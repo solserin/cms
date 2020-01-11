@@ -9,7 +9,8 @@
 
 // MAIN COLORS - VUESAX THEME COLORS
 let colors = {
-	primary : '#7367F0',
+    //primary : '#7367F0',
+    primary : '#063278',
 	success : '#28C76F',
 	danger  : '#EA5455',
 	warning : '#FF9F43',
@@ -18,8 +19,8 @@ let colors = {
 
 // CONFIGS
 const themeConfig = {
-  disableCustomizer : false,       // options[Boolean] : true, false(default)
-  disableThemeTour  : true,        // options[Boolean] : true, false(default)
+  disableCustomizer : true,       // options[Boolean] : true, false(default)
+  disableThemeTour  : false,        // options[Boolean] : true, false(default)
   footerType        : "static",    // options[String]  : static(default) / sticky / hidden
   hideScrollToTop   : false,       // options[Boolean] : true, false(default)
   mainLayoutType    : "vertical",  // options[String]  : vertical(default) / horizontal
