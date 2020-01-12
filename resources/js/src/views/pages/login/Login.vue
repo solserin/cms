@@ -32,10 +32,6 @@
                   <vs-tab label="JWT">
                     <login-jwt></login-jwt>
                   </vs-tab>
-
-                  <vs-tab label="Auth0">
-                    <login-auth0></login-auth0>
-                  </vs-tab>
                 </vs-tabs>
 
               </div>
@@ -50,12 +46,10 @@
 
 <script>
 import LoginJwt from "./LoginJWT.vue"
-import LoginAuth0 from "./LoginAuth0.vue"
 
 export default {
   components: {
-    LoginJwt,
-    LoginAuth0
+    LoginJwt
   }
 }
 </script>

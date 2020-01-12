@@ -19,7 +19,6 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-import auth from "@/auth/authService";
 
 
 Vue.use(Router)
@@ -1279,14 +1278,6 @@ const router = new Router({
         // =============================================================================
         // PAGES
         // =============================================================================
-                {
-                    path: '/callback',
-                    name: 'auth-callback',
-                    component: () => import('@/views/Callback.vue'),
-                    meta: {
-                        rule: 'editor'
-                    }
-                },
                 {
                     path: '/pages/login',
                     name: 'page-login',
