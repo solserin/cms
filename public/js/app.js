@@ -118870,7 +118870,7 @@ __webpack_require__.r(__webpack_exports__);
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vue_i18n__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  locale: 'en',
+  locale: 'es',
   // set default locale
   messages: _i18nData__WEBPACK_IMPORTED_MODULE_2__["default"]
 }));
@@ -118886,7 +118886,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var _en;
+var _en, _es;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -118977,7 +118977,93 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Maintenance: 'Maintenance',
     Profile: 'Profile',
     User: 'User'
-  }, _defineProperty(_en, "List", 'List'), _defineProperty(_en, "View", 'View'), _defineProperty(_en, "Edit", 'Edit'), _defineProperty(_en, "UserSettings", 'User Settings'), _defineProperty(_en, "Invoice", 'Invoice'), _defineProperty(_en, "FAQ", 'FAQ'), _defineProperty(_en, "Search", 'Search'), _defineProperty(_en, "KnowledgeBase", 'Knowledge Base'), _defineProperty(_en, "ChartsAndMaps", 'Charts & Maps'), _defineProperty(_en, "Charts", 'Charts'), _defineProperty(_en, "ApexCharts", 'Apex Charts'), _defineProperty(_en, "chartjs", 'chartjs'), _defineProperty(_en, "echarts", 'echarts'), _defineProperty(_en, "chartist", 'chartist'), _defineProperty(_en, "GoogleMap", 'Google Map'), _defineProperty(_en, "Extensions", 'Extensions'), _defineProperty(_en, "QuillEditor", 'Quill Editor'), _defineProperty(_en, "DragAndDrop", 'Drag & Drop'), _defineProperty(_en, "Datepicker", 'Datepicker'), _defineProperty(_en, "DatetimePicker", 'Datetime Picker'), _defineProperty(_en, "AccessControl", 'Access Control'), _defineProperty(_en, "I18n", 'I18n'), _defineProperty(_en, "Carousel", 'Carousel'), _defineProperty(_en, "Clipboard", 'Clipboard'), _defineProperty(_en, "ContextMenu", 'Context Menu'), _defineProperty(_en, "StarRatings", 'Star Ratings'), _defineProperty(_en, "Autocomplete", 'Autocomplete'), _defineProperty(_en, "Tree", 'Tree'), _defineProperty(_en, "Import", 'Import'), _defineProperty(_en, "Export", 'Export'), _defineProperty(_en, "ExportSelected", "Export Selected"), _defineProperty(_en, "Others", 'Others'), _defineProperty(_en, "MenuLevels", 'Menu Levels'), _defineProperty(_en, "MenuLevel2p1", 'Menu Level 2.1'), _defineProperty(_en, "MenuLevel2p2", 'Menu Level 2.2'), _defineProperty(_en, "MenuLevel3p1", 'Menu Level 3.1'), _defineProperty(_en, "MenuLevel3p2", 'Menu Level 3.2'), _defineProperty(_en, "DisabledMenu", 'Disabled Menu'), _defineProperty(_en, "Support", 'Support'), _defineProperty(_en, "Documentation", 'Documentation'), _defineProperty(_en, "RaiseSupport", 'Raise Support'), _defineProperty(_en, "demoTitle", 'Card Title'), _defineProperty(_en, "demoText", 'Cake sesame snaps cupcake gingerbread danish I love gingerbread. Apple pie pie jujubes chupa chups muffin halvah lollipop. Chocolate cake oat cake tiramisu marzipan sugar plum. Donut sweet pie oat cake dragée fruitcake cotton candy lemon drops.'), _en)
+  }, _defineProperty(_en, "List", 'List'), _defineProperty(_en, "View", 'View'), _defineProperty(_en, "Edit", 'Edit'), _defineProperty(_en, "UserSettings", 'User Settings'), _defineProperty(_en, "Invoice", 'Invoice'), _defineProperty(_en, "FAQ", 'FAQ'), _defineProperty(_en, "Search", 'Search'), _defineProperty(_en, "KnowledgeBase", 'Knowledge Base'), _defineProperty(_en, "ChartsAndMaps", 'Charts & Maps'), _defineProperty(_en, "Charts", 'Charts'), _defineProperty(_en, "ApexCharts", 'Apex Charts'), _defineProperty(_en, "chartjs", 'chartjs'), _defineProperty(_en, "echarts", 'echarts'), _defineProperty(_en, "chartist", 'chartist'), _defineProperty(_en, "GoogleMap", 'Google Map'), _defineProperty(_en, "Extensions", 'Extensions'), _defineProperty(_en, "QuillEditor", 'Quill Editor'), _defineProperty(_en, "DragAndDrop", 'Drag & Drop'), _defineProperty(_en, "Datepicker", 'Datepicker'), _defineProperty(_en, "DatetimePicker", 'Datetime Picker'), _defineProperty(_en, "AccessControl", 'Access Control'), _defineProperty(_en, "I18n", 'I18n'), _defineProperty(_en, "Carousel", 'Carousel'), _defineProperty(_en, "Clipboard", 'Clipboard'), _defineProperty(_en, "ContextMenu", 'Context Menu'), _defineProperty(_en, "StarRatings", 'Star Ratings'), _defineProperty(_en, "Autocomplete", 'Autocomplete'), _defineProperty(_en, "Tree", 'Tree'), _defineProperty(_en, "Import", 'Import'), _defineProperty(_en, "Export", 'Export'), _defineProperty(_en, "ExportSelected", "Export Selected"), _defineProperty(_en, "Others", 'Others'), _defineProperty(_en, "MenuLevels", 'Menu Levels'), _defineProperty(_en, "MenuLevel2p1", 'Menu Level 2.1'), _defineProperty(_en, "MenuLevel2p2", 'Menu Level 2.2'), _defineProperty(_en, "MenuLevel3p1", 'Menu Level 3.1'), _defineProperty(_en, "MenuLevel3p2", 'Menu Level 3.2'), _defineProperty(_en, "DisabledMenu", 'Disabled Menu'), _defineProperty(_en, "Support", 'Support'), _defineProperty(_en, "Documentation", 'Documentation'), _defineProperty(_en, "RaiseSupport", 'Raise Support'), _defineProperty(_en, "demoTitle", 'Card Title'), _defineProperty(_en, "demoText", 'Cake sesame snaps cupcake gingerbread danish I love gingerbread. Apple pie pie jujubes chupa chups muffin halvah lollipop. Chocolate cake oat cake tiramisu marzipan sugar plum. Donut sweet pie oat cake dragée fruitcake cotton candy lemon drops.'), _en),
+  es: (_es = {
+    Dashboard: 'Dashboard',
+    eCommerce: 'eCommerce',
+    Apps: 'Aplicaciones',
+    Todo: 'Todo',
+    Chat: 'Chat',
+    Email: 'Email',
+    Calendar: 'Calendario',
+    FullCalendar: 'Calendario Completo',
+    SimpleCalendar: 'Calendario Simple',
+    Shop: 'Tienda',
+    ItemDetails: 'Item Details',
+    Cart: 'Carrito',
+    WishList: 'Wish List',
+    Checkout: 'Checkout',
+    UI: 'UI',
+    DataList: 'Data List',
+    ListView: 'List View',
+    ThumbView: 'Thumb View',
+    Grid: 'Grid',
+    Vuexy: 'Vuexy',
+    Vuesax: 'Vuesax',
+    Tailwind: 'Tailwind',
+    Colors: 'Colors',
+    Card: 'Card',
+    Basic: 'Basic',
+    Statistics: 'Statistics',
+    Analytics: 'Analytics',
+    CardActions: 'Card Actions',
+    CardColors: 'Card Colors',
+    Table: 'Table',
+    agGridTable: 'agGrid Table',
+    Components: 'Components',
+    Alert: 'Alert',
+    Avatar: 'Avatar',
+    Badge: 'Badge',
+    Breadcrumb: 'Breadcrumb',
+    Button: 'Button',
+    ButtonGroup: 'Button Group',
+    Chip: 'Chip',
+    Collapse: 'Collapse',
+    Dialogs: 'Dialogs',
+    Divider: 'Divider',
+    DropDown: 'DropDown',
+    List: 'List',
+    Loading: 'Loading',
+    Navbar: 'Navbar',
+    Notifications: 'Notifications',
+    Pagination: 'Pagination',
+    Popup: 'Popup',
+    Progress: 'Progress',
+    Sidebar: 'Sidebar',
+    Slider: 'Slider',
+    Tabs: 'Tabs',
+    Tooltip: 'Tooltip',
+    Upload: 'Upload',
+    FormsAndTable: 'Forms & Table',
+    FormElements: 'Form Elements',
+    Select: 'Select',
+    Switch: 'Switch',
+    Checkbox: 'Checkbox',
+    Radio: 'Radio',
+    Input: 'Input',
+    NumberInput: 'Number Input',
+    Textarea: 'Textarea',
+    FormLayouts: 'Form Layouts',
+    FormWizard: 'Form Wizard',
+    FormValidation: 'Form Validation',
+    FormInputGroup: 'Form Input Group',
+    Pages: 'Pages',
+    Authentication: 'Authentication',
+    Login: 'Login',
+    Register: 'Register',
+    ForgotPassword: 'Forgot Password',
+    ResetPassword: 'Reset Password',
+    LockScreen: 'Lock Screen',
+    Miscellaneous: 'Miscellaneous',
+    ComingSoon: 'Coming Soon',
+    Error: 'Error',
+    404: '404',
+    500: '500',
+    NotAuthorized: 'Not Authorized',
+    Maintenance: 'Maintenance',
+    Profile: 'Profile',
+    User: 'User'
+  }, _defineProperty(_es, "List", 'List'), _defineProperty(_es, "View", 'View'), _defineProperty(_es, "Edit", 'Edit'), _defineProperty(_es, "UserSettings", 'User Settings'), _defineProperty(_es, "Invoice", 'Invoice'), _defineProperty(_es, "FAQ", 'FAQ'), _defineProperty(_es, "Search", 'Search'), _defineProperty(_es, "KnowledgeBase", 'Knowledge Base'), _defineProperty(_es, "ChartsAndMaps", 'Charts & Maps'), _defineProperty(_es, "Charts", 'Charts'), _defineProperty(_es, "ApexCharts", 'Apex Charts'), _defineProperty(_es, "chartjs", 'chartjs'), _defineProperty(_es, "echarts", 'echarts'), _defineProperty(_es, "chartist", 'chartist'), _defineProperty(_es, "GoogleMap", 'Google Map'), _defineProperty(_es, "Extensions", 'Extensions'), _defineProperty(_es, "QuillEditor", 'Quill Editor'), _defineProperty(_es, "DragAndDrop", 'Drag & Drop'), _defineProperty(_es, "Datepicker", 'Datepicker'), _defineProperty(_es, "DatetimePicker", 'Datetime Picker'), _defineProperty(_es, "AccessControl", 'Access Control'), _defineProperty(_es, "I18n", 'I18n'), _defineProperty(_es, "Carousel", 'Carousel'), _defineProperty(_es, "Clipboard", 'Clipboard'), _defineProperty(_es, "ContextMenu", 'Context Menu'), _defineProperty(_es, "StarRatings", 'Star Ratings'), _defineProperty(_es, "Autocomplete", 'Autocomplete'), _defineProperty(_es, "Tree", 'Tree'), _defineProperty(_es, "Import", 'Import'), _defineProperty(_es, "Export", 'Export'), _defineProperty(_es, "ExportSelected", "Export Selected"), _defineProperty(_es, "Others", 'Others'), _defineProperty(_es, "MenuLevels", 'Menu Levels'), _defineProperty(_es, "MenuLevel2p1", 'Menu Level 2.1'), _defineProperty(_es, "MenuLevel2p2", 'Menu Level 2.2'), _defineProperty(_es, "MenuLevel3p1", 'Menu Level 3.1'), _defineProperty(_es, "MenuLevel3p2", 'Menu Level 3.2'), _defineProperty(_es, "DisabledMenu", 'Disabled Menu'), _defineProperty(_es, "Support", 'Support'), _defineProperty(_es, "Documentation", 'Documentation'), _defineProperty(_es, "RaiseSupport", 'Raise Support'), _defineProperty(_es, "demoTitle", 'Card Title'), _defineProperty(_es, "demoText", 'Cake sesame snaps cupcake gingerbread danish I love gingerbread. Apple pie pie jujubes chupa chups muffin halvah lollipop. Chocolate cake oat cake tiramisu marzipan sugar plum. Donut sweet pie oat cake dragée fruitcake cotton candy lemon drops.'), _es)
 });
 
 /***/ }),
