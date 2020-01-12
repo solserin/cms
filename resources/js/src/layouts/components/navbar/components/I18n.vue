@@ -19,17 +19,13 @@ export default {
     i18n_locale_img() {
         const locale = this.$i18n.locale;
         if (locale == "en")      return require(`@assets/images/flags/en.png`)
-        else if (locale == "pt") return require(`@assets/images/flags/pt.png`)
-        else if (locale == "fr") return require(`@assets/images/flags/fr.png`)
-        else if (locale == "de") return require(`@assets/images/flags/de.png`)
+        else if (locale == "es") return require(`@assets/images/flags/en.png`)
         else return require(`@assets/images/flags/en.png`)
     },
     getCurrentLocaleData() {
         const locale = this.$i18n.locale;
         if (locale == "en")      return { flag: "us", lang: 'English'    }
-        else if (locale == "pt") return { flag: "br", lang: 'Portuguese' }
-        else if (locale == "fr") return { flag: "fr", lang: 'French'     }
-        else if (locale == "de") return { flag: "de", lang: 'German'     }
+        else if (locale == "es") return { flag: "br", lang: 'English' }
     },
   },
   methods: {

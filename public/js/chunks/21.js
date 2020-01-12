@@ -1871,22 +1871,16 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     i18n_locale_img: function i18n_locale_img() {
       var locale = this.$i18n.locale;
-      if (locale == "en") return __webpack_require__(/*! @assets/images/flags/en.png */ "./resources/assets/images/flags/en.png");else if (locale == "pt") return __webpack_require__(/*! @assets/images/flags/pt.png */ "./resources/assets/images/flags/pt.png");else if (locale == "fr") return __webpack_require__(/*! @assets/images/flags/fr.png */ "./resources/assets/images/flags/fr.png");else if (locale == "de") return __webpack_require__(/*! @assets/images/flags/de.png */ "./resources/assets/images/flags/de.png");else return __webpack_require__(/*! @assets/images/flags/en.png */ "./resources/assets/images/flags/en.png");
+      if (locale == "en") return __webpack_require__(/*! @assets/images/flags/en.png */ "./resources/assets/images/flags/en.png");else if (locale == "es") return __webpack_require__(/*! @assets/images/flags/en.png */ "./resources/assets/images/flags/en.png");else return __webpack_require__(/*! @assets/images/flags/en.png */ "./resources/assets/images/flags/en.png");
     },
     getCurrentLocaleData: function getCurrentLocaleData() {
       var locale = this.$i18n.locale;
       if (locale == "en") return {
         flag: "us",
         lang: 'English'
-      };else if (locale == "pt") return {
+      };else if (locale == "es") return {
         flag: "br",
-        lang: 'Portuguese'
-      };else if (locale == "fr") return {
-        flag: "fr",
-        lang: 'French'
-      };else if (locale == "de") return {
-        flag: "de",
-        lang: 'German'
+        lang: 'English'
       };
     }
   },
@@ -3246,7 +3240,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -3255,11 +3248,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-var VxTour = function VxTour() {
-  return __webpack_require__.e(/*! import() */ 90).then(__webpack_require__.bind(null, /*! @/components/VxTour.vue */ "./resources/js/src/components/VxTour.vue"));
-};
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3269,8 +3257,7 @@ var VxTour = function VxTour() {
     TheFooter: _layouts_components_TheFooter_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     TheNavbarHorizontal: _layouts_components_navbar_TheNavbarHorizontal_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
     TheNavbarVertical: _layouts_components_navbar_TheNavbarVertical_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-    VNavMenu: _layouts_components_vertical_nav_menu_VerticalNavMenu_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-    VxTour: VxTour
+    VNavMenu: _layouts_components_vertical_nav_menu_VerticalNavMenu_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
   },
   data: function data() {
     return {
@@ -3284,32 +3271,7 @@ var VxTour = function VxTour() {
       navbarType: _themeConfig_js__WEBPACK_IMPORTED_MODULE_7__["default"].navbarType || 'floating',
       navMenuItems: _layouts_components_vertical_nav_menu_navMenuItems_js__WEBPACK_IMPORTED_MODULE_2__["default"],
       routerTransition: _themeConfig_js__WEBPACK_IMPORTED_MODULE_7__["default"].routerTransition || 'none',
-      routeTitle: this.$route.meta.pageTitle,
-      steps: [{
-        target: '#btnVNavMenuMinToggler',
-        content: 'Toggle Collapse Sidebar.'
-      }, {
-        target: '.vx-navbar__starred-pages',
-        content: 'Create your own bookmarks. You can also re-arrange them using drag & drop.'
-      }, {
-        target: '.i18n-locale',
-        content: 'You can change language from here.'
-      }, {
-        target: '.navbar-fuzzy-search',
-        content: 'Try fuzzy search to visit pages in flash.'
-      }, {
-        target: '.customizer-btn',
-        content: 'Customize template based on your preference',
-        params: {
-          placement: 'left'
-        }
-      }, {
-        target: '.vs-button.buy-now',
-        content: 'Buy this awesomeness at affordable price!',
-        params: {
-          placement: 'top'
-        }
-      }]
+      routeTitle: this.$route.meta.pageTitle
     };
   },
   watch: {
@@ -7689,13 +7651,6 @@ var render = function() {
       ]
     },
     [
-      !_vm.disableThemeTour &&
-      _vm.windowWidth >= 1200 &&
-        _vm.mainLayoutType === "vertical" &&
-        _vm.verticalNavMenuWidth == "default"
-        ? _c("vx-tour", { attrs: { steps: _vm.steps } })
-        : _vm._e(),
-      _vm._v(" "),
       !_vm.disableCustomizer
         ? _c("the-customizer", {
             attrs: {

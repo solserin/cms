@@ -11,7 +11,6 @@
 <template>
   <div class="layout--main" :class="[layoutTypeClass, navbarClasses, footerClasses, {'no-scroll': isAppPage}]">
 
-    <vx-tour :steps="steps" v-if="!disableThemeTour && (windowWidth >= 1200 && mainLayoutType === 'vertical' && verticalNavMenuWidth == 'default')" />
 
     <the-customizer
       v-if                    = "!disableCustomizer"
@@ -140,7 +139,6 @@ import TheFooter           from '@/layouts/components/TheFooter.vue'
 import themeConfig         from '@/../themeConfig.js'
 import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
 
-const VxTour = () => import('@/components/VxTour.vue')
 
 export default {
   components: {
@@ -151,7 +149,6 @@ export default {
     TheNavbarHorizontal,
     TheNavbarVertical,
     VNavMenu,
-    VxTour
   },
   data() {
     return {
@@ -165,38 +162,7 @@ export default {
       navbarType        : themeConfig.navbarType  || 'floating',
       navMenuItems      : navMenuItems,
       routerTransition  : themeConfig.routerTransition || 'none',
-      routeTitle        : this.$route.meta.pageTitle,
-      steps: [{
-          target  : '#btnVNavMenuMinToggler',
-          content : 'Toggle Collapse Sidebar.'
-        },
-        {
-          target  : '.vx-navbar__starred-pages',
-          content : 'Create your own bookmarks. You can also re-arrange them using drag & drop.'
-        },
-        {
-          target  : '.i18n-locale',
-          content : 'You can change language from here.'
-        },
-        {
-          target  : '.navbar-fuzzy-search',
-          content : 'Try fuzzy search to visit pages in flash.'
-        },
-        {
-          target  : '.customizer-btn',
-          content : 'Customize template based on your preference',
-          params  : {
-            placement: 'left'
-          }
-        },
-        {
-          target  : '.vs-button.buy-now',
-          content : 'Buy this awesomeness at affordable price!',
-          params  : {
-            placement: 'top'
-          }
-        },
-      ],
+      routeTitle        : this.$route.meta.pageTitle
     }
   },
   watch: {
