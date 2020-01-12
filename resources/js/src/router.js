@@ -21,8 +21,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import auth from "@/auth/authService";
 
-import firebase from 'firebase/app'
-import 'firebase/auth'
 
 Vue.use(Router)
 
@@ -1388,10 +1386,7 @@ router.afterEach(() => {
 })
 
 router.beforeEach((to, from, next) => {
-    firebase.auth().onAuthStateChanged(() => {
 
-        // get firebase current user
-        const firebaseCurrentUser = firebase.auth().currentUser
 
         // if (
         //     to.path === "/pages/login" ||
@@ -1408,7 +1403,7 @@ router.beforeEach((to, from, next) => {
 
         // If auth required, check login. If login fails redirect to login page
         if(to.meta.authRequired) {
-          if (!(auth.isAuthenticated() || firebaseCurrentUser)) {
+          if (!auth.isAuthenticated()) {
             router.push({ path: '/pages/login', query: { to: to.path } })
           }
         }
@@ -1418,7 +1413,7 @@ router.beforeEach((to, from, next) => {
         // will be returned to the application after auth
         // auth.login({ target: to.path });
 
-    });
+
 
 });
 
