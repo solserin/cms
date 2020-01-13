@@ -17,7 +17,7 @@ class CreateRolesTable extends Migration
             $table->bigIncrements('id');
             $table->string('rol')->comment('nombre del rol');
             $table->string('descripcion')->nullable()->comment('descripcion breve del rol');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1);
         });
     }
 

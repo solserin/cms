@@ -16,6 +16,7 @@ class CreateModulosRolesPermisosTable extends Migration
         Schema::create('modulos_roles_permisos', function (Blueprint $table) {
             $table->unsignedInteger('modulos_id')->comment('clave foranea del modulo');
             $table->unsignedInteger('roles_id')->comment('clave foranea del rol');
+            $table->unsignedInteger('permisos_id')->comment('1 del permiso');
         });
     }
 
