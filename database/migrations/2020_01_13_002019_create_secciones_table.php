@@ -15,7 +15,8 @@ class CreateSeccionesTable extends Migration
     {
         Schema::create('secciones', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->string('seccion')->comment('nombre de la seccion a la que pertenece el modulo');
+            $table->string('icon')->nullable()->comment('nombre del codigo usado para ientificar la seccion');
         });
     }
 

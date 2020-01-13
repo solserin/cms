@@ -14,8 +14,8 @@ class CreateModulosRolesPermisosTable extends Migration
     public function up()
     {
         Schema::create('modulos_roles_permisos', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->unsignedInteger('modulos_id')->comment('clave foranea del modulo');
+            $table->unsignedInteger('roles_id')->comment('clave foranea del rol');
         });
     }
 
