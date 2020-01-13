@@ -32,9 +32,6 @@
 
           <!-- Group Name -->
           <span v-show="!verticalNavMenuItemsMin" class="truncate mr-3 select-none">{{ $t(group.i18n) || group.name }}</span>
-
-          <!-- Group Tag -->
-          <vs-chip class="ml-auto mr-4" :color="group.tagColor" v-if="group.tag && !verticalNavMenuItemsMin">{{ group.tag }}</vs-chip>
         </span>
 
         <!-- Group Collapse Icon -->
