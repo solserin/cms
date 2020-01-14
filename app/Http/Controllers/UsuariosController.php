@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ApiController;
 
 class UsuariosController extends ApiController
 {
@@ -14,7 +15,7 @@ class UsuariosController extends ApiController
      */
     public function index()
     {
-
+        return $this->showAll(User::get());
     }
 
     /**
