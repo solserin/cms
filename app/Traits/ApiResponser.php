@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 trait ApiResponser
 {
-    private function successResponse($data,$code){
+    protected function successResponse($data,$code){
         return response()->json($data,$code);
     }
 
@@ -22,13 +22,6 @@ trait ApiResponser
 
     //show all paginados
     protected function showAllPaginated(Collection $collection,$code=200){
-        $collection=$this->paginate($collection);
-        return $this->successResponse(['data'=>$collection],$code);
-    }
-
-    //metodo de paginacion de datos
-    protected function paginate(Collection $collection)
-    {
         $rules=[
             'per_page'=>'integer|min:2|max:300'
         ];
