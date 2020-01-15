@@ -45,7 +45,7 @@ export default {
     })
   },
   login(email, pwd) {
-    return axios.post("/api/auth/login", {email: email, password: pwd})
+    return axios.post("http://app.laravel/login_usuario", {username: email, password: pwd})
   },
   registerUser(name, email, pwd) {
     return axios.post("/api/auth/register", {displayName: name, email: email, password: pwd})

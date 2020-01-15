@@ -43,7 +43,10 @@ const router = new Router({
         // =============================================================================
                 {
                     path: '/',
-                    redirect: '/dashboard/analytics'
+                    redirect: '/dashboard/analytics',
+                    meta:{
+                        authRequired:true
+                    }
                 },
                 {
                     path: '/dashboard/analytics',
@@ -51,6 +54,7 @@ const router = new Router({
                     component: () => import('./views/DashboardAnalytics.vue'),
                     meta: {
                         rule: 'editor',
+                        authRequired:true
                     }
                 },
                 {
@@ -58,7 +62,8 @@ const router = new Router({
                     name: 'dashboard-ecommerce',
                     component: () => import('./views/DashboardECommerce.vue'),
                     meta: {
-                        rule: 'admin'
+                        rule: 'admin',
+                        authRequired:true
                     }
                 },
 
@@ -1377,8 +1382,6 @@ router.afterEach(() => {
 })
 
 router.beforeEach((to, from, next) => {
-
-
         // if (
         //     to.path === "/pages/login" ||
         //     to.path === "/pages/forgot-password" ||
@@ -1392,11 +1395,11 @@ router.beforeEach((to, from, next) => {
         //     return next();
         // }
 
+        //validar si ya esta logueado y redigir al dashboard
+
         // If auth required, check login. If login fails redirect to login page
         if(to.meta.authRequired) {
-          if (!auth.isAuthenticated()) {
-            router.push({ path: '/pages/login', query: { to: to.path } })
-          }
+            router.push({ path: '/pages/login', query: { to: to.path } }).catch(err=>{})
         }
 
         return next()

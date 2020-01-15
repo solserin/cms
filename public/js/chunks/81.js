@@ -111,12 +111,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       email: 'admin@admin.com',
-      password: 'adminadmin',
+      password: '',
       checkbox_remember_me: false
     };
   },
@@ -132,8 +131,8 @@ __webpack_require__.r(__webpack_exports__);
         // Close animation if passed as payload
         // this.$vs.loading.close()
         this.$vs.notify({
-          title: 'Login Attempt',
-          text: 'You are already logged in!',
+          title: 'Atención',
+          text: 'Su cuenta ya ha iniciado sesión!',
           iconPack: 'feather',
           icon: 'icon-alert-circle',
           color: 'warning'
@@ -163,7 +162,7 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$vs.notify({
           title: 'Error',
-          text: error.message,
+          text: 'Debe ingresar un usuario y contraseña correcto!',
           iconPack: 'feather',
           icon: 'icon-alert-circle',
           color: 'danger'
@@ -314,7 +313,7 @@ var render = function() {
                               [
                                 _c(
                                   "vs-tab",
-                                  { attrs: { label: "JWT" } },
+                                  { attrs: { label: "Login" } },
                                   [_c("login-jwt")],
                                   1
                                 )
@@ -441,11 +440,11 @@ var render = function() {
                 expression: "checkbox_remember_me"
               }
             },
-            [_vm._v("Remember Me")]
+            [_vm._v("Recordarme")]
           ),
           _vm._v(" "),
           _c("router-link", { attrs: { to: "/pages/forgot-password" } }, [
-            _vm._v("Forgot Password?")
+            _vm._v("Olvidó su contraseña?")
           ])
         ],
         1
@@ -455,12 +454,6 @@ var render = function() {
         "div",
         { staticClass: "flex flex-wrap justify-between mb-3" },
         [
-          _c(
-            "vs-button",
-            { attrs: { type: "border" }, on: { click: _vm.registerUser } },
-            [_vm._v("Register")]
-          ),
-          _vm._v(" "),
           _c(
             "vs-button",
             {

@@ -29,7 +29,7 @@
                 </div>
 
                 <vs-tabs>
-                  <vs-tab label="JWT">
+                  <vs-tab label="Login">
                     <login-jwt></login-jwt>
                   </vs-tab>
                 </vs-tabs>

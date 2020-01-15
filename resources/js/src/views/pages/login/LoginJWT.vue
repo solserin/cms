@@ -26,11 +26,10 @@
     <span class="text-danger text-sm">{{ errors.first('password') }}</span>
 
     <div class="flex flex-wrap justify-between my-5">
-        <vs-checkbox v-model="checkbox_remember_me" class="mb-3">Remember Me</vs-checkbox>
-        <router-link to="/pages/forgot-password">Forgot Password?</router-link>
+        <vs-checkbox v-model="checkbox_remember_me" class="mb-3">Recordarme</vs-checkbox>
+        <router-link to="/pages/forgot-password">Olvidó su contraseña?</router-link>
     </div>
     <div class="flex flex-wrap justify-between mb-3">
-      <vs-button  type="border" @click="registerUser">Register</vs-button>
       <vs-button :disabled="!validateForm" @click="loginJWT">Login</vs-button>
     </div>
   </div>
@@ -41,7 +40,7 @@ export default {
   data() {
     return {
       email: 'admin@admin.com',
-      password: 'adminadmin',
+      password: '',
       checkbox_remember_me: false
     }
   },
@@ -59,8 +58,8 @@ export default {
         // this.$vs.loading.close()
 
         this.$vs.notify({
-          title: 'Login Attempt',
-          text: 'You are already logged in!',
+          title: 'Atención',
+          text: 'Su cuenta ya ha iniciado sesión!',
           iconPack: 'feather',
           icon: 'icon-alert-circle',
           color: 'warning'
@@ -91,13 +90,14 @@ export default {
           this.$vs.loading.close()
           this.$vs.notify({
             title: 'Error',
-            text: error.message,
+            text:'Debe ingresar un usuario y contraseña correcto!',
             iconPack: 'feather',
             icon: 'icon-alert-circle',
             color: 'danger'
           })
         })
     },
+
     registerUser() {
       if (!this.checkLogin()) return
       this.$router.push('/pages/register').catch(() => {})
