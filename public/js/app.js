@@ -116981,7 +116981,10 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     }, {
       path: '/apps/email',
       redirect: '/apps/email/inbox',
-      name: 'email'
+      name: 'email',
+      meta: {
+        authRequired: true
+      }
     }, {
       path: '/apps/email/:filter',
       component: function component() {
@@ -117011,6 +117014,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
         return Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(20), __webpack_require__.e(88)]).then(__webpack_require__.bind(null, /*! ./views/apps/eCommerce/ECommerceShop.vue */ "./resources/js/src/views/apps/eCommerce/ECommerceShop.vue"));
       },
       meta: {
+        authRequired: true,
         breadcrumb: [{
           title: 'Home',
           url: '/'
@@ -117021,8 +117025,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
           active: true
         }],
         pageTitle: 'Shop',
-        rule: 'editor',
-        authRequired: true
+        rule: 'editor'
       }
     }, {
       path: '/apps/eCommerce/wish-list',
@@ -117031,6 +117034,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
         return __webpack_require__.e(/*! import() */ 93).then(__webpack_require__.bind(null, /*! ./views/apps/eCommerce/ECommerceWishList.vue */ "./resources/js/src/views/apps/eCommerce/ECommerceWishList.vue"));
       },
       meta: {
+        authRequired: true,
         breadcrumb: [{
           title: 'Home',
           url: '/'
@@ -117042,8 +117046,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
           active: true
         }],
         pageTitle: 'Wish List',
-        rule: 'editor',
-        authRequired: true
+        rule: 'editor'
       }
     }, {
       path: '/apps/eCommerce/checkout',
@@ -117052,6 +117055,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
         return Promise.all(/*! import() */[__webpack_require__.e(15), __webpack_require__.e(87)]).then(__webpack_require__.bind(null, /*! ./views/apps/eCommerce/ECommerceCheckout.vue */ "./resources/js/src/views/apps/eCommerce/ECommerceCheckout.vue"));
       },
       meta: {
+        authRequired: true,
         breadcrumb: [{
           title: 'Home',
           url: '/'
@@ -117063,8 +117067,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
           active: true
         }],
         pageTitle: 'Checkout',
-        rule: 'editor',
-        authRequired: true
+        rule: 'editor'
       }
     },
     /*
@@ -117078,10 +117081,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     */
     {
       path: '/apps/eCommerce/item/',
-      redirect: '/apps/eCommerce/item/5546604',
-      meta: {
-        authRequired: true
-      }
+      redirect: '/apps/eCommerce/item/5546604'
     }, {
       path: '/apps/eCommerce/item/:item_id',
       name: 'ecommerce-item-detail-view',
@@ -117105,8 +117105,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
         }],
         parent: "ecommerce-item-detail-view",
         pageTitle: 'Item Details',
-        rule: 'editor',
-        authRequired: true
+        rule: 'editor'
       }
     }, {
       path: '/apps/user/user-list',
@@ -117125,8 +117124,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
           active: true
         }],
         pageTitle: 'User List',
-        rule: 'editor',
-        authRequired: true
+        rule: 'editor'
       }
     }, {
       path: '/apps/user/user-view/:userId',
@@ -118683,45 +118681,29 @@ router.afterEach(function () {
   }
 });
 router.beforeEach(function (to, from, next) {
-  // if (
-  //     to.path === "/pages/login" ||
-  //     to.path === "/pages/forgot-password" ||
-  //     to.path === "/pages/error-404" ||
-  //     to.path === "/pages/error-500" ||
-  //     to.path === "/pages/register" ||
-  //     to.path === "/callback" ||
-  //     to.path === "/pages/comingsoon" ||
-  //     (auth.isAuthenticated() || firebaseCurrentUser)
-  // ) {
-  //     return next();
-  // }
-  //validar si ya esta logueado y redigir al dashboard
+  if (to.path === "/pages/login" || to.path === "/pages/forgot-password" || to.path === "/pages/error-404" || to.path === "/pages/error-500" || to.path === "/pages/register" || to.path === "/callback" || to.path === "/pages/comingsoon") {
+    if (localStorage.getItem('accessToken')) {
+      next();
+    }
+  } //validar si ya esta logueado y redigir al dashboard
   // If auth required, check login. If login fails redirect to login page
   //router.push({ path: '/pages/login', query: { to: to.path } }).catch(err=>{})
 
   /** verificar que este logueado */
+
+
   if (to.matched.some(function (record) {
     return record.meta.authRequired;
   })) {
-    if (_src_store_store__WEBPACK_IMPORTED_MODULE_2__["default"].getters['auth/isLoggedIn']) {
+    if (localStorage.getItem('accessToken')) {
       next();
-      return;
     } else next('/pages/login');
-  } else {
-    //aqui se fija si se esta dirigiendo al login y ya esta logueado
-    //lo debe llevar al dashboard
-    if (to.path == "/pages/login") {
-      if (_src_store_store__WEBPACK_IMPORTED_MODULE_2__["default"].getters['auth/isLoggedIn']) {
-        next('/');
-        return;
-      }
-    } else next();
-  } //router.push({ path: '/pages/login' }).catch(err=>{})
+  }
 
-
-  return next(); // Specify the current path as the customState parameter, meaning it
+  next(); //router.push({ path: '/pages/login' }).catch(err=>{})
+  // Specify the current path as the customState parameter, meaning it
   // will be returned to the application after auth
-  // auth.login({ target: to.path });
+  // auth.login({ target: to.path })
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
@@ -118868,15 +118850,15 @@ __webpack_require__.r(__webpack_exports__);
         // If there's user data in response
         if (response.data) {
           // Navigate User to homepage
-          _router__WEBPACK_IMPORTED_MODULE_2__["default"].push(_router__WEBPACK_IMPORTED_MODULE_2__["default"].currentRoute.query.to || '/').catch(function (err) {}); // Set accessToken
-
+          // Set accessToken
           localStorage.setItem("accessToken", response.data.access_token); // Set bearer token in axios
 
-          commit("SET_BEARER", response.data.access_token); // Update user details(perfil del usuario)
+          commit("LOGIN_USER", response.data.access_token); // Update user details(perfil del usuario)
 
           commit('UPDATE_USER_INFO', payload.userDetails.email, {
             root: true
           });
+          _router__WEBPACK_IMPORTED_MODULE_2__["default"].push(_router__WEBPACK_IMPORTED_MODULE_2__["default"].currentRoute.query.to || '/').catch(function (err) {});
           resolve(response);
         } else {
           reject({
@@ -118890,22 +118872,27 @@ __webpack_require__.r(__webpack_exports__);
   },
   logout_user: function logout_user(_ref2) {
     var commit = _ref2.commit;
-    return new Promise(function (resolve, reject) {
-      _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].post("http://app.laravel/logout_usuario").then(function (resp) {
-        if (resp.code) {
-          reject({
-            message: "Error al cerrar sesion"
-          });
-        } else {
-          commit("LOGOUT_USER"); // Navigate User to login
 
-          _router__WEBPACK_IMPORTED_MODULE_2__["default"].push('/pages/login').catch(function () {});
-          resolve(resp);
-        }
-      }).catch(function (err) {
-        reject(err);
+    if (localStorage.getItem('accessToken')) {
+      return new Promise(function (resolve, reject) {
+        _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].post("http://app.laravel/logout_usuario").then(function (resp) {
+          if (resp.code) {
+            reject({
+              message: "Error al cerrar sesion"
+            });
+          } else {
+            commit("LOGOUT_USER"); // Navigate User to login
+
+            _router__WEBPACK_IMPORTED_MODULE_2__["default"].push('/pages/login').catch(function () {});
+            resolve(resp);
+          }
+        }).catch(function (err) {
+          reject(err);
+        });
       });
-    });
+    } else {
+      _router__WEBPACK_IMPORTED_MODULE_2__["default"].push('/pages/login').catch(function () {});
+    }
   },
   registerUserJWT: function registerUserJWT(_ref3, payload) {
     var commit = _ref3.commit;
@@ -118993,10 +118980,15 @@ __webpack_require__.r(__webpack_exports__);
 ==========================================================================================*/
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  SET_BEARER: function SET_BEARER(state, accessToken) {
+  LOGIN_USER: function LOGIN_USER(state, accessToken) {
+    //se manda el token para mostrar logueado al usuario
+    state.isUserLoggedIn = accessToken;
+    /**se agrega el token al header de axios */
+
     _http_axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.headers.common['Authorization'] = 'Bearer ' + accessToken;
   },
   LOGOUT_USER: function LOGOUT_USER(state) {
+    /**se reinician los estados quitando toda credencial del sistema */
     _http_axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.headers.common['Authorization'] = ' ';
     state.isUserLoggedIn = '', localStorage.removeItem("accessToken"), localStorage.removeItem("userInfo");
   }

@@ -13,13 +13,22 @@ use Illuminate\Http\Request;
 |
 */
 
-/**RUTAS PARA EL SISTEMA DE LOGUEADO*/
-Route::middleware('auth:api')->get('/user',function(Request $request){
-    return $request->user();
-});
-Route::post('login_usuario','UsuariosController@login_usuario');
-Route::middleware('auth:api')->post('logout_usuario','UsuariosController@logout_usuario');
-
-Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
+/**ruta para obtener tokens */
 Route::post('oauth/token','\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
+
+
+/**RUTAS PARA EL SISTEMA DE LOGUEADO*/
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('/user',function(Request $request){
+        return $request->user();
+    });
+    Route::post('logout_usuario','UsuariosController@logout_usuario');
+});
+
+
+
+Route::post('login_usuario','UsuariosController@login_usuario');
+Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
+
+
 /**FIN DE RUTAS DEL SISTEMA DE LOGUEADO */

@@ -104,6 +104,9 @@ const router = new Router({
                     path: '/apps/email',
                     redirect: '/apps/email/inbox',
                     name: 'email',
+                    meta:{
+                        authRequired:true
+                    }
                 },
                 {
                     path: '/apps/email/:filter',
@@ -130,14 +133,14 @@ const router = new Router({
                     name: 'ecommerce-shop',
                     component: () => import('./views/apps/eCommerce/ECommerceShop.vue'),
                     meta: {
+                        authRequired:true,
                         breadcrumb: [
                             { title: 'Home', url: '/' },
                             { title: 'eCommerce'},
                             { title: 'Shop', active: true },
                         ],
                         pageTitle: 'Shop',
-                        rule: 'editor',
-                        authRequired:true
+                        rule: 'editor'
                     }
                 },
                 {
@@ -145,14 +148,14 @@ const router = new Router({
                     name: 'ecommerce-wish-list',
                     component: () => import('./views/apps/eCommerce/ECommerceWishList.vue'),
                     meta: {
+                        authRequired:true,
                         breadcrumb: [
                             { title: 'Home', url: '/' },
                             { title: 'eCommerce', url:'/apps/eCommerce/shop'},
                             { title: 'Wish List', active: true },
                         ],
                         pageTitle: 'Wish List',
-                        rule: 'editor',
-                        authRequired:true
+                        rule: 'editor'
                     }
                 },
                 {
@@ -160,14 +163,14 @@ const router = new Router({
                     name: 'ecommerce-checkout',
                     component: () => import('./views/apps/eCommerce/ECommerceCheckout.vue'),
                     meta: {
+                        authRequired:true,
                         breadcrumb: [
                             { title: 'Home', url: '/' },
                             { title: 'eCommerce', url:'/apps/eCommerce/shop'},
                             { title: 'Checkout', active: true },
                         ],
                         pageTitle: 'Checkout',
-                        rule: 'editor',
-                        authRequired:true
+                        rule: 'editor'
                     }
                 },
                 /*
@@ -182,9 +185,6 @@ const router = new Router({
                 {
                     path: '/apps/eCommerce/item/',
                     redirect: '/apps/eCommerce/item/5546604',
-                    meta:{
-                        authRequired:true
-                    }
                 },
                 {
                     path: '/apps/eCommerce/item/:item_id',
@@ -199,8 +199,7 @@ const router = new Router({
                         ],
                         parent: "ecommerce-item-detail-view",
                         pageTitle: 'Item Details',
-                        rule: 'editor',
-                        authRequired:true
+                        rule: 'editor'
                     }
                 },
                 {
@@ -214,8 +213,7 @@ const router = new Router({
                             { title: 'List', active: true },
                         ],
                         pageTitle: 'User List',
-                        rule: 'editor',
-                        authRequired:true
+                        rule: 'editor'
                     },
                 },
                 {
@@ -246,6 +244,97 @@ const router = new Router({
                         rule: 'editor'
                     },
                 },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // =============================================================================
         // UI ELEMENTS
         // =============================================================================
@@ -1398,48 +1487,36 @@ router.afterEach(() => {
 })
 
 router.beforeEach((to, from, next) => {
-        // if (
-        //     to.path === "/pages/login" ||
-        //     to.path === "/pages/forgot-password" ||
-        //     to.path === "/pages/error-404" ||
-        //     to.path === "/pages/error-500" ||
-        //     to.path === "/pages/register" ||
-        //     to.path === "/callback" ||
-        //     to.path === "/pages/comingsoon" ||
-        //     (auth.isAuthenticated() || firebaseCurrentUser)
-        // ) {
-        //     return next();
-        // }
-
+         if ((
+             to.path === "/pages/login" ||
+             to.path === "/pages/forgot-password" ||
+             to.path === "/pages/error-404" ||
+             to.path === "/pages/error-500" ||
+             to.path === "/pages/register" ||
+             to.path === "/callback" ||
+             to.path === "/pages/comingsoon"
+         )){
+            if(localStorage.getItem('accessToken')){
+                next()
+            }
+         }
         //validar si ya esta logueado y redigir al dashboard
 
         // If auth required, check login. If login fails redirect to login page
             //router.push({ path: '/pages/login', query: { to: to.path } }).catch(err=>{})
             /** verificar que este logueado */
-            if (to.matched.some(record => record.meta.authRequired)) {
-                if (store.getters['auth/isLoggedIn']) {
-                    next()
-                    return
+            if (to.matched.some(record => record.meta.authRequired)){
+                if(localStorage.getItem('accessToken')){
+                     next()
                 }else
-                next('/pages/login')
-            } else {
-                //aqui se fija si se esta dirigiendo al login y ya esta logueado
-                //lo debe llevar al dashboard
-                if(to.path=="/pages/login"){
-                    if (store.getters['auth/isLoggedIn']) {
-                        next('/')
-                        return
-                    }
-                }else
-                next()
+                 next('/pages/login')
             }
-            //router.push({ path: '/pages/login' }).catch(err=>{})
-        return next()
+
+             next()
+        //router.push({ path: '/pages/login' }).catch(err=>{})
         // Specify the current path as the customState parameter, meaning it
         // will be returned to the application after auth
-        // auth.login({ target: to.path });
-
-
+        // auth.login({ target: to.path })
 
 });
 

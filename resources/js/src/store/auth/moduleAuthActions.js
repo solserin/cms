@@ -22,17 +22,14 @@ export default {
             // If there's user data in response
             if(response.data) {
               // Navigate User to homepage
-              router.push(router.currentRoute.query.to || '/').catch(err => {})
-
               // Set accessToken
               localStorage.setItem("accessToken", response.data.access_token)
-
               // Set bearer token in axios
-               commit("SET_BEARER", response.data.access_token)
-
+               commit("LOGIN_USER", response.data.access_token)
               // Update user details(perfil del usuario)
               commit('UPDATE_USER_INFO', payload.userDetails.email, {root: true})
 
+              router.push(router.currentRoute.query.to || '/').catch(err => {})
               resolve(response)
             }else {
               reject({message: "Error de usuario y/o contraseña."})
@@ -43,20 +40,24 @@ export default {
     },
 
     logout_user({ commit }) {
-        return new Promise((resolve,reject)=>{
-            axios.post("http://app.laravel/logout_usuario").then(resp=>{
-                if(resp.code){
-                    reject({message:"Error al cerrar sesion"})
-                }else{
-                    commit("LOGOUT_USER")
-                    // Navigate User to login
-                    router.push('/pages/login').catch(() => {})
-                    resolve(resp)
-                }
-            }).catch(err=>{
-                reject(err)
+        if(localStorage.getItem('accessToken')){
+            return new Promise((resolve,reject)=>{
+                axios.post("http://app.laravel/logout_usuario").then(resp=>{
+                    if(resp.code){
+                        reject({message:"Error al cerrar sesion"})
+                    }else{
+                        commit("LOGOUT_USER")
+                        // Navigate User to login
+                        router.push('/pages/login').catch(() => {})
+                        resolve(resp)
+                    }
+                }).catch(err=>{
+                    reject(err)
+                })
             })
-        })
+        }else{
+            router.push('/pages/login').catch(() => {})
+        }
       },
 
     registerUserJWT({ commit }, payload) {
@@ -88,5 +89,5 @@ export default {
       return new Promise((resolve) => {
         jwt.refreshToken().then(response => { resolve(response) })
       })
-    }
+    },
 }
