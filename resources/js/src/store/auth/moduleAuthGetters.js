@@ -8,4 +8,7 @@
 ==========================================================================================*/
 
 
-export default {}
+export default {
+    //verifico si el usuario esta logueado con un access token
+    isLoggedIn: state => !!state.isUserLoggedIn,
+}

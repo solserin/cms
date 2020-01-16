@@ -19,6 +19,7 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../src/store/store'
 
 
 Vue.use(Router)
@@ -75,6 +76,9 @@ const router = new Router({
                     path: '/apps/todo',
                     redirect: '/apps/todo/all',
                     name: 'todo',
+                    meta:{
+                        authRequired:true
+                    }
                 },
                 {
                     path: '/apps/todo/:filter',
@@ -83,6 +87,7 @@ const router = new Router({
                         rule: 'editor',
                         parent: "todo",
                         no_scroll: true,
+                        authRequired:true
                     }
                 },
                 {
@@ -92,6 +97,7 @@ const router = new Router({
                     meta: {
                         rule: 'editor',
                         no_scroll: true,
+                        authRequired:true
                     }
                 },
                 {
@@ -106,6 +112,7 @@ const router = new Router({
                         rule: 'editor',
                         parent: 'email',
                         no_scroll: true,
+                        authRequired:true
                     }
                 },
                 {
@@ -115,6 +122,7 @@ const router = new Router({
                     meta: {
                         rule: 'editor',
                         no_scroll: true,
+                        authRequired:true
                     }
                 },
                 {
@@ -128,7 +136,8 @@ const router = new Router({
                             { title: 'Shop', active: true },
                         ],
                         pageTitle: 'Shop',
-                        rule: 'editor'
+                        rule: 'editor',
+                        authRequired:true
                     }
                 },
                 {
@@ -142,7 +151,8 @@ const router = new Router({
                             { title: 'Wish List', active: true },
                         ],
                         pageTitle: 'Wish List',
-                        rule: 'editor'
+                        rule: 'editor',
+                        authRequired:true
                     }
                 },
                 {
@@ -156,7 +166,8 @@ const router = new Router({
                             { title: 'Checkout', active: true },
                         ],
                         pageTitle: 'Checkout',
-                        rule: 'editor'
+                        rule: 'editor',
+                        authRequired:true
                     }
                 },
                 /*
@@ -171,6 +182,9 @@ const router = new Router({
                 {
                     path: '/apps/eCommerce/item/',
                     redirect: '/apps/eCommerce/item/5546604',
+                    meta:{
+                        authRequired:true
+                    }
                 },
                 {
                     path: '/apps/eCommerce/item/:item_id',
@@ -185,7 +199,8 @@ const router = new Router({
                         ],
                         parent: "ecommerce-item-detail-view",
                         pageTitle: 'Item Details',
-                        rule: 'editor'
+                        rule: 'editor',
+                        authRequired:true
                     }
                 },
                 {
@@ -199,7 +214,8 @@ const router = new Router({
                             { title: 'List', active: true },
                         ],
                         pageTitle: 'User List',
-                        rule: 'editor'
+                        rule: 'editor',
+                        authRequired:true
                     },
                 },
                 {
@@ -1398,10 +1414,26 @@ router.beforeEach((to, from, next) => {
         //validar si ya esta logueado y redigir al dashboard
 
         // If auth required, check login. If login fails redirect to login page
-        if(to.meta.authRequired) {
-            router.push({ path: '/pages/login', query: { to: to.path } }).catch(err=>{})
-        }
-
+            //router.push({ path: '/pages/login', query: { to: to.path } }).catch(err=>{})
+            /** verificar que este logueado */
+            if (to.matched.some(record => record.meta.authRequired)) {
+                if (store.getters['auth/isLoggedIn']) {
+                    next()
+                    return
+                }else
+                next('/pages/login')
+            } else {
+                //aqui se fija si se esta dirigiendo al login y ya esta logueado
+                //lo debe llevar al dashboard
+                if(to.path=="/pages/login"){
+                    if (store.getters['auth/isLoggedIn']) {
+                        next('/')
+                        return
+                    }
+                }else
+                next()
+            }
+            //router.push({ path: '/pages/login' }).catch(err=>{})
         return next()
         // Specify the current path as the customState parameter, meaning it
         // will be returned to the application after auth

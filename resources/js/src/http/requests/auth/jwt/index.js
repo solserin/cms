@@ -5,6 +5,10 @@ import store from "../../../../store/store.js"
 let isAlreadyFetchingAccessToken = false
 let subscribers = []
 
+if (localStorage.getItem('accessToken')) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('accessToken')
+}
+
 function onAccessTokenFetched(access_token) {
   subscribers = subscribers.filter(callback => callback(access_token))
 }
@@ -15,13 +19,13 @@ function addSubscriber(callback) {
 
 export default {
   init() {
+
     axios.interceptors.response.use(function (response) {
       return response
     }, function (error) {
       // const { config, response: { status } } = error
       const { config, response } = error
       const originalRequest = config
-
       // if (status === 401) {
       if (response && response.status === 401) {
         if (!isAlreadyFetchingAccessToken) {

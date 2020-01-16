@@ -10,5 +10,5 @@
 
 
 export default {
-    isUserLoggedIn: () => (localStorage.getItem('userInfo'))
+    isUserLoggedIn:localStorage.getItem('accessToken') || ''
 }

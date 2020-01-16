@@ -22,7 +22,8 @@ const userDefaults = {
   about       : "Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.",
   photoURL    : require("@assets/images/portrait/small/avatar-s-11.jpg"), // From Auth
   status      : "online",
-  userRole    : "admin"
+  userRole    : "admin",
+  userRole_Id    : "1"
 }
 
 const userInfoLocalStorage = JSON.parse(localStorage.getItem("userInfo")) || {}

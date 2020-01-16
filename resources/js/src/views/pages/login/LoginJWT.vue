@@ -32,15 +32,18 @@
     <div class="flex flex-wrap justify-between mb-3">
       <vs-button :disabled="!validateForm" @click="loginJWT">Login</vs-button>
     </div>
+    {{isLoggedIn}}
   </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex"
+import store from '../../../store/store'
 export default {
   data() {
     return {
       email: 'admin@admin.com',
-      password: '',
+      password: 'password',
       checkbox_remember_me: false
     }
   },
@@ -48,12 +51,14 @@ export default {
     validateForm() {
       return !this.errors.any() && this.email != '' && this.password != '';
     },
+    ...mapGetters({
+        isLoggedIn:"auth/isLoggedIn"
+    })
   },
   methods: {
     checkLogin() {
       // If user is already logged in notify
-      if (this.$store.state.auth.isUserLoggedIn()) {
-
+      if (store.getters['auth/isLoggedIn']) {
         // Close animation if passed as payload
         // this.$vs.loading.close()
 
