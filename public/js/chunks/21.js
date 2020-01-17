@@ -9022,7 +9022,7 @@ __webpack_require__.r(__webpack_exports__);
 // },
 {
   url: null,
-  name: "Dashboardddddd",
+  name: "Dashboard",
   tag: "2",
   tagColor: "warning",
   icon: "HomeIcon",

@@ -19,11 +19,12 @@ Route::post('oauth/token','\Laravel\Passport\Http\Controllers\AccessTokenControl
 
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/user',function(Request $request){
-        return $request->user();
-    });
     Route::post('logout_usuario','UsuariosController@logout_usuario');
+
+    /**RUTA PARA OBTENER LOS PERMISOS DEL USUARIO */
+    Route::get('get_permisos','UsuariosController@get_permisos');
 });
+
 
 
 

@@ -7,12 +7,13 @@ use BadMethodCallException;
 use App\Traits\ApiResponser;
 use Illuminate\Database\QueryException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
@@ -58,6 +59,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
+        //CON ESTO VALIDO QUE SI EL USUARIO NO ESTA AUTENTICADO NO PUEDE OBTENER EL SERVICIO Y RESPONDE CON
+        /**CODIGO DE ERROR O REDIRIGE AL INICIO */
+        if($exception instanceof RouteNotFoundException){
+            if($this->isFronted($request)){
+                return redirect('/');
+             }else{
+                return $this->errorResponse('No autenticado',401);
+             }
+        }
+
         //con esto validamos cuando no se cumplen con las validaciones en las peticiones post
         if($exception instanceof ValidationException){
             return $this->convertValidationExceptionToResponse($exception,$request);
