@@ -58,10 +58,11 @@ export default {
   methods: {
     checkLogin() {
       // If user is already logged in notify
-      if (store.getters['auth/isLoggedIn']) {
+      if (localStorage.getItem('accessToken')) {
+        location.reload();
+        return false;
         // Close animation if passed as payload
         // this.$vs.loading.close()
-
         this.$vs.notify({
           title: 'Atención',
           text: 'Su cuenta ya ha iniciado sesión!',

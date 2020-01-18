@@ -95,13 +95,13 @@ class UsuariosController extends ApiController
                                     'id'=>$valor->id,
                                     'url'=>$valor->url,
                                     'name'=>$valor->modulo,
+                                    'slug'=>$valor->modulo,
                                     'secciones_id'=>$valor->secciones_id,
                                     'icon'=>$valor->icon
                                 ]);
                               }
                           }
                     }
-
                     array_push($grupos,[
                         'id'=>$grupo->id,
                         'url'=>null,
@@ -116,6 +116,7 @@ class UsuariosController extends ApiController
                         'id'=>$grupo->id,
                         'url'=>$grupo->url,
                         'name'=>$grupo->modulo,
+                        'slug'=>$grupo->modulo,
                         'secciones_id'=>$grupo->secciones_id,
                         'icon'=>$grupo->icon
                     ]);

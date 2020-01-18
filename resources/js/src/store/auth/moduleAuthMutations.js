@@ -16,12 +16,12 @@ export default {
     /**se agrega el token al header de axios */
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken
   },
-
   LOGOUT_USER(state) {
-      /**se reinician los estados quitando toda credencial del sistema */
+    /**se reinician los estados quitando toda credencial del sistema */
     axios.defaults.headers.common['Authorization'] = ' '
     state.isUserLoggedIn='',
     localStorage.removeItem("accessToken"),
     localStorage.removeItem("userInfo")
+    localStorage.removeItem("AuthMenu")
   }
 }

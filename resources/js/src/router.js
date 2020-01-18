@@ -327,14 +327,6 @@ const router = new Router({
 
 
 
-
-
-
-
-
-
-
-
         // =============================================================================
         // UI ELEMENTS
         // =============================================================================
@@ -1487,19 +1479,21 @@ router.afterEach(() => {
 })
 
 router.beforeEach((to, from, next) => {
-         if ((
-             to.path === "/pages/login" ||
-             to.path === "/pages/forgot-password" ||
-             to.path === "/pages/error-404" ||
-             to.path === "/pages/error-500" ||
-             to.path === "/pages/register" ||
-             to.path === "/callback" ||
-             to.path === "/pages/comingsoon"
-         )){
+
+    /**validando paginas especiales */
+         if (
+             (
+                to.path === "/pages/login" ||
+                to.path === "/pages/forgot-password" ||
+                to.path === "/callback"
+            )
+         )
+         {
             if(localStorage.getItem('accessToken')){
-                next()
+               return next('/')
             }
          }
+
         //validar si ya esta logueado y redigir al dashboard
 
         // If auth required, check login. If login fails redirect to login page
@@ -1507,12 +1501,13 @@ router.beforeEach((to, from, next) => {
             /** verificar que este logueado */
             if (to.matched.some(record => record.meta.authRequired)){
                 if(localStorage.getItem('accessToken')){
-                     next()
+                   return  next()
                 }else
-                 next('/pages/login')
+               return  next('/pages/login')
+            }else{
+            return  next()
             }
-
-             next()
+        //
         //router.push({ path: '/pages/login' }).catch(err=>{})
         // Specify the current path as the customState parameter, meaning it
         // will be returned to the application after auth

@@ -27,7 +27,7 @@ export default [
   //   icon: "MailIcon",
   //   i18n: "Email",
   // },
-  {
+  /*{
     url: null,
     name: "Dashboard",
     tag: "2",
@@ -48,7 +48,7 @@ export default [
         i18n: "eCommerce",
       },
     ]
-  },
+  },*/
   {
     header: "Apps",
     icon: "PackageIcon",

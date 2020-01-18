@@ -3309,6 +3309,11 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
+    if (!localStorage.getItem("accessToken")) {
+      this.$router.push('/pages/login');
+      return false;
+    }
+
     var color = this.navbarColor == "#fff" && this.isThemeDark ? "#10163a" : this.navbarColor;
     this.updateNavbarColor(color);
     this.setNavMenuVisibility(this.$store.state.mainLayoutType); // Dynamic Watchers for tour
@@ -3341,6 +3346,17 @@ __webpack_require__.r(__webpack_exports__);
 
       delete _this2.dynamicWatchers[i];
     });
+  },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    if (localStorage.getItem("AuthMenu")) {
+      this.navMenuItems = JSON.parse(localStorage.getItem("AuthMenu"));
+    } else {
+      this.$store.dispatch('auth/crear_menu').then(function (res) {
+        _this3.navMenuItems = JSON.parse(localStorage.getItem("AuthMenu"));
+      });
+    }
   }
 });
 
@@ -9020,25 +9036,30 @@ __webpack_require__.r(__webpack_exports__);
 //   icon: "MailIcon",
 //   i18n: "Email",
 // },
-{
+
+/*{
   url: null,
   name: "Dashboard",
   tag: "2",
   tagColor: "warning",
   icon: "HomeIcon",
   i18n: "Dashboard",
-  submenu: [{
-    url: '/dashboard/analytics',
-    name: "Analytics",
-    slug: "dashboard-analytics",
-    i18n: "Analytics"
-  }, {
-    url: '/dashboard/ecommerce',
-    name: "eCommerce",
-    slug: "dashboard-ecommerce",
-    i18n: "eCommerce"
-  }]
-}, {
+  submenu: [
+    {
+      url: '/dashboard/analytics',
+      name: "Analytics",
+      slug: "dashboard-analytics",
+      i18n: "Analytics",
+    },
+    {
+      url: '/dashboard/ecommerce',
+      name: "eCommerce",
+      slug: "dashboard-ecommerce",
+      i18n: "eCommerce",
+    },
+  ]
+},*/
+{
   header: "Apps",
   icon: "PackageIcon",
   i18n: "Apps",

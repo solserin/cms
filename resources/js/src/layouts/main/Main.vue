@@ -217,6 +217,10 @@ export default {
     }
   },
   created() {
+      if (!localStorage.getItem("accessToken")) {
+           this.$router.push('/pages/login')
+           return false
+       }
     const color = this.navbarColor == "#fff" && this.isThemeDark ? "#10163a" : this.navbarColor
     this.updateNavbarColor(color)
     this.setNavMenuVisibility(this.$store.state.mainLayoutType)
@@ -246,8 +250,17 @@ export default {
       this.dynamicWatchers[i]()
       delete this.dynamicWatchers[i]
     })
-  }
-}
+  },
+  mounted() {
 
+            if (localStorage.getItem("AuthMenu")) {
+                this.navMenuItems=JSON.parse(localStorage.getItem("AuthMenu"))
+            }else{
+                    this.$store.dispatch('auth/crear_menu').then(res=>{
+                        this.navMenuItems=JSON.parse(localStorage.getItem("AuthMenu"))
+                    })
+            }
+       }
+}
 </script>
 

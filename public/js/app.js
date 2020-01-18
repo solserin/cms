@@ -118681,9 +118681,10 @@ router.afterEach(function () {
   }
 });
 router.beforeEach(function (to, from, next) {
-  if (to.path === "/pages/login" || to.path === "/pages/forgot-password" || to.path === "/pages/error-404" || to.path === "/pages/error-500" || to.path === "/pages/register" || to.path === "/callback" || to.path === "/pages/comingsoon") {
+  /**validando paginas especiales */
+  if (to.path === "/pages/login" || to.path === "/pages/forgot-password" || to.path === "/callback") {
     if (localStorage.getItem('accessToken')) {
-      next();
+      return next('/');
     }
   } //validar si ya esta logueado y redigir al dashboard
   // If auth required, check login. If login fails redirect to login page
@@ -118696,14 +118697,16 @@ router.beforeEach(function (to, from, next) {
     return record.meta.authRequired;
   })) {
     if (localStorage.getItem('accessToken')) {
-      next();
-    } else next('/pages/login');
-  }
-
-  next(); //router.push({ path: '/pages/login' }).catch(err=>{})
+      return next();
+    } else return next('/pages/login');
+  } else {
+    return next();
+  } //
+  //router.push({ path: '/pages/login' }).catch(err=>{})
   // Specify the current path as the customState parameter, meaning it
   // will be returned to the application after auth
   // auth.login({ target: to.path })
+
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
@@ -118844,7 +118847,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   // JWT
   loginJWT: function loginJWT(_ref, payload) {
-    var commit = _ref.commit;
+    var commit = _ref.commit,
+        dispatch = _ref.dispatch;
     return new Promise(function (resolve, reject) {
       _http_requests_auth_jwt_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].login(payload.userDetails.email, payload.userDetails.password).then(function (response) {
         // If there's user data in response
@@ -118853,12 +118857,12 @@ __webpack_require__.r(__webpack_exports__);
           // Set accessToken
           localStorage.setItem("accessToken", response.data.access_token); // Set bearer token in axios
 
-          commit("LOGIN_USER", response.data.access_token); // Update user details(perfil del usuario)
+          commit("LOGIN_USER", response.data.access_token);
+          dispatch('crear_menu'); // Update user details(perfil del usuario)
 
           commit('UPDATE_USER_INFO', payload.userDetails.email, {
             root: true
           });
-          _router__WEBPACK_IMPORTED_MODULE_2__["default"].push(_router__WEBPACK_IMPORTED_MODULE_2__["default"].currentRoute.query.to || '/').catch(function (err) {});
           resolve(response);
         } else {
           reject({
@@ -118870,11 +118874,33 @@ __webpack_require__.r(__webpack_exports__);
       });
     });
   },
-  logout_user: function logout_user(_ref2) {
+  crear_menu: function crear_menu(_ref2) {
     var commit = _ref2.commit;
 
     if (localStorage.getItem('accessToken')) {
       return new Promise(function (resolve, reject) {
+        _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].get("http://app.laravel/get_permisos").then(function (resp) {
+          if (resp.code) {
+            reject({
+              message: "Error"
+            });
+          } else {
+            localStorage.setItem("AuthMenu", JSON.stringify(resp.data));
+            _router__WEBPACK_IMPORTED_MODULE_2__["default"].push(_router__WEBPACK_IMPORTED_MODULE_2__["default"].currentRoute.query.to || '/').catch(function (err) {});
+            resolve(resp);
+          }
+        }).catch(function (err) {
+          reject(err);
+        });
+      });
+    }
+  },
+  logout_user: function logout_user(_ref3) {
+    var commit = _ref3.commit;
+
+    if (localStorage.getItem('accessToken')) {
+      return new Promise(function (resolve, reject) {
+        commit("LOGIN_USER", localStorage.getItem('accessToken'));
         _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].post("http://app.laravel/logout_usuario").then(function (resp) {
           if (resp.code) {
             reject({
@@ -118894,8 +118920,8 @@ __webpack_require__.r(__webpack_exports__);
       _router__WEBPACK_IMPORTED_MODULE_2__["default"].push('/pages/login').catch(function () {});
     }
   },
-  registerUserJWT: function registerUserJWT(_ref3, payload) {
-    var commit = _ref3.commit;
+  registerUserJWT: function registerUserJWT(_ref4, payload) {
+    var commit = _ref4.commit;
     var _payload$userDetails = payload.userDetails,
         displayName = _payload$userDetails.displayName,
         email = _payload$userDetails.email,
@@ -118991,6 +119017,7 @@ __webpack_require__.r(__webpack_exports__);
     /**se reinician los estados quitando toda credencial del sistema */
     _http_axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.headers.common['Authorization'] = ' ';
     state.isUserLoggedIn = '', localStorage.removeItem("accessToken"), localStorage.removeItem("userInfo");
+    localStorage.removeItem("AuthMenu");
   }
 });
 

@@ -139,9 +139,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     checkLogin: function checkLogin() {
       // If user is already logged in notify
-      if (_store_store__WEBPACK_IMPORTED_MODULE_1__["default"].getters['auth/isLoggedIn']) {
-        // Close animation if passed as payload
+      if (localStorage.getItem('accessToken')) {
+        location.reload();
+        return false; // Close animation if passed as payload
         // this.$vs.loading.close()
+
         this.$vs.notify({
           title: 'Atención',
           text: 'Su cuenta ya ha iniciado sesión!',
