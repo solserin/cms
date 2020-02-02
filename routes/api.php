@@ -23,13 +23,23 @@ Route::middleware(['auth:api'])->group(function () {
 
     /**RUTA PARA OBTENER LOS PERMISOS DEL USUARIO */
     Route::get('get_permisos','UsuariosController@get_permisos');
+
+
+
+    
+
+    /**LAS RUTAS QUE ESTAN CONTROLADAS CON EL MIDDLEWARE "permiso" RECIBEN 2 PARAMETROS
+     * EL PRIMERO ES EL NUMERO DEL MODULO
+     * EL SEGUNDO EL NUMERO DE PERMISO
+     */
+    Route::get('usuarios', 'UsuariosController@index')->middleware('permiso:1,1');
 });
 
 
 
 
 Route::post('login_usuario','UsuariosController@login_usuario');
-Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
+//Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
 
 
 /**FIN DE RUTAS DEL SISTEMA DE LOGUEADO */
