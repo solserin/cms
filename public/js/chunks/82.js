@@ -119,19 +119,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      email: 'admin@admin.com',
-      password: 'password',
+      email: "admin@admin.com",
+      password: "password",
       checkbox_remember_me: false
     };
   },
   computed: _objectSpread({
     validateForm: function validateForm() {
-      return !this.errors.any() && this.email != '' && this.password != '';
+      return !this.errors.any() && this.email != "" && this.password != "";
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     isLoggedIn: "auth/isLoggedIn"
@@ -139,17 +140,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     checkLogin: function checkLogin() {
       // If user is already logged in notify
-      if (localStorage.getItem('accessToken')) {
+      if (localStorage.getItem("accessToken")) {
         location.reload();
         return false; // Close animation if passed as payload
         // this.$vs.loading.close()
 
         this.$vs.notify({
-          title: 'Atención',
-          text: 'Su cuenta ya ha iniciado sesión!',
-          iconPack: 'feather',
-          icon: 'icon-alert-circle',
-          color: 'warning'
+          title: "Atención",
+          text: "Su cuenta ya ha iniciado sesión!",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "warning"
         });
         return false;
       }
@@ -169,23 +170,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           password: this.password
         }
       };
-      this.$store.dispatch('auth/loginJWT', payload).then(function () {
+      this.$store.dispatch("auth/loginJWT", payload).then(function () {
         _this.$vs.loading.close();
       }).catch(function (error) {
         _this.$vs.loading.close();
 
         _this.$vs.notify({
-          title: 'Error',
-          text: 'Debe ingresar un usuario y contraseña correcto!',
-          iconPack: 'feather',
-          icon: 'icon-alert-circle',
-          color: 'danger'
+          title: "Error",
+          text: "Debe ingresar un usuario y contraseña correcto!",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger"
         });
       });
     },
     registerUser: function registerUser() {
       if (!this.checkLogin()) return;
-      this.$router.push('/pages/register').catch(function () {});
+      this.$router.push("/pages/register").catch(function () {});
     }
   }
 });
@@ -478,8 +479,7 @@ var render = function() {
           )
         ],
         1
-      ),
-      _vm._v("\n  " + _vm._s(_vm.isLoggedIn) + "\n")
+      )
     ],
     1
   )

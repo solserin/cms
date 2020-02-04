@@ -317,6 +317,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "the-footer",
   props: {
@@ -1396,6 +1399,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -1426,7 +1432,7 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     navbarColor: function navbarColor() {
       var color = "#fff";
-      if (this.navbarType === "sticky") color = "#f7f7f7";else if (this.navbarType === 'static') {
+      if (this.navbarType === "sticky") color = "#f7f7f7";else if (this.navbarType === "static") {
         if (this.scrollY < 50) {
           color = "#f7f7f7";
         }
@@ -1515,6 +1521,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -1546,7 +1556,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     textColor: function textColor() {
       return {
-        'text-white': this.navbarColor != '#10163a' && this.$store.state.theme === 'dark' || this.navbarColor != '#fff' && this.$store.state.theme !== 'dark'
+        "text-white": this.navbarColor != "#10163a" && this.$store.state.theme === "dark" || this.navbarColor != "#fff" && this.$store.state.theme !== "dark"
       };
     },
     windowWidth: function windowWidth() {
@@ -1559,7 +1569,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     showSidebar: function showSidebar() {
-      this.$store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', true);
+      this.$store.commit("TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE", true);
     }
   }
 });
@@ -2137,6 +2147,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2150,7 +2167,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     logout: function logout() {
-      this.$store.dispatch('auth/logout_user');
+      this.$store.dispatch("auth/logout_user");
     }
   }
 });
@@ -4140,7 +4157,9 @@ var render = function(_h, _vm) {
     { staticClass: "the-footer flex-wrap justify-between", class: _vm.classes },
     [
       _c("span", [
-        _vm._v("COPYRIGHT © " + _vm._s(new Date().getFullYear()) + " "),
+        _vm._v(
+          "\n    COPYRIGHT © " + _vm._s(new Date().getFullYear()) + "\n    "
+        ),
         _c(
           "a",
           {
@@ -4152,7 +4171,7 @@ var render = function(_h, _vm) {
           },
           [_vm._v("Pixinvent")]
         ),
-        _vm._v(", All rights Reserved")
+        _vm._v(", All rights Reserved\n  ")
       ]),
       _vm._v(" "),
       _c(
@@ -5394,10 +5413,6 @@ var render = function() {
             attrs: { color: _vm.navbarColor }
           },
           [
-            _vm.windowWidth >= 992
-              ? _c("bookmarks", { attrs: { navbarColor: _vm.navbarColor } })
-              : _vm._e(),
-            _vm._v(" "),
             _c(
               "router-link",
               {
@@ -5416,11 +5431,7 @@ var render = function() {
               1
             ),
             _vm._v(" "),
-            _c("i18n"),
-            _vm._v(" "),
-            _c("search-bar"),
-            _vm._v(" "),
-            _c("cart-drop-down"),
+            _c("search-bar", { staticClass: "pr-3" }),
             _vm._v(" "),
             _c("notification-drop-down"),
             _vm._v(" "),
@@ -5479,17 +5490,9 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _vm.windowWidth >= 992
-              ? _c("bookmarks", { attrs: { navbarColor: _vm.navbarColor } })
-              : _vm._e(),
-            _vm._v(" "),
             _c("vs-spacer"),
             _vm._v(" "),
-            _c("i18n"),
-            _vm._v(" "),
-            _c("search-bar"),
-            _vm._v(" "),
-            _c("cart-drop-down"),
+            _c("search-bar", { staticClass: "pr-3" }),
             _vm._v(" "),
             _c("notification-drop-down"),
             _vm._v(" "),
@@ -6378,100 +6381,6 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("span", { staticClass: "ml-2" }, [_vm._v("Profile")])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      {
-                        staticClass:
-                          "flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white",
-                        on: {
-                          click: function($event) {
-                            _vm.$router.push("/apps/email").catch(function() {})
-                          }
-                        }
-                      },
-                      [
-                        _c("feather-icon", {
-                          attrs: { icon: "MailIcon", svgClasses: "w-4 h-4" }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "ml-2" }, [_vm._v("Inbox")])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      {
-                        staticClass:
-                          "flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white",
-                        on: {
-                          click: function($event) {
-                            _vm.$router.push("/apps/todo").catch(function() {})
-                          }
-                        }
-                      },
-                      [
-                        _c("feather-icon", {
-                          attrs: {
-                            icon: "CheckSquareIcon",
-                            svgClasses: "w-4 h-4"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "ml-2" }, [_vm._v("Tasks")])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      {
-                        staticClass:
-                          "flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white",
-                        on: {
-                          click: function($event) {
-                            _vm.$router.push("/apps/chat").catch(function() {})
-                          }
-                        }
-                      },
-                      [
-                        _c("feather-icon", {
-                          attrs: {
-                            icon: "MessageSquareIcon",
-                            svgClasses: "w-4 h-4"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "ml-2" }, [_vm._v("Chat")])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      {
-                        staticClass:
-                          "flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white",
-                        on: {
-                          click: function($event) {
-                            _vm.$router
-                              .push("/apps/eCommerce/wish-list")
-                              .catch(function() {})
-                          }
-                        }
-                      },
-                      [
-                        _c("feather-icon", {
-                          attrs: { icon: "HeartIcon", svgClasses: "w-4 h-4" }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "ml-2" }, [
-                          _vm._v("Wish List")
-                        ])
                       ],
                       1
                     ),
