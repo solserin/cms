@@ -9,6 +9,8 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _http_axios_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../http/axios/index */ "./resources/js/src/http/axios/index.js");
+/* harmony import */ var _VariablesGlobales__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../VariablesGlobales */ "./resources/js/src/VariablesGlobales.js");
 //
 //
 //
@@ -47,11 +49,75 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/**VARIABLES GLOBALES */
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      value1: ''
+      email: ""
     };
+  },
+  methods: {
+    submitForm: function submitForm() {
+      var _this = this;
+
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          var payload = {
+            email: _this.email
+          };
+
+          _this.$vs.loading();
+
+          _http_axios_index__WEBPACK_IMPORTED_MODULE_0__["default"].post(_VariablesGlobales__WEBPACK_IMPORTED_MODULE_1__["api_url"] + "password/email", payload).then(function (resp) {
+            //exito con la peticion
+            _this.$vs.notify({
+              time: 6000,
+              title: "Recuperar contraseña",
+              text: resp.data,
+              color: "success"
+            });
+
+            _this.email = "";
+
+            _this.$vs.loading.close();
+          }).catch(function (error) {
+            if (error) {
+              _this.$vs.notify({
+                time: 6000,
+                title: "Recuperar contraseña",
+                text: "Usuario no registrado, intente nuevamente.",
+                color: "danger"
+              });
+            }
+
+            _this.$vs.loading.close();
+          });
+        } else {// error de validacion de datos
+        }
+      });
+      return false;
+    }
   }
 });
 
@@ -120,30 +186,63 @@ var render = function() {
                       [
                         _c("div", { staticClass: "vx-card__title mb-8" }, [
                           _c("h4", { staticClass: "mb-4" }, [
-                            _vm._v("Recover your password")
+                            _vm._v("Recuperar su contraseña")
                           ]),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
-                              "Please enter your email address and we'll send you instructions on how to reset your password."
+                              "Por favor ingrese su correo electrónico a donde enviaremos las instrucciones para recuperar su cuenta."
                             )
                           ])
                         ]),
                         _vm._v(" "),
-                        _c("vs-input", {
-                          staticClass: "w-full mb-8",
-                          attrs: {
-                            type: "email",
-                            "label-placeholder": "Email"
-                          },
-                          model: {
-                            value: _vm.value1,
-                            callback: function($$v) {
-                              _vm.value1 = $$v
+                        _c("div", { staticClass: "vx-col sm:w-full pb-6" }, [
+                          _c(
+                            "form",
+                            {
+                              on: {
+                                submit: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.submitForm($event)
+                                }
+                              }
                             },
-                            expression: "value1"
-                          }
-                        }),
+                            [
+                              _c("vs-input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|email|min:3",
+                                    expression: "'required|email|min:3'"
+                                  }
+                                ],
+                                staticClass: "w-full mb-4",
+                                attrs: {
+                                  type: "email",
+                                  "data-vv-validate-on": "blur",
+                                  "label-placeholder": "Email (Usuario)",
+                                  icon: "icon icon-user",
+                                  "icon-pack": "feather",
+                                  name: "email",
+                                  "data-vv-as": "email"
+                                },
+                                model: {
+                                  value: _vm.email,
+                                  callback: function($$v) {
+                                    _vm.email = $$v
+                                  },
+                                  expression: "email"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "text-danger text-sm" }, [
+                            _vm._v(_vm._s(_vm.errors.first("email")))
+                          ])
+                        ]),
                         _vm._v(" "),
                         _c(
                           "vs-button",
@@ -151,16 +250,22 @@ var render = function() {
                             staticClass: "px-4 w-full md:w-auto",
                             attrs: { type: "border", to: "/pages/login" }
                           },
-                          [_vm._v("Back To Login")]
+                          [_vm._v("Regresar")]
                         ),
                         _vm._v(" "),
                         _c(
                           "vs-button",
                           {
                             staticClass:
-                              "float-right px-4 w-full md:w-auto mt-3 mb-8 md:mt-0 md:mb-0"
+                              "float-right px-4 w-full md:w-auto mt-3 mb-8 md:mt-0 md:mb-0",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.submitForm($event)
+                              }
+                            }
                           },
-                          [_vm._v("Recover Password")]
+                          [_vm._v("Recuperar Contraseña")]
                         )
                       ],
                       1

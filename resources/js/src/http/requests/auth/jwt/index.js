@@ -63,7 +63,9 @@ export default {
                 })
                 return retryOriginalRequest
             } else {
-                store.dispatch("auth/logout_force")
+                /**VALIDO QUE EL ERROR NO SEA EL 422 DE ERROR PROCESING "CAUSADO POR EL RESET PASSWORD" */
+                if (response.status != 422)
+                    store.dispatch("auth/logout_force")
             }
             return Promise.reject(error)
         })

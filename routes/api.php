@@ -42,6 +42,13 @@ Route::post('login_usuario','UsuariosController@login_usuario');
 //RUTA DEL REFRESH TOKEN
 Route::post('refresh_token','UsuariosController@refresh_token');
 
+//RECUPERAR CONTRASEÑA
+Route::post('/password/email', 'Auth\Api\ForgotPasswordController@sendResetLinkEmail');
+Route::post('/password/reset', 'Auth\Api\ResetPasswordController@reset');
+
+
+
+
 
 
 //Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);

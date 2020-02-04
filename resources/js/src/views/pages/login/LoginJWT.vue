@@ -105,11 +105,6 @@ export default {
             color: "danger"
           });
         });
-    },
-
-    registerUser() {
-      if (!this.checkLogin()) return;
-      this.$router.push("/pages/register").catch(() => {});
     }
   }
 };

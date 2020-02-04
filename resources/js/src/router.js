@@ -1405,7 +1405,7 @@ const router = new Router({
                     }
                 },
                 {
-                    path: '/pages/reset-password',
+                    path: '/pages/reset-password/:token',
                     name: 'page-reset-password',
                     component: () => import('@/views/pages/ResetPassword.vue'),
                     meta: {

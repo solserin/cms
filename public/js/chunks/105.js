@@ -9,6 +9,8 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _http_axios_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../http/axios/index */ "./resources/js/src/http/axios/index.js");
+/* harmony import */ var _VariablesGlobales__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../VariablesGlobales */ "./resources/js/src/VariablesGlobales.js");
 //
 //
 //
@@ -52,13 +54,107 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/**VARIABLES GLOBALES */
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      value1: '',
-      value2: '',
-      value3: ''
+      email: "",
+      password: "",
+      password_confirmation: ""
     };
+  },
+  methods: {
+    submitForm: function submitForm() {
+      var _this = this;
+
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          var payload = {
+            email: _this.email,
+            password: _this.password,
+            password_confirmation: _this.password_confirmation,
+            token: _this.$route.params.token
+          };
+
+          _this.$vs.loading();
+
+          _http_axios_index__WEBPACK_IMPORTED_MODULE_0__["default"].post(_VariablesGlobales__WEBPACK_IMPORTED_MODULE_1__["api_url"] + "password/reset", payload).then(function (resp) {
+            //exito con la peticion
+            _this.$vs.notify({
+              time: 6000,
+              title: "Cambiar Contraseña",
+              text: resp.data,
+              color: "success"
+            });
+
+            _this.email = "";
+            _this.password = "";
+            _this.password_confirmation = "";
+
+            _this.$vs.loading.close();
+          }).catch(function (error) {
+            if (error) {
+              _this.$vs.notify({
+                time: 8000,
+                title: "Error",
+                text: "Verifique sus datos: [usuario, contraseñas o cree un nuevo correo de renovación de contraseñas] e intente nuevamente.",
+                color: "danger"
+              });
+            }
+
+            _this.$vs.loading.close();
+          });
+        } else {// error de validacion de datos
+        }
+      });
+      return false;
+    }
   }
 });
 
@@ -118,94 +214,223 @@ var render = function() {
                   "div",
                   {
                     staticClass:
-                      "vx-col sm:w-full md:w-full lg:w-1/2 mx-auto self-center  d-theme-dark-bg"
+                      "vx-col sm:w-full md:w-full lg:w-1/2 mx-auto self-center d-theme-dark-bg"
                   },
                   [
-                    _c(
-                      "div",
-                      { staticClass: "p-8" },
-                      [
-                        _c("div", { staticClass: "vx-card__title mb-8" }, [
-                          _c("h4", { staticClass: "mb-4" }, [
-                            _vm._v("Reset Password")
-                          ]),
-                          _vm._v(" "),
-                          _c("p", [_vm._v("Please enter your new password.")])
+                    _c("div", { staticClass: "p-8" }, [
+                      _c("div", { staticClass: "vx-card__title mb-8" }, [
+                        _c("h4", { staticClass: "mb-4" }, [
+                          _vm._v("Cambiar Contraseña")
                         ]),
                         _vm._v(" "),
-                        _c("vs-input", {
-                          staticClass: "w-full mb-6",
-                          attrs: {
-                            type: "email",
-                            "label-placeholder": "Email"
-                          },
-                          model: {
-                            value: _vm.value1,
-                            callback: function($$v) {
-                              _vm.value1 = $$v
-                            },
-                            expression: "value1"
+                        _c("p", [
+                          _vm._v(
+                            "Por favor ingrese su correo y su nueva contraseña."
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "form",
+                        {
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.submitForm($event)
+                            }
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("vs-input", {
-                          staticClass: "w-full mb-6",
-                          attrs: {
-                            type: "password",
-                            "label-placeholder": "Password"
-                          },
-                          model: {
-                            value: _vm.value2,
-                            callback: function($$v) {
-                              _vm.value2 = $$v
-                            },
-                            expression: "value2"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("vs-input", {
-                          staticClass: "w-full mb-8",
-                          attrs: {
-                            type: "password",
-                            "label-placeholder": "Confirm Password"
-                          },
-                          model: {
-                            value: _vm.value3,
-                            callback: function($$v) {
-                              _vm.value3 = $$v
-                            },
-                            expression: "value3"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "flex flex-wrap justify-between flex-col-reverse sm:flex-row"
-                          },
-                          [
-                            _c(
-                              "vs-button",
+                        },
+                        [
+                          _c("vs-input", {
+                            directives: [
                               {
-                                staticClass:
-                                  "w-full sm:w-auto mb-8 sm:mb-auto mt-3 sm:mt-auto",
-                                attrs: { type: "border", to: "/pages/login" }
+                                name: "validate",
+                                rawName: "v-validate",
+                                value: "required|email|min:3",
+                                expression: "'required|email|min:3'"
+                              }
+                            ],
+                            staticClass: "w-full mb-8",
+                            attrs: {
+                              type: "email",
+                              icon: "icon icon-user",
+                              "icon-pack": "feather",
+                              "data-vv-validate-on": "blur",
+                              "label-placeholder": "Email",
+                              name: "email",
+                              "data-vv-as": "email"
+                            },
+                            on: {
+                              keyup: function($event) {
+                                if (
+                                  !$event.type.indexOf("key") &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key,
+                                    "Enter"
+                                  )
+                                ) {
+                                  return null
+                                }
+                                return _vm.submitForm($event)
+                              }
+                            },
+                            model: {
+                              value: _vm.email,
+                              callback: function($$v) {
+                                _vm.email = $$v
                               },
-                              [_vm._v("Go Back To Login")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "vs-button",
-                              { staticClass: "w-full sm:w-auto" },
-                              [_vm._v("Reset")]
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
+                              expression: "email"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            { staticClass: "text-danger text-sm pb-4" },
+                            [_vm._v(_vm._s(_vm.errors.first("email")))]
+                          ),
+                          _vm._v(" "),
+                          _c("vs-input", {
+                            directives: [
+                              {
+                                name: "validate",
+                                rawName: "v-validate",
+                                value: "required|min:3",
+                                expression: "'required|min:3'"
+                              }
+                            ],
+                            staticClass: "w-full mb-8",
+                            attrs: {
+                              icon: "icon icon-unlock",
+                              "icon-pack": "feather",
+                              type: "password",
+                              "data-vv-validate-on": "blur",
+                              "label-placeholder": "Contraseña",
+                              name: "password",
+                              "data-vv-as": "Contraseña"
+                            },
+                            on: {
+                              keyup: function($event) {
+                                if (
+                                  !$event.type.indexOf("key") &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key,
+                                    "Enter"
+                                  )
+                                ) {
+                                  return null
+                                }
+                                return _vm.submitForm($event)
+                              }
+                            },
+                            model: {
+                              value: _vm.password,
+                              callback: function($$v) {
+                                _vm.password = $$v
+                              },
+                              expression: "password"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            { staticClass: "text-danger text-sm pb-4" },
+                            [_vm._v(_vm._s(_vm.errors.first("password")))]
+                          ),
+                          _vm._v(" "),
+                          _c("vs-input", {
+                            directives: [
+                              {
+                                name: "validate",
+                                rawName: "v-validate",
+                                value: "required|min:3",
+                                expression: "'required|min:3'"
+                              }
+                            ],
+                            staticClass: "w-full mb-8",
+                            attrs: {
+                              icon: "icon icon-unlock",
+                              "icon-pack": "feather",
+                              type: "password",
+                              "data-vv-validate-on": "blur",
+                              "label-placeholder": "Confirmar Contraseña",
+                              name: "confirmar",
+                              "data-vv-as": "Confirmar Contraseña"
+                            },
+                            on: {
+                              keyup: function($event) {
+                                if (
+                                  !$event.type.indexOf("key") &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key,
+                                    "Enter"
+                                  )
+                                ) {
+                                  return null
+                                }
+                                return _vm.submitForm($event)
+                              }
+                            },
+                            model: {
+                              value: _vm.password_confirmation,
+                              callback: function($$v) {
+                                _vm.password_confirmation = $$v
+                              },
+                              expression: "password_confirmation"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            { staticClass: "text-danger text-sm pb-4" },
+                            [_vm._v(_vm._s(_vm.errors.first("confirmar")))]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "flex flex-wrap justify-between flex-col-reverse sm:flex-row mt-5"
+                        },
+                        [
+                          _c(
+                            "vs-button",
+                            {
+                              staticClass:
+                                "w-full sm:w-auto mb-8 sm:mb-auto mt-3 sm:mt-auto",
+                              attrs: { type: "border", to: "/pages/login" }
+                            },
+                            [_vm._v("Regresar al login")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "vs-button",
+                            {
+                              staticClass: "w-full sm:w-auto",
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.submitForm($event)
+                                }
+                              }
+                            },
+                            [_vm._v("Cambiar")]
+                          )
+                        ],
+                        1
+                      )
+                    ])
                   ]
                 )
               ])

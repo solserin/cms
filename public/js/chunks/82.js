@@ -183,10 +183,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           color: "danger"
         });
       });
-    },
-    registerUser: function registerUser() {
-      if (!this.checkLogin()) return;
-      this.$router.push("/pages/register").catch(function () {});
     }
   }
 });

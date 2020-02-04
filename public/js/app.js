@@ -40089,6 +40089,17 @@ exports.callbackify = callbackify;
 
 /***/ }),
 
+/***/ "./node_modules/vee-validate/dist/locale/es.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/vee-validate/dist/locale/es.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,n){ true?module.exports=n():undefined}(this,function(){"use strict";var e,n={name:"es",messages:{_default:function(e){return"El campo "+e+" no es válido"},after:function(e,n){var o=n[0];return"El campo "+e+" debe ser posterior "+(n[1]?"o igual ":"")+"a "+o},alpha:function(e){return"El campo "+e+" solo debe contener letras"},alpha_dash:function(e){return"El campo "+e+" solo debe contener letras, números y guiones"},alpha_num:function(e){return"El campo "+e+" solo debe contener letras y números"},alpha_spaces:function(e){return"El campo "+e+" solo debe contener letras y espacios"},before:function(e,n){var o=n[0];return"El campo "+e+" debe ser anterior "+(n[1]?"o igual ":"")+"a "+o},between:function(e,n){return"El campo "+e+" debe estar entre "+n[0]+" y "+n[1]},confirmed:function(e){return"El campo "+e+" no coincide"},credit_card:function(e){return"El campo "+e+" es inválido"},date_between:function(e,n){return"El campo "+e+" debe estar entre "+n[0]+" y "+n[1]},date_format:function(e,n){return"El campo "+e+" debe tener un formato "+n[0]},decimal:function(e,n){void 0===n&&(n=[]);var o=n[0];return void 0===o&&(o="*"),"El campo "+e+" debe ser numérico y contener"+(o&&"*"!==o?" "+o:"")+" puntos decimales"},digits:function(e,n){return"El campo "+e+" debe ser numérico y contener exactamente "+n[0]+" dígitos"},dimensions:function(e,n){return"El campo "+e+" debe ser de "+n[0]+" píxeles por "+n[1]+" píxeles"},email:function(e){return"El campo "+e+" debe ser un correo electrónico válido"},excluded:function(e){return"El campo "+e+" debe ser un valor válido"},ext:function(e){return"El campo "+e+" debe ser un archivo válido"},image:function(e){return"El campo "+e+" debe ser una imagen"},included:function(e){return"El campo "+e+" debe ser un valor válido"},integer:function(e){return"El campo "+e+" debe ser un entero"},ip:function(e){return"El campo "+e+" debe ser una dirección ip válida"},length:function(e,n){var o=n[0],r=n[1];return r?"El largo del campo "+e+" debe estar entre "+o+" y "+r:"El largo del campo "+e+" debe ser "+o},max:function(e,n){return"El campo "+e+" no debe ser mayor a "+n[0]+" caracteres"},max_value:function(e,n){return"El campo "+e+" debe de ser "+n[0]+" o menor"},mimes:function(e){return"El campo "+e+" debe ser un tipo de archivo válido"},min:function(e,n){return"El campo "+e+" debe tener al menos "+n[0]+" caracteres"},min_value:function(e,n){return"El campo "+e+" debe ser "+n[0]+" o superior"},numeric:function(e){return"El campo "+e+" debe contener solo caracteres numéricos"},regex:function(e){return"El formato del campo "+e+" no es válido"},required:function(e){return"El campo "+e+" es obligatorio"},size:function(e,n){return"El campo "+e+" debe ser menor a "+function(e){var n=1024,o=0===(e=Number(e)*n)?0:Math.floor(Math.log(e)/Math.log(n));return 1*(e/Math.pow(n,o)).toFixed(2)+" "+["Byte","KB","MB","GB","TB","PB","EB","ZB","YB"][o]}(n[0])},url:function(e){return"El campo "+e+" no es una URL válida"}},attributes:{}};return"undefined"!=typeof VeeValidate&&VeeValidate.Validator.localize(((e={})[n.name]=n,e)),n});
+
+/***/ }),
+
 /***/ "./node_modules/vee-validate/dist/vee-validate.esm.js":
 /*!************************************************************!*\
   !*** ./node_modules/vee-validate/dist/vee-validate.esm.js ***!
@@ -115752,7 +115763,8 @@ function addSubscriber(callback) {
         });
         return retryOriginalRequest;
       } else {
-        _store_store_js__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/logout_force");
+        /**VALIDO QUE EL ERROR NO SEA EL 422 DE ERROR PROCESING "CAUSADO POR EL RESET PASSWORD" */
+        if (response.status != 422) _store_store_js__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/logout_force");
       }
 
       return Promise.reject(error);
@@ -116815,12 +116827,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_tour__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-tour */ "./node_modules/vue-tour/dist/vue-tour.umd.js");
 /* harmony import */ var vue_tour__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(vue_tour__WEBPACK_IMPORTED_MODULE_14__);
 /* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
-/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vue2-google-maps */ "./node_modules/vue2-google-maps/dist/main.js");
-/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(vue2_google_maps__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var vue2_hammer__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vue2-hammer */ "./node_modules/vue2-hammer/index.min.js");
-/* harmony import */ var vue2_hammer__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(vue2_hammer__WEBPACK_IMPORTED_MODULE_17__);
-/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! prismjs */ "./node_modules/prismjs/prism.js");
-/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(prismjs__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var vee_validate_dist_locale_es__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vee-validate/dist/locale/es */ "./node_modules/vee-validate/dist/locale/es.js");
+/* harmony import */ var vee_validate_dist_locale_es__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(vee_validate_dist_locale_es__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vue2-google-maps */ "./node_modules/vue2-google-maps/dist/main.js");
+/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(vue2_google_maps__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var vue2_hammer__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! vue2-hammer */ "./node_modules/vue2-hammer/index.min.js");
+/* harmony import */ var vue2_hammer__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(vue2_hammer__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! prismjs */ "./node_modules/prismjs/prism.js");
+/* harmony import */ var prismjs__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(prismjs__WEBPACK_IMPORTED_MODULE_19__);
 /*=========================================================================================
   File Name: main.js
   Description: main vue(js) file
@@ -116866,10 +116880,12 @@ __webpack_require__(/*! vue-tour/dist/vue-tour.css */ "./node_modules/vue-tour/d
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vee_validate__WEBPACK_IMPORTED_MODULE_15__["default"]); // Google Maps
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vee_validate__WEBPACK_IMPORTED_MODULE_15__["default"]);
+vee_validate__WEBPACK_IMPORTED_MODULE_15__["Validator"].localize('es', vee_validate_dist_locale_es__WEBPACK_IMPORTED_MODULE_16___default.a); // Google Maps
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_16__, {
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_17__, {
   load: {
     // Add your API key here
     key: 'AIzaSyB4DDathvvwuwlwnUu7F4Sow3oU22y5T1Y',
@@ -116879,7 +116895,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_google_maps__WEBPACK_IMPORTE
 }); // Vuejs - Vue wrapper for hammerjs
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_hammer__WEBPACK_IMPORTED_MODULE_17__["VueHammer"]); // PrismJS
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_hammer__WEBPACK_IMPORTED_MODULE_18__["VueHammer"]); // PrismJS
 
  // import 'prismjs/themes/prism-tomorrow.css'
 // Feather font icon
@@ -118636,7 +118652,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
         rule: 'editor'
       }
     }, {
-      path: '/pages/reset-password',
+      path: '/pages/reset-password/:token',
       name: 'page-reset-password',
       component: function component() {
         return __webpack_require__.e(/*! import() */ 105).then(__webpack_require__.bind(null, /*! @/views/pages/ResetPassword.vue */ "./resources/js/src/views/pages/ResetPassword.vue"));
