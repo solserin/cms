@@ -47,6 +47,28 @@ class UsuariosController extends ApiController
         }
     }
 
+
+
+    /**REFRESH TOKEN */
+     public function refresh_token(Request $request)
+    {
+        $client = new \GuzzleHttp\Client();
+        try {
+            $response = $client->request('POST', config('services.passport.login_endpoint'),[
+                'form_params'=>[
+                    'grant_type'=>'refresh_token',
+                    'refresh_token' => $request->refresh_token,
+                    'client_id'=>config('services.passport.client_id'),
+                    'client_secret'=>config('services.passport.client_secret')
+                ]
+            ]);
+            return $response->getBody();
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+           return $this->errorResponse('No autenticado',$e->getCode());
+        }
+    }
+    /**FIN DEL REFRESH TOKEN */
+
     /**OBTIENE TODOS LOS PERMISOS DEL USUARIO EN EL SISTEMA TOMANDO COMO PARAMETRO EL ACCESS TOKEN */
     public function get_permisos(Request $request)
     {

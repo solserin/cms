@@ -111586,6 +111586,20 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/src/VariablesGlobales.js":
+/*!***********************************************!*\
+  !*** ./resources/js/src/VariablesGlobales.js ***!
+  \***********************************************/
+/*! exports provided: api_url */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "api_url", function() { return api_url; });
+var api_url = 'http://app.laravel/';
+
+/***/ }),
+
 /***/ "./resources/js/src/acl/acl.js":
 /*!*************************************!*\
   !*** ./resources/js/src/acl/acl.js ***!
@@ -115675,14 +115689,20 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _axios_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../axios/index.js */ "./resources/js/src/http/axios/index.js");
 /* harmony import */ var _store_store_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../store/store.js */ "./resources/js/src/store/store.js");
+/* harmony import */ var _VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../VariablesGlobales */ "./resources/js/src/VariablesGlobales.js");
+
 
  // Token Refresh
 
 var isAlreadyFetchingAccessToken = false;
 var subscribers = [];
+/**VALIDO SI EXISTEN ESTOS DATOS PARA DEJAR PASAR LA PETICION */
 
-if (localStorage.getItem('accessToken')) {
+if (localStorage.getItem('accessToken') && localStorage.getItem('refreshToken')) {
   _axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('accessToken');
+} else {
+  //forzar el logout
+  _store_store_js__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/logout_force");
 }
 
 function onAccessTokenFetched(access_token) {
@@ -115705,10 +115725,19 @@ function addSubscriber(callback) {
           response = error.response;
       var originalRequest = config; // if (status === 401) {
 
-      if (response && response.status === 401) {
+      /**AQUI VALIDO QUE LA PETICION NO APLIQUE PARA EL REFREH TOKEN
+      PUESTO QUE SI ESTE TAMBIEN FALLA EL SISTEMA DEBERIA OBLIGAR AL 
+      USUARIO A LOGUEARSE NUEVAMENTE */
+
+      if (response && response.status === 401 && originalRequest.url != _VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'refresh_token') {
         if (!isAlreadyFetchingAccessToken) {
           isAlreadyFetchingAccessToken = true;
           _store_store_js__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/fetchAccessToken").then(function (access_token) {
+            /**ACTUALIZO EL LOCAL STORAGE CON LOS NUEVO VALORES DEL TOKEN Y EL REFRSH */
+            localStorage.setItem("accessToken", access_token.data.access_token);
+            localStorage.setItem("refreshToken", access_token.data.refresh_token);
+            /**FIN DE ACTUALIZAR EL LOCAL STORAGE */
+
             isAlreadyFetchingAccessToken = false;
             onAccessTokenFetched(access_token);
           });
@@ -115716,18 +115745,21 @@ function addSubscriber(callback) {
 
         var retryOriginalRequest = new Promise(function (resolve) {
           addSubscriber(function (access_token) {
-            originalRequest.headers.Authorization = 'Bearer ' + access_token;
+            /**PASANDO EL NUEVO TOKEN A LA ULTIMA PETICION QUE MANDO EL 401 */
+            originalRequest.headers.Authorization = 'Bearer ' + access_token.data.access_token;
             resolve(Object(_axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"])(originalRequest));
           });
         });
         return retryOriginalRequest;
+      } else {
+        _store_store_js__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/logout_force");
       }
 
       return Promise.reject(error);
     });
   },
   login: function login(email, pwd) {
-    return _axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("http://app.laravel/login_usuario", {
+    return _axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "login_usuario", {
       username: email,
       password: pwd
     });
@@ -115740,8 +115772,9 @@ function addSubscriber(callback) {
     });
   },
   refreshToken: function refreshToken() {
-    return _axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/api/auth/refresh-token", {
-      accessToken: localStorage.getItem("accessToKen")
+    //PASAR EL REFRESH TOKEN PARA SOLICITAR UN NUEVO TOKEN
+    return _axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "refresh_token", {
+      refresh_token: localStorage.getItem("refreshToken")
     });
   }
 });
@@ -118832,7 +118865,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _http_requests_auth_jwt_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../http/requests/auth/jwt/index.js */ "./resources/js/src/http/requests/auth/jwt/index.js");
 /* harmony import */ var _http_axios_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../http/axios/index */ "./resources/js/src/http/axios/index.js");
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/router */ "./resources/js/src/router.js");
+/* harmony import */ var _VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../VariablesGlobales */ "./resources/js/src/VariablesGlobales.js");
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/router */ "./resources/js/src/router.js");
 /*=========================================================================================
   File Name: moduleAuthActions.js
   Description: Auth Module Actions
@@ -118841,6 +118875,9 @@ __webpack_require__.r(__webpack_exports__);
   Author: Pixinvent
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
+
+
+/**VARIABLES GLOBALES */
 
 
 
@@ -118855,7 +118892,8 @@ __webpack_require__.r(__webpack_exports__);
         if (response.data) {
           // Navigate User to homepage
           // Set accessToken
-          localStorage.setItem("accessToken", response.data.access_token); // Set bearer token in axios
+          localStorage.setItem("accessToken", response.data.access_token);
+          localStorage.setItem("refreshToken", response.data.refresh_token); // Set bearer token in axios
 
           commit("LOGIN_USER", response.data.access_token);
           dispatch('crear_menu'); // Update user details(perfil del usuario)
@@ -118879,14 +118917,14 @@ __webpack_require__.r(__webpack_exports__);
 
     if (localStorage.getItem('accessToken')) {
       return new Promise(function (resolve, reject) {
-        _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].get("http://app.laravel/get_permisos").then(function (resp) {
+        _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].get(_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "get_permisos").then(function (resp) {
           if (resp.code) {
             reject({
               message: "Error"
             });
           } else {
             localStorage.setItem("AuthMenu", JSON.stringify(resp.data));
-            _router__WEBPACK_IMPORTED_MODULE_2__["default"].push(_router__WEBPACK_IMPORTED_MODULE_2__["default"].currentRoute.query.to || '/').catch(function (err) {});
+            _router__WEBPACK_IMPORTED_MODULE_3__["default"].push(_router__WEBPACK_IMPORTED_MODULE_3__["default"].currentRoute.query.to || '/').catch(function (err) {});
             resolve(resp);
           }
         }).catch(function (err) {
@@ -118901,7 +118939,7 @@ __webpack_require__.r(__webpack_exports__);
     if (localStorage.getItem('accessToken')) {
       return new Promise(function (resolve, reject) {
         commit("LOGIN_USER", localStorage.getItem('accessToken'));
-        _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].post("http://app.laravel/logout_usuario").then(function (resp) {
+        _http_axios_index__WEBPACK_IMPORTED_MODULE_1__["default"].post(_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "logout_usuario").then(function (resp) {
           if (resp.code) {
             reject({
               message: "Error al cerrar sesion"
@@ -118909,7 +118947,7 @@ __webpack_require__.r(__webpack_exports__);
           } else {
             commit("LOGOUT_USER"); // Navigate User to login
 
-            _router__WEBPACK_IMPORTED_MODULE_2__["default"].push('/pages/login').catch(function () {});
+            _router__WEBPACK_IMPORTED_MODULE_3__["default"].push('/pages/login').catch(function () {});
             resolve(resp);
           }
         }).catch(function (err) {
@@ -118917,11 +118955,18 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     } else {
-      _router__WEBPACK_IMPORTED_MODULE_2__["default"].push('/pages/login').catch(function () {});
+      _router__WEBPACK_IMPORTED_MODULE_3__["default"].push('/pages/login').catch(function () {});
     }
   },
-  registerUserJWT: function registerUserJWT(_ref4, payload) {
+
+  /**FORZAR EL LOGOUT DEL USUARIO */
+  logout_force: function logout_force(_ref4) {
     var commit = _ref4.commit;
+    commit("LOGOUT_USER");
+    _router__WEBPACK_IMPORTED_MODULE_3__["default"].push('/pages/login').catch(function () {});
+  },
+  registerUserJWT: function registerUserJWT(_ref5, payload) {
+    var commit = _ref5.commit;
     var _payload$userDetails = payload.userDetails,
         displayName = _payload$userDetails.displayName,
         email = _payload$userDetails.email,
@@ -119016,7 +119061,9 @@ __webpack_require__.r(__webpack_exports__);
   LOGOUT_USER: function LOGOUT_USER(state) {
     /**se reinician los estados quitando toda credencial del sistema */
     _http_axios_index_js__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.headers.common['Authorization'] = ' ';
-    state.isUserLoggedIn = '', localStorage.removeItem("accessToken"), localStorage.removeItem("userInfo");
+    state.isUserLoggedIn = '';
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken"), localStorage.removeItem("userInfo");
     localStorage.removeItem("AuthMenu");
   }
 });

@@ -37,8 +37,13 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 
-
+//RUTA DEL LOGUIN
 Route::post('login_usuario','UsuariosController@login_usuario');
+//RUTA DEL REFRESH TOKEN
+Route::post('refresh_token','UsuariosController@refresh_token');
+
+
+
 //Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
 
 
