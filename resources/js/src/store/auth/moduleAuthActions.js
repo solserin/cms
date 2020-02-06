@@ -34,6 +34,7 @@ export default {
                         // Set bearer token in axios
                         commit("LOGIN_USER", response.data.access_token)
                         dispatch('crear_menu')
+                        dispatch('user_datos')
 
                         // Update user details(perfil del usuario)
                         commit('UPDATE_USER_INFO', payload.userDetails.email, {
@@ -74,6 +75,24 @@ export default {
         }
     },
 
+    //OBTENER INFO DEL USUARIOS
+    user_datos({
+        commit
+    }) {
+        return new Promise((resolve, reject) => {
+            axios.get(api_url + "get_perfil").then(resp => {
+                if (resp.status == 200) {
+                    localStorage.setItem("userInfo", JSON.stringify(resp.data[0]))
+                    resolve(resp.data[0])
+                } else {
+                    reject();
+                }
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+
     logout_user({
         commit
     }) {
@@ -100,7 +119,6 @@ export default {
         }
     },
 
-
     /**FORZAR EL LOGOUT DEL USUARIO */
     logout_force({
         commit
@@ -110,57 +128,6 @@ export default {
     },
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    registerUserJWT({
-        commit
-    }, payload) {
-
-        const {
-            displayName,
-            email,
-            password,
-            confirmPassword
-        } = payload.userDetails
-
-        return new Promise((resolve, reject) => {
-
-            // Check confirm password
-            if (password !== confirmPassword) {
-                reject({
-                    message: "Password doesn't match. Please try again."
-                })
-            }
-
-            jwt.registerUser(displayName, email, password)
-                .then(response => {
-                    // Redirect User
-                    //router.push(router.currentRoute.query.to || '/')
-
-                    // Update data in localStorage
-                    localStorage.setItem("accessToken", response.data.accessToken)
-                    commit('UPDATE_USER_INFO', response.data.userData, {
-                        root: true
-                    })
-
-                    resolve(response)
-                })
-                .catch(error => {
-                    reject(error)
-                })
-        })
-    },
     fetchAccessToken() {
         return new Promise((resolve) => {
             jwt.refreshToken().then(response => {

@@ -24,6 +24,9 @@ Route::middleware(['auth:api'])->group(function () {
     /**RUTA PARA OBTENER LOS PERMISOS DEL USUARIO */
     Route::get('get_permisos','UsuariosController@get_permisos');
 
+    /**RUTA PARA OBTENER EL PERFIL DEL USUARIO */
+    Route::get('get_perfil','UsuariosController@get_perfil');
+
 
 
     

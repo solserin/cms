@@ -1,16 +1,26 @@
 <template>
-  <div class="the-navbar__user-meta flex items-center" v-if="activeUserInfo.displayName">
+  <div class="the-navbar__user-meta flex items-center" v-if="this.activeUserInfo">
     <div class="text-right leading-tight hidden sm:block">
-      <p class="font-semibold">{{ activeUserInfo.displayName }}</p>
-      <small>Available</small>
+      <p class="font-semibold">{{ this.activeUserInfo.nombre }}</p>
+      <small>Disponible</small>
     </div>
 
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
-      <div class="con-img ml-3">
+      <div class="con-img ml-3" v-if="this.activeUserInfo.imagen">
         <img
-          v-if="activeUserInfo.photoURL"
           key="onlineImg"
-          :src="activeUserInfo.photoURL"
+          :src="activeUserInfo.imagen"
+          alt="user-img"
+          width="40"
+          height="40"
+          class="rounded-full shadow-md cursor-pointer block"
+        />
+      </div>
+
+      <div class="con-img ml-3" v-else>
+        <img
+          key="onlineImg"
+          src="@assets/images/portrait/small/default-user.jpg"
           alt="user-img"
           width="40"
           height="40"
@@ -25,7 +35,7 @@
             @click="$router.push('/pages/profile').catch(() => {})"
           >
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Profile</span>
+            <span class="ml-2">Perfil</span>
           </li>
           <!--
           <li
@@ -63,7 +73,7 @@
             @click="logout"
           >
             <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Logout</span>
+            <span class="ml-2">Salir</span>
           </li>
         </ul>
       </vs-dropdown-menu>
@@ -72,21 +82,25 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
-
 export default {
   data() {
-    return {};
-  },
-  computed: {
-    activeUserInfo() {
-      return this.$store.state.AppActiveUser;
-    }
+    return {
+      activeUserInfo: {}
+    };
   },
   methods: {
     logout() {
       this.$store.dispatch("auth/logout_user");
+    }
+  },
+  mounted() {
+    /**si no existe mando llamar los datos del usuario get_perfil de rutas api */
+    if (!localStorage.getItem("userInfo")) {
+      this.$store.dispatch("auth/user_datos").then(resp => {
+        this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
+      });
+    } else {
+      this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
     }
   }
 };

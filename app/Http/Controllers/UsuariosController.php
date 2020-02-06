@@ -173,7 +173,24 @@ class UsuariosController extends ApiController
             else
         //no existe el token y regresamos un codigo de error
         return $this->errorResponse('Usuario no autenticado',401);
+    }
 
+
+    /**OBTIENE TODOS LOS PERMISOS DEL USUARIO EN EL SISTEMA TOMANDO COMO PARAMETRO EL ACCESS TOKEN */
+    public function get_perfil(Request $request)
+    {
+        if($request->user()){
+           /**RECIBIMOS COMO PARAMETRO EL TOKEN PARA OBTENER LOS PERMISOS DEL USUARIO*/
+            $resultado=DB::table('usuarios')
+            ->select('usuarios.id as user_id','roles_id','rol','descripcion','nombre','email','imagen','usuarios.status as user_status')
+            ->join('roles','usuarios.roles_id', '=', 'roles.id')
+            ->where('usuarios.id','=',$request->user()->id)
+            ->get();
+            return $resultado;
+        }
+            else
+            //no existe el token y regresamos un codigo de error
+            return $this->errorResponse('Usuario no autenticado',401);
     }
 
     public function logout_usuario()
