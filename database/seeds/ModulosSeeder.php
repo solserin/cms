@@ -12,54 +12,54 @@ class ModulosSeeder extends Seeder
      */
     public function run()
     {
-        $modulos=[
+        $modulos = [
             [
                 //1
-                'modulo'=>'Usuarios',
-                'icon'=>'fa-users',
-                'parent_modulo_id'=>'0',
-                'url'=>'/usuarios',
-                'secciones_id'=>'1'
+                'modulo' => 'Usuarios',
+                'icon' => 'fa-users',
+                'parent_modulo_id' => '0',
+                'url' => '/usuarios',
+                'secciones_id' => '1'
             ],
             [
                 //2
-                'modulo'=>'Inventario',
-                'icon'=>'icon-box',
-                'parent_modulo_id'=>'0',
-                'url'=>'',
-                'secciones_id'=>'1'
+                'modulo' => 'Inventario',
+                'icon' => 'icon-box',
+                'parent_modulo_id' => '0',
+                'url' => '',
+                'secciones_id' => '1'
             ],
-                    [
-                        //3
-                        'modulo'=>'Proveedores',
-                        'icon'=>'icon-box',
-                        'parent_modulo_id'=>'2',
-                        'url'=>'/proveedores',
-                        'secciones_id'=>'1'
-                    ],
-                    [
-                        //4
-                        'modulo'=>'Almacen',
-                        'icon'=>'icon-box',
-                        'parent_modulo_id'=>'2',
-                        'url'=>'/almacen',
-                        'secciones_id'=>'1'
-                    ],
-                    [
-                        //5
-                        'modulo'=>'Reportes',
-                        'icon'=>'icon-box',
-                        'parent_modulo_id'=>'2',
-                        'url'=>'/reportes',
-                        'secciones_id'=>'1'
-                    ],
+            [
+                //3
+                'modulo' => 'Proveedores',
+                'icon' => 'icon-box',
+                'parent_modulo_id' => '2',
+                'url' => '/proveedores',
+                'secciones_id' => '1'
+            ],
+            [
+                //4
+                'modulo' => 'Almacen',
+                'icon' => 'icon-box',
+                'parent_modulo_id' => '2',
+                'url' => '/almacen',
+                'secciones_id' => '1'
+            ],
+            [
+                //5
+                'modulo' => 'Reportes',
+                'icon' => 'icon-box',
+                'parent_modulo_id' => '2',
+                'url' => '/reportes',
+                'secciones_id' => '1'
+            ],
             [
                 //6
-                'modulo'=>'Ventas',
-                'icon'=>'fa-users',
-                'parent_modulo_id'=>'0',
-                'url'=>'/ventas',
-                'secciones_id'=>'2'
+                'modulo' => 'Ventas',
+                'icon' => 'fa-users',
+                'parent_modulo_id' => '0',
+                'url' => '/ventas',
+                'secciones_id' => '2'
             ],
         ];
 

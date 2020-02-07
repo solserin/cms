@@ -24,6 +24,7 @@
       label-placeholder="Password"
       v-model="password"
       class="w-full mt-6"
+      v-on:keyup.enter="loginJWT"
     />
     <span class="text-danger text-sm">{{ errors.first('password') }}</span>
 
