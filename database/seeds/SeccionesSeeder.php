@@ -12,14 +12,14 @@ class SeccionesSeeder extends Seeder
      */
     public function run()
     {
-        $secciones=[
+        $secciones = [
             [
-                'seccion'=>'Personal',
-                'icon'=>'fa-users'
+                'seccion' => 'Configuración',
+                'icon' => 'SettingsIcon'
             ],
             [
-                'seccion'=>'Módulos',
-                'icon'=>'fa-briefcase'
+                'seccion' => 'Módulos',
+                'icon' => 'fa-briefcase'
             ]
         ];
 

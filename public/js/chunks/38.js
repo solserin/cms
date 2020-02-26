@@ -160,6 +160,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
  // Store Module
@@ -184,69 +211,69 @@ __webpack_require__.r(__webpack_exports__);
     return {
       // Filter Options
       roleFilter: {
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       },
       roleOptions: [{
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       }, {
-        label: 'Admin',
-        value: 'admin'
+        label: "Admin",
+        value: "admin"
       }, {
-        label: 'User',
-        value: 'user'
+        label: "User",
+        value: "user"
       }, {
-        label: 'Staff',
-        value: 'staff'
+        label: "Staff",
+        value: "staff"
       }],
       statusFilter: {
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       },
       statusOptions: [{
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       }, {
-        label: 'Active',
-        value: 'active'
+        label: "Active",
+        value: "active"
       }, {
-        label: 'Deactivated',
-        value: 'deactivated'
+        label: "Deactivated",
+        value: "deactivated"
       }, {
-        label: 'Blocked',
-        value: 'blocked'
+        label: "Blocked",
+        value: "blocked"
       }],
       isVerifiedFilter: {
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       },
       isVerifiedOptions: [{
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       }, {
-        label: 'Yes',
-        value: 'yes'
+        label: "Yes",
+        value: "yes"
       }, {
-        label: 'No',
-        value: 'no'
+        label: "No",
+        value: "no"
       }],
       departmentFilter: {
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       },
       departmentOptions: [{
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       }, {
-        label: 'Sales',
-        value: 'sales'
+        label: "Sales",
+        value: "sales"
       }, {
-        label: 'Development',
-        value: 'development'
+        label: "Development",
+        value: "development"
       }, {
-        label: 'Management',
-        value: 'management'
+        label: "Management",
+        value: "management"
       }],
       searchQuery: "",
       // AgGrid
@@ -258,62 +285,62 @@ __webpack_require__.r(__webpack_exports__);
         suppressMenu: true
       },
       columnDefs: [{
-        headerName: 'ID',
-        field: 'id',
+        headerName: "ID",
+        field: "id",
         width: 125,
         filter: true,
         checkboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         headerCheckboxSelection: true
       }, {
-        headerName: 'Username',
-        field: 'username',
+        headerName: "Username",
+        field: "username",
         filter: true,
         width: 210,
-        cellRendererFramework: 'CellRendererLink'
+        cellRendererFramework: "CellRendererLink"
       }, {
-        headerName: 'Email',
-        field: 'email',
+        headerName: "Email",
+        field: "email",
         filter: true,
         width: 225
       }, {
-        headerName: 'Name',
-        field: 'name',
+        headerName: "Name",
+        field: "name",
         filter: true,
         width: 200
       }, {
-        headerName: 'Country',
-        field: 'country',
+        headerName: "Country",
+        field: "country",
         filter: true,
         width: 150
       }, {
-        headerName: 'Role',
-        field: 'role',
+        headerName: "Role",
+        field: "role",
         filter: true,
         width: 150
       }, {
-        headerName: 'Status',
-        field: 'status',
+        headerName: "Status",
+        field: "status",
         filter: true,
         width: 150,
-        cellRendererFramework: 'CellRendererStatus'
+        cellRendererFramework: "CellRendererStatus"
       }, {
-        headerName: 'Verified',
-        field: 'is_verified',
+        headerName: "Verified",
+        field: "is_verified",
         filter: true,
         width: 125,
-        cellRendererFramework: 'CellRendererVerified',
+        cellRendererFramework: "CellRendererVerified",
         cellClass: "text-center"
       }, {
-        headerName: 'Department',
-        field: 'department',
+        headerName: "Department",
+        field: "department",
         filter: true,
         width: 150
       }, {
-        headerName: 'Actions',
-        field: 'transactions',
+        headerName: "Actions",
+        field: "transactions",
         width: 150,
-        cellRendererFramework: 'CellRendererActions'
+        cellRendererFramework: "CellRendererActions"
       }],
       // Cell Renderer Components
       components: {
@@ -379,8 +406,8 @@ __webpack_require__.r(__webpack_exports__);
       this.gridApi.onFilterChanged(); // Reset Filter Options
 
       this.roleFilter = this.statusFilter = this.isVerifiedFilter = this.departmentFilter = {
-        label: 'All',
-        value: 'all'
+        label: "All",
+        value: "all"
       };
       this.$refs.filterCard.removeRefreshAnimation();
     },
@@ -403,7 +430,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     if (!_store_user_management_moduleUserManagement_js__WEBPACK_IMPORTED_MODULE_3__["default"].isRegistered) {
-      this.$store.registerModule('userManagement', _store_user_management_moduleUserManagement_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+      this.$store.registerModule("userManagement", _store_user_management_moduleUserManagement_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
       _store_user_management_moduleUserManagement_js__WEBPACK_IMPORTED_MODULE_3__["default"].isRegistered = true;
     }
 
