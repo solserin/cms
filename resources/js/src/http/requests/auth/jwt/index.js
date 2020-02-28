@@ -1,8 +1,5 @@
 import axios from "../../../axios/index.js"
 import store from "../../../../store/store.js"
-import {
-    api_url
-} from "../../../../VariablesGlobales"
 
 // Token Refresh
 let isAlreadyFetchingAccessToken = false
@@ -40,7 +37,7 @@ export default {
             /**AQUI VALIDO QUE LA PETICION NO APLIQUE PARA EL REFREH TOKEN
             PUESTO QUE SI ESTE TAMBIEN FALLA EL SISTEMA DEBERIA OBLIGAR AL 
             USUARIO A LOGUEARSE NUEVAMENTE */
-            if (response && response.status === 401 && originalRequest.url != api_url + 'refresh_token') {
+            if (response && response.status === 401 && originalRequest.url != '/refresh_token') {
                 if (!isAlreadyFetchingAccessToken) {
                     isAlreadyFetchingAccessToken = true
                     store.dispatch("auth/fetchAccessToken")
@@ -81,7 +78,7 @@ export default {
         })
     },
     login(email, pwd) {
-        return axios.post(api_url + "login_usuario", {
+        return axios.post("/login_usuario", {
             username: email,
             password: pwd
         })
@@ -95,7 +92,7 @@ export default {
     },
     refreshToken() {
         //PASAR EL REFRESH TOKEN PARA SOLICITAR UN NUEVO TOKEN
-        return axios.post(api_url + "refresh_token", {
+        return axios.post("/refresh_token", {
             refresh_token: localStorage.getItem("refreshToken")
         })
     }

@@ -4,17 +4,12 @@ const CancelToken = axiosSuper.CancelToken
 const source = CancelToken.source();
 let cancel;
 
-/**VARIABLES GLOBALES */
-import {
-    api_url
-} from "../src/../VariablesGlobales"
-
 export default {
     cancel: null,
     getUsuarios(param) {
         let self = this
         return new Promise((resolve, reject) => {
-            axios.get(api_url + 'get_usuarios', {
+            axios.get('/get_usuarios', {
                     cancelToken: new CancelToken((c) => {
                         self.cancel = c
                     }),
@@ -33,7 +28,7 @@ export default {
         })
     },
     getRoles() {
-        let call = api_url + "get_roles"
+        let call = "/get_roles"
         return new Promise((resolve, reject) => {
             axios.get(call)
                 .then((response) => {
@@ -47,7 +42,7 @@ export default {
     /**agregar rol */
     add_rol(param) {
         return new Promise((resolve, reject) => {
-            axios.post(api_url + 'add_rol', param)
+            axios.post('/add_rol', param)
                 .then((response) => {
                     resolve(response)
                 })
@@ -59,7 +54,7 @@ export default {
 
     update_rol(param) {
         return new Promise((resolve, reject) => {
-            axios.post(api_url + 'update_rol', param)
+            axios.post('/update_rol', param)
                 .then((response) => {
                     resolve(response)
                 })
@@ -71,7 +66,7 @@ export default {
 
     delete_rol(param) {
         return new Promise((resolve, reject) => {
-            axios.post(api_url + 'delete_rol', param)
+            axios.post('/delete_rol', param)
                 .then((response) => {
                     resolve(response)
                 })
@@ -84,7 +79,7 @@ export default {
 
     /**obtener los modulos del sistema */
     getModulos() {
-        let call = api_url + "get_modulos"
+        let call = "/get_modulos"
         return new Promise((resolve, reject) => {
             axios.get(call)
                 .then((response) => {
@@ -98,7 +93,7 @@ export default {
 
     /**obtener los permisos por modulo y rol */
     getPermisosRol(param) {
-        let call = api_url + "get_rol_permisos"
+        let call = "/get_rol_permisos"
         let self = this
         return new Promise((resolve, reject) => {
             axios.get(call, {
@@ -121,7 +116,7 @@ export default {
 
     /**obtener los datos de un usuario por id */
     get_usuarioById(param) {
-        let call = api_url + "get_usuarioById"
+        let call = "/get_usuarioById"
         let self = this
         return new Promise((resolve, reject) => {
             axios.get(call, {
@@ -144,7 +139,7 @@ export default {
     /**agregar usuario */
     add_usuario(param) {
         return new Promise((resolve, reject) => {
-            axios.post(api_url + 'add_usuario', param)
+            axios.post('/add_usuario', param)
                 .then((response) => {
                     resolve(response)
                 })
@@ -157,7 +152,7 @@ export default {
     /**modificar usuario */
     update_usuario(param) {
         return new Promise((resolve, reject) => {
-            axios.post(api_url + 'update_usuario', param)
+            axios.post('/update_usuario', param)
                 .then((response) => {
                     resolve(response)
                 })
@@ -170,7 +165,7 @@ export default {
     /**eliminar usuario */
     delete_usuario(param) {
         return new Promise((resolve, reject) => {
-            axios.post(api_url + 'delete_usuario', param)
+            axios.post('/delete_usuario', param)
                 .then((response) => {
                     resolve(response)
                 })
@@ -183,7 +178,7 @@ export default {
     /**habilitar usuario */
     habilitar_usuario(param) {
         return new Promise((resolve, reject) => {
-            axios.post(api_url + 'activate_usuario', param)
+            axios.post('/activate_usuario', param)
                 .then((response) => {
                     resolve(response)
                 })
@@ -197,7 +192,7 @@ export default {
 
     /**obtener los permisos por modulo y rol */
     confirmPassword(param) {
-        let call = api_url + "verificar_password"
+        let call = "/verificar_password"
         let self = this
         return new Promise((resolve, reject) => {
             axios.post(call, {
@@ -221,7 +216,7 @@ export default {
     /**obtengo el blob del pdf */
     get_pdf(service_end_point) {
         return new Promise((resolve, reject) => {
-            axios.get(api_url + service_end_point, {
+            axios.get(service_end_point, {
                     responseType: "blob"
                 })
                 .then((response) => {

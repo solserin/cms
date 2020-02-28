@@ -9,10 +9,6 @@
 
 import jwt from "../../http/requests/auth/jwt/index.js"
 import axios from "../../http/axios/index"
-/**VARIABLES GLOBALES */
-import {
-    api_url
-} from "../../VariablesGlobales"
 
 import router from '@/router'
 
@@ -58,7 +54,7 @@ export default {
     }) {
         if (localStorage.getItem('accessToken')) {
             return new Promise((resolve, reject) => {
-                axios.get(api_url + "get_permisos").then(resp => {
+                axios.get("/get_permisos").then(resp => {
                     if (resp.code) {
                         reject({
                             message: "Error"
@@ -80,7 +76,7 @@ export default {
         commit
     }) {
         return new Promise((resolve, reject) => {
-            axios.get(api_url + "get_perfil").then(resp => {
+            axios.get("/get_perfil").then(resp => {
                 if (resp.status == 200) {
                     localStorage.setItem("userInfo", JSON.stringify(resp.data[0]))
                     resolve(resp.data[0])
@@ -99,7 +95,7 @@ export default {
         if (localStorage.getItem('accessToken')) {
             return new Promise((resolve, reject) => {
                 commit("LOGIN_USER", localStorage.getItem('accessToken'))
-                axios.post(api_url + "logout_usuario").then(resp => {
+                axios.post("/logout_usuario").then(resp => {
                     if (resp.code) {
                         reject({
                             message: "Error al cerrar sesion"

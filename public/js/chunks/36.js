@@ -3950,6 +3950,64 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./resources/js/src/VariablesGlobales.js":
+/*!***********************************************!*\
+  !*** ./resources/js/src/VariablesGlobales.js ***!
+  \***********************************************/
+/*! exports provided: api_url, mostrarOptions, estadosOptions, generosOptions */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "api_url", function() { return api_url; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mostrarOptions", function() { return mostrarOptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "estadosOptions", function() { return estadosOptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generosOptions", function() { return generosOptions; });
+var api_url = 'http://app.laravel/';
+/**SELECT OPTIONS */
+
+var mostrarOptions = [{
+  label: "15",
+  value: "15"
+}, {
+  label: "30",
+  value: "30"
+}, {
+  label: "45",
+  value: "45"
+}, {
+  label: "60",
+  value: "60"
+}, {
+  label: "80",
+  value: "80"
+}, {
+  label: "100",
+  value: "100"
+}];
+var estadosOptions = [{
+  label: "Todos",
+  value: ""
+}, {
+  label: "Activo",
+  value: "1"
+}, {
+  label: "Sin Accceso",
+  value: "0"
+}];
+var generosOptions = [{
+  label: "Seleccione 1",
+  value: ""
+}, {
+  label: "Hombre",
+  value: "1"
+}, {
+  label: "Mujer",
+  value: "2"
+}];
+
+/***/ }),
+
 /***/ "./resources/js/src/services/Usuarios.js":
 /*!***********************************************!*\
   !*** ./resources/js/src/services/Usuarios.js ***!
@@ -3962,21 +4020,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _axios_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/axios.js */ "./resources/js/src/axios.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../src/../VariablesGlobales */ "./resources/js/src/VariablesGlobales.js");
 
 
 var CancelToken = axios__WEBPACK_IMPORTED_MODULE_1___default.a.CancelToken;
 var source = CancelToken.source();
 var cancel;
-/**VARIABLES GLOBALES */
-
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   cancel: null,
   getUsuarios: function getUsuarios(param) {
     var self = this;
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'get_usuarios', {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get('/get_usuarios', {
         cancelToken: new CancelToken(function (c) {
           self.cancel = c;
         }),
@@ -3993,7 +4047,7 @@ var cancel;
     });
   },
   getRoles: function getRoles() {
-    var call = _src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "get_roles";
+    var call = "/get_roles";
     return new Promise(function (resolve, reject) {
       _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(call).then(function (response) {
         resolve(response);
@@ -4006,7 +4060,7 @@ var cancel;
   /**agregar rol */
   add_rol: function add_rol(param) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'add_rol', param).then(function (response) {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post('/add_rol', param).then(function (response) {
         resolve(response);
       }).catch(function (error) {
         reject(error);
@@ -4015,7 +4069,7 @@ var cancel;
   },
   update_rol: function update_rol(param) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'update_rol', param).then(function (response) {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post('/update_rol', param).then(function (response) {
         resolve(response);
       }).catch(function (error) {
         reject(error);
@@ -4024,7 +4078,7 @@ var cancel;
   },
   delete_rol: function delete_rol(param) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'delete_rol', param).then(function (response) {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post('/delete_rol', param).then(function (response) {
         resolve(response);
       }).catch(function (error) {
         reject(error);
@@ -4034,7 +4088,7 @@ var cancel;
 
   /**obtener los modulos del sistema */
   getModulos: function getModulos() {
-    var call = _src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "get_modulos";
+    var call = "/get_modulos";
     return new Promise(function (resolve, reject) {
       _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(call).then(function (response) {
         resolve(response);
@@ -4046,7 +4100,7 @@ var cancel;
 
   /**obtener los permisos por modulo y rol */
   getPermisosRol: function getPermisosRol(param) {
-    var call = _src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "get_rol_permisos";
+    var call = "/get_rol_permisos";
     var self = this;
     return new Promise(function (resolve, reject) {
       _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(call, {
@@ -4066,7 +4120,7 @@ var cancel;
 
   /**obtener los datos de un usuario por id */
   get_usuarioById: function get_usuarioById(param) {
-    var call = _src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "get_usuarioById";
+    var call = "/get_usuarioById";
     var self = this;
     return new Promise(function (resolve, reject) {
       _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(call, {
@@ -4087,7 +4141,7 @@ var cancel;
   /**agregar usuario */
   add_usuario: function add_usuario(param) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'add_usuario', param).then(function (response) {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post('/add_usuario', param).then(function (response) {
         resolve(response);
       }).catch(function (error) {
         reject(error);
@@ -4098,7 +4152,7 @@ var cancel;
   /**modificar usuario */
   update_usuario: function update_usuario(param) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'update_usuario', param).then(function (response) {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post('/update_usuario', param).then(function (response) {
         resolve(response);
       }).catch(function (error) {
         reject(error);
@@ -4109,7 +4163,7 @@ var cancel;
   /**eliminar usuario */
   delete_usuario: function delete_usuario(param) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'delete_usuario', param).then(function (response) {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post('/delete_usuario', param).then(function (response) {
         resolve(response);
       }).catch(function (error) {
         reject(error);
@@ -4120,7 +4174,7 @@ var cancel;
   /**habilitar usuario */
   habilitar_usuario: function habilitar_usuario(param) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + 'activate_usuario', param).then(function (response) {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post('/activate_usuario', param).then(function (response) {
         resolve(response);
       }).catch(function (error) {
         reject(error);
@@ -4130,7 +4184,7 @@ var cancel;
 
   /**obtener los permisos por modulo y rol */
   confirmPassword: function confirmPassword(param) {
-    var call = _src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + "verificar_password";
+    var call = "/verificar_password";
     var self = this;
     return new Promise(function (resolve, reject) {
       _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].post(call, {
@@ -4151,7 +4205,7 @@ var cancel;
   /**obtengo el blob del pdf */
   get_pdf: function get_pdf(service_end_point) {
     return new Promise(function (resolve, reject) {
-      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(_src_VariablesGlobales__WEBPACK_IMPORTED_MODULE_2__["api_url"] + service_end_point, {
+      _axios_js__WEBPACK_IMPORTED_MODULE_0__["default"].get(service_end_point, {
         responseType: "blob"
       }).then(function (response) {
         resolve(response);
