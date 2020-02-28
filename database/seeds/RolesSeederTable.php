@@ -12,14 +12,10 @@ class RolesSeederTable extends Seeder
      */
     public function run()
     {
-        $roles=[
+        $roles = [
             [
-                'rol'=>'SuperUsuario',
-                'descripcion'=>'Tiene acceso 100 al sistema y solo los administradores del sistema tienen acceso',
-            ],
-            [
-                'rol'=>'Administrador',
-                'descripcion'=>'Tiene 100 % al sistema en operación',
+                'rol' => 'SuperUsuario',
+                'descripcion' => 'Tiene acceso 100 al sistema y solo los administradores del sistema tienen acceso',
             ]
         ];
         foreach ($roles as $key) {
@@ -30,9 +26,9 @@ class RolesSeederTable extends Seeder
         }
         //aqui inserto los permisos en los roles
         //4 permisos (1-Agregar, 2-Editar, 3-Eliminar y 4-Consultar)
-        $roles=DB::table('modulos')->select('id')->where('url','<>','')->get();
+        $roles = DB::table('modulos')->select('id')->where('url', '<>', '')->get();
         foreach ($roles as $key) {
-            for ($i=1; $i < 5; $i++) {
+            for ($i = 1; $i < 5; $i++) {
                 DB::table('modulos_roles_permisos')->insert([
                     'modulos_id' => $key->id,
                     'roles_id' => 1,

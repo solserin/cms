@@ -111612,13 +111612,57 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************!*\
   !*** ./resources/js/src/VariablesGlobales.js ***!
   \***********************************************/
-/*! exports provided: api_url */
+/*! exports provided: api_url, mostrarOptions, estadosOptions, generosOptions */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "api_url", function() { return api_url; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mostrarOptions", function() { return mostrarOptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "estadosOptions", function() { return estadosOptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generosOptions", function() { return generosOptions; });
 var api_url = 'http://app.laravel/';
+/**SELECT OPTIONS */
+
+var mostrarOptions = [{
+  label: "15",
+  value: "15"
+}, {
+  label: "30",
+  value: "30"
+}, {
+  label: "45",
+  value: "45"
+}, {
+  label: "60",
+  value: "60"
+}, {
+  label: "80",
+  value: "80"
+}, {
+  label: "100",
+  value: "100"
+}];
+var estadosOptions = [{
+  label: "Todos",
+  value: ""
+}, {
+  label: "Activo",
+  value: "1"
+}, {
+  label: "Sin Accceso",
+  value: "0"
+}];
+var generosOptions = [{
+  label: "Seleccione 1",
+  value: ""
+}, {
+  label: "Hombre",
+  value: "1"
+}, {
+  label: "Mujer",
+  value: "2"
+}];
 
 /***/ }),
 
@@ -115775,7 +115819,18 @@ function addSubscriber(callback) {
         return retryOriginalRequest;
       } else {
         /**VALIDO QUE EL ERROR NO SEA EL 422 DE ERROR PROCESING "CAUSADO POR EL RESET PASSWORD" */
-        if (response.status != 422) _store_store_js__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/logout_force");
+
+        /**ERROR 429 TOO MANY REQUEST */
+
+        /**ERROR 500 INTERNAL SERVER */
+        if (response) {
+          //si el error tiene status
+          if (response.status) {
+            if (response.status != 422 && response.status != 429 && response.status != 500 && response.status != 403 && response.status != 409) _store_store_js__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/logout_force");
+          }
+        } else {
+          return Promise.reject(error);
+        }
       }
 
       return Promise.reject(error);
@@ -117006,17 +117061,33 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
         rule: 'admin',
         authRequired: true
       }
-    }, // =============================================================================
+    },
+    /**RUTAS PARA EL MODULO DE USUARIOS */
+    {
+      path: '/usuarios',
+      name: 'Lista de Usuarios',
+      component: function component() {
+        return __webpack_require__.e(/*! import() */ 36).then(__webpack_require__.bind(null, /*! @/views/pages/configuracion/usuarios/UsuariosList.vue */ "./resources/js/src/views/pages/configuracion/usuarios/UsuariosList.vue"));
+      },
+      meta: {
+        breadcrumb: [{
+          title: 'Home',
+          url: '/'
+        }, {
+          title: 'Usuarios'
+        }, {
+          title: 'Lista',
+          active: true
+        }],
+        pageTitle: 'Usuarios',
+        rule: 'editor'
+      }
+    },
+    /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
+    // =============================================================================
     // Application Routes
     // =============================================================================
     {
-      path: '/apps/todo',
-      redirect: '/apps/todo/all',
-      name: 'todo',
-      meta: {
-        authRequired: true
-      }
-    }, {
       path: '/apps/todo/:filter',
       component: function component() {
         return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(45)]).then(__webpack_require__.bind(null, /*! ./views/apps/todo/Todo.vue */ "./resources/js/src/views/apps/todo/Todo.vue"));
@@ -120464,11 +120535,16 @@ __webpack_require__.r(__webpack_exports__);
 // MAIN COLORS - VUESAX THEME COLORS
 var colors = {
   //primary : '#7367F0',
+  //solserin 
   primary: '#063278',
+
+  /*aeternus*/
+  //primary: '#b18b1e',
   success: '#28C76F',
   danger: '#EA5455',
   warning: '#FF9F43',
-  dark: '#1E1E1E'
+  dark: '#1E1E1E',
+  secondary_theme: '#b6babd'
 }; // CONFIGS
 
 var themeConfig = {

@@ -64,8 +64,18 @@ export default {
                 return retryOriginalRequest
             } else {
                 /**VALIDO QUE EL ERROR NO SEA EL 422 DE ERROR PROCESING "CAUSADO POR EL RESET PASSWORD" */
-                if (response.status != 422)
-                    store.dispatch("auth/logout_force")
+                /**ERROR 429 TOO MANY REQUEST */
+                /**ERROR 500 INTERNAL SERVER */
+                if (response) {
+                    //si el error tiene status
+                    if (response.status) {
+                        if (response.status != 422 && response.status != 429 && response.status != 500 && response.status != 403 && response.status != 409)
+                            store.dispatch("auth/logout_force")
+                    }
+                } else {
+                    return Promise.reject(error)
+                }
+
             }
             return Promise.reject(error)
         })
