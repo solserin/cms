@@ -117007,7 +117007,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/usuarios',
       name: 'Lista de Usuarios',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 36).then(__webpack_require__.bind(null, /*! @/views/pages/configuracion/usuarios/UsuariosList.vue */ "./resources/js/src/views/pages/configuracion/usuarios/UsuariosList.vue"));
+        return __webpack_require__.e(/*! import() */ 30).then(__webpack_require__.bind(null, /*! @/views/pages/configuracion/usuarios/UsuariosList.vue */ "./resources/js/src/views/pages/configuracion/usuarios/UsuariosList.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -117809,7 +117809,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/components/slider',
       name: 'component-slider',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 32).then(__webpack_require__.bind(null, /*! @/views/components/vuesax/slider/Slider.vue */ "./resources/js/src/views/components/vuesax/slider/Slider.vue"));
+        return __webpack_require__.e(/*! import() */ 33).then(__webpack_require__.bind(null, /*! @/views/components/vuesax/slider/Slider.vue */ "./resources/js/src/views/components/vuesax/slider/Slider.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -117929,7 +117929,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/forms/form-elements/checkbox',
       name: 'form-element-checkbox',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 33).then(__webpack_require__.bind(null, /*! ./views/forms/form-elements/checkbox/Checkbox.vue */ "./resources/js/src/views/forms/form-elements/checkbox/Checkbox.vue"));
+        return __webpack_require__.e(/*! import() */ 34).then(__webpack_require__.bind(null, /*! ./views/forms/form-elements/checkbox/Checkbox.vue */ "./resources/js/src/views/forms/form-elements/checkbox/Checkbox.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -117967,7 +117967,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/forms/form-elements/input',
       name: 'form-element-input',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 34).then(__webpack_require__.bind(null, /*! ./views/forms/form-elements/input/Input.vue */ "./resources/js/src/views/forms/form-elements/input/Input.vue"));
+        return __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./views/forms/form-elements/input/Input.vue */ "./resources/js/src/views/forms/form-elements/input/Input.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -117986,7 +117986,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/forms/form-elements/number-input',
       name: 'form-element-number-input',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./views/forms/form-elements/number-input/NumberInput.vue */ "./resources/js/src/views/forms/form-elements/number-input/NumberInput.vue"));
+        return __webpack_require__.e(/*! import() */ 36).then(__webpack_require__.bind(null, /*! ./views/forms/form-elements/number-input/NumberInput.vue */ "./resources/js/src/views/forms/form-elements/number-input/NumberInput.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -118328,7 +118328,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/extensions/select',
       name: 'extra-component-select',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 31).then(__webpack_require__.bind(null, /*! @/views/components/extra-components/select/Select.vue */ "./resources/js/src/views/components/extra-components/select/Select.vue"));
+        return __webpack_require__.e(/*! import() */ 32).then(__webpack_require__.bind(null, /*! @/views/components/extra-components/select/Select.vue */ "./resources/js/src/views/components/extra-components/select/Select.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -118404,7 +118404,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/extensions/datetime-picker',
       name: 'extra-component-datetime-picker',
       component: function component() {
-        return Promise.all(/*! import() */[__webpack_require__.e(4), __webpack_require__.e(118), __webpack_require__.e(30)]).then(__webpack_require__.bind(null, /*! @/views/components/extra-components/datetime-picker/DatetimePicker.vue */ "./resources/js/src/views/components/extra-components/datetime-picker/DatetimePicker.vue"));
+        return Promise.all(/*! import() */[__webpack_require__.e(4), __webpack_require__.e(118), __webpack_require__.e(31)]).then(__webpack_require__.bind(null, /*! @/views/components/extra-components/datetime-picker/DatetimePicker.vue */ "./resources/js/src/views/components/extra-components/datetime-picker/DatetimePicker.vue"));
       },
       meta: {
         breadcrumb: [{
