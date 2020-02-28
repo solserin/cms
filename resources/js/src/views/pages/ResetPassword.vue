@@ -87,7 +87,6 @@
 <script>
 import axios from "../../http/axios/index";
 /**VARIABLES GLOBALES */
-import { api_url } from "../../VariablesGlobales";
 export default {
   data() {
     return {
@@ -108,7 +107,7 @@ export default {
           };
           this.$vs.loading();
           axios
-            .post(api_url + "password/reset", payload)
+            .post("/password/reset", payload)
             .then(resp => {
               //exito con la peticion
               this.$vs.notify({

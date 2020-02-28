@@ -210,8 +210,7 @@ import usuarios from "../../../../services/Usuarios";
 import {
   mostrarOptions,
   estadosOptions,
-  rolesOptions,
-  api_url
+  rolesOptions
 } from "../../../../VariablesGlobales";
 import vSelect from "vue-select";
 

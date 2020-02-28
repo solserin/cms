@@ -10,7 +10,6 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _http_axios_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../http/axios/index */ "./resources/js/src/http/axios/index.js");
-/* harmony import */ var _VariablesGlobales__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../VariablesGlobales */ "./resources/js/src/VariablesGlobales.js");
 //
 //
 //
@@ -100,7 +99,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /**VARIABLES GLOBALES */
 
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -124,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 
           _this.$vs.loading();
 
-          _http_axios_index__WEBPACK_IMPORTED_MODULE_0__["default"].post(_VariablesGlobales__WEBPACK_IMPORTED_MODULE_1__["api_url"] + "password/reset", payload).then(function (resp) {
+          _http_axios_index__WEBPACK_IMPORTED_MODULE_0__["default"].post("/password/reset", payload).then(function (resp) {
             //exito con la peticion
             _this.$vs.notify({
               time: 6000,
@@ -457,64 +455,6 @@ render._withStripped = true
 /***/ (function(module, exports) {
 
 module.exports = "/images/reset-password.png?965156dace52dc1b319d6363d3040ff2";
-
-/***/ }),
-
-/***/ "./resources/js/src/VariablesGlobales.js":
-/*!***********************************************!*\
-  !*** ./resources/js/src/VariablesGlobales.js ***!
-  \***********************************************/
-/*! exports provided: api_url, mostrarOptions, estadosOptions, generosOptions */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "api_url", function() { return api_url; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mostrarOptions", function() { return mostrarOptions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "estadosOptions", function() { return estadosOptions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generosOptions", function() { return generosOptions; });
-var api_url = 'http://app.laravel/';
-/**SELECT OPTIONS */
-
-var mostrarOptions = [{
-  label: "15",
-  value: "15"
-}, {
-  label: "30",
-  value: "30"
-}, {
-  label: "45",
-  value: "45"
-}, {
-  label: "60",
-  value: "60"
-}, {
-  label: "80",
-  value: "80"
-}, {
-  label: "100",
-  value: "100"
-}];
-var estadosOptions = [{
-  label: "Todos",
-  value: ""
-}, {
-  label: "Activo",
-  value: "1"
-}, {
-  label: "Sin Accceso",
-  value: "0"
-}];
-var generosOptions = [{
-  label: "Seleccione 1",
-  value: ""
-}, {
-  label: "Hombre",
-  value: "1"
-}, {
-  label: "Mujer",
-  value: "2"
-}];
 
 /***/ }),
 

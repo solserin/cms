@@ -116,7 +116,7 @@ import usuarios from "../../../../services/Usuarios";
 //componente de password
 import Password from "../../confirmar_password";
 /**VARIABLES GLOBALES */
-import { rolesOptions, api_url } from "../../../../VariablesGlobales";
+import { rolesOptions } from "../../../../VariablesGlobales";
 import vSelect from "vue-select";
 
 import {

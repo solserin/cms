@@ -1,10 +1,6 @@
 import axios from "@/axios.js"
 import axiosSuper from 'axios'
 const CancelToken = axiosSuper.CancelToken
-/**VARIABLES GLOBALES */
-import {
-    api_url
-} from "../../../VariablesGlobales"
 
 export default {
     cancel: null,
@@ -27,23 +23,6 @@ export default {
                 })
         })
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     fetchUser({}, userId) {
         return new Promise((resolve, reject) => {
             axios.get(`/api/user-management/users/${userId}`)
