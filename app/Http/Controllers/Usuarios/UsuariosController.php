@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Usuarios;
 
 use App\User;
 use GuzzleHttp\Client;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -441,6 +442,39 @@ class UsuariosController extends ApiController
                 'status' => 1,
             ]
         );
+    }
+
+    public function pdfs()
+    {
+        $res = User::select(
+            'usuarios.id as id_user',
+            'nombre',
+            'email',
+            'genero',
+            'imagen',
+            'telefono',
+            'fecha_alta',
+            'roles_id',
+            'usuarios.status as estado',
+            'rol',
+            DB::raw('(CASE 
+                        WHEN usuarios.genero = "1" THEN "Hombre"
+                        ELSE "Mujer" 
+                        END) AS genero_des')
+        )
+            ->join('roles', 'roles.id', '=', 'usuarios.roles_id')
+            //->where('roles_id', ">", 1)
+            ->where('usuarios.roles_id', '>', '1') //no muestro super usuarios
+            ->get();
+
+        $pdf = PDF::loadView('pdfs', ['employees' => $res]);
+        $pdf->setOptions([
+            'footer-html' => view('header'),
+            'page-size' => 'legal',
+            'images' => false,
+            'title' => 'ddddddd'
+        ]);
+        return $pdf->inline();
     }
 
 

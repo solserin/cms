@@ -67,7 +67,7 @@ Route::post('/password/reset', 'Auth\Api\ResetPasswordController@reset');
 
 
 
-
+Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
 
 
 //Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
