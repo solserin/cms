@@ -276,27 +276,3 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-.vs-popup--header {
-  padding: 10px 0 10px 0;
-  background-color: #063278;
-  border-radius: 0;
-}
-.vs-popup--title h3 {
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 14px !important;
-  font-weight: 600;
-}
-.con-vs-popup .vs-popup {
-  border-radius: 0px;
-}
-
-.vs-button {
-  border-radius: 0;
-}
-
-.con-vs-popup {
-  z-index: 52000 !important;
-}
-</style>

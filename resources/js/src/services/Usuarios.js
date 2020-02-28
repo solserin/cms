@@ -216,4 +216,20 @@ export default {
                 })
         })
     },
+
+
+    /**obtengo el blob del pdf */
+    get_pdf(service_end_point) {
+        return new Promise((resolve, reject) => {
+            axios.get(api_url + service_end_point, {
+                    responseType: "blob"
+                })
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
 }

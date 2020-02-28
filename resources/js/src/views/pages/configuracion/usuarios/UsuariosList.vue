@@ -11,7 +11,7 @@
             <vs-button color="success" size="small" class="float-right" @click="verAgregar=true">
               <user-plus-icon size="1x" class="custom-class mr-2"></user-plus-icon>Agregar
             </vs-button>
-            <vs-button color="primary" size="small" class="float-right mr-3">
+            <vs-button color="primary" size="small" class="float-right mr-3" @click="pdf()">
               <printer-icon size="1x" class="custom-class mr-2"></printer-icon>Pdf
             </vs-button>
           </div>
@@ -190,10 +190,12 @@
       @closeVerificar="closeStatus"
       :accion="accionNombre"
     ></Password>
+    <pdf :show="verPdf" :pdf="pdfLink" @closePdf="verPdf=false"></pdf>
   </div>
 </template>
 
 <script>
+import pdf from "../../pdf_viewer";
 /**IMPORTAR EL COMPONENTE DE ROLES */
 import rolesList from "../usuarios/RolesList";
 import AgregarUsuario from "../usuarios/AgregarUsuario";
@@ -221,7 +223,8 @@ export default {
     rolesList,
     Password,
     AgregarUsuario,
-    UpdateUsuario
+    UpdateUsuario,
+    pdf
   },
   watch: {
     actual: function(newValue, oldValue) {
@@ -239,6 +242,8 @@ export default {
   },
   data() {
     return {
+      verPdf: false,
+      pdfLink: "",
       openStatus: false,
       callback: Function,
       accionNombre: "",
@@ -478,6 +483,17 @@ export default {
 
     closeStatus() {
       this.openStatus = false;
+    },
+
+    pdf() {
+      this.pdfLink =
+        "pdfs?status=" +
+        this.estado.value +
+        "&rol_id=" +
+        this.roles.value +
+        "&nombre=" +
+        this.nombre;
+      this.verPdf = true;
     }
   },
   created() {

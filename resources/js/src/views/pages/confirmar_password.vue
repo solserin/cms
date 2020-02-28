@@ -11,7 +11,8 @@
       cancel-text="Cancelar"
     >
       <div class="con-exemple-prompt">
-        Ingrese su contraseña para <span class="text-danger text-sm">{{accionNombre}}</span>.
+        Ingrese su contraseña para
+        <span class="accion_nombre">{{accionNombre}}</span>.
         <vs-input
           id="password"
           ref="password"
@@ -37,9 +38,9 @@ export default {
       type: Function,
       required: true
     },
-    accion:{
-      type:String,
-      required:true
+    accion: {
+      type: String,
+      required: true
     }
   },
 
@@ -60,8 +61,8 @@ export default {
         return newValue;
       }
     },
-    accionNombre(){
-      return this.accion
+    accionNombre() {
+      return this.accion;
     }
   },
   methods: {

@@ -117067,7 +117067,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/usuarios',
       name: 'Lista de Usuarios',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 41).then(__webpack_require__.bind(null, /*! @/views/pages/configuracion/usuarios/UsuariosList.vue */ "./resources/js/src/views/pages/configuracion/usuarios/UsuariosList.vue"));
+        return __webpack_require__.e(/*! import() */ 36).then(__webpack_require__.bind(null, /*! @/views/pages/configuracion/usuarios/UsuariosList.vue */ "./resources/js/src/views/pages/configuracion/usuarios/UsuariosList.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -117242,7 +117242,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/apps/user/user-list',
       name: 'app-user-list',
       component: function component() {
-        return Promise.all(/*! import() */[__webpack_require__.e(6), __webpack_require__.e(16), __webpack_require__.e(38)]).then(__webpack_require__.bind(null, /*! @/views/apps/user/user-list/UserList.vue */ "./resources/js/src/views/apps/user/user-list/UserList.vue"));
+        return Promise.all(/*! import() */[__webpack_require__.e(6), __webpack_require__.e(16), __webpack_require__.e(39)]).then(__webpack_require__.bind(null, /*! @/views/apps/user/user-list/UserList.vue */ "./resources/js/src/views/apps/user/user-list/UserList.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -117698,7 +117698,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/components/dropdown',
       name: 'component-drop-down',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 36).then(__webpack_require__.bind(null, /*! @/views/components/vuesax/dropdown/Dropdown.vue */ "./resources/js/src/views/components/vuesax/dropdown/Dropdown.vue"));
+        return __webpack_require__.e(/*! import() */ 37).then(__webpack_require__.bind(null, /*! @/views/components/vuesax/dropdown/Dropdown.vue */ "./resources/js/src/views/components/vuesax/dropdown/Dropdown.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -117793,7 +117793,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/components/pagination',
       name: 'component-pagination',
       component: function component() {
-        return __webpack_require__.e(/*! import() */ 40).then(__webpack_require__.bind(null, /*! @/views/components/vuesax/pagination/Pagination.vue */ "./resources/js/src/views/components/vuesax/pagination/Pagination.vue"));
+        return __webpack_require__.e(/*! import() */ 41).then(__webpack_require__.bind(null, /*! @/views/components/vuesax/pagination/Pagination.vue */ "./resources/js/src/views/components/vuesax/pagination/Pagination.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -118183,7 +118183,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/pages/user-settings',
       name: 'page-user-settings',
       component: function component() {
-        return Promise.all(/*! import() */[__webpack_require__.e(4), __webpack_require__.e(37)]).then(__webpack_require__.bind(null, /*! @/views/pages/user-settings/UserSettings.vue */ "./resources/js/src/views/pages/user-settings/UserSettings.vue"));
+        return Promise.all(/*! import() */[__webpack_require__.e(4), __webpack_require__.e(38)]).then(__webpack_require__.bind(null, /*! @/views/pages/user-settings/UserSettings.vue */ "./resources/js/src/views/pages/user-settings/UserSettings.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -118347,7 +118347,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
       path: '/charts-and-maps/charts/echarts',
       name: 'extra-component-charts-echarts',
       component: function component() {
-        return Promise.all(/*! import() */[__webpack_require__.e(19), __webpack_require__.e(39)]).then(__webpack_require__.bind(null, /*! @/views/charts-and-maps/charts/echarts/Echarts.vue */ "./resources/js/src/views/charts-and-maps/charts/echarts/Echarts.vue"));
+        return Promise.all(/*! import() */[__webpack_require__.e(19), __webpack_require__.e(40)]).then(__webpack_require__.bind(null, /*! @/views/charts-and-maps/charts/echarts/Echarts.vue */ "./resources/js/src/views/charts-and-maps/charts/echarts/Echarts.vue"));
       },
       meta: {
         breadcrumb: [{
@@ -120535,11 +120535,16 @@ __webpack_require__.r(__webpack_exports__);
 // MAIN COLORS - VUESAX THEME COLORS
 var colors = {
   //primary : '#7367F0',
+  //solserin 
   primary: '#063278',
+
+  /*aeternus*/
+  //primary: '#b18b1e',
   success: '#28C76F',
   danger: '#EA5455',
   warning: '#FF9F43',
-  dark: '#1E1E1E'
+  dark: '#1E1E1E',
+  secondary_theme: '#b6babd'
 }; // CONFIGS
 
 var themeConfig = {

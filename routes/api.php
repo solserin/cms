@@ -41,6 +41,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('update_usuario', 'Usuarios\UsuariosController@update_usuario')->middleware('permiso:1,2');
     Route::post('delete_usuario', 'Usuarios\UsuariosController@delete_usuario')->middleware('permiso:1,3');
     Route::post('activate_usuario', 'Usuarios\UsuariosController@activate_usuario')->middleware('permiso:1,3');
+    Route::get('pdfs', 'Usuarios\UsuariosController@pdfs')->middleware('permiso:1,4');
+
     /**verificar el password del usuario recibe el request del token y el password */
     Route::post('verificar_password', 'Usuarios\UsuariosController@verificar_password');
 
@@ -56,6 +58,9 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 
+
+
+
 //RUTA DEL LOGUIN
 Route::post('login_usuario', 'Usuarios\UsuariosController@login_usuario');
 //RUTA DEL REFRESH TOKEN
@@ -67,7 +72,7 @@ Route::post('/password/reset', 'Auth\Api\ResetPasswordController@reset');
 
 
 
-Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
+
 
 
 //Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);

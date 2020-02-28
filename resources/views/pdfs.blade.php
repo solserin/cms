@@ -148,7 +148,7 @@ footer {
       <div id="logo">
         <img src="https://s3-eu-west-1.amazonaws.com/htmlpdfapi.production/free_html5_invoice_templates/example1/logo.png">
       </div>
-      <h1>INVOICE 3-2-1</h1>
+      <h1>REPORTE DE USUARIOS</h1>
       <div id="company" class="clearfix">
         <div>Company Name</div>
         <div>455 Foggy Heights,<br /> AZ 85004, US</div>
@@ -176,17 +176,21 @@ footer {
           </tr>
         </thead>
         <tbody>
+          <?php
+          for($x=0;$x<1;$x++){
+          ?>
             @foreach ($employees as $item)
                  <tr>
-            <td class="service">Design</td>
+            <td class="service">{{$item->nombre}}</td>
             <td class="desc">Creating a recognizable design solution based on the company's existing visual identity</td>
             <td class="unit">$40.00</td>
             <td class="qty">26</td>
             <td class="total">$1,040.00</td>
           </tr>
             @endforeach
-         
-         
+         <?php
+          }
+          ?>
           <tr>
             <td colspan="4">SUBTOTAL</td>
             <td class="total">$5,200.00</td>

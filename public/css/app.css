@@ -7,6 +7,51 @@
   Author URL: hhttp://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
+[dir] .vs-popup--header {
+  padding: 10px 0 10px 0;
+  background-color: rgba(var(--vs-primary), 1) !important;
+  border-radius: 0;
+}
+
+.vs-popup--title h3 {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 14px !important;
+  font-weight: 600;
+}
+
+[dir] .con-vs-popup .vs-popup {
+  border-radius: 0px;
+}
+
+[dir] .vs-button {
+  border-radius: 0;
+}
+
+.con-vs-popup {
+  z-index: 52000 !important;
+}
+
+.vs-dialog-primary .vs-dialog .vs-dialog-header {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 14px !important;
+  font-weight: 600;
+}
+
+[dir] .vs-dialog-primary .vs-dialog .vs-dialog-header {
+  border-radius: 0;
+  background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+.accion_nombre {
+  color: rgba(var(--vs-primary), 1) !important;
+}
+
+[dir] .con-vs-dialog .vs-dialog {
+  border-radius: 0 !important;
+}
+
 /*=========================================================================================
   File Name: main.scss
   Description: Main scss file. Imports other scss partials from 'vuexy' folder

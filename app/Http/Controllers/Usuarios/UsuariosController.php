@@ -444,8 +444,12 @@ class UsuariosController extends ApiController
         );
     }
 
-    public function pdfs()
+    public function pdfs(Request $request)
     {
+        $status = $request->status;
+        $rol_id = $request->rol_id;
+        $nombre = $request->nombre;
+
         $res = User::select(
             'usuarios.id as id_user',
             'nombre',
@@ -464,15 +468,32 @@ class UsuariosController extends ApiController
         )
             ->join('roles', 'roles.id', '=', 'usuarios.roles_id')
             //->where('roles_id', ">", 1)
+            ->where(function ($q) use ($status) {
+                if ($status != '') {
+                    $q->where('usuarios.status', $status);
+                }
+            })
+            ->where(function ($q) use ($rol_id) {
+                if ($rol_id != '') {
+                    $q->where('usuarios.roles_id', $rol_id);
+                }
+            })
+            ->where(function ($q) use ($nombre) {
+                if ($nombre != '') {
+                    $q->where('usuarios.nombre', 'like', '%' . $nombre . '%');
+                }
+            })
             ->where('usuarios.roles_id', '>', '1') //no muestro super usuarios
             ->get();
+
+
 
         $pdf = PDF::loadView('pdfs', ['employees' => $res]);
         $pdf->setOptions([
             'footer-html' => view('header'),
             'page-size' => 'legal',
             'images' => false,
-            'title' => 'ddddddd'
+            'title' => 'Reporte de Usuarios'
         ]);
         return $pdf->inline();
     }
