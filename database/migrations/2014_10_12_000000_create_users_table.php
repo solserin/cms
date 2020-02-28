@@ -13,7 +13,8 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-
+        //el 28 de feb de 2020 agregue los campos para el control de los datos de empleado
+        //(celular, calle. colonia, cp y datos de contacto)
         Schema::create('usuarios', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre');
@@ -23,6 +24,14 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('genero');
             $table->longText('imagen')->nullable();
             $table->string('telefono')->nullable();
+            $table->string('celular')->nullable();
+            $table->string('calle')->nullable();
+            $table->string('numero')->nullable();
+            $table->string('colonia')->nullable();
+            $table->string('cp')->nullable();
+            $table->string('nombre_contacto')->nullable();
+            $table->string('tel_contacto')->nullable();
+            $table->string('parentesco')->nullable();
             $table->dateTime('fecha_alta')->nullable();
             $table->dateTime('fecha_baja')->nullable();
             $table->rememberToken();
