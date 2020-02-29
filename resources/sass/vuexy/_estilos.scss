@@ -1,13 +1,24 @@
+.texto-importante {
+    color: rgba(var(--vs-danger), 1) !important;
+    font-weight: 600;
+}
+
+.opacity-75 {
+    opacity: 1 !important;
+}
+
 .vs-popup--header {
     padding: 10px 0 10px 0;
     background-color: rgba(var(--vs-primary), 1) !important;
+    //background-color: transparent !important;
     border-radius: 0;
+
 }
 
 .vs-popup--title h3 {
     color: #fff;
     text-transform: uppercase;
-    font-size: 14px !important;
+    font-size: 15px !important;
     font-weight: 600;
 }
 
@@ -38,4 +49,64 @@
 
 .con-vs-dialog .vs-dialog {
     border-radius: 0 !important;
+}
+
+
+.usuarios .vs-popup {
+    width: 100% !important;
+}
+
+/**medias queries para el popup de captura de datos */
+// Extra small devices (portrait phones, less than 576px)
+@media (min-width: 576px) {
+    .usuarios .vs-popup {
+        width: 85% !important;
+    }
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (min-width: 768px) {
+    .usuarios .vs-popup {
+        width: 85% !important;
+    }
+}
+
+// Medium devices (tablets, less than 992px)
+@media (min-width: 992px) {
+    .usuarios .vs-popup {
+        width: 75% !important;
+    }
+}
+
+// Large devices (desktops, less than 1200px)
+@media (min-width: 1200px) {
+    .usuarios .vs-popup {
+        width: 80% !important;
+    }
+}
+
+
+.vs-popup--background {
+    background: rgba(0, 0, 0, .5);
+}
+
+
+
+.vs-input--input {
+    border-radius: 0px !important;
+}
+
+[dir] .vs__dropdown-toggle {
+    border-radius: 0px !important;
+}
+
+.vs-input--placeholder {
+    color: rgba(0, 0, 0, .7);
+}
+
+.texto-informacion {
+    padding: 10px 0px 10px 0px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: rgba(var(--vs-primary), 1) !important;
 }

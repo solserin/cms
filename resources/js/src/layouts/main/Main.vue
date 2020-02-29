@@ -27,7 +27,7 @@
       @updateRouterTransition="updateRouterTransition"
     />
 
-    <v-nav-menu :navMenuItems="navMenuItems" title="Vuexy" parent=".layout--main" />
+    <v-nav-menu :navMenuItems="navMenuItems" parent=".layout--main" />
 
     <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
       <div id="content-overlay" />

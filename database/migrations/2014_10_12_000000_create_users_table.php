@@ -25,10 +25,7 @@ class CreateUsersTable extends Migration
             $table->longText('imagen')->nullable();
             $table->string('telefono')->nullable();
             $table->string('celular')->nullable();
-            $table->string('calle')->nullable();
-            $table->string('numero')->nullable();
-            $table->string('colonia')->nullable();
-            $table->string('cp')->nullable();
+            $table->string('domicilio')->nullable();
             $table->string('nombre_contacto')->nullable();
             $table->string('tel_contacto')->nullable();
             $table->string('parentesco')->nullable();

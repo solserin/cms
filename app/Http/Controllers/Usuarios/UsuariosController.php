@@ -269,6 +269,12 @@ class UsuariosController extends ApiController
                 'roles_id',
                 'usuarios.status as estado',
                 'rol',
+                'domicilio',
+                'telefono',
+                'celular',
+                'tel_contacto',
+                'nombre_contacto',
+                'parentesco',
                 DB::raw('(CASE 
                         WHEN usuarios.genero = "1" THEN "Hombre"
                         ELSE "Mujer" 
@@ -346,7 +352,14 @@ class UsuariosController extends ApiController
                 'genero' => $request->genero,
                 'nombre' => $request->nombre,
                 'email' => $request->usuario,
-                'password' => Hash::make($request->password)
+                'password' => Hash::make($request->password),
+                'domicilio' => $request->direccion,
+                'telefono' => $request->telefono,
+                'celular' => $request->celular,
+                'nombre_contacto' => $request->nombre_contacto,
+                'tel_contacto' => $request->tel_contacto,
+                'parentesco' => $request->parentesco_contacto,
+                'created_at' => now(),
             ]
         );
     }
@@ -390,6 +403,13 @@ class UsuariosController extends ApiController
                     'genero' => $request->genero,
                     'nombre' => $request->nombre,
                     'email' => $request->usuario,
+                    'domicilio' => $request->direccion,
+                    'telefono' => $request->telefono,
+                    'celular' => $request->celular,
+                    'nombre_contacto' => $request->nombre_contacto,
+                    'tel_contacto' => $request->tel_contacto,
+                    'parentesco' => $request->parentesco_contacto,
+                    'updated_at' => now(),
                 ]
             );
         } else {
@@ -400,7 +420,14 @@ class UsuariosController extends ApiController
                     'genero' => $request->genero,
                     'nombre' => $request->nombre,
                     'email' => $request->usuario,
-                    'password' => Hash::make($request->password)
+                    'password' => Hash::make($request->password),
+                    'domicilio' => $request->direccion,
+                    'telefono' => $request->telefono,
+                    'celular' => $request->celular,
+                    'nombre_contacto' => $request->nombre_contacto,
+                    'tel_contacto' => $request->tel_contacto,
+                    'parentesco' => $request->parentesco_contacto,
+                    'updated_at' => now(),
                 ]
             );
         }

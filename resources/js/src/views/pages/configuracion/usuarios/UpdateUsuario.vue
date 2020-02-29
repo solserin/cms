@@ -1,41 +1,24 @@
 <template >
   <div class="centerx">
     <vs-popup
+      class="usuarios"
       close="cancelar"
       title="Modificar Usuario"
       :active.sync="showVentana"
       button-close-hidden
     >
+      <div class="w-full px-2">
+        <vs-button @click="acceptAlert()" color="success" size="small" class="float-right">Modificar</vs-button>
+        <vs-button @click="cancel()" color="danger" size="small" class="float-right mr-5">Cancelar</vs-button>
+      </div>
+      <span class="text-sm texto-importante">IMPORTANTE Los campos con (*) son obligatorios.</span>
+      <h3 class="texto-informacion">Información del usuario</h3>
       <div class="flex flex-wrap">
-        <div class="w-full">
-          <label class="text-sm opacity-75">Rol</label>
-          <v-select
-            :options="rolesOptions"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="roles"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rol_id">{{errores.rol_id[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full">
-          <label class="text-sm opacity-75">Género</label>
-          <v-select
-            :options="generosOptions"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="genero"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full">
-          <label class="text-sm opacity-75">Nombre</label>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <label class="text-sm opacity-75">
+            Nombre
+            <span class="text-danger text-sm">(*)</span>
+          </label>
           <vs-input
             name="Nombre"
             data-vv-validate-on="blur"
@@ -52,9 +35,43 @@
             <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
           </div>
         </div>
-
-        <div class="w-full">
-          <label class="text-sm opacity-75">Usuario (email)</label>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+          <label class="text-sm opacity-75">
+            Rol
+            <span class="text-danger text-sm">(*)</span>
+          </label>
+          <v-select
+            :options="rolesOptions"
+            :clearable="false"
+            :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            v-model="roles"
+            class="mb-4 sm:mb-0 pb-1 pt-1"
+          />
+          <div class="mt-2">
+            <span class="text-danger text-sm" v-if="this.errores.rol_id">{{errores.rol_id[0]}}</span>
+          </div>
+        </div>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+          <label class="text-sm opacity-75">
+            Género
+            <span class="text-danger text-sm">(*)</span>
+          </label>
+          <v-select
+            :options="generosOptions"
+            :clearable="false"
+            :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            v-model="genero"
+            class="mb-4 sm:mb-0 pb-1 pt-1"
+          />
+          <div class="mt-2">
+            <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+          </div>
+        </div>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <label class="text-sm opacity-75">
+            Usuario (email)
+            <span class="text-danger text-sm">(*)</span>
+          </label>
           <vs-input
             name="Usuario (email)"
             data-vv-validate-on="blur"
@@ -71,9 +88,11 @@
             <span class="text-danger text-sm" v-if="this.errores.usuario">{{errores.usuario[0]}}</span>
           </div>
         </div>
-
-        <div class="w-full">
-          <label class="text-sm opacity-75">Password</label>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+          <label class="text-sm opacity-75">
+            Password
+            <span class="text-danger text-sm">(*)</span>
+          </label>
           <vs-input
             data-vv-validate-on="blur"
             v-validate="'required'"
@@ -91,8 +110,11 @@
           </div>
         </div>
 
-        <div class="w-full">
-          <label class="text-sm opacity-75">Repetir Password</label>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+          <label class="text-sm opacity-75">
+            Repetir Password
+            <span class="text-danger text-sm">(*)</span>
+          </label>
           <vs-input
             data-vv-validate-on="blur"
             v-validate="'required'"
@@ -112,14 +134,64 @@
       </div>
 
       <div class="flex flex-wrap">
-        <div class="w-full pt-5">
-          <vs-button @click="cancel()" color="danger" size="small" class="float-right">Cancelar</vs-button>
-          <vs-button
-            @click="acceptAlert()"
-            color="success"
-            size="small"
-            class="float-right mr-5"
-          >Modificar</vs-button>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <label class="text-sm opacity-75">Dirección</label>
+          <vs-input
+            type="text"
+            class="w-full pb-1 pt-1"
+            placeholder="Ingrese el nombre del usuario"
+            v-model="form.direccion"
+          />
+        </div>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 mb-3 px-2">
+          <label class="text-sm opacity-75">Teléfono</label>
+          <vs-input
+            type="text"
+            class="w-full pb-1 pt-1"
+            placeholder="Ingrese el nombre del usuario"
+            v-model="form.telefono"
+          />
+        </div>
+
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 mb-2 px-2">
+          <label class="text-sm opacity-75">Celular</label>
+          <vs-input
+            type="text"
+            class="w-full pb-1 pt-1"
+            placeholder="Ingrese el nombre del usuario"
+            v-model="form.celular"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap">
+        <h3 class="texto-informacion">Información del contacto</h3>
+        <div class="w-full mb-2 px-2">
+          <label class="text-sm opacity-75">Nombre de un contacto</label>
+          <vs-input
+            type="text"
+            class="w-full pb-1 pt-1"
+            placeholder="Ingrese el nombre del usuario"
+            v-model="form.nombre_contacto"
+          />
+        </div>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 mb-2 px-2">
+          <label class="text-sm opacity-75">Teléfono del contacto</label>
+          <vs-input
+            type="text"
+            class="w-full pb-1 pt-1"
+            placeholder="Ingrese el nombre del usuario"
+            v-model="form.tel_contacto"
+          />
+        </div>
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 mb-2 px-2">
+          <label class="text-sm opacity-75">Parentesco</label>
+          <vs-input
+            type="text"
+            class="w-full pb-1 pt-1"
+            placeholder="Ingrese el nombre del usuario"
+            v-model="form.parentesco_contacto"
+          />
         </div>
       </div>
     </vs-popup>
@@ -196,7 +268,13 @@ export default {
         usuario: "",
         password: "",
         repetir: "",
-        genero: ""
+        genero: "",
+        direccion: "",
+        telefono: "",
+        celular: "",
+        nombre_contacto: "",
+        tel_contacto: "",
+        parentesco_contacto: ""
       },
       errores: []
     };
@@ -242,6 +320,12 @@ export default {
       this.form.usuario = "";
       this.form.password = "";
       this.form.repetir = "";
+      this.form.direccion = "";
+      this.form.telefono = "";
+      this.form.celular = "";
+      this.form.nombre_contacto = "";
+      this.form.tel_contacto = "";
+      this.form.parentesco_contacto = "";
       this.$emit("closeModificar");
     },
     get_roles() {
@@ -278,6 +362,13 @@ export default {
           this.form.usuario = res.data[0].email;
           this.form.password = "nochanges";
           this.form.repetir = "nochanges";
+          this.form.direccion = res.data[0].domicilio;
+          this.form.telefono = res.data[0].telefono;
+          this.form.celular = res.data[0].celular;
+
+          this.form.nombre_contacto = res.data[0].nombre_contacto;
+          this.form.tel_contacto = res.data[0].tel_contacto;
+          this.form.parentesco_contacto = res.data[0].parentesco;
         })
         .catch(err => {
           this.$vs.loading.close();

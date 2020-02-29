@@ -11,14 +11,16 @@
 let colors = {
     //primary : '#7367F0',
     //solserin 
-    primary: '#063278',
+    //primary: '#063278',
     /*aeternus*/
-    //primary: '#b18b1e',
+    primary: '#b18b1e',
     success: '#28C76F',
     danger: '#EA5455',
     warning: '#FF9F43',
     dark: '#1E1E1E',
-    secondary_theme: '#b6babd'
+    secondary_theme: '#b6babd',
+    textos_theme: '#1f1714',
+
 }
 
 // CONFIGS

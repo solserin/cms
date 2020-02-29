@@ -1,10 +1,10 @@
 <template>
   <div>
-    <vs-tabs alignment="left" position="top" class="pt-5" v-model="activeTab">
+    <vs-tabs alignment="left" position="top" v-model="activeTab">
       <vs-tab label="CONTROL DE USUARIOS" icon="supervisor_account" class="pb-5"></vs-tab>
       <vs-tab label="ROLES DEL SISTEMA" icon="fingerprint"></vs-tab>
     </vs-tabs>
-    <div class="tab-content mt-4 pb-3" v-show="activeTab==0">
+    <div class="tab-content mt-1" v-show="activeTab==0">
       <vx-card ref="filterCard" title="Filtros de selección" class="user-list-filters">
         <div class="flex flex-wrap">
           <div class="w-full">
@@ -177,7 +177,7 @@
     <div class="tab-content mt-4 pb-3" v-show="activeTab==1">
       <rolesList @refreshRoles="get_roles"></rolesList>
     </div>
-    <AgregarUsuario :show="verAgregar" @closeVentana="closeVentana"></AgregarUsuario>
+    <AgregarUsuario :show="verAgregar" @closeVentana="closeVentana" @get_data="get_data(actual)"></AgregarUsuario>
     <UpdateUsuario
       :show="verModificar"
       @closeModificar="closeModificar"
