@@ -1,6 +1,3 @@
-export const api_url = 'http://app.laravel/'
-
-
 /**SELECT OPTIONS */
 export const mostrarOptions = [{
         label: "15",

@@ -15,6 +15,10 @@ class DatabaseSeeder extends Seeder
         $this->call(SeccionesSeeder::class);
         $this->call(ModulosSeeder::class);
         $this->call(RolesSeederTable::class);
+        $this->call(EstadosTableSeeder::class);
+        $this->call(MunicipiosTableSeeder::class);
+        $this->call(SATMonedasSeeder::class);
+        $this->call(SATRegimenesSeeder::class);
         factory(User::class, 250)->create();
     }
 }
