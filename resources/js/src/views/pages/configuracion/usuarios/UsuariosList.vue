@@ -205,13 +205,13 @@ import UpdateUsuario from "../usuarios/UpdateUsuario.vue";
 import Password from "../../confirmar_password";
 import { UserPlusIcon, PrinterIcon } from "vue-feather-icons";
 
-import usuarios from "../../../../services/Usuarios";
+import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import {
   mostrarOptions,
   estadosOptions,
   rolesOptions
-} from "../../../../VariablesGlobales";
+} from "@/VariablesGlobales";
 import vSelect from "vue-select";
 
 export default {

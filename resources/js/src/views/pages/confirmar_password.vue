@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import usuarios from "../../services/Usuarios";
+import usuarios from "@services/Usuarios";
 export default {
   props: {
     show: {

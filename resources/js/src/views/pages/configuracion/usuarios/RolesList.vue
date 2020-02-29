@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import usuarios from "../../../../services/Usuarios";
+import usuarios from "@services/Usuarios";
 //componente de password
 import Password from "../../confirmar_password";
 /**VARIABLES GLOBALES */

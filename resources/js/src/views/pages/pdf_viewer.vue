@@ -24,7 +24,7 @@
 
 
 <script>
-import usuarios from "../../services/Usuarios";
+import usuarios from "@services/Usuarios";
 export default {
   props: {
     pdf: {

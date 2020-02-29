@@ -206,10 +206,10 @@
 <script>
 //componente de password
 import Password from "../../confirmar_password";
-import usuarios from "../../../../services/Usuarios";
+import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
 /**VARIABLES GLOBALES */
-import { generosOptions } from "../../../../VariablesGlobales";
+import { generosOptions } from "@/VariablesGlobales";
 export default {
   components: {
     "v-select": vSelect,
