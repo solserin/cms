@@ -54,12 +54,36 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('add_rol', 'Usuarios\RolesController@add_rol')->middleware('permiso:1,1');
     Route::post('update_rol', 'Usuarios\RolesController@update_rol')->middleware('permiso:1,2');
     Route::post('delete_rol', 'Usuarios\RolesController@delete_rol')->middleware('permiso:1,3');
+
+    //municipios y estados
+    Route::get('estados/', 'EstadosController@getEstados');
+    Route::get('municipios/{estadoId}', 'MunicipiosController@getMunicipios');
+    Route::get('localidades/{municipioId}', 'LocalidadesController@getLocalidades');
+
+    //Empresa
+    Route::get('empresa/funeraria', 'EmpresaController@get');
+    Route::post('empresa/funeraria', 'EmpresaController@save');
+    Route::post('empresa/registro-publico', 'EmpresaController@saveRegistroPublico');
+    Route::get('empresa/registro-publico', 'EmpresaController@getRegistroPublico');
+    //Cementerio
+    Route::get('empresa/cementerio', 'EmpresaController@getCementerio');
+    Route::post('empresa/cementerio', 'EmpresaController@saveCementerio');
+    //crematorio
+    Route::get('empresa/crematorio', 'EmpresaController@getCrematorio');
+    Route::post('empresa/crematorio', 'EmpresaController@saveCrematorio');
+    //velatorio
+    Route::get('empresa/velatorio', 'EmpresaController@getVelatorio');
+    Route::post('empresa/velatorio', 'EmpresaController@saveVelatorio');
+    //validate cer file
+    Route::post('empresa/facturacion/validateCER', 'EmpresaController@validateCERFile');
+    Route::post('empresa/facturacion/validateKEY', 'EmpresaController@validateKEYFile');
+    Route::post('empresa/facturacion', 'EmpresaController@saveFacturacion');
+    Route::get('empresa/facturacion', 'EmpresaController@getFacturacion');
+
+    ///SAT
+    Route::get('regimenes/', 'SATRegimenesController@getAll');
+    Route::get('monedas/', 'SATMonedasController@getAll');
 });
-
-
-
-
-
 
 //RUTA DEL LOGUIN
 Route::post('login_usuario', 'Usuarios\UsuariosController@login_usuario');

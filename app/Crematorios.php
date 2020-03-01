@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cementerios extends Model
+class Crematorios extends Model
 {
-    protected $table = 'cementerios';
+    protected $table = 'crematorios';
 
     public function localidad() {
         return $this->hasOne('App\Localidades', 'id', 'localidades_id');

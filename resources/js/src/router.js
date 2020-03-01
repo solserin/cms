@@ -94,7 +94,26 @@ const router = new Router({
                     },
                 },
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
-
+                /**RUTAS PARA EL MODULO DE EMPRESA */
+                {
+                    path: '/empresa',
+                    name: 'Informacion de empresa',
+                    component: () => import('@/views/pages/empresa/Empresa.vue'),
+                    meta: {
+                        breadcrumb: [{
+                                title: 'Home',
+                                url: '/'
+                            },
+                            {
+                                title: 'Empresa',
+                                active: true
+                            },
+                        ],
+                        pageTitle: 'Empresa',
+                        rule: 'editor'
+                    },
+                },
+                /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
                 // =============================================================================
                 // Application Routes
                 // =============================================================================

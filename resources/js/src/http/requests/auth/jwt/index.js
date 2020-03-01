@@ -4,7 +4,9 @@ import store from "../../../../store/store.js"
 // Token Refresh
 let isAlreadyFetchingAccessToken = false
 let subscribers = []
-
+let allowedErrorCodes = [
+    422, 429, 500, 403, 404
+]
 /**VALIDO SI EXISTEN ESTOS DATOS PARA DEJAR PASAR LA PETICION */
 if (localStorage.getItem('accessToken') && localStorage.getItem('refreshToken')) {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('accessToken')
@@ -66,8 +68,9 @@ export default {
                 if (response) {
                     //si el error tiene status
                     if (response.status) {
-                        if (response.status != 422 && response.status != 429 && response.status != 500 && response.status != 403 && response.status != 409)
+                        if (allowedErrorCodes.indexOf(response.status) === -1) {
                             store.dispatch("auth/logout_force")
+                        }
                     }
                 } else {
                     return Promise.reject(error)
