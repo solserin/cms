@@ -153,6 +153,7 @@ class UsuariosController extends ApiController
                 ->where('parent_modulo_id', '=', 0)
                 ->where('roles_id', '=',  $request->user()->roles_id)
                 ->distinct('modulo')
+                //->toSql();
                 ->get();
             //return $grupos_modulos;
             $grupos = [];

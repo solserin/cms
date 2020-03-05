@@ -18,7 +18,7 @@ class ModulosSeeder extends Seeder
                 'modulo' => 'Usuarios',
                 'icon' => 'UserIcon',
                 'parent_modulo_id' => '0',
-                'url' => '/usuarios',
+                'url' => '/configuracion/usuarios',
                 'secciones_id' => '1'
             ],
             [
@@ -26,7 +26,7 @@ class ModulosSeeder extends Seeder
                 'modulo' => 'Empresa',
                 'icon' => 'BriefcaseIcon',
                 'parent_modulo_id' => '0',
-                'url' => '/empresa',
+                'url' => '/configuracion/empresa',
                 'secciones_id' => '1'
             ],
             [
@@ -34,7 +34,31 @@ class ModulosSeeder extends Seeder
                 'modulo' => 'Cementerio',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => '0',
-                'url' => '/cementerio',
+                'url' => '/inventarios/cementerio',
+                'secciones_id' => '2'
+            ],
+            [
+                //4
+                'modulo' => 'Funeraria',
+                'icon' => 'CoffeeIcon',
+                'parent_modulo_id' => '0',
+                'url' => '',
+                'secciones_id' => '2'
+            ],
+            [
+                //5
+                'modulo' => 'Proveedores',
+                'icon' => 'CoffeeIcon',
+                'parent_modulo_id' => '4',
+                'url' => '/inventarios/funeraria/proveedores',
+                'secciones_id' => '2'
+            ],
+            [
+                //5
+                'modulo' => 'Inventario',
+                'icon' => 'CoffeeIcon',
+                'parent_modulo_id' => '4',
+                'url' => '/inventarios/funeraria/articulos-servicios',
                 'secciones_id' => '2'
             ]
         ];
