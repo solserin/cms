@@ -114,6 +114,28 @@ const router = new Router({
                     },
                 },
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
+                /**RUTAS PARA EL MODULO DE inventarios */
+                {
+                    path: '/cementerio',
+                    name: 'Control del cementerio',
+                    component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
+                    meta: {
+                        breadcrumb: [{
+                                title: 'Home',
+                                url: '/'
+                            },
+                            {
+                                title: 'Inventario del cementerio'
+                            },
+                            {
+                                title: 'Control',
+                                active: true
+                            },
+                        ],
+                        pageTitle: 'Cementerio',
+                        rule: 'editor'
+                    },
+                },
                 // =============================================================================
                 // Application Routes
                 // =============================================================================

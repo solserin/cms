@@ -18,8 +18,8 @@ class SeccionesSeeder extends Seeder
                 'icon' => 'SettingsIcon'
             ],
             [
-                'seccion' => 'Módulos',
-                'icon' => 'fa-briefcase'
+                'seccion' => 'Inventarios',
+                'icon' => 'PackageIcon'
             ]
         ];
 

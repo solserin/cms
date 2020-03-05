@@ -28,6 +28,14 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => '0',
                 'url' => '/empresa',
                 'secciones_id' => '1'
+            ],
+            [
+                //3
+                'modulo' => 'Cementerio',
+                'icon' => 'PackageIcon',
+                'parent_modulo_id' => '0',
+                'url' => '/cementerio',
+                'secciones_id' => '2'
             ]
         ];
 
