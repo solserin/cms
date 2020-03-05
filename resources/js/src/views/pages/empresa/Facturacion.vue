@@ -81,7 +81,7 @@
 				<div class="vx-row">
 					<div class="vx-col w-full">
 						<div class="flex flex-wrap items-center justify-end">
-							<vs-button class="ml-auto mt-2" size="small" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar</vs-button>
+							<vs-button class="ml-auto mt-2" size="small" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar Facturacion</vs-button>
 						</div>
 					</div>
 				</div>
@@ -162,11 +162,7 @@ export default {
 
       self.$validator.validateAll().then(result => {
         if (result && !filesError) {
-          if (self.routePassword) {
-            self.showChecker = true 
-          } else {
-            self.saveData()
-          }
+          self.showChecker = true
         } else {
           self.$vs.notify({
               color:'warning',

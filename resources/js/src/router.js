@@ -113,6 +113,29 @@ const router = new Router({
                         rule: 'editor'
                     },
                 },
+                /**FIN DE RUTAS PARA EL MODULO DE EMPRESAS */
+                /**RUTAS PARA EL MODULO DE PROVEEDORES */
+                {
+                    path: '/inventario/proveedores',
+                    name: 'inventario-proveedores',
+                    component: () => import('@/views/pages/proveedores/Proveedores.vue'),
+                    meta: {
+                        breadcrumb: [{
+                                title: 'Home',
+                                url: '/'
+                            },
+                            {
+                                title: 'Inventario'
+                            },
+                            {
+                                title: 'Proveedores',
+                                active: true
+                            },
+                        ],
+                        pageTitle: 'Proveedores',
+                        rule: 'editor'
+                    },
+                },
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
                 /**RUTAS PARA EL MODULO DE inventarios */
                 {
