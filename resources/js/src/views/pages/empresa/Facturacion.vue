@@ -1,6 +1,5 @@
 <template>
-	<div>
-		<vx-card title="Configuración de facturación">
+  <div class="mt-4 pb-3">
 			<form>
 				<div class="vx-row" v-if="!disableFields">
 					<div class="vx-col w-full mt-3 flex justify-center">
@@ -17,7 +16,7 @@
 									:headers="requestHeaders" 
 									fileName="certificate" 
 									automatic 
-									action="/api/empresa/facturacion/validateCER" 
+									action="/empresa/facturacion/validateCER" 
 									@on-success="successCertificate"
 									@on-error="errorCertificate"
 									@on-delete="clearCertificate" />
@@ -36,7 +35,7 @@
 									:headers="requestHeaders" 
 									fileName="key" 
 									automatic 
-									action="/api/empresa/facturacion/validateKEY" 
+									action="/empresa/facturacion/validateKEY" 
 									@on-success="successKey"
 									@on-error="errorKey"
 									@on-delete="clearKey" />
@@ -56,7 +55,7 @@
 				<div class="vx-row w-full">
 					<div class="vx-col md:w-3/12 mt-3">
 						<vx-tooltip text="La contraseña del certificado no se muestra, para cambiarla basta con introducirla en el campo de texto">
-							<vs-input :disabled="disableFields" v-model="facturacion.password" icon-pack="feather" icon="icon-lock" data-vv-as="Contraseña" type="password" class="w-full" label="Contraseña del certificado:" v-validate="rules" name="password" ref="password"/>
+							<vs-input v-model="facturacion.password" icon-pack="feather" icon="icon-lock" data-vv-as="Contraseña" type="password" class="w-full" label="Contraseña del certificado:" v-validate="rules" name="password" ref="password"/>
 						</vx-tooltip>
 						<span class="text-danger text-sm" v-show="errors.has('password')">{{ errors.first('password') }}</span>
 					</div>
@@ -66,38 +65,35 @@
 					</div>
 					<div class="vx-col md:w-3/12 mt-3">
 						<vx-tooltip text="Correo usado para emitir facturas">
-							<vs-input :disabled="disableFields" data-vv-as="Correo" icon-pack="feather" icon="icon-mail" :bails="false" v-model="facturacion.email_emisor" class="w-full" label="Correo*:" type="email" v-validate="'required|email'" name="email" />
+							<vs-input data-vv-as="Correo" icon-pack="feather" icon="icon-mail" :bails="false" v-model="facturacion.email_emisor" class="w-full" label="Correo*:" type="email" v-validate="'required|email'" name="email" />
 						</vx-tooltip>
 						<span class="text-danger text-sm" v-show="errors.has('email')">{{ errors.first('email') }}</span>
 					</div>                    
 					<div class="vx-col w-full md:w-3/12 mt-3">
 						<label for="" class="vs-input--label">Tipo de moneda*:</label>
-						<v-select v-model="selectedMoneda" :disabled="disableFields" :clearable="false" name="moneda" data-vv-as="Moneda" v-validate="'required'" placeholder="Seleccione un tipo de moneda" :options="monedas">
+						<v-select v-model="selectedMoneda" :clearable="false" name="moneda" data-vv-as="Moneda" v-validate="'required'" placeholder="Seleccione un tipo de moneda" :options="monedas">
 							<div  slot="no-options">No hay opciones disponibles.</div>
 						</v-select>
 						<span class="text-danger text-sm" v-show="errors.has('moneda')">{{ errors.first('moneda') }}</span>
 					</div>
 				</div>
-				<vs-divider v-if="!disableFields" />
-				<div class="vx-row" v-if="!disableFields">
+				<vs-divider />
+				<div class="vx-row">
 					<div class="vx-col w-full">
 						<div class="flex flex-wrap items-center justify-end">
-							<vs-button class="ml-auto mt-2" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar</vs-button>
+							<vs-button class="ml-auto mt-2" size="small" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar Facturacion</vs-button>
 						</div>
 					</div>
 				</div>
 			</form>
-		</vx-card>
-		<password-checker :show="showChecker" :callback-on-success="saveData" :callback-on-error="closeChecker" :cancel-callback="closeChecker" />
+		<password-checker accion="Actualizar facturacion" :show="showChecker" :callback-on-success="saveData" :callback-on-error="closeChecker" @closeVerificar="closeChecker" />
 	</div>
 </template>
 <script>
 import vSelect from 'vue-select'
 import empresaService from '@services/empresa'
 import satService from '@services/sat'
-import access from '../../../route-access'
-import {routePassword} from '@/route-access'
-import PasswordChecker from '@/components/PasswordChecker'
+import PasswordChecker from '@/views/pages/confirmar_password'
 import  _ from 'lodash'
 
 export default {
@@ -108,9 +104,6 @@ export default {
   data() {
     return {
       monedas: [],
-      editAccess: true,
-      viewAccess: true,
-      disableFields: false,
       currentTimeStampKey: null,
       currentTimeStampCer: null,
       selectedMoneda: null,
@@ -169,11 +162,7 @@ export default {
 
       self.$validator.validateAll().then(result => {
         if (result && !filesError) {
-          if (self.routePassword) {
-            self.showChecker = true 
-          } else {
-            self.saveData()
-          }
+          self.showChecker = true
         } else {
           self.$vs.notify({
               color:'warning',
@@ -310,10 +299,6 @@ export default {
   },
   created: function () {
     let self = this
-    self.editAccess = access('/empresa/facturacion', 'e')
-    self.viewAccess = access('/empresa/facturacion', 'v')
-    self.disableFields = self.editAccess ? false : true
-    self.routePassword = routePassword('/empresa/facturacion')
     satService.getMonedas().then((result) => {
       if (result.data) {
         self.monedas = result.data.data

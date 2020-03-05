@@ -7,12 +7,14 @@
                 <vs-tab label="Cementerio" icon-pack="feather" icon="icon-layers"></vs-tab>
                 <vs-tab label="Crematorio" icon-pack="feather" icon="icon-minimize"></vs-tab>
                 <vs-tab label="Velatorio" icon-pack="feather" icon="icon-home"></vs-tab>
+                <vs-tab label="Facturacion" icon-pack="feather" icon="icon-home"></vs-tab>
             </vs-tabs>
             <Funeraria v-if="activeTab === 0"/>
             <RegistroPublico v-if="activeTab === 1"/>
             <Cementerio v-if="activeTab === 2"/>
             <Crematorio v-if="activeTab === 3"/>
             <Velatorio v-if="activeTab === 4"/>
+            <Facturacion v-if="activeTab === 5"/>
         </vx-card>
     </div>
 </template>
@@ -22,6 +24,7 @@ import RegistroPublico from './RegistroPublico'
 import Cementerio from './Cementerio'
 import Crematorio from './Crematorio'
 import Velatorio from './Velatorio'
+import Facturacion from './Facturacion'
 
 export default {
     components: {
@@ -29,7 +32,8 @@ export default {
         RegistroPublico,
         Cementerio,
         Crematorio,
-        Velatorio
+        Velatorio,
+        Facturacion
     },
     data() {
         return {

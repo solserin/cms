@@ -37,7 +37,9 @@
     "autoload": {
         "files": [
             "app/helpers/cantidad_a_letras.php",
-            "app/helpers/fechas_funciones.php"
+            "app/helpers/fechas_funciones.php",
+            "app/helpers/facturacion.php"
+
         ],
         "psr-4": {
             "App\\": "app/"
