@@ -35,6 +35,10 @@
         }
     },
     "autoload": {
+        "files": [
+            "app/helpers/cantidad_a_letras.php",
+            "app/helpers/fechas_funciones.php"
+        ],
         "psr-4": {
             "App\\": "app/"
         },

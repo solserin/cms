@@ -5,7 +5,7 @@ import store from "../../../../store/store.js"
 let isAlreadyFetchingAccessToken = false
 let subscribers = []
 let allowedErrorCodes = [
-    422, 429, 500, 403, 404
+    422, 429, 500, 403, 404, 409
 ]
 /**VALIDO SI EXISTEN ESTOS DATOS PARA DEJAR PASAR LA PETICION */
 if (localStorage.getItem('accessToken') && localStorage.getItem('refreshToken')) {

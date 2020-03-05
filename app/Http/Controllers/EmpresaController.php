@@ -16,15 +16,16 @@ use App\SATMonedas;
 class EmpresaController extends ApiController
 {
 
-    public function save(Request $request) {
-        $funerariaData = (object)$request->all();
+    public function save(Request $request)
+    {
+        $funerariaData = (object) $request->all();
 
         $funeraria = Funeraria::get()->first();
         if (!$funeraria) {
             $funeraria = new Funeraria;
         }
 
-        foreach($funerariaData as $key => $value) {
+        foreach ($funerariaData as $key => $value) {
             $funeraria->{$key} = !is_null($funerariaData->{$key}) ? $funerariaData->{$key} : $funeraria->{$key};
         }
 
@@ -33,8 +34,9 @@ class EmpresaController extends ApiController
         return response()->json(['message' => 'funeraria creada satisfactoriamente'], 200);
     }
 
-    public function saveRegistroPublico(Request $request) {
-        $registroData = (object)$request->all();
+    public function saveRegistroPublico(Request $request)
+    {
+        $registroData = (object) $request->all();
 
         $funeraria = Funeraria::get()->first();
         $registro = RegistroPublico::get()->first();
@@ -42,24 +44,24 @@ class EmpresaController extends ApiController
             $registro = new RegistroPublico;
         }
 
-        foreach($registroData as $key => $value) {
+        foreach ($registroData as $key => $value) {
             $registro->{$key} = !is_null($registroData->{$key}) ? $registroData->{$key} : $registro->{$key};
         }
         $registro->funeraria_id = $funeraria->id;
         $registro->save();
 
         return response()->json(['message' => 'registro publico creado satisfactoriamente'], 200);
-
     }
 
-    public function getRegistroPublico() {
+    public function getRegistroPublico()
+    {
         $registro = RegistroPublico::with('localidadNP')
-                    ->with('localidadNP.municipio')
-                    ->with('localidadNP.municipio.estado')
-                    ->with('localidadRPC')
-                    ->with('localidadRPC.municipio')
-                    ->with('localidadRPC.municipio.estado')
-                    ->get()->first();
+            ->with('localidadNP.municipio')
+            ->with('localidadNP.municipio.estado')
+            ->with('localidadRPC')
+            ->with('localidadRPC.municipio')
+            ->with('localidadRPC.municipio.estado')
+            ->get()->first();
 
         if ($registro) {
             $data = ['registro' => $registro];
@@ -69,7 +71,8 @@ class EmpresaController extends ApiController
         return $this->errorResponse('Registro Publico not found', 404);
     }
 
-    public function get() {
+    public function get()
+    {
         $funeraria = Funeraria::with('regimen')->with('localidad')->with('localidad.municipio')->with('localidad.municipio.estado')->get()->first();
         $data = array();
 
@@ -82,7 +85,8 @@ class EmpresaController extends ApiController
     }
 
     ///cementerio
-    public function saveCementerio(Request $request) {
+    public function saveCementerio(Request $request)
+    {
         $data = $request->all();
 
         $cementerio = Cementerios::get()->first();
@@ -90,7 +94,7 @@ class EmpresaController extends ApiController
             $cementerio = new Cementerios;
         }
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $cementerio->{$key} = !is_null($data[$key]) ? $data[$key] : $cementerio->{$key};
         }
         $funeraria = Funeraria::get()->first();
@@ -100,7 +104,8 @@ class EmpresaController extends ApiController
         return response()->json(['message' => 'cementerio guardado satisfactoriamente'], 200);
     }
 
-    public function getCementerio() {
+    public function getCementerio()
+    {
         $cementerio = Cementerios::with('localidad')->with('localidad.municipio')->with('localidad.municipio.estado')->get()->first();
         $data = array();
 
@@ -112,7 +117,8 @@ class EmpresaController extends ApiController
     }
 
     ///crematorio
-    public function saveCrematorio(Request $request) {
+    public function saveCrematorio(Request $request)
+    {
         $data = $request->all();
 
         $crematorio = Crematorios::get()->first();
@@ -120,7 +126,7 @@ class EmpresaController extends ApiController
             $crematorio = new Crematorios;
         }
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $crematorio->{$key} = !is_null($data[$key]) ? $data[$key] : $crematorio->{$key};
         }
         $funeraria = Funeraria::get()->first();
@@ -130,7 +136,8 @@ class EmpresaController extends ApiController
         return response()->json(['message' => 'crematorio guardado satisfactoriamente'], 200);
     }
 
-    public function getCrematorio() {
+    public function getCrematorio()
+    {
         $crematorio = Crematorios::with('localidad')->with('localidad.municipio')->with('localidad.municipio.estado')->get()->first();
         $data = array();
 
@@ -140,9 +147,10 @@ class EmpresaController extends ApiController
 
         return $this->errorResponse('Crematorio not found', 404);
     }
-    
+
     ///velatorios
-    public function saveVelatorio(Request $request) {
+    public function saveVelatorio(Request $request)
+    {
         $data = $request->all();
 
         $velatorio = Velatorios::get()->first();
@@ -152,7 +160,7 @@ class EmpresaController extends ApiController
 
         $salas = $data['salas'];
         $dataVelatorio = $data['velatorio'];
-        foreach($dataVelatorio as $key => $value) {
+        foreach ($dataVelatorio as $key => $value) {
             $velatorio->{$key} = !is_null($dataVelatorio[$key]) ? $dataVelatorio[$key] : $velatorio->{$key};
         }
         $funeraria = Funeraria::get()->first();
@@ -187,7 +195,8 @@ class EmpresaController extends ApiController
         return response()->json(['message' => 'velatorio guardado satisfactoriamente'], 200);
     }
 
-    public function getVelatorio() {
+    public function getVelatorio()
+    {
         $velatorio = Velatorios::with('localidad')->with('localidad.municipio')->with('localidad.municipio.estado')->get()->first();
         $data = array();
 
@@ -203,7 +212,8 @@ class EmpresaController extends ApiController
         return $this->errorResponse('Velatorio not found', 404);
     }
 
-    public function validateCERFile(Request $request) {
+    public function validateCERFile(Request $request)
+    {
         $extension = $request->certificate->getClientOriginalExtension();
         if ($extension !== 'cer') {
             return $this->errorResponse(['message' => 'El archivo no es un certificado'], 412);
@@ -213,15 +223,15 @@ class EmpresaController extends ApiController
         $data = getCertificateData($path);
         $serialArray = str_split($data['serialNumberHex']);
         //To validate serial number
-		$finalCert = "";
-		for($x = 0;$x < count($serialArray);$x++){
-			$finalCert.=($x%2 != 0)?$serialArray[$x]:"";
+        $finalCert = "";
+        for ($x = 0; $x < count($serialArray); $x++) {
+            $finalCert .= ($x % 2 != 0) ? $serialArray[$x] : "";
         }
 
         if (!$finalCert or strlen($finalCert) != 20) {
             return $this->errorResponse(['message' => 'El numero de certificado no es valido'], 412);
         }
-        
+
         //Validates if certificate is valid
         $validFrom = new \DateTime();
         $validFrom->setTimestamp($data['validFrom_time_t']);
@@ -229,13 +239,14 @@ class EmpresaController extends ApiController
         $validTo->setTimestamp($data['validTo_time_t']);
         $today = new \DateTime();
         if (!($today >= $validFrom) and ($today <= $validTo)) {
-            return $this->errorResponse(['message' => 'El certificado no es valido'] , 412);    
+            return $this->errorResponse(['message' => 'El certificado no es valido'], 412);
         }
 
         return response()->json(['certificate' => ''], 200);
     }
 
-    public function validateKEYFile(Request $request) {
+    public function validateKEYFile(Request $request)
+    {
         $extension = $request->key->getClientOriginalExtension();
         if ($extension !== 'key') {
             return $this->errorResponse(['message' => 'El archivo no es un archivo key'], 412);
@@ -244,7 +255,8 @@ class EmpresaController extends ApiController
         return response()->json(['key' => ''], 200);
     }
 
-    public function saveFacturacion(Request $request) {
+    public function saveFacturacion(Request $request)
+    {
 
         $data = $request->all();
         $facturacion = Facturacion::get()->first();
@@ -259,25 +271,25 @@ class EmpresaController extends ApiController
         $request->sat_monedas_id = $request->sat_monedas_id === 'null' ? null : $request->sat_monedas_id;
 
         if (!is_null($request->certificateFile)) {
-            $certificateFileName = 'certificate_'.date('YmdHis').".".$request->certificateFile->getClientOriginalExtension();
+            $certificateFileName = 'certificate_' . date('YmdHis') . "." . $request->certificateFile->getClientOriginalExtension();
             $request->certificateFile->storeAs('cer', $certificateFileName);
             $facturacion->cer = $certificateFileName;
 
             $path = $request->certificateFile->path();
             $data = getCertificateData($path);
-            
+
             $serialArray = str_split($data['serialNumberHex']);
             //To validate serial number
             $finalCert = "";
-            for($x = 0;$x < count($serialArray);$x++){
-                $finalCert.=($x%2 != 0)?$serialArray[$x]:"";
+            for ($x = 0; $x < count($serialArray); $x++) {
+                $finalCert .= ($x % 2 != 0) ? $serialArray[$x] : "";
             }
 
             $facturacion->numero_cert = $finalCert;
         }
 
         if (!is_null($request->keyFile)) {
-            $keyFileName = 'key_'.date('YmdHis').".".$request->keyFile->getClientOriginalExtension();
+            $keyFileName = 'key_' . date('YmdHis') . "." . $request->keyFile->getClientOriginalExtension();
             $request->keyFile->storeAs('key', $keyFileName);
             $facturacion->key = $keyFileName;
         }
@@ -291,7 +303,8 @@ class EmpresaController extends ApiController
         return response()->json(['key' => ''], 200);
     }
 
-    public function getFacturacion() {
+    public function getFacturacion()
+    {
         $facturacion = Facturacion::get()->first();
         if (!$facturacion) {
             return $this->errorResponse('Facturacion not found', 404);
@@ -300,5 +313,14 @@ class EmpresaController extends ApiController
         $moneda = SATMonedas::find($facturacion->sat_monedas_id);
         $facturacion->moneda = $moneda;
         return response()->json($facturacion, 200);
+    }
+
+
+
+    /**obtengo los datos de la empresa para crear los header de los reportes */
+    public function get_empresa_data()
+    {
+        $funeraria = Funeraria::with('regimen')->with('localidad')->with('localidad.municipio')->with('localidad.municipio.estado')->get()->first();
+        return $funeraria;
     }
 }

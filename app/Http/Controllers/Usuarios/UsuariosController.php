@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\EmpresaController;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\BadResponseException;
 
@@ -492,7 +493,11 @@ class UsuariosController extends ApiController
             DB::raw('(CASE 
                         WHEN usuarios.genero = "1" THEN "Hombre"
                         ELSE "Mujer" 
-                        END) AS genero_des')
+                        END) AS genero_des'),
+            DB::raw('(CASE 
+                        WHEN usuarios.status = "1" THEN "Activo"
+                        ELSE "Sin acceso" 
+                        END) AS status_des')
         )
             ->join('roles', 'roles.id', '=', 'usuarios.roles_id')
             //->where('roles_id', ">", 1)
@@ -516,13 +521,17 @@ class UsuariosController extends ApiController
 
 
 
-        $pdf = PDF::loadView('pdfs', ['employees' => $res]);
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $pdf->setOptions([
-            'footer-html' => view('header'),
-            'page-size' => 'legal',
             'images' => false,
-            'title' => 'Reporte de Usuarios'
+            'title' => 'Reporte de Usuarios',
+            'footer-html' => view('footer'),
+            'header-html' => view('header'),
         ]);
+        $pdf->setOption('margin-top', 10);
+        $pdf->setOption('margin-bottom', 15);
         return $pdf->inline();
     }
 
