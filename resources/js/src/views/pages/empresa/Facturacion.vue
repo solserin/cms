@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4 pb-3">
 			<form>
-				<div class="vx-row" v-if="!disableFields">
+				<div class="vx-row">
 					<div class="vx-col w-full mt-3 flex justify-center">
 						<div class="flex items-center">
 							<div class="align-center">
@@ -60,7 +60,7 @@
 						<span class="text-danger text-sm" v-show="errors.has('password')">{{ errors.first('password') }}</span>
 					</div>
 					<div class="vx-col md:w-3/12 mt-3">
-						<vs-input v-model="repeatPassword" icon-pack="feather" icon="icon-lock"  :disabled="disabledPassword || disableFields" data-vv-as="Repetir Contraseña" type="password" class="w-full" label="Repetir Contraseña:" v-validate="rulesRepeat" name="repeat_password" />
+						<vs-input v-model="repeatPassword" icon-pack="feather" icon="icon-lock"  data-vv-as="Repetir Contraseña" type="password" class="w-full" label="Repetir Contraseña:" v-validate="rulesRepeat" name="repeat_password" />
 						<span class="text-danger text-sm" v-show="errors.has('repeat_password')">{{ errors.first('repeat_password') }}</span>
 					</div>
 					<div class="vx-col md:w-3/12 mt-3">

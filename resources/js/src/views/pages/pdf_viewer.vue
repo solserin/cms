@@ -73,6 +73,7 @@ export default {
   methods: {
     get_pdf() {
       this.$vs.loading();
+      console.log(this.pdfLink)
       usuarios
         .get_pdf(this.pdfLink)
         .then(res => {
