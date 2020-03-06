@@ -104,7 +104,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof HttpException) {
             return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
         }
-
+        
         //con esto validamos si el metodo llamado existe
         if ($exception instanceof BadMethodCallException) {
             return $this->errorResponse('El metodo solicitado no existe', 500);
@@ -121,10 +121,10 @@ class Handler extends ExceptionHandler
             $codigo_error = $exception->errorInfo[1];
             if ($codigo_error == 1451) {
                 return $this->errorResponse('No se puede eliminar de forma permanente el recurso porque esta relacionado con algun otro.', 409);
-            }
+            }/*
             if ($codigo_error == 1048) {
                 return $this->errorResponse('La bd no puede ejecutar su petición por que faltan campos obligatorios.', 409);
-            }
+            }*/
         }
 
 

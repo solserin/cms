@@ -83,6 +83,12 @@ Route::middleware(['auth:api'])->group(function () {
     ///SAT
     Route::get('regimenes/', 'SATRegimenesController@getAll');
     Route::get('monedas/', 'SATMonedasController@getAll');
+
+    //Proveedores
+    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create');
+    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save');
+    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll');
+    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF');
 });
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
