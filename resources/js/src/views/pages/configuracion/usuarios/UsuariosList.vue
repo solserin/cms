@@ -486,7 +486,7 @@ export default {
 
     pdf() {
       this.pdfLink =
-        "pdfs?status=" +
+        "/pdfs?status=" +
         this.estado.value +
         "&rol_id=" +
         this.roles.value +
