@@ -193,7 +193,7 @@ const router = new Router({
                                 title: 'Inventario de la funeraria'
                             },
                             {
-                                title: 'Control',
+                                title: 'Inventario',
                                 active: true
                             },
                         ],
