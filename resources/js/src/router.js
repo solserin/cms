@@ -73,7 +73,7 @@ const router = new Router({
 
                 /**RUTAS PARA EL MODULO DE USUARIOS */
                 {
-                    path: '/usuarios',
+                    path: '/configuracion/usuarios',
                     name: 'Lista de Usuarios',
                     component: () => import('@/views/pages/configuracion/usuarios/UsuariosList.vue'),
                     meta: {
@@ -96,7 +96,7 @@ const router = new Router({
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
                 /**RUTAS PARA EL MODULO DE EMPRESA */
                 {
-                    path: '/empresa',
+                    path: '/configuracion/empresa',
                     name: 'Informacion de empresa',
                     component: () => import('@/views/pages/empresa/Empresa.vue'),
                     meta: {
@@ -139,8 +139,8 @@ const router = new Router({
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
                 /**RUTAS PARA EL MODULO DE inventarios */
                 {
-                    path: '/cementerio',
-                    name: 'Control del cementerio',
+                    path: '/inventarios/cementerio',
+                    name: 'inventario_cementerio',
                     component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
                     meta: {
                         breadcrumb: [{
@@ -151,11 +151,53 @@ const router = new Router({
                                 title: 'Inventario del cementerio'
                             },
                             {
-                                title: 'Control',
+                                title: 'Inventario',
                                 active: true
                             },
                         ],
                         pageTitle: 'Cementerio',
+                        rule: 'editor'
+                    },
+                },
+                {
+                    path: '/inventarios/funeraria/proveedores',
+                    name: 'Proveedores',
+                    component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
+                    meta: {
+                        breadcrumb: [{
+                                title: 'Home',
+                                url: '/'
+                            },
+                            {
+                                title: 'Proveedores de la funeraria'
+                            },
+                            {
+                                title: 'Proveedores',
+                                active: true
+                            },
+                        ],
+                        pageTitle: 'Proveedores',
+                        rule: 'editor'
+                    },
+                },
+                {
+                    path: '/inventarios/funeraria/articulos-servicios',
+                    name: 'inventarioFuneraria',
+                    component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
+                    meta: {
+                        breadcrumb: [{
+                                title: 'Home',
+                                url: '/'
+                            },
+                            {
+                                title: 'Inventario de la funeraria'
+                            },
+                            {
+                                title: 'Inventario',
+                                active: true
+                            },
+                        ],
+                        pageTitle: 'Inventario de la funeraria',
                         rule: 'editor'
                     },
                 },

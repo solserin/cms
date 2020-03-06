@@ -153,6 +153,7 @@ class UsuariosController extends ApiController
                 ->where('parent_modulo_id', '=', 0)
                 ->where('roles_id', '=',  $request->user()->roles_id)
                 ->distinct('modulo')
+                //->toSql();
                 ->get();
             //return $grupos_modulos;
             $grupos = [];
@@ -519,19 +520,18 @@ class UsuariosController extends ApiController
             ->where('usuarios.roles_id', '>', '1') //no muestro super usuarios
             ->get();
 
-
-
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
         $pdf = PDF::loadView('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $pdf->setOptions([
-            'images' => false,
             'title' => 'Reporte de Usuarios',
             'footer-html' => view('footer'),
             'header-html' => view('header'),
         ]);
         $pdf->setOption('margin-top', 10);
         $pdf->setOption('margin-bottom', 15);
+
         return $pdf->inline();
     }
 

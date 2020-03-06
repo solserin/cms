@@ -85,6 +85,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('monedas/', 'SATMonedasController@getAll');
 });
 
+Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
+
 //RUTA DEL LOGUIN
 Route::post('login_usuario', 'Usuarios\UsuariosController@login_usuario');
 //RUTA DEL REFRESH TOKEN
