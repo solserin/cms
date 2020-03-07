@@ -52,6 +52,7 @@
 							<vs-button title="Editar" size="large" icon-pack="feather" icon="icon-edit" color="dark" type="flat" @click="editProveedor(proveedor)"></vs-button>
 							<vs-button v-if="proveedor.status === 1" title="Desactivar" icon-pack="feather" size="large" icon="icon-shield-off" color="danger"  type="flat" @click="changeStatus(proveedor, 2)"></vs-button>
 							<vs-button  v-if="proveedor.status === 2" title="Activar" icon-pack="feather" size="large" icon="icon-shield" color="success" type="flat" @click="changeStatus(proveedor, 1)"></vs-button>
+							<vs-button title="PDF" size="large" icon-pack="feather" icon="icon-download" color="dark" type="flat" @click="proveedorPDF(proveedor)"></vs-button>
 						</div>
 					</vs-td>
 				</vs-tr>
@@ -227,6 +228,10 @@ export default {
 		},
 		openPDF() {
 			this.PDFLink = '/empresa/inventario/proveedores-pdf?' + 'nombre=' + this.serverOptions.search + '&estado=' + ((this.serverOptions.estado === null || this.serverOptions.estado === 0) ? '' : this.serverOptions.estado)
+			this.showPDF = true
+		},
+		proveedorPDF(proveedor) {
+			this.PDFLink = '/empresa/inventario/proveedor-pdf/' + proveedor.id
 			this.showPDF = true
 		},
 		reset() {

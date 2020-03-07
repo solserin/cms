@@ -86,12 +86,11 @@ Route::middleware(['auth:api'])->group(function () {
 
     //Proveedores
 
-    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create');
-    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save');
-    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll');
-    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF');
-
-
+    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create')->middleware('permiso:5,1');
+    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save')->middleware('permiso:5,2');
+    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll')->middleware('permiso:5,4');
+    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF')->middleware('permiso:5,4');
+    Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF')->middleware('permiso:5,4');
 
     /**rutas del cementerio */
     Route::get('inventarios/cementerio/get_list', 'CementerioController@get_list');

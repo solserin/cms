@@ -114,4 +114,22 @@ class ProveedoresController extends ApiController
 
         return $pdf->inline();
     }
+
+    public function proveedorPDF($id, Request $request) {
+        $proveedor = Proveedores::find($id);
+
+        $getFuneraria = new EmpresaController();
+        $empresa = $getFuneraria->get_empresa_data();
+        $pdf = PDF::loadView('proveedor', ['proveedor' => $proveedor, 'empresa' => $empresa]);
+        $pdf->setOptions([
+            'title' => 'Proveedor',
+            'footer-html' => view('footer'),
+            'header-html' => view('header'),
+        ]);
+
+        $pdf->setOption('margin-top', 10);
+        $pdf->setOption('margin-bottom', 15);
+
+        return $pdf->inline();
+    }
 }
