@@ -1,7 +1,7 @@
 <template>
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
-      <vs-tab label="CONTROL DE USUARIOS" icon="supervisor_account" class="pb-5"></vs-tab>
+      <vs-tab label="INVENTARIO DEL CEMENTERIO" icon="supervisor_account" class="pb-5"></vs-tab>
       <vs-tab label="ROLES DEL SISTEMA" icon="fingerprint"></vs-tab>
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
@@ -109,62 +109,37 @@
             </vs-td>
             <vs-td :data="data[indextr].rol">{{data[indextr].rol}}</vs-td>
             <vs-td :data="data[indextr].id_user">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="feather feather-edit-3 h-5 w-5 mr-4 hover:text-primary cursor-pointer"
-                @click="openModificar(data[indextr].id_user)"
-              >
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-              </svg>
-
-              <svg
-                v-if="data[indextr].estado==1"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="feather feather-user-check h-5 w-5 hover:text-danger cursor-pointer"
-                @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
-              >
-                <polyline points="3 6 5 6 21 6" />
-                <path
-                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                />
-                <line x1="10" y1="11" x2="10" y2="17" />
-                <line x1="14" y1="11" x2="14" y2="17" />
-              </svg>
-              <svg
-                v-else
-                xmlns="http://www.w3.org/2000/svg"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="feather feather-user-check h-5 w-5 hover:text-success cursor-pointer"
-                @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="8.5" cy="7" r="4" />
-                <path d="M17 11l2 2l4-4" />
-              </svg>
+              <div class="flex flex-start">
+                <vs-button
+                  title="Editar"
+                  size="large"
+                  icon-pack="feather"
+                  icon="icon-edit"
+                  color="dark"
+                  type="flat"
+                  @click="openModificar(data[indextr].id_user)"
+                ></vs-button>
+                <vs-button
+                  v-if="data[indextr].estado==1"
+                  title="Desactivar"
+                  icon-pack="feather"
+                  size="large"
+                  icon="icon-shield-off"
+                  color="danger"
+                  type="flat"
+                  @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
+                ></vs-button>
+                <vs-button
+                  v-else
+                  title="Activar"
+                  icon-pack="feather"
+                  size="large"
+                  icon="icon-shield"
+                  color="success"
+                  type="flat"
+                  @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
+                ></vs-button>
+              </div>
             </vs-td>
           </vs-tr>
         </template>
@@ -486,7 +461,7 @@ export default {
 
     pdf() {
       this.pdfLink =
-        "pdfs?status=" +
+        "/pdfs?status=" +
         this.estado.value +
         "&rol_id=" +
         this.roles.value +

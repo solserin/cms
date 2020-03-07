@@ -70,6 +70,7 @@ export default {
                     if (response.status) {
                         if (allowedErrorCodes.indexOf(response.status) === -1) {
                             store.dispatch("auth/logout_force")
+                            location.reload();
                         }
                     }
                 } else {

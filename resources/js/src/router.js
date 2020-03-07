@@ -141,7 +141,7 @@ const router = new Router({
                 {
                     path: '/inventarios/cementerio',
                     name: 'inventario_cementerio',
-                    component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
+                    component: () => import('@/views/pages/inventarios/cementerio/CementerioList.vue'),
                     meta: {
                         breadcrumb: [{
                                 title: 'Home',

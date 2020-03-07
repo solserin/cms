@@ -227,10 +227,148 @@ class PropiedadesSeeder extends Seeder
             [
                 //30
                 'propiedad_indicador' => '1',
-                'filas' => '10', //1 PROPIEADES
+                'frente' => 'estacionamiento',
+                'filas' => '10',
                 'columnas' => '32',
                 'tipo_propiedades_id' => '4'
             ],
+            [
+                //31
+                'propiedad_indicador' => '2',
+                'frente' => 'estacionamiento',
+                'filas' => '10',
+                'columnas' => '33',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //32
+                'propiedad_indicador' => '3',
+                'frente' => 'estacionamiento',
+                'filas' => '10',
+                'columnas' => '32',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //33
+                'propiedad_indicador' => '4',
+                'frente' => 'TERRAZA 3',
+                'filas' => '10',
+                'columnas' => '31',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //34
+                'propiedad_indicador' => '5',
+                'frente' => 'TERRAZA 2',
+                'filas' => '10',
+                'columnas' => '33',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //35
+                'propiedad_indicador' => '6',
+                'frente' => 'TERRAZA 1',
+                'filas' => '10',
+                'columnas' => '32',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //36
+                'propiedad_indicador' => '7',
+                'frente' => 'estacionamiento',
+                'filas' => '5',
+                'columnas' => '14',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //37
+                'propiedad_indicador' => '8',
+                'frente' => 'terraza 4',
+                'filas' => '5',
+                'columnas' => '19',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //38
+                'propiedad_indicador' => '9',
+                'frente' => 'terraza 5',
+                'filas' => '5',
+                'columnas' => '32',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //39
+                'propiedad_indicador' => '10',
+                'frente' => 'terraza 6',
+                'filas' => '5',
+                'columnas' => '32',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //40
+                'propiedad_indicador' => '11',
+                'frente' => 'terraza 7',
+                'filas' => '10',
+                'columnas' => '19',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //41
+                'propiedad_indicador' => '12',
+                'frente' => 'terraza 11',
+                'filas' => '5',
+                'columnas' => '21',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //42
+                'propiedad_indicador' => '13',
+                'frente' => 'terraza 9',
+                'filas' => '5',
+                'columnas' => '33',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //43
+                'propiedad_indicador' => '14',
+                'frente' => 'terraza 10',
+                'filas' => '5',
+                'columnas' => '32',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //44
+                'propiedad_indicador' => '15',
+                'frente' => 'terraza 12',
+                'filas' => '5',
+                'columnas' => '23',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //45
+                'propiedad_indicador' => '16',
+                'frente' => 'terraza 13',
+                'filas' => '5',
+                'columnas' => '33',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //46
+                'propiedad_indicador' => '17',
+                'frente' => 'terraza 14',
+                'filas' => '5',
+                'columnas' => '32',
+                'tipo_propiedades_id' => '4'
+            ],
+            [
+                //47
+                'propiedad_indicador' => '18',
+                'frente' => 'terraza 15',
+                'filas' => '5',
+                'columnas' => '27',
+                'tipo_propiedades_id' => '4'
+            ],
+            /**fin de registro de propiedades cuadruplex */
         ];
 
         foreach ($secciones as $key) {

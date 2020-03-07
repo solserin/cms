@@ -89,6 +89,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save');
     Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll');
     Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF');
+
+
+
+
+    /**rutas del cementerio */
+    Route::get('inventarios/cementerio/get_list', 'CementerioController@get_list');
+    /**fin de rutas del cementerio */
 });
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');

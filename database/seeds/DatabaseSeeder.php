@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SATRegimenesSeeder::class);
         $this->call(tiposPropiedadesSeeder::class);
         $this->call(PropiedadesSeeder::class);
+        $this->call(columnasFilasSeeder::class);
         factory(User::class, 250)->create();
     }
 }
