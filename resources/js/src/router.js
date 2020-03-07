@@ -160,27 +160,6 @@ const router = new Router({
                     },
                 },
                 {
-                    path: '/inventarios/funeraria/proveedores',
-                    name: 'Proveedores',
-                    component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
-                    meta: {
-                        breadcrumb: [{
-                                title: 'Home',
-                                url: '/'
-                            },
-                            {
-                                title: 'Proveedores de la funeraria'
-                            },
-                            {
-                                title: 'Proveedores',
-                                active: true
-                            },
-                        ],
-                        pageTitle: 'Proveedores',
-                        rule: 'editor'
-                    },
-                },
-                {
                     path: '/inventarios/funeraria/articulos-servicios',
                     name: 'inventarioFuneraria',
                     component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
