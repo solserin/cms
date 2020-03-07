@@ -61,34 +61,34 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('localidades/{municipioId}', 'LocalidadesController@getLocalidades');
 
     //Empresa
-    Route::get('empresa/funeraria', 'EmpresaController@get');
-    Route::post('empresa/funeraria', 'EmpresaController@save');
-    Route::post('empresa/registro-publico', 'EmpresaController@saveRegistroPublico');
-    Route::get('empresa/registro-publico', 'EmpresaController@getRegistroPublico');
+    Route::get('empresa/funeraria', 'EmpresaController@get')->middleware('permiso:2,4');
+    Route::post('empresa/funeraria', 'EmpresaController@save')->middleware('permiso:2,2');
+    Route::post('empresa/registro-publico', 'EmpresaController@saveRegistroPublico')->middleware('permiso:2,2');
+    Route::get('empresa/registro-publico', 'EmpresaController@getRegistroPublico')->middleware('permiso:2,4');
     //Cementerio
-    Route::get('empresa/cementerio', 'EmpresaController@getCementerio');
-    Route::post('empresa/cementerio', 'EmpresaController@saveCementerio');
+    Route::get('empresa/cementerio', 'EmpresaController@getCementerio')->middleware('permiso:2,4');
+    Route::post('empresa/cementerio', 'EmpresaController@saveCementerio')->middleware('permiso:2,2');
     //crematorio
-    Route::get('empresa/crematorio', 'EmpresaController@getCrematorio');
-    Route::post('empresa/crematorio', 'EmpresaController@saveCrematorio');
+    Route::get('empresa/crematorio', 'EmpresaController@getCrematorio')->middleware('permiso:2,4');
+    Route::post('empresa/crematorio', 'EmpresaController@saveCrematorio')->middleware('permiso:2,2');
     //velatorio
-    Route::get('empresa/velatorio', 'EmpresaController@getVelatorio');
-    Route::post('empresa/velatorio', 'EmpresaController@saveVelatorio');
+    Route::get('empresa/velatorio', 'EmpresaController@getVelatorio')->middleware('permiso:2,4');
+    Route::post('empresa/velatorio', 'EmpresaController@saveVelatorio')->middleware('permiso:2,2');
     //validate cer file
     Route::post('empresa/facturacion/validateCER', 'EmpresaController@validateCERFile');
     Route::post('empresa/facturacion/validateKEY', 'EmpresaController@validateKEYFile');
-    Route::post('empresa/facturacion', 'EmpresaController@saveFacturacion');
-    Route::get('empresa/facturacion', 'EmpresaController@getFacturacion');
+    Route::post('empresa/facturacion', 'EmpresaController@saveFacturacion')->middleware('permiso:2,2');
+    Route::get('empresa/facturacion', 'EmpresaController@getFacturacion')->middleware('permiso:2,4');
 
     ///SAT
     Route::get('regimenes/', 'SATRegimenesController@getAll');
     Route::get('monedas/', 'SATMonedasController@getAll');
 
     //Proveedores
-    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create');
-    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save');
-    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll');
-    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF');
+    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create')->middleware('permiso:5,1');
+    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save')->middleware('permiso:5,2');
+    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll')->middleware('permiso:5,4');
+    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF')->middleware('permiso:5,4');
 });
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
