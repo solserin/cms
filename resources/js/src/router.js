@@ -116,7 +116,7 @@ const router = new Router({
                 /**FIN DE RUTAS PARA EL MODULO DE EMPRESAS */
                 /**RUTAS PARA EL MODULO DE PROVEEDORES */
                 {
-                    path: '/inventario/proveedores',
+                    path: '/inventarios/funeraria/proveedores',
                     name: 'inventario-proveedores',
                     component: () => import('@/views/pages/proveedores/Proveedores.vue'),
                     meta: {
@@ -160,30 +160,9 @@ const router = new Router({
                     },
                 },
                 {
-                    path: '/inventarios/funeraria/proveedores',
-                    name: 'Proveedores',
-                    component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
-                    meta: {
-                        breadcrumb: [{
-                                title: 'Home',
-                                url: '/'
-                            },
-                            {
-                                title: 'Proveedores de la funeraria'
-                            },
-                            {
-                                title: 'Proveedores',
-                                active: true
-                            },
-                        ],
-                        pageTitle: 'Proveedores',
-                        rule: 'editor'
-                    },
-                },
-                {
                     path: '/inventarios/funeraria/articulos-servicios',
                     name: 'inventarioFuneraria',
-                    component: () => import('@/views/pages/inventarios/cementerio/UsuariosList.vue'),
+                    component: () => import('@/views/pages/inventarios/cementerio/CementerioList.vue'),
                     meta: {
                         breadcrumb: [{
                                 title: 'Home',

@@ -461,7 +461,7 @@ export default {
 
     pdf() {
       this.pdfLink =
-        "/pdfs?status=" +
+        "/usuarios_pdfs?status=" +
         this.estado.value +
         "&rol_id=" +
         this.roles.value +
