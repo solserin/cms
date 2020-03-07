@@ -85,6 +85,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('monedas/', 'SATMonedasController@getAll');
 
     //Proveedores
+
     Route::post('empresa/inventario/proveedores', 'ProveedoresController@create');
     Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save');
     Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll');
