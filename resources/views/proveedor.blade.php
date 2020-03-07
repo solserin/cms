@@ -1,5 +1,5 @@
 @extends('layouts.lista_pdf_layout')
-@section('title', 'Reporte de proveedor')
+@section('title', 'REPORTE DE PROVEEDOR')
 @section('contenido')
 <style>
 #proveedor tbody tr td {
@@ -11,6 +11,10 @@
 #proveedor tbody tr td:nth-child(1) {
     font-weight: bold;
     color: #{{env('maincolor')}};
+}
+
+#proveedor {
+    text-transform: uppercase;
 }
 
 .header td{
@@ -62,7 +66,7 @@
                 </tr>
                 <tr>
                     <td>Correo electronico:</td>
-                    <td>{{ $proveedor->email }}</td>
+                    <td style="text-transform: initial;">{{ $proveedor->email }}</td>
                 </tr>
                 <tr class="header">
                     <td colspan="2">Direccion</td>
