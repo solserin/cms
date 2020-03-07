@@ -116,7 +116,7 @@ const router = new Router({
                 /**FIN DE RUTAS PARA EL MODULO DE EMPRESAS */
                 /**RUTAS PARA EL MODULO DE PROVEEDORES */
                 {
-                    path: '/inventario/proveedores',
+                    path: '/inventarios/funeraria/proveedores',
                     name: 'inventario-proveedores',
                     component: () => import('@/views/pages/proveedores/Proveedores.vue'),
                     meta: {
