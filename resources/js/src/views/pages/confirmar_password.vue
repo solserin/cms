@@ -8,7 +8,7 @@
       @accept="acceptAlert"
       :active.sync="showChecker"
       accept-text="Confirmar"
-      cancel-text="Cancelar"
+      cancel-text="(Esc) Cancelar"
     >
       <div class="con-exemple-prompt">
         Ingrese su contraseña para

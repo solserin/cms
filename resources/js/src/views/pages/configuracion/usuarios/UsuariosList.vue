@@ -104,8 +104,16 @@
               <p v-else>Mujer</p>
             </vs-td>
             <vs-td :data="data[indextr].estado">
-              <p v-if="data[indextr].estado==1">Activo</p>
-              <p v-else>Sin acceso</p>
+              <p v-if="data[indextr].estado==1">
+                <span class="flex items-center px-2 py-1 rounded">
+                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-success'"></div>Activo
+                </span>
+              </p>
+              <p v-else>
+                <span class="flex items-center px-2 py-1 rounded">
+                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-danger'"></div>Sin Acceso
+                </span>
+              </p>
             </vs-td>
             <vs-td :data="data[indextr].rol">{{data[indextr].rol}}</vs-td>
             <vs-td :data="data[indextr].id_user">
