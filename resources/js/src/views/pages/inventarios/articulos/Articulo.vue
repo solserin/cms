@@ -9,7 +9,7 @@
 				<div class="vx-col w-full">
 					<div class="flex items-end">
 						<feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />
-						<span class="leading-none font-medium">Informacion del proveedor</span>
+						<span class="leading-none font-medium">Informacion del articulo</span>
 					</div>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
 						Tipo de producto
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.tipos_producto_id" name="tipo_producto" data-vv-as="Tipo de producto" icon-pack="feather" icon="icon-trello"  type="text" class="w-full pb-1 pt-1"/>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.tipos_producto_id" name="tipo_producto" data-vv-as="Tipo de producto" icon-pack="feather" icon="icon-trello"  type="text" class="w-full pb-1 pt-1"/>
 					<span class="text-danger text-sm">{{ errors.first('tipo_producto', 'add-articulo') }}</span>
 				</div>
 				<div class="vx-col w-full md:w-3/12">
@@ -44,186 +44,91 @@
 						Tipo de producto SAT
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.sat_productos_servicios_id" name="sat_productos_servicios_id" data-vv-as="Tipo de producto SAT"  icon-pack="feather" icon="icon-trello"  type="text" class="w-full pb-1 pt-1"/>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.sat_productos_servicios_id" name="sat_productos_servicios_id" data-vv-as="Tipo de producto SAT"  icon-pack="feather" icon="icon-trello"  type="text" class="w-full pb-1 pt-1"/>
 					<span class="text-danger text-sm">{{ errors.first('sat_productos_servicios_id', 'add-articulo') }}</span>
 				</div>
 				<div class="vx-col w-full md:w-3/12">
 					<label class="text-sm opacity-75">
-						Lolcalizacion(Almacen):
+						Almacen
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="articulo.almacenes_id" name="almacenes_id" data-vv-as="Localizacion"  icon-pack="feather" icon="icon-book-open"  type="text" class="w-full pb-1 pt-1"/>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.almacenes_id" name="almacenes_id" data-vv-as="Almacen"  icon-pack="feather" icon="icon-book-open"  type="text" class="w-full pb-1 pt-1"/>
 					<span class="text-danger text-sm">{{ errors.first('almacenes_id', 'add-articulo') }}</span>
+				</div>
+				<div class="vx-col w-full md:w-3/12">
+					<label class="text-sm opacity-75">
+						Localizacion
+						<span class="text-danger text-sm">(*)</span>
+					</label>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.localizacion" name="localizacion" data-vv-as="Localizacion"  icon-pack="feather" icon="icon-book-open"  type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('localizacion', 'add-articulo') }}</span>
+				</div>
+				<div class="vx-col w-full md:w-3/12">
+					<label class="text-sm opacity-75">
+						Cantidad Maxima
+						<span class="text-danger text-sm">(*)</span>
+					</label>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.maximo" name="maximo" data-vv-as="Maximo"  icon-pack="feather" icon="icon-book-open"  v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('maximo', 'add-articulo') }}</span>
+				</div>
+				<div class="vx-col w-full md:w-3/12">
+					<label class="text-sm opacity-75">
+						Cantidad Minima
+						<span class="text-danger text-sm">(*)</span>
+					</label>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.minimo" name="minimo" data-vv-as="Minimo"  icon-pack="feather" icon="icon-book-open"  v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('minimo', 'add-articulo') }}</span>
 				</div>
 			</div>
 			<div class="vx-row w-full mt-4">
 				<div class="vx-col w-full">
 					<div class="flex items-end">
 						<feather-icon icon="MailIcon" class="mr-2" svgClasses="w-5 h-5" />
-						<span class="leading-none font-medium">Informacion de contacto</span>
+						<span class="leading-none font-medium">Precios de venta</span>
 					</div>
 				</div>
 			</div>
 			<vs-divider/> 
 			<div class="vx-row w-full mt-4">
-				<div class="vx-col w-full md:w-5/12">
+				<div class="vx-col w-full md:w-3/12">
 					<label class="text-sm opacity-75">
-						Nombre del contacto
+						Precio de compra neto
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.nombre_contacto" name="nombre-contacto" data-vv-as="Nombre del contacto" icon-pack="feather" icon="icon-user"  v-validate="'required'" type="text" class="w-full pb-1 pt-1" placeholder="Ingrese el nombre del contacto"/>
-					<span class="text-danger text-sm">{{ errors.first('nombre-contacto', 'add-articulo') }}</span>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.costo_neto" name="costo-neto" data-vv-as="Costo neto" icon-pack="feather" icon="icon-user"  v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('costo-neto', 'add-articulo') }}</span>
 				</div>
 				<div class="vx-col w-full md:w-4/12">
 					<label class="text-sm opacity-75">
-						Telefono de contacto
+						Unidad de compra
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.telefono" name="telefono-contacto" data-vv-as="Telefono de contacto" icon-pack="feather" icon="icon-phone"  v-validate="'required'" type="text" class="w-full pb-1 pt-1" placeholder="Ingrese el telefono de contacto"/>
-					<span class="text-danger text-sm">{{ errors.first('telefono-contacto', 'add-articulo') }}</span>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.unidades_compra_id" name="unidad-compra" data-vv-as="Unidad de compra" icon-pack="feather" icon="icon-phone"  v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('unidad-compra', 'add-articulo') }}</span>
 				</div>
 				<div class="vx-col w-full md:w-3/12">
 					<label class="text-sm opacity-75">
-						Correo electronico
+						Unidad de venta
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.email" name="correo-electronico" data-vv-as="Correo electronico" icon-pack="feather" icon="icon-at-sign"  v-validate="'required|email'" type="text" class="w-full pb-1 pt-1" placeholder="Ingrese el correo electronico"/>
-					<span class="text-danger text-sm">{{ errors.first('correo-electronico', 'add-articulo') }}</span>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.email" name="unidad-venta" data-vv-as="Unidad de venta" icon-pack="feather" icon="icon-at-sign"  v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('unidad-venta', 'add-articulo') }}</span>
 				</div>
-			</div>
-			<div class="vx-row w-full md:mt-4">
-				<div class="vx-col w-full md:w-5/12">
+				<div class="vx-col w-full md:w-3/12">
 					<label class="text-sm opacity-75">
-						Sitio WEB
-					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.pagina_web"  name="sitio-web" data-vv-as="Sitio WEB" icon-pack="feather" icon="icon-chrome" type="text" class="w-full pb-1 pt-1" v-validate="'url'" placeholder="Ingrese el sitio web"/>
-					<span class="text-danger text-sm">{{ errors.first('sitio-web', 'add-articulo') }}</span>
-				</div>
-			</div>
-			<div class="vx-row w-full mt-4">
-				<div class="vx-col w-full">
-					<div class="flex items-end">
-						<feather-icon icon="MapPinIcon" class="mr-2" svgClasses="w-5 h-5" />
-						<span class="leading-none font-medium">Direccion</span>
-					</div>
-				</div>
-			</div>
-			<vs-divider/>
-			<div class="vx-row mt-4">
-				<div class="vx-col w-full md:w-1/3">
-					<label for class="vs-input--label">Pais
+						Impuestos
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.pais" data-vv-as="Pais" icon-pack="feather" icon="icon-map" name="pais"  v-validate="'required'" type="text" class="w-full pb-1 pt-1" placeholder="Ingrese el pais"/>
-					<span class="text-danger text-sm" v-show="errors.has('pais', 'add-articulo')">{{ errors.first('pais', 'add-articulo') }}</span>
+					<vs-input data-vv-scope="add-articulo"  name="unidad-venta" data-vv-as="Impuestos" icon-pack="feather" icon="icon-at-sign"  v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('impuestos', 'add-articulo') }}</span>
 				</div>
-				<div class="vx-col w-full md:w-1/3">
-					<label for class="vs-input--label">Estado
+				<div class="vx-col w-full md:w-3/12">
+					<label class="text-sm opacity-75">
+						Retenciones
 						<span class="text-danger text-sm">(*)</span>
 					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.estado" icon-pack="feather" icon="icon-map" name="estado"  v-validate="'required'" type="text" class="w-full pb-1 pt-1" placeholder="Ingrese el estado"/>
-					<span class="text-danger text-sm" v-show="errors.has('estado', 'add-articulo')">{{ errors.first('estado', 'add-articulo') }}</span>
-				</div>
-				<div class="vx-col w-full md:w-1/3">
-					<label for class="vs-input--label">Ciudad
-						<span class="text-danger text-sm">(*)</span>
-					</label>
-					<vs-input data-vv-scope="add-articulo" v-model="proveedor.ciudad" icon-pack="feather" icon="icon-map" name="ciudad"  v-validate="'required'" type="text" class="w-full pb-1 pt-1" placeholder="Ingrese la ciudad"/>
-					<span class="text-danger text-sm" v-show="errors.has('ciudad', 'add-articulo')">{{ errors.first('ciudad', 'add-articulo') }}</span>
-				</div>
-			</div>
-			<div class="vx-row md:mt-4">
-				<div class="vx-col w-full md:w-4/12">
-					<label for class="vs-input--label">Calle
-						<span class="text-danger text-sm">(*)</span>
-					</label>
-					<vs-input
-						data-vv-scope="add-articulo"
-						v-model="proveedor.calle"
-						icon-pack="feather"
-						icon="icon-map"
-						name="direccion_calle"
-						data-vv-as="Calle"
-						v-validate="'required'"
-						class="w-full"
-					/>
-					<span
-						class="text-danger text-sm"
-						v-show="errors.has('direccion_calle', 'add-articulo')"
-					>{{ errors.first('direccion_calle', 'add-articulo') }}</span>
-				</div>
-				<div class="vx-col w-full md:w-2/12">
-					<label for class="vs-input--label">Num. Ext.
-						<span class="text-danger text-sm">(*)</span>
-					</label>
-					<vs-input
-						data-vv-scope="add-articulo"
-						v-model="proveedor.num_ext"
-						icon-pack="feather"
-						icon="icon-map"
-						name="num-ext"
-						data-vv-as="Numero exterior"
-						v-validate="'required'"
-						placeholder="Numero exterior"
-						class="w-full"
-					/>
-					<span
-						class="text-danger text-sm"
-						v-show="errors.has('num-ext', 'add-articulo')"
-					>{{ errors.first('num-ext', 'add-articulo') }}</span>
-				</div>
-				<div class="vx-col w-full md:w-2/12">
-					<label for class="vs-input--label">Num. Int.</label>
-					<vs-input
-						data-vv-scope="add-articulo"
-						v-model="proveedor.num_int"
-						icon-pack="feather"
-						icon="icon-map"
-						name="num-int"
-						placeholder="Numero Interior"
-						class="w-full"
-					/>
-				</div>
-				<div class="vx-col w-full md:w-4/12">
-					<label for class="vs-input--label">Colonia
-						<span class="text-danger text-sm">(*)</span>
-					</label>
-					<vs-input
-						data-vv-scope="add-articulo"
-						v-model="proveedor.col"
-						icon-pack="feather"
-						icon="icon-map"
-						name="colonia"
-						data-vv-as="Colonia"
-						v-validate="'required'"
-						placeholder="Colonia"
-						class="w-full"
-					/>
-					<span
-						class="text-danger text-sm"
-						v-show="errors.has('colonia', 'add-articulo')"
-					>{{ errors.first('colonia', 'add-articulo') }}</span>
-				</div>
-			</div>
-			<div class="vx-row md:mt-4">
-				<div class="vx-col w-full md:w-2/12">
-					<label for class="vs-input--label">C.P.
-						<span class="text-danger text-sm">(*)</span>
-					</label>
-					<vs-input
-						data-vv-scope="add-articulo"
-						v-model="proveedor.cp"
-						icon-pack="feather"
-						icon="icon-map"
-						name="cp"
-						data-vv-as="C.P."
-						v-validate="'required|alpha_num'"
-						class="w-full"
-					/>
-					<span
-						class="text-danger text-sm"
-						v-show="errors.has('cp', 'add-articulo')"
-					>{{ errors.first('cp', 'add-articulo') }}</span>
+					<vs-input data-vv-scope="add-articulo" v-model="articulo.email" name="retenciones" data-vv-as="Retenciones" icon-pack="feather" icon="icon-at-sign"  v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+					<span class="text-danger text-sm">{{ errors.first('retenciones', 'add-articulo') }}</span>
 				</div>
 			</div>
 			</form>
@@ -231,7 +136,7 @@
   	</div>
 </template>
 <script>
-import proveedorService from '@services/proveedores'
+import articuloService from '@services/articulos'
 import _ from 'lodash'
 
 export default {
@@ -240,25 +145,25 @@ export default {
             type: Boolean,
             required: true
 		},
-		proveedorData: {
+		articuloData: {
 			type: Object
 		}
     },
 	watch: {
         show: function() {
 			this.showPopup = this.show
-			if (this.proveedorData) {
-				this.proveedor = _.clone(this.proveedorData)
-				this.title = 'MODIFICAR PROVEEDOR'
+			if (this.articuloData) {
+				this.articulo = _.clone(this.articuloData)
+				this.title = 'MODIFICAR ARITCULO'
 			}
 			
 			if (!this.showPopup) {
-				this.title = 'NUEVO PROVEEDOR'
-				for (let member in this.proveedor) 
-					this.proveedor[member] = null
+				this.title = 'NUEVO ARITCULO'
+				for (let member in this.articulo) 
+					this.articulo[member] = null
 
-				delete this.proveedor.id
-				this.proveedor.status = 1
+				delete this.articulo.id
+				this.articulo.status = 1
 
 				let matcher = {
 					scope: 'add-articulo',
@@ -272,22 +177,32 @@ export default {
 		return {
 			title: 'NUEVO PROVEEDOR',
             showPopup: false,
-			proveedor: {
-				nombre_comercial: null,
-				razon_social: null,
-				rfc: null,
-				nombre_contacto: null,
-				telefono: null,
-				pagina_web: null,
-				email: null,
-				calle: null,
-				col: null,
-				num_ext: null,
-				num_int: null,
-				cp: null,
-				ciudad: null,
-				estado: null,
-				pais: null,
+			articulo: {
+				codigo_barras: null,
+				nombre: null,
+				imagen: null,
+				imagen2: null,
+				imagen3: null,
+				costo_neto: null,
+				sat_productos_servicios_id: null,
+				cuenta_predial: null,
+				codigo_articulo: null,
+				grupos_profeco_id: null,
+				maximo: null,
+				minimo: null,
+				almacenes_id: null,
+				existencia: null,
+				unidades_compra_id: null,
+				unidades_venta_id: null,
+				factor: null,
+				localizacion: null,
+				facturable: null,
+				caduca: null,
+				rentable: null,
+				familias_id: null,
+				tipos_producto_id: null,
+				impuestos: [],
+				retenciones: [],
 				status: 1
 			}
 		}
@@ -302,12 +217,12 @@ export default {
             self.$validator.validate('add-articulo.*').then(result => {
 				if (result) {
 					let promise
-					if (self.proveedor.id) {
-						let id = _.clone(self.proveedor.id)
-						delete self.proveedor.id
-						promise = proveedorService.update(id, self.proveedor)
+					if (self.articulo.id) {
+						let id = _.clone(self.articulo.id)
+						delete self.articulo.id
+						promise = articuloService.update(id, self.articulo)
 					} else {
-						promise = proveedorService.create(self.proveedor)
+						promise = articuloService.create(self.articulo)
 					}
 
 					promise.then((response) => {
@@ -319,7 +234,7 @@ export default {
 								color: "success",
 								position: "top-center",
 								title: "Completado",
-								text: "Se ha guardado el proveedor"
+								text: "Se ha guardado el articulo"
 							});
 						} else {
 							self.$vs.notify({
