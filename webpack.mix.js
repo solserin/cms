@@ -59,3 +59,23 @@ else{
     });
 }
 
+mix.options({
+    hmrOptions: {
+        host: process.env.APP_HOST_NAME,
+        port: 8080,
+    }
+});
+
+mix.webpackConfig({
+    devServer: { 
+        proxy: {
+            host: '127.0.0.1',
+            port: 8080,
+        },
+        watchOptions:{
+            aggregateTimeout:200,
+            poll:5000
+        },
+
+    }
+});
