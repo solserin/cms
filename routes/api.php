@@ -95,6 +95,16 @@ Route::middleware(['auth:api'])->group(function () {
     /**rutas del cementerio */
     Route::get('inventarios/cementerio/get_list', 'CementerioController@get_list');
     /**fin de rutas del cementerio */
+
+    //Routes for LOV
+    Route::get('tipos-productos', 'TiposProductoController@getAll');
+    Route::get('grupos-profeco', 'GruposProfecoController@getAll');
+    Route::get('almacenes', 'AlmacenesController@getAll');
+    Route::get('categorias', 'CategoriasController@getAll');
+    Route::get('impuestos', 'SATImpuestosController@getImpuestos');
+    Route::get('retenciones', 'SATImpuestosController@getRetenciones');
+    Route::get('productos-servicios', 'SATProductosServiciosController@getRetenciones');
+    Route::get('unidades', 'UnidadesController@getAll');
 });
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');

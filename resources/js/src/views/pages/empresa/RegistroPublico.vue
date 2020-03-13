@@ -18,7 +18,7 @@
                 <div class="vx-col w-full md:w-4/12 mt-3">
                     <label for="" class="vs-input--label">Representante legal <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Nombre del representante legal">
-                        <vs-input :disabled="disableFields" class="w-full uppercase" icon-pack="feather" icon="icon-user" data-vv-as="Representante legal" v-model="registro.rep_legal" v-validate="'required'" name="rep_legal"/>
+                        <vs-input  class="w-full uppercase" icon-pack="feather" icon="icon-user" data-vv-as="Representante legal" v-model="registro.rep_legal" v-validate="'required'" name="rep_legal"/>
                     </vx-tooltip>
                     <span class="text-danger text-sm" v-show="errors.has('rep_legal')">{{ errors.first('rep_legal') }}</span>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="vx-col w-full md:w-2/12 mt-3">
                     <label for="" class="vs-input--label">Num. del testimonio <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Numero del testimonio de la escritura publica">
-                        <vs-input :disabled="disableFields" class="w-full uppercase" icon-pack="feather" icon="icon-file"  data-vv-as="Numero del testimonio" v-model="registro.t_nep" v-validate="'required|numeric'" name="t_nep"/>
+                        <vs-input  class="w-full uppercase" icon-pack="feather" icon="icon-file"  data-vv-as="Numero del testimonio" v-model="registro.t_nep" v-validate="'required|numeric'" name="t_nep"/>
                     </vx-tooltip>
                     <span class="text-danger text-sm" v-show="errors.has('t_nep')">{{ errors.first('t_nep') }}</span>
                 </div>
@@ -34,14 +34,14 @@
                 <div class="vx-col w-full md:w-2/12 mt-3">
                     <label for="" class="vs-input--label">Fecha del testimonio <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Fecha en que se hizo el testimonio del numero de la escritura publica">
-                        <datepicker :disabled="disableFields" :language="spanishDatepicker" :disabled-dates="disabledDates" name="fecha_tnep" data-vv-as="Fecha del testimonio"  v-validate="'required'" format="yyyy-MM-dd" placeholder="Seleccionar fecha" v-model="fecha_tnep_bk"></datepicker>
+                        <datepicker  :language="spanishDatepicker" :disabled-dates="disabledDates" name="fecha_tnep" data-vv-as="Fecha del testimonio"  v-validate="'required'" format="yyyy-MM-dd" placeholder="Seleccionar fecha" v-model="fecha_tnep_bk"></datepicker>
                     </vx-tooltip>
                     <span class="text-danger text-sm" v-show="errors.has('fecha_tnep')">{{ errors.first('fecha_tnep') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-4/12 mt-3">
                     <label for="" class="vs-input--label">Otorgada ante la fé del Lic. <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Nombre del o de la licenciada que dio fe en la inscripcion de la escritura publica">
-                        <vs-input :disabled="disableFields" icon-pack="feather" icon="icon-user" class="w-full uppercase" data-vv-as="Otorgada ante la fé del Lic." v-model="registro.fe_lic" v-validate="'required'" name="fe_lic"/>
+                        <vs-input  icon-pack="feather" icon="icon-user" class="w-full uppercase" data-vv-as="Otorgada ante la fé del Lic." v-model="registro.fe_lic" v-validate="'required'" name="fe_lic"/>
                     </vx-tooltip>
                     <span class="text-danger text-sm" v-show="errors.has('fe_lic')">{{ errors.first('fe_lic') }}</span>
                 </div>
@@ -59,14 +59,14 @@
                 <div class="vx-col w-full md:w-3/12 mt-3">
                     <label for="" class="vs-input--label">Notario público número <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Numero del notario publico">
-                        <vs-input :disabled="disableFields" class="w-full uppercase" icon-pack="feather" icon="icon-briefcase" data-vv-as="Notario público número" v-model="registro.num_np" v-validate="'required|numeric'" name="num_np"/>
+                        <vs-input  class="w-full uppercase" icon-pack="feather" icon="icon-briefcase" data-vv-as="Notario público número" v-model="registro.num_np" v-validate="'required|numeric'" name="num_np"/>
                     </vx-tooltip>
                     <span class="text-danger text-sm" v-show="errors.has('num_np')">{{ errors.first('num_np') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-3/12 mt-3">
                     <label for="" class="vs-input--label">Estado <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Estado del notario publico">
-                        <v-select :disabled="disableFields" v-model="selectedEstado.notario" :clearable="false" name="estado_notario" data-vv-as="Estado" v-validate="'required'" placeholder="Seleccione un estado" @input="estadoChange('notario')" :options="estados">
+                        <v-select  v-model="selectedEstado.notario" :clearable="false" name="estado_notario" data-vv-as="Estado" v-validate="'required'" placeholder="Seleccione un estado" @input="estadoChange('notario')" :options="estados">
                         <div  slot="no-options">No hay opciones disponibles.</div>
                     </v-select>
                     </vx-tooltip>
@@ -75,7 +75,7 @@
                 <div class="vx-col w-full md:w-3/12 mt-3">
                     <label for="" class="vs-input--label">Municipio <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Muncipio del notario publico">
-                        <v-select :disabled="disableFields" v-model="selectedMunicipio.notario" :clearable="false" name="municipio_notario" data-vv-as="Municipio" v-validate="'required'" placeholder="Seleccione un municipio"  @input="municipioChange('notario')" :options="municipios.notario">
+                        <v-select  v-model="selectedMunicipio.notario" :clearable="false" name="municipio_notario" data-vv-as="Municipio" v-validate="'required'" placeholder="Seleccione un municipio"  @input="municipioChange('notario')" :options="municipios.notario">
                         <div  slot="no-options">No hay opciones disponibles.</div>
                     </v-select>
                     </vx-tooltip>
@@ -84,7 +84,7 @@
                 <div class="vx-col w-full md:w-3/12 mt-3">
                     <label for="" class="vs-input--label">Localidad(Ciudad) <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Localidad/Ciudad donde se cuentra el notario publico">
-                        <v-select :disabled="disableFields" v-model="selectedLocalidad.notario" :clearable="false" name="ciudad_np" data-vv-as="Localidad" v-validate="'required'" placeholder="Seleccione una localidad" :options="localidades.notario">
+                        <v-select  v-model="selectedLocalidad.notario" :clearable="false" name="ciudad_np" data-vv-as="Localidad" v-validate="'required'" placeholder="Seleccione una localidad" :options="localidades.notario">
                         <div  slot="no-options">No hay opciones disponibles.</div>
                     </v-select>
                     </vx-tooltip>
@@ -104,14 +104,14 @@
                 <div class="vx-col w-full md:w-4/12 mt-3">
                     <label for="" class="vs-input--label">Num. del registro publico <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Numero del registro publico del comercio">
-                        <vs-input :disabled="disableFields" name="num_rpc" icon-pack="feather" icon="icon-briefcase" data-vv-as="Num. del registro publico" v-validate="'required|numeric'" v-model="registro.num_rpc" class="w-full uppercase"/>
+                        <vs-input  name="num_rpc" icon-pack="feather" icon="icon-briefcase" data-vv-as="Num. del registro publico" v-validate="'required|numeric'" v-model="registro.num_rpc" class="w-full uppercase"/>
                     </vx-tooltip>
                     <span class="text-danger text-sm" v-show="errors.has('num_rpc')">{{ errors.first('num_rpc') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-4/12 mt-3">
                     <label for="" class="vs-input--label">Fecha del registro publico <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Fecha del registro publico del comercio">
-                        <datepicker :disabled="disableFields" :language="spanishDatepicker" :disabled-dates="disabledDates" name="fecha_rpc" data-vv-as="Fecha del registro publico"  v-validate="'required'" format="yyyy-MM-dd" placeholder="Seleccionar fecha" v-model="fecha_rpc_bk"></datepicker>
+                        <datepicker  :language="spanishDatepicker" :disabled-dates="disabledDates" name="fecha_rpc" data-vv-as="Fecha del registro publico"  v-validate="'required'" format="yyyy-MM-dd" placeholder="Seleccionar fecha" v-model="fecha_rpc_bk"></datepicker>
                     </vx-tooltip>
                     <span class="text-danger text-sm" v-show="errors.has('fecha_rpc')">{{ errors.first('fecha_rpc') }}</span>
                 </div>
@@ -120,7 +120,7 @@
                 <div class="vx-col w-full md:w-1/3 mt-3">
                     <label for="" class="vs-input--label">Estado <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Estado del registro publico">
-                        <v-select :disabled="disableFields" v-model="selectedEstado.registro" :clearable="false" name="estado_registro" data-vv-as="Estado" v-validate="'required'" placeholder="Seleccione un estado" @input="estadoChange('registro')" :options="estados">
+                        <v-select  v-model="selectedEstado.registro" :clearable="false" name="estado_registro" data-vv-as="Estado" v-validate="'required'" placeholder="Seleccione un estado" @input="estadoChange('registro')" :options="estados">
                             <div  slot="no-options">No hay opciones disponibles.</div>
                         </v-select>
                     </vx-tooltip>
@@ -129,7 +129,7 @@
                 <div class="vx-col w-full md:w-1/3 mt-3">
                     <label for="" class="vs-input--label">Municipio <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Municipio del registro publico">
-                        <v-select :disabled="disableFields" v-model="selectedMunicipio.registro" :clearable="false" name="municipio_registro" data-vv-as="Municipio" v-validate="'required'" placeholder="Seleccione un municipio"  @input="municipioChange('registro')" :options="municipios.registro">
+                        <v-select  v-model="selectedMunicipio.registro" :clearable="false" name="municipio_registro" data-vv-as="Municipio" v-validate="'required'" placeholder="Seleccione un municipio"  @input="municipioChange('registro')" :options="municipios.registro">
                             <div  slot="no-options">No hay opciones disponibles.</div>
                         </v-select>
                     </vx-tooltip>
@@ -138,7 +138,7 @@
                 <div class="vx-col w-full md:w-1/3 mt-3">
                     <label for="" class="vs-input--label">Localidad(Ciudad) <span class="text-danger text-sm">(*)</span>:</label>
                     <vx-tooltip text="Localidad/Ciudad del registro publico">
-                        <v-select :disabled="disableFields" v-model="selectedLocalidad.registro" :clearable="false" name="ciudad_rpc" data-vv-as="Localidad" v-validate="'required'" placeholder="Seleccione una localidad" :options="localidades.registro">
+                        <v-select  v-model="selectedLocalidad.registro" :clearable="false" name="ciudad_rpc" data-vv-as="Localidad" v-validate="'required'" placeholder="Seleccione una localidad" :options="localidades.registro">
                             <div  slot="no-options">No hay opciones disponibles.</div>
                         </v-select>
                     </vx-tooltip>
@@ -149,7 +149,7 @@
             <div class="vx-row">
                 <div class="vx-col w-full">
                     <div class="flex flex-wrap items-center justify-end">
-                        <vs-button size="small" v-if="!disableFields" class="ml-auto mt-2" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar Registro Publico</vs-button>
+                        <vs-button size="small" class="ml-auto mt-2" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar Registro Publico</vs-button>
                     </div>
                 </div>
             </div>
@@ -188,7 +188,6 @@ export default {
             showChecker: false,
             spanishDatepicker: es,
             estados: [],
-            disableFields: false,
             funeraria: true,
             municipios: {
                 notario: [],

@@ -11,6 +11,6 @@ class UnidadesSeeder extends Seeder
      */
     public function run()
     {
-        //
+        
     }
 }

@@ -11,6 +11,8 @@ class TiposProductoSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('tipos_producto')->insert(['tipo' => 'Producto']);
+        DB::table('tipos_producto')->insert(['tipo' => 'Servicio']);
+        DB::table('tipos_producto')->insert(['tipo' => 'Paquete']);
     }
 }
