@@ -17,16 +17,16 @@
             <div class="vx-row">
                 <div class="vx-col w-full mt-3 md:w-3/5">
                     <label for="" class="vs-input--label">Nombre del crematorio <span class="text-danger text-sm">(*)</span>:</label>
-                    <vs-input class="w-full uppercase" :disabled="disableFields" icon-pack="feather" icon="icon-user" data-vv-as="Nombre comercial" v-model="crematorio.crematorio" v-validate="'required'" name="crematorio"/>
+                    <vs-input class="w-full uppercase"  icon-pack="feather" icon="icon-user" data-vv-as="Nombre comercial" v-model="crematorio.crematorio" v-validate="'required'" name="crematorio"/>
                     <span class="text-danger text-sm" v-show="errors.has('crematorio')">{{ errors.first('crematorio') }}</span>
                 </div>
                 <div class="vx-col w-full mt-3 md:w-1/5">
                     <label for="" class="vs-input--label">Telefonos <span class="text-danger text-sm">(*)</span>:</label>
-                    <vs-input class="w-full uppercase" :disabled="disableFields" data-vv-as="Telefonos" icon-pack="feather" icon="icon-phone" v-model="crematorio.telefonos" v-validate="'required'" name="telefonos"/>
+                    <vs-input class="w-full uppercase"  data-vv-as="Telefonos" icon-pack="feather" icon="icon-phone" v-model="crematorio.telefonos" v-validate="'required'" name="telefonos"/>
                     <span class="text-danger text-sm" v-show="errors.has('telefonos')">{{ errors.first('telefonos') }}</span>
                 </div>
                 <div class="vx-col w-full mt-3 md:w-1/5">
-                    <vs-input class="w-full uppercase" :disabled="disableFields" data-vv-as="Fax" icon-pack="feather" icon="icon-file" v-model="crematorio.fax" label="Fax:" name="fax"/>
+                    <vs-input class="w-full uppercase"  data-vv-as="Fax" icon-pack="feather" icon="icon-file" v-model="crematorio.fax" label="Fax:" name="fax"/>
                 </div>
             </div>
             <div class="vx-row w-full mt-8">
@@ -41,21 +41,21 @@
             <div class="vx-row">
                 <div class="vx-col w-full md:w-1/3 mt-3">
                     <label for="" class="vs-input--label">Estado <span class="text-danger text-sm">(*)</span>:</label>
-                    <v-select :disabled="disableFields" v-model="selectedEstado" :clearable="false" name="estado" data-vv-as="Estado" v-validate="'required'" placeholder="Seleccione un estado" @input="estadoChange" :options="estados">
+                    <v-select  v-model="selectedEstado" :clearable="false" name="estado" data-vv-as="Estado" v-validate="'required'" placeholder="Seleccione un estado" @input="estadoChange" :options="estados">
                         <div  slot="no-options">No hay opciones disponibles.</div>
                     </v-select>
                     <span class="text-danger text-sm" v-show="errors.has('estado')">{{ errors.first('estado') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-1/3 mt-3">
                     <label for="" class="vs-input--label">Municipio <span class="text-danger text-sm">(*)</span>:</label>
-                    <v-select :disabled="disableFields" v-model="selectedMunicipio" :clearable="false" name="municipio" data-vv-as="Municipio" v-validate="'required'" placeholder="Seleccione un municipio"  @input="municipioChange" :options="municipios">
+                    <v-select  v-model="selectedMunicipio" :clearable="false" name="municipio" data-vv-as="Municipio" v-validate="'required'" placeholder="Seleccione un municipio"  @input="municipioChange" :options="municipios">
                         <div  slot="no-options">No hay opciones disponibles.</div>
                     </v-select>
                     <span class="text-danger text-sm" v-show="errors.has('municipio')">{{ errors.first('municipio') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-1/3 mt-3">
                     <label for="" class="vs-input--label">Localidad(Ciudad) <span class="text-danger text-sm">(*)</span>:</label>
-                    <v-select :disabled="disableFields" v-model="selectedLocalidad" :clearable="false" name="localidad" data-vv-as="Localidad" v-validate="'required'" placeholder="Seleccione una localidad" :options="localidades">
+                    <v-select  v-model="selectedLocalidad" :clearable="false" name="localidad" data-vv-as="Localidad" v-validate="'required'" placeholder="Seleccione una localidad" :options="localidades">
                         <div  slot="no-options">No hay opciones disponibles.</div>
                     </v-select>
                     <span class="text-danger text-sm" v-show="errors.has('localidad')">{{ errors.first('localidad') }}</span>
@@ -64,27 +64,27 @@
             <div class="vx-row">
                 <div class="vx-col w-full md:w-3/12 mt-3">
                     <label for="" class="vs-input--label">Calle <span class="text-danger text-sm">(*)</span>:</label>
-                    <vs-input :disabled="disableFields" name="calle" icon-pack="feather" icon="icon-map" data-vv-as="Calle" v-validate="'required'" v-model="crematorio.calle" class="w-full uppercase"/>
+                    <vs-input  name="calle" icon-pack="feather" icon="icon-map" data-vv-as="Calle" v-validate="'required'" v-model="crematorio.calle" class="w-full uppercase"/>
                     <span class="text-danger text-sm" v-show="errors.has('calle')">{{ errors.first('calle') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-2/12 mt-3">
                     <label for="" class="vs-input--label">Numero Ext. <span class="text-danger text-sm">(*)</span>:</label>
-                    <vs-input :disabled="disableFields" name="num_ext" icon-pack="feather" icon="icon-map" data-vv-as="Numero exterior" v-validate="'required'" v-model="crematorio.num_ext" class="w-full uppercase"/>
+                    <vs-input  name="num_ext" icon-pack="feather" icon="icon-map" data-vv-as="Numero exterior" v-validate="'required'" v-model="crematorio.num_ext" class="w-full uppercase"/>
                     <span class="text-danger text-sm" v-show="errors.has('num_ext')">{{ errors.first('num_ext') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-2/12 mt-3">
                     <label for="" class="vs-input--label">Numero Int. <span class="text-danger text-sm">(*)</span>:</label>
-                    <vs-input :disabled="disableFields" name="num_int" icon-pack="feather" icon="icon-map" data-vv-as="Numero interior" v-model="crematorio.num_int" class="w-full uppercase"/>
+                    <vs-input  name="num_int" icon-pack="feather" icon="icon-map" data-vv-as="Numero interior" v-model="crematorio.num_int" class="w-full uppercase"/>
                     <span class="text-danger text-sm" v-show="errors.has('num_int')">{{ errors.first('num_int') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-3/12 mt-3">
                     <label for="" class="vs-input--label">Colonia <span class="text-danger text-sm">(*)</span>:</label>
-                    <vs-input :disabled="disableFields" name="colonia" icon-pack="feather" icon="icon-map" data-vv-as="Colonia" v-validate="'required'" v-model="crematorio.colonia" class="w-full uppercase"/>
+                    <vs-input  name="colonia" icon-pack="feather" icon="icon-map" data-vv-as="Colonia" v-validate="'required'" v-model="crematorio.colonia" class="w-full uppercase"/>
                     <span class="text-danger text-sm" v-show="errors.has('colonia')">{{ errors.first('colonia') }}</span>
                 </div>
                 <div class="vx-col w-full md:w-2/12 mt-3">
                     <label for="" class="vs-input--label">C.P. <span class="text-danger text-sm">(*)</span>:</label>
-                    <vs-input :disabled="disableFields" name="cp" icon-pack="feather" icon="icon-map" data-vv-as="C.P." v-validate="'required|numeric'" v-model="crematorio.cp" class="w-full uppercase"/>
+                    <vs-input  name="cp" icon-pack="feather" icon="icon-map" data-vv-as="C.P." v-validate="'required|numeric'" v-model="crematorio.cp" class="w-full uppercase"/>
                     <span class="text-danger text-sm" v-show="errors.has('cp')">{{ errors.first('cp') }}</span>
                 </div>
             </div>
@@ -94,7 +94,7 @@
             <div class="vx-row">
                 <div class="vx-col w-full">
                     <div class="flex flex-wrap items-center justify-end">
-                        <vs-button size="small"  v-if="!disableFields" class="ml-auto mt-2" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar Crematorio</vs-button>
+                        <vs-button size="small"  class="ml-auto mt-2" icon-pack="feather" icon="icon-save" @click.prevent="save">Guardar Crematorio</vs-button>
                     </div>
                 </div>
             </div>
@@ -123,7 +123,6 @@ export default {
             showChecker: false,
             estados: [],
             funeraria: true,
-            disableFields: false,
             municipios: [],
             localidades: [],
             selectedRegimen: null,
