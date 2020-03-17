@@ -15,6 +15,9 @@ class CreateSatProductosServiciosTable extends Migration
     {
         Schema::create('sat_productos_servicios', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('clave');
+            $table->string('descripcion');
+            $table->string('similar');
             $table->timestamps();
         });
     }

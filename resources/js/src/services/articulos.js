@@ -42,5 +42,11 @@ export default {
     },
     productosServicios() {
         return axios.get('/productos-servicios')
+    },
+    getCategorias() {
+        return axios.get('/categorias')
+    },    
+    getFamilias(idCategoria) {
+        return axios.get('/categorias/' + idCategoria + '/familias')
     }
 }

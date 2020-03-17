@@ -20,14 +20,14 @@ class CreateArticulosTable extends Migration
             $table->decimal('costo_neto', 10, 2);
             $table->unsignedBigInteger('sat_productos_servicios_id');
             $table->foreign('sat_productos_servicios_id')->references('id')->on('sat_productos_servicios');
-            $table->string('cuenta_predial');
-            $table->string('codigo_proveedor');
+            $table->string('cuenta_predial')->nullable();
+            $table->string('codigo_proveedor')->nullable();
             
             $table->unsignedBigInteger('grupos_profeco_id');
             $table->foreign('grupos_profeco_id')->references('id')->on('grupos_profeco');
-            $table->integer('maximo')->default(0);
-            $table->integer('minimo')->default(0); 
-            $table->unsignedBigInteger('almacenes_id');
+            $table->integer('maximo')->default(0)->nullable();
+            $table->integer('minimo')->default(0)->nullable();
+            $table->unsignedBigInteger('almacenes_id')->nullable();
             $table->foreign('almacenes_id')->references('id')->on('almacenes');
             $table->integer('existencia')->default(0); 
 
@@ -36,8 +36,8 @@ class CreateArticulosTable extends Migration
 
             $table->unsignedBigInteger('unidades_venta_id');
             $table->foreign('unidades_venta_id')->references('id')->on('unidades');
-            $table->integer('factor')->default(0); 
-            $table->string('localizacion');
+            $table->integer('factor')->default(0)->nullable();
+            $table->string('localizacion')->nullable();
             $table->integer('facturable')->default(0);
             $table->integer('caduca')->default(0);
             $table->integer('rentable')->default(0);
