@@ -101,10 +101,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('grupos-profeco', 'GruposProfecoController@getAll');
     Route::get('almacenes', 'AlmacenesController@getAll');
     Route::get('categorias', 'CategoriasController@getAll');
+    Route::get('categorias/{idCategoria}/familias', 'CategoriasController@getFamilias');
     Route::get('impuestos', 'SATImpuestosController@getImpuestos');
     Route::get('retenciones', 'SATImpuestosController@getRetenciones');
-    Route::get('productos-servicios', 'SATProductosServiciosController@getRetenciones');
+    Route::get('productos-servicios', 'SATProductosServiciosController@getAll');
     Route::get('unidades', 'UnidadesController@getAll');
+
+    //Articulos
+    Route::post('empresa/inventario/articulos', 'ArticulosController@create');
+    Route::put('empresa/inventario/articulos/{id}', 'ArticulosController@save');
+    Route::get('empresa/inventario/articulos', 'ArticulosController@getAll');
 });
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');

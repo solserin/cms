@@ -288,12 +288,13 @@ export default {
 					let promise
 					if (self.proveedor.id) {
 						let id = _.clone(self.proveedor.id)
-						delete self.proveedor.id
-						promise = proveedorService.update(id, self.proveedor)
+						let updateData = _.clone(self.proveedor)
+						delete updateData.id
+						promise = proveedorService.update(id, updateData)
 					} else {
 						promise = proveedorService.create(self.proveedor)
 					}
-
+      				self.$vs.loading()
 					promise.then((response) => {
 						self.$vs.loading.close()
 						if (response.status >= 200) {
