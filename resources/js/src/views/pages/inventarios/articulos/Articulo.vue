@@ -238,29 +238,38 @@
 			<div v-show="activeTab == 1">
 				<div class="vx-col w-full md:w-12/12" v-if="isPaquete">
 					<div class="vx-row">
-						<div class="vx-col w-full">
-							<vx-input-group class="mb-4">
-								<v-select placeholder="Seleccione o busque un articulo" />
+						<div class="vx-col w-full mb-4">
+							<vx-input-group>
+								<v-select v-model="selectedArticuloPack" :clearable="false" :filterable="false" placeholder="Seleccione o busque un articulo" :options="searchedArticulos" @search="onSearchArticulos">
+									<div slot="no-options">No hay opciones disponibles.</div>
+									<template slot="option" slot-scope="option">
+										<div class="d-center"><b>{{ option.codigo_barras }}</b>: {{ option.nombre }}</div>
+									</template>
+    								<template slot="selected-option" slot-scope="option">
+										<div class="d-center"><b>{{ option.codigo_barras }}</b>: {{ option.nombre }}</div>
+    								</template>
+								</v-select>
 								<template slot="append">
 									<div class="append-text bg-primary">
-										<vs-button icon-pack="feather" icon="icon-plus" ></vs-button>
+										<vs-button icon-pack="feather" icon="icon-plus" @click="addArticuloPack"></vs-button>
 									</div>
 								</template>
 							</vx-input-group>
-							<span class="leading-none font-medium">Articulos incluidos en el paquete</span>
-							<vs-table :data="paqueteProductos" class="mt-4">
+							<span class="text-danger text-sm">Solo se mostraran los primeros 15 articulo que coincidad con la busqueda, para encontrar un producto en especifico sugerimos usar el <b>CODIGO DE BARRAS</b></span><br/>
+						</div>
+						<div class="vx-col w-full">
+							<span class="leading-none font-medium mt-6">Articulos incluidos en el paquete</span>
+							<vs-table noDataText="Aun no has agregado articulos al paquete" :data="paqueteProductos" class="mt-4">
 								<template slot="thead">
 									<vs-th>Cantidad</vs-th>
+									<vs-th>Codigo de barras</vs-th>
 									<vs-th>Articulo</vs-th>
 								</template>
 								<template slot-scope="{data}">
-									<vs-tr >
-										<vs-td>
-											<vs-input />
-										</vs-td>
-										<vs-td>
-											Producto 1
-										</vs-td>
+									<vs-tr :data="articulo" :key="indextr" v-for="(articulo, indextr) in data">
+										<vs-td><vs-input /></vs-td>
+										<vs-td>{{ articulo.codigo_barras }}</vs-td>
+										<vs-td>{{ articulo.nombre }}</vs-td>
 									</vs-tr>
 								</template>
 							</vs-table>
@@ -332,7 +341,6 @@ export default {
 			this.activeTab = 0
 			this.showPopup = this.show
 			if (this.articuloData) {
-				console.log(this.articuloData)
 				this.articulo = _.clone(this.articuloData)
 				this.selectedUnidadCompra = {
 					value: this.articulo.unidad_compra.id,
@@ -464,6 +472,8 @@ export default {
 			gruposProfeco: [],
 			familias: [],
 			categorias: [],
+			searchedArticulos: [],
+			selectedArticuloPack: null,
 			selectedGrupoProfeco: null,
 			selectedUnidadVenta: null,
 			selectedUnidadCompra: null,
@@ -510,6 +520,31 @@ export default {
 		}
     },
     methods: {
+		addArticuloPack() {
+			let articulo = _.clone(this.selectedArticuloPack)
+			this.selectedArticuloPack = null
+			this.paqueteProductos.push({
+				articulos_id: articulo.id,
+				cantidad: 0,
+				nombre: articulo.nombre,
+				codigo_barras: articulo.codigo_barras
+			})
+		},
+		onSearchArticulos(search, loading) {
+			loading(true);
+			this.search(loading, search, this);
+		},
+		search: _.debounce((loading, search, vm) => {
+			articuloService.getAll({
+                page: 1,
+                per_page: 15,
+				search: search,
+				tipo_producto: 1
+			}).then(res => {
+				vm.searchedArticulos = res.data.data//_.map(res.data.data, (articulo) => ({ value: articulo.id, label: articulo.nombre }))
+				loading(false)
+			})
+		}, 350),
 		save() {
 			let self = this
             self.$validator.validate('add-articulo.*').then(result => {
