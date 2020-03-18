@@ -47,4 +47,8 @@ class Articulos extends Model
     public function precios() {
         return $this->hasMany('App\PreciosArticulos');
     }
+
+    public function paquete() {
+        return $this->hasMany('App\ArticulosPaquete', 'articulos_parent_id', 'id');
+    }
 }

@@ -97,7 +97,7 @@
 						</v-select>
 						<span class="text-danger text-sm">{{ errors.first('familia', 'add-articulo') }}</span>
 					</div>
-					<div class="vx-col w-full md:w-3/12 mt-4" v-if="!(isServicio || isPaquete)">
+					<div class="vx-col w-full md:w-3/12 mt-4" v-if="!(isServicio || isPaquete)" :key="uniqueKey + 'divAlmacen'">
 						<label class="text-sm opacity-75">
 							Almacen
 							<span class="text-danger text-sm">(*)</span>
@@ -107,7 +107,7 @@
 						</v-select>
 						<span class="text-danger text-sm">{{ errors.first('almacenes_id', 'add-articulo') }}</span>
 					</div>
-					<div class="vx-col w-full md:w-3/12 mt-4" v-if="!(isServicio || isPaquete)">
+					<div class="vx-col w-full md:w-3/12 mt-4" v-if="!(isServicio || isPaquete)" :key="uniqueKey + 'divLocalizacion'">
 						<label class="text-sm opacity-75">
 							Localizacion
 							<span class="text-danger text-sm">(*)</span>
@@ -123,14 +123,14 @@
 						<vs-input data-vv-scope="add-articulo" v-model="articulo.cuenta_predial" name="cuenta_predial" data-vv-as="cuenta predial" v-validate="'numeric'" type="text" class="w-full pb-1 pt-1" />
 						<!--<span class="text-danger text-sm">{{ errors.first('nombre', 'add-articulo') }}</span>-->
 					</div>
-					<div class="vx-col w-full md:w-3/12 mt-4" v-if="!(isServicio || isPaquete)">
+					<div class="vx-col w-full md:w-3/12 mt-4" v-if="!(isServicio || isPaquete)" :key="uniqueKey + 'divCantidad'">
 						<div class="vx-row">
-							<div class="vx-col w-full md:w-6/12" v-if="showField">
+							<div class="vx-col w-full md:w-6/12">
 								<label class="text-sm opacity-75">
 									Cantidad Minima
 									<span class="text-danger text-sm">(*)</span>
 								</label>
-								<vs-input data-vv-scope="add-articulo" v-model="articulo.minimo" name="minimo" data-vv-as="Minimo"  v-validate="rulesIventarioMinimo" type="text" class="w-full pb-1 pt-1"/>
+								<vs-input :key="'minimo'" data-vv-scope="add-articulo" v-model="articulo.minimo" name="minimo" data-vv-as="Minimo"  v-validate="rulesIventarioMinimo" type="text" class="w-full pb-1 pt-1"/>
 								<span class="text-danger text-sm">{{ errors.first('minimo', 'add-articulo') }}</span>
 							</div>
 							<div class="vx-col w-full md:w-6/12">
@@ -138,16 +138,16 @@
 									Cantidad Maxima
 									<span class="text-danger text-sm">(*)</span>
 								</label>
-								<vs-input data-vv-scope="add-articulo" v-model="articulo.maximo" name="maximo" data-vv-as="Maximo"  v-validate="rulesInventarioMaximo" type="text" class="w-full pb-1 pt-1"/>
+								<vs-input :key="'maximo'" data-vv-scope="add-articulo" v-model="articulo.maximo" name="maximo" data-vv-as="Maximo"  v-validate="rulesInventarioMaximo" type="text" class="w-full pb-1 pt-1"/>
 								<span class="text-danger text-sm">{{ errors.first('maximo', 'add-articulo') }}</span>
 							</div>
 						</div>
 					</div>
-					<div class="vx-col w-full" :class="isServicio || isPaquete ? 'md:w-3/12 mt-4': 'md:w-3/12 mt-12'">
+					<div class="vx-col w-full" :class="isServicio || isPaquete ? 'md:w-3/12 mt-4': 'md:w-3/12 mt-12'" :key="uniqueKey + 'divOptions'">
 						<ul class="centerx options">
-							<li><vs-checkbox v-model="articulo.facturable">Facturable</vs-checkbox></li> 
-							<li><vs-checkbox v-model="articulo.caduca" v-if="!(isPaquete || isServicio)">Caduca</vs-checkbox></li>
-							<li><vs-checkbox v-model="articulo.rentable">Rentable</vs-checkbox></li>
+							<li><vs-checkbox key="facturable" v-model="articulo.facturable">Facturable</vs-checkbox></li> 
+							<li><vs-checkbox :key="uniqueKey + 'caduca'" v-model="articulo.caduca" v-if="!(isPaquete || isServicio)">Caduca</vs-checkbox></li>
+							<li><vs-checkbox key="rentable" v-model="articulo.rentable">Rentable</vs-checkbox></li>
 						</ul>
 					</div>
 				</div>
@@ -189,7 +189,7 @@
 						</v-select>
 						<span class="text-danger text-sm">{{ errors.first('unidad_venta', 'add-articulo') }}</span>
 					</div>
-					<div class="vx-col w-full" :class="classPrices" v-if="!(isPaquete || isServicio)">
+					<div class="vx-col w-full" :class="classPrices" v-if="!(isPaquete || isServicio)" :key="uniqueKey + 'factor'">
 						<label class="text-sm opacity-75">
 							Factor
 							<span class="text-danger text-sm">(*)</span>
@@ -236,11 +236,11 @@
 				</div>
 			</div>
 			<div v-show="activeTab == 1">
-				<div class="vx-col w-full md:w-12/12" v-if="isPaquete">
+				<div class="vx-col w-full md:w-12/12" v-if="isPaquete" :key="uniqueKey + 'divPack'">
 					<div class="vx-row">
 						<div class="vx-col w-full mb-4">
 							<vx-input-group>
-								<v-select v-model="selectedArticuloPack" :clearable="false" :filterable="false" placeholder="Seleccione o busque un articulo" :options="searchedArticulos" @search="onSearchArticulos">
+								<v-select v-model="selectedArticuloPack" :filterable="false" placeholder="Seleccione o busque un articulo" :options="searchedArticulos" @search="onSearchArticulos">
 									<div slot="no-options">No hay opciones disponibles.</div>
 									<template slot="option" slot-scope="option">
 										<div class="d-center"><b>{{ option.codigo_barras }}</b>: {{ option.nombre }}</div>
@@ -259,17 +259,24 @@
 						</div>
 						<div class="vx-col w-full">
 							<span class="leading-none font-medium mt-6">Articulos incluidos en el paquete</span>
-							<vs-table noDataText="Aun no has agregado articulos al paquete" :data="paqueteProductos" class="mt-4">
+							<vs-table :hoverFlat="false" stripe noDataText="Aun no has agregado articulos al paquete" :data="paqueteProductos" class="mt-4">
 								<template slot="thead">
 									<vs-th>Cantidad</vs-th>
 									<vs-th>Codigo de barras</vs-th>
 									<vs-th>Articulo</vs-th>
+									<vs-th></vs-th>
 								</template>
 								<template slot-scope="{data}">
 									<vs-tr :data="articulo" :key="indextr" v-for="(articulo, indextr) in data">
-										<vs-td><vs-input /></vs-td>
+										<vs-td>
+											<vs-input :key="'articulo' + indextr" data-vv-scope="add-articulo" :name="'articulo' + indextr" v-validate="'required|numeric|min_value:1'" data-vv-as="Impuestos" v-model="articulo.cantidad" />
+											<span class="text-danger text-sm">{{ errors.first('articulo' + indextr, 'add-articulo') }}</span>
+										</vs-td>
 										<vs-td>{{ articulo.codigo_barras }}</vs-td>
 										<vs-td>{{ articulo.nombre }}</vs-td>
+										<vs-td>
+											<vs-button @click="onDeleteFromPackage(indextr)" title="Eliminar del paquete" icon-pack="feather" size="large" icon="icon-x" color="danger"  type="flat"></vs-button>
+										</vs-td>
 									</vs-tr>
 								</template>
 							</vs-table>
@@ -340,6 +347,7 @@ export default {
         show: function() {
 			this.activeTab = 0
 			this.showPopup = this.show
+			this.uniqueKey = (new Date()).getTime()
 			if (this.articuloData) {
 				this.articulo = _.clone(this.articuloData)
 				this.selectedUnidadCompra = {
@@ -399,6 +407,18 @@ export default {
 					})
 				}
 
+				//PAQUETE
+				if (this.articulo.tipos_producto_id === 3) {
+					this.paqueteProductos = _.map(this.articulo.paquete, (articuloPack) => {
+						return {
+							articulos_id: articuloPack.articulos_id,
+							cantidad: articuloPack.cantidad,
+							nombre: articuloPack.articulo.nombre,
+							codigo_barras: articuloPack.articulo.codigo_barras
+						}
+					})
+				}
+
 				delete this.articulo.unidad_compra
 				delete this.articulo.unidad_venta
 				delete this.articulo.tipo_producto
@@ -452,11 +472,16 @@ export default {
 				} else {
 					this.showField = true
 				}
+
+				if (this.selectedTipoProducto.value === 2 || this.selectedTipoProducto.value === 1) {
+					this.paqueteProductos = []
+				}
 			}
 		}
 	},
 	data() {
 		return {
+			uniqueKey: 0,
 			currentTimestamp: 1,
 			title: 'NUEVO ARTICULO',
 			activeTab: 2,
@@ -520,30 +545,48 @@ export default {
 		}
     },
     methods: {
+		onDeleteFromPackage(index) {
+			this.paqueteProductos.splice(index, 1)
+		},
 		addArticuloPack() {
 			let articulo = _.clone(this.selectedArticuloPack)
 			this.selectedArticuloPack = null
-			this.paqueteProductos.push({
-				articulos_id: articulo.id,
-				cantidad: 0,
-				nombre: articulo.nombre,
-				codigo_barras: articulo.codigo_barras
-			})
+			let exists = _.find(this.paqueteProductos, (o) => o.articulos_id === articulo.id)
+			if (!exists) {
+				this.paqueteProductos.push({
+					articulos_id: articulo.id,
+					cantidad: 0,
+					nombre: articulo.nombre,
+					codigo_barras: articulo.codigo_barras
+				})
+			} else {				
+				this.$vs.notify({
+					color: "warning",
+					position: "top-center",
+					title: "Advertencia",
+					text: "El articulo ya es parte del paquete"
+				});
+			}
 		},
 		onSearchArticulos(search, loading) {
 			loading(true);
 			this.search(loading, search, this);
 		},
 		search: _.debounce((loading, search, vm) => {
-			articuloService.getAll({
-                page: 1,
-                per_page: 15,
-				search: search,
-				tipo_producto: 1
-			}).then(res => {
-				vm.searchedArticulos = res.data.data//_.map(res.data.data, (articulo) => ({ value: articulo.id, label: articulo.nombre }))
+			if (!search) {
+				vm.searchedArticulos = []
 				loading(false)
-			})
+			} else {
+				articuloService.getAll({
+					page: 1,
+					per_page: 15,
+					search: search,
+					tipo_producto: 1
+				}).then(res => {
+					vm.searchedArticulos = res.data.data//_.map(res.data.data, (articulo) => ({ value: articulo.id, label: articulo.nombre }))
+					loading(false)
+				})
+			}
 		}, 350),
 		save() {
 			let self = this
@@ -566,10 +609,21 @@ export default {
 						self.articulo.almacenes_id = self.selectedAlmacen.value
 					}
 
+					if (self.isPaquete && self.paqueteProductos.length === 0) {
+						self.$vs.notify({
+							color: "warning",
+							position: "top-center",
+							title: "Advertencia",
+							text: "Estas creando un paquete pero aun no has agregado ningun articulo a este, porfavor ve a la pestaña Articulos del paquete para agregar al menos un articulo"
+						});
+						return false
+					}
+
 					let articuloData = _.clone(self.articulo)
 					let data = {
 						articulo: articuloData,
-						precios: self.preciosVenta
+						precios: self.preciosVenta,
+						paqueteArticulos: self.paqueteProductos
 					}
 
 					let promise
@@ -618,6 +672,13 @@ export default {
 							})
 						}
 					})
+				} else {
+					self.$vs.notify({
+						color: "warning",
+						position: "top-center",
+						title: "Advertencia",
+						text: "Se han detectado errores de validacion, porfavor revisa todos los campos"
+					});
 				}
 			})
 		},
