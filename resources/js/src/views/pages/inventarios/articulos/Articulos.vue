@@ -74,7 +74,7 @@
 					<vs-td>{{ articulo.nombre }}</vs-td>
 					<vs-td>{{ articulo.almacen ? articulo.almacen.almacen : 'N/A' }}</vs-td>
 					<vs-td>{{ articulo.almacen ? articulo.localizacion : 'N/A' }}</vs-td>
-					<vs-td>{{ articulo.existencia }}</vs-td>
+					<vs-td>{{ articulo.tipos_producto_id === 3 || articulo.tipos_producto_id === 2 ? 'N/A' : articulo.existencia }}</vs-td>
 					<vs-td>                                    
 						<div class="flex flex-start">
 							<vs-button title="Editar" size="large" icon-pack="feather" icon="icon-edit" color="dark" type="flat" @click="editArticulo(articulo)"></vs-button>
@@ -192,6 +192,11 @@ export default {
 		},
 		getFamilias() {
 			this.selectedFamilia = null
+			if (!this.selectedCategoria) {
+				this.familias = []
+                this.customFilter()
+				return false
+			}
 			return articuloService.getFamilias(this.selectedCategoria.value).then((response) => {
 				this.familias = response.data.data
                 this.loadArticulos(true)
@@ -209,7 +214,7 @@ export default {
             if (articuloService.cancel) {
                 articuloService.cancel()
             }
-			console.log(self.serverOptions)
+			
             if (resetPage) {
                 self.serverOptions.page = 1
 			}
@@ -283,7 +288,27 @@ export default {
 			this.openStatus = false
 		},
 		openPDF() {
-			this.PDFLink = '/empresa/inventario/articulos-pdf?' + 'nombre=' + this.serverOptions.search + '&estado=' + ((this.serverOptions.estado === null || this.serverOptions.estado === 0) ? '' : this.serverOptions.estado)
+			this.serverOptions.tipo_producto = this.selectedTipoProducto ? this.selectedTipoProducto.value : null
+			this.serverOptions.grupo_profeco = this.selectedGrupoProfeco ? this.selectedGrupoProfeco.value : null
+			this.serverOptions.almacen = this.selectedAlmacen ? this.selectedAlmacen.value : null
+			this.serverOptions.familia = this.selectedFamilia ? this.selectedFamilia.value : null
+			let options = []
+			if (this.serverOptions.tipo_producto !== null) {
+				options.push('tipo_producto=' + this.serverOptions.tipo_producto)
+			}
+			if (this.serverOptions.grupo_profeco !== null) {
+				options.push('grupo_profeco=' + this.serverOptions.grupo_profeco)
+			}
+			if (this.serverOptions.almacen !== null) {
+				options.push('almacen=' + this.serverOptions.almacen)
+			}
+			if (this.serverOptions.familia !== null) {
+				options.push('familia=' + this.serverOptions.familia)
+			}
+
+			let optionstr = options.join('&')
+
+			this.PDFLink = '/empresa/inventario/articulos-pdf?' + 'nombre=' + this.serverOptions.search + '&' + optionstr
 			this.showPDF = true
 		},
 		articuloPDF(articulo) {
@@ -294,6 +319,13 @@ export default {
 			this.estado = null
 			this.mostrar = null
 			this.serverOptions.search = ''
+
+			this.selectedTipoProducto = null
+			this.selectedGrupoProfeco = null
+			this.selectedAlmacen = null
+			this.selectedCategoria = null
+			this.selectedFamilia = null
+			this.customFilter()
 			this.loadArticulos(true)
 		}
 	},

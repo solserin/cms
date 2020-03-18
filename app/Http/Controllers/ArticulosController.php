@@ -7,12 +7,15 @@ use App\Articulos;
 use App\PreciosArticulos;
 use App\ArticulosImpuestos;
 use App\ArticulosRetenciones;
+use App\ArticulosPaquete;
+use PDF;
 
 class ArticulosController extends ApiController
 {
     public function create(Request $request) {
         $data = (object)$request->articulo;
         $precios = (object)$request->precios;
+        $paqueteArticulos = $request->paqueteArticulos;
         $articulo = new Articulos;
         $existsCodigo = Articulos::whereRaw('LOWER(codigo_barras) = LOWER(?)', $data->codigo_barras)->exists();
         if ($existsCodigo) {
@@ -58,13 +61,26 @@ class ArticulosController extends ApiController
                     $articuloImpuesto->save();
                 }
             }
+
             if (!empty($data->retenciones)) {
                 foreach($data->retenciones as $retencion) {
                     $articuloRetencion = new ArticulosRetenciones;
                     $articuloRetencion->articulos_id = $articulo->id;
-                    $articuloRetencion->sat_impuestos_id = $impuesto;
+                    $articuloRetencion->sat_impuestos_id = $retencion;
 
                     $articuloRetencion->save();
+                }
+            }
+
+            if (!empty($paqueteArticulos)) {
+                foreach($paqueteArticulos as $item) {
+                    $item = (object)$item;
+                    $paqueteArticulo = new ArticulosPaquete;
+                    $paqueteArticulo->articulos_parent_id = $articulo->id;
+                    $paqueteArticulo->articulos_id = $item->articulos_id;
+                    $paqueteArticulo->cantidad = $item->cantidad;
+
+                    $paqueteArticulo->save();
                 }
             }
 
@@ -139,9 +155,25 @@ class ArticulosController extends ApiController
                     foreach($data->retenciones as $retencion) {
                         $articuloRetencion = new ArticulosRetenciones;
                         $articuloRetencion->articulos_id = $articulo->id;
-                        $articuloRetencion->sat_impuestos_id = $impuesto;
+                        $articuloRetencion->sat_impuestos_id = $retencion;
 
                         $articuloRetencion->save();
+                    }
+                }
+            }
+
+            $paqueteArticulos = $request->paqueteArticulos;
+            if (!is_null($paqueteArticulos)) {
+                ArticulosPaquete::where('articulos_parent_id', $articulo->id)->delete();
+                if (count($paqueteArticulos)) {
+                    foreach($paqueteArticulos as $item) {
+                        $item = (object)$item;
+                        $paqueteArticulo = new ArticulosPaquete;
+                        $paqueteArticulo->articulos_parent_id = $articulo->id;
+                        $paqueteArticulo->articulos_id = $item->articulos_id;
+                        $paqueteArticulo->cantidad = $item->cantidad;
+
+                        $paqueteArticulo->save();
                     }
                 }
             }
@@ -168,7 +200,7 @@ class ArticulosController extends ApiController
         return response()->json(['message' => 'Articulo modificado', 'articulo' => $articulo->id], 200);
     }
 
-    public function getAll(Request $request) {
+    private function processGetAllRequest(Request $request) {
         $search = $request->search;
         $tipoProducto = $request->tipo_producto;
         $grupoProfeco = $request->grupo_profeco;
@@ -176,11 +208,9 @@ class ArticulosController extends ApiController
         $familia = $request->familia;
 
         $articulos = Articulos::with('unidadCompra','unidadVenta', 'tipoProducto',
-        'satProductoServicio', 'familia',
-        'familia.categoria', 'almacen',
-        'grupoProfeco', 'impuestos',
-        'impuestos.satImpuesto', 'retenciones',
-        'retenciones.satImpuesto', 'precios')->where(function($query) use (&$search) {
+        'satProductoServicio', 'familia', 'familia.categoria', 'almacen',
+        'grupoProfeco', 'impuestos', 'impuestos.satImpuesto', 'retenciones',
+        'retenciones.satImpuesto', 'precios', 'paquete', 'paquete.articulo')->where(function($query) use (&$search) {
             $query->where('codigo_barras', 'like', '%'.$search.'%')
             ->orWhere('nombre', 'like', '%'.$search.'%')
             ->orWhere('localizacion', 'like', '%'.$search.'%');
@@ -199,7 +229,49 @@ class ArticulosController extends ApiController
             }
         })->get();
 
+        return $articulos;
+    }
+
+    public function getAll(Request $request) {
+        $articulos = $this->processGetAllRequest($request);
         $paginatedData = $this->showAllPaginated($articulos);
         return response($paginatedData, 200);
+    }
+
+    public function getPDF(Request $request) {
+        $articulos = $this->processGetAllRequest($request);
+        $getFuneraria = new EmpresaController();
+        $empresa = $getFuneraria->get_empresa_data();
+        $pdf = PDF::loadView('lista_articulos', ['articulos' => $articulos, 'empresa' => $empresa]);
+        $pdf->setOptions([
+            'title' => 'Reporte de Articulos',
+            'footer-html' => view('footer'),
+            'header-html' => view('header'),
+        ]);
+        $pdf->setOption('margin-top', 10);
+        $pdf->setOption('margin-bottom', 15);
+
+        return $pdf->inline();
+    }
+
+    public function articuloPDF($id, Request $request) {
+        $articulo = Articulos::with('unidadCompra','unidadVenta', 'tipoProducto',
+        'satProductoServicio', 'familia', 'familia.categoria', 'almacen',
+        'grupoProfeco', 'impuestos', 'impuestos.satImpuesto', 'retenciones',
+        'retenciones.satImpuesto', 'precios', 'precios.precioParent', 'paquete', 'paquete.articulo')->find($id);
+
+        $getFuneraria = new EmpresaController();
+        $empresa = $getFuneraria->get_empresa_data();
+        $pdf = PDF::loadView('articulo', ['articulo' => $articulo, 'empresa' => $empresa]);
+        $pdf->setOptions([
+            'title' => 'Articulo',
+            'footer-html' => view('footer'),
+            'header-html' => view('header'),
+        ]);
+
+        $pdf->setOption('margin-top', 10);
+        $pdf->setOption('margin-bottom', 15);
+
+        return $pdf->inline();
     }
 }
