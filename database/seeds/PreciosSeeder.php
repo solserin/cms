@@ -11,6 +11,8 @@ class PreciosSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('precios')->insert(['precio' => 'Precio normal']);
+        DB::table('precios')->insert(['precio' => 'Precio con descuento']);
+        DB::table('precios')->insert(['precio' => 'Precio especial']);
     }
 }

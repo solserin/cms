@@ -22,6 +22,11 @@ class DatabaseSeeder extends Seeder
         $this->call(tiposPropiedadesSeeder::class);
         $this->call(PropiedadesSeeder::class);
         $this->call(columnasFilasSeeder::class);
+        $this->call(SATProductosServiciosSeeder::class);
+        $this->call(TiposProductoSeeder::class);
+        $this->call(UnidadesSeeder::class);
+        $this->call(AlmacenesSeeder::class);
+        $this->call(FamiliasTableSeeder::class);
         factory(User::class, 250)->create();
     }
 }

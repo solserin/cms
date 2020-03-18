@@ -17,7 +17,7 @@ class CreateGruposProfecoTable extends Migration
             $table->bigIncrements('id');
             $table->string('grupo');
             $table->string('ver_nombre');
-            $table->unsignedBigInteger('grupo_parent_id');
+            $table->unsignedBigInteger('grupo_parent_id')->nullable();
             $table->foreign('grupo_parent_id')->references('id')->on('grupos_profeco');
             $table->timestamps();
         });

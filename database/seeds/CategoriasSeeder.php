@@ -11,6 +11,9 @@ class CategoriasSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('categorias')->insert(['categoria' => 'ATAUDES']);
+        DB::table('categorias')->insert(['categoria' => 'URNAS']);
+        DB::table('categorias')->insert(['categoria' => 'CAFETERIA']);
+        DB::table('categorias')->insert(['categoria' => 'MATERIAL RENTABLE']);
     }
 }
