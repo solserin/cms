@@ -2,18 +2,19 @@
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
       <vs-tab label="INVENTARIO DEL CEMENTERIO" icon="supervisor_account" class="pb-5"></vs-tab>
-      <vs-tab label="ROLES DEL SISTEMA" icon="fingerprint"></vs-tab>
+      <!--<vs-tab label="ROLES DEL SISTEMA" icon="fingerprint"></vs-tab>-->
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
       <vx-card ref="filterCard" title="Filtros de selección" class="user-list-filters">
         <div class="flex flex-wrap">
           <div class="w-full">
-            <vs-button color="success" size="small" class="float-right" @click="verAgregar=true">
-              <user-plus-icon size="1x" class="custom-class mr-2"></user-plus-icon>Agregar
-            </vs-button>
-            <vs-button color="primary" size="small" class="float-right mr-3" @click="pdf()">
-              <printer-icon size="1x" class="custom-class mr-2"></printer-icon>Pdf
-            </vs-button>
+            <vs-button
+              color="success"
+              size="small"
+              class="float-right"
+              @click="verAgregar=true"
+            >Agregar</vs-button>
+            <vs-button color="primary" size="small" class="float-right mr-3" @click="pdf()">Pdf</vs-button>
           </div>
         </div>
         <div class="flex flex-wrap">
@@ -78,7 +79,7 @@
         @sort="handleSort"
         v-model="selected"
         :max-items="serverOptions.per_page.value"
-        :data="users"
+        :data="propiedades"
         stripe
         noDataText="0 Resultados"
       >
@@ -86,8 +87,8 @@
           <h3 class="pb-5 text-primary">Listado de Usuarios</h3>
         </template>
         <template slot="thead">
-          <vs-th>Clave</vs-th>
-          <vs-th>Nombre</vs-th>
+          <vs-th>Tamaño</vs-th>
+          <vs-th>Descripcion</vs-th>
           <vs-th>Usuario</vs-th>
           <vs-th>Género</vs-th>
           <vs-th>Estado</vs-th>
@@ -96,8 +97,8 @@
         </template>
         <template slot-scope="{data}">
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-            <vs-td :data="data[indextr].id_user">{{data[indextr].id_user}}</vs-td>
-            <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
+            <vs-td :data="data[indextr].tipo_propiedad">{{data[indextr].tipo_propiedad.tipo}}</vs-td>
+            <vs-td :data="data[indextr].propiedad_indicador">{{data[indextr].propiedad_indicador}}</vs-td>
             <vs-td :data="data[indextr].email">{{data[indextr].email}}</vs-td>
             <vs-td :data="data[indextr].genero">
               <p v-if="data[indextr].genero==1">Hombre</p>
@@ -111,76 +112,39 @@
             <vs-td :data="data[indextr].id_user">
               <div class="flex flex-start">
                 <vs-button
-                  title="Editar"
-                  size="large"
-                  icon-pack="feather"
-                  icon="icon-edit"
-                  color="dark"
-                  type="flat"
-                  @click="openModificar(data[indextr].id_user)"
-                ></vs-button>
-                <vs-button
-                  v-if="data[indextr].estado==1"
-                  title="Desactivar"
-                  icon-pack="feather"
-                  size="large"
-                  icon="icon-shield-off"
-                  color="danger"
-                  type="flat"
-                  @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
-                ></vs-button>
-                <vs-button
-                  v-else
                   title="Activar"
                   icon-pack="feather"
                   size="large"
                   icon="icon-shield"
                   color="success"
                   type="flat"
-                  @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
+                  @click="datosPropiedad(data[indextr].id)"
                 ></vs-button>
               </div>
             </vs-td>
           </vs-tr>
         </template>
       </vs-table>
-      <div>
-        <vs-pagination v-if="ver" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
-      </div>
-      <pre ref="pre"></pre>
     </div>
-    <div class="tab-content mt-4 pb-3" v-show="activeTab==1">
-      <rolesList @refreshRoles="get_roles"></rolesList>
-    </div>
-    <AgregarUsuario :show="verAgregar" @closeVentana="closeVentana" @get_data="get_data(actual)"></AgregarUsuario>
-    <UpdateUsuario
-      :show="verModificar"
-      @closeModificar="closeModificar"
-      :datos="datosModifcar"
-      @get_data="get_data(actual)"
-    ></UpdateUsuario>
+
     <Password
       :show="openStatus"
       :callback-on-success="callback"
       @closeVerificar="closeStatus"
       :accion="accionNombre"
     ></Password>
-    <pdf :show="verPdf" :pdf="pdfLink" @closePdf="verPdf=false"></pdf>
+
+    <verPropiedades :show="abrirVisor" :propiedad_id="propiedad_id" @closeVisor="abrirVisor=false"></verPropiedades>
   </div>
 </template>
 
 <script>
-import pdf from "../../pdf_viewer";
-/**IMPORTAR EL COMPONENTE DE ROLES */
-import rolesList from "../cementerio/RolesList";
-import AgregarUsuario from "../cementerio/AgregarUsuario";
-import UpdateUsuario from "../cementerio/UpdateUsuario.vue";
+import verPropiedades from "../cementerio/listaModulos";
+//get cementerio services
+import cementerio from "@services/cementerio";
 
 //componente de password
 import Password from "../../confirmar_password";
-import { UserPlusIcon, PrinterIcon } from "vue-feather-icons";
-
-import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import {
   mostrarOptions,
@@ -192,13 +156,8 @@ import vSelect from "vue-select";
 export default {
   components: {
     "v-select": vSelect,
-    UserPlusIcon,
-    PrinterIcon,
-    rolesList,
     Password,
-    AgregarUsuario,
-    UpdateUsuario,
-    pdf
+    verPropiedades
   },
   watch: {
     actual: function(newValue, oldValue) {
@@ -216,14 +175,11 @@ export default {
   },
   data() {
     return {
-      verPdf: false,
+      abrirVisor: false,
       pdfLink: "",
       openStatus: false,
       callback: Function,
       accionNombre: "",
-      verModificar: false,
-      datosModifcar: {},
-      verAgregar: false,
       activeTab: 0,
       ver: true,
       total: 0,
@@ -236,7 +192,8 @@ export default {
       roles: { label: "Todos", value: "" },
       nombre: "",
       selected: [],
-      users: [],
+      propiedades: [],
+      propiedad_id: 0,
       /**opciones para filtrar la peticion del server */
       serverOptions: {
         page: "",
@@ -255,69 +212,6 @@ export default {
       this.estado = { label: "Todos", value: "" };
       this.roles = { label: "Todos", value: "" };
       this.nombre = "";
-      this.get_data(this.actual);
-    },
-    get_data(page, evento = "") {
-      if (evento == "blur") {
-        if (this.nombre != "") {
-          //la funcion no avanza
-
-          return false;
-        }
-      }
-      let self = this;
-      if (usuarios.cancel) {
-        usuarios.cancel("Operation canceled by the user.");
-      }
-      this.$vs.loading();
-      this.ver = false;
-      this.serverOptions.page = page;
-      this.serverOptions.per_page = this.mostrar.value;
-      this.serverOptions.rol_id = this.roles.value;
-      this.serverOptions.status = this.estado.value;
-      this.serverOptions.nombre = this.nombre;
-      usuarios
-        .getUsuarios(this.serverOptions)
-        .then(res => {
-          this.users = res.data.data;
-          this.total = res.data.last_page;
-          this.actual = res.data.current_page;
-          this.ver = true;
-          this.$vs.loading.close();
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          this.ver = true;
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 4000
-              });
-            }
-          }
-        });
-    },
-    get_roles() {
-      usuarios
-        .getRoles()
-        .then(res => {
-          this.rolesOptions = [];
-          //le agrego todos los roles
-          this.rolesOptions.push({ label: "Todos", value: "" });
-          res.data.data.forEach(element => {
-            /**AGREGO LOS DEMAS ROLES */
-            this.rolesOptions.push(element);
-          });
-          this.roles = { label: "Todos", value: "" };
-        })
-        .catch(err => {});
     },
     handleSearch(searching) {},
     handleChangePage(page) {},
@@ -325,154 +219,40 @@ export default {
     closeVentana() {
       this.verAgregar = false;
     },
-    openModificar(id_user) {
-      this.users.forEach(element => {
-        if (element.id_user == id_user) {
-          this.datosModifcar = element;
-          this.verModificar = true;
-          return false;
-        }
-      });
-    },
-    //eliminar usuario logicamente
-    deleteUsuario(id_user, nombre) {
-      this.accionNombre = "deshabilitar usuario " + nombre;
-      this.user_id = id_user;
-      this.openStatus = true;
-      this.callback = this.delete_usuario;
-    },
-    delete_usuario() {
-      this.$vs.loading();
-      let datos = {
-        user_id: this.user_id
-      };
-      usuarios
-        .delete_usuario(datos)
-        .then(res => {
-          this.$vs.loading.close();
-          this.get_data(this.actual);
-          if (res.data == 1) {
-            this.$vs.notify({
-              title: "Deshabilitar Usuario",
-              text: "Se ha deshabilitado el usuario exitosamente.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "success",
-              time: 4000
-            });
-          } else {
-            this.$vs.notify({
-              title: "Deshabilitar Usuario",
-              text: "No se realizaron cambios.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "primary",
-              time: 4000
-            });
-          }
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 4000
-              });
-            } else if (err.response.status == 422) {
-              /**error de validacion */
-              this.errores = err.response.data.error;
-            }
-          }
-        });
-    },
-
-    //eliminar usuario logicamente
-    habilitarUsuario(id_user, nombre) {
-      this.accionNombre = "habilitar usuario " + nombre;
-      this.user_id = id_user;
-      this.openStatus = true;
-      this.callback = this.habilitar_usuario;
-    },
-    habilitar_usuario() {
-      this.$vs.loading();
-      let datos = {
-        user_id: this.user_id
-      };
-      usuarios
-        .habilitar_usuario(datos)
-        .then(res => {
-          this.get_data(this.actual);
-          this.$vs.loading.close();
-          if (res.data == 1) {
-            this.$vs.notify({
-              title: "Habilitar Usuario",
-              text: "Se ha habilitado el usuario exitosamente.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "success",
-              time: 4000
-            });
-          } else {
-            this.$vs.notify({
-              title: "Habilitar Usuario",
-              text: "No se realizaron cambios.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "primary",
-              time: 4000
-            });
-          }
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 4000
-              });
-            } else if (err.response.status == 422) {
-              /**error de validacion */
-              this.errores = err.response.data.error;
-            }
-          }
-        });
-    },
-    closeModificar() {
-      this.verModificar = false;
-    },
-
     closeStatus() {
       this.openStatus = false;
     },
-
-    pdf() {
-      this.pdfLink =
-        "/pdfs?status=" +
-        this.estado.value +
-        "&rol_id=" +
-        this.roles.value +
-        "&nombre=" +
-        this.nombre;
-      this.verPdf = true;
+    datosPropiedad(datos) {
+      this.propiedad_id = datos;
+      this.abrirVisor = true;
     }
   },
   created() {
-    this.get_roles();
-    this.get_data(this.actual);
+    cementerio
+      .getDistribucion()
+      .then(res => {
+        this.propiedades = res.data;
+        this.$vs.loading.close();
+      })
+      .catch(err => {
+        this.$vs.loading.close();
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000
+            });
+          } else if (err.response.status == 422) {
+            /**error de validacion */
+            this.errores = err.response.data.error;
+          }
+        }
+      });
   }
 };
 </script>

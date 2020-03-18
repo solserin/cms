@@ -189,43 +189,35 @@ class PropiedadesSeeder extends Seeder
             ],
             [
                 //25
-                'propiedad_indicador' => '8',
-                'filas' => '7', //1 PROPIEADES
-                'columnas' => '1',
-                'tipo_propiedades_id' => '3'
-            ],
-            [
-                //26
                 'propiedad_indicador' => '9',
                 'filas' => '7', //1 PROPIEADES
                 'columnas' => '1',
                 'tipo_propiedades_id' => '3'
             ],
             [
-                //27
+                //26
                 'propiedad_indicador' => '10',
                 'filas' => '7', //1 PROPIEADES
                 'columnas' => '1',
                 'tipo_propiedades_id' => '3'
             ],
             [
-                //28
+                //27
                 'propiedad_indicador' => '11',
                 'filas' => '7', //1 PROPIEADES
                 'columnas' => '1',
                 'tipo_propiedades_id' => '3'
             ],
             [
-                //29
+                //28
                 'propiedad_indicador' => '12',
                 'filas' => '7', //1 PROPIEADES
                 'columnas' => '1',
                 'tipo_propiedades_id' => '3'
             ],
-
             /**registro de propiedades cuadruplex */
             [
-                //30
+                //29
                 'propiedad_indicador' => '1',
                 'frente' => 'estacionamiento',
                 'filas' => '10',
@@ -233,7 +225,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //31
+                //30
                 'propiedad_indicador' => '2',
                 'frente' => 'estacionamiento',
                 'filas' => '10',
@@ -241,7 +233,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //32
+                //31
                 'propiedad_indicador' => '3',
                 'frente' => 'estacionamiento',
                 'filas' => '10',
@@ -249,7 +241,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //33
+                //32
                 'propiedad_indicador' => '4',
                 'frente' => 'TERRAZA 3',
                 'filas' => '10',
@@ -257,7 +249,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //34
+                //33
                 'propiedad_indicador' => '5',
                 'frente' => 'TERRAZA 2',
                 'filas' => '10',
@@ -265,7 +257,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //35
+                //34
                 'propiedad_indicador' => '6',
                 'frente' => 'TERRAZA 1',
                 'filas' => '10',
@@ -273,7 +265,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //36
+                //35
                 'propiedad_indicador' => '7',
                 'frente' => 'estacionamiento',
                 'filas' => '5',
@@ -281,7 +273,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //37
+                //36
                 'propiedad_indicador' => '8',
                 'frente' => 'terraza 4',
                 'filas' => '5',
@@ -289,7 +281,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //38
+                //37
                 'propiedad_indicador' => '9',
                 'frente' => 'terraza 5',
                 'filas' => '5',
@@ -297,7 +289,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //39
+                //38
                 'propiedad_indicador' => '10',
                 'frente' => 'terraza 6',
                 'filas' => '5',
@@ -305,7 +297,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //40
+                //39
                 'propiedad_indicador' => '11',
                 'frente' => 'terraza 7',
                 'filas' => '10',
@@ -313,7 +305,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //41
+                //40
                 'propiedad_indicador' => '12',
                 'frente' => 'terraza 11',
                 'filas' => '5',
@@ -321,7 +313,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //42
+                //41
                 'propiedad_indicador' => '13',
                 'frente' => 'terraza 9',
                 'filas' => '5',
@@ -329,7 +321,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //43
+                //42
                 'propiedad_indicador' => '14',
                 'frente' => 'terraza 10',
                 'filas' => '5',
@@ -337,7 +329,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //44
+                //43
                 'propiedad_indicador' => '15',
                 'frente' => 'terraza 12',
                 'filas' => '5',
@@ -345,7 +337,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //45
+                //44
                 'propiedad_indicador' => '16',
                 'frente' => 'terraza 13',
                 'filas' => '5',
@@ -353,7 +345,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //46
+                //45
                 'propiedad_indicador' => '17',
                 'frente' => 'terraza 14',
                 'filas' => '5',
@@ -361,7 +353,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             [
-                //47
+                //46
                 'propiedad_indicador' => '18',
                 'frente' => 'terraza 15',
                 'filas' => '5',

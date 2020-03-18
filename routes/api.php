@@ -93,7 +93,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF')->middleware('permiso:5,4');
 
     /**rutas del cementerio */
-    Route::get('inventarios/cementerio/get_list', 'CementerioController@get_list');
+    Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
+    Route::get('inventarios/cementerio/propiedadesById', 'CementerioController@propiedadesById');
+    Route::get('inventarios/cementerio/get_usuarios_para_vendedores', 'CementerioController@get_usuarios_para_vendedores');
+    Route::get('inventarios/cementerio/get_ventas_referencias_propiedades', 'CementerioController@get_ventas_referencias_propiedades');
     /**fin de rutas del cementerio */
 
     //Routes for LOV
@@ -114,7 +118,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('empresa/inventario/articulos', 'ArticulosController@getAll');
     Route::get('empresa/inventario/articulos-pdf', 'ArticulosController@getPDF');
     Route::get('empresa/inventario/articulos-pdf/{id}', 'ArticulosController@articuloPDF');
-    
 });
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
