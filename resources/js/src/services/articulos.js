@@ -10,6 +10,9 @@ export default {
     update(id, data) {
         return axios.put('/empresa/inventario/articulos/' + id, data)
     },
+    get(id) {
+        return axios.get('/empresa/inventario/articulos/' + id)
+    },
     getAll(param) {
         let self = this
         return axios.get('/empresa/inventario/articulos', {

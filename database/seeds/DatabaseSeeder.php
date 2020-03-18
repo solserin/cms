@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SATProductosServiciosSeeder::class);
         $this->call(TiposProductoSeeder::class);
         $this->call(UnidadesSeeder::class);
+        $this->call(AlmacenesSeeder::class);
+        $this->call(FamiliasTableSeeder::class);
         factory(User::class, 250)->create();
     }
 }

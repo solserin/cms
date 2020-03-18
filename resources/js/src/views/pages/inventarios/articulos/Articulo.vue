@@ -31,6 +31,37 @@
 						</div>
 						<vs-divider/>
 					</div>
+					<div class="vx-col w-full">
+						<div class="flex content-end flex-wrap ">
+							<div class="w-1/3">
+								<div class="text-center items-center">
+									<img :src="imagen ? 'data:image/png;base64, ' + imagen : require('@assets/images/no-image-icon.png')" class="rounded h-32 w-32" />
+									<div class="w-full items-center flex justify-center">
+										<vs-button @click="uploadImage('update_image')" icon-pack="feather" icon="icon-upload" class="mb-4" size="small">Subir Imagen</vs-button>
+                                    	<input v-on:change="handleFileUpload" type="file" class="hidden" ref="update_image" accept="image/*">
+									</div>
+								</div>
+							</div>
+							<div class="w-1/3">
+								<div class="text-center">
+									<img :src="imagen1 ? 'data:image/png;base64, ' + imagen1 : require('@assets/images/no-image-icon.png')" class="rounded h-32 w-32" />
+									<div class="w-full items-center flex justify-center">
+										<vs-button :disabled="!imagen" @click="uploadImage('update_image1')" icon-pack="feather" icon="icon-upload" class="mb-4" size="small">Subir Imagen</vs-button>
+										<input v-on:change="handleFileUpload" type="file" class="hidden" ref="update_image1" accept="image/*">
+									</div>
+								</div>
+							</div>
+							<div class="w-1/3">
+								<div class="text-center">
+									<img :src="imagen2 ? 'data:image/png;base64, ' + imagen2 : require('@assets/images/no-image-icon.png')" class="rounded h-32 w-32" />
+									<div class="w-full items-center flex justify-center">
+										<vs-button :disabled="!imagen1" @click="uploadImage('update_image2')" icon-pack="feather" icon="icon-upload" class="mb-4" size="small">Subir Imagen</vs-button>
+										<input v-on:change="handleFileUpload" type="file" class="hidden" ref="update_image2" accept="image/*">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="vx-col w-full md:w-3/12">
 						<label class="text-sm opacity-75">
 							Codigo de barras
@@ -102,7 +133,7 @@
 							Almacen
 							<span class="text-danger text-sm">(*)</span>
 						</label>
-						<v-select data-vv-scope="add-articulo" class="w-full pb-1 pt-1" v-model="selectedAlmacen" :clearable="false" name="almacenes_id" data-vv-as="Almacen" v-validate="'required'" :options="almacenes">
+						<v-select :key="uniqueKey + 'selectAlmacen'" data-vv-scope="add-articulo" class="w-full pb-1 pt-1" v-model="selectedAlmacen" :clearable="false" name="almacenes_id" data-vv-as="Almacen" v-validate="'required'" :options="almacenes">
 							<div slot="no-options">No hay opciones disponibles.</div>
 						</v-select>
 						<span class="text-danger text-sm">{{ errors.first('almacenes_id', 'add-articulo') }}</span>
@@ -112,7 +143,7 @@
 							Localizacion
 							<span class="text-danger text-sm">(*)</span>
 						</label>
-						<vs-input data-vv-scope="add-articulo" v-model="articulo.localizacion" name="localizacion" data-vv-as="Localizacion" v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
+						<vs-input :key="uniqueKey + 'location'" data-vv-scope="add-articulo" v-model="articulo.localizacion" name="localizacion" data-vv-as="Localizacion" v-validate="'required'" type="text" class="w-full pb-1 pt-1"/>
 						<span class="text-danger text-sm">{{ errors.first('localizacion', 'add-articulo') }}</span>
 					</div>
 					<div class="vx-col w-full md:w-3/12 mt-4">
@@ -130,7 +161,7 @@
 									Cantidad Minima
 									<span class="text-danger text-sm">(*)</span>
 								</label>
-								<vs-input :key="'minimo'" data-vv-scope="add-articulo" v-model="articulo.minimo" name="minimo" data-vv-as="Minimo"  v-validate="rulesIventarioMinimo" type="text" class="w-full pb-1 pt-1"/>
+								<vs-input :key="uniqueKey + 'minimo'" data-vv-scope="add-articulo" v-model="articulo.minimo" name="minimo" data-vv-as="Minimo"  v-validate="rulesIventarioMinimo" type="text" class="w-full pb-1 pt-1"/>
 								<span class="text-danger text-sm">{{ errors.first('minimo', 'add-articulo') }}</span>
 							</div>
 							<div class="vx-col w-full md:w-6/12">
@@ -138,16 +169,16 @@
 									Cantidad Maxima
 									<span class="text-danger text-sm">(*)</span>
 								</label>
-								<vs-input :key="'maximo'" data-vv-scope="add-articulo" v-model="articulo.maximo" name="maximo" data-vv-as="Maximo"  v-validate="rulesInventarioMaximo" type="text" class="w-full pb-1 pt-1"/>
+								<vs-input :key="uniqueKey + 'maxima'" data-vv-scope="add-articulo" v-model="articulo.maximo" name="maximo" data-vv-as="Maximo"  v-validate="rulesInventarioMaximo" type="text" class="w-full pb-1 pt-1"/>
 								<span class="text-danger text-sm">{{ errors.first('maximo', 'add-articulo') }}</span>
 							</div>
 						</div>
 					</div>
 					<div class="vx-col w-full" :class="isServicio || isPaquete ? 'md:w-3/12 mt-4': 'md:w-3/12 mt-12'" :key="uniqueKey + 'divOptions'">
 						<ul class="centerx options">
-							<li><vs-checkbox key="facturable" v-model="articulo.facturable">Facturable</vs-checkbox></li> 
+							<li><vs-checkbox v-model="articulo.facturable">Facturable</vs-checkbox></li> 
 							<li><vs-checkbox :key="uniqueKey + 'caduca'" v-model="articulo.caduca" v-if="!(isPaquete || isServicio)">Caduca</vs-checkbox></li>
-							<li><vs-checkbox key="rentable" v-model="articulo.rentable">Rentable</vs-checkbox></li>
+							<li><vs-checkbox v-model="articulo.rentable">Rentable</vs-checkbox></li>
 						</ul>
 					</div>
 				</div>
@@ -194,7 +225,7 @@
 							Factor
 							<span class="text-danger text-sm">(*)</span>
 						</label>
-						<vs-input data-vv-scope="add-articulo" v-model="articulo.factor" name="factor" data-vv-as="Factor" v-validate="'required|numeric|min_value:1'" type="text" class="w-full"/>
+						<vs-input :key="uniqueKey + 'factor'" data-vv-scope="add-articulo" v-model="articulo.factor" name="factor" data-vv-as="Factor" v-validate="'required|numeric|min_value:1'" type="text" class="w-full"/>
 						<span class="text-danger text-sm">{{ errors.first('factor', 'add-articulo') }}</span>
 					</div>
 					<div class="vx-col w-full" :class="classPrices">
@@ -240,7 +271,7 @@
 					<div class="vx-row">
 						<div class="vx-col w-full mb-4">
 							<vx-input-group>
-								<v-select v-model="selectedArticuloPack" :filterable="false" placeholder="Seleccione o busque un articulo" :options="searchedArticulos" @search="onSearchArticulos">
+								<v-select :key="uniqueKey + 'articulopack'" v-model="selectedArticuloPack" :filterable="false" placeholder="Seleccione o busque un articulo" :options="searchedArticulos" @search="onSearchArticulos">
 									<div slot="no-options">No hay opciones disponibles.</div>
 									<template slot="option" slot-scope="option">
 										<div class="d-center"><b>{{ option.codigo_barras }}</b>: {{ option.nombre }}</div>
@@ -350,6 +381,16 @@ export default {
 			this.uniqueKey = (new Date()).getTime()
 			if (this.articuloData) {
 				this.articulo = _.clone(this.articuloData)
+				articuloService.get(this.articulo.id).then(response => {
+					this.imagen = response.data.imagen
+					this.imagen1 = response.data.imagen1
+					this.imagen2 = response.data.imagen2
+
+					this.articulo.imagen = this.imagen
+					this.articulo.imagen1 = this.imagen1
+					this.articulo.imagen2 = this.imagen2
+				})
+
 				this.selectedUnidadCompra = {
 					value: this.articulo.unidad_compra.id,
 					label: this.articulo.unidad_compra.unidad
@@ -379,7 +420,7 @@ export default {
 					value: this.articulo.familia.categoria.id,
 					label: this.articulo.familia.categoria.categoria
 				}
-
+				
 				if (this.articulo.almacen) {
 					this.selectedAlmacen = {
 						value: this.articulo.almacen.id,
@@ -452,7 +493,9 @@ export default {
 				this.selectedRetenciones = null
 				this.selectedFamilia = null
 				this.selectedCategoria = null
-
+				this.imagen = null
+				this.imagen1 = null
+				this.imagen2 = null
 				this.tipoProductoDisabled = false
 				delete this.articulo.id
 				this.articulo.status = 1
@@ -461,6 +504,7 @@ export default {
 					scope: 'add-articulo',
 					vmId: this.$validator.id
 				}
+				
             	this.$validator.reset(matcher)
 			} else {
 			}
@@ -509,6 +553,10 @@ export default {
 			selectedRetenciones: null,
 			selectedFamilia: null,
 			selectedCategoria: null,
+			imagen: null,
+			imagen1: null,
+			imagen2: null,
+			currentImageChange: '',
 			articulo: {
 				codigo_barras: null,
 				nombre: null,
@@ -545,6 +593,42 @@ export default {
 		}
     },
     methods: {
+        uploadImage(ref) {
+            let self = this
+			self.$refs[ref].click(ref)
+			self.currentImageChange = ref
+        },
+        handleFileUpload(ref) {
+			let self = this
+			let imageAttr = ''
+			if (self.currentImageChange === 'update_image1') {
+				self.articulo.image1 = null
+				imageAttr = 'imagen1'
+			} else if (self.currentImageChange === 'update_image2') {
+				self.articulo.image2 = null
+				imageAttr = 'imagen2'
+			} else {
+				self.articulo.image = null
+				imageAttr = 'imagen'
+			}
+
+			console.log(self.currentImageChange)
+            let f = this.$refs[self.currentImageChange].files[0] // FileList object
+            let reader = new FileReader()
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    let binaryData = e.target.result
+                    //Converting Binary Data to base 64
+                    let base64String = window.btoa(binaryData)
+                    //showing file converted to base64
+					self[imageAttr] = base64String
+                    self.showImage = true
+                };
+            })(f)
+            // Read in the image file as a data URL.
+            reader.readAsBinaryString(f)
+        },
 		onDeleteFromPackage(index) {
 			this.paqueteProductos.splice(index, 1)
 		},
@@ -618,6 +702,10 @@ export default {
 						});
 						return false
 					}
+
+					self.articulo.imagen = self.imagen
+					self.articulo.imagen1 = self.imagen1
+					self.articulo.imagen2 = self.imagen2
 
 					let articuloData = _.clone(self.articulo)
 					let data = {
@@ -719,5 +807,9 @@ export default {
   height: 12px;
   padding: 0px !important;
   padding-bottom: 2px !important;
+}
+
+.center {
+	text-align: center;
 }
 </style>

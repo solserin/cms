@@ -110,6 +110,7 @@ Route::middleware(['auth:api'])->group(function () {
     //Articulos
     Route::post('empresa/inventario/articulos', 'ArticulosController@create');
     Route::put('empresa/inventario/articulos/{id}', 'ArticulosController@save');
+    Route::get('empresa/inventario/articulos/{id}', 'ArticulosController@getArticulo');
     Route::get('empresa/inventario/articulos', 'ArticulosController@getAll');
     Route::get('empresa/inventario/articulos-pdf', 'ArticulosController@getPDF');
     Route::get('empresa/inventario/articulos-pdf/{id}', 'ArticulosController@articuloPDF');

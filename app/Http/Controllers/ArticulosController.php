@@ -35,6 +35,9 @@ class ArticulosController extends ApiController
         $articulo->unidades_compra_id = $data->unidades_compra_id;
         $articulo->factor = $data->factor;
         $articulo->localizacion = $data->localizacion;
+        $articulo->imagen = $data->imagen;
+        $articulo->imagen1 = $data->imagen1;
+        $articulo->imagen2 = $data->imagen2;
         if (!is_null($data->facturable)) {
             $articulo->facturable = $data->facturable;
         }
@@ -136,6 +139,9 @@ class ArticulosController extends ApiController
             $articulo->rentable = is_null($data->rentable) ? $articulo->rentable : $data->rentable;
             $articulo->familias_id = is_null($data->familias_id) ? $articulo->familias_id : $data->familias_id;
             $articulo->tipos_producto_id = is_null($data->tipos_producto_id) ? $articulo->tipos_producto_id : $data->tipos_producto_id;
+            $articulo->imagen = $data->imagen;
+            $articulo->imagen1 = $data->imagen1;
+            $articulo->imagen2 = $data->imagen2;
             
             if (!is_null($data->impuestos)) {
                 ArticulosImpuestos::where('articulos_id', $articulo->id)->delete();
@@ -227,7 +233,7 @@ class ArticulosController extends ApiController
             if (!is_null($familia)) {
                 $q->where('familias_id', $familia);
             }
-        })->get();
+        })->get()->makeHidden(['imagen', 'imagen1', 'imagen2']);
 
         return $articulos;
     }
@@ -273,5 +279,17 @@ class ArticulosController extends ApiController
         $pdf->setOption('margin-bottom', 15);
 
         return $pdf->inline();
+    }
+
+    public function getArticulo($id) {
+        if (Articulos::where('id', $id)->exists()) {
+            $articulo = Articulos::select('*', 'articulos.imagen', 'articulos.imagen1', 'articulos.imagen2')->with('unidadCompra','unidadVenta', 'tipoProducto',
+            'satProductoServicio', 'familia', 'familia.categoria', 'almacen',
+            'grupoProfeco', 'impuestos', 'impuestos.satImpuesto', 'retenciones',
+            'retenciones.satImpuesto', 'precios', 'precios.precioParent', 'paquete', 'paquete.articulo')->find($id);
+
+            return response()->json($articulo, 200);
+        }
+        return response()->json(false, 404);
     }
 }
