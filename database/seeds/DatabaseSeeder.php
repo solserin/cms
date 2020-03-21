@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MunicipiosTableSeeder::class);
         $this->call(SATMonedasSeeder::class);
         $this->call(SATRegimenesSeeder::class);
+        $this->call(SATImpuestosSeeder::class);
         $this->call(tiposPropiedadesSeeder::class);
         $this->call(PropiedadesSeeder::class);
         $this->call(columnasFilasSeeder::class);
@@ -26,7 +27,9 @@ class DatabaseSeeder extends Seeder
         $this->call(TiposProductoSeeder::class);
         $this->call(UnidadesSeeder::class);
         $this->call(AlmacenesSeeder::class);
+        $this->call(CategoriasSeeder::class);
         $this->call(FamiliasTableSeeder::class);
+        $this->call(GruposProfecoTableSeeder::class);
         factory(User::class, 250)->create();
     }
 }

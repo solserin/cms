@@ -160,30 +160,9 @@ const router = new Router({
                     },
                 },
                 {
-                    path: '/inventarios/funeraria/articulos',
-                    name: 'inventarioFuneraria',
-                    component: () => import('@/views/pages/inventarios/articulos/Articulos.vue'),
-                    meta: {
-                        breadcrumb: [{
-                                title: 'Home',
-                                url: '/'
-                            },
-                            {
-                                title: 'Inventario de la funeraria'
-                            },
-                            {
-                                title: 'Articulos',
-                                active: true
-                            },
-                        ],
-                        pageTitle: 'Inventario de la funeraria',
-                        rule: 'editor'
-                    },
-                },
-                {
                     path: '/inventarios/funeraria/articulos-servicios',
                     name: 'inventarioFuneraria',
-                    component: () => import('@/views/pages/inventarios/cementerio/CementerioList.vue'),
+                    component: () => import('@/views/pages/inventarios/articulos/Articulos.vue'),
                     meta: {
                         breadcrumb: [{
                                 title: 'Home',

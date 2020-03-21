@@ -17,7 +17,7 @@ class CreateSatProductosServiciosTable extends Migration
             $table->bigIncrements('id');
             $table->string('clave');
             $table->string('descripcion');
-            $table->string('similar');
+            $table->string('similar')->nullable();
             $table->timestamps();
         });
     }
