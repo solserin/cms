@@ -78,4 +78,61 @@ export default {
                 })
         })
     },
+
+
+    //obtiene los tipos de propieades que hay
+    tipoPropiedades() {
+        let self = this
+        return new Promise((resolve, reject) => {
+            axios.get('/inventarios/cementerio/tipoPropiedades')
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    if (axiosSuper.isCancel(error)) {
+                        reject(error.message)
+                    } else {
+                        reject(error)
+                    }
+                })
+        })
+    },
+
+    //obtiene las propieades segun su tipo
+    get_propiedades_by_tipo(id) {
+        let call = "/inventarios/cementerio/get_propiedades_by_tipo"
+        return new Promise((resolve, reject) => {
+            axios.get(call, {
+                    params: {
+                        id_propiedad_tipo: id
+                    }
+                })
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+
+    //retorna los datos de columnas_filas para saber en que numero de lote inicia y acaba una fila de una terraza
+    get_columna_fila_terraza(propiedades_id, fila) {
+        let call = "/inventarios/cementerio/get_columna_fila_terraza"
+        return new Promise((resolve, reject) => {
+            axios.get(call, {
+                    params: {
+                        propiedades_id: propiedades_id,
+                        fila: fila
+                    }
+                })
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
 }

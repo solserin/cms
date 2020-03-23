@@ -51,3 +51,34 @@ export const generosOptions = [{
         value: "2"
     }
 ]
+
+
+//variables para poder crear las filas de las terrazas por nombre de letra
+export const alfabeto = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'Ñ',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'X',
+    'Y',
+    'Z'
+]

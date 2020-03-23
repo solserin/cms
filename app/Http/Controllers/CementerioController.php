@@ -24,6 +24,32 @@ class CementerioController extends ApiController
             Propiedades::with('filas_columnas')->with('tipoPropiedad')->orderBy('tipo_propiedades_id', 'asc')->where('propiedades.id', '=', $id_propiedad)->get();
     }
 
+    //retorna los tipos de propiedad
+    public function tipoPropiedades()
+    {
+        return DB::table('tipo_propiedades')->get();
+    }
+
+
+    //retorna los tipos de propiedad
+    public function get_propiedades_by_tipo(Request $request)
+    {
+        //id del conjunto de propieades
+        $id_propiedad_tipo = $request->id_propiedad_tipo;
+        return
+            Propiedades::where('propiedades.tipo_propiedades_id', '=', $id_propiedad_tipo)->get();
+    }
+
+    //retorna los datos de columnas_filas para saber en que numero de lote inicia y acaba una fila de una terraza
+    public function get_columna_fila_terraza(Request $request)
+    {
+        //id del conjunto de propieades
+        $propiedades_id = $request->propiedades_id;
+        $fila = $request->fila;
+        return DB::table('columnas_filas')->where('fila', $fila)->where('propiedades_id', $propiedades_id)->get();
+    }
+
+
 
 
 
