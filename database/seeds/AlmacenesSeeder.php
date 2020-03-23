@@ -11,6 +11,6 @@ class AlmacenesSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('almacenes')->insert(['almacen' => 'Funeraria', 'status' => 1]);
     }
 }
