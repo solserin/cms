@@ -2,6 +2,7 @@
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
       <vs-tab label="CONTROL DE VENTAS" icon="supervisor_account" class="pb-5"></vs-tab>
+      <vs-tab label="PLANES DE VENTAS" icon="supervisor_account" class="pb-5"></vs-tab>
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
       <vx-card ref="filterCard" title="Filtros de selección" class="user-list-filters">
@@ -156,6 +157,11 @@
       </div>
       <pre ref="pre"></pre>
     </div>
+
+    <div class="tab-content mt-1" v-show="activeTab==1">
+      <PlanesVenta></PlanesVenta>
+    </div>
+
     <AgregarUsuario :show="verAgregar" @closeVentana="closeVentana" @get_data="get_data(actual)"></AgregarUsuario>
     <UpdateUsuario
       :show="verModificar"
@@ -174,6 +180,10 @@
 </template>
 
 <script>
+//planes de venta
+import PlanesVenta from "../ventas/PlanesVentas";
+
+import cementerio from "@services/cementerio";
 import pdf from "../../../pdf_viewer";
 /**IMPORTAR EL COMPONENTE DE ROLES */
 import VendedoresList from "../ventas/VendedoresList";
@@ -202,7 +212,8 @@ export default {
     Password,
     AgregarUsuario,
     UpdateUsuario,
-    pdf
+    pdf,
+    PlanesVenta
   },
   watch: {
     actual: function(newValue, oldValue) {
@@ -220,6 +231,11 @@ export default {
   },
   data() {
     return {
+      //variable
+      tipo_propiedades: [],
+      propiedad: { label: "Todos", value: "" },
+      //fin variables
+
       verPdf: false,
       pdfLink: "",
       openStatus: false,
@@ -254,6 +270,26 @@ export default {
     };
   },
   methods: {
+    //traigo los tipos de propieades que hay
+    tipoPropiedades() {
+      cementerio
+        .tipoPropiedades()
+        .then(res => {
+          console.log(res);
+          //le agrego todos los roles
+          this.tipo_propiedades = [];
+          this.tipo_propiedades.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach(element => {
+            /**AGREGO LOS DEMAS ROLES */
+            this.tipo_propiedades.push({
+              label: element.tipo,
+              value: element.id
+            });
+          });
+        })
+        .catch(err => {});
+    },
+
     reset() {
       this.mostrar = { label: "15", value: "15" };
       this.estado = { label: "Todos", value: "" };
@@ -475,6 +511,7 @@ export default {
     }
   },
   created() {
+    this.tipoPropiedades();
     this.get_roles();
     this.get_data(this.actual);
   }

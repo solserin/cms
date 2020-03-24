@@ -101,6 +101,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/tipoPropiedades', 'CementerioController@tipoPropiedades');
     Route::get('inventarios/cementerio/get_ventas_referencias_propiedades', 'CementerioController@get_ventas_referencias_propiedades');
     Route::get('inventarios/cementerio/get_columna_fila_terraza', 'CementerioController@get_columna_fila_terraza');
+    Route::get('inventarios/cementerio/precios_tarifas', 'CementerioController@precios_tarifas');
     /**fin de rutas del cementerio */
 
     //Routes for LOV

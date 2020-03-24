@@ -135,4 +135,20 @@ export default {
                 })
         })
     },
+
+
+
+    //retorna los precios de las diferenres propiedades
+    precios_tarifas() {
+        let call = "/inventarios/cementerio/precios_tarifas"
+        return new Promise((resolve, reject) => {
+            axios.get(call)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
 }

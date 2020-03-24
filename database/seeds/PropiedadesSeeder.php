@@ -361,6 +361,43 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4'
             ],
             /**fin de registro de propiedades cuadruplex */
+
+            /**duplex */
+            [
+                //47
+                'propiedad_indicador' => 'S',
+                'filas' => '6', //6 PROPIEADES
+                'columnas' => '1',
+                'tipo_propiedades_id' => '2'
+            ],
+            /**fin de duplex */
+
+            /**triplex */
+            [
+                //48
+                'propiedad_indicador' => 'P',
+                'filas' => '14',
+                'columnas' => '1',
+                'tipo_propiedades_id' => '5'
+            ],
+            [
+                //49
+                'propiedad_indicador' => 'R',
+                'filas' => '12',
+                'columnas' => '1',
+                'tipo_propiedades_id' => '5'
+            ],
+            /**fin de triplex */
+
+            /**quadriplex sin terraza */
+            [
+                //50
+                'propiedad_indicador' => 'Q',
+                'filas' => '8',
+                'columnas' => '1',
+                'tipo_propiedades_id' => '6'
+            ]
+            /**fin de quadriplex sin terraza */
         ];
 
         foreach ($secciones as $key) {

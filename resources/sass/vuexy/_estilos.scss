@@ -108,6 +108,10 @@
     border-radius: 0px !important;
 }
 
+.con-vs-card {
+    border-radius: 0px !important;
+}
+
 .vs-input--placeholder {
     color: rgba(0, 0, 0, .7);
 }
@@ -132,3 +136,17 @@
     color: rgba(var(--vs-primary), 1) !important;
     background-color: #fff !important;
 }
+
+
+/*tarifas card*/
+.card-tarifas .vs-card--header {
+    background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+.card-tarifas .vs-card--header h3 {
+    color: #fff;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+/*fin de tarifas card*/

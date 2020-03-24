@@ -12,4 +12,10 @@ class tipoPropiedades extends Model
     {
         return $this->hasMany('App\Propiedades', 'tipo_propiedades_id', 'id');
     }
+
+    //defino los precios que tienen cada tipo de propiedad
+    public function precios()
+    {
+        return $this->hasMany('App\PreciosPropiedades', 'tipo_propiedades_id', 'id');
+    }
 }

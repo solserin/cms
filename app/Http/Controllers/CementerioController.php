@@ -49,6 +49,13 @@ class CementerioController extends ApiController
         return DB::table('columnas_filas')->where('fila', $fila)->where('propiedades_id', $propiedades_id)->get();
     }
 
+    //retorna los tipos de precios y tarifas segun las propiedadad
+    public function precios_tarifas()
+    {
+        return tipoPropiedades::with('precios.tipo')->get();
+    }
+
+
 
 
 

@@ -32,6 +32,16 @@ class tiposPropiedadesSeeder extends Seeder
                 'tipo' => 'cuadriplex',
                 'descripcion' => 'Propiedades organizadas por terrazas',
                 'capacidad' => '4'
+            ],
+            [
+                'tipo' => 'triplex',
+                'descripcion' => 'Propiedades por columnas',
+                'capacidad' => '3'
+            ],
+            [
+                'tipo' => 'cuadriplex S/Terraza',
+                'descripcion' => 'Propiedades columnas',
+                'capacidad' => '4'
             ]
         ];
 
