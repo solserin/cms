@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(GruposProfecoTableSeeder::class);
         $this->call(TipoPreciosSeeder::class);
         $this->call(PreciosPropiedadesSeeder::class);
+        $this->call(PreciosSeeder::class);
         factory(User::class, 250)->create();
     }
 }

@@ -15,7 +15,7 @@ class CreateArticulosTable extends Migration
     {
         Schema::create('articulos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('codigo_barras');
+            $table->string('codigo_barras');
             $table->string('nombre');
             $table->decimal('costo_neto', 10, 2);
             $table->unsignedBigInteger('sat_productos_servicios_id');
