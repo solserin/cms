@@ -58,7 +58,43 @@ class CementerioController extends ApiController
     /**UPDATE precios de tarifas */
     public function actualizar_precios_tarifas(Request $request)
     {
-        $user_id = $request->user_id;
+        //return $request;
+
+
+        //creando los valores que necesito validar
+        request()->validate(
+            [
+                '*.precio_neto' => [
+                    'required',
+                    'numeric',
+                ],
+                '*.enganche_inicial' => [
+                    'required',
+                    'numeric',
+                    'lte:*.precio_neto'
+                ],
+                '*.meses' => [
+                    'required',
+                    'integer',
+                    'digits_between:1,2'
+                ],
+            ],
+
+            [
+                '*.precio_neto.required' => 'ingrese este dato.',
+
+                '*.enganche_inicial.lte' => 'El pago inicial debe ser menor o igual al precio neto de la propiedad.',
+                '*.enganche_inicial.required' => 'ingrese este dato.',
+
+                '*.meses.numeric' => 'ingrese un número de meses correcto.',
+                '*.meses.required' => 'ingrese este dato.',
+                '*.meses.digits_between' => 'ingrese este dato (2 dígitos máximo).',
+            ]
+        );
+
+
+
+        /*$user_id = $request->user_id;
         request()->validate(
             [
                 'rol_id' => 'required',
@@ -121,6 +157,7 @@ class CementerioController extends ApiController
                 ]
             );
         }
+        */
     }
 
 

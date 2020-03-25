@@ -115,6 +115,12 @@
                     class="text-danger text-sm"
                   >{{ errors.first(('pago_inicial'+indextr+indexprecio),('add-'+indextr)) }}</span>
                 </div>
+
+                <div v-if="errores[indexprecio + '.' + 'enganche_inicial'] && index_datos==indextr">
+                  <span
+                    class="text-danger text-sm"
+                  >{{errores[indexprecio + '.' + 'enganche_inicial'][0]}}</span>
+                </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
                 <label class="text-sm opacity-75">
@@ -205,6 +211,7 @@ export default {
   data() {
     return {
       tipo_propiedades: [],
+      errores: [],
       operConfirmar: false,
       openPassword: false,
       accionPassword: "",
@@ -294,9 +301,11 @@ export default {
           if (!result) {
             return;
           } else {
+            this.errores = [];
             //se confirma la cntraseña
             this.openPassword = true;
-            this.datos_actualizar = datos;
+            //aqui creo los datos a actualizar
+            this.datos_actualizar = datos.precios;
             this.index_datos = index_datos;
             this.callbackPassword = this.ActualizarDatos;
           }
@@ -306,7 +315,22 @@ export default {
 
     ActualizarDatos() {
       //aqui mando actualizar los datos
-      console.log(this.datos_actualizar);
+      cementerio
+        .actualizar_precios_tarifas(this.datos_actualizar)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          //checo si existe cada error
+          this.errores = err.response.data.error;
+          for (let index = 0; index < this.datos_actualizar.length; index++) {
+            if (err.response.data.error[index + "." + "enganche_inicial"]) {
+              console.log(
+                err.response.data.error[index + "." + "enganche_inicial"][0]
+              );
+            }
+          }
+        });
     }
   },
   created() {
