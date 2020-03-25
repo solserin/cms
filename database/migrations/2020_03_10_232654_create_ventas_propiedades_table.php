@@ -62,6 +62,8 @@ class CreateVentasPropiedadesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ventas_propiedades');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('ventas_propiedades');       
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }
