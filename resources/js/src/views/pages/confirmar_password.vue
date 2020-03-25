@@ -116,11 +116,3 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-.password-checker .vs-dialog-cancel--icon {
-  display: none;
-}
-.vs-dialog-cancel-button {
-  color: red !important;
-}
-</style>

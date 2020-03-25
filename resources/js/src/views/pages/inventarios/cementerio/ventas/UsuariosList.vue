@@ -275,7 +275,6 @@ export default {
       cementerio
         .tipoPropiedades()
         .then(res => {
-          console.log(res);
           //le agrego todos los roles
           this.tipo_propiedades = [];
           this.tipo_propiedades.push({ label: "Seleccione 1", value: "" });

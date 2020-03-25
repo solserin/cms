@@ -14,6 +14,7 @@ let colors = {
     //primary: '#063278',
     /*aeternus*/
     primary: '#b18b1e',
+    default_color: '#C1C1C1',
     success: '#28C76F',
     danger: '#EA5455',
     warning: '#FF9F43',

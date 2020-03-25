@@ -93,6 +93,12 @@ require('@assets/css/iconfont.css')
 
 Vue.config.productionTip = false
 
+/**importo el formnateador de numeros a moneda */
+import numeral from 'numeral';
+import numFormat from 'vue-filter-number-format';
+
+Vue.filter('numFormat', numFormat(numeral));
+
 new Vue({
     router,
     store,

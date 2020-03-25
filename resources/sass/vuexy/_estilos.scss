@@ -140,13 +140,25 @@
 
 /*tarifas card*/
 .card-tarifas .vs-card--header {
-    background-color: rgba(var(--vs-primary), 1) !important;
+    background-color: rgba(var(--vs-default_color), 1) !important;
 }
 
 .card-tarifas .vs-card--header h3 {
-    color: #fff;
+    color: rgba(var(--vs-textos_theme), 1) !important;
     font-size: 14px;
     text-transform: capitalize;
+    font-weight: 600 !important;
 }
 
 /*fin de tarifas card*/
+
+/*password checker*/
+.password-checker .password-checker .vs-dialog-cancel--icon {
+    display: none;
+}
+
+.password-checker .vs-dialog-cancel-button {
+    color: red !important;
+}
+
+/*fin password checker*/

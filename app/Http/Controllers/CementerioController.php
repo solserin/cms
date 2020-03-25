@@ -55,6 +55,74 @@ class CementerioController extends ApiController
         return tipoPropiedades::with('precios.tipo')->get();
     }
 
+    /**UPDATE precios de tarifas */
+    public function actualizar_precios_tarifas(Request $request)
+    {
+        $user_id = $request->user_id;
+        request()->validate(
+            [
+                'rol_id' => 'required',
+                'genero' => 'required',
+                'nombre' => 'required',
+                'usuario' => [
+                    'required',
+                    'email',
+                    Rule::unique('usuarios', 'email')->ignore($user_id),
+                ],
+                'password' => 'required',
+                'repetir' => 'required|same:password',
+            ],
+            [
+                'genero.required' => 'Ingrese el género del usuario.',
+                'rol_id.required' => 'Ingrese el rol del usuario.',
+                'nombre.required' => 'Ingrese el nombre del usuario.',
+                'usuario.required' => 'Ingrese el email del usuario.',
+                'usuario.email' => 'El email debe ser un correo válido.',
+                'password.required' => 'debe ingresar una contraseña.',
+                'repetir.required' => 'debe confirmar la contraseña.',
+                'repetir.same' => 'Las contraseñas no coinciden.',
+                'unique' => 'Este nombre de usuario ya ha sido registrado.'
+            ]
+        );
+        //con cambio de contraseña
+
+        if ($request->password == 'nochanges') {
+            return DB::table('usuarios')->where('id', $user_id)->update(
+                [
+                    'roles_id' => $request->rol_id,
+                    'genero' => $request->genero,
+                    'nombre' => $request->nombre,
+                    'email' => $request->usuario,
+                    'domicilio' => $request->direccion,
+                    'telefono' => $request->telefono,
+                    'celular' => $request->celular,
+                    'nombre_contacto' => $request->nombre_contacto,
+                    'tel_contacto' => $request->tel_contacto,
+                    'parentesco' => $request->parentesco_contacto,
+                    'updated_at' => now(),
+                ]
+            );
+        } else {
+            //con cambio de contraseñas
+            return DB::table('usuarios')->where('id', $user_id)->update(
+                [
+                    'roles_id' => $request->rol_id,
+                    'genero' => $request->genero,
+                    'nombre' => $request->nombre,
+                    'email' => $request->usuario,
+                    'password' => Hash::make($request->password),
+                    'domicilio' => $request->direccion,
+                    'telefono' => $request->telefono,
+                    'celular' => $request->celular,
+                    'nombre_contacto' => $request->nombre_contacto,
+                    'tel_contacto' => $request->tel_contacto,
+                    'parentesco' => $request->parentesco_contacto,
+                    'updated_at' => now(),
+                ]
+            );
+        }
+    }
+
 
 
 

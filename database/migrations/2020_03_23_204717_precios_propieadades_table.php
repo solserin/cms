@@ -23,6 +23,10 @@ class PreciosPropieadadesTable extends Migration
             $table->foreign('tipo_precios_id')->references('id')->on('tipo_precios');
             $table->unsignedBigInteger('tipo_propiedades_id');
             $table->foreign('tipo_propiedades_id')->references('id')->on('tipo_propiedades');
+            $table->dateTime('fecha_hora')->nullable();
+            //relacion del usuario
+            $table->unsignedBigInteger('actualizo_id');
+            $table->foreign('actualizo_id')->references('id')->on('usuarios');
         });
     }
 
