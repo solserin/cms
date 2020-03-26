@@ -267,22 +267,20 @@
             </div>
             <div
               class="vx-col w-full md:w-3/12 mt-4"
-              v-if="!(isServicio || isPaquete)"
-              :key="uniqueKey + 'divAlmacen'"
+              v-show="!(isServicio || isPaquete)"
             >
               <label class="text-sm opacity-75">
                 Almacen
                 <span class="text-danger text-sm">(*)</span>
               </label>
               <v-select
-                :key="uniqueKey + 'selectAlmacen'"
                 data-vv-scope="add-articulo"
                 class="w-full pb-1 pt-1"
                 v-model="selectedAlmacen"
                 :clearable="false"
                 name="almacenes_id"
                 data-vv-as="Almacen"
-                v-validate="'required'"
+                v-validate="rulesAlmacen"
                 :options="almacenes"
               >
                 <div slot="no-options">No hay opciones disponibles.</div>
@@ -291,20 +289,18 @@
             </div>
             <div
               class="vx-col w-full md:w-3/12 mt-4"
-              v-if="!(isServicio || isPaquete)"
-              :key="uniqueKey + 'divLocalizacion'"
+              v-show="!(isServicio || isPaquete)"
             >
               <label class="text-sm opacity-75">
                 Localizacion
                 <span class="text-danger text-sm">(*)</span>
               </label>
               <vs-input
-                :key="uniqueKey + 'location'"
                 data-vv-scope="add-articulo"
                 v-model="articulo.localizacion"
                 name="localizacion"
                 data-vv-as="Localizacion"
-                v-validate="'required'"
+                v-validate="rulesAlmacen"
                 type="text"
                 class="w-full pb-1 pt-1"
               />
@@ -328,8 +324,7 @@
             </div>
             <div
               class="vx-col w-full md:w-3/12 mt-4"
-              v-if="!(isServicio || isPaquete)"
-              :key="uniqueKey + 'divCantidad'"
+              v-show="!(isServicio || isPaquete)"
             >
               <div class="vx-row">
                 <div class="vx-col w-full md:w-6/12">
@@ -338,7 +333,6 @@
                     <span class="text-danger text-sm">(*)</span>
                   </label>
                   <vs-input
-                    :key="uniqueKey + 'minimo'"
                     data-vv-scope="add-articulo"
                     v-model="articulo.minimo"
                     name="minimo"
@@ -355,7 +349,6 @@
                     <span class="text-danger text-sm">(*)</span>
                   </label>
                   <vs-input
-                    :key="uniqueKey + 'maxima'"
                     data-vv-scope="add-articulo"
                     v-model="articulo.maximo"
                     name="maximo"
@@ -371,7 +364,6 @@
             <div
               class="vx-col w-full"
               :class="isServicio || isPaquete ? 'md:w-3/12 mt-4': 'md:w-3/12 mt-12'"
-              :key="uniqueKey + 'divOptions'"
             >
               <ul class="centerx options">
                 <li>
@@ -379,7 +371,6 @@
                 </li>
                 <li>
                   <vs-checkbox
-                    :key="uniqueKey + 'caduca'"
                     v-model="articulo.caduca"
                     v-if="!(isPaquete || isServicio)"
                   >Caduca</vs-checkbox>
@@ -457,20 +448,18 @@
             <div
               class="vx-col w-full"
               :class="classPrices"
-              v-if="!(isPaquete || isServicio)"
-              :key="uniqueKey + 'factor'"
+              v-show="!(isPaquete || isServicio)"
             >
               <label class="text-sm opacity-75">
                 Factor
                 <span class="text-danger text-sm">(*)</span>
               </label>
               <vs-input
-                :key="uniqueKey + 'factor'"
                 data-vv-scope="add-articulo"
                 v-model="articulo.factor"
                 name="factor"
                 data-vv-as="Factor"
-                v-validate="'required|numeric|min_value:1'"
+                v-validate="factorRules"
                 type="text"
                 class="w-full"
               />
@@ -547,12 +536,11 @@
           </div>
         </div>
         <div v-show="activeTab == 1">
-          <div class="vx-col w-full md:w-12/12" v-if="isPaquete" :key="uniqueKey + 'divPack'">
+          <div class="vx-col w-full md:w-12/12" v-show="isPaquete">
             <div class="vx-row">
               <div class="vx-col w-full mb-4">
                 <vx-input-group>
                   <v-select
-                    :key="uniqueKey + 'articulopack'"
                     v-model="selectedArticuloPack"
                     :filterable="false"
                     placeholder="Seleccione o busque un articulo"
@@ -604,7 +592,6 @@
                     <vs-tr :data="articulo" :key="indextr" v-for="(articulo, indextr) in data">
                       <vs-td>
                         <vs-input
-                          :key="'articulo' + indextr"
                           data-vv-scope="add-articulo"
                           :name="'articulo' + indextr"
                           v-validate="'required|numeric|min_value:1'"
@@ -661,10 +648,15 @@ export default {
     isServicio() {
       if (this.selectedTipoProducto) {
         if (this.selectedTipoProducto.value === 2) {
-          return true;
+		  this.selectedAlmacen = null
+		  this.articulo.localizacion = null
+		  this.articulo.factor = null
+		  this.articulo.minimo = null
+		  this.articulo.maximo = null
+          return true
         }
       }
-      return false;
+      return false
     },
     isPaquete() {
       if (this.selectedTipoProducto) {
@@ -682,17 +674,36 @@ export default {
       return classes;
     },
     rulesInventarioMaximo() {
+	  if (this.isServicio || this.isPaquete) {
+		  return ''
+	  }
       if (this.articulo.minimo) {
         return "required|numeric|min_value:" + this.articulo.minimo;
       }
       return "required|numeric";
     },
     rulesIventarioMinimo() {
+	  if (this.isServicio || this.isPaquete) {
+		  return ''
+	  }
       if (this.articulo.maximo) {
         return "required|numeric|max_value:" + this.articulo.maximo;
       }
       return "required|numeric";
-    }
+	},
+	rulesAlmacen() {
+		console.log('rules-almacen')
+		if (this.isPaquete || this.isServicio) {
+			return ''
+		}
+		return 'required'
+	},
+	factorRules() {
+	  if (this.isServicio || this.isPaquete) {
+		  return ''
+	  }
+	  return 'required|numeric|min_value:1'
+	}
   },
   watch: {
     show: function() {
@@ -834,7 +845,6 @@ export default {
         };
 
         this.$validator.reset(matcher);
-      } else {
       }
     },
     selectedTipoProducto: function() {
@@ -943,7 +953,6 @@ export default {
         imageAttr = "imagen";
       }
 
-      console.log(self.currentImageChange);
       let f = this.$refs[self.currentImageChange].files[0]; // FileList object
       let reader = new FileReader();
       // Closure to capture the file information.
