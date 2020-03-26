@@ -61,6 +61,13 @@
                     class="text-danger text-sm"
                   >{{ errors.first(('meses'+indextr+indexprecio),('add-'+indextr)) }}</span>
                 </div>
+                <div :key="indexerror" v-for="(error, indexerror) in errores">
+                  <div
+                    v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.meses']"
+                  >
+                    <span class="text-danger text-sm">{{error['error'][indexprecio+'.meses'][0]}}</span>
+                  </div>
+                </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
                 <label class="text-sm opacity-75">
@@ -82,6 +89,16 @@
                   <span
                     class="text-danger text-sm"
                   >{{ errors.first(('precio'+indextr+indexprecio),('add-'+indextr)) }}</span>
+                </div>
+
+                <div :key="indexerror" v-for="(error, indexerror) in errores">
+                  <div
+                    v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.precio_neto']"
+                  >
+                    <span
+                      class="text-danger text-sm"
+                    >{{error['error'][indexprecio+'.precio_neto'][0]}}</span>
+                  </div>
                 </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
@@ -115,11 +132,14 @@
                     class="text-danger text-sm"
                   >{{ errors.first(('pago_inicial'+indextr+indexprecio),('add-'+indextr)) }}</span>
                 </div>
-
-                <div v-if="errores[indexprecio + '.' + 'enganche_inicial'] && index_datos==indextr">
-                  <span
-                    class="text-danger text-sm"
-                  >{{errores[indexprecio + '.' + 'enganche_inicial'][0]}}</span>
+                <div :key="indexerror" v-for="(error, indexerror) in errores">
+                  <div
+                    v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.enganche_inicial']"
+                  >
+                    <span
+                      class="text-danger text-sm"
+                    >{{error['error'][indexprecio+'.enganche_inicial'][0]}}</span>
+                  </div>
                 </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
@@ -301,12 +321,17 @@ export default {
           if (!result) {
             return;
           } else {
-            this.errores = [];
+            //aqui limpio los errores que pertenecen al tipo de propiedad
+
             //se confirma la cntraseña
             this.openPassword = true;
             //aqui creo los datos a actualizar
             this.datos_actualizar = datos.precios;
+            //actualizo el precio del enganche del primero precio "contado"
+            this.datos_actualizar[0].enganche_inicial = this.datos_actualizar[0].precio_neto;
             this.index_datos = index_datos;
+
+            //console.log(this.errores);
             this.callbackPassword = this.ActualizarDatos;
           }
         })
@@ -314,22 +339,80 @@ export default {
     },
 
     ActualizarDatos() {
+      //limpio los datos de los errores que pertenecen al tipo de index_datos "id del tipo de propiedad"
+      //console.log(this.errores.length);
+      for (let index = this.errores.length; index > 0; index--) {
+        if (this.errores[index - 1].propiedad_id == this.index_datos) {
+          //remuevo ese item de los errores
+          this.errores.splice(index - 1, 1);
+        }
+      }
       //aqui mando actualizar los datos
+      this.$vs.loading();
       cementerio
         .actualizar_precios_tarifas(this.datos_actualizar)
         .then(res => {
-          console.log(res);
+          if (res.data == 1) {
+            //success
+            this.$vs.notify({
+              title: "Tarifas de Cementerio",
+              text: "Se han actualizado los precios correctamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 5000
+            });
+          } else {
+            this.$vs.notify({
+              title: "Tarifas de Cementerio",
+              text: "Error al actualizar los precios.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 4000
+            });
+          }
+
+          this.$vs.loading.close();
         })
         .catch(err => {
-          //checo si existe cada error
-          this.errores = err.response.data.error;
-          for (let index = 0; index < this.datos_actualizar.length; index++) {
-            if (err.response.data.error[index + "." + "enganche_inicial"]) {
-              console.log(
-                err.response.data.error[index + "." + "enganche_inicial"][0]
-              );
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              //checo si existe cada error
+              //this.errores = err.response.data.error;
+              for (
+                let index = 0;
+                index < this.datos_actualizar.length;
+                index++
+              ) {
+                //error de enganche
+                if (
+                  err.response.data.error[index + "." + "enganche_inicial"] ||
+                  err.response.data.error[index + "." + "meses"] ||
+                  err.response.data.error[index + "." + "precio_neto"]
+                ) {
+                  //tengo que hacer push aqui
+                  this.errores.push({
+                    propiedad_id: this.index_datos,
+                    error: err.response.data.error
+                  });
+                  break;
+                }
+              }
             }
           }
+          this.$vs.loading.close();
         });
     }
   },
