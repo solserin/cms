@@ -58,9 +58,9 @@ class CementerioController extends ApiController
     /**UPDATE precios de tarifas */
     public function actualizar_precios_tarifas(Request $request)
     {
-        //return $request;
 
-
+        //return count($request->all());
+        //return ($request->all());
         //creando los valores que necesito validar
         request()->validate(
             [
@@ -76,12 +76,12 @@ class CementerioController extends ApiController
                 '*.meses' => [
                     'required',
                     'integer',
-                    'digits_between:1,2'
+                    'digits_between:1,2',
                 ],
             ],
-
             [
                 '*.precio_neto.required' => 'ingrese este dato.',
+                '*.precio_neto.numeric' => 'Ingrese una cantidad correcta.',
 
                 '*.enganche_inicial.lte' => 'El pago inicial debe ser menor o igual al precio neto de la propiedad.',
                 '*.enganche_inicial.required' => 'ingrese este dato.',
@@ -92,72 +92,33 @@ class CementerioController extends ApiController
             ]
         );
 
+        //actualizo los nuevos datos de tarifas
 
+        try {
+            DB::beginTransaction();
+            //elimino todos los datos de esas tarifas
+            DB::table('precios_propiedades')->where('tipo_propiedades_id', '=', $request[0]['tipo_propiedades_id'])->delete();
 
-        /*$user_id = $request->user_id;
-        request()->validate(
-            [
-                'rol_id' => 'required',
-                'genero' => 'required',
-                'nombre' => 'required',
-                'usuario' => [
-                    'required',
-                    'email',
-                    Rule::unique('usuarios', 'email')->ignore($user_id),
-                ],
-                'password' => 'required',
-                'repetir' => 'required|same:password',
-            ],
-            [
-                'genero.required' => 'Ingrese el género del usuario.',
-                'rol_id.required' => 'Ingrese el rol del usuario.',
-                'nombre.required' => 'Ingrese el nombre del usuario.',
-                'usuario.required' => 'Ingrese el email del usuario.',
-                'usuario.email' => 'El email debe ser un correo válido.',
-                'password.required' => 'debe ingresar una contraseña.',
-                'repetir.required' => 'debe confirmar la contraseña.',
-                'repetir.same' => 'Las contraseñas no coinciden.',
-                'unique' => 'Este nombre de usuario ya ha sido registrado.'
-            ]
-        );
-        //con cambio de contraseña
+            for ($i = 0; $i < count($request->all()); $i++) {
+                DB::table('precios_propiedades')->insert(
+                    [
+                        'precio_neto' => $request[$i]['precio_neto'],
+                        'meses' => $request[$i]['meses'],
+                        'enganche_inicial' => $request[$i]['enganche_inicial'],
+                        'tipo_precios_id' => $request[$i]['tipo_precios_id'],
+                        'tipo_propiedades_id' => $request[0]['tipo_propiedades_id'],
+                        'fecha_hora' => now(),
+                        'actualizo_id' => $request->user()->id
+                    ]
+                );
+            }
 
-        if ($request->password == 'nochanges') {
-            return DB::table('usuarios')->where('id', $user_id)->update(
-                [
-                    'roles_id' => $request->rol_id,
-                    'genero' => $request->genero,
-                    'nombre' => $request->nombre,
-                    'email' => $request->usuario,
-                    'domicilio' => $request->direccion,
-                    'telefono' => $request->telefono,
-                    'celular' => $request->celular,
-                    'nombre_contacto' => $request->nombre_contacto,
-                    'tel_contacto' => $request->tel_contacto,
-                    'parentesco' => $request->parentesco_contacto,
-                    'updated_at' => now(),
-                ]
-            );
-        } else {
-            //con cambio de contraseñas
-            return DB::table('usuarios')->where('id', $user_id)->update(
-                [
-                    'roles_id' => $request->rol_id,
-                    'genero' => $request->genero,
-                    'nombre' => $request->nombre,
-                    'email' => $request->usuario,
-                    'password' => Hash::make($request->password),
-                    'domicilio' => $request->direccion,
-                    'telefono' => $request->telefono,
-                    'celular' => $request->celular,
-                    'nombre_contacto' => $request->nombre_contacto,
-                    'tel_contacto' => $request->tel_contacto,
-                    'parentesco' => $request->parentesco_contacto,
-                    'updated_at' => now(),
-                ]
-            );
+            DB::commit();
+            return 1;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 0;
         }
-        */
     }
 
 

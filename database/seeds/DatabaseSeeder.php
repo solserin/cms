@@ -35,5 +35,7 @@ class DatabaseSeeder extends Seeder
         factory(User::class, 30)->create();
         $this->call(PreciosPropiedadesSeeder::class);
         $this->call(PreciosSeeder::class);
+        $this->call(tiposVentaSeeder::class);
+        $this->call(ventasReferenciasSeeder::class);
     }
 }
