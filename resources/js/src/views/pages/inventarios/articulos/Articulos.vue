@@ -1,9 +1,10 @@
 <template>
 	<div>
 		<vx-card ref="filterCard" title="Filtros de seleccion">
-			<div class="flex flex-wrap">
+			<div class="flex flex-wrap mb-3">
 				<div class="w-full">
-					<vs-button icon-pack="feather" icon="icon-user-plus" color="success" size="small" class="float-right" @click="showArticulo = true">Agregar</vs-button>
+					<vs-button icon-pack="feather" icon="icon-user-plus" color="success" size="small" class="float-right"  @click="showArticulo = true">Agregar</vs-button>
+					<vs-button icon-pack="feather" icon="icon-user-plus" color="success" size="small" class="float-right mr-3" @click="showCompra = true">Compra</vs-button>
 					<vs-button icon-pack="feather" icon="icon-printer" color="primary" size="small" class="float-right mr-3" @click="openPDF">PDF</vs-button>
 				</div>
 			</div>
@@ -90,6 +91,7 @@
 			<vs-pagination v-show="showPaginate" :total="totalPages" v-model="serverOptions.page" class="mt-8"></vs-pagination>
 		</div>
 		<Articulo :articulo-data="currentArticulo" @on-cancel="cancelArticulo" :show.sync="showArticulo" @on-close="closedArticulo" />
+		<Compra :show.sync="showCompra" />
     	<Password :show="openStatus" :callback-on-success="callback" @closeVerificar="closeStatus" :accion="accionNombre" />
 		<PDFViewer :show="showPDF" :pdf="PDFLink" @closePdf="showPDF = false" />
 	</div>
@@ -99,6 +101,7 @@ import { mostrarOptions } from "@/VariablesGlobales";
 
 import vSelect from 'vue-select'
 import Articulo from './Articulo'
+import Compra from './Compra'
 import articuloService from '@services/articulos'
 import Password from '@/views/pages/confirmar_password'
 import PDFViewer from "@/views/pages/pdf_viewer";
@@ -108,6 +111,7 @@ export default {
 	components: {
         vSelect,
 		Articulo,
+		Compra,
 		Password,
 		PDFViewer
 	},
@@ -118,6 +122,7 @@ export default {
 			selectedAlmacen: null,
 			selectedFamilia: null,
 			selectedCategoria: null,
+			showCompra: false,
 			showPDF: false,
 			PDFLink: '',
 			accionNombre: '',

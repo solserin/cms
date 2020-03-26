@@ -212,6 +212,11 @@ class ArticulosController extends ApiController
         $grupoProfeco = $request->grupo_profeco;
         $almacen = $request->almacen;
         $familia = $request->familia;
+        $image = $request->image;
+        $images = ['imagen', 'imagen1', 'imagen2'];
+        if (!is_null($image)) {
+            $images = ['imagen1', 'imagen2'];
+        }
 
         $articulos = Articulos::with('unidadCompra','unidadVenta', 'tipoProducto',
         'satProductoServicio', 'familia', 'familia.categoria', 'almacen',
@@ -233,7 +238,7 @@ class ArticulosController extends ApiController
             if (!is_null($familia)) {
                 $q->where('familias_id', $familia);
             }
-        })->get()->makeHidden(['imagen', 'imagen1', 'imagen2']);
+        })->get()->makeHidden($images);
 
         return $articulos;
     }

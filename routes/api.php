@@ -90,6 +90,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save')->middleware('permiso:5,2');
     Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll')->middleware('permiso:5,4');
     Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF')->middleware('permiso:5,4');
+    Route::get('empresa/inventario/proveedores-active', 'ProveedoresController@getActive');
     Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF')->middleware('permiso:5,4');
 
     /**rutas del cementerio */
@@ -123,6 +124,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('empresa/inventario/articulos', 'ArticulosController@getAll');
     Route::get('empresa/inventario/articulos-pdf', 'ArticulosController@getPDF');
     Route::get('empresa/inventario/articulos-pdf/{id}', 'ArticulosController@articuloPDF');
+
+    Route::get('metodos-pago/', 'MetodosPagoController@getAll');
+    Route::post('compras/', 'ComprasController@save');
 });
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');

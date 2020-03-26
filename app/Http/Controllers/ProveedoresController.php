@@ -82,6 +82,11 @@ class ProveedoresController extends ApiController
         } else {
             return $this->errorResponse('Proveedor no encontrado', 404);
         }
+    }    
+    
+    public function getActive() {
+        $proveedores = Proveedores::where('status', 1)->get();
+        return response($proveedores, 200);
     }
 
     public function getPDF(Request $request) {

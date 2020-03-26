@@ -68,25 +68,29 @@
 /**medias queries para el popup de captura de datos */
 
 @media (min-width: 576px) {
-  .usuarios .vs-popup {
+  .usuarios .vs-popup,
+  .aet-popup .vs-popup {
     width: 85% !important;
   }
 }
 
 @media (min-width: 768px) {
-  .usuarios .vs-popup {
+  .usuarios .vs-popup,
+  .aet-popup .vs-popup {
     width: 85% !important;
   }
 }
 
 @media (min-width: 992px) {
-  .usuarios .vs-popup {
+  .usuarios .vs-popup,
+  .aet-popup .vs-popup {
     width: 75% !important;
   }
 }
 
 @media (min-width: 1200px) {
-  .usuarios .vs-popup {
+  .usuarios .vs-popup,
+  .aet-popup .vs-popup {
     width: 80% !important;
   }
 }

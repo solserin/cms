@@ -1,6 +1,6 @@
 <template>
   <div class="centerx">
-    <vs-popup close="cancelar" :title="title" :active="showPopup" button-close-hidden>
+    <vs-popup fullscreen close="cancelar" :title="title" :active="showPopup" button-close-hidden>
       <form>
         <vs-button
           @click="guardar"

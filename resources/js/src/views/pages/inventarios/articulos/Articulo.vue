@@ -1,11 +1,11 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="usuarios"
       close="cancelar"
       :title="title"
       :active="showPopup"
       button-close-hidden
+      fullscreen 
     >
       <form>
         <div class="vx-row">
@@ -568,7 +568,7 @@
                   </template>
                 </vx-input-group>
                 <span class="text-danger text-sm">
-                  Solo se mostraran los primeros 15 articulo que coincidad con la busqueda, para encontrar un producto en especifico sugerimos usar el
+                  Solo se mostraran los primeros 15 articulo que coincidan con la busqueda, para encontrar un producto en especifico sugerimos usar el
                   <b>CODIGO DE BARRAS</b>
                 </span>
                 <br />
@@ -595,7 +595,7 @@
                           data-vv-scope="add-articulo"
                           :name="'articulo' + indextr"
                           v-validate="'required|numeric|min_value:1'"
-                          data-vv-as="Impuestos"
+                          data-vv-as="Cantidad"
                           v-model="articulo.cantidad"
                         />
                         <span

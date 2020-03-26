@@ -18,5 +18,8 @@ export default {
             }),
             params: param
         })
+    },
+    getActiveProveedores() {
+        return axios.get('/empresa/inventario/proveedores-active')
     }
 }
