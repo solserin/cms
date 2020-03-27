@@ -7,6 +7,21 @@ let cancel;
 export default {
     cancel: null,
 
+    //obtiene las propieades del cementerio
+    get_cementerio() {
+        let call = "/inventarios/cementerio/get_cementerio"
+        return new Promise((resolve, reject) => {
+            axios.get(call)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+
     //obtiene la distribucion del cementerio
     getDistribucion() {
         let call = "/inventarios/cementerio/get_cementerio"

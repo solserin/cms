@@ -12,393 +12,412 @@
         <vs-button @click="cancel()" color="danger" size="small" class="float-right mr-5">Cancelar</vs-button>
       </div>
       <span class="text-sm texto-importante">IMPORTANTE Los campos con (*) son obligatorios.</span>
-      <div class="vx-row w-full mt-2">
-        <div class="vx-col w-full">
-          <div class="flex items-end">
-            <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />
-            <span class="leading-none font-medium">Información del titular</span>
+      <vs-tabs alignment="left" position="top" v-model="activeTab">
+        <vs-tab label="DETALLE DE LA VENTA" icon="supervisor_account" class="pb-5"></vs-tab>
+        <vs-tab label="TITULAR" icon="fingerprint"></vs-tab>
+        <vs-tab label="BENEFICIARIOS" icon="fingerprint"></vs-tab>
+      </vs-tabs>
+      <div class="tab-content mt-1" v-show="activeTab==0">
+        <Mapa></Mapa>
+        <div class="vx-row w-full mt-2">
+          <div class="vx-col w-full">
+            <div class="flex items-end">
+              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />
+              <span class="leading-none font-medium">Información del titular</span>
+            </div>
           </div>
         </div>
-      </div>
-      <vs-divider />
-      <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75">
-            Nombre completo
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Nombre"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del titular"
-            v-model="form.nombre"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+        <vs-divider />
+        <div class="flex flex-wrap">
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">
+              Nombre completo
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="Nombre"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el nombre del titular"
+              v-model="form.nombre"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
+            </div>
           </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
-          </div>
-        </div>
 
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75">
-            Domicilio Completo
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="DomicilioCompleto"
-            data-vv-as="Domicilio Completo"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.domicilio"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('DomicilioCompleto') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.domicilio">{{errores.domicilio[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75">
-            Ciudad
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Ciudad"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese la ciudad"
-            v-model="form.ciudad"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Ciudad') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.ciudad">{{errores.ciudad[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75">
-            Estado
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Estado"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el estado"
-            v-model="form.estado"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Estado') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.estado">{{errores.estado[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75">Tél. Domicilio</label>
-          <vs-input
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el teléfono del domicilio"
-            v-model="form.tel_domicilio"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75">
-            Celular
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Celular"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese un número de celular"
-            v-model="form.celular"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Celular') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.celular">{{errores.celular[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75">Tél. Oficina</label>
-          <vs-input
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese un teléfono de oficina"
-            v-model="form.tel_oficina"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75">RFC</label>
-          <vs-input
-            name="rfc"
-            data-vv-validate-on="blur"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="e.j. MELM8305281H0"
-            v-model="form.rfc"
-            v-validate="'min:12|max:13'"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75">Email</label>
-          <vs-input
-            type="email"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el email"
-            v-model="form.email"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75">
-            Fecha de Nacimiento
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <datepicker
-            :language="spanishDatepicker"
-            :disabled-dates="disabledDates"
-            name="FechaNac"
-            data-vv-as="Fecha de nacimiento"
-            v-validate="'required'"
-            format="yyyy-MM-dd"
-            placeholder="Seleccionar fecha"
-            v-model="form.fecha_nac"
-          ></datepicker>
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('FechaNac') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.fecha_nac">{{errores.fecha_nac[0]}}</span>
-          </div>
-        </div>
-      </div>
-      <div class="vx-row w-full mt-4">
-        <div class="vx-col w-full">
-          <div class="flex items-end">
-            <feather-icon icon="ShoppingCartIcon" class="mr-2" svgClasses="w-5 h-5" />
-            <span class="leading-none font-medium">Detalle de la venta</span>
-          </div>
-        </div>
-      </div>
-      <vs-divider />
-      <div class="flex flex-wrap">
-        <vs-checkbox class="mb-5" v-model="ventaAntesdelSistema">Venta liquidada antes del sistema</vs-checkbox>
-      </div>
-
-      <div class="flex flex-wrap pb-10">
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75">
-            Fecha de Nacimiento
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <datepicker
-            :language="spanishDatepicker"
-            :disabled-dates="disabledDates"
-            name="FechaNac"
-            data-vv-as="Fecha de nacimiento"
-            v-validate="'required'"
-            format="yyyy-MM-dd"
-            placeholder="Seleccionar fecha"
-            v-model="form.fecha_nac"
-          ></datepicker>
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('FechaNac') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.fecha_nac">{{errores.fecha_nac[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            Tipo de Venta
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="ventasReferencias"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.venta_referencia_id"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rol_id">{{errores.rol_id[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            Núm. Solicitud
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Nombre"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.nombre"
-            :disabled="(!((uso_futuro)))"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            Núm. Convenio
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Nombre"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.nombre"
-            :disabled="(!((uso_futuro*ventaAntesdelSistema)))"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            Núm. Título
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Nombre"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.nombre"
-            :disabled="(!(((uso_inmediato+uso_futuro)*(ventaAntesdelSistema))))"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            Tipo Propiedad
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="tipo_propiedades"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.tipo_propiedad_id"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            <span v-if="this.form.tipo_propiedad_id.value!=''">
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">
+              Domicilio Completo
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="DomicilioCompleto"
+              data-vv-as="Domicilio Completo"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el nombre del usuario"
+              v-model="form.domicilio"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('DomicilioCompleto') }}</span>
+            </div>
+            <div class="mt-2">
               <span
-                v-if="this.form.tipo_propiedad_id.value==1 || this.form.tipo_propiedad_id.value==2"
-              >Módulo</span>
-              <span v-if="this.form.tipo_propiedad_id.value==3">Columna</span>
+                class="text-danger text-sm"
+                v-if="this.errores.domicilio"
+              >{{errores.domicilio[0]}}</span>
+            </div>
+          </div>
 
-              <span v-if="this.form.tipo_propiedad_id.value==4">Terraza</span>
-            </span>
-            <span v-else>-</span>
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="propiedades"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.propiedad_id"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">
+              Ciudad
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="Ciudad"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese la ciudad"
+              v-model="form.ciudad"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('Ciudad') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.ciudad">{{errores.ciudad[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">
+              Estado
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="Estado"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el estado"
+              v-model="form.estado"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('Estado') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.estado">{{errores.estado[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">Tél. Domicilio</label>
+            <vs-input
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el teléfono del domicilio"
+              v-model="form.tel_domicilio"
+            />
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">
+              Celular
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="Celular"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese un número de celular"
+              v-model="form.celular"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('Celular') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.celular">{{errores.celular[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">Tél. Oficina</label>
+            <vs-input
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese un teléfono de oficina"
+              v-model="form.tel_oficina"
+            />
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">RFC</label>
+            <vs-input
+              name="rfc"
+              data-vv-validate-on="blur"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="e.j. MELM8305281H0"
+              v-model="form.rfc"
+              v-validate="'min:12|max:13'"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">Email</label>
+            <vs-input
+              type="email"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el email"
+              v-model="form.email"
+            />
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75">
+              Fecha de Nacimiento
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <datepicker
+              :language="spanishDatepicker"
+              :disabled-dates="disabledDates"
+              name="FechaNac"
+              data-vv-as="Fecha de nacimiento"
+              v-validate="'required'"
+              format="yyyy-MM-dd"
+              placeholder="Seleccionar fecha"
+              v-model="form.fecha_nac"
+            ></datepicker>
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('FechaNac') }}</span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger text-sm"
+                v-if="this.errores.fecha_nac"
+              >{{errores.fecha_nac[0]}}</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            Fila
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="filas"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.filas"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+      <div class="tab-content mt-1" v-show="activeTab==1">
+        <div class="vx-row w-full mt-4">
+          <div class="vx-col w-full">
+            <div class="flex items-end">
+              <feather-icon icon="ShoppingCartIcon" class="mr-2" svgClasses="w-5 h-5" />
+              <span class="leading-none font-medium">Detalle de la venta</span>
+            </div>
           </div>
         </div>
+        <vs-divider />
+        <div class="flex flex-wrap">
+          <vs-checkbox class="mb-5" v-model="ventaAntesdelSistema">Venta liquidada antes del sistema</vs-checkbox>
+        </div>
+        <div class="flex flex-wrap pb-10">
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 px-2">
+            <label class="text-sm opacity-75">
+              Fecha de Nacimiento
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <datepicker
+              :language="spanishDatepicker"
+              :disabled-dates="disabledDates"
+              name="FechaNac"
+              data-vv-as="Fecha de nacimiento"
+              v-validate="'required'"
+              format="yyyy-MM-dd"
+              placeholder="Seleccionar fecha"
+              v-model="form.fecha_nac"
+            ></datepicker>
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('FechaNac') }}</span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger text-sm"
+                v-if="this.errores.fecha_nac"
+              >{{errores.fecha_nac[0]}}</span>
+            </div>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              Tipo de Venta
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <v-select
+              :options="ventasReferencias"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.venta_referencia_id"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+            />
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.rol_id">{{errores.rol_id[0]}}</span>
+            </div>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              Núm. Solicitud
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="Nombre"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el nombre del usuario"
+              v-model="form.nombre"
+              :disabled="(!((uso_futuro)))"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
+            </div>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              Núm. Convenio
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="Nombre"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el nombre del usuario"
+              v-model="form.nombre"
+              :disabled="(!((uso_futuro*ventaAntesdelSistema)))"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
+            </div>
+          </div>
 
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
-            Ubicación
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="lotes"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.lotes"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-            :disabled="!cuadriplex"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              Núm. Título
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <vs-input
+              name="Nombre"
+              data-vv-validate-on="blur"
+              v-validate="'required'"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el nombre del usuario"
+              v-model="form.nombre"
+              :disabled="(!(((uso_inmediato+uso_futuro)*(ventaAntesdelSistema))))"
+            />
+            <div>
+              <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              Tipo Propiedad
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <v-select
+              :options="tipo_propiedades"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.tipo_propiedad_id"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+            />
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              <span v-if="this.form.tipo_propiedad_id.value!=''">
+                <span
+                  v-if="this.form.tipo_propiedad_id.value==1 || this.form.tipo_propiedad_id.value==2"
+                >Módulo</span>
+                <span v-if="this.form.tipo_propiedad_id.value==3">Columna</span>
+
+                <span v-if="this.form.tipo_propiedad_id.value==4">Terraza</span>
+              </span>
+              <span v-else>-</span>
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <v-select
+              :options="propiedades"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.propiedad_id"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+            />
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              Fila
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <v-select
+              :options="filas"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.filas"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+            />
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+            <label class="text-sm opacity-75">
+              Ubicación
+              <span class="text-danger text-sm">(*)</span>
+            </label>
+            <v-select
+              :options="lotes"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.lotes"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              :disabled="!cuadriplex"
+            />
+            <div class="mt-2">
+              <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -413,6 +432,7 @@
   </div>
 </template>
 <script>
+import Mapa from "../ventas/Mapa";
 //componente de password
 import Password from "../../../confirmar_password";
 import cementerio from "@services/cementerio";
@@ -428,7 +448,8 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    Datepicker
+    Datepicker,
+    Mapa
   },
   props: {
     show: {
@@ -625,6 +646,7 @@ export default {
   },
   data() {
     return {
+      activeTab: 0,
       alfabeto: alfabeto,
       disabledDates: {
         from: new Date()

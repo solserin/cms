@@ -1,5 +1,6 @@
 <template >
   <div>
+    <h4 class="ml-2 pb-4">Lista de precios de uso inmediato y a futuro</h4>
     <div class="flex flex-wrap">
       <div
         :key="indextr"
@@ -194,7 +195,7 @@
                   color="success"
                   icon="add_circle_outline"
                   @click="abrirPassword(tipo_propiedades[indextr],indextr)"
-                >Guardar</vs-button>
+                >Actualizar Precios</vs-button>
               </div>
             </div>
           </div>

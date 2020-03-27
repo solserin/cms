@@ -13,8 +13,14 @@ class CementerioController extends ApiController
     public function get_cementerio(Request $request)
     {
         return
-            Propiedades::with('filas_columnas')->with('tipoPropiedad')->orderBy('tipo_propiedades_id', 'asc')->get();
+            Propiedades::with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->orderBy('id', 'asc')->get();
     }
+
+
+
+
+
+
 
     public function propiedadesById(Request $request)
     {
