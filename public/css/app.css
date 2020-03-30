@@ -99,8 +99,16 @@
   background: rgba(0, 0, 0, 0.5);
 }
 
+[dir] .vs__dropdown-toggle {
+  padding: 0 0 4px 0;
+  background: none;
+  border: 1px solid rgba(var(--vs-default_color), 1) !important;
+  border-radius: 4px;
+}
+
 [dir] .vs-input--input {
   border-radius: 0px !important;
+  border: 1px solid rgba(var(--vs-default_color), 1) !important;
 }
 
 [dir] .vdp-datepicker input {
@@ -177,6 +185,14 @@
 }
 
 /*fin password checker*/
+
+/*ESTILOS DEL COMPONENTE DE VENTAS*/
+
+.venta-details .propiedad_tipo {
+  text-transform: capitalize !important;
+}
+
+/*FIN DE ESTILOS DEL COMPONENTE DE VENTAS*/
 
 /*=========================================================================================
   File Name: main.scss

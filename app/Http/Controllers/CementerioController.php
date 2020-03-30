@@ -13,8 +13,15 @@ class CementerioController extends ApiController
     public function get_cementerio(Request $request)
     {
         return
-            Propiedades::with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->orderBy('id', 'asc')->get();
+            Propiedades::with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get();
     }
+
+    //obtiene los usuarios para vendedores
+    public function get_vendedores()
+    {
+        return User::get();
+    }
+
 
 
 

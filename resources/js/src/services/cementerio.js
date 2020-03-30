@@ -20,6 +20,23 @@ export default {
                 })
         })
     },
+    //obtiene los usuarios para cargar los vendedores
+    get_vendedores() {
+        let call = "/inventarios/cementerio/get_vendedores"
+        return new Promise((resolve, reject) => {
+            axios.get(call)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+
+
+
 
 
     //obtiene la distribucion del cementerio

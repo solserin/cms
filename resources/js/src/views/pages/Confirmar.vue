@@ -96,14 +96,14 @@ export default {
       }
     });
 
-    document.body.addEventListener("keyup", e => {
+    /*document.body.addEventListener("keyup", e => {
       if (e.keyCode === 13) {
         if (this.showChecker) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
           this.aceptar();
         }
       }
-    });
+    });*/
   }
 };
 </script>

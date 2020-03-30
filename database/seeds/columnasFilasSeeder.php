@@ -593,7 +593,7 @@ class columnasFilasSeeder extends Seeder
             ],
             [
                 //id propiedad 38
-                'propiedades_id' => '39',
+                'propiedades_id' => '38',
                 'empieza_columna' => '1',
                 'fin_columna' => '32',
                 'fila' => '2' //B
