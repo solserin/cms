@@ -55,7 +55,7 @@ const router = new Router({
                 {
                     path: '/dashboard/analytics',
                     name: 'dashboard-analytics',
-                    component: () => import('./views/DashboardAnalytics.vue'),
+                    component: () => import('./views/HomeInfo.vue'),
                     meta: {
                         rule: 'editor',
                         authRequired: true

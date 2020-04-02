@@ -30,11 +30,11 @@
 
         <!--<i18n />-->
 
-        <search-bar class="pr-3" />
+        <!--<search-bar class="pr-3" />-->
 
         <!--<cart-drop-down />-->
 
-        <notification-drop-down />
+        <!--<notification-drop-down />-->
 
         <profile-drop-down />
       </vs-navbar>
