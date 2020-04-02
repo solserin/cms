@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Propiedades;
+use App\SatFormasPago;
 use App\tipoPropiedades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,123 @@ class CementerioController extends ApiController
     {
         return User::get();
     }
+
+    public function get_sat_formas_pago()
+    {
+        //id del conjunto de propieades
+
+        return
+            SatFormasPago::where('clave', '<>', '99')->get();
+    }
+
+    /**GUARDAR LA VENTA */
+    public function guardar_venta(Request $request)
+    {
+        //return $request->minima_cuota_inicial;
+        //validaciones directas sin condicionales
+        $validaciones = [
+            //datos de la propiedad
+            'tipo_propiedades_id' => 'required|min:1',
+            'propiedades_id' => 'required|min:1',
+            'ubicacion' => 'required|unique:ventas_propiedades,ubicacion',
+            //fin de datos de la propiedad
+            //datos de la venta
+            'fecha_venta' => 'required|date',
+            'ventaAntesdelSistema' => 'required',
+            'venta_referencia_id' => 'required',
+            'filas.value' => 'required',
+            'lotes.value' => '', //modificada segun condiciones
+            'vendedor.value' => 'required',
+
+            'num_solicitud' => '',
+            'convenio' => '',
+            'titulo' => '',
+
+            //info del plan de venta y pagos
+            'planVenta.value' => 'required',
+            'precio_neto' => 'required|numeric',
+            'descuento' => 'nullable|numeric|lte:planVenta.precio_neto',
+            'precio_neto' => 'numeric|min:0',
+            'enganche_inicial' => 'numeric|min:' . $request->minima_cuota_inicial . '|' . 'max:' . $request->maxima_cuota_inicial,
+            'opcionPagar.value' => 'required',
+            'formaPago.value' => 'required',
+            'banco' => '',
+            'ultimosdigitos' => '',
+
+            //enganche inicial sera calculado
+            //fin info de plan de ventas y pagos
+
+
+            //fin de datos de la venta
+
+
+
+
+            //datos del titular
+            'titular' => 'required',
+            'domicilio' => 'required',
+            'ciudad' => 'required',
+            'estado' => 'required',
+            'celular' => 'required',
+            'email' => 'nullable|email',
+            'fecha_nac' => 'required|date',
+            //fin de datos del titular
+        ];
+
+        /**VALIDACIONES CONDICIONADAS*/
+        //validando que mande el user el lote en caso de ser terraza
+        if ($request->tipo_propiedades_id == 4) {
+            //checando que tipo de propiedad es, si es terraza
+            $validaciones['lotes.value'] = "required";
+        }
+
+        //validnado en caso de que sea de uso inmediato y de venta antes del sistema.
+        if ($request->venta_referencia_id == 1 && $request->ventaAntesdelSistema) {
+            //venta de uso inmediato
+            $validaciones['titulo'] = 'required|unique:ventas_propiedades,numero_titulo';
+        }
+
+        //validnado en caso de que sea de uso futuro
+        if ($request->venta_referencia_id == 2) {
+            //venta de uso inmediato
+            $validaciones['num_solicitud'] = 'required|unique:ventas_propiedades,numero_solicitud';
+            //valido si es de venta antes del sistema
+            if ($request->ventaAntesdelSistema) {
+                $validaciones['titulo'] = 'required|unique:ventas_propiedades,numero_titulo';
+                $validaciones['convenio'] = 'required|unique:ventas_propiedades,numero_convenio';
+            }
+        }
+        //validando si el tipo de pago requiere de banco y digitos
+        if ($request->opcionPagar['value'] == 1) {
+            //si desea pagar desde la venta
+            if ($request->formaPago['value'] > 1) {
+                //cuqlquiera menos efectivo
+                $validaciones['banco'] = 'required';
+            }
+            if ($request->formaPago['value'] == 4 || $request->formaPago['value'] == 5) {
+                //cuqlquiera menos efectivo
+                $validaciones['ultimosdigitos'] = 'nullable|numeric|digits_between:4,4';
+            }
+        }
+
+
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+
+        $mensajes = [
+            'required' => 'Ingrese este dato'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+
+
+        return 1;
+    }
+
 
 
 
@@ -95,10 +213,8 @@ class CementerioController extends ApiController
             [
                 '*.precio_neto.required' => 'ingrese este dato.',
                 '*.precio_neto.numeric' => 'Ingrese una cantidad correcta.',
-
                 '*.enganche_inicial.lte' => 'El pago inicial debe ser menor o igual al precio neto de la propiedad.',
                 '*.enganche_inicial.required' => 'ingrese este dato.',
-
                 '*.meses.numeric' => 'ingrese un número de meses correcto.',
                 '*.meses.required' => 'ingrese este dato.',
                 '*.meses.digits_between' => 'ingrese este dato (2 dígitos máximo).',

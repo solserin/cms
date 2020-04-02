@@ -34,6 +34,36 @@ export default {
         })
     },
 
+    //obtiene las formas de pago con la clave del sat segun las necesidades del sistema
+    get_sat_formas_pago() {
+        let call = "/inventarios/cementerio/get_sat_formas_pago"
+        return new Promise((resolve, reject) => {
+            axios.get(call)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+
+    guardarVenta(datos) {
+        let call = "/inventarios/cementerio/guardar_venta"
+        return new Promise((resolve, reject) => {
+            axios.post(call, datos)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+
+
 
 
 

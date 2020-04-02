@@ -8,10 +8,18 @@
       button-close-hidden
     >
       <!--inicio venta-->
-      <vx-card class="pt-5 pb-8">
+      <vx-card class="pt-5">
         <template slot="no-body">
           <div class="venta-details">
             <div class="flex flex-wrap">
+              <div class="w-full px-2">
+                <vs-button
+                  @click="cancel()"
+                  color="danger"
+                  size="small"
+                  class="float-right mb-5"
+                >Cancelar</vs-button>
+              </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
                 <!--mapa del cementerio-->
                 <div mt-5>
@@ -64,7 +72,11 @@
                 <div class="flex flex-wrap mt-1">
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                     <label class="text-sm opacity-75 font-medium">
-                      <span>Seleccione 1 Área</span>
+                      <span v-if="this.datosAreas.tipo_propiedades_id">
+                        <span v-if="this.datosAreas.tipo_propiedades_id == 4">Fila</span>
+                        <span v-else>Ubicación</span>
+                      </span>
+                      <span v-else>Seleccione un Área</span>
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <v-select
@@ -73,15 +85,20 @@
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
                       v-model="form.filas"
                       class="mb-4 sm:mb-0 pb-1 pt-1"
+                      v-validate:fila_validacion_computed.immediate="'required'"
+                      name="fila_validacion"
+                      data-vv-as=" "
                     >
                       <div slot="no-options">No Se Ha Seleccionado Ningún Área</div>
                     </v-select>
-
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('fila_validacion') }}</span>
+                    </div>
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.genero"
-                      >{{errores.genero[0]}}</span>
+                        v-if="this.errores.nombre"
+                      >{{errores.nombre[0]}}</span>
                     </div>
                   </div>
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -97,21 +114,27 @@
                       v-model="form.lotes"
                       class="mb-4 sm:mb-0 pb-1 pt-1"
                       :disabled="this.datosAreas.tipo_propiedades_id!=4"
+                      v-validate:ubicacion_validacion_computed.immediate="'required'"
+                      name="ubicacion_validacion"
+                      data-vv-as=" "
                     >
                       <div slot="no-options">Seleccione 1 Área</div>
                     </v-select>
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('ubicacion_validacion') }}</span>
+                    </div>
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.genero"
-                      >{{errores.genero[0]}}</span>
+                        v-if="this.errores.nombre"
+                      >{{errores.nombre[0]}}</span>
                     </div>
                   </div>
                 </div>
                 <vs-divider />
                 <div class="flex flex-wrap mt-1">
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm font-medium">Venta liquidada antes del sistema</label>
+                    <label class="text-sm font-medium">Asignar números de órden manualmente</label>
                     <div class="mt-2">
                       <div class="mt-2">
                         <vs-radio
@@ -161,26 +184,26 @@
                     </h3>
                   </div>
 
-                  <!--precios-->
-                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                  <!--vendedor-->
+                  <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
                     <label class="text-sm opacity-75 font-medium">
-                      <span>Plan de Venta</span>
+                      <span>Venta realizada por:</span>
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <v-select
-                      :options="planesVenta"
+                      :options="vendedores"
                       :clearable="false"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      v-model="form.planVenta"
+                      v-model="form.vendedor"
                       class="pb-1 pt-1"
-                      v-validate:plan_de_venta_computed.immediate="'required'"
-                      name="plan_venta"
-                      data-vv-as="Plan de Venta"
+                      v-validate:vendedor_validacion_computed.immediate="'required'"
+                      name="vendedor"
+                      data-vv-as=" "
                     >
-                      <div slot="no-options">No Se Ha Seleccionado Ningún Área</div>
+                      <div slot="no-options">Seleccione un vendedor</div>
                     </v-select>
                     <div>
-                      <span class="text-danger text-sm">{{ errors.first('plan_venta') }}</span>
+                      <span class="text-danger text-sm">{{ errors.first('vendedor') }}</span>
                     </div>
                     <div class="mt-2">
                       <span
@@ -189,51 +212,53 @@
                       >{{errores.nombre[0]}}</span>
                     </div>
                   </div>
+                  <!--Fin de vendedor-->
 
-                  <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                     <label class="text-sm opacity-75">
-                      $ Total Neto
+                      Fecha de la Venta
                       <span class="text-danger text-sm">(*)</span>
                     </label>
-                    <vs-input
-                      type="text"
+                    <datepicker
+                      :language="spanishDatepicker"
+                      :disabled-dates="disabledDates"
+                      name="fecha_venta"
+                      data-vv-as=" "
+                      v-validate="'required'"
+                      format="yyyy-MM-dd"
+                      placeholder="Fecha de la Venta"
+                      v-model="form.fecha_venta"
                       class="w-full pb-1 pt-1"
-                      placeholder="Total Neto"
-                      v-model="form.precio_neto"
-                      readonly
-                    />
+                    ></datepicker>
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('fecha_venta') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.fecha_nac"
+                      >{{errores.fecha_nac[0]}}</span>
+                    </div>
                   </div>
-                  <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                    <label class="text-sm opacity-75">
-                      $ Descuento Neto
-                      <span class="text-danger text-sm">(*)</span>
-                    </label>
-                    <vs-input
-                      name="Nombre"
-                      type="text"
-                      class="w-full pb-1 pt-1"
-                      placeholder="$ 0.00"
-                      v-model="form.descuento"
-                    />
-                  </div>
-                  <!--fin de precios-->
+
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                     <label class="text-sm opacity-75">
                       Núm. Solicitud
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <vs-input
-                      name="Nombre"
-                      data-vv-validate-on="blur"
-                      v-validate="'required'"
+                      v-validate:num_solicitud_validacion_computed.immediate="'required'"
+                      name="num_solicitud"
+                      data-vv-as=" "
                       type="text"
                       class="w-full pb-1 pt-1"
-                      placeholder="Ingrese el nombre del usuario"
-                      v-model="form.nombre"
+                      placeholder=" Núm. Solicitud"
+                      v-model="form.num_solicitud"
                       :disabled="(tipo_venta)"
+                      maxlength="12"
                     />
                     <div>
-                      <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+                      <span class="text-danger text-sm">{{ errors.first('num_solicitud') }}</span>
                     </div>
                     <div class="mt-2">
                       <span
@@ -248,17 +273,18 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <vs-input
-                      name="Nombre"
-                      data-vv-validate-on="blur"
-                      v-validate="'required'"
+                      v-validate:num_convenio_validacion_computed.immediate="'required'"
+                      name="num_convenio"
+                      data-vv-as=" "
                       type="text"
                       class="w-full pb-1 pt-1"
-                      placeholder="Ingrese el nombre del usuario"
-                      v-model="form.nombre"
+                      placeholder="Núm. Convenio"
+                      v-model="form.convenio"
                       :disabled="!((!tipo_venta)*(form.ventaAntesdelSistema))"
+                      maxlength="12"
                     />
                     <div>
-                      <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+                      <span class="text-danger text-sm">{{ errors.first('num_convenio') }}</span>
                     </div>
                     <div class="mt-2">
                       <span
@@ -274,80 +300,27 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <vs-input
-                      name="Nombre"
-                      data-vv-validate-on="blur"
-                      v-validate="'required'"
+                      v-validate:num_titulo_validacion_computed.immediate="'required'"
+                      name="num_titulo"
+                      data-vv-as=" "
                       type="text"
                       class="w-full pb-1 pt-1"
-                      placeholder="Ingrese el nombre del usuario"
-                      v-model="form.nombre"
+                      placeholder="Núm. Título"
+                      v-model="form.titulo"
                       :disabled="!((tipo_venta*form.ventaAntesdelSistema)+form.ventaAntesdelSistema)"
+                      maxlength="12"
                     />
                     <div>
-                      <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+                      <span class="text-danger text-sm">{{ errors.first('num_titulo') }}</span>
                     </div>
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
                         v-if="this.errores.nombre"
                       >{{errores.nombre[0]}}</span>
-                    </div>
-                  </div>
-                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
-                      Fecha de la Venta
-                      <span class="text-danger text-sm">(*)</span>
-                    </label>
-                    <datepicker
-                      :language="spanishDatepicker"
-                      :disabled-dates="disabledDates"
-                      name="FechaNac"
-                      data-vv-as="Fecha de la venta"
-                      v-validate="'required'"
-                      format="yyyy-MM-dd"
-                      placeholder="Fecha de la Venta"
-                      v-model="form.fecha_nac"
-                      class="w-full pb-1 pt-1"
-                    ></datepicker>
-                    <div>
-                      <span class="text-danger text-sm">{{ errors.first('FechaNac') }}</span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger text-sm"
-                        v-if="this.errores.fecha_nac"
-                      >{{errores.fecha_nac[0]}}</span>
                     </div>
                   </div>
 
-                  <!--vendedor-->
-                  <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-                    <label class="text-sm opacity-75 font-medium">
-                      <span>Venta realizada por:</span>
-                      <span class="text-danger text-sm">(*)</span>
-                    </label>
-                    <v-select
-                      :options="vendedores"
-                      :clearable="false"
-                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      v-model="form.vendedor"
-                      class="pb-1 pt-1"
-                      v-validate:plan_de_venta_computed.immediate="'required'"
-                      name="plan_venta"
-                      data-vv-as="Plan de Venta"
-                    >
-                      <div slot="no-options">Seleccione un vendedor</div>
-                    </v-select>
-                    <div>
-                      <span class="text-danger text-sm">{{ errors.first('plan_venta') }}</span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
-                    </div>
-                  </div>
                   <vs-divider />
                 </div>
               </div>
@@ -367,16 +340,18 @@
                   <span class="text-danger text-sm">(*)</span>
                 </label>
                 <vs-input
-                  name="Nombre"
+                  name="titular"
+                  data-vv-as=" "
                   data-vv-validate-on="blur"
                   v-validate="'required'"
+                  maxlength="75"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese el nombre del titular"
-                  v-model="form.nombre"
+                  v-model="form.titular"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
+                  <span class="text-danger text-sm">{{ errors.first('titular') }}</span>
                 </div>
                 <div class="mt-2">
                   <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
@@ -391,8 +366,8 @@
                 <datepicker
                   :language="spanishDatepicker"
                   :disabled-dates="disabledDates"
-                  name="FechaNac"
-                  data-vv-as="Fecha de la venta"
+                  name="fecha_nacimiento"
+                  data-vv-as=" "
                   v-validate="'required'"
                   format="yyyy-MM-dd"
                   placeholder="Fecha de Nacimiento"
@@ -400,7 +375,7 @@
                   class="w-full pb-1 pt-1"
                 ></datepicker>
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('FechaNac') }}</span>
+                  <span class="text-danger text-sm">{{ errors.first('fecha_nacimiento') }}</span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -416,17 +391,18 @@
                   <span class="text-danger text-sm">(*)</span>
                 </label>
                 <vs-input
-                  name="DomicilioCompleto"
-                  data-vv-as="Domicilio Completo"
+                  name="domicilio"
+                  data-vv-as=" "
                   data-vv-validate-on="blur"
                   v-validate="'required'"
+                  maxlength="150"
                   type="text"
                   class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el nombre del usuario"
+                  placeholder="Domicilio Completo"
                   v-model="form.domicilio"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('DomicilioCompleto') }}</span>
+                  <span class="text-danger text-sm">{{ errors.first('domicilio') }}</span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -442,16 +418,18 @@
                   <span class="text-danger text-sm">(*)</span>
                 </label>
                 <vs-input
-                  name="Ciudad"
+                  name="ciudad"
+                  data-vv-as=" "
                   data-vv-validate-on="blur"
                   v-validate="'required'"
+                  maxlength="45"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese la ciudad"
                   v-model="form.ciudad"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('Ciudad') }}</span>
+                  <span class="text-danger text-sm">{{ errors.first('ciudad') }}</span>
                 </div>
                 <div class="mt-2">
                   <span class="text-danger text-sm" v-if="this.errores.ciudad">{{errores.ciudad[0]}}</span>
@@ -464,16 +442,18 @@
                   <span class="text-danger text-sm">(*)</span>
                 </label>
                 <vs-input
-                  name="Estado"
+                  name="estado"
+                  data-vv-as=" "
                   data-vv-validate-on="blur"
                   v-validate="'required'"
+                  maxlength="45"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese el estado"
                   v-model="form.estado"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('Estado') }}</span>
+                  <span class="text-danger text-sm">{{ errors.first('estado') }}</span>
                 </div>
                 <div class="mt-2">
                   <span class="text-danger text-sm" v-if="this.errores.estado">{{errores.estado[0]}}</span>
@@ -483,6 +463,7 @@
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75">Tél. Domicilio</label>
                 <vs-input
+                  maxlength="10"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese el teléfono del domicilio"
@@ -496,16 +477,18 @@
                   <span class="text-danger text-sm">(*)</span>
                 </label>
                 <vs-input
-                  name="Celular"
+                  name="celular"
+                  data-vv-as=" "
                   data-vv-validate-on="blur"
-                  v-validate="'required'"
+                  v-validate="'required|min:10|max:10|numeric'"
+                  maxlength="10"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese un número de celular"
                   v-model="form.celular"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('Celular') }}</span>
+                  <span class="text-danger text-sm">{{ errors.first('celular') }}</span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -518,6 +501,7 @@
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75">Tél. Oficina</label>
                 <vs-input
+                  maxlength="10"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese un teléfono de oficina"
@@ -528,6 +512,7 @@
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                 <label class="text-sm opacity-75">RFC</label>
                 <vs-input
+                  maxlength="13"
                   name="rfc"
                   data-vv-validate-on="blur"
                   type="text"
@@ -547,11 +532,22 @@
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                 <label class="text-sm opacity-75">Email</label>
                 <vs-input
+                  name="email"
+                  data-vv-as=" "
+                  data-vv-validate-on="blur"
+                  v-validate="'email'"
+                  maxlength="75"
                   type="email"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese el email"
                   v-model="form.email"
                 />
+                <div>
+                  <span class="text-danger text-sm">{{ errors.first('email') }}</span>
+                </div>
+                <div class="mt-2">
+                  <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                </div>
               </div>
 
               <!--fin de datos del titular-->
@@ -565,106 +561,118 @@
                 <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />Información de los Beneficiarios
               </h3>
             </div>
-            <div v-if="form.beneficiarios.nombre">
-            <div
-              :key="index"
-              v-for="(beneficiario, index) in form.beneficiarios"
-              class="flex flex-wrap px-2"
-            >
-              <!--datos de los beneficiarios-->
+            <div v-if="form.beneficiarios.length>0">
+              <div
+                :key="index"
+                v-for="(beneficiario, index) in form.beneficiarios"
+                class="flex flex-wrap px-2"
+              >
+                <!--datos de los beneficiarios-->
 
-              <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-                <label class="text-sm opacity-75">
-                  Nombre completo
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="Nombre"
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el nombre del titular"
-                  v-model="beneficiario.nombre"
-                />
-                <div class="pb-2">
-                  <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
-                </div>
+                <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+                  <label class="text-sm opacity-75">
+                    Beneficiario {{(index+1)}} - Nombre completo
+                    <span
+                      class="text-danger text-sm"
+                    >(*)</span>
+                  </label>
+                  <vs-input
+                    :name="'beneficiario'+index"
+                    data-vv-as=" "
+                    data-vv-validate-on="blur"
+                    v-validate="'required'"
+                    maxlength="75"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Ingrese el nombre del benericiario"
+                    v-model="beneficiario.nombre"
+                  />
+                  <div class="pb-2">
+                    <span class="text-danger text-sm">{{ errors.first('beneficiario'+index) }}</span>
+                  </div>
 
-                <div :key="indexerror" v-for="(error, indexerror) in errores">
-                  <div v-if="error['error'][indexerror+'.meses']">
-                    <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
+                  <div :key="indexerror" v-for="(error, indexerror) in errores">
+                    <div v-if="error['error'][indexerror+'.meses']">
+                      <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">
-                  Parentesco
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="Nombre"
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el nombre del titular"
-                  v-model="beneficiario.parentesco"
-                />
-                <div class="pb-2">
-                  <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
-                </div>
-                <div :key="indexerror" v-for="(error, indexerror) in errores">
-                  <div v-if="error['error'][indexerror+'.meses']">
-                    <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
+                <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                  <label class="text-sm opacity-75">
+                    Parentesco
+                    <span class="text-danger text-sm">(*)</span>
+                  </label>
+                  <vs-input
+                    :name="'parentesco'+index"
+                    data-vv-as=" "
+                    data-vv-validate-on="blur"
+                    v-validate="'required'"
+                    maxlength="35"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Parentesco"
+                    v-model="beneficiario.parentesco"
+                  />
+                  <div class="pb-2">
+                    <span class="text-danger text-sm">{{ errors.first('parentesco'+index) }}</span>
+                  </div>
+                  <div :key="indexerror" v-for="(error, indexerror) in errores">
+                    <div v-if="error['error'][indexerror+'.meses']">
+                      <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">
-                  Teléfono
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="Nombre"
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el nombre del titular"
-                  v-model="beneficiario.telefono"
-                />
-                <div class="pb-2">
-                  <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
-                </div>
-                <div :key="indexerror" v-for="(error, indexerror) in errores">
-                  <div v-if="error['error'][indexerror+'.meses']">
-                    <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
+                <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                  <label class="text-sm opacity-75">
+                    Teléfono
+                    <span class="text-danger text-sm">(*)</span>
+                  </label>
+                  <vs-input
+                    :name="'telefono'+index"
+                    data-vv-as=" "
+                    data-vv-validate-on="blur"
+                    v-validate="'required|min:10|max:10|numeric'"
+                    maxlength="10"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Teléfono"
+                    v-model="beneficiario.telefono"
+                  />
+                  <div class="pb-2">
+                    <span class="text-danger text-sm">{{ errors.first('telefono'+index) }}</span>
+                  </div>
+                  <div :key="indexerror" v-for="(error, indexerror) in errores">
+                    <div v-if="error['error'][indexerror+'.meses']">
+                      <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
+                    </div>
                   </div>
                 </div>
+                <div class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
+                  <vs-button
+                    class="mt-8 float-right"
+                    type="flat"
+                    color="danger"
+                    size="small"
+                    icon="remove_circle_outline"
+                    @click="remover_beneficiario(index)"
+                  >Quitar</vs-button>
+                </div>
+                <!--fin de datos de los beneficiarios-->
               </div>
-              <div class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
-                <vs-button
-                  class="mt-8 float-right"
-                  type="flat"
-                  color="danger"
-                  size="small"
-                  icon="remove_circle_outline"
-                >Quitar</vs-button>
-              </div>
-              <!--fin de datos de los beneficiarios-->
             </div>
-            </div>
 
-     
-             <div v-else class="  pr-3 pl-3 text-white bg-danger">
-              No se ha seleccionado ningún área
-               </div>
+            <div v-else class="flex flex-wrap pt-4 px-2">
+              <div class="w-full px-2">
+                <span
+                  class="pr-3 pl-3 text-white bg-danger propiedad_tipo"
+                >No se ha capturado ningún beneficiario</span>
+              </div>
+            </div>
 
             <div class="flex flex-wrap pt-4 px-2">
               <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
                 <div class="mt-5">
-                  <p class="text-base">
+                  <p class="text-sm">
                     <span class="text-danger font-medium">Ojo:</span>
                     En este apartado puede agregar cada uno de los beneficiarios que tenga derecho el titular de este contrato.
                   </p>
@@ -683,6 +691,454 @@
                 </div>
               </div>
             </div>
+            <vs-divider />
+
+            <!--checkout-->
+            <div class="flex flex-wrap my-6">
+              <div class="w-full sm:w-12/12 md:w-6/12 px-2">
+                <div class="w-full pt-3 pb-3 px-2">
+                  <h3 class="text-xl">
+                    <feather-icon icon="CalendarIcon" class="mr-2" svgClasses="w-5 h-5" />Programación de Pagos
+                  </h3>
+                </div>
+                <div class="flex flex-wrap">
+                  <!--precios-->
+                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                    <label class="text-sm opacity-75 font-medium">
+                      <span>Plan de Venta</span>
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <v-select
+                      :options="planesVenta"
+                      :clearable="false"
+                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                      v-model="form.planVenta"
+                      class="pb-1 pt-1"
+                      v-validate:plan_de_venta_computed.immediate="'required'"
+                      name="plan_venta"
+                      data-vv-as=" "
+                    >
+                      <div slot="no-options">No Se Ha Seleccionado Ningún Área</div>
+                    </v-select>
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('plan_venta') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.nombre"
+                      >{{errores.nombre[0]}}</span>
+                    </div>
+                  </div>
+
+                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                    <label class="text-sm opacity-75">
+                      $ Precio Neto de la Propiedad
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <vs-input
+                      name="precio_neto"
+                      data-vv-as=" "
+                      v-validate="'required|numeric'"
+                      type="text"
+                      class="w-full pb-1 pt-1"
+                      placeholder="Precio Neto de la Propiedad"
+                      v-model="form.planVenta.precio_neto"
+                      readonly
+                    />
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('precio_neto') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                    <label class="text-sm opacity-75">
+                      $ Descuento Neto
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <vs-input
+                      name="descuento_neto"
+                      data-vv-as=" "
+                      v-validate="'numeric|min_value:0|max_value:'+this.form.planVenta.precio_neto"
+                      maxlength="7"
+                      type="text"
+                      class="w-full pb-1 pt-1"
+                      placeholder="$ 0.00"
+                      v-model="form.descuento"
+                    />
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('descuento_neto') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                    <label class="text-sm opacity-75">
+                      $ Total a Pagar
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <vs-input
+                      name="total_pagar"
+                      data-vv-as=" "
+                      v-validate="'numeric|min_value:0'"
+                      type="text"
+                      class="w-full pb-1 pt-1"
+                      placeholder="$ 0.00"
+                      v-model="form.precio_neto"
+                      readonly
+                    />
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('total_pagar') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                    </div>
+                    <div class="mt-2"></div>
+                  </div>
+                  <div class="w-full px-2 pt-3 pb-3">
+                    <div>
+                      <p class="text-sm">
+                        <span class="text-danger font-medium leading-6">Ojo:</span>
+                        Desde este apartado puede capturar pagos y enganches de manera directa. Si no desea registrar pagos durante la captura de la esta venta, puede seleccionar la opción de
+                        <span
+                          class="text-danger font-medium leading-6"
+                        >"Pagar después"</span>.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                    <label class="text-sm opacity-75">
+                      $ Cuota Inicial Mínima
+                      <span class="font-medium text-danger">10%</span> del Valor Total
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <vs-input
+                      name="cuota_inicial"
+                      data-vv-as=" "
+                      v-validate="'required|numeric|min_value:'+(cuota_inicial)+'|max_value:'+(maxima_cuota_inicial)"
+                      maxlength="7"
+                      type="text"
+                      class="w-full pb-1 pt-1"
+                      placeholder="$ 0.00"
+                      v-model="form.enganche_inicial"
+                      :disabled="plan_venta"
+                    />
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('cuota_inicial') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                    </div>
+                    <div class="mt-2"></div>
+                  </div>
+
+                  <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                    <label class="text-sm opacity-75 font-medium">
+                      <span>¿Guardar Cuota Inicial como cobrada?</span>
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <v-select
+                      :options="opcionesPagar"
+                      :clearable="false"
+                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                      v-model="form.opcionPagar"
+                      class="pb-1 pt-1"
+                      v-validate:plan_de_venta_computed.immediate="'required'"
+                      name="plan_venta"
+                      data-vv-as="Plan de Venta"
+                    >
+                      <div slot="no-options">Seleccione una opción</div>
+                    </v-select>
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('plan_venta') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.nombre"
+                      >{{errores.nombre[0]}}</span>
+                    </div>
+                  </div>
+
+                  <!--datos del pago inicial-->
+                  <div class="w-full" v-if="this.form.opcionPagar.value==1">
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
+                        <label class="text-sm opacity-75 font-medium">
+                          <span>Formas de Pago</span>
+                          <span class="text-danger text-sm">(*)</span>
+                        </label>
+                        <v-select
+                          :options="formasPago"
+                          :clearable="false"
+                          :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                          v-model="form.formaPago"
+                          class="pb-1 pt-1"
+                          v-validate:plan_de_venta_computed.immediate="'required'"
+                          name="formas_pago"
+                          data-vv-as="Plan de Venta"
+                        >
+                          <div slot="no-options">Seleccione una Forma de Pago</div>
+                        </v-select>
+                        <div>
+                          <span class="text-danger text-sm">{{ errors.first('formas_pago') }}</span>
+                        </div>
+                        <div class="mt-2">
+                          <span
+                            class="text-danger text-sm"
+                            v-if="this.errores.nombre"
+                          >{{errores.nombre[0]}}</span>
+                        </div>
+                      </div>
+
+                      <div
+                        class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                        v-if="this.form.formaPago.value!=1"
+                      >
+                        <label class="text-sm opacity-75">
+                          Banco
+                          <span class="text-danger text-sm">(*)</span>
+                        </label>
+                        <vs-input
+                          data-vv-validate-on="blur"
+                          v-validate:banco_computed="'required'"
+                          name="banco_validacion"
+                          data-vv-as=" "
+                          type="text"
+                          class="w-full pb-1 pt-1"
+                          placeholder="Nombre del Banco"
+                          v-model="form.banco"
+                          maxlength="36"
+                        />
+                        <div>
+                          <span class="text-danger text-sm">{{ errors.first('banco_validacion') }}</span>
+                        </div>
+                        <div class="mt-2">
+                          <span
+                            class="text-danger text-sm"
+                            v-if="this.errores.nombre"
+                          >{{errores.nombre[0]}}</span>
+                        </div>
+                      </div>
+
+                      <div
+                        class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                        v-if="this.form.formaPago.value==3"
+                      >
+                        <label class="text-sm opacity-75">Núm. Operación</label>
+                        <vs-input
+                          name="Nombre"
+                          type="text"
+                          class="w-full pb-1 pt-1"
+                          placeholder="Número de Operacion"
+                          v-model="form.num_operacion"
+                          maxlength="36"
+                        />
+                        <div class="mt-2"></div>
+                      </div>
+
+                      <div
+                        class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                        v-if="this.form.formaPago.value==2"
+                      >
+                        <label class="text-sm opacity-75">Número de Cheque</label>
+                        <vs-input
+                          name="Nombre"
+                          type="text"
+                          class="w-full pb-1 pt-1"
+                          placeholder="Número de Cheque"
+                          v-model="form.num_cheque"
+                          maxlength="7"
+                        />
+                        <div class="mt-2"></div>
+                      </div>
+
+                      <div
+                        class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                        v-if="this.form.formaPago.value==4 ||  this.form.formaPago.value==5"
+                      >
+                        <label class="text-sm opacity-75">Últimos 4 Digitos</label>
+                        <vs-input
+                          name="ultimos_digitos"
+                          data-vv-as=" "
+                          data-vv-validate-on="blur"
+                          v-validate="'min:4|max:4|numeric'"
+                          type="text"
+                          class="w-full pb-1 pt-1"
+                          placeholder="Últimos 4 Dígitos de la tarjeta"
+                          maxlength="4"
+                          v-model="form.ultimosdigitos"
+                        />
+                        <div>
+                          <span class="text-danger text-sm">{{ errors.first('ultimos_digitos') }}</span>
+                        </div>
+                        <div class="mt-2">
+                          <span
+                            class="text-danger text-sm"
+                            v-if="this.errores.celular"
+                          >{{errores.celular[0]}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--fin de datos del pago inicial--->
+
+                  <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5">
+                    <vs-button color="success" class="w-full" @click="acceptAlert()">Guardar Venta</vs-button>
+                  </div>
+                  <div class="w-full px-2 pt-3 pb-3">
+                    <div>
+                      <p class="text-sm">
+                        <span class="text-danger font-medium leading-6">Ojo:</span>
+                        Se recomienda revisar la Información capturada antes de mandar
+                        <span
+                          class="text-danger font-medium leading-6"
+                        >Guardar la venta</span>, si ya revisó que todo está correcto puede proceder.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!--fin de precios-->
+                </div>
+              </div>
+              <div class="w-full sm:w-12/12 md:w-6/12 px-2">
+                <div class="w-full pt-3 pb-3">
+                  <h3 class="text-xl">
+                    <feather-icon icon="ShoppingCartIcon" class="mr-2" svgClasses="w-5 h-5" />Resumen de la Venta
+                  </h3>
+                </div>
+                <!--resumen de la venta-->
+                <div class="flex flex-wrap mt-6">
+                  <div class="w-full sm:w-12/12 ml-auto md:w-12/12 lg:w-12/12 xl:w-12/12">
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">Ubicación</span>
+                      </div>
+                      <div
+                        class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
+                      >
+                        <span v-if="this.datosAreas.id">
+                          <span
+                            v-if="this.datosAreas.tipo_propiedades_id == 1 || this.datosAreas.tipo_propiedades_id == 2 || this.datosAreas.tipo_propiedades_id == 3 || this.datosAreas.tipo_propiedades_id == 5 || this.datosAreas.tipo_propiedades_id == 6"
+                          >
+                            <span
+                              v-if="this.form.filas.value!=''"
+                            >Propiedad {{this.datosAreas['tipo_propiedad'].tipo+' Ubicación '+this.form.filas.label}}</span>
+                            <span v-else class="text-danger">Seleccione una ubicación</span>
+                          </span>
+                          <span v-else>
+                            <span
+                              v-if="this.form.filas.value!='' && this.form.lotes.value!=''"
+                            >Propiedad {{this.datosAreas['tipo_propiedad'].tipo+' Ubicación '+this.form.lotes.label}}</span>
+                            <span v-else class="text-danger">Seleccione una ubicación</span>
+                          </span>
+                        </span>
+                        <span v-else class="text-danger">Seleccione un Área del Cementerio</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">Vendedor</span>
+                      </div>
+                      <div
+                        class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
+                      >
+                        <span v-if="this.form.vendedor.value!=''">{{this.form.vendedor.label}}</span>
+                        <span v-else class="text-danger">Seleccione un Vendedor</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">Tipo Venta</span>
+                      </div>
+                      <div
+                        class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
+                      >
+                        <span v-if="this.form.venta_referencia_id.value==1">Uso inmediato</span>
+                        <span v-else>A futuro</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">Plan de Venta</span>
+                      </div>
+                      <div
+                        class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
+                      >
+                        <span v-if="this.form.planVenta.value>=0">
+                          <span
+                            v-if="this.form.planVenta.value==0"
+                          >Pago Único de {{this.form.precio_neto | numFormat('0,000.00')}} Pesos</span>
+                          <span
+                            v-else
+                          >Pago Inicial de {{this.form.enganche_inicial | numFormat('0,000.00')}} Pesos. Más {{this.form.planVenta.value}} Mensualidades de {{((this.form.precio_neto-this.form.enganche_inicial)/this.form.planVenta.value) | numFormat('0,000.00')}} Pesos</span>
+                        </span>
+                        <span v-else class="text-danger">Seleccione un Plan de Venta</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">Sub Total</span>
+                      </div>
+                      <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
+                        <!--obtencion del precio total menos iva-->
+                        <span
+                          class="text-gray-900 font-medium"
+                        >{{(this.form.precio_neto*.84) | numFormat('0,000.00')}} Pesos</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">Descuento</span>
+                      </div>
+                      <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
+                        <span
+                          class="text-gray-900 font-medium"
+                        >{{this.form.descuento | numFormat('0,000.00')}} Pesos</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+
+                    <div class="flex flex-wrap">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">IVA</span>
+                      </div>
+                      <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
+                        <!--obtencion del  iva-->
+                        <span
+                          class="text-gray-900 font-medium"
+                        >{{(this.form.precio_neto*.16) | numFormat('0,000.00')}} Pesos</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+                    <div class="flex flex-wrap text-success">
+                      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                        <span class="text-gray-100">Total a Pagar</span>
+                      </div>
+                      <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
+                        <span
+                          class="text-gray-900 font-medium"
+                        >{{this.form.precio_neto | numFormat('0,000.00')}} Pesos</span>
+                      </div>
+                    </div>
+                    <vs-divider />
+                  </div>
+                </div>
+                <!--fin del resumen de la venta-->
+              </div>
+            </div>
+            <!--fin del checkout-->
+            <vs-divider />
           </div>
         </template>
       </vx-card>
@@ -694,10 +1150,18 @@
       @closeVerificar="closeChecker"
       :accion="accionNombre"
     ></Password>
+    <Confirmar
+      :show="openConfirmarSinPassword"
+      :callback-on-success="callbackRemoverBeneficiario"
+      @closeVerificar="openConfirmarSinPassword=false"
+      :accion="'¿Desea eliminar este beneficiario? Los datos quedarán eliminados del sistema.'"
+      :confirmarButton="'Eliminar'"
+    ></Confirmar>
   </div>
 </template>
 <script>
 import Mapa from "../ventas/Mapa";
+import Confirmar from "../../../Confirmar";
 //componente de password
 import Password from "../../../confirmar_password";
 import cementerio from "@services/cementerio";
@@ -714,7 +1178,8 @@ export default {
     "v-select": vSelect,
     Password,
     Datepicker,
-    Mapa
+    Mapa,
+    Confirmar
   },
   props: {
     show: {
@@ -730,8 +1195,8 @@ export default {
     },
 
     //aqui obtengo los datos necesarios para poder saber cuantas filas tiene una propiedad
-    "form.filas.value": function(newValue, oldValue) {
-      if (newValue != "") {
+    "form.filas": function(newValue, oldValue) {
+      if (newValue.value != "") {
         if (this.datosAreas.tipo_propiedades_id == 4) {
           this.lotes = [];
           this.lotes.push({ label: "Seleccione 1", value: "" });
@@ -756,10 +1221,16 @@ export default {
                   });
                 }
               }
-              this.form.lotes = { label: "Seleccione 1", value: "" };
+              //la primero opcion
+
+              this.form.lotes = this.lotes[1];
               return;
             }
           });
+        } else {
+          this.lotes = [];
+          this.lotes.push({ label: "Seleccione 1", value: "" });
+          this.form.lotes = { label: "Seleccione 1", value: "" };
         }
       } else {
         this.lotes = [];
@@ -771,10 +1242,16 @@ export default {
     datosAreas: function(newValue, oldValue) {
       //creo las posibles opciones para filas y modulos
       if (newValue != []) {
+        //actualizo el id del tipo de propiedad
+        this.form.propiedades_id = this.datosAreas.tipo_propiedades_id;
         //creo uniplex, duplex, triplex y cuadruplex sin nicho
         this.filas = [];
         this.filas.push({ label: "Seleccione 1", value: "" });
+        this.form.filas = this.filas[0];
         if (this.datosAreas.tipo_propiedades_id != 4) {
+          this.lotes = [];
+          this.lotes.push({ label: "Seleccione 1", value: "" });
+          this.form.lotes = { label: "Seleccione 1", value: "" };
           //al encontrar el numero de filas que les corresponden segun la propiedad creo las filas para que la seleccione el usuario
           let indicador_propiedad = "";
           if (
@@ -791,7 +1268,6 @@ export default {
               value: index
             });
           }
-          this.form.filas = { label: "Seleccione 1", value: "" };
         } else {
           //filas para las terrazas
           for (let index = 1; index <= this.datosAreas.filas; index++) {
@@ -800,8 +1276,9 @@ export default {
               value: index
             });
           }
-          this.form.filas = { label: "Seleccione 1", value: "" };
         }
+        //la primero opcion
+        this.form.filas = this.filas[1];
         //cargo los precios
         this.cargarPlanes();
       }
@@ -813,9 +1290,32 @@ export default {
 
     "form.planVenta": function(newValue, oldValue) {
       //actualizo el precio actual de la propiedad para mostrar el total neto
-      this.form.precio_neto = newValue.precio_neto;
-    }
+      this.form.precio_neto = newValue.precio_neto - this.form.descuento;
+      this.form.enganche_inicial = newValue.enganche_inicial;
+    },
+    "form.descuento": function(newValue, oldValue) {
+      //actualizo el total a pagar
+      if (isNaN(newValue)) {
+        //no es numero y marca error, pone el valor en cero
+        this.form.precio_neto = "Error";
+      } else {
+        //si es numero y poner un valor bueno
+        if (Number(newValue) > Number(this.form.planVenta.precio_neto)) {
+          //error de captura ps el descuento no sobrepasa el precio
+          this.form.precio_neto = "Error";
+        } else {
+          //todo bien
+          this.form.precio_neto = Number(
+            Number(this.form.planVenta.precio_neto) - Number(newValue)
+          );
+        }
 
+        //ajusto la cuota inicial si es de contado
+        if (this.form.planVenta.value == 0) {
+          this.form.enganche_inicial = this.form.precio_neto;
+        }
+      }
+    }
     //fin de watchs con mapa
   },
   computed: {
@@ -836,22 +1336,119 @@ export default {
       }
     },
 
-    ubicacion: function() {
-      //se va creando la ubicacion
-      return (
-        this.datosAreas.tipo_propiedades_id +
-        "-" +
-        this.datosAreas.id +
-        "-" +
-        this.form.filas.value +
-        "-" +
-        this.form.lotes.value
-      );
+    plan_venta: function() {
+      if (this.form.planVenta.value == 0) {
+        return true;
+      } else {
+        return false;
+      }
     },
+
+    cuota_inicial: function() {
+      //se define la cuota inicial segun el precio de la propiedad y el plan de venta
+      if (this.form.planVenta.value == 0) {
+        //si el plan de venta es a contado
+        return this.form.precio_neto;
+      } else {
+        //si el plan de venta no es a contado debe dar como minimo el 10% de lo que vale la propiedad ya con descuento
+        return this.form.precio_neto * 0.1;
+      }
+    },
+
+    maxima_cuota_inicial: function() {
+      //se define la cuota inicial maxima para las mensualidades
+      if (this.form.planVenta.value == 0) {
+        //si el plan de venta es a contado
+        return this.form.precio_neto;
+      } else {
+        //si el plan de venta no es a contado debe dar como minimo el 10% de lo que vale la propiedad ya con descuento
+        return this.form.precio_neto * 0.5;
+      }
+    },
+
+    //validaciones calculadas
     //valido que elija un plan de venta
     plan_de_venta_computed: function() {
       return this.form.planVenta.value;
+    },
+    fila_validacion_computed: function() {
+      return this.form.filas.value;
+    },
+    ubicacion_validacion_computed: function() {
+      if (this.form.propiedades_id == 4) {
+        //terrazas
+        return this.form.lotes.value;
+      } else {
+        return true;
+      }
+    },
+    vendedor_validacion_computed: function() {
+      return this.form.vendedor.value;
+    },
+    fecha_venta_validacion_computed: function() {
+      return this.form.fecha_venta;
+    },
+
+    num_solicitud_validacion_computed: function() {
+      //checo que el dato venta a futuro este activo
+      if (this.form.venta_referencia_id == 2) {
+        return this.form.num_solicitud;
+      } else return true;
+    },
+
+    num_convenio_validacion_computed: function() {
+      //checo que el dato venta a futuro este activo y que sea de venta antes del sistema
+      if (
+        this.form.ventaAntesdelSistema == 1 &&
+        this.form.venta_referencia_id == 2
+      ) {
+        return this.form.convenio;
+      } else return true;
+    },
+    num_titulo_validacion_computed: function() {
+      //checo que el dato venta a futuro este activo
+      if (this.form.ventaAntesdelSistema == 1) {
+        return this.form.titulo;
+      } else return true;
+    },
+    fecha_nacimiento_validacion_computed: function() {
+      return this.form.fecha_nac;
+    },
+    banco_validacion_computed: function() {
+      if (this.form.opcionPagar.value == 1 && this.form.formaPago.value != 1) {
+        //quiere decir que selecciono la opcion de si pagar
+        return this.form.banco;
+      } else {
+        return true;
+      }
+    },
+    //fin de validaciones calculadas
+    //crear ubicacion
+    crear_ubicacion_computed: function() {
+      if (this.datosAreas.tipo_propiedades_id == 4) {
+        //ubicacion para cuadriplex de terrazas
+        //id del tipo de propiedad - id de la propiedad - num fila - num columna
+        return (this.form.ubicacion =
+          this.form.propiedades_id +
+          "-" +
+          this.datosAreas.id +
+          "-" +
+          this.form.filas.value +
+          "-" +
+          this.form.lotes.value);
+      } else {
+        //id del tipo de propiedad - id de la propiedad - num fila - 1
+        return (this.form.ubicacion =
+          this.form.propiedades_id +
+          "-" +
+          this.datosAreas.id +
+          "-" +
+          this.form.filas.value +
+          "-" +
+          1);
+      }
     }
+    //fin de crear ubicacion
   },
   data() {
     return {
@@ -861,8 +1458,10 @@ export default {
       },
       spanishDatepicker: es,
       operConfirmar: false,
+      openConfirmarSinPassword: false,
       callback: Function,
-      accionNombre: "agregar nuevo usuario",
+      callbackRemoverBeneficiario: Function,
+      accionNombre: "Guardar Venta",
       ventasReferencias: [],
       filas: [],
       lotes: [],
@@ -872,17 +1471,35 @@ export default {
         {
           label: "Seleccione 1",
           value: "",
-          precio_neto: ""
+          precio_neto: "",
+          enganche_inicial: ""
         }
       ],
       datosAreas: [],
+      formasPago: [],
+      opcionesPagar: [
+        {
+          label: "Si",
+          value: 1
+        },
+        {
+          label: "Pagar Después",
+          value: 0
+        }
+      ],
       //fin var con mapa
       form: {
+        //ubicacion
+        tipo_propiedades_id: 0,
+        propiedades_id: 0,
+        num_fila: 0,
+        num_columna: 0,
+        ubicacion: "",
+        //fin de ubicacion
+        fecha_venta: "",
         ventaAntesdelSistema: false,
         //datos del titular
-        nombre: "",
-        a_paterno: "",
-        a_materno: "",
+        titular: "",
         domicilio: "",
         ciudad: "",
         estado: "",
@@ -893,9 +1510,9 @@ export default {
         email: "",
         fecha_nac: "",
         //
-        tipo_venta_id: "",
         num_solicitud: "",
         convenio: "",
+        titulo: "",
         venta_referencia_id: 1,
         filas: {
           label: "Seleccione 1",
@@ -909,15 +1526,32 @@ export default {
         planVenta: {
           label: "Seleccione 1",
           value: "",
-          precio_neto: ""
+          precio_neto: "",
+          enganche_inicial: ""
         },
+        enganche_inicial: "",
         precio_neto: "",
-        descuento: "",
+        descuento: 0,
+        minima_cuota_inicial: 0,
+        maxima_cuota_inicial: 0,
         vendedor: {
           label: "Seleccione 1",
           value: ""
         },
-        beneficiarios: []
+        opcionPagar: {
+          label: "Pagar Después",
+          value: 0
+        },
+        beneficiarios: [],
+        index_beneficiario: 0,
+        formaPago: {
+          label: "Seleccione 1",
+          value: ""
+        },
+        banco: "",
+        ultimosdigitos: "",
+        num_cheque: "",
+        num_operacion: ""
         //fin var con mapa
       },
       errores: []
@@ -928,20 +1562,80 @@ export default {
     getDatosTipoPropiedad(datos) {
       //actualizo los datos que se ocupan para manejar las ubicaciones de las propiedades
       this.datosAreas = datos;
+      this.form.propiedades_id = this.datosAreas.tipo_propiedades_id;
     },
     acceptAlert() {
       this.$validator
         .validateAll()
         .then(result => {
-          if (!result) {
+          if (result) {
             return;
           } else {
             //se confirma la cntraseña
-            this.callback = this.saveUsuario;
+            //una vez todo validado, actualizo los ultimos datos de ubicacion
+            this.form.ubicacion = this.crear_ubicacion_computed;
+            this.form.propiedades_id = this.datosAreas.id;
+            this.form.tipo_propiedades_id = this.datosAreas.tipo_propiedades_id;
+            this.form.minima_cuota_inicial = this.cuota_inicial;
+            this.form.maxima_cuota_inicial = this.maxima_cuota_inicial;
+            //fin de actualizar datos de ubicacion
+            this.callback = this.guardarVenta;
             this.operConfirmar = true;
           }
         })
         .catch(() => {});
+    },
+
+    guardarVenta() {
+      //aqui mando guardar los datos
+      this.$vs.loading();
+      cementerio
+        .guardarVenta(this.form)
+        .then(res => {
+          console.log(res);
+          if (res.data == 1) {
+            //success
+            this.$vs.notify({
+              title: "Ventas de Propiedades",
+              text: "Se ha guardado la venta correctamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 5000
+            });
+          } else {
+            this.$vs.notify({
+              title: "Ventas de Propiedades",
+              text: "Error al guardar la venta, por favor reintente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 4000
+            });
+          }
+
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              //checo si existe cada error
+              console.log(err.response);
+            }
+          }
+          this.$vs.loading.close();
+        });
     },
     cancel() {
       this.$emit("closeVentana");
@@ -980,13 +1674,33 @@ export default {
         })
         .catch(err => {});
     },
+    //get formad de pago
+    get_sat_formas_pago() {
+      cementerio
+        .get_sat_formas_pago()
+        .then(res => {
+          //le agrego todos los usuarios vendedores
+          this.formasPago = [];
+          //this.formasPago.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach(element => {
+            this.formasPago.push({
+              label: element.forma,
+              value: element.id
+            });
+          });
+          this.form.formaPago = this.formasPago[0];
+          //selecciono efectivo por default
+        })
+        .catch(err => {});
+    },
 
     cargarPlanes() {
       this.planesVenta = [];
       this.planesVenta.push({
         label: "Seleccione 1",
         value: "",
-        precio_neto: ""
+        precio_neto: "",
+        enganche_inicial: ""
       });
       if (this.datosAreas.id) {
         this.datosAreas["tipo_propiedad"].precios.forEach(element => {
@@ -997,8 +1711,9 @@ export default {
               //precio de contado a 0 meses 1 solo pago
               this.planesVenta.push({
                 label: "Pago de contado",
-                value: element.meses,
-                precio_neto: element.precio_neto
+                value: Number(element.meses),
+                precio_neto: Number(element.precio_neto),
+                enganche_inicial: Number(element.enganche_inicial)
               });
             }
           } else {
@@ -1008,15 +1723,17 @@ export default {
               //precio de contado a 0 meses 1 solo pago
               this.planesVenta.push({
                 label: "Pago de contado",
-                value: element.meses,
-                precio_neto: element.precio_neto
+                value: Number(element.meses),
+                precio_neto: Number(element.precio_neto),
+                enganche_inicial: Number(element.enganche_inicial)
               });
             } else {
               //precios de pagos a meses
               this.planesVenta.push({
                 label: element.meses + " Meses",
-                value: element.meses,
-                precio_neto: element.precio_neto
+                value: Number(element.meses),
+                precio_neto: Number(element.precio_neto),
+                enganche_inicial: Number(element.enganche_inicial)
               });
             }
           }
@@ -1036,15 +1753,15 @@ export default {
       //verifico si todos los datos estan completos para dejarle agregar nuevos
       let errores_de_captura_en_datos = 0;
       if (this.form.beneficiarios.length < 5) {
-        /*this.tipo_propiedades[index].precios.forEach(element => {
-        if (
-          element.meses === "" ||
-          element.precio_neto === "" ||
-          element.enganche_inicial === ""
-        ) {
-          errores_de_captura_en_datos += 1;
-        }
-      });*/
+        this.form.beneficiarios.forEach(element => {
+          if (
+            element.nombre === "" ||
+            element.parentesco === "" ||
+            element.telefono === ""
+          ) {
+            errores_de_captura_en_datos += 1;
+          }
+        });
         if (errores_de_captura_en_datos > 0) {
           //no paso
           this.$vs.notify({
@@ -1067,8 +1784,8 @@ export default {
       } else {
         //pasa de 5 beneficiarios
         this.$vs.notify({
-          title: "Error",
-          text: "Ha llegado al límite de beneficiarios",
+          title: "Límite de Beneficiarios",
+          text: "Ha llegado a 5, el límite de beneficiarios",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -1076,10 +1793,22 @@ export default {
           time: "4000"
         });
       }
+    },
+
+    //remover beneficiario
+    remover_beneficiario(index_beneficiario) {
+      this.form.index_beneficiario = index_beneficiario;
+      this.callbackRemoverBeneficiario = this.remover_beneficiario_callback;
+      this.openConfirmarSinPassword = true;
+    },
+    //remover beneficiario callback quita del array al beneficiario seleccionado
+    remover_beneficiario_callback() {
+      this.form.beneficiarios.splice(this.form.index_beneficiario, 1);
     }
   },
   created() {
     this.get_vendedores();
+    this.get_sat_formas_pago();
   }
 };
 </script>
