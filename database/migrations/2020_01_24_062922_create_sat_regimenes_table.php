@@ -17,7 +17,6 @@ class CreateSatRegimenesTable extends Migration
             $table->bigIncrements('id');
             $table->string('clave');
             $table->string('regimen');
-            $table->timestamps();
         });
     }
 

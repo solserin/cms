@@ -15,13 +15,10 @@ class CreateFacturacionTable extends Migration
     {
         Schema::create('facturacion', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('cer');
-            $table->string('key');
-            $table->string('password');
-            $table->string('numero_cert');
-            $table->string('email_emisor');
-            $table->unsignedBigInteger('sat_monedas_id')->nullable();
-            $table->timestamps();
+            $table->date('fecha_renovacion')->nullable();
+            $table->date('fecha_vencimiento')->nullable();
+            $table->string('password')->nullable();
+            $table->unsignedBigInteger('funeraria_id')->nullable();
         });
     }
 

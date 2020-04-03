@@ -16,9 +16,6 @@ class CreateFunerariaTable extends Migration
         Schema::create('funeraria', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('localidades_id')->nullable();
-            $table->unsignedBigInteger('sat_regimenes_id')->nullable();
-            $table->foreign('localidades_id')->references('id')->on('localidades');
             $table->string('nombre_comercial');
             $table->string('razon_social');
             $table->string('rfc');
@@ -26,18 +23,21 @@ class CreateFunerariaTable extends Migration
             $table->string('num_ext');
             $table->string('num_int')->nullable();
             $table->string('colonia');
-            $table->integer('cp')->default(0)->nullable();
-            $table->string('zona_horaria');
+            $table->string('cp')->default(0)->nullable();
+            $table->string('ciudad');
+            $table->string('estado');
             $table->string('telefono');
             $table->string('ext')->nullable();
             $table->string('fax')->nullable();
             $table->string('email');
             $table->string('facebook')->nullable();
             $table->string('web')->nullable();
+            $table->string('zona_horaria');
+            $table->unsignedBigInteger('sat_regimenes_id')->nullable();
             $table->timestamps();
         });
-            
-        DB::statement("ALTER TABLE funeraria ADD logo MEDIUMBLOB");
+
+        //DB::statement("ALTER TABLE funeraria ADD logo MEDIUMBLOB");
     }
 
     /**

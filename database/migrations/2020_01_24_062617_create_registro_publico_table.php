@@ -18,22 +18,17 @@ class CreateRegistroPublicoTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('funeraria_id')->nullable();
             $table->foreign('funeraria_id')->references('id')->on('funeraria');
-
-            $table->unsignedBigInteger('ciudad_np')->nullable();
-            $table->foreign('ciudad_np')->references('id')->on('localidades');
-
-            $table->unsignedBigInteger('ciudad_rpc')->nullable();
-            $table->foreign('ciudad_rpc')->references('id')->on('localidades');
-            
-
             $table->string('rep_legal');
             $table->string('t_nep');
             $table->date('fecha_tnep');
             $table->string('fe_lic');
-            $table->integer('num_np')->default(0)->nullable();
-            $table->integer('num_rpc')->default(0)->nullable();
+            $table->string('num_np')->default(0)->nullable();
+            $table->string('ciudad_np');
+            $table->string('estado_np');
+            $table->string('ciudad_rpc');
+            $table->string('estado_rpc');
+            $table->string('num_rpc')->default(0)->nullable();
             $table->date('fecha_rpc');
-            $table->timestamps();
         });
     }
 

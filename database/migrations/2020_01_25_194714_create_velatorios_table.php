@@ -18,17 +18,14 @@ class CreateVelatoriosTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('funeraria_id')->nullable();
             $table->foreign('funeraria_id')->references('id')->on('funeraria');
-            $table->unsignedBigInteger('localidades_id')->nullable();
-            $table->foreign('localidades_id')->references('id')->on('localidades');
             $table->string('velatorio');
             $table->string('calle');
             $table->string('num_ext');
             $table->string('num_int')->nullable();
             $table->string('colonia');
-            $table->integer('cp')->default(0)->nullable();
+            $table->string('cp')->default(0)->nullable();
             $table->string('telefonos');
             $table->string('fax')->nullable();
-            $table->timestamps();
         });
     }
 

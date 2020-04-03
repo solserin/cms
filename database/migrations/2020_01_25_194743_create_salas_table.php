@@ -18,7 +18,6 @@ class CreateSalasTable extends Migration
             $table->unsignedBigInteger('velatorios_id')->nullable();
             $table->foreign('velatorios_id')->references('id')->on('velatorios');
             $table->string('sala');
-            $table->timestamps();
         });
     }
 
