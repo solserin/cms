@@ -45,11 +45,11 @@ if (mix.inProduction()) {
     mix.version();
     mix.webpackConfig({
         output: {
-            publicPath: '/demo/vuexy-vuejs-laravel-admin-template/demo-1/',
+            publicPath: '/',
             chunkFilename: 'js/chunks/[name].[chunkhash].js',
         }
     });
-    mix.setResourceRoot("/demo/vuexy-vuejs-laravel-admin-template/demo-1/");
+    mix.setResourceRoot("/");
 } else {
     mix.webpackConfig({
         output: {
@@ -57,24 +57,3 @@ if (mix.inProduction()) {
         }
     });
 }
-
-mix.options({
-    hmrOptions: {
-        host: process.env.APP_HOST_NAME,
-        port: 8080,
-    }
-});
-
-mix.webpackConfig({
-    devServer: {
-        proxy: {
-            host: '127.0.0.1',
-            port: 8080,
-        },
-        watchOptions: {
-            aggregateTimeout: 200,
-            poll: 5000
-        },
-
-    }
-});
