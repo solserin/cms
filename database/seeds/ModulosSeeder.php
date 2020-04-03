@@ -39,7 +39,7 @@ class ModulosSeeder extends Seeder
             ],
             [
                 //4
-                'modulo' => 'Distribución',
+                'modulo' => 'Inventario',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => '3',
                 'url' => '/inventarios/cementerio/distribucion',
@@ -47,7 +47,7 @@ class ModulosSeeder extends Seeder
             ],
             [
                 //5
-                'modulo' => 'ventas',
+                'modulo' => 'Ventas',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => '3',
                 'url' => '/inventarios/cementerio/ventas',
@@ -61,6 +61,7 @@ class ModulosSeeder extends Seeder
                 'url' => '/inventarios/cementerio/cobranza',
                 'secciones_id' => '2'
             ],
+            /*
             [
                 //7
                 'modulo' => 'Funeraria',
@@ -85,6 +86,7 @@ class ModulosSeeder extends Seeder
                 'url' => '/inventarios/funeraria/articulos-servicios',
                 'secciones_id' => '2'
             ]
+            */
         ];
 
         foreach ($modulos as $key) {
