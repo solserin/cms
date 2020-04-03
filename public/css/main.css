@@ -181,6 +181,14 @@ padding-left: 1rem
   background-color: #dae1e7 !important
 }
 
+[dir] .bg-info {
+  background-color: #0061ff !important
+}
+
+[dir] .bg-default {
+  background-color: #C1C1C1 !important
+}
+
 [dir] .hover\:bg-transparent:hover {
   background-color: transparent !important
 }
@@ -201,6 +209,14 @@ padding-left: 1rem
   background-color: #dae1e7 !important
 }
 
+[dir] .hover\:bg-info:hover {
+  background-color: #0061ff !important
+}
+
+[dir] .hover\:bg-default:hover {
+  background-color: #C1C1C1 !important
+}
+
 [dir] .focus\:bg-transparent:focus {
   background-color: transparent !important
 }
@@ -219,6 +235,14 @@ padding-left: 1rem
 
 [dir] .focus\:bg-grey-light:focus {
   background-color: #dae1e7 !important
+}
+
+[dir] .focus\:bg-info:focus {
+  background-color: #0061ff !important
+}
+
+[dir] .focus\:bg-default:focus {
+  background-color: #C1C1C1 !important
 }
 
 [dir] .bg-auto {
@@ -261,6 +285,10 @@ padding-left: 1rem
   border-color: #dae1e7 !important
 }
 
+[dir] .border-info {
+  border-color: #0061ff !important
+}
+
 [dir] .hover\:border-transparent:hover {
   border-color: transparent !important
 }
@@ -279,6 +307,10 @@ padding-left: 1rem
 
 [dir] .hover\:border-grey-light:hover {
   border-color: #dae1e7 !important
+}
+
+[dir] .hover\:border-info:hover {
+  border-color: #0061ff !important
 }
 
 [dir] .rounded-none {
@@ -3322,6 +3354,46 @@ padding-left: 2.2rem !important
   color: #dae1e7 !important
 }
 
+.placeholder-info::-webkit-input-placeholder {
+  color: #0061ff !important
+}
+
+.placeholder-info::-moz-placeholder {
+  color: #0061ff !important
+}
+
+.placeholder-info:-ms-input-placeholder {
+  color: #0061ff !important
+}
+
+.placeholder-info::-ms-input-placeholder {
+  color: #0061ff !important
+}
+
+.placeholder-info::placeholder {
+  color: #0061ff !important
+}
+
+.placeholder-default::-webkit-input-placeholder {
+  color: #C1C1C1 !important
+}
+
+.placeholder-default::-moz-placeholder {
+  color: #C1C1C1 !important
+}
+
+.placeholder-default:-ms-input-placeholder {
+  color: #C1C1C1 !important
+}
+
+.placeholder-default::-ms-input-placeholder {
+  color: #C1C1C1 !important
+}
+
+.placeholder-default::placeholder {
+  color: #C1C1C1 !important
+}
+
 .focus\:placeholder-transparent:focus::-webkit-input-placeholder {
   color: transparent !important
 }
@@ -3420,6 +3492,46 @@ padding-left: 2.2rem !important
 
 .focus\:placeholder-grey-light:focus::placeholder {
   color: #dae1e7 !important
+}
+
+.focus\:placeholder-info:focus::-webkit-input-placeholder {
+  color: #0061ff !important
+}
+
+.focus\:placeholder-info:focus::-moz-placeholder {
+  color: #0061ff !important
+}
+
+.focus\:placeholder-info:focus:-ms-input-placeholder {
+  color: #0061ff !important
+}
+
+.focus\:placeholder-info:focus::-ms-input-placeholder {
+  color: #0061ff !important
+}
+
+.focus\:placeholder-info:focus::placeholder {
+  color: #0061ff !important
+}
+
+.focus\:placeholder-default:focus::-webkit-input-placeholder {
+  color: #C1C1C1 !important
+}
+
+.focus\:placeholder-default:focus::-moz-placeholder {
+  color: #C1C1C1 !important
+}
+
+.focus\:placeholder-default:focus:-ms-input-placeholder {
+  color: #C1C1C1 !important
+}
+
+.focus\:placeholder-default:focus::-ms-input-placeholder {
+  color: #C1C1C1 !important
+}
+
+.focus\:placeholder-default:focus::placeholder {
+  color: #C1C1C1 !important
 }
 
 .pointer-events-none {
@@ -3747,6 +3859,14 @@ text-align: right !important
   color: #dae1e7 !important
 }
 
+.text-info {
+  color: #0061ff !important
+}
+
+.text-default {
+  color: #C1C1C1 !important
+}
+
 .hover\:text-inherit:hover {
   color: inherit !important
 }
@@ -3771,6 +3891,14 @@ text-align: right !important
   color: #dae1e7 !important
 }
 
+.hover\:text-info:hover {
+  color: #0061ff !important
+}
+
+.hover\:text-default:hover {
+  color: #C1C1C1 !important
+}
+
 .focus\:text-inherit:focus {
   color: inherit !important
 }
@@ -3793,6 +3921,14 @@ text-align: right !important
 
 .focus\:text-grey-light:focus {
   color: #dae1e7 !important
+}
+
+.focus\:text-info:focus {
+  color: #0061ff !important
+}
+
+.focus\:text-default:focus {
+  color: #C1C1C1 !important
 }
 
 .text-xs {
@@ -4371,6 +4507,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .sm\:bg-info {
+    background-color: #0061ff !important
+  }
+
+  [dir] .sm\:bg-default {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .sm\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -4391,6 +4535,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .sm\:hover\:bg-info:hover {
+    background-color: #0061ff !important
+  }
+
+  [dir] .sm\:hover\:bg-default:hover {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .sm\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -4409,6 +4561,14 @@ text-align: right !important
 
   [dir] .sm\:focus\:bg-grey-light:focus {
     background-color: #dae1e7 !important
+  }
+
+  [dir] .sm\:focus\:bg-info:focus {
+    background-color: #0061ff !important
+  }
+
+  [dir] .sm\:focus\:bg-default:focus {
+    background-color: #C1C1C1 !important
   }
 
   [dir] .sm\:bg-auto {
@@ -4443,6 +4603,10 @@ text-align: right !important
     border-color: #dae1e7 !important
   }
 
+  [dir] .sm\:border-info {
+    border-color: #0061ff !important
+  }
+
   [dir] .sm\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -4461,6 +4625,10 @@ text-align: right !important
 
   [dir] .sm\:hover\:border-grey-light:hover {
     border-color: #dae1e7 !important
+  }
+
+  [dir] .sm\:hover\:border-info:hover {
+    border-color: #0061ff !important
   }
 
   [dir] .sm\:border-solid {
@@ -7088,6 +7256,46 @@ padding-left: 2.2rem !important
     color: #dae1e7 !important
   }
 
+  .sm\:placeholder-info::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:placeholder-info::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:placeholder-info:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:placeholder-info::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:placeholder-info::placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:placeholder-default::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:placeholder-default::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:placeholder-default:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:placeholder-default::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:placeholder-default::placeholder {
+    color: #C1C1C1 !important
+  }
+
   .sm\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -7186,6 +7394,46 @@ padding-left: 2.2rem !important
 
   .sm\:focus\:placeholder-grey-light:focus::placeholder {
     color: #dae1e7 !important
+  }
+
+  .sm\:focus\:placeholder-info:focus::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:focus\:placeholder-info:focus::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:focus\:placeholder-info:focus:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:focus\:placeholder-info:focus::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:focus\:placeholder-info:focus::placeholder {
+    color: #0061ff !important
+  }
+
+  .sm\:focus\:placeholder-default:focus::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:focus\:placeholder-default:focus::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:focus\:placeholder-default:focus:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:focus\:placeholder-default:focus::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .sm\:focus\:placeholder-default:focus::placeholder {
+    color: #C1C1C1 !important
   }
 
   .sm\:pointer-events-none {
@@ -7505,6 +7753,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .sm\:text-info {
+    color: #0061ff !important
+  }
+
+  .sm\:text-default {
+    color: #C1C1C1 !important
+  }
+
   .sm\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -7529,6 +7785,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .sm\:hover\:text-info:hover {
+    color: #0061ff !important
+  }
+
+  .sm\:hover\:text-default:hover {
+    color: #C1C1C1 !important
+  }
+
   .sm\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -7551,6 +7815,14 @@ text-align: right !important
 
   .sm\:focus\:text-grey-light:focus {
     color: #dae1e7 !important
+  }
+
+  .sm\:focus\:text-info:focus {
+    color: #0061ff !important
+  }
+
+  .sm\:focus\:text-default:focus {
+    color: #C1C1C1 !important
   }
 
   .sm\:text-xs {
@@ -8115,6 +8387,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .md\:bg-info {
+    background-color: #0061ff !important
+  }
+
+  [dir] .md\:bg-default {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .md\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -8135,6 +8415,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .md\:hover\:bg-info:hover {
+    background-color: #0061ff !important
+  }
+
+  [dir] .md\:hover\:bg-default:hover {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .md\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -8153,6 +8441,14 @@ text-align: right !important
 
   [dir] .md\:focus\:bg-grey-light:focus {
     background-color: #dae1e7 !important
+  }
+
+  [dir] .md\:focus\:bg-info:focus {
+    background-color: #0061ff !important
+  }
+
+  [dir] .md\:focus\:bg-default:focus {
+    background-color: #C1C1C1 !important
   }
 
   [dir] .md\:bg-auto {
@@ -8187,6 +8483,10 @@ text-align: right !important
     border-color: #dae1e7 !important
   }
 
+  [dir] .md\:border-info {
+    border-color: #0061ff !important
+  }
+
   [dir] .md\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -8205,6 +8505,10 @@ text-align: right !important
 
   [dir] .md\:hover\:border-grey-light:hover {
     border-color: #dae1e7 !important
+  }
+
+  [dir] .md\:hover\:border-info:hover {
+    border-color: #0061ff !important
   }
 
   [dir] .md\:border-solid {
@@ -10832,6 +11136,46 @@ padding-left: 2.2rem !important
     color: #dae1e7 !important
   }
 
+  .md\:placeholder-info::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:placeholder-info::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:placeholder-info:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:placeholder-info::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:placeholder-info::placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:placeholder-default::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:placeholder-default::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:placeholder-default:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:placeholder-default::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:placeholder-default::placeholder {
+    color: #C1C1C1 !important
+  }
+
   .md\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -10930,6 +11274,46 @@ padding-left: 2.2rem !important
 
   .md\:focus\:placeholder-grey-light:focus::placeholder {
     color: #dae1e7 !important
+  }
+
+  .md\:focus\:placeholder-info:focus::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:focus\:placeholder-info:focus::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:focus\:placeholder-info:focus:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:focus\:placeholder-info:focus::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:focus\:placeholder-info:focus::placeholder {
+    color: #0061ff !important
+  }
+
+  .md\:focus\:placeholder-default:focus::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:focus\:placeholder-default:focus::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:focus\:placeholder-default:focus:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:focus\:placeholder-default:focus::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .md\:focus\:placeholder-default:focus::placeholder {
+    color: #C1C1C1 !important
   }
 
   .md\:pointer-events-none {
@@ -11249,6 +11633,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .md\:text-info {
+    color: #0061ff !important
+  }
+
+  .md\:text-default {
+    color: #C1C1C1 !important
+  }
+
   .md\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -11273,6 +11665,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .md\:hover\:text-info:hover {
+    color: #0061ff !important
+  }
+
+  .md\:hover\:text-default:hover {
+    color: #C1C1C1 !important
+  }
+
   .md\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -11295,6 +11695,14 @@ text-align: right !important
 
   .md\:focus\:text-grey-light:focus {
     color: #dae1e7 !important
+  }
+
+  .md\:focus\:text-info:focus {
+    color: #0061ff !important
+  }
+
+  .md\:focus\:text-default:focus {
+    color: #C1C1C1 !important
   }
 
   .md\:text-xs {
@@ -11859,6 +12267,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .lg\:bg-info {
+    background-color: #0061ff !important
+  }
+
+  [dir] .lg\:bg-default {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .lg\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -11879,6 +12295,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .lg\:hover\:bg-info:hover {
+    background-color: #0061ff !important
+  }
+
+  [dir] .lg\:hover\:bg-default:hover {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .lg\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -11897,6 +12321,14 @@ text-align: right !important
 
   [dir] .lg\:focus\:bg-grey-light:focus {
     background-color: #dae1e7 !important
+  }
+
+  [dir] .lg\:focus\:bg-info:focus {
+    background-color: #0061ff !important
+  }
+
+  [dir] .lg\:focus\:bg-default:focus {
+    background-color: #C1C1C1 !important
   }
 
   [dir] .lg\:bg-auto {
@@ -11931,6 +12363,10 @@ text-align: right !important
     border-color: #dae1e7 !important
   }
 
+  [dir] .lg\:border-info {
+    border-color: #0061ff !important
+  }
+
   [dir] .lg\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -11949,6 +12385,10 @@ text-align: right !important
 
   [dir] .lg\:hover\:border-grey-light:hover {
     border-color: #dae1e7 !important
+  }
+
+  [dir] .lg\:hover\:border-info:hover {
+    border-color: #0061ff !important
   }
 
   [dir] .lg\:border-solid {
@@ -14576,6 +15016,46 @@ padding-left: 2.2rem !important
     color: #dae1e7 !important
   }
 
+  .lg\:placeholder-info::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:placeholder-info::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:placeholder-info:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:placeholder-info::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:placeholder-info::placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:placeholder-default::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:placeholder-default::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:placeholder-default:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:placeholder-default::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:placeholder-default::placeholder {
+    color: #C1C1C1 !important
+  }
+
   .lg\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -14674,6 +15154,46 @@ padding-left: 2.2rem !important
 
   .lg\:focus\:placeholder-grey-light:focus::placeholder {
     color: #dae1e7 !important
+  }
+
+  .lg\:focus\:placeholder-info:focus::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:focus\:placeholder-info:focus::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:focus\:placeholder-info:focus:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:focus\:placeholder-info:focus::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:focus\:placeholder-info:focus::placeholder {
+    color: #0061ff !important
+  }
+
+  .lg\:focus\:placeholder-default:focus::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:focus\:placeholder-default:focus::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:focus\:placeholder-default:focus:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:focus\:placeholder-default:focus::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .lg\:focus\:placeholder-default:focus::placeholder {
+    color: #C1C1C1 !important
   }
 
   .lg\:pointer-events-none {
@@ -14993,6 +15513,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .lg\:text-info {
+    color: #0061ff !important
+  }
+
+  .lg\:text-default {
+    color: #C1C1C1 !important
+  }
+
   .lg\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -15017,6 +15545,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .lg\:hover\:text-info:hover {
+    color: #0061ff !important
+  }
+
+  .lg\:hover\:text-default:hover {
+    color: #C1C1C1 !important
+  }
+
   .lg\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -15039,6 +15575,14 @@ text-align: right !important
 
   .lg\:focus\:text-grey-light:focus {
     color: #dae1e7 !important
+  }
+
+  .lg\:focus\:text-info:focus {
+    color: #0061ff !important
+  }
+
+  .lg\:focus\:text-default:focus {
+    color: #C1C1C1 !important
   }
 
   .lg\:text-xs {
@@ -15603,6 +16147,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .xl\:bg-info {
+    background-color: #0061ff !important
+  }
+
+  [dir] .xl\:bg-default {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .xl\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -15623,6 +16175,14 @@ text-align: right !important
     background-color: #dae1e7 !important
   }
 
+  [dir] .xl\:hover\:bg-info:hover {
+    background-color: #0061ff !important
+  }
+
+  [dir] .xl\:hover\:bg-default:hover {
+    background-color: #C1C1C1 !important
+  }
+
   [dir] .xl\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -15641,6 +16201,14 @@ text-align: right !important
 
   [dir] .xl\:focus\:bg-grey-light:focus {
     background-color: #dae1e7 !important
+  }
+
+  [dir] .xl\:focus\:bg-info:focus {
+    background-color: #0061ff !important
+  }
+
+  [dir] .xl\:focus\:bg-default:focus {
+    background-color: #C1C1C1 !important
   }
 
   [dir] .xl\:bg-auto {
@@ -15675,6 +16243,10 @@ text-align: right !important
     border-color: #dae1e7 !important
   }
 
+  [dir] .xl\:border-info {
+    border-color: #0061ff !important
+  }
+
   [dir] .xl\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -15693,6 +16265,10 @@ text-align: right !important
 
   [dir] .xl\:hover\:border-grey-light:hover {
     border-color: #dae1e7 !important
+  }
+
+  [dir] .xl\:hover\:border-info:hover {
+    border-color: #0061ff !important
   }
 
   [dir] .xl\:border-solid {
@@ -18320,6 +18896,46 @@ padding-left: 2.2rem !important
     color: #dae1e7 !important
   }
 
+  .xl\:placeholder-info::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:placeholder-info::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:placeholder-info:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:placeholder-info::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:placeholder-info::placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:placeholder-default::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:placeholder-default::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:placeholder-default:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:placeholder-default::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:placeholder-default::placeholder {
+    color: #C1C1C1 !important
+  }
+
   .xl\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -18418,6 +19034,46 @@ padding-left: 2.2rem !important
 
   .xl\:focus\:placeholder-grey-light:focus::placeholder {
     color: #dae1e7 !important
+  }
+
+  .xl\:focus\:placeholder-info:focus::-webkit-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:focus\:placeholder-info:focus::-moz-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:focus\:placeholder-info:focus:-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:focus\:placeholder-info:focus::-ms-input-placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:focus\:placeholder-info:focus::placeholder {
+    color: #0061ff !important
+  }
+
+  .xl\:focus\:placeholder-default:focus::-webkit-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:focus\:placeholder-default:focus::-moz-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:focus\:placeholder-default:focus:-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:focus\:placeholder-default:focus::-ms-input-placeholder {
+    color: #C1C1C1 !important
+  }
+
+  .xl\:focus\:placeholder-default:focus::placeholder {
+    color: #C1C1C1 !important
   }
 
   .xl\:pointer-events-none {
@@ -18737,6 +19393,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .xl\:text-info {
+    color: #0061ff !important
+  }
+
+  .xl\:text-default {
+    color: #C1C1C1 !important
+  }
+
   .xl\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -18761,6 +19425,14 @@ text-align: right !important
     color: #dae1e7 !important
   }
 
+  .xl\:hover\:text-info:hover {
+    color: #0061ff !important
+  }
+
+  .xl\:hover\:text-default:hover {
+    color: #C1C1C1 !important
+  }
+
   .xl\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -18783,6 +19455,14 @@ text-align: right !important
 
   .xl\:focus\:text-grey-light:focus {
     color: #dae1e7 !important
+  }
+
+  .xl\:focus\:text-info:focus {
+    color: #0061ff !important
+  }
+
+  .xl\:focus\:text-default:focus {
+    color: #C1C1C1 !important
   }
 
   .xl\:text-xs {

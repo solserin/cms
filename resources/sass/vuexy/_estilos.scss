@@ -195,3 +195,47 @@
 }
 
 /*FIN DE ESTILOS DEL COMPONENTE DE VENTAS*/
+
+/*estislod del login*/
+/*[dir] .layout--full-page .bg-img {
+    background-image: url(/images/aeternus/login.jpg) !important;
+    background-color: rgba(248, 247, 216, 0.7);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}*/
+.login-template .iniciar-sesion {
+    font-size: 25px;
+    line-height: 1.14286;
+    font-family:
+        Open Sans,
+        sans-serif;
+    font-weight: 500;
+}
+
+
+#login-informacion img {
+    max-width: 340px !important;
+}
+
+#login-informacion .sistema-title {
+    font-size: 50px;
+    line-height: 60px;
+    font-weight: 500
+}
+
+
+
+
+/*fin de estilos del login*/
+
+/* estilos de videos tutoriales*/
+.tutorial {
+    padding: 5px 20px;
+    border: 1px solid rgba(var(--vs-primary), 1) !important;
+    margin: 0 auto 0 auto;
+    cursor: pointer;
+}
+
+
+/*fin de estilos de videos tutoriales*/

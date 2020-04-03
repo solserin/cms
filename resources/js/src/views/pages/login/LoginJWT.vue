@@ -2,26 +2,24 @@
   <div>
     <vs-input
       v-validate="'required|email|min:3'"
-      data-vv-validate-on="blur"
       name="email"
       icon-no-border
       icon="icon icon-user"
       icon-pack="feather"
-      label-placeholder="Email"
+      label-placeholder="Correo electrónico"
       v-model="email"
       class="w-full"
     />
     <span class="text-danger text-sm">{{ errors.first('email') }}</span>
 
     <vs-input
-      data-vv-validate-on="blur"
-      v-validate="'required|min:6|max:10'"
+      v-validate="'required|min:6|max:25'"
       type="password"
       name="password"
       icon-no-border
       icon="icon icon-lock"
       icon-pack="feather"
-      label-placeholder="Password"
+      label-placeholder="Contraseña"
       v-model="password"
       class="w-full mt-6"
       v-on:keyup.enter="loginJWT"
@@ -29,7 +27,7 @@
     <span class="text-danger text-sm">{{ errors.first('password') }}</span>
 
     <div class="flex flex-wrap justify-between my-5">
-      <vs-checkbox  v-model="checkbox_remember_me" class="mb-3 hidden">Recordarme</vs-checkbox>
+      <vs-checkbox v-model="checkbox_remember_me" class="mb-3 hidden">Recordarme</vs-checkbox>
       <router-link to="/pages/forgot-password" class="float-right">Olvidó su contraseña?</router-link>
     </div>
     <div class="flex flex-wrap justify-between mb-3">
