@@ -61,6 +61,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('localidades/{municipioId}', 'LocalidadesController@getLocalidades');
 
     //Empresa
+    Route::get('empresa/get_datos_empresa', 'EmpresaController@get_datos_empresa')->middleware('permiso:2,4');
+
+    Route::get('empresa/get_regimenes', 'EmpresaController@get_regimenes')->middleware('permiso:2,4');
+    Route::post('empresa/modificar_datos', 'EmpresaController@modificar_datos');
+
+
+
+
     Route::get('empresa/funeraria', 'EmpresaController@get')->middleware('permiso:2,4');
     Route::post('empresa/funeraria', 'EmpresaController@save')->middleware('permiso:2,2');
     Route::post('empresa/registro-publico', 'EmpresaController@saveRegistroPublico')->middleware('permiso:2,2');

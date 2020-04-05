@@ -22,6 +22,7 @@ class CreateCementeriosTable extends Migration
             $table->string('calle');
             $table->string('num_ext');
             $table->string('num_int')->nullable();
+            $table->string('email')->nullable();
             $table->string('colonia');
             $table->string('cp')->default(0)->nullable();
             $table->string('ciudad');

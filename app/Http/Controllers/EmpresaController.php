@@ -2,19 +2,172 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use App\Salas;
+use Exception;
 use App\Funeraria;
-use App\RegistroPublico;
+use App\SATMonedas;
+use App\Velatorios;
 use App\Cementerios;
 use App\Crematorios;
-use App\Velatorios;
-use App\Salas;
 use App\Facturacion;
-use App\SATMonedas;
+use App\SATRegimenes;
+use App\RegistroPublico;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class EmpresaController extends ApiController
 {
+
+
+
+
+    public function get_datos_empresa()
+    {
+        return Funeraria::with('regimen')->with('registro_publico')->with('cementerio')->get();
+    }
+
+    public function get_regimenes()
+    {
+        return SATRegimenes::get();
+    }
+
+    /**UPDATE FUNERARIA */
+    public function modificar_datos(Request $request)
+    {
+
+        //checando que tipo de modificacion es, es decir que parte de la info se va actualizar
+        if ($request->modulo == "funeraria") {
+            ///modificando funeraria
+            request()->validate(
+                [
+                    'nombre_comercial' => 'required',
+                    'razon_social' => 'required',
+                    'regimen.value' => 'required',
+                    'rfc' => 'required',
+                    'telefono' => 'required',
+                    'email' => 'required|email',
+                    'calle' => 'required',
+                    'num_ext' => 'required',
+                    'colonia' => 'required',
+                    'cp' => 'required',
+                    'zona.value' => 'required',
+                    'ciudad' => 'required',
+                    'estado' => 'required',
+                ],
+                [
+                    'required' => 'Dato requerido',
+                    'email' => 'ingrese un correo válido'
+                ]
+            );
+
+            //se actualizan datos
+            return DB::table('funeraria')->where('id', 1)->update(
+                [
+                    'nombre_comercial' => $request->nombre_comercial,
+                    'razon_social' => $request->razon_social,
+                    'sat_regimenes_id' => $request->regimen['value'],
+                    'rfc' => $request->rfc,
+                    'calle' => $request->calle,
+                    'num_ext' => $request->num_ext,
+                    'num_int' => $request->num_int,
+                    'colonia' => $request->colonia,
+                    'cp' => $request->cp,
+                    'ciudad' => $request->ciudad,
+                    'estado' => $request->estado,
+                    'zona_horaria' => $request->zona['value'],
+                    'telefono' => $request->telefono,
+                    'fax' => $request->fax,
+                    'email' => $request->email,
+                    'telefono' => $request->telefono,
+                ]
+            );
+        } else if ($request->modulo == "registro_publico") {
+            ///modificando registro publico
+            request()->validate(
+                [
+                    'rep_legal' => 'required',
+                    't_nep' => 'required',
+                    'fecha_tnep' => 'required',
+                    'fe_lic' => 'required',
+                    'num_np' => 'required',
+                    'ciudad_np' => 'required',
+                    'estado_np' => 'required',
+                    'num_rpc' => 'required',
+                    'fecha_rpc' => 'required',
+                    'ciudad_rpc' => 'required',
+                    'estado_rpc' => 'required'
+                ],
+                [
+                    'required' => 'Dato requerido',
+
+                ]
+            );
+
+            //se actualizan datos
+            return DB::table('registro_publico')->where('id', 1)->update(
+                [
+                    'rep_legal' => $request->rep_legal,
+                    't_nep' => $request->t_nep,
+                    'fecha_tnep' => $request->fecha_tnep,
+                    'fe_lic' => $request->fe_lic,
+                    'num_np' => $request->num_np,
+                    'ciudad_np' => $request->ciudad_np,
+                    'estado_np' => $request->estado_np,
+                    'num_rpc' => $request->num_rpc,
+                    'fecha_rpc' => $request->fecha_rpc,
+                    'ciudad_rpc' => $request->ciudad_rpc,
+                    'estado_rpc' => $request->estado_rpc,
+                ]
+            );
+        } else if ($request->modulo == "cementerio") {
+            ///modificando cementerio
+            request()->validate(
+                [
+                    'cementerio' => 'required',
+                    'telefono' => 'required',
+                    'email' => 'required|email',
+                    'calle' => 'required',
+                    'num_ext' => 'required',
+                    'colonia' => 'required',
+                    'cp' => 'required',
+                    'ciudad' => 'required',
+                    'estado' => 'required',
+                ],
+                [
+                    'required' => 'Dato requerido',
+                    'email' => 'ingrese un correo válido'
+                ]
+            );
+
+            //se actualizan datos
+            return DB::table('cementerios')->where('id', 1)->update(
+                [
+                    'cementerio' => $request->cementerio,
+                    'calle' => $request->calle,
+                    'num_ext' => $request->num_ext,
+                    'num_int' => $request->num_int,
+                    'colonia' => $request->colonia,
+                    'cp' => $request->cp,
+                    'ciudad' => $request->ciudad,
+                    'estado' => $request->estado,
+                    'telefono' => $request->telefono,
+                    'fax' => $request->fax,
+                    'email' => $request->email,
+                    'telefono' => $request->telefono,
+                ]
+            );
+        }
+    }
+
+
+
+
+
+
+
+
+    /**de aqui para abajo son cambios que tenia andres */
 
     public function save(Request $request)
     {
@@ -221,12 +374,19 @@ class EmpresaController extends ApiController
 
         $path = $request->certificate->path();
         $data = getCertificateData($path);
+
+
+
+
         $serialArray = str_split($data['serialNumberHex']);
         //To validate serial number
         $finalCert = "";
         for ($x = 0; $x < count($serialArray); $x++) {
             $finalCert .= ($x % 2 != 0) ? $serialArray[$x] : "";
         }
+
+
+
 
         if (!$finalCert or strlen($finalCert) != 20) {
             return $this->errorResponse(['message' => 'El numero de certificado no es valido'], 412);
@@ -242,7 +402,14 @@ class EmpresaController extends ApiController
             return $this->errorResponse(['message' => 'El certificado no es valido'], 412);
         }
 
-        return response()->json(['certificate' => ''], 200);
+        //hasta aqui ek certificado es valido y se puede proceder
+        //se retornan las fechas para mostrar en el frontend
+        $fecha_validez = [
+            'fecha_validez' => fecha_no_day(date_format($validTo, 'Y-m-d H:i:s'))
+        ];
+
+
+        return $this->successResponse($fecha_validez, 200);
     }
 
     public function validateKEYFile(Request $request)

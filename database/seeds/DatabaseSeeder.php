@@ -23,8 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(FunerariaSeeder::class);
         $this->call(CementerioSeeder::class);
         $this->call(FacturacionSeeder::class);
-        $this->call(VelatoriosSeeder::class);
-        $this->call(SalasSeeder::class);
         $this->call(RegistroPublicoSeeder::class);
         /**fin de sedders de empresa */
 

@@ -98,14 +98,15 @@ const router = new Router({
                 {
                     path: '/configuracion/empresa',
                     name: 'Informacion de empresa',
-                    component: () => import('@/views/pages/empresa/Empresa.vue'),
+                    component: () => import('@/views/pages/empresa/configuracion/empresa.vue'),
+                    //component: () => import('@/views/pages/empresa/Empresa.vue'),
                     meta: {
                         breadcrumb: [{
                                 title: 'Home',
                                 url: '/'
                             },
                             {
-                                title: 'Empresa',
+                                title: 'Configuración',
                                 active: true
                             },
                         ],
@@ -180,6 +181,85 @@ const router = new Router({
                         rule: 'editor'
                     },
                 },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 {
                     path: '/inventarios/funeraria/articulos-servicios',
                     name: 'inventarioFuneraria',

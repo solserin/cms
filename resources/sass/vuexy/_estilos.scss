@@ -164,11 +164,11 @@
 
 /*tarifas card*/
 .card-tarifas .vs-card--header {
-    background-color: rgba(var(--vs-default_color), 1) !important;
+    background-color: rgba(var(--vs-primary), 1) !important;
 }
 
 .card-tarifas .vs-card--header h3 {
-    color: rgba(var(--vs-textos_theme), 1) !important;
+    color: #fff !important;
     font-size: 14px;
     text-transform: capitalize;
     font-weight: 600 !important;
@@ -239,3 +239,26 @@
 
 
 /*fin de estilos de videos tutoriales*/
+
+/* buttons*/
+
+
+.vs-card--content {
+    font-size: 1rem !important;
+}
+
+
+.firma-digital .con-input-upload {
+    margin: 0 auto 0 auto !important;
+    float: none !important;
+}
+
+
+.firma-digital .con-img-upload .img-upload {
+    margin: 0 auto 0 auto !important;
+    float: none !important;
+}
+
+
+
+/*fin de buttons*/
