@@ -234,6 +234,24 @@
 
 /*fin de estilos de videos tutoriales*/
 
+/* buttons*/
+
+.vs-card--content {
+  font-size: 1rem !important;
+}
+
+[dir] .firma-digital .con-input-upload {
+  margin: 0 auto 0 auto !important;
+  float: none !important;
+}
+
+[dir] .firma-digital .con-img-upload .img-upload {
+  margin: 0 auto 0 auto !important;
+  float: none !important;
+}
+
+/*fin de buttons*/
+
 /*=========================================================================================
   File Name: main.scss
   Description: Main scss file. Imports other scss partials from 'vuexy' folder

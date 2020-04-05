@@ -8,7 +8,15 @@ class Velatorios extends Model
 {
     protected $table = 'velatorios';
 
-    public function localidad() {
+
+
+
+
+
+
+    /**de aqui abajo son cambios de andres */
+    public function localidad()
+    {
         return $this->hasOne('App\Localidades', 'id', 'localidades_id');
     }
 }

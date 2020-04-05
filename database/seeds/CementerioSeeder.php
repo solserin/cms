@@ -25,6 +25,7 @@ class CementerioSeeder extends Seeder
                 'estado' => 'Sinaloa',
                 'telefono' => '(669) 983 15 77',
                 'fax' => '(669) 983 15 88',
+                'email' => 'administracion@aeternus.com.mx',
                 'funeraria_id' => '1', //funeraria 1
             ]
         );
