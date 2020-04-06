@@ -275,7 +275,7 @@
               <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
                 <p class="text-sm">
                   <span class="text-danger font-medium">Ojo:</span>
-                  Desde este apartado puedes modificar la informacion que aparece en los formatos y reportes de la empresa. Presta atención a los datos que pueden causr conflictos fiscales ya que son tomados en cuenta a la hora de facturar.
+                  Desde aquí se puede modificar la informacion necesaria para los formatos y reportes del área de cementerios.
                 </p>
               </div>
               <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">

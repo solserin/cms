@@ -146,7 +146,7 @@
               <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
                 <p class="text-sm">
                   <span class="text-danger font-medium">Ojo:</span>
-                  Desde este apartado puedes modificar la informacion que aparece en los formatos y reportes de la empresa. Presta atención a los datos que pueden causr conflictos fiscales ya que son tomados en cuenta a la hora de facturar.
+                  Aquí puedes modificar la información necesaria para poder emitir facturas electrónicas.
                 </p>
               </div>
               <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
@@ -256,8 +256,11 @@ export default {
   methods: {
     mostrarDatos() {
       //lleno los datos mandados del parent
-      this.form.password = "nochanges";
-      this.form.passwordRepetir = "nochanges";
+      if (this.getDatos.facturacion["cerfile"] !== null) {
+        this.form.password = "nochanges";
+        this.form.passwordRepetir = "nochanges";
+      }
+
       this.form.cerPath = this.getDatos.facturacion["cerfile"];
       this.form.keyPath = this.getDatos.facturacion["keyfile"];
     },
