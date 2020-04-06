@@ -38,10 +38,39 @@ export default {
     },
 
     //modificar funeraria
-    modificarInformacion(datos) {
+
+    modificarInformacion(datos, modulo) {
         let call = "/empresa/modificar_datos"
         return new Promise((resolve, reject) => {
-            axios.post(call, datos)
+            if (modulo == 'facturacion') {
+                axios.post(call, datos, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then((response) => {
+                        resolve(response)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            } else {
+                axios.post(call, datos)
+                    .then((response) => {
+                        resolve(response)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            }
+        })
+    },
+
+    //get Facturacion
+    get_facturacion() {
+        let call = "/empresa/get_facturacion"
+        return new Promise((resolve, reject) => {
+            axios.get(call)
                 .then((response) => {
                     resolve(response)
                 })
@@ -50,6 +79,7 @@ export default {
                 })
         })
     },
+
 
 
 
