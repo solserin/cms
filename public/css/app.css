@@ -204,23 +204,6 @@
     background-size: cover;
 }*/
 
-.login-template .iniciar-sesion {
-  font-size: 25px;
-  line-height: 1.14286;
-  font-family: Open Sans, sans-serif;
-  font-weight: 500;
-}
-
-#login-informacion img {
-  max-width: 340px !important;
-}
-
-#login-informacion .sistema-title {
-  font-size: 50px;
-  line-height: 60px;
-  font-weight: 500;
-}
-
 /*fin de estilos del login*/
 
 /* estilos de videos tutoriales*/
@@ -251,6 +234,65 @@
 }
 
 /*fin de buttons*/
+
+[dir] .layout--full-page .bg-img {
+  background: url(/images/aeternus/login.jpg) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.layer {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999 !important;
+}
+
+[dir] .layer {
+  background-color: rgba(190, 140, 14, 0.3);
+}
+
+[dir=ltr] .layer {
+  left: 0;
+}
+
+[dir=rtl] .layer {
+  right: 0;
+}
+
+.login-form {
+  z-index: 1000 !important;
+}
+
+[dir] .login-form {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.login-img {
+  max-width: 295px !important;
+}
+
+.iniciar-sesion {
+  font-size: 25px;
+  line-height: 1.14286;
+  font-weight: 500;
+}
+
+.sistema-descripcion {
+  line-height: 22px;
+}
+
+.sistema-title {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+[dir] .sistema-title {
+  text-align: center !important;
+}
 
 /*=========================================================================================
   File Name: main.scss
