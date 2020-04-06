@@ -14,17 +14,16 @@ use App\SATRegimenes;
 use App\RegistroPublico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends ApiController
 {
 
-
-
-
     public function get_datos_empresa()
     {
-        return Funeraria::with('regimen')->with('registro_publico')->with('cementerio')->get();
+        return Funeraria::with('regimen')->with('registro_publico')->with('cementerio')->with(array('facturacion' => function ($query) {
+            $query->select('id', 'funeraria_id', 'fecha_solicitud', 'fecha_vencimiento', 'cerfile', 'keyfile');
+        }))->get();
     }
 
     public function get_regimenes()
@@ -159,6 +158,106 @@ class EmpresaController extends ApiController
                     'fax' => $request->fax,
                     'email' => $request->email,
                     'telefono' => $request->telefono,
+                ]
+            );
+        } else if ($request->modulo == "facturacion") {
+            ///modificando facturacion
+            request()->validate(
+                [
+                    'password' => 'required|same:passwordRepetir',
+                    'passwordRepetir' => 'required|same:password',
+                ],
+                [
+                    'required' => 'Dato requerido',
+                    'same' => 'Las contraseñas no coinciden'
+                ]
+            );
+
+            //////datos del certificado
+
+            $fecha_solicitud = '';
+            $fecha_vencimiento = '';
+            $certificateFileName = '';
+            $keyFileName = '';
+            if ($request->certificateFile !== 'null') {
+                $extension = $request->certificateFile->getClientOriginalExtension();
+                if ($extension !== 'cer') {
+                    return $this->errorResponse(['message' => 'El archivo no es un certificado'], 412);
+                }
+
+                $path = $request->certificateFile->path();
+                $data = getCertificateData($path);
+
+
+
+
+                $serialArray = str_split($data['serialNumberHex']);
+                //To validate serial number
+                $finalCert = "";
+                for ($x = 0; $x < count($serialArray); $x++) {
+                    $finalCert .= ($x % 2 != 0) ? $serialArray[$x] : "";
+                }
+
+
+
+
+                if (!$finalCert or strlen($finalCert) != 20) {
+                    return $this->errorResponse(['message' => 'El numero de certificado no es valido'], 412);
+                }
+
+                //Validates if certificate is valid
+                $validFrom = new \DateTime();
+                $validFrom->setTimestamp($data['validFrom_time_t']);
+                $validTo = new \DateTime();
+                $validTo->setTimestamp($data['validTo_time_t']);
+                $today = new \DateTime();
+                if (!($today >= $validFrom) and ($today <= $validTo)) {
+                    return $this->errorResponse(['message' => 'El certificado no es valido'], 412);
+                }
+
+                //hasta aqui ek certificado es valido y se puede proceder
+                $fecha_solicitud = date_format($validFrom, 'Y-m-d H:i:s');
+                $fecha_vencimiento = date_format($validTo, 'Y-m-d H:i:s');
+
+
+
+                //validando el .key
+
+                $extension = $request->keyFile->getClientOriginalExtension();
+                if ($extension !== 'key') {
+                    return $this->errorResponse(['message' => 'El archivo no es un archivo key'], 412);
+                }
+
+                //borro los certificados anteriores
+                Storage::deleteDirectory('cer');
+                //fin de borrado de certificados anteriores
+                //borro el key anterio
+                Storage::deleteDirectory('key');
+                //fin de borradoel key anterio
+
+                $time_created = date('YmdHis');
+                $certificateFileName = 'certificate_' . $time_created . "." . $request->certificateFile->getClientOriginalExtension();
+                $request->certificateFile->storeAs('cer', $certificateFileName);
+                $keyFileName = 'key_' . $time_created . "." . $request->keyFile->getClientOriginalExtension();
+                $request->keyFile->storeAs('key', $keyFileName);
+                //fin de datos del certificado
+            }
+
+            //se actualizan datos
+
+            $facturacion = Facturacion::get()->first();
+
+
+
+
+            //con cambio de contraseñas
+            return DB::table('facturacion')->where('id', 1)->update(
+                [
+                    'keyFile' => $request->keyFile === 'null' ? $facturacion->keyFile : $keyFileName,
+                    'cerFile' => $request->certificateFile === 'null' ? $facturacion->cerFile : $certificateFileName,
+                    'password' => $request->password === 'nochanges' ? $facturacion->password : $request->password,
+                    'fecha_solicitud' => $fecha_solicitud === '' ? $facturacion->fecha_solicitud : $fecha_solicitud,
+                    'fecha_vencimiento' => $fecha_vencimiento === '' ? $facturacion->fecha_vencimiento : $fecha_vencimiento,
                 ]
             );
         }
@@ -474,17 +573,7 @@ class EmpresaController extends ApiController
         return response()->json(['key' => ''], 200);
     }
 
-    public function getFacturacion()
-    {
-        $facturacion = Facturacion::get()->first();
-        if (!$facturacion) {
-            return $this->errorResponse('Facturacion not found', 404);
-        }
 
-        $moneda = SATMonedas::find($facturacion->sat_monedas_id);
-        $facturacion->moneda = $moneda;
-        return response()->json($facturacion, 200);
-    }
 
 
 

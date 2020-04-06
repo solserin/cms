@@ -27,6 +27,11 @@ class Funeraria extends Model
         return $this->belongsTo('App\Cementerio', 'id', 'funeraria_id');
     }
 
+    public function facturacion()
+    {
+        return $this->belongsTo('App\Facturacion', 'id', 'funeraria_id');
+    }
+
 
     /**de aqui abajo son cambios de andres */
     public function localidad()

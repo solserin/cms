@@ -13,15 +13,21 @@
                   <feather-icon icon="EditIcon" class="mr-2" svgClasses="w-5 h-5" />Firma Electrónica
                 </h3>
               </div>
-              <div class="w-full px-2 text-center">
+              <div class="w-full mt-5 px-2 text-center">
                 <span
                   v-if="this.certificado_llave_capturados"
+                  class="pr-3 pl-3 text-white bg-success uppercase"
+                >el sistema ya tiene registrado una firma electrónica, si desea actualizar los archivos súbalos por favor.</span>
+              </div>
+              <div class="w-full mt-5 px-2 text-center">
+                <span
+                  v-if="this.certificado_llave_validos"
                   class="pr-3 pl-3 text-white bg-danger"
-                >Seleccione cetificado digital (.cer) y llave privada (.key)</span>
+                >Seleccione certificado digital (.cer) y llave privada (.key) que desea actualizar</span>
                 <span
                   v-else
                   class="pr-3 pl-3 text-white bg-success uppercase"
-                >FIEL válida hasta: {{form.fecha_validez}}</span>
+                >Certificado (.cer) válido hasta {{fecha_validez}}</span>
               </div>
               <div class="w-full my-10">
                 <div class="flex flex-wrap firma-digital">
@@ -78,15 +84,6 @@
                       @on-error="errorKey"
                       @on-delete="clearKey"
                     />
-                    <div>
-                      <span class="text-danger text-sm">{{ errors.first('nombre_comercial') }}</span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger text-sm"
-                        v-if="this.errores.nombre_comercial"
-                      >{{errores.nombre_comercial[0]}}</span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -96,7 +93,7 @@
                   <span class="text-danger text-sm">(*)</span>
                 </label>
                 <vs-input
-                  name="nombre_comercial"
+                  name="password"
                   data-vv-as=" "
                   v-validate="'required'"
                   maxlength="35"
@@ -172,6 +169,7 @@
 <script>
 import vSelect from "vue-select";
 import empresa from "@services/empresa";
+import { tr } from "date-fns/locale";
 export default {
   components: {
     "v-select": vSelect
@@ -195,11 +193,27 @@ export default {
   },
   computed: {
     certificado_llave_capturados: function() {
+      if (this.form.cerPath != null && this.form.keyPath != null) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    certificado_llave_validos: function() {
       if (this.form.certificateFile != null && this.form.keyFile != null) {
         return false;
       } else {
         return true;
       }
+    },
+    //decide si es posbile mandar el form  para actualizar
+    validar_certificado_actualizar: function() {
+      if (!this.certificado_llave_capturados) {
+        if (!this.certificado_llave_validos) {
+          return true;
+        } else return false;
+      } else return true;
     },
     getDatos: {
       get() {
@@ -223,15 +237,17 @@ export default {
       requestHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken")
       },
-
+      keyError: false,
       certificateError: false,
+      fecha_validez: "",
       form: {
+        cerPath: "",
+        keyPath: "",
         modulo: "facturacion",
         password: "",
         passwordRepetir: "",
         cer: "",
         key: "",
-        fecha_validez: "",
         certificateFile: null,
         keyFile: null
       }
@@ -239,8 +255,11 @@ export default {
   },
   methods: {
     mostrarDatos() {
-      //lleno los datos mandados dle parent
-      //this.form.nombre_comercial = this.getDatos.nombre_comercial;
+      //lleno los datos mandados del parent
+      this.form.password = "nochanges";
+      this.form.passwordRepetir = "nochanges";
+      this.form.cerPath = this.getDatos.facturacion["cerfile"];
+      this.form.keyPath = this.getDatos.facturacion["keyfile"];
     },
 
     mandarModificar() {
@@ -259,7 +278,25 @@ export default {
             return;
           } else {
             //se manda el emit al parent para guardar datps
-            this.$emit("actualizar", this.form);
+            if (!this.validar_certificado_actualizar) {
+              this.$vs.notify({
+                title: "Actualizar Datos",
+                text: "Error, capture certificado y llave privada.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 4000
+              });
+              return;
+            }
+            let formData = new FormData();
+            formData.append("modulo", this.form.modulo);
+            formData.append("certificateFile", this.form.certificateFile);
+            formData.append("keyFile", this.form.keyFile);
+            formData.append("password", this.form.password);
+            formData.append("passwordRepetir", this.form.passwordRepetir);
+
+            this.$emit("actualizar", formData);
           }
         })
         .catch(() => {});
@@ -268,11 +305,10 @@ export default {
     successCertificate(event) {
       //obteniendo las fechas de valiz del certificado
       let res = JSON.parse(event.target.response);
-
-      this.form.fecha_validez = res.fecha_validez;
       this.form.certificateFile = this.$refs.uploadCer.filesx[
         this.$refs.uploadCer.filesx.length - 1
       ];
+      this.fecha_validez = res.fecha_validez;
       this.certificateError = false;
     },
     errorCertificate(event) {
@@ -290,18 +326,28 @@ export default {
     },
     clearCertificate() {
       this.form.certificateFile = null;
-      this.form.fecha_validez = "";
     },
 
     successKey(event) {
       let res = JSON.parse(event.target.response);
-
       this.form.keyFile = this.$refs.uploadKey.filesx[
         this.$refs.uploadKey.filesx.length - 1
       ];
       this.certificateError = false;
     },
-    errorKey(event) {},
+    errorKey(event) {
+      this.$refs.uploadKey.srcs[
+        this.$refs.uploadKey.srcs.length - 1
+      ].error = true;
+      let data = JSON.parse(event.target.response);
+      this.$vs.notify({
+        position: "top-center",
+        color: "danger",
+        title: "Firma Electrónica",
+        text: data.error.message
+      });
+      this.clearKey();
+    },
     clearKey() {
       this.form.keyFile = null;
     }

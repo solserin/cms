@@ -4,6 +4,7 @@
       <vs-tab label="FUNERARIA" icon="supervisor_account" class="pb-5"></vs-tab>
       <vs-tab label="REGISTRO PÚBLICO" icon="fingerprint"></vs-tab>
       <vs-tab label="CEMENTERIO" icon="fingerprint"></vs-tab>
+      <vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>
       <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
@@ -22,9 +23,8 @@
     </div>
 
     <div class="tab-content mt-1" v-show="activeTab==3">
-      <Facturacion :datos="datosEmpresa" :erroresForm="erroresCementerio" @actualizar="actualizar"></Facturacion>
+      <Facturacion :datos="datosEmpresa" :erroresForm="erroresFacturacion" @actualizar="actualizar"></Facturacion>
     </div>
-
     <Password
       :show="operConfirmar"
       :callback-on-success="callback"
@@ -77,11 +77,13 @@ export default {
       erroresFuneraria: {},
       erroresRegistroPublico: {},
       erroresCementerio: {},
+      erroresFacturacion: {},
       //fin de errores por modulo
       activeTab: 0,
       ver: true,
       //los datos mandado del children por el emit
-      datos_para_actualizar: []
+      datos_para_actualizar: [],
+      modulo: ""
     };
   },
   methods: {
@@ -111,10 +113,17 @@ export default {
       //aqui mando guardar los datos
       if (this.datos_para_actualizar.modulo == "funeraria") {
         this.erroresFuneraria = {};
+        this.modulo = "funeraria";
       } else if (this.datos_para_actualizar.modulo == "registro_publico") {
         this.erroresRegistroPublico = {};
+        this.modulo = "registro_publico";
       } else if (this.datos_para_actualizar.modulo == "cementerio") {
         this.erroresCementerio = {};
+        this.modulo = "cementerio";
+      } else {
+        //facturacion
+        this.erroresFacturacion = {};
+        this.modulo = "facturacion";
       }
 
       this.modificarInformacion();
@@ -123,8 +132,9 @@ export default {
     modificarInformacion() {
       this.$vs.loading();
       empresa
-        .modificarInformacion(this.datos_para_actualizar)
+        .modificarInformacion(this.datos_para_actualizar, this.modulo)
         .then(res => {
+          console.log(res.data);
           if (res.data >= 0) {
             //success
             this.$vs.notify({
@@ -151,6 +161,7 @@ export default {
         .catch(err => {
           if (err.response) {
             //console.log(err.response);
+            console.log(err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -164,6 +175,7 @@ export default {
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
+              console.log(err.response);
               if (this.datos_para_actualizar.modulo == "funeraria") {
                 this.erroresFuneraria = err.response.data.error;
               } else if (
@@ -172,6 +184,9 @@ export default {
                 this.erroresRegistroPublico = err.response.data.error;
               } else if (this.datos_para_actualizar.modulo == "cementerio") {
                 this.erroresCementerio = err.response.data.error;
+              } else {
+                //facturacion
+                this.erroresFacturacion = err.response.data.error;
               }
             }
           }

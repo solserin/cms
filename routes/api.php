@@ -86,7 +86,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('empresa/facturacion/validateCER', 'EmpresaController@validateCERFile');
     Route::post('empresa/facturacion/validateKEY', 'EmpresaController@validateKEYFile');
     Route::post('empresa/facturacion', 'EmpresaController@saveFacturacion')->middleware('permiso:2,2');
-    Route::get('empresa/facturacion', 'EmpresaController@getFacturacion')->middleware('permiso:2,4');
 
     ///SAT
     Route::get('regimenes/', 'SATRegimenesController@getAll');
