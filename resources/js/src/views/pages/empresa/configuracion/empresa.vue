@@ -150,6 +150,7 @@ export default {
         })
         .catch(err => {
           if (err.response) {
+            //console.log(err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -163,8 +164,6 @@ export default {
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
-              console.log(err.response);
-
               if (this.datos_para_actualizar.modulo == "funeraria") {
                 this.erroresFuneraria = err.response.data.error;
               } else if (

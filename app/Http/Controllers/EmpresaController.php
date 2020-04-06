@@ -104,18 +104,22 @@ class EmpresaController extends ApiController
                 ]
             );
 
+
+
+            //return date('Y-m-d', strtotime($request->fecha_tnep));
+
             //se actualizan datos
             return DB::table('registro_publico')->where('id', 1)->update(
                 [
                     'rep_legal' => $request->rep_legal,
                     't_nep' => $request->t_nep,
-                    'fecha_tnep' => $request->fecha_tnep,
+                    'fecha_tnep' => date('Y-m-d', strtotime($request->fecha_tnep)),
                     'fe_lic' => $request->fe_lic,
                     'num_np' => $request->num_np,
                     'ciudad_np' => $request->ciudad_np,
                     'estado_np' => $request->estado_np,
                     'num_rpc' => $request->num_rpc,
-                    'fecha_rpc' => $request->fecha_rpc,
+                    'fecha_rpc' => date('Y-m-d', strtotime($request->fecha_rpc)),
                     'ciudad_rpc' => $request->ciudad_rpc,
                     'estado_rpc' => $request->estado_rpc,
                 ]

@@ -340,6 +340,7 @@ import vSelect from "vue-select";
 import empresa from "@services/empresa";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
+import { parse } from "date-fns";
 export default {
   components: {
     "v-select": vSelect,
@@ -410,13 +411,23 @@ export default {
       //lleno los datos mandados dle parent
       this.form.rep_legal = this.getDatos.registro_publico.rep_legal;
       this.form.t_nep = this.getDatos.registro_publico.t_nep;
-      this.form.fecha_tnep = this.getDatos.registro_publico.fecha_tnep;
+      this.form.fecha_tnep = parse(
+        this.getDatos.registro_publico.fecha_tnep,
+        "yyyy-MM-dd",
+        new Date()
+      );
+
       this.form.fe_lic = this.getDatos.registro_publico.fe_lic;
       this.form.num_np = this.getDatos.registro_publico.num_np;
       this.form.ciudad_np = this.getDatos.registro_publico.ciudad_np;
       this.form.estado_np = this.getDatos.registro_publico.estado_np;
       this.form.num_rpc = this.getDatos.registro_publico.num_rpc;
-      this.form.fecha_rpc = this.getDatos.registro_publico.fecha_rpc;
+      this.form.fecha_rpc = parse(
+        this.getDatos.registro_publico.fecha_rpc,
+        "yyyy-MM-dd",
+        new Date()
+      );
+
       this.form.ciudad_rpc = this.getDatos.registro_publico.ciudad_rpc;
       this.form.estado_rpc = this.getDatos.registro_publico.estado_rpc;
     },
