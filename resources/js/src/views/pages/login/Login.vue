@@ -88,7 +88,7 @@
                       </div>
 
                       <div class="flex flex-wrap justify-between py-10">
-                        <a href="#" target="_blank" class="tutorial text-base">
+                        <a href="#" target="_blank" class="tutorial text-base hidden">
                           <feather-icon icon="PlayIcon" class="mr-2" svgClasses="w-5 h-5" />
                           <span class="mt-2 text-black">Ver guía de usuario "Inicio de Sesión"</span>
                         </a>
