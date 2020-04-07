@@ -76,6 +76,7 @@ export default {
       usuarios
         .get_pdf(this.pdfLink)
         .then(res => {
+          console.log(res);
           this.ver = true;
           this.$vs.loading.close();
           const file = new Blob([res.data], { type: "application/pdf" });
@@ -88,6 +89,7 @@ export default {
           };*/
         })
         .catch(err => {
+          console.log(err.response);
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {

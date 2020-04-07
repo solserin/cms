@@ -95,7 +95,7 @@
               {{strtolower($empresa->calle)}} Núm. Ext {{$empresa->num_ext}} , Col. {{strtolower($empresa->colonia)}}.
             </p>
             <p class="datos">
-              {{$empresa->localidad['nombre']}}  {{$empresa->localidad['municipio']->estado['abrev']}} Tel. {{$empresa->telefono}}. <br>
+              {{$empresa->ciudad}}  {{$empresa->estado}} Tel. {{$empresa->telefono}}. <br>
             </p>
              <p class="datos">
              Impresión, {{fechahora_completa()}}.

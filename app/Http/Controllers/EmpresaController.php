@@ -580,7 +580,7 @@ class EmpresaController extends ApiController
     /**obtengo los datos de la empresa para crear los header de los reportes */
     public function get_empresa_data()
     {
-        $funeraria = Funeraria::with('regimen')->with('localidad')->with('localidad.municipio')->with('localidad.municipio.estado')->get()->first();
+        $funeraria = Funeraria::with('regimen')->get()->first();
         return $funeraria;
     }
 }
