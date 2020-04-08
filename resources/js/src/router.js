@@ -1548,19 +1548,20 @@ const router = new Router({
                     name: 'page-profile',
                     component: () => import('@/views/pages/Profile.vue'),
                     meta: {
+                        authRequired: true,
                         breadcrumb: [{
                                 title: 'Home',
                                 url: '/'
                             },
                             {
-                                title: 'Pages'
+                                title: 'Usuario'
                             },
                             {
-                                title: 'Profile',
+                                title: 'Cambiar mi Perfíl',
                                 active: true
                             },
                         ],
-                        pageTitle: 'Profile',
+                        pageTitle: 'Perfíl',
                         rule: 'editor'
                     },
                 },

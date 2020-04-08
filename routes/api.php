@@ -42,6 +42,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('delete_usuario', 'Usuarios\UsuariosController@delete_usuario')->middleware('permiso:1,3');
     Route::post('activate_usuario', 'Usuarios\UsuariosController@activate_usuario')->middleware('permiso:1,3');
     Route::get('usuarios_pdfs', 'Usuarios\UsuariosController@pdfs')->middleware('permiso:1,4');
+    Route::post('/usuarios/actualizar_perfil', 'Usuarios\UsuariosController@actualizar_perfil');
 
     /**verificar el password del usuario recibe el request del token y el password */
     Route::post('verificar_password', 'Usuarios\UsuariosController@verificar_password');

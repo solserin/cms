@@ -298,7 +298,6 @@ export default {
             formData.append("keyFile", this.form.keyFile);
             formData.append("password", this.form.password);
             formData.append("passwordRepetir", this.form.passwordRepetir);
-
             this.$emit("actualizar", formData);
           }
         })

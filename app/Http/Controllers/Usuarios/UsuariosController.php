@@ -246,7 +246,22 @@ class UsuariosController extends ApiController
         if ($request->user()) {
             /**RECIBIMOS COMO PARAMETRO EL TOKEN PARA OBTENER LOS PERMISOS DEL USUARIO*/
             $resultado = DB::table('usuarios')
-                ->select('usuarios.id as user_id', 'roles_id', 'rol', 'descripcion', 'nombre', 'email', 'imagen', 'usuarios.status as user_status')
+                ->select(
+                    'usuarios.id as user_id',
+                    'telefono',
+                    'celular',
+                    'roles_id',
+                    'rol',
+                    'descripcion',
+                    'nombre',
+                    'email',
+                    'imagen',
+                    'usuarios.status as user_status',
+                    DB::raw('(CASE 
+                        WHEN usuarios.genero = "1" THEN "Hombre"
+                        ELSE "Mujer" 
+                        END) AS genero_des')
+                )
                 ->join('roles', 'usuarios.roles_id', '=', 'roles.id')
                 ->where('usuarios.id', '=', $request->user()->id)
                 ->get();
@@ -433,6 +448,36 @@ class UsuariosController extends ApiController
                 ]
             );
         }
+    }
+
+
+
+
+
+    //se actualiza el perfil de cada usuario desde perfil vue
+    public function actualizar_perfil(Request $request)
+    {
+        $id_usuario = $request->user()->id;
+        $usuario = User::where('id', $id_usuario)->get()->first();
+
+        request()->validate(
+            [
+                'password' => 'same:repetirPassword',
+                'repetirPassword' => 'same:password',
+            ],
+            [
+                'same' => 'Las contraseñas no coinciden.',
+            ]
+        );
+        //cambios de datos
+
+        return DB::table('usuarios')->where('id', $id_usuario)->update(
+            [
+                'password' => trim($request->password) === '' ? $usuario->password : Hash::make($request->password),
+                'imagen' => trim($request->imagen) === '' ? $usuario->imagen : $request->imagen,
+                'updated_at' => now(),
+            ]
+        );
     }
 
 

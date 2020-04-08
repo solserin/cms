@@ -70,7 +70,7 @@
 
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="logout"
+            @click="openConfirmarSinPassword=true"
           >
             <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Salir</span>
@@ -78,15 +78,27 @@
         </ul>
       </vs-dropdown-menu>
     </vs-dropdown>
+    <Confirmar
+      :show="openConfirmarSinPassword"
+      :callback-on-success="logout"
+      @closeVerificar="openConfirmarSinPassword=false"
+      :accion="'Esta operación lo sacará de sistema.'"
+      :confirmarButton="'Confirmar y salir'"
+    ></Confirmar>
   </div>
 </template>
 
 <script>
+import Confirmar from "../../../../views/pages/Confirmar";
 export default {
   data() {
     return {
-      activeUserInfo: {}
+      activeUserInfo: {},
+      openConfirmarSinPassword: false
     };
+  },
+  components: {
+    Confirmar
   },
   methods: {
     logout() {

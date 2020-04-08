@@ -227,4 +227,17 @@ export default {
                 })
         })
     },
+
+    //update perfil personal
+    actualizar_perfil(param) {
+        return new Promise((resolve, reject) => {
+            axios.post('/usuarios/actualizar_perfil', param)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
 }

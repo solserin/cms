@@ -28,7 +28,13 @@
         <div class="header-sidebar flex items-end justify-between" slot="header">
           <!-- Logo -->
           <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/">
-            <logo class="w-10 mr-4 fill-current text-primary" />
+            <template v-if="!verticalNavMenuItemsMin">
+              <img src="@assets/images/logo/aeternus.jpg" width="190" />
+            </template>
+            <template v-else>
+              <img src="@assets/images/logo/icono.png" width="35" />
+            </template>
+
             <span
               class="vx-logo-text text-primary"
               v-show="isMouseEnter || !reduce"
@@ -50,15 +56,13 @@
 
             <!-- Toggle Buttons -->
             <template v-else-if="!showCloseButton && !verticalNavMenuItemsMin">
-              <!--
-                removido el 02 de abril del 2020
-                <feather-icon
+              <feather-icon
                 id="btnVNavMenuMinToggler"
                 class="mr-0 cursor-pointer"
                 :icon="reduce ? 'CircleIcon' : 'DiscIcon'"
                 svg-classes="stroke-current text-primary"
                 @click="toggleReduce(!reduce)"
-              />-->
+              />
             </template>
           </div>
           <!-- /Menu Toggle Buttons -->
