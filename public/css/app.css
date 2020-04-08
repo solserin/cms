@@ -270,6 +270,10 @@
   background-color: rgba(255, 255, 255, 0.8) !important;
 }
 
+.zindex1000 {
+  z-index: 1000 !important;
+}
+
 .login-img {
   max-width: 295px !important;
 }

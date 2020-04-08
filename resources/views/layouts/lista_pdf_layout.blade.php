@@ -82,7 +82,7 @@
       <table>
         <tr>
           <td style="width:40%;">
-          <img src="{{public_path(env('logojpg'))}}" alt="" class="logo">
+          <img src="{{public_path(env('LOGOJPG'))}}" alt="" class="logo">
           </td>
           <td style="width:60%;">
             <h1>
