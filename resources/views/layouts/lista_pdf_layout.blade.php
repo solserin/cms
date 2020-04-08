@@ -23,7 +23,7 @@
     }
 
     #header section table, #header section table th, #header section table td {
-      border-bottom: 1px solid #{{env('maincolor')}};
+      border-bottom: 1px solid #{{env('MAINCOLOR')}};
     }
 
      #header section table td {
@@ -39,7 +39,7 @@
       line-height: .8em !important;
       text-transform: uppercase;
       text-align: right;
-      color:  #{{env('maincolor')}};
+      color:  #{{env('MAINCOLOR')}};
     }
 
     .datos{
@@ -57,7 +57,7 @@
     .data table thead tr th{
       font-size: .9em;
       text-align: center;
-      color:  #{{env('maincolor')}};
+      color:  #{{env('MAINCOLOR')}};
     }
 
     .data table tr td{
