@@ -134,7 +134,7 @@ class UsuariosController extends ApiController
         //DICHO TOEKN
         if ($request->user()) {
             $resultado = DB::table('usuarios')
-                ->select('seccion', 'secciones_id', 'url', 'parent_modulo_id', 'modulo', 'modulos.id as modulo_id', 'secciones.icon as iconseccion', 'modulos.icon as moduloicon')
+                ->select('secciones.id', 'seccion', 'secciones_id', 'url', 'parent_modulo_id', 'modulo', 'modulos.id as modulo_id', 'secciones.icon as iconseccion', 'modulos.icon as moduloicon')
                 ->join('roles', 'usuarios.roles_id', '=', 'roles.id')
                 ->join('modulos_roles_permisos', 'modulos_roles_permisos.roles_id', '=', 'roles.id')
                 ->join('modulos', 'modulos_roles_permisos.modulos_id', '=', 'modulos.id')
