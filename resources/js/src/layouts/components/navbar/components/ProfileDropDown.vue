@@ -113,7 +113,15 @@ export default {
       });
     } else {
       this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
+      if (!this.activeUserInfo.user_id) {
+        this.$store.dispatch("auth/user_datos").then(resp => {
+          this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
+        });
+      }
     }
+  },
+  created() {
+    this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
   }
 };
 </script>

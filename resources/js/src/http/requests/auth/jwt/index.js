@@ -47,6 +47,7 @@ export default {
                             /**ACTUALIZO EL LOCAL STORAGE CON LOS NUEVO VALORES DEL TOKEN Y EL REFRSH */
                             localStorage.setItem("accessToken", access_token.data.access_token)
                             localStorage.setItem("refreshToken", access_token.data.refresh_token)
+                            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('accessToken')
                             /**FIN DE ACTUALIZAR EL LOCAL STORAGE */
                             isAlreadyFetchingAccessToken = false
                             onAccessTokenFetched(access_token)
@@ -56,7 +57,7 @@ export default {
                 const retryOriginalRequest = new Promise((resolve) => {
                     addSubscriber(access_token => {
                         /**PASANDO EL NUEVO TOKEN A LA ULTIMA PETICION QUE MANDO EL 401 */
-                        originalRequest.headers.Authorization = 'Bearer ' + access_token.data.access_token
+                        originalRequest.headers.Authorization = 'Bearer ' + localStorage.getItem("accessToken")
                         resolve(axios(originalRequest))
                     })
                 })
