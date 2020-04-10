@@ -15,24 +15,40 @@ class CreateVentasPropiedadesTable extends Migration
     {
         Schema::create('ventas_propiedades', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('antiguedad_ventas_id');
+            $table->foreign('antiguedad_ventas_id')->references('id')->on('antiguedad_ventas'); //VENTA SEGUN SU ANTIGUEDAD
             $table->string('numero_solicitud')->nullable();
             $table->string('numero_convenio')->nullable();
             $table->string('numero_titulo')->nullable();
+
+            /**datos de la ubicacion */
+            $table->unsignedBigInteger('propiedades_area_id');
+            $table->foreign('propiedades_area_id')->references('id')->on('propiedades');
             $table->string('ubicacion'); //se crea una estructura para poder hacer la relacion de las propiedades
+            /**fin de datos de la ubicacion */
             $table->dateTime('fecha_registro');
             $table->dateTime('fecha_venta');
-            $table->unsignedBigInteger('tipo_propiedades_id');
-            $table->foreign('tipo_propiedades_id')->references('id')->on('tipo_propiedades');
-            $table->unsignedBigInteger('registro_id');
-            $table->foreign('registro_id')->references('id')->on('usuarios');
-            $table->double('subtotal');
-            $table->double('iva');
-            $table->double('total');
+
+            /**datos en caso de cancelacion */
+            $table->string('numero_solicitud_cancelacion')->nullable();
+            $table->string('numero_convenio_cancelacion')->nullable();
+            $table->string('numero_titulo_cancelacion')->nullable();
+            $table->string('ubicacion_cancelacion'); //ubicacion en caso de que cancele 
+            $table->dateTime('fecha_cancelacion');
             $table->unsignedBigInteger('cancelo_id');
             $table->foreign('cancelo_id')->references('id')->on('usuarios'); //en caso de cancelar la venta
             $table->string('motivo_cancelacion');
+            /**fin de datos en caso de cancelacion */
+
+            $table->unsignedBigInteger('registro_id');
+            $table->foreign('registro_id')->references('id')->on('usuarios');
+            $table->double('subtotal');
+            $table->double('descuento');
+            $table->double('iva');
+            $table->double('total');
             $table->unsignedBigInteger('vendedor_id');
             $table->foreign('vendedor_id')->references('id')->on('usuarios'); //quien hizo la venta
+
             //informacion del comprador (titular)
             $table->string('nombre');
             $table->string('apellido_m')->nullable();
@@ -49,8 +65,7 @@ class CreateVentasPropiedadesTable extends Migration
             $table->tinyInteger('mensualidades');
             $table->unsignedBigInteger('ventas_referencias_id');
             $table->foreign('ventas_referencias_id')->references('id')->on('ventas_referencias');
-            $table->unsignedBigInteger('antiguedad_ventas_id');
-            $table->foreign('antiguedad_ventas_id')->references('id')->on('antiguedad_ventas'); //quien hizo la venta
+            $table->longText('nota');
             $table->tinyInteger('status')->default(1);
         });
     }
@@ -63,7 +78,7 @@ class CreateVentasPropiedadesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('ventas_propiedades');       
+        Schema::dropIfExists('ventas_propiedades');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

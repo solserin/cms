@@ -60,8 +60,9 @@ class DatabaseSeeder extends Seeder
         $this->call(columnasFilasSeeder::class);
         $this->call(TipoPreciosSeeder::class);
         $this->call(PreciosPropiedadesSeeder::class);
-        $this->call(tiposVentaSeeder::class);
         $this->call(ventasReferenciasSeeder::class);
+        /**pagos */
+        $this->call(TipoPagosSeeder::class);
         /**fin de seeder de cementerio */
     }
 }

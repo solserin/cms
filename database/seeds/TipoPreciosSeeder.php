@@ -16,4 +16,9 @@ class TipoPreciosSeeder extends Seeder
         DB::table('tipo_precios')->insert(['tipo' => 'Uso inmediato']);
         DB::table('tipo_precios')->insert(['tipo' => 'A futuro']);
     }
+
+    public function down()
+    {
+        Schema::dropIfExists('tipo_precios');
+    }
 }
