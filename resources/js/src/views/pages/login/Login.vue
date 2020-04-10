@@ -167,7 +167,7 @@ export default {
           this.$vs.loading.close();
           this.$vs.notify({
             title: "Error",
-            text: "Debe ingresar un usuario y contraseña correcto!",
+            text: error.response.data.error,
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger"

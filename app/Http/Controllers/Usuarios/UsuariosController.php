@@ -76,7 +76,7 @@ class UsuariosController extends ApiController
             ->where('email', '=', $request->username)
             ->where('status', '=', 1)
             ->get();
-        if (count($resultado) > 0) {
+        if (!$resultado->isEmpty()) {
             if (Hash::check($request->password, $resultado[0]->password)) {
                 $client = new \GuzzleHttp\Client();
                 try {
@@ -92,16 +92,16 @@ class UsuariosController extends ApiController
                     return $response->getBody();
                 } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                     if ($e->getCode() == 400) {
-                        return $this->errorResponse('Error. Usuario y/o Password incorrecto.', $e->getCode());
+                        return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
                     } else if ($e->getCode() == 401) {
                         return $this->errorResponse('Error. Usuario y/o Password incorrecto.', $e->getCode());
                     }
-
                     return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
                 }
-            }
+            } else
+                return $this->errorResponse('Error. Contraseña incorrecta.', 409);
         } else {
-            return $this->errorResponse('Error. Usuario y/o Password incorrecto.', 400);
+            return $this->errorResponse('Error. Usuario no registrado.', 409);
         }
     }
 
