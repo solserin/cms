@@ -153,7 +153,7 @@ const router = new Router({
                 {
                     path: '/inventarios/cementerio/ventas',
                     name: 'inventario_cementerio_ventas',
-                    component: () => import('@/views/pages/inventarios/cementerio/ventas/UsuariosList.vue'),
+                    component: () => import('@/views/pages/inventarios/cementerio/ventas/VentasList.vue'),
                     meta: {
                         breadcrumb: [{
                                 title: 'Home',
@@ -225,27 +225,7 @@ const router = new Router({
                         rule: 'editor'
                     },
                 },
-                {
-                    path: '/pages/user-settings',
-                    name: 'page-user-settings',
-                    component: () => import('@/views/pages/user-settings/UserSettings.vue'),
-                    meta: {
-                        breadcrumb: [{
-                                title: 'Home',
-                                url: '/'
-                            },
-                            {
-                                title: 'Pages'
-                            },
-                            {
-                                title: 'User Settings',
-                                active: true
-                            },
-                        ],
-                        pageTitle: 'Settings',
-                        rule: 'editor'
-                    },
-                },
+
                 {
                     path: '/pages/faq',
                     name: 'page-faq',
@@ -288,14 +268,7 @@ const router = new Router({
                         rule: 'editor'
                     }
                 },
-                {
-                    path: '/pages/register',
-                    name: 'page-register',
-                    component: () => import('@/views/pages/register/Register.vue'),
-                    meta: {
-                        rule: 'editor'
-                    }
-                },
+
                 {
                     path: '/pages/forgot-password',
                     name: 'page-forgot-password',
