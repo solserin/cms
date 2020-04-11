@@ -14,18 +14,18 @@
             <div class="flex flex-wrap">
               <div class="w-full px-2">
                 <vs-button
-                  @click="cancel()"
+                  icon-pack="feather"
+                  icon="icon-x"
                   color="danger"
-                  size="small"
-                  class="float-right mb-5"
-                >Cancelar</vs-button>
+                  class="float-right mb-6"
+                  @click="cancelar"
+                >Cancelar Venta</vs-button>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
                 <!--mapa del cementerio-->
                 <div mt-5>
                   <Mapa
-                    class="mt-5"
-                    :idAreaInicial="0"
+                    :idAreaInicial="idAreaInicial"
                     @getDatosTipoPropiedad="getDatosTipoPropiedad"
                   ></Mapa>
                 </div>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="flex flex-wrap mt-1">
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75 font-medium">
+                    <label class="text-sm opacity-75 font-bold">
                       <span v-if="this.datosAreas.tipo_propiedades_id">
                         <span v-if="this.datosAreas.tipo_propiedades_id == 4">Fila</span>
                         <span v-else>Ubicación</span>
@@ -97,12 +97,12 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
+                        v-if="this.errores['filas.value']"
+                      >{{errores['filas.value'][0]}}</span>
                     </div>
                   </div>
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75 font-medium">
+                    <label class="text-sm opacity-75 font-bold">
                       <span v-if="this.datosAreas.tipo_propiedades_id == 4">Ubicación</span>
                       <span v-else>No Aplica</span>
                       <span class="text-danger text-sm">(*)</span>
@@ -126,35 +126,43 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
+                        v-if="this.errores['lotes.value']"
+                      >{{errores['lotes.value'][0]}}</span>
                     </div>
                   </div>
                 </div>
                 <vs-divider />
                 <div class="flex flex-wrap mt-1">
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm font-medium">Asignar números de órden manualmente</label>
+                    <label class="text-sm opacity-75 font-bold">
+                      <span>Control de Venta</span>
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <v-select
+                      :options="ventasAntiguedad"
+                      :clearable="false"
+                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                      v-model="form.ventaAntiguedad"
+                      class="mb-4 sm:mb-0 pb-1 pt-1"
+                      v-validate:antiguedad_validacion_computed.immediate="'required'"
+                      name="antiguedad_validacion"
+                      data-vv-as=" "
+                    >
+                      <div slot="no-options">Seleccione 1</div>
+                    </v-select>
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('antiguedad_validacion') }}</span>
+                    </div>
                     <div class="mt-2">
-                      <div class="mt-2">
-                        <vs-radio
-                          vs-name="ventaAntiguedad"
-                          v-model="form.ventaAntesdelSistema"
-                          :vs-value="true"
-                          class="mr-4"
-                        >Si</vs-radio>
-                        <vs-radio
-                          vs-name="ventaAntiguedad"
-                          v-model="form.ventaAntesdelSistema"
-                          :vs-value="false"
-                          class="mr-4"
-                        >No</vs-radio>
-                      </div>
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores['ventaAntiguedad.value']"
+                      >{{errores['ventaAntiguedad.value'][0]}}</span>
                     </div>
                   </div>
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm font-medium">Tipo de Venta</label>
-                    <div class="mt-2">
+                    <label class="text-sm font-bold">Tipo de Venta</label>
+                    <div class="mt-3">
                       <vs-radio
                         vs-name="tipoVenta"
                         v-model="form.venta_referencia_id"
@@ -186,7 +194,7 @@
 
                   <!--vendedor-->
                   <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-                    <label class="text-sm opacity-75 font-medium">
+                    <label class="text-sm opacity-75 font-bold">
                       <span>Venta realizada por:</span>
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -208,14 +216,14 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
+                        v-if="this.errores['vendedor.value']"
+                      >{{errores['vendedor.value'][0]}}</span>
                     </div>
                   </div>
                   <!--Fin de vendedor-->
 
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       Fecha de la Venta
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -236,13 +244,13 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.fecha_nac"
-                      >{{errores.fecha_nac[0]}}</span>
+                        v-if="this.errores.fecha_venta"
+                      >{{errores.fecha_venta[0]}}</span>
                     </div>
                   </div>
 
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       Núm. Solicitud
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -263,12 +271,12 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
+                        v-if="this.errores.num_solicitud"
+                      >{{errores.num_solicitud[0]}}</span>
                     </div>
                   </div>
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       Núm. Convenio
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -280,7 +288,7 @@
                       class="w-full pb-1 pt-1"
                       placeholder="Núm. Convenio"
                       v-model="form.convenio"
-                      :disabled="!((!tipo_venta)*(form.ventaAntesdelSistema))"
+                      :disabled="!((!tipo_venta)*(capturar_num_convenio))"
                       maxlength="12"
                     />
                     <div>
@@ -289,13 +297,13 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
+                        v-if="this.errores.convenio"
+                      >{{errores.convenio[0]}}</span>
                     </div>
                   </div>
 
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       Núm. Título
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -307,7 +315,7 @@
                       class="w-full pb-1 pt-1"
                       placeholder="Núm. Título"
                       v-model="form.titulo"
-                      :disabled="!((tipo_venta*form.ventaAntesdelSistema)+form.ventaAntesdelSistema)"
+                      :disabled="!((tipo_venta*capturar_num_titulo)+capturar_num_titulo)"
                       maxlength="12"
                     />
                     <div>
@@ -316,8 +324,8 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
+                        v-if="this.errores.titulo"
+                      >{{errores.titulo[0]}}</span>
                     </div>
                   </div>
 
@@ -335,7 +343,7 @@
               </div>
               <!--datos del titular-->
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="text-sm opacity-75 font-bold">
                   Nombre completo
                   <span class="text-danger text-sm">(*)</span>
                 </label>
@@ -354,12 +362,15 @@
                   <span class="text-danger text-sm">{{ errors.first('titular') }}</span>
                 </div>
                 <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
+                  <span
+                    class="text-danger text-sm"
+                    v-if="this.errores.titular"
+                  >{{errores.titular[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="text-sm opacity-75 font-bold">
                   Fecha de Nacimiento
                   <span class="text-danger text-sm">(*)</span>
                 </label>
@@ -386,7 +397,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="text-sm opacity-75 font-bold">
                   Domicilio Completo
                   <span class="text-danger text-sm">(*)</span>
                 </label>
@@ -413,7 +424,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="text-sm opacity-75 font-bold">
                   Ciudad
                   <span class="text-danger text-sm">(*)</span>
                 </label>
@@ -437,7 +448,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="text-sm opacity-75 font-bold">
                   Estado
                   <span class="text-danger text-sm">(*)</span>
                 </label>
@@ -461,7 +472,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">Tél. Domicilio</label>
+                <label class="text-sm opacity-75 font-bold">Tél. Domicilio</label>
                 <vs-input
                   maxlength="10"
                   type="text"
@@ -472,7 +483,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="text-sm opacity-75 font-bold">
                   Celular
                   <span class="text-danger text-sm">(*)</span>
                 </label>
@@ -499,7 +510,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">Tél. Oficina</label>
+                <label class="text-sm opacity-75 font-bold">Tél. Oficina</label>
                 <vs-input
                   maxlength="10"
                   type="text"
@@ -510,7 +521,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">RFC</label>
+                <label class="text-sm opacity-75 font-bold">RFC</label>
                 <vs-input
                   maxlength="13"
                   name="rfc"
@@ -530,7 +541,7 @@
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">Email</label>
+                <label class="text-sm opacity-75 font-bold">Email</label>
                 <vs-input
                   name="email"
                   data-vv-as=" "
@@ -546,7 +557,7 @@
                   <span class="text-danger text-sm">{{ errors.first('email') }}</span>
                 </div>
                 <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                  <span class="text-danger text-sm" v-if="this.errores.email">{{errores.email[0]}}</span>
                 </div>
               </div>
 
@@ -571,10 +582,8 @@
 
                 <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
                   <label class="text-sm opacity-75">
-                    Beneficiario {{(index+1)}} - Nombre completo
-                    <span
-                      class="text-danger text-sm"
-                    >(*)</span>
+                    <span class="font-bold">Beneficiario {{(index+1)}} - Nombre completo</span>
+                    <span class="text-danger text-sm">(*)</span>
                   </label>
                   <vs-input
                     :name="'beneficiario'+index"
@@ -590,16 +599,16 @@
                   <div class="pb-2">
                     <span class="text-danger text-sm">{{ errors.first('beneficiario'+index) }}</span>
                   </div>
-
-                  <div :key="indexerror" v-for="(error, indexerror) in errores">
-                    <div v-if="error['error'][indexerror+'.meses']">
-                      <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
-                    </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger text-sm"
+                      v-if="errores['beneficiarios.'+index+'.nombre']"
+                    >{{errores['beneficiarios.'+index+'.nombre'][0]}}</span>
                   </div>
                 </div>
                 <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
                   <label class="text-sm opacity-75">
-                    Parentesco
+                    <span class="font-bold">Beneficiario {{(index+1)}} - Parentesco</span>
                     <span class="text-danger text-sm">(*)</span>
                   </label>
                   <vs-input
@@ -616,15 +625,16 @@
                   <div class="pb-2">
                     <span class="text-danger text-sm">{{ errors.first('parentesco'+index) }}</span>
                   </div>
-                  <div :key="indexerror" v-for="(error, indexerror) in errores">
-                    <div v-if="error['error'][indexerror+'.meses']">
-                      <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
-                    </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger text-sm"
+                      v-if="errores['beneficiarios.'+index+'.parentesco']"
+                    >{{errores['beneficiarios.'+index+'.parentesco'][0]}}</span>
                   </div>
                 </div>
                 <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
                   <label class="text-sm opacity-75">
-                    Teléfono
+                    <span class="font-bold">Beneficiario {{(index+1)}} - Teléfono</span>
                     <span class="text-danger text-sm">(*)</span>
                   </label>
                   <vs-input
@@ -641,10 +651,11 @@
                   <div class="pb-2">
                     <span class="text-danger text-sm">{{ errors.first('telefono'+index) }}</span>
                   </div>
-                  <div :key="indexerror" v-for="(error, indexerror) in errores">
-                    <div v-if="error['error'][indexerror+'.meses']">
-                      <span class="text-danger text-sm">{{error['error'][indexerror+'.meses'][0]}}</span>
-                    </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger text-sm"
+                      v-if="errores['beneficiarios.'+index+'.telefono']"
+                    >{{errores['beneficiarios.'+index+'.telefono'][0]}}</span>
                   </div>
                 </div>
                 <div class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
@@ -704,7 +715,7 @@
                 <div class="flex flex-wrap">
                   <!--precios-->
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75 font-medium">
+                    <label class="text-sm opacity-75 font-bold">
                       <span>Plan de Venta</span>
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -726,13 +737,13 @@
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
+                        v-if="this.errores['planVenta.value']"
+                      >{{errores['planVenta.value'][0]}}</span>
                     </div>
                   </div>
 
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       $ Precio Neto de la Propiedad
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -750,11 +761,14 @@
                       <span class="text-danger text-sm">{{ errors.first('precio_neto') }}</span>
                     </div>
                     <div class="mt-2">
-                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.precio_neto"
+                      >{{errores.precio_neto[0]}}</span>
                     </div>
                   </div>
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       $ Descuento Neto
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -772,11 +786,14 @@
                       <span class="text-danger text-sm">{{ errors.first('descuento_neto') }}</span>
                     </div>
                     <div class="mt-2">
-                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.descuento"
+                      >{{errores.descuento[0]}}</span>
                     </div>
                   </div>
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       $ Total a Pagar
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -794,7 +811,10 @@
                       <span class="text-danger text-sm">{{ errors.first('total_pagar') }}</span>
                     </div>
                     <div class="mt-2">
-                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.precio_neto"
+                      >{{errores.precio_neto[0]}}</span>
                     </div>
                     <div class="mt-2"></div>
                   </div>
@@ -810,7 +830,7 @@
                     </div>
                   </div>
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75">
+                    <label class="text-sm opacity-75 font-bold">
                       $ Cuota Inicial Mínima
                       <span class="font-medium text-danger">10%</span> del Valor Total
                       <span class="text-danger text-sm">(*)</span>
@@ -830,13 +850,16 @@
                       <span class="text-danger text-sm">{{ errors.first('cuota_inicial') }}</span>
                     </div>
                     <div class="mt-2">
-                      <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.enganche_inicial"
+                      >{{errores.enganche_inicial[0]}}</span>
                     </div>
                     <div class="mt-2"></div>
                   </div>
 
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                    <label class="text-sm opacity-75 font-medium">
+                    <label class="text-sm opacity-75 font-bold">
                       <span>¿Guardar Cuota Inicial como cobrada?</span>
                       <span class="text-danger text-sm">(*)</span>
                     </label>
@@ -855,19 +878,14 @@
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('plan_venta') }}</span>
                     </div>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger text-sm"
-                        v-if="this.errores.nombre"
-                      >{{errores.nombre[0]}}</span>
-                    </div>
+                    <div class="mt-2"></div>
                   </div>
 
                   <!--datos del pago inicial-->
                   <div class="w-full" v-if="this.form.opcionPagar.value==1">
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-                        <label class="text-sm opacity-75 font-medium">
+                        <label class="text-sm opacity-75 font-bold">
                           <span>Formas de Pago</span>
                           <span class="text-danger text-sm">(*)</span>
                         </label>
@@ -886,19 +904,14 @@
                         <div>
                           <span class="text-danger text-sm">{{ errors.first('formas_pago') }}</span>
                         </div>
-                        <div class="mt-2">
-                          <span
-                            class="text-danger text-sm"
-                            v-if="this.errores.nombre"
-                          >{{errores.nombre[0]}}</span>
-                        </div>
+                        <div class="mt-2"></div>
                       </div>
 
                       <div
                         class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                         v-if="this.form.formaPago.value!=1"
                       >
-                        <label class="text-sm opacity-75">
+                        <label class="text-sm opacity-75 font-bold">
                           Banco
                           <span class="text-danger text-sm">(*)</span>
                         </label>
@@ -919,8 +932,8 @@
                         <div class="mt-2">
                           <span
                             class="text-danger text-sm"
-                            v-if="this.errores.nombre"
-                          >{{errores.nombre[0]}}</span>
+                            v-if="this.errores.banco"
+                          >{{errores.banco[0]}}</span>
                         </div>
                       </div>
 
@@ -928,7 +941,7 @@
                         class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                         v-if="this.form.formaPago.value==3"
                       >
-                        <label class="text-sm opacity-75">Núm. Operación</label>
+                        <label class="text-sm opacity-75 font-bold">Núm. Operación</label>
                         <vs-input
                           name="Nombre"
                           type="text"
@@ -944,7 +957,7 @@
                         class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                         v-if="this.form.formaPago.value==2"
                       >
-                        <label class="text-sm opacity-75">Número de Cheque</label>
+                        <label class="text-sm opacity-75 font-bold">Número de Cheque</label>
                         <vs-input
                           name="Nombre"
                           type="text"
@@ -960,7 +973,7 @@
                         class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                         v-if="this.form.formaPago.value==4 ||  this.form.formaPago.value==5"
                       >
-                        <label class="text-sm opacity-75">Últimos 4 Digitos</label>
+                        <label class="text-sm opacity-75 font-bold">Últimos 4 Digitos</label>
                         <vs-input
                           name="ultimos_digitos"
                           data-vv-as=" "
@@ -978,8 +991,8 @@
                         <div class="mt-2">
                           <span
                             class="text-danger text-sm"
-                            v-if="this.errores.celular"
-                          >{{errores.celular[0]}}</span>
+                            v-if="this.errores.ultimosdigitos"
+                          >{{errores.ultimosdigitos[0]}}</span>
                         </div>
                       </div>
                     </div>
@@ -987,7 +1000,13 @@
                   <!--fin de datos del pago inicial--->
 
                   <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5">
-                    <vs-button color="success" class="w-full" @click="acceptAlert()">Guardar Venta</vs-button>
+                    <vs-button
+                      icon-pack="feather"
+                      icon="icon-database"
+                      color="success"
+                      class="w-full"
+                      @click="acceptAlert()"
+                    >Guardar Venta</vs-button>
                   </div>
                   <div class="w-full px-2 pt-3 pb-3">
                     <div>
@@ -1015,7 +1034,7 @@
                   <div class="w-full sm:w-12/12 ml-auto md:w-12/12 lg:w-12/12 xl:w-12/12">
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">Ubicación</span>
+                        <span class="text-gray-100 font-bold">Ubicación</span>
                       </div>
                       <div
                         class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
@@ -1042,7 +1061,7 @@
                     <vs-divider />
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">Vendedor</span>
+                        <span class="text-gray-100 font-bold">Vendedor</span>
                       </div>
                       <div
                         class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
@@ -1054,19 +1073,19 @@
                     <vs-divider />
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">Tipo Venta</span>
+                        <span class="text-gray-100 font-bold">Tipo Venta</span>
                       </div>
                       <div
                         class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
                       >
-                        <span v-if="this.form.venta_referencia_id.value==1">Uso inmediato</span>
+                        <span v-if="this.form.venta_referencia_id==1">Uso inmediato</span>
                         <span v-else>A futuro</span>
                       </div>
                     </div>
                     <vs-divider />
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">Plan de Venta</span>
+                        <span class="text-gray-100 font-bold">Plan de Venta</span>
                       </div>
                       <div
                         class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
@@ -1086,7 +1105,7 @@
 
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">Sub Total</span>
+                        <span class="text-gray-100 font-bold">Sub Total</span>
                       </div>
                       <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
                         <!--obtencion del precio total menos iva-->
@@ -1099,7 +1118,7 @@
 
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">Descuento</span>
+                        <span class="text-gray-100 font-bold">Descuento</span>
                       </div>
                       <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
                         <span
@@ -1111,7 +1130,7 @@
 
                     <div class="flex flex-wrap">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">IVA</span>
+                        <span class="text-gray-100 font-bold">IVA</span>
                       </div>
                       <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
                         <!--obtencion del  iva-->
@@ -1123,7 +1142,7 @@
                     <vs-divider />
                     <div class="flex flex-wrap text-success">
                       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                        <span class="text-gray-100">Total a Pagar</span>
+                        <span class="text-gray-100 font-bold">Total a Pagar</span>
                       </div>
                       <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
                         <span
@@ -1152,10 +1171,10 @@
     ></Password>
     <Confirmar
       :show="openConfirmarSinPassword"
-      :callback-on-success="callbackRemoverBeneficiario"
+      :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword=false"
-      :accion="'¿Desea eliminar este beneficiario? Los datos quedarán eliminados del sistema.'"
-      :confirmarButton="'Eliminar'"
+      :accion="accionConfirmarSinPassword"
+      :confirmarButton="botonConfirmarSinPassword"
     ></Confirmar>
   </div>
 </template>
@@ -1191,6 +1210,12 @@ export default {
     show: function(newValue, oldValue) {
       if (newValue == true) {
         this.get_ventas_referencias_propiedades();
+        this.get_vendedores();
+        this.get_sat_formas_pago();
+        this.get_antiguedades();
+        this.idAreaInicial = 29;
+      } else {
+        this.idAreaInicial = 0;
       }
     },
 
@@ -1330,6 +1355,23 @@ export default {
     tipo_venta: function() {
       //definiendo el tipo de uso, si es true es venta de uso inmediato si es false es venta de uso futuro
       if (this.form.venta_referencia_id == 1) {
+        //uso inmediato
+        return true;
+      } else {
+        //a futuro
+        return false;
+      }
+    },
+
+    capturar_num_convenio: function() {
+      if (this.form.ventaAntiguedad.value > 1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    capturar_num_titulo: function() {
+      if (this.form.ventaAntiguedad.value == 3) {
         return true;
       } else {
         return false;
@@ -1382,6 +1424,11 @@ export default {
         return true;
       }
     },
+
+    antiguedad_validacion_computed: function() {
+      return this.form.ventaAntiguedad.value;
+    },
+
     vendedor_validacion_computed: function() {
       return this.form.vendedor.value;
     },
@@ -1399,7 +1446,7 @@ export default {
     num_convenio_validacion_computed: function() {
       //checo que el dato venta a futuro este activo y que sea de venta antes del sistema
       if (
-        this.form.ventaAntesdelSistema == 1 &&
+        this.form.ventaAntiguedad.value >= 2 &&
         this.form.venta_referencia_id == 2
       ) {
         return this.form.convenio;
@@ -1407,7 +1454,7 @@ export default {
     },
     num_titulo_validacion_computed: function() {
       //checo que el dato venta a futuro este activo
-      if (this.form.ventaAntesdelSistema == 1) {
+      if (this.form.ventaAntiguedad.value == 3) {
         return this.form.titulo;
       } else return true;
     },
@@ -1452,6 +1499,9 @@ export default {
   },
   data() {
     return {
+      idAreaInicial: 1,
+      accionConfirmarSinPassword: "",
+      botonConfirmarSinPassword: "",
       alfabeto: alfabeto,
       disabledDates: {
         from: new Date()
@@ -1460,9 +1510,10 @@ export default {
       operConfirmar: false,
       openConfirmarSinPassword: false,
       callback: Function,
-      callbackRemoverBeneficiario: Function,
+      callBackConfirmar: Function,
       accionNombre: "Guardar Venta",
       ventasReferencias: [],
+      ventasAntiguedad: [],
       filas: [],
       lotes: [],
       vendedores: [],
@@ -1497,7 +1548,6 @@ export default {
         ubicacion: "",
         //fin de ubicacion
         fecha_venta: "",
-        ventaAntesdelSistema: false,
         //datos del titular
         titular: "",
         domicilio: "",
@@ -1528,6 +1578,10 @@ export default {
           value: "",
           precio_neto: "",
           enganche_inicial: ""
+        },
+        ventaAntiguedad: {
+          label: "Seleccione 1",
+          value: ""
         },
         enganche_inicial: "",
         precio_neto: "",
@@ -1568,7 +1622,16 @@ export default {
       this.$validator
         .validateAll()
         .then(result => {
-          if (result) {
+          if (!result) {
+            this.$vs.notify({
+              title: "Error",
+              text: "Verifique que todos los datos han sido capturados",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "4000"
+            });
             return;
           } else {
             //se confirma la cntraseña
@@ -1631,6 +1694,7 @@ export default {
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
+              this.errores = err.response.data.error;
               console.log(err.response);
             }
           }
@@ -1671,6 +1735,23 @@ export default {
               value: element.id
             });
           });
+          this.form.vendedor = this.vendedores[0];
+        })
+        .catch(err => {});
+    },
+    get_antiguedades() {
+      cementerio
+        .get_antiguedades()
+        .then(res => {
+          //le agrego todos los usuarios vendedores
+          this.ventasAntiguedad = [];
+          res.data.forEach(element => {
+            this.ventasAntiguedad.push({
+              label: element.antiguedad,
+              value: element.id
+            });
+          });
+          this.form.ventaAntiguedad = this.ventasAntiguedad[0];
         })
         .catch(err => {});
     },
@@ -1743,6 +1824,50 @@ export default {
         this.form.planVenta = this.planesVenta[1];
       }
     },
+    cancelar() {
+      this.botonConfirmarSinPassword = "Salir y limpiar";
+      this.accionConfirmarSinPassword =
+        "Esta acción limpiará los datos que capturó en el formulario.";
+      this.openConfirmarSinPassword = true;
+      this.callBackConfirmar = this.cerrarVentana;
+    },
+
+    cerrarVentana() {
+      this.openConfirmarSinPassword = false;
+      this.limpiarVentana();
+      this.$emit("closeVentana");
+    },
+    //regresa los datos a su estado inicial
+    limpiarVentana() {
+      //area de la terraza 1
+      this.form.venta_referencia_id = 1;
+      this.form.num_solicitud = "";
+      this.form.convenio = "";
+      this.form.titulo = "";
+      this.form.titular = "";
+      this.form.fecha_nac = "";
+      this.form.domicilio = "";
+      this.form.ciudad = "";
+      this.form.estado = "";
+      this.form.telefono = "";
+      this.form.celular = "";
+      this.form.tel_oficina = "";
+      this.form.rfc = "";
+      this.form.email = "";
+      this.form.descuento = 0;
+
+      this.form.beneficiarios = [];
+
+      this.form.fecha_venta = "";
+      this.form.opcionPagar = {
+        label: "Pagar Después",
+        value: 0
+      };
+      this.form.banco = "";
+      this.form.num_cheque = "";
+      this.form.ultimosdigitos = "";
+      this.form.num_operacion = "";
+    },
 
     closeChecker() {
       this.operConfirmar = false;
@@ -1797,8 +1922,11 @@ export default {
 
     //remover beneficiario
     remover_beneficiario(index_beneficiario) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea eliminar este beneficiario? Los datos quedarán eliminados del sistema?";
       this.form.index_beneficiario = index_beneficiario;
-      this.callbackRemoverBeneficiario = this.remover_beneficiario_callback;
+      this.callBackConfirmar = this.remover_beneficiario_callback;
       this.openConfirmarSinPassword = true;
     },
     //remover beneficiario callback quita del array al beneficiario seleccionado
@@ -1806,9 +1934,6 @@ export default {
       this.form.beneficiarios.splice(this.form.index_beneficiario, 1);
     }
   },
-  created() {
-    this.get_vendedores();
-    this.get_sat_formas_pago();
-  }
+  created() {}
 };
 </script>

@@ -34,6 +34,21 @@ export default {
         })
     },
 
+    //obtiene las 3 tipos de venta segun la antiguedad
+    get_antiguedades() {
+        let call = "/inventarios/cementerio/get_antiguedades_venta"
+        return new Promise((resolve, reject) => {
+            axios.get(call)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+
     //obtiene las formas de pago con la clave del sat segun las necesidades del sistema
     get_sat_formas_pago() {
         let call = "/inventarios/cementerio/get_sat_formas_pago"
@@ -126,19 +141,10 @@ export default {
     //obtengo los posibles tipos de venta para la propiedad
     get_ventas_referencias_propiedades() {
         let self = this
-        return new Promise((resolve, reject) => {
-            axios.get('/inventarios/cementerio/get_ventas_referencias_propiedades')
-                .then((response) => {
-                    resolve(response)
-                })
-                .catch((error) => {
-                    if (axiosSuper.isCancel(error)) {
-                        reject(error.message)
-                    } else {
-                        reject(error)
-                    }
-                })
-        })
+
+        return axios.get('/inventarios/cementerio/get_ventas_referencias_propiedades')
+
+
     },
 
 
@@ -203,15 +209,7 @@ export default {
     //retorna los precios de las diferenres propiedades
     precios_tarifas() {
         let call = "/inventarios/cementerio/precios_tarifas"
-        return new Promise((resolve, reject) => {
-            axios.get(call)
-                .then((response) => {
-                    resolve(response)
-                })
-                .catch((error) => {
-                    reject(error)
-                })
-        })
+        return axios.get(call)
     },
 
     //update precios tarifas

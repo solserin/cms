@@ -39,7 +39,7 @@ class ModulosSeeder extends Seeder
             ],
             [
                 //4
-                'modulo' => 'Inventario',
+                'modulo' => 'Inventario General',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => '3',
                 'url' => '/inventarios/cementerio/distribucion',
@@ -47,7 +47,7 @@ class ModulosSeeder extends Seeder
             ],
             [
                 //5
-                'modulo' => 'Ventas',
+                'modulo' => 'Ventas de Terrenos',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => '3',
                 'url' => '/inventarios/cementerio/ventas',
@@ -55,7 +55,7 @@ class ModulosSeeder extends Seeder
             ],
             [
                 //6
-                'modulo' => 'Cobranza',
+                'modulo' => 'Cobro de Cuotas',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => '3',
                 'url' => '/inventarios/cementerio/cobranza',

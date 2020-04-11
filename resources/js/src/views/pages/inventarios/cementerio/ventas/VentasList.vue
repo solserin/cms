@@ -8,12 +8,13 @@
       <vx-card ref="filterCard" title="Filtros de selección" class="user-list-filters">
         <div class="flex flex-wrap">
           <div class="w-full">
-            <vs-button color="success" size="small" class="float-right" @click="verAgregar=true">
-              <user-plus-icon size="1x" class="custom-class mr-2"></user-plus-icon>Agregar
-            </vs-button>
-            <vs-button color="primary" size="small" class="float-right mr-3" @click="pdf()">
-              <printer-icon size="1x" class="custom-class mr-2"></printer-icon>Pdf
-            </vs-button>
+            <vs-button
+              icon-pack="feather"
+              icon="icon-shopping-cart"
+              color="success"
+              class="float-right"
+              @click="verAgregar=true"
+            >Nueva Venta</vs-button>
           </div>
         </div>
         <div class="flex flex-wrap">
@@ -162,7 +163,11 @@
       <PlanesVenta></PlanesVenta>
     </div>
 
-    <AgregarUsuario :show="verAgregar" @closeVentana="closeVentana" @get_data="get_data(actual)"></AgregarUsuario>
+    <AgregarUsuario
+      :show="verAgregar"
+      @closeVentana="verAgregar = false"
+      @get_data="get_data(actual)"
+    ></AgregarUsuario>
     <UpdateUsuario
       :show="verModificar"
       @closeModificar="closeModificar"
@@ -361,9 +366,6 @@ export default {
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
-    closeVentana() {
-      this.verAgregar = false;
-    },
     openModificar(id_user) {
       this.users.forEach(element => {
         if (element.id_user == id_user) {

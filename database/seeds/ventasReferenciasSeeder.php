@@ -14,10 +14,10 @@ class ventasReferenciasSeeder extends Seeder
     {
         //aqui agrego las posibles referencias que se pueden aplicar a cobranza
         //referencias para servicios funerarios
-        DB::table('ventas_referencias')->insert(['referencia_pagos' => '01', 'tipo_venta' => 'USO INMEDIATO']);
-        DB::table('ventas_referencias')->insert(['referencia_pagos' => '02', 'tipo_venta' => 'A FUTURO']);
+        DB::table('ventas_referencias')->insert(['referencia_pagos' => '01', 'tipo_venta' => 'TERRENO USO INMEDIATO']);
+        DB::table('ventas_referencias')->insert(['referencia_pagos' => '02', 'tipo_venta' => 'TERRENO A FUTURO']);
         //referencias para propieades de cementerio
-        DB::table('ventas_referencias')->insert(['referencia_pagos' => '03', 'tipo_venta' => 'USO INMEDIATO']);
-        DB::table('ventas_referencias')->insert(['referencia_pagos' => '04', 'tipo_venta' => 'A FUTURO']);
+        DB::table('ventas_referencias')->insert(['referencia_pagos' => '03', 'tipo_venta' => 'SERVICIO FUNERARIO USO INMEDIATO']);
+        DB::table('ventas_referencias')->insert(['referencia_pagos' => '04', 'tipo_venta' => 'SERVICIO FUNERARIO A FUTURO']);
     }
 }

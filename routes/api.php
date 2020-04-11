@@ -116,6 +116,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_vendedores', 'CementerioController@get_vendedores');
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
     Route::post('inventarios/cementerio/guardar_venta', 'CementerioController@guardar_venta');
+    Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     /**fin de rutas del cementerio */
 
     //Routes for LOV

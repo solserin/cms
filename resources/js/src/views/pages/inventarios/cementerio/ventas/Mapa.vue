@@ -2445,12 +2445,13 @@ export default {
   },
 
   watch: {
-    id_area_activa: function(newValue, oldValue) {
+    idAreaInicial: function(newValue, oldValue) {
       if (newValue > 0) {
-        this.datosAreaSeleccionada = this.propiedades[this.id_area_activa - 1];
-        //mando los datos al parent
-        this.$emit("getDatosTipoPropiedad", this.datosAreaSeleccionada);
+        this.id_area_activa = newValue;
       }
+    },
+    id_area_activa: function(newValue, oldValue) {
+      this.get_cementerio();
     }
   },
   components: {},
@@ -2460,31 +2461,31 @@ export default {
       //todas las status_propiedadades
       status_propiedadades: [],
       id_area_activa: 0,
-      area_activa: "",
-      id_ubicacion: 0,
       datosAreaSeleccionada: []
     };
   },
   computed: {
-    area_inicial() {
-      return this.idAreaInicial;
+    area_inicial: {
+      get() {
+        return this.idAreaInicial;
+      },
+      set(newValue) {
+        return newValue;
+      }
     }
   },
   methods: {
     get_cementerio() {
+      this.datosAreaSeleccionada = [];
       cementerio
         .get_cementerio()
         .then(res => {
           this.propiedades = res.data;
-
-          if (this.area_activa > 0) {
+          if (this.id_area_activa > 0) {
             this.datosAreaSeleccionada = this.propiedades[
               this.id_area_activa - 1
             ];
-            console.log(this.id_area_activa);
-            console.log(this.datosAreaSeleccionada);
           }
-
           this.status_propiedadades.push("dato vacio");
           res.data.forEach(element => {
             if (element.status == 1) {
@@ -2494,6 +2495,8 @@ export default {
               this.status_propiedadades.push("bloqueado");
             }
           });
+          //mando los datos al parent
+          this.$emit("getDatosTipoPropiedad", this.datosAreaSeleccionada);
         })
         .catch(err => {});
     },
@@ -2502,9 +2505,7 @@ export default {
     handleSort(key, active) {}
   },
   created() {
-    //se inicia con el valor default o recibido desde el parent
     this.id_area_activa = this.area_inicial;
-    this.get_cementerio();
   }
 };
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AntiguedadesVenta;
 use App\User;
 use App\Propiedades;
 use App\SatFormasPago;
@@ -44,7 +45,7 @@ class CementerioController extends ApiController
             //fin de datos de la propiedad
             //datos de la venta
             'fecha_venta' => 'required|date',
-            'ventaAntesdelSistema' => 'required',
+            'ventaAntiguedad.value' => 'required',
             'venta_referencia_id' => 'required',
             'filas.value' => 'required',
             'lotes.value' => '', //modificada segun condiciones
@@ -71,9 +72,6 @@ class CementerioController extends ApiController
 
             //fin de datos de la venta
 
-
-
-
             //datos del titular
             'titular' => 'required',
             'domicilio' => 'required',
@@ -83,6 +81,17 @@ class CementerioController extends ApiController
             'email' => 'nullable|email',
             'fecha_nac' => 'required|date',
             //fin de datos del titular
+
+            /**beneficiarios */
+            'beneficiarios.*.nombre' => [
+                'required',
+            ],
+            'beneficiarios.*.parentesco' => [
+                'required',
+            ],
+            'beneficiarios.*.telefono' => [
+                'required',
+            ],
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
@@ -93,7 +102,7 @@ class CementerioController extends ApiController
         }
 
         //validnado en caso de que sea de uso inmediato y de venta antes del sistema.
-        if ($request->venta_referencia_id == 1 && $request->ventaAntesdelSistema) {
+        if ($request->venta_referencia_id == 1 && $request->ventaAntiguedad['value'] == 3) {
             //venta de uso inmediato
             $validaciones['titulo'] = 'required|unique:ventas_propiedades,numero_titulo';
         }
@@ -103,9 +112,11 @@ class CementerioController extends ApiController
             //venta de uso inmediato
             $validaciones['num_solicitud'] = 'required|unique:ventas_propiedades,numero_solicitud';
             //valido si es de venta antes del sistema
-            if ($request->ventaAntesdelSistema) {
-                $validaciones['titulo'] = 'required|unique:ventas_propiedades,numero_titulo';
+            if ($request->ventaAntiguedad['value'] == 2) {
                 $validaciones['convenio'] = 'required|unique:ventas_propiedades,numero_convenio';
+            } else if ($request->ventaAntiguedad['value'] == 3) {
+                $validaciones['convenio'] = 'required|unique:ventas_propiedades,numero_convenio';
+                $validaciones['titulo'] = 'required|unique:ventas_propiedades,numero_titulo';
             }
         }
         //validando si el tipo de pago requiere de banco y digitos
@@ -126,7 +137,13 @@ class CementerioController extends ApiController
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'required' => 'Ingrese este dato'
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'unique' => 'Este terreno ya fue vendido',
+            //beneficiarios
+            '*.nombre.required' => 'ingrese este dato.',
+            '*.parentesco.required' => 'ingrese este dato.',
+            '*.telefono.required' => 'ingrese este dato.',
         ];
         request()->validate(
             $validaciones,
@@ -283,6 +300,16 @@ class CementerioController extends ApiController
     //retorna que tipo de venta es de la propiedad, si es de uso inmediato o a futuro
     public function get_ventas_referencias_propiedades()
     {
-        return DB::table('ventas_referencias')->where('tipos_venta_id', 1)->get();
+        return DB::table('ventas_referencias')->where('id', '<', 3)->get();
+    }
+
+
+    //obtiene los tipos de antiguedad de una venta, son 3 registros predefinidos
+    public function get_antiguedades_venta()
+    {
+        //id del conjunto de propieades
+
+        return
+            AntiguedadesVenta::get();
     }
 }
