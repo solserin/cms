@@ -64,6 +64,7 @@ class DatabaseSeeder extends Seeder
         /**pagos */
         $this->call(TipoPagosSeeder::class);
         $this->call(antiguedadVentasSeeder::class);
+        $this->call(AjustesSeeder::class);
         /**fin de seeder de cementerio */
     }
 }

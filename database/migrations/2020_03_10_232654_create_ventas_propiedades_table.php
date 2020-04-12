@@ -27,25 +27,25 @@ class CreateVentasPropiedadesTable extends Migration
             $table->string('ubicacion'); //se crea una estructura para poder hacer la relacion de las propiedades
             /**fin de datos de la ubicacion */
             $table->dateTime('fecha_registro');
-            $table->dateTime('fecha_venta');
+            $table->date('fecha_venta');
 
             /**datos en caso de cancelacion */
             $table->string('numero_solicitud_cancelacion')->nullable();
             $table->string('numero_convenio_cancelacion')->nullable();
             $table->string('numero_titulo_cancelacion')->nullable();
-            $table->string('ubicacion_cancelacion'); //ubicacion en caso de que cancele 
-            $table->dateTime('fecha_cancelacion');
-            $table->unsignedBigInteger('cancelo_id');
+            $table->string('ubicacion_cancelacion')->nullable(); //ubicacion en caso de que cancele 
+            $table->dateTime('fecha_cancelacion')->nullable();
+            $table->unsignedBigInteger('cancelo_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios'); //en caso de cancelar la venta
-            $table->string('motivo_cancelacion');
+            $table->string('motivo_cancelacion')->nullable();
             /**fin de datos en caso de cancelacion */
 
             $table->unsignedBigInteger('registro_id');
             $table->foreign('registro_id')->references('id')->on('usuarios');
-            $table->double('subtotal');
-            $table->double('descuento');
-            $table->double('iva');
-            $table->double('total');
+            $table->double('subtotal')->nullable();
+            $table->double('descuento')->nullable();
+            $table->double('iva')->nullable();
+            $table->double('total')->nullable();
             $table->unsignedBigInteger('vendedor_id');
             $table->foreign('vendedor_id')->references('id')->on('usuarios'); //quien hizo la venta
 
@@ -53,19 +53,20 @@ class CreateVentasPropiedadesTable extends Migration
             $table->string('nombre');
             $table->string('apellido_m')->nullable();
             $table->string('apellido_p')->nullable();
-            $table->string('domicilio');
-            $table->string('ciudad');
-            $table->string('estado');
+            $table->string('domicilio')->nullable();
+            $table->string('ciudad')->nullable();
+            $table->string('estado')->nullable();
             $table->string('telefono')->nullable();
             $table->string('celular')->nullable();
+            $table->string('tel_oficina')->nullable();
             $table->string('rfc')->nullable();
             $table->string('email')->nullable();
-            $table->date('fecha_nac');
+            $table->date('fecha_nac')->nullable();
             //modalidad de pago de la venta
-            $table->tinyInteger('mensualidades');
+            $table->tinyInteger('mensualidades')->nullable();
             $table->unsignedBigInteger('ventas_referencias_id');
             $table->foreign('ventas_referencias_id')->references('id')->on('ventas_referencias');
-            $table->longText('nota');
+            $table->longText('nota')->nullable();
             $table->tinyInteger('status')->default(1);
         });
     }

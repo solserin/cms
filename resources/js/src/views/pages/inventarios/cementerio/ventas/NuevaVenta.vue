@@ -872,6 +872,7 @@
                       v-validate:plan_de_venta_computed.immediate="'required'"
                       name="plan_venta"
                       data-vv-as="Plan de Venta"
+                      :disabled="opcionPagar_validacion_computed"
                     >
                       <div slot="no-options">Seleccione una opción</div>
                     </v-select>
@@ -950,7 +951,12 @@
                           v-model="form.num_operacion"
                           maxlength="36"
                         />
-                        <div class="mt-2"></div>
+                        <div class="mt-2">
+                          <span
+                            class="text-danger text-sm"
+                            v-if="this.errores.num_operacion"
+                          >{{errores.num_operacion[0]}}</span>
+                        </div>
                       </div>
 
                       <div
@@ -1000,6 +1006,14 @@
                   <!--fin de datos del pago inicial--->
 
                   <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5">
+                    <div
+                      class="pb-6 text-center"
+                      v-if="this.form.planVenta.precio_neto==this.form.descuento && this.form.planVenta.value>=0"
+                    >
+                      <span
+                        class="bg-danger text-white font-medium pr-3 pl-3"
+                      >Ojo, está haciendo un descuento del 100%, verifique si desea continuar.</span>
+                    </div>
                     <vs-button
                       icon-pack="feather"
                       icon="icon-database"
@@ -1340,10 +1354,30 @@ export default {
           this.form.enganche_inicial = this.form.precio_neto;
         }
       }
+    },
+
+    "form.precio_neto": function(newValue, oldValue) {
+      if (newValue == 0) {
+        //la venta es 100% gratis
+        this.form.opcionPagar = {
+          label: "Pagar Después",
+          value: 0
+        };
+      }
     }
     //fin de watchs con mapa
   },
   computed: {
+    banco_computed: function() {
+      if (this.form.formaPago.value != 1) {
+        return this.form.banco;
+      } else return true;
+    },
+    opcionPagar_validacion_computed: function() {
+      if (this.form.precio_neto == 0) {
+        return true;
+      } else return false;
+    },
     showVentana: {
       get() {
         return this.show;
@@ -1475,24 +1509,26 @@ export default {
       if (this.datosAreas.tipo_propiedades_id == 4) {
         //ubicacion para cuadriplex de terrazas
         //id del tipo de propiedad - id de la propiedad - num fila - num columna
-        return (this.form.ubicacion =
-          this.form.propiedades_id +
+        return (
+          this.form.tipo_propiedades_id +
           "-" +
           this.datosAreas.id +
           "-" +
           this.form.filas.value +
           "-" +
-          this.form.lotes.value);
+          this.form.lotes.value
+        );
       } else {
         //id del tipo de propiedad - id de la propiedad - num fila - 1
-        return (this.form.ubicacion =
-          this.form.propiedades_id +
+        return (
+          this.form.tipo_propiedades_id +
           "-" +
           this.datosAreas.id +
           "-" +
           this.form.filas.value +
           "-" +
-          1);
+          1
+        );
       }
     }
     //fin de crear ubicacion
@@ -1636,9 +1672,10 @@ export default {
           } else {
             //se confirma la cntraseña
             //una vez todo validado, actualizo los ultimos datos de ubicacion
-            this.form.ubicacion = this.crear_ubicacion_computed;
             this.form.propiedades_id = this.datosAreas.id;
             this.form.tipo_propiedades_id = this.datosAreas.tipo_propiedades_id;
+
+            this.form.ubicacion = this.crear_ubicacion_computed;
             this.form.minima_cuota_inicial = this.cuota_inicial;
             this.form.maxima_cuota_inicial = this.maxima_cuota_inicial;
             //fin de actualizar datos de ubicacion
@@ -1651,6 +1688,7 @@ export default {
 
     guardarVenta() {
       //aqui mando guardar los datos
+      this.errores = [];
       this.$vs.loading();
       cementerio
         .guardarVenta(this.form)
@@ -1666,6 +1704,7 @@ export default {
               color: "success",
               time: 5000
             });
+            //this.limpiarVentana();
           } else {
             this.$vs.notify({
               title: "Ventas de Propiedades",
@@ -1695,7 +1734,27 @@ export default {
             } else if (err.response.status == 422) {
               //checo si existe cada error
               this.errores = err.response.data.error;
-              console.log(err.response);
+              if (this.errores.ubicacion) {
+                //la propiedad esa ya ha sido vendida
+                this.$vs.notify({
+                  title: "Seleccionar Terreno",
+                  text: "Este terreno ya ha sido vendido previamente.",
+                  iconPack: "feather",
+                  icon: "icon-alert-circle",
+                  color: "danger",
+                  time: 5000
+                });
+              }
+
+              this.$vs.notify({
+                title: "Guardar Venta",
+                text: "Verifique los errores encontrados en los datos.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 5000
+              });
+              //console.log(err.response);
             }
           }
           this.$vs.loading.close();
@@ -1857,8 +1916,13 @@ export default {
       this.form.descuento = 0;
 
       this.form.beneficiarios = [];
-
-      this.form.fecha_venta = "";
+      (this.form.planVenta = {
+        label: "Seleccione 1",
+        value: "",
+        precio_neto: "",
+        enganche_inicial: ""
+      }),
+        (this.form.fecha_venta = "");
       this.form.opcionPagar = {
         label: "Pagar Después",
         value: 0

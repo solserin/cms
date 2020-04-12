@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\AntiguedadesVenta;
 use App\User;
+use App\Ajustes;
 use App\Propiedades;
 use App\SatFormasPago;
 use App\tipoPropiedades;
+use App\AntiguedadesVenta;
+use App\VentasPropiedades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +31,7 @@ class CementerioController extends ApiController
         //id del conjunto de propieades
 
         return
-            SatFormasPago::where('clave', '<>', '99')->get();
+            SatFormasPago::where('clave', '<>', '99')->where('clave', '<>', '25')->get();
     }
 
     /**GUARDAR LA VENTA */
@@ -65,6 +67,8 @@ class CementerioController extends ApiController
             'formaPago.value' => 'required',
             'banco' => '',
             'ultimosdigitos' => '',
+            'num_operacion' => '',
+
 
             //enganche inicial sera calculado
             //fin info de plan de ventas y pagos
@@ -126,6 +130,15 @@ class CementerioController extends ApiController
                 //cuqlquiera menos efectivo
                 $validaciones['banco'] = 'required';
             }
+
+
+            //pago con trasferencia de fondos
+            if ($request->formaPago['value'] == 3) {
+                //cuqlquiera menos efectivo
+                $validaciones['num_operacion'] = 'unique:pagos_propiedades,referencia_operacion';
+            }
+
+
             if ($request->formaPago['value'] == 4 || $request->formaPago['value'] == 5) {
                 //cuqlquiera menos efectivo
                 $validaciones['ultimosdigitos'] = 'nullable|numeric|digits_between:4,4';
@@ -139,26 +152,254 @@ class CementerioController extends ApiController
         $mensajes = [
             'required' => 'Ingrese este dato',
             'numeric' => 'Este dato debe ser un número',
-            'unique' => 'Este terreno ya fue vendido',
+            'ubicacion.unique' => 'Este terreno ya fue vendido',
+            'num_solicitud.unique' => 'Esta solicitud ya fue registrada en otra venta',
+            'convenio.unique' => 'Este convenio ya fue registrado en otra venta',
+            'titulo.unique' => 'Este título ya fue registrado en otra venta',
+            'num_operacion.unique' => 'Este número de operación ya fue capturado',
             //beneficiarios
-            '*.nombre.required' => 'ingrese este dato.',
-            '*.parentesco.required' => 'ingrese este dato.',
-            '*.telefono.required' => 'ingrese este dato.',
+            '*.nombre.required' => 'ingrese este dato',
+            '*.parentesco.required' => 'ingrese este dato',
+            '*.telefono.required' => 'ingrese este dato',
+            'lte' => 'verifique la cantidad',
+            'unique.num_operacion' => 'Este número de operación ya fue registrado.',
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
 
+        /**aqui comienzan a gurdar los datos */
+        $subtotal = (((float) $request->planVenta['precio_neto'])) * .84; //sin iva
+        $iva = (((float) $request->planVenta['precio_neto'])) * .16; //solo el iva
+        $descuento = (float) $request->descuento;
+        $total_neto = $subtotal + $iva - $descuento;
 
 
 
-        return 1;
+        //aqui procedemos a guardar segun los datas recibidos
+
+
+        //if ($request->venta_referencia_id == 1 && $request->ventaAntiguedad['value'] == 1) {
+        /**********CASO DE VENTA 1 - NUEVA VENTA "SISTEMATIZADA" */
+        /**VENTA DE USO INMEDIATO */
+        //no se captura ningun numero de referencia, pues el numero de titulo se genera al cubrir la totalidad de la venta
+        //return $request->vendedor['value'];
+        try {
+            DB::beginTransaction();
+            $id_venta = 0;
+            //venta de uso inmediato y de control sistematizado
+            //captura de la venta
+            $id_venta = DB::table('ventas_propiedades')->insertGetId(
+                [
+                    /**venta a futuro solamente */
+                    'numero_solicitud' => ($request->venta_referencia_id == 2) ? $request->num_solicitud : null,
+                    /**venta  liquidada solamente */
+                    'numero_convenio' => $this->generarNumeroConvenio($request),
+                    'numero_titulo' => ($request->ventaAntiguedad['value'] > 1) ? $request->titulo : null,
+                    'antiguedad_ventas_id' => (int) $request->ventaAntiguedad['value'],
+                    'propiedades_area_id' => (int) $request->propiedades_id,
+                    /**la ubicacion consiste de 4 valores id_tipo_propiedad-id_propiedad-fila-lote */
+                    /**ejem 4-29-1-3 */
+                    'ubicacion' => $request->ubicacion,
+                    'fecha_registro' => now(),
+                    'fecha_venta' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                    'registro_id' => (int) $request->user()->id,
+                    'subtotal' => $subtotal,
+                    'descuento' => $descuento,
+                    'iva' => $iva,
+                    'total' => $total_neto,
+                    'vendedor_id' => (int) $request->vendedor['value'],
+                    'nombre' => $request->titular,
+                    'fecha_nac' => date('Y-m-d', strtotime($request->fecha_nac)),
+                    'domicilio' => $request->domicilio,
+                    'ciudad' => $request->ciudad,
+                    'estado' => $request->estado,
+                    'telefono' => $request->tel_domicilio,
+                    'tel_oficina' => $request->tel_oficina,
+                    'celular' => $request->celular,
+                    //agregar'tel_oficina' => $request->ubicacion,
+                    'rfc' => $request->rfc,
+                    'email' => $request->email,
+                    'mensualidades' => (int) $request->planVenta['value'],
+                    'ventas_referencias_id' => (int) $request->venta_referencia_id,
+                ]
+            );
+            //captura de los beneficiarios
+            $this->guardarBeneficiariosVenta($request, $id_venta);
+
+
+
+            /**captura de pagos */
+            $this->programarPagosVenta($request, $id_venta);
+
+            /**fin de captura de pagos */
+            DB::commit();
+            return 1;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+        /**FIN DE VENTA A USO INMEDIATO */
+        /**********FIN DE CASOS DE VENTA 1 - NUEVA VENTA "SISTEMATIZADA" */
+    }
+
+    /**generar numero de convenio automatico */
+    public function generarNumeroConvenio(Request $request)
+    {
+        $numero_convenio = 0;
+
+        if ($request->venta_referencia_id == 2  && $request->ventaAntiguedad['value'] == 1) {
+            //debo generar el numero de convenio
+            //para aquellas ventas que son a futuro pero del sistema nuevo, con control sistematizado, el orden de convenios con sistemas comenzará con el numero
+            //500 (quinientos)
+            //determino si ya esta en funcion la asignacion de numeros de convenios automaticos
+            $ajustes = Ajustes::first();
+            if ($ajustes->numero_convenios_sistematizados == true) {
+                //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
+                $numero_convenio = ((int) VentasPropiedades::where('antiguedad_ventas_id', 1)->where('ventas_referencias_id', 2)->max('numero_convenio')) + 1;
+            } else {
+                //comenzamos en numero 500 (quinientos) y marcamos numero_convenios_sistematizados como true en la base de datos
+                $ajustes->numero_convenios_sistematizados = true;
+                $ajustes->timestamps = false;
+                $ajustes->save();
+                $numero_convenio = 500;
+            }
+        } else if ($request->venta_referencia_id == 2  && $request->ventaAntiguedad['value'] > 1) {
+            //se debe ingresar manualmente
+            $numero_convenio = $request->convenio; //es el que capturo el usuario
+        } else {
+            //no aplica y se debe retornar null
+            $numero_convenio = null;
+        }
+
+        //se retorna el nuevo numero de convenio generado
+        return $numero_convenio;
     }
 
 
 
+    //guarda los beneficiarios de la venta de una propiedad
+    public function guardarBeneficiariosVenta(Request $request, $id_venta = 0)
+    {
+        //id del conjunto de propieades
+        for ($i = 0; $i < count($request['beneficiarios']); $i++) {
+            DB::table('beneficiarios_propiedades')->insert(
+                [
+                    'nombre' => $request['beneficiarios'][$i]['nombre'],
+                    'parentesco' => $request['beneficiarios'][$i]['parentesco'],
+                    'telefono' => $request['beneficiarios'][$i]['telefono'],
+                    'ventas_propiedades_id' => $id_venta,
+                ]
+            );
+        }
+    }
 
+    //guarda los beneficiarios de la venta de una propiedad
+    public function programarPagosVenta(Request $request, $id_venta = 0)
+    {
+        /**aqui comienzan a gurdar los datos */
+        $subtotal = (((float) $request->planVenta['precio_neto'])) * .84; //sin iva
+        $iva = (((float) $request->planVenta['precio_neto'])) * .16; //solo el iva
+        $descuento = (float) $request->descuento;
+        $total_neto = $subtotal + $iva - $descuento;
+        //verificando si la venta viene con algun descuento
+
+        /**como se genera la referencia del pago para realizar pago en bancos */
+        //se compone de la referencia de la venta segun el tipo de venta que es, la fecha
+        //venta_referencia_id
+        /**asi se compone una referencia para un pago */
+        /**
+         * se compone de la clave de referencia del tipo de venta segun la tabla ventas_referencias (2 digitos)
+         * fecha programada del pago(8 digitos)
+         * numero de pago 01,02,12,18,24,32,maximo son 64 etc. (2 digitos)
+         * id de la venta, puede ir desde los 4 hasta los 5 digitos
+         * ejemplo de una referencia
+         * 0120200411011  // venta de propiedad de uso inmediato, fecha 11 de abril 2020, pago 01 y venta id 1
+         */
+
+        if ($total_neto == 0) {
+            //este es un pago especial
+            //la venta tiene 100% de descuento
+            //sin importar el plan de venta solo se programara un solo pago y se registrará el pago automaticmante con el la forma de pago del sat
+            //clave 25, remision de deuda
+
+            $id_pago_programado_venta_gratis = DB::table('pagos_programados_propiedades')->insertGetId(
+                [
+                    'num_pago' => '01', //numero 1, pues es unico
+                    'fecha_programada' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                    'ventas_propiedades_id' => $id_venta, //id de la venta
+                    'tipo_pagos_id' => 3, //3-liquidacion //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
+                    'referencia_pago' => '01' . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
+                    'subtotal' => $subtotal,
+                    'iva' => $iva,
+                    'descuento' => $descuento,
+                    'total' => $total_neto,
+                ]
+            );
+            //se paga automaticamente este tipo de ventas
+            DB::table('pagos_propiedades')->insert(
+                [
+                    'pagos_programados_propiedades_id' => $id_pago_programado_venta_gratis,
+                    'subtotal' => $subtotal,
+                    'iva' => $iva,
+                    'descuento' => $descuento,
+                    'total' => $total_neto,
+                    'fecha_pago' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                    'fecha_registro' =>  now(), //fecha de la venta
+                    'registro_id' => (int) $request->user()->id,
+                    'cobrador_id' => (int) $request->vendedor['value'],
+                    'sat_formas_pago_id' => 6, //remision de deuda la forma pago del sat
+                ]
+            );
+        } else {
+            //puede que venga con descuento pero no es del 100%
+            //determinamos que tipo de ventas
+            if ($request->venta_referencia_id == 1 || (int) $request->planVenta['value'] == 0) {
+                //de uso inmediato sin importar si es seleccionado a futuro o inmediato ya que selecciono pagarlo de contado
+                /**se crea un solo pago */
+
+                $id_pago_programado_unico = DB::table('pagos_programados_propiedades')->insertGetId(
+                    [
+                        'num_pago' => 1, //numero 1, pues es unico
+                        'fecha_programada' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                        'ventas_propiedades_id' => $id_venta, //id de la venta
+                        'tipo_pagos_id' => 3, //3-liquidacion //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
+                        'referencia_pago' => '01' . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
+                        'subtotal' => $subtotal,
+                        'iva' => $iva,
+                        'descuento' => $descuento,
+                        'total' => $total_neto
+                    ]
+                );
+                //viendo si quiere registrar el abono inicial desde la venta
+                if ($request->opcionPagar['value'] == 1) {
+                    //quiere registrar el enganche inicial, osea el valor de la propiedad de una vez
+                    DB::table('pagos_propiedades')->insert(
+                        [
+                            'pagos_programados_propiedades_id' => $id_pago_programado_unico,
+                            'subtotal' => $subtotal,
+                            'iva' => $iva,
+                            'descuento' => $descuento,
+                            'total' => $total_neto,
+                            'fecha_pago' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                            'fecha_registro' => now(), //fecha de la venta
+                            'registro_id' => (int) $request->user()->id,
+                            'cobrador_id' => (int) $request->vendedor['value'],
+                            'sat_formas_pago_id' => $request->formaPago['value'], //
+                            'banco' => ($request->formaPago['value'] != '1') ? $request->banco : null,
+                            'num_cheque' => ($request->formaPago['value'] == '2') ? $request->num_cheque : null,
+                            'referencia_operacion' => ($request->formaPago['value'] == '3') ? $request->num_operacion : null,
+                            'ultimos_cuatro' => ($request->formaPago['value'] == '4' || $request->formaPago['value'] == '5') ? $request->ultimosdigitos : null,
+                        ]
+                    );
+                }
+            } else {
+                //a futuro y a meses
+
+            }
+        }
+    }
 
 
 
