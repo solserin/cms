@@ -155,6 +155,7 @@ Route::post('/password/reset', 'Auth\Api\ResetPasswordController@reset');
 
 
 
+Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
 
 
 

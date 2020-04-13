@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Ajustes;
+use Carbon\Carbon;
 use App\Propiedades;
 use App\SatFormasPago;
 use App\tipoPropiedades;
@@ -11,6 +12,7 @@ use App\AntiguedadesVenta;
 use App\VentasPropiedades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\PagosProgramadosPropiedades;
 
 class CementerioController extends ApiController
 {
@@ -135,7 +137,9 @@ class CementerioController extends ApiController
             //pago con trasferencia de fondos
             if ($request->formaPago['value'] == 3) {
                 //cuqlquiera menos efectivo
-                $validaciones['num_operacion'] = 'unique:pagos_propiedades,referencia_operacion';
+                if (trim($validaciones['num_operacion']) != '') {
+                    $validaciones['num_operacion'] = 'unique:pagos_propiedades,referencia_operacion';
+                }
             }
 
 
@@ -196,7 +200,7 @@ class CementerioController extends ApiController
                     'numero_solicitud' => ($request->venta_referencia_id == 2) ? $request->num_solicitud : null,
                     /**venta  liquidada solamente */
                     'numero_convenio' => $this->generarNumeroConvenio($request),
-                    'numero_titulo' => ($request->ventaAntiguedad['value'] > 1) ? $request->titulo : null,
+                    'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
                     'antiguedad_ventas_id' => (int) $request->ventaAntiguedad['value'],
                     'propiedades_area_id' => (int) $request->propiedades_id,
                     /**la ubicacion consiste de 4 valores id_tipo_propiedad-id_propiedad-fila-lote */
@@ -257,7 +261,10 @@ class CementerioController extends ApiController
             $ajustes = Ajustes::first();
             if ($ajustes->numero_convenios_sistematizados == true) {
                 //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
-                $numero_convenio = ((int) VentasPropiedades::where('antiguedad_ventas_id', 1)->where('ventas_referencias_id', 2)->max('numero_convenio')) + 1;
+                //$numero_convenio = ((int) VentasPropiedades::where('antiguedad_ventas_id', 1)->where('ventas_referencias_id', 2)->max('numero_convenio')) + 1;
+                $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_convenio NOT LIKE '%[^0-9]%' THEN numero_convenio END) as int)) AS max_numero_convenio  from ventas_propiedades where ventas_referencias_id=2 and antiguedad_ventas_id=1"));
+                $ultimo_convenio = json_decode(json_encode($result), true)[0]['max_numero_convenio'];
+                $numero_convenio = $ultimo_convenio + 1;
             } else {
                 //comenzamos en numero 500 (quinientos) y marcamos numero_convenios_sistematizados como true en la base de datos
                 $ajustes->numero_convenios_sistematizados = true;
@@ -275,6 +282,66 @@ class CementerioController extends ApiController
 
         //se retorna el nuevo numero de convenio generado
         return $numero_convenio;
+    }
+
+
+    /**generar numero de convenio titulo */
+    public function generarNumeroTitulo($id_venta = 0)
+    {
+        //$id_venta = 52;
+        if ($id_venta > 0) {
+            //aqui se comienza a generar el numero de titulo
+            /***el numero de titulo que se genera con el sistema 
+             * es para aqeullas ventas que son nueva venta antiguedad 1 y ventas que no estan
+             * liquidadas antiguedad 2
+             * ya que estas ventas no llevan el numero de titulo asigando por el usuario
+             */
+
+            /**el numero de titulo se asigna para aquellas ventas que ya fueron liquidadas
+             * por lo tanto debemos checar en los pagos hechos a esta venta y ver si el total de pagos realizados
+              es igual al total neto de la venta
+             */
+            $pagos_venta = VentasPropiedades::with(['pagosProgramados.pagosRealizados' => function ($q) {
+                $q->where('status', '=', 1);
+            }])->find($id_venta)->toArray();
+
+            //return $pagos_venta['pagos_programados'];
+            $total_pagado = 0;
+            foreach ($pagos_venta['pagos_programados'] as $pago_programado) {
+                foreach ($pago_programado['pagos_realizados'] as $pago_realizado) {
+                    $total_pagado += $pago_realizado['total'];
+                }
+            }
+
+            $numero_titulo = 0;
+
+
+            //checando si la suma de pagos es igual al total de la venta para generale un numero de titulo por haber cubierto la deuda
+            if ($total_pagado == $pagos_venta['total']) {
+                //venta cubierta el 100%
+                //500 (quinientos)
+                //determino si ya esta en funcion la asignacion de numeros de titulos automaticos
+                $ajustes = Ajustes::first();
+                if ($ajustes->numero_titulos_sistematizados == true) {
+                    //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
+                    $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_titulo NOT LIKE '%[^0-9]%' THEN numero_titulo END) as int)) AS max_numero_titulo  from ventas_propiedades"));
+                    $ultimo_titulo = json_decode(json_encode($result), true)[0]['max_numero_titulo'];
+                    $numero_titulo = $ultimo_titulo + 1;
+                } else {
+                    //comenzamos en numero 500 (quinientos) y marcamos numero_titulos_sistematizados como true en la base de datos
+                    $ajustes->numero_titulos_sistematizados = true;
+                    $ajustes->timestamps = false;
+                    $ajustes->save();
+                    $numero_titulo = 500;
+                }
+
+                $venta = VentasPropiedades::find($id_venta);
+                //actualizamos la venta con su nuevo numero de titulo
+                $venta->numero_titulo = $numero_titulo;
+                $venta->timestamps = false;
+                $venta->save();
+            }
+        }
     }
 
 
@@ -352,6 +419,9 @@ class CementerioController extends ApiController
                     'sat_formas_pago_id' => 6, //remision de deuda la forma pago del sat
                 ]
             );
+
+            //se corre el proceso para ver si ya esta liquidada la venta y generar el numero de titulo
+            $this->generarNumeroTitulo($id_venta);
         } else {
             //puede que venga con descuento pero no es del 100%
             //determinamos que tipo de ventas
@@ -394,9 +464,77 @@ class CementerioController extends ApiController
                         ]
                     );
                 }
+                //se corre el proceso para ver si ya esta liquidada la venta y generar el numero de titulo
+                $this->generarNumeroTitulo($id_venta);
             } else {
-                //a futuro y a meses
 
+                //registro el enganche
+                /**los pagos deben llevar los valores en proporcion al descuento 
+                 * por decir asi, cuando el precio lleva descuento se debe de repartir el descuento total entre los diferentes pagos
+                 * segun el porcentaje del pago
+                 */
+
+
+                $enganche_incial = (float) $request->enganche_inicial;
+                $resto_a_mensualidades = (float) $request->precio_neto - (float) $request->enganche_inicial;
+
+                $porcentaje_enganche_inicial = ($enganche_incial * 100) / (float) $request->precio_neto;
+                /**obtengo el porcentaje que le corresponde a esos pagos segun el plan de venta */
+                $porcentaje_resto_a_mensualidades = (100 - $porcentaje_enganche_inicial) / (int) $request->planVenta['value'];
+
+                $sub_total_pago_enganche_sin_descuento = ((float) $request->enganche_inicial) + (($descuento * $porcentaje_enganche_inicial) / 100);
+
+                //enganche inicial mandado mas lo descontado para sacar impuestos completos
+                $subtotal_enganche = $sub_total_pago_enganche_sin_descuento * .84;
+                $iva_enganche = $sub_total_pago_enganche_sin_descuento * .16;
+                $descuento_enganche = ($descuento * $porcentaje_enganche_inicial) / 100;
+
+                $total_enganche = $subtotal_enganche + $iva_enganche - $descuento_enganche;
+
+                $id_pago_programado_enganche = DB::table('pagos_programados_propiedades')->insertGetId(
+                    [
+                        'num_pago' => 1, //numero 1, pues es enganche
+                        'fecha_programada' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                        'ventas_propiedades_id' => $id_venta, //id de la venta
+                        'tipo_pagos_id' => 1, //3-enganche //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
+                        'referencia_pago' => '02'
+                            /**tipo 02 por ser a meses */
+                            . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
+                        'subtotal' => $subtotal_enganche,
+                        'iva' => $iva_enganche,
+                        'descuento' => $descuento_enganche,
+                        'total' => $total_enganche
+                    ]
+                );
+                //a futuro y a meses
+                for ($i = 1; $i <= ((int) $request->planVenta['value']); $i++) {
+                    //aqui van las seis mensualidades del plan de ventas seleccionado y se crear los registros de pagos programados
+                    $sub_total_pago_sin_descuento = ($resto_a_mensualidades / (int) $request->planVenta['value']) + (($descuento * $porcentaje_resto_a_mensualidades) / 100);
+
+
+                    $subtotal_pago = $sub_total_pago_sin_descuento * .84;
+                    $iva_pago = $sub_total_pago_sin_descuento * .16;
+                    $descuento_pago = ($descuento * $porcentaje_resto_a_mensualidades) / 100;
+                    $total_pago = $subtotal_pago + $iva_pago - $descuento_pago;
+
+                    $fecha = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fecha_venta)))->add($i, 'month');
+                    DB::table('pagos_programados_propiedades')->insertGetId(
+                        [
+                            'num_pago' => ($i + 1), //numero 1, pues es enganche
+                            'fecha_programada' => $fecha, //fecha de la venta
+                            'ventas_propiedades_id' => $id_venta, //id de la venta
+                            'tipo_pagos_id' => 2, //3-enganche //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
+                            'referencia_pago' => '02'
+                                /**tipo 02 por ser a meses */
+                                . date('Ymd', strtotime($request->fecha_venta)) . ($i + 1) . $id_venta, //se crea una referencia para saber a que pago pertenece
+                            'subtotal' => $subtotal_pago,
+                            'iva' => $iva_pago,
+                            'descuento' => $descuento_pago,
+                            'total' => $total_pago
+                        ]
+                    );
+                }
+                /**aqui corro el ciclo para ver cuantos pagos se van a hacer, diferenciando el enganche  */
             }
         }
     }

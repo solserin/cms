@@ -1329,8 +1329,14 @@ export default {
 
     "form.planVenta": function(newValue, oldValue) {
       //actualizo el precio actual de la propiedad para mostrar el total neto
-      this.form.precio_neto = newValue.precio_neto - this.form.descuento;
-      this.form.enganche_inicial = newValue.enganche_inicial;
+      if (newValue.value == 0) {
+        this.form.precio_neto = newValue.precio_neto - this.form.descuento;
+        this.form.enganche_inicial = newValue.precio_neto - this.form.descuento;
+      } else if (newValue.value > 0) {
+        this.form.precio_neto = newValue.precio_neto - this.form.descuento;
+        this.form.enganche_inicial =
+          (newValue.precio_neto - this.form.descuento) / 10;
+      }
     },
     "form.descuento": function(newValue, oldValue) {
       //actualizo el total a pagar
