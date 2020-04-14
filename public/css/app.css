@@ -320,6 +320,18 @@
   min-width: 100% !important;
 }
 
+[dir] .pdfs_modulos .iframe_viewer {
+  border: 1px solid #dae1e7 !important;
+}
+
+.pdfs_modulos .vs-card--header {
+  display: none !important;
+}
+
+[dir] .pdfs_modulos .vs-card--header {
+  background-color: rgba(var(--vs-secondary_theme), 1) !important;
+}
+
 .vs-popup--close {
   color: black;
 }

@@ -317,6 +317,12 @@
 .pdfs_modulos .iframe_viewer {
     min-height: 100vh !important;
     min-width: 100% !important;
+    border: 1px solid #dae1e7 !important;
+}
+
+.pdfs_modulos .vs-card--header {
+    display: none !important;
+    background-color: rgba(var(--vs-secondary_theme), 1) !important;
 }
 
 

@@ -148,15 +148,14 @@
             </vs-td>
             <vs-td :data="data[indextr].id_user">
               <div class="flex flex-start">
-                <vs-button
-                  title="Consultar"
-                  size="large"
-                  icon-pack="feather"
-                  icon="icon-eye"
-                  color="dark"
-                  type="flat"
+                <img
+                  class="mr-3"
+                  style="width:19px;"
                   @click="ConsultarVenta(data[indextr].id)"
-                ></vs-button>
+                  src="@assets/images/pdf.svg"
+                  alt
+                />
+
                 <vs-button
                   title="Editar"
                   size="large"
@@ -219,7 +218,12 @@
       :accion="accionNombre"
     ></Password>
     <pdf :show="verPdf" :pdf="pdfLink" @closePdf="verPdf=false"></pdf>
-    <ReportesDisponible :show="openReportesLista" @closeReportes="openReportesLista=false"></ReportesDisponible>
+    <ReportesDisponible
+      :header="'consultar reporte de venta'"
+      :show="openReportesLista"
+      :listadereportes="ListaReportes"
+      @closeReportes="openReportesLista=false"
+    ></ReportesDisponible>
   </div>
 </template>
 
@@ -266,7 +270,7 @@ export default {
   data() {
     return {
       //variable
-
+      ListaReportes: [],
       tipo_propiedades: [],
       propiedad: { label: "Todos", value: "" },
       id_venta_consultar: 0,
@@ -488,6 +492,74 @@ export default {
     },
 
     ConsultarVenta(id_ultima_venta) {
+      this.ListaReportes = [];
+      let self = this;
+      if (cementerio.cancel) {
+        cementerio.cancel("Operation canceled by the user.");
+      }
+      this.$vs.loading();
+      cementerio
+        .get_venta_id(id_ultima_venta)
+        .then(res => {
+          if (res.data[0].numero_solicitud_raw != null) {
+            this.ListaReportes.push({
+              nombre: "Solicitud de venta",
+              url:
+                "inventarios/cementerio/documento_solicitud/" + id_ultima_venta
+            });
+          }
+          if (res.data[0].numero_convenio_raw != null) {
+            this.ListaReportes.push({
+              nombre: "Convenio",
+              url:
+                "inventarios/cementerio/documento_convenio/" + id_ultima_venta
+            });
+          }
+
+          if (res.data[0].numero_titulo_raw != null) {
+            this.ListaReportes.push({
+              nombre: "Título",
+              url: "inventarios/cementerio/documento_titulo/" + id_ultima_venta
+            });
+          }
+
+          this.ListaReportes.push({
+            nombre: "Referencias de Pago",
+            url:
+              "inventarios/cementerio/documento_estado_de_cuenta/" +
+              id_ultima_venta
+          });
+
+          this.ListaReportes.push({
+            nombre: "Estado de cuenta",
+            url:
+              "inventarios/cementerio/documento_estado_de_cuenta/" +
+              id_ultima_venta
+          });
+
+          //estado de cuenta
+          this.ListaReportes.push();
+
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            }
+          }
+        });
+
       this.id_venta_consultar = id_ultima_venta;
       this.openReportesLista = true;
     }

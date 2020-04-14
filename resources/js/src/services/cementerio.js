@@ -247,4 +247,28 @@ export default {
                 })
         })
     },
+
+
+    //obtiene la venta por id
+    get_venta_id(param) {
+        let self = this
+        return new Promise((resolve, reject) => {
+            axios.get('/inventarios/cementerio/get_venta_id', {
+                    cancelToken: new CancelToken((c) => {
+                        self.cancel = c
+                    }),
+                    params: param
+                })
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    if (axiosSuper.isCancel(error)) {
+                        reject(error.message)
+                    } else {
+                        reject(error)
+                    }
+                })
+        })
+    },
 }

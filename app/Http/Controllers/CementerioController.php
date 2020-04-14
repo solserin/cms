@@ -889,4 +889,90 @@ class CementerioController extends ApiController
 
         return $ubicacion_texto;
     }
+
+
+
+
+    /**obtiene la venta por id */
+    public function get_venta_id(Request $request)
+    {
+        $id_venta = $request[0];
+
+        $resultado =
+            VentasPropiedades::select(
+                'email',
+                'ventas_propiedades.propiedades_area_id',
+                'nombre',
+                'ventas_propiedades.status',
+                'ventas_propiedades.id',
+                'numero_solicitud',
+                'numero_convenio',
+                'numero_titulo',
+                'numero_solicitud AS numero_solicitud_raw',
+                'numero_convenio as numero_convenio_raw',
+                'numero_titulo as numero_titulo_raw',
+                'ubicacion as ubicacion_raw',
+                'tipo_propiedades.tipo',
+                'ventas_propiedades.status',
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.ventas_referencias_id = "1" THEN "Inmediato"
+                        ELSE "A futuro" 
+                        END) AS uso_venta'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.numero_solicitud <> "" THEN ventas_propiedades.numero_solicitud
+                        ELSE "N/A" 
+                        END) AS numero_solicitud'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.numero_convenio <> "" THEN ventas_propiedades.numero_convenio
+                        ELSE "N/A" 
+                        END) AS numero_convenio'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.numero_titulo <> "" THEN ventas_propiedades.numero_titulo
+                        ELSE "Pendiente" 
+                        END) AS numero_titulo'
+                ),
+                DB::raw(
+                    '"" as ubicacion_texto'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.status = 1 THEN "Activa"
+                        ELSE "Cancelada" 
+                        END) AS status_des'
+                ),
+
+
+            )
+            ->with(
+                ['pagosProgramados.pagosRealizados' => function ($q) {
+                    $q->where('status', '=', 1);
+                }]
+            )
+            ->where('ventas_propiedades.id', $id_venta)
+            ->join('propiedades', 'ventas_propiedades.propiedades_area_id', '=', 'propiedades.id')
+            ->join('tipo_propiedades', 'propiedades.tipo_propiedades_id', '=', 'tipo_propiedades.id')
+            ->orderBy('ventas_propiedades.id', 'desc')
+            ->get();
+
+
+
+        /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
+        $datos_cementerio = $this->get_cementerio();
+        /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
+
+        //**se actualiza la propiedad a formato legible para el usuario */
+        foreach ($resultado as $valor) {
+            $valor->ubicacion_texto = $this->ubicacion_texto($valor->ubicacion_raw, $datos_cementerio);
+        }
+
+        //se retorna el resultado
+        return $resultado;
+    }
 }
