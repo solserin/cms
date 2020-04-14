@@ -6,10 +6,11 @@
       class="confirmar"
       :active.sync="showChecker"
       buttons-hidden
+      fullscreen
     >
       <div class="text-center icono"></div>
       <div class="text-center seguro-mensaje mt-3">¿Seguro de continuar?</div>
-      <div class="text-center seguro-texto mt-3">{{accionNombre}}</div>
+      <div class="text-center seguro-texto mt-3">ssssssss</div>
       <div class="flex flex-wrap mt-2">
         <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
           <div class="mt-2">
@@ -17,13 +18,7 @@
           </div>
         </div>
         <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
-          <div class="mt-2">
-            <vs-button
-              :color="confirmarColorTexto"
-              class="float-left ml-2"
-              @click="aceptar"
-            >{{confirmarButtonTexto}}</vs-button>
-          </div>
+          <div class="mt-2"></div>
         </div>
       </div>
     </vs-prompt>
@@ -35,22 +30,6 @@ export default {
     show: {
       type: Boolean,
       required: true
-    },
-    callbackOnSuccess: {
-      type: Function,
-      required: true
-    },
-    accion: {
-      type: String,
-      required: true
-    },
-    confirmarButton: {
-      type: String,
-      default: "Aceptar"
-    },
-    confirmarColor: {
-      type: String,
-      default: "danger"
     }
   },
 
@@ -65,24 +44,11 @@ export default {
       set(newValue) {
         return newValue;
       }
-    },
-    accionNombre() {
-      return this.accion;
-    },
-    confirmarButtonTexto() {
-      return this.confirmarButton;
-    },
-    confirmarColorTexto() {
-      return this.confirmarColor;
     }
   },
   methods: {
-    aceptar() {
-      this.callbackOnSuccess();
-      this.cancel();
-    },
     cancel() {
-      this.$emit("closeVerificar");
+      this.$emit("closeReportes");
     }
   },
   mounted() {
@@ -128,7 +94,7 @@ export default {
 }
 
 .icono:before {
-  content: url("../../../../../resources/assets/images/question.svg");
+  content: url("../../../../../../../assets/images/pdf.svg");
 }
 
 .confirmar .seguro-mensaje {

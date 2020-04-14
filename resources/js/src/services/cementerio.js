@@ -225,4 +225,26 @@ export default {
                 })
         })
     },
+    /**get las ventas para el paginado de ventas */
+    get_ventas(param) {
+        let self = this
+        return new Promise((resolve, reject) => {
+            axios.get('/inventarios/cementerio/get_ventas', {
+                    cancelToken: new CancelToken((c) => {
+                        self.cancel = c
+                    }),
+                    params: param
+                })
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    if (axiosSuper.isCancel(error)) {
+                        reject(error.message)
+                    } else {
+                        reject(error)
+                    }
+                })
+        })
+    },
 }

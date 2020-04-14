@@ -289,7 +289,7 @@
                       placeholder="Núm. Convenio"
                       v-model="form.convenio"
                       :disabled="!((!tipo_venta)*(capturar_num_convenio))"
-                      maxlength="12"
+                      maxlength="16"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('num_convenio') }}</span>
@@ -316,7 +316,7 @@
                       placeholder="Núm. Título"
                       v-model="form.titulo"
                       :disabled="!((tipo_venta*capturar_num_titulo)+capturar_num_titulo)"
-                      maxlength="12"
+                      maxlength="16"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('num_titulo') }}</span>
@@ -1551,6 +1551,7 @@ export default {
       spanishDatepicker: es,
       operConfirmar: false,
       openConfirmarSinPassword: false,
+
       callback: Function,
       callBackConfirmar: Function,
       accionNombre: "Guardar Venta",
@@ -1699,8 +1700,8 @@ export default {
       cementerio
         .guardarVenta(this.form)
         .then(res => {
-          console.log(res);
-          if (res.data == 1) {
+          //console.log(res);
+          if (res.data >= 1) {
             //success
             this.$vs.notify({
               title: "Ventas de Propiedades",
@@ -1710,6 +1711,7 @@ export default {
               color: "success",
               time: 5000
             });
+            this.$emit("ver_pdfs_nueva_venta", res.data);
             //this.limpiarVentana();
           } else {
             this.$vs.notify({

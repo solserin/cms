@@ -16,7 +16,7 @@ use App\PagosProgramadosPropiedades;
 
 class CementerioController extends ApiController
 {
-    public function get_cementerio(Request $request)
+    public function get_cementerio()
     {
         return
             Propiedades::with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get();
@@ -239,7 +239,7 @@ class CementerioController extends ApiController
 
             /**fin de captura de pagos */
             DB::commit();
-            return 1;
+            return $id_venta;
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
@@ -305,41 +305,46 @@ class CementerioController extends ApiController
                 $q->where('status', '=', 1);
             }])->find($id_venta)->toArray();
 
-            //return $pagos_venta['pagos_programados'];
-            $total_pagado = 0;
-            foreach ($pagos_venta['pagos_programados'] as $pago_programado) {
-                foreach ($pago_programado['pagos_realizados'] as $pago_realizado) {
-                    $total_pagado += $pago_realizado['total'];
-                }
-            }
+            //debemos verificar que la venta no sea liquidada antes del sistema ps deberia llevar el titulo asigando por el usuario y no el calculado
+            if ($pagos_venta['antiguedad_ventas_id'] != 3) {
+                //la venta no fue hecha y liquidada antes del sistema
 
-            $numero_titulo = 0;
-
-
-            //checando si la suma de pagos es igual al total de la venta para generale un numero de titulo por haber cubierto la deuda
-            if ($total_pagado == $pagos_venta['total']) {
-                //venta cubierta el 100%
-                //500 (quinientos)
-                //determino si ya esta en funcion la asignacion de numeros de titulos automaticos
-                $ajustes = Ajustes::first();
-                if ($ajustes->numero_titulos_sistematizados == true) {
-                    //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
-                    $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_titulo NOT LIKE '%[^0-9]%' THEN numero_titulo END) as int)) AS max_numero_titulo  from ventas_propiedades"));
-                    $ultimo_titulo = json_decode(json_encode($result), true)[0]['max_numero_titulo'];
-                    $numero_titulo = $ultimo_titulo + 1;
-                } else {
-                    //comenzamos en numero 500 (quinientos) y marcamos numero_titulos_sistematizados como true en la base de datos
-                    $ajustes->numero_titulos_sistematizados = true;
-                    $ajustes->timestamps = false;
-                    $ajustes->save();
-                    $numero_titulo = 500;
+                //return $pagos_venta['pagos_programados'];
+                $total_pagado = 0;
+                foreach ($pagos_venta['pagos_programados'] as $pago_programado) {
+                    foreach ($pago_programado['pagos_realizados'] as $pago_realizado) {
+                        $total_pagado += $pago_realizado['total'];
+                    }
                 }
 
-                $venta = VentasPropiedades::find($id_venta);
-                //actualizamos la venta con su nuevo numero de titulo
-                $venta->numero_titulo = $numero_titulo;
-                $venta->timestamps = false;
-                $venta->save();
+                $numero_titulo = 0;
+
+
+                //checando si la suma de pagos es igual al total de la venta para generale un numero de titulo por haber cubierto la deuda
+                if ($total_pagado == $pagos_venta['total']) {
+                    //venta cubierta el 100%
+                    //500 (quinientos)
+                    //determino si ya esta en funcion la asignacion de numeros de titulos automaticos
+                    $ajustes = Ajustes::first();
+                    if ($ajustes->numero_titulos_sistematizados == true) {
+                        //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
+                        $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_titulo NOT LIKE '%[^0-9]%' THEN numero_titulo END) as int)) AS max_numero_titulo  from ventas_propiedades"));
+                        $ultimo_titulo = json_decode(json_encode($result), true)[0]['max_numero_titulo'];
+                        $numero_titulo = $ultimo_titulo + 1;
+                    } else {
+                        //comenzamos en numero 500 (quinientos) y marcamos numero_titulos_sistematizados como true en la base de datos
+                        $ajustes->numero_titulos_sistematizados = true;
+                        $ajustes->timestamps = false;
+                        $ajustes->save();
+                        $numero_titulo = 500;
+                    }
+
+                    $venta = VentasPropiedades::find($id_venta);
+                    //actualizamos la venta con su nuevo numero de titulo
+                    $venta->numero_titulo = $numero_titulo;
+                    $venta->timestamps = false;
+                    $venta->save();
+                }
             }
         }
     }
@@ -506,6 +511,30 @@ class CementerioController extends ApiController
                         'total' => $total_enganche
                     ]
                 );
+
+                /**verifico si pago el enganchde desde la venta */
+                if ($request->opcionPagar['value'] == 1) {
+                    //quiere registrar el enganche inicial, osea el valor de la propiedad de una vez
+                    DB::table('pagos_propiedades')->insert(
+                        [
+                            'pagos_programados_propiedades_id' => $id_pago_programado_enganche,
+                            'subtotal' => $subtotal_enganche,
+                            'iva' => $iva_enganche,
+                            'descuento' => $descuento_enganche,
+                            'total' => $total_enganche,
+                            'fecha_pago' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                            'fecha_registro' => now(), //fecha de la venta
+                            'registro_id' => (int) $request->user()->id,
+                            'cobrador_id' => (int) $request->vendedor['value'],
+                            'sat_formas_pago_id' => $request->formaPago['value'], //
+                            'banco' => ($request->formaPago['value'] != '1') ? $request->banco : null,
+                            'num_cheque' => ($request->formaPago['value'] == '2') ? $request->num_cheque : null,
+                            'referencia_operacion' => ($request->formaPago['value'] == '3') ? $request->num_operacion : null,
+                            'ultimos_cuatro' => ($request->formaPago['value'] == '4' || $request->formaPago['value'] == '5') ? $request->ultimosdigitos : null,
+                        ]
+                    );
+                }
+
                 //a futuro y a meses
                 for ($i = 1; $i <= ((int) $request->planVenta['value']); $i++) {
                     //aqui van las seis mensualidades del plan de ventas seleccionado y se crear los registros de pagos programados
@@ -516,6 +545,13 @@ class CementerioController extends ApiController
                     $iva_pago = $sub_total_pago_sin_descuento * .16;
                     $descuento_pago = ($descuento * $porcentaje_resto_a_mensualidades) / 100;
                     $total_pago = $subtotal_pago + $iva_pago - $descuento_pago;
+                    $numero_pago_para_referencia = '';
+                    if ($i < 10) {
+                        //se debe asignar un cero (0) para crear la referencia correcta
+                        $numero_pago_para_referencia = '0' . ($i + 1);
+                    } else {
+                        $numero_pago_para_referencia = ($i + 1);
+                    }
 
                     $fecha = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fecha_venta)))->add($i, 'month');
                     DB::table('pagos_programados_propiedades')->insertGetId(
@@ -526,7 +562,7 @@ class CementerioController extends ApiController
                             'tipo_pagos_id' => 2, //3-enganche //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
                             'referencia_pago' => '02'
                                 /**tipo 02 por ser a meses */
-                                . date('Ymd', strtotime($request->fecha_venta)) . ($i + 1) . $id_venta, //se crea una referencia para saber a que pago pertenece
+                                . date('Ymd', strtotime($request->fecha_venta)) . $numero_pago_para_referencia . $id_venta, //se crea una referencia para saber a que pago pertenece
                             'subtotal' => $subtotal_pago,
                             'iva' => $iva_pago,
                             'descuento' => $descuento_pago,
@@ -690,5 +726,167 @@ class CementerioController extends ApiController
 
         return
             AntiguedadesVenta::get();
+    }
+
+
+
+
+
+    /**obtiene todas las ventas para el paginado de ventas de cementerio */
+    public function get_ventas(Request $request)
+    {
+        $filtro_especifico_opcion = $request->filtro_especifico_opcion;
+        $titular = $request->titular;
+        $numero_control = $request->numero_control;
+        $status = $request->status;
+
+
+        $resultado = $this->showAllPaginated(
+            VentasPropiedades::select(
+                'ventas_propiedades.propiedades_area_id',
+                'nombre',
+                'ventas_propiedades.status',
+                'ventas_propiedades.id',
+                'numero_solicitud',
+                'numero_convenio',
+                'numero_titulo',
+                'ubicacion as ubicacion_raw',
+                'tipo_propiedades.tipo',
+                'ventas_propiedades.status',
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.ventas_referencias_id = "1" THEN "Inmediato"
+                        ELSE "A futuro" 
+                        END) AS uso_venta'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.numero_solicitud <> "" THEN ventas_propiedades.numero_solicitud
+                        ELSE "N/A" 
+                        END) AS numero_solicitud'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.numero_convenio <> "" THEN ventas_propiedades.numero_convenio
+                        ELSE "N/A" 
+                        END) AS numero_convenio'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.numero_titulo <> "" THEN ventas_propiedades.numero_titulo
+                        ELSE "Pendiente" 
+                        END) AS numero_titulo'
+                ),
+                DB::raw(
+                    '"" as ubicacion_texto'
+                ),
+                DB::raw(
+                    '(CASE 
+                        WHEN ventas_propiedades.status = 1 THEN "Activa"
+                        ELSE "Cancelada" 
+                        END) AS status_des'
+                ),
+
+
+            )
+                ->with(
+                    ['pagosProgramados.pagosRealizados' => function ($q) {
+                        $q->where('status', '=', 1);
+                    }]
+                )
+                ->where(function ($q) use ($status) {
+                    if ($status != '') {
+                        $q->where('ventas_propiedades.status', $status);
+                    }
+                })
+                ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
+                    if (trim($numero_control) != '') {
+                        if ($filtro_especifico_opcion == 1) {
+                            /**filtro por numero de solicitud */
+                            $q->where('ventas_propiedades.numero_solicitud', '=',  $numero_control);
+                        } else if ($filtro_especifico_opcion == 2) {
+                            /**filtro por numero de solicitud */
+                            $q->where('ventas_propiedades.numero_convenio', '=',  $numero_control);
+                        } else if ($filtro_especifico_opcion == 3) {
+                            /**filtro por numero de solicitud */
+                            $q->where('ventas_propiedades.numero_titulo', '=',  $numero_control);
+                        } else {
+                            /**filtro por numero de solicitud */
+                            $q->where('ventas_propiedades.id', $numero_control);
+                        }
+                    }
+                })
+                ->where(function ($q) use ($titular) {
+                    if (trim($titular) != '') {
+                        $q->where('ventas_propiedades.nombre', 'like', '%' . $titular . '%');
+                    }
+                })
+                ->join('propiedades', 'ventas_propiedades.propiedades_area_id', '=', 'propiedades.id')
+                ->join('tipo_propiedades', 'propiedades.tipo_propiedades_id', '=', 'tipo_propiedades.id')
+                ->orderBy('ventas_propiedades.id', 'desc')
+                ->get()
+        );
+
+
+        /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
+        $datos_cementerio = $this->get_cementerio();
+        /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
+
+        //**se actualiza la propiedad a formato legible para el usuario */
+        foreach ($resultado as $valor) {
+            $valor->ubicacion_texto = $this->ubicacion_texto($valor->ubicacion_raw, $datos_cementerio);
+        }
+
+        //se retorna el resultado
+        return $resultado;
+    }
+
+    public function ubicacion_texto($dato = '', $datos_cementerio = [])
+    {
+        //checo si los datos del cemeterio vienen vacios para llenar el arreglo
+        if (count($datos_cementerio) == 0) {
+            /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
+            $datos_cementerio = $this->get_cementerio();
+            /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
+        }
+
+        /**se obtienen los parametros de la ubicacion */
+        $id_tipo = explode("-", $dato)[0];
+        $id_propiedad = explode("-", $dato)[1];
+        $fila = explode("-", $dato)[2];
+        $lote = explode("-", $dato)[3];
+
+        /**se necesita crear un arregle con el abecedario para cuadrar las propiedades segun su fila "en alfabeto" */
+        $alfabeto = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+        /**se procede a crear una ubicacion entendible para el usuario */
+
+        $ubicacion_texto = '';
+        foreach ($datos_cementerio as $propiedad) {
+            //recorriendo propiedades
+            if ($propiedad->id == $id_propiedad) {
+                //una vez encontrada el id defino si es terraza que es
+                if ($propiedad->tipo_propiedades_id == 1) {
+                    //uniplex
+                    $ubicacion_texto .= "Uniplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                } else if ($propiedad->tipo_propiedades_id == 2) {
+                    //duplex
+                    $ubicacion_texto .= "Duplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                } else if ($propiedad->tipo_propiedades_id == 3) {
+                    //nicho
+                    $ubicacion_texto .= "Nichos - Columna " . $propiedad->propiedad_indicador . ", Fila " . $fila;
+                } else if ($propiedad->tipo_propiedades_id == 4) {
+                    //cuadriplex
+                    $ubicacion_texto .= "Terraza " . $propiedad->propiedad_indicador . ", Fila " . strtoupper($alfabeto[$fila - 1]) . " Lote " . $lote;
+                } else if ($propiedad->tipo_propiedades_id == 5) {
+                    //triplex
+                    $ubicacion_texto .= "Triplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                } else if ($propiedad->tipo_propiedades_id == 6) {
+                    //cuadriplex sin terraza
+                    $ubicacion_texto .= "cuadriplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                }
+            }
+        }
+
+        return $ubicacion_texto;
     }
 }
