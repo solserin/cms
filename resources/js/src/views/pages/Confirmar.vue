@@ -107,7 +107,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style language="scss">
 /*confirmar (sin password) checker*/
 .confirmar .password-checker .vs-dialog-cancel--icon {
   display: none;

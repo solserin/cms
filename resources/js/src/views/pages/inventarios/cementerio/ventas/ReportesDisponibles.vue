@@ -1,36 +1,48 @@
 <template >
   <div class="centerx">
-    <vs-prompt
-      type="confirm"
-      title="¿Desea continuar?"
-      class="confirmar"
-      :active.sync="showChecker"
-      buttons-hidden
+    <vs-popup
       fullscreen
+      title="consultar reporte de venta"
+      class="pdfs_modulos bg-grey-light h-screen"
+      :active.sync="showChecker"
+      @close="cancel"
     >
-      <div class="text-center icono"></div>
-      <div class="text-center seguro-mensaje mt-3">¿Seguro de continuar?</div>
-      <div class="text-center seguro-texto mt-3">ssssssss</div>
-      <div class="flex flex-wrap mt-2">
+      <!-- <img style="width:100px;" src="@assets/images/pdf.svg" alt />-->
+      <div class="flex flex-wrap">
+        <div class="w-full px-2">
+          <div class="flex flex-wrap">
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12">f</div>
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12">f</div>
+          </div>
+        </div>
+        <div class="w-full mt-5 px-2">
+          <div class="mt-2">
+            <iframe src class="iframe_viewer"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!--<div class="flex flex-wrap mt-2">
         <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
           <div class="mt-2">
             <vs-button class="float-right mr-2" type="border" @click="cancel">(Esc) Cancelar</vs-button>
           </div>
         </div>
-        <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
-          <div class="mt-2"></div>
-        </div>
-      </div>
-    </vs-prompt>
+      </div>-->
+    </vs-popup>
   </div>
 </template>
 <script>
+import vSelect from "vue-select";
 export default {
   props: {
     show: {
       type: Boolean,
       required: true
     }
+  },
+  components: {
+    "v-select": vSelect
   },
 
   data() {
@@ -73,44 +85,5 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-/*confirmar (sin password) checker*/
-.confirmar .password-checker .vs-dialog-cancel--icon {
-  display: none;
-}
-
-.confirmar .vs-dialog-cancel-button {
-  color: #fff !important;
-  background-color: #c1c1c1 !important;
-}
-
-.confirmar .vs-dialog {
-  max-width: 550px !important;
-  min-height: 350px !important;
-}
-
-.confirmar .vs-dialog .vs-dialog-header {
-  display: none !important;
-}
-
-.icono:before {
-  content: url("../../../../../../../assets/images/pdf.svg");
-}
-
-.confirmar .seguro-mensaje {
-  font-size: 1.8rem;
-  color: #636363 !important;
-  font-weight: 500 !important;
-}
-
-.confirmar .seguro-texto {
-  font-size: 1.2rem;
-  color: #999999 !important;
-}
-
-.cancelar {
-  background-color: #c1c1c1;
-}
-
-/*fin confirmar (sin password) checker*/
+<style  scoped>
 </style>

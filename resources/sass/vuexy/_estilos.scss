@@ -293,3 +293,38 @@
     font-size: 24px;
     line-height: 32px;
 }
+
+
+
+/*pdfs de los reportes de los modulos*/
+/*.pdfs_modulos .vs-popup--header,
+.pdfs_modulos .vs-popup--footer {
+    display: none !important;
+}
+*/
+.pdfs_modulos .vs-popup--header {
+    padding: 2px 0 2px 0 !important;
+}
+
+.pdfs_modulos .vs-popup--header h3 {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+
+
+
+.pdfs_modulos .iframe_viewer {
+    min-height: 100vh !important;
+    min-width: 100% !important;
+}
+
+
+
+
+.vs-popup--close {
+    border-radius: 0px !important;
+    color: rgba(0, 0, 0, 1);
+}
+
+/*FIN pdfs de los reportes de los modulos*/

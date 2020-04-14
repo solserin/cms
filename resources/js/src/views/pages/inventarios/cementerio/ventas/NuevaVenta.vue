@@ -5,22 +5,13 @@
       close="cancelar"
       title="Venta de Propiedades del Cementerio"
       :active.sync="showVentana"
-      button-close-hidden
+      @close="cancelar"
     >
       <!--inicio venta-->
       <vx-card class="pt-5">
         <template slot="no-body">
           <div class="venta-details">
             <div class="flex flex-wrap">
-              <div class="w-full px-2">
-                <vs-button
-                  icon-pack="feather"
-                  icon="icon-x"
-                  color="danger"
-                  class="float-right mb-6"
-                  @click="cancelar"
-                >Cancelar Venta</vs-button>
-              </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
                 <!--mapa del cementerio-->
                 <div mt-5>

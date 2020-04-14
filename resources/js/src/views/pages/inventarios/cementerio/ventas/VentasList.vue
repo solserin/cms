@@ -155,7 +155,7 @@
                   icon="icon-eye"
                   color="dark"
                   type="flat"
-                  @click="openModificar(data[indextr].id_user)"
+                  @click="ConsultarVenta(data[indextr].id)"
                 ></vs-button>
                 <vs-button
                   title="Editar"
@@ -204,7 +204,7 @@
     <NuevaVenta
       :show="verAgregar"
       @closeVentana="verAgregar = false"
-      @ver_pdfs_nueva_venta="ultimaVenta"
+      @ver_pdfs_nueva_venta="ConsultarVenta"
     ></NuevaVenta>
     <UpdateUsuario
       :show="verModificar"
@@ -487,7 +487,7 @@ export default {
       this.openStatus = false;
     },
 
-    ultimaVenta(id_ultima_venta) {
+    ConsultarVenta(id_ultima_venta) {
       this.id_venta_consultar = id_ultima_venta;
       this.openReportesLista = true;
     }
