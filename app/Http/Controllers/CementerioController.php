@@ -959,6 +959,9 @@ class CementerioController extends ApiController
                     $q->where('status', '=', 1);
                 }]
             )
+            ->with(
+                'pagosProgramados.tipoPago'
+            )
             ->where('ventas_propiedades.id', $id_venta)
             ->join('propiedades', 'ventas_propiedades.propiedades_area_id', '=', 'propiedades.id')
             ->join('tipo_propiedades', 'propiedades.tipo_propiedades_id', '=', 'tipo_propiedades.id')
@@ -989,14 +992,14 @@ class CementerioController extends ApiController
     public function referencias_de_pago($id_venta = 75, $descargar = 0, $email = 0)
     {
         //obtengo la informacion de esa venta
-        $datos_venta = $this->get_venta_id($id_venta);
+        $datos_venta = $this->get_venta_id($id_venta)->toArray();
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/referencias_de_pago', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('inventarios/cementerios/referencias_de_pago', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $pdf->setOptions([
             'title' => 'Reporte de Usuarios',
-            'footer-html' => view('footer'),
+            //'footer-html' => view('footer'),
             'header-html' => view('header'),
         ]);
 
@@ -1007,6 +1010,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 0);
         $pdf->setOption('margin-top', 0);
         $pdf->setOption('margin-bottom', 0);
+
+        $pdf->setOption('page-size', 'A4');
 
         return $pdf->inline();
     }

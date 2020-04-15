@@ -15,4 +15,10 @@ class PagosProgramadosPropiedades extends Model
         return $this->hasMany('App\PagosPropiedades', 'pagos_programados_propiedades_id', 'id');
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
     }
+
+    public function tipoPago()
+    {
+        return $this->belongsTo('App\TipoPagos', 'tipo_pagos_id', 'id');
+        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+    }
 }

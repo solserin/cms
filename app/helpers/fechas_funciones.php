@@ -14,6 +14,18 @@ function fechahora_completa()
     return ($arrayDias[date('w')] . ", " . date('d') . " de " . $arrayMeses[date('m') - 1] . " de " . date('Y') . ", " . date("h:i:s a"));
 }
 
+function fecha_completa()
+{
+    $arrayMeses = array(
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    );
+
+
+    return (date('d') . "/" . $arrayMeses[date('m') - 1] . "/" . date('Y'));
+}
+
+
 
 function mes($mes)
 {
@@ -89,4 +101,15 @@ function dia($fecha)
         'M', 'J', 'V', 'S'
     );
     return ($arrayDias[date('w', strtotime($fecha))]);
+}
+
+
+function mes_from_fecha($fecha)
+{
+    $arrayMeses = array(
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    );
+
+    return strtoupper(($arrayMeses[date('m', strtotime($fecha)) - 1]));
 }
