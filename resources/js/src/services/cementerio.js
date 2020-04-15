@@ -253,11 +253,10 @@ export default {
     get_venta_id(param) {
         let self = this
         return new Promise((resolve, reject) => {
-            axios.get('/inventarios/cementerio/get_venta_id', {
+            axios.get('/inventarios/cementerio/get_venta_id/' + param, {
                     cancelToken: new CancelToken((c) => {
                         self.cancel = c
-                    }),
-                    params: param
+                    })
                 })
                 .then((response) => {
                     resolve(response)

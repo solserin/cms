@@ -102,8 +102,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF')->middleware('permiso:5,4');
 
     /**rutas del cementerio */
+    Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
-
     Route::get('inventarios/cementerio/propiedadesById', 'CementerioController@propiedadesById');
     Route::get('inventarios/cementerio/get_propiedades_by_tipo', 'CementerioController@get_propiedades_by_tipo');
     Route::get('inventarios/cementerio/get_usuarios_para_vendedores', 'CementerioController@get_usuarios_para_vendedores');
@@ -118,10 +118,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('inventarios/cementerio/guardar_venta', 'CementerioController@guardar_venta');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     Route::get('inventarios/cementerio/get_ventas', 'CementerioController@get_ventas');
-    Route::get('inventarios/cementerio/get_venta_id', 'CementerioController@get_venta_id');
+    Route::get('inventarios/cementerio/get_venta_id/{id_venta?}', 'CementerioController@get_venta_id');
     Route::get('inventarios/cementerio/documento_solicitud/{id}/{descargar}/{email}', 'CementerioController@documento_solicitud');
     Route::get('inventarios/cementerio/documento_convenio/{id}/{descargar}/{email}', 'CementerioController@documento_convenio');
     Route::get('inventarios/cementerio/documento_titulo/{id}/{descargar}/{email}', 'CementerioController@documento_titulo');
+
     Route::get('inventarios/cementerio/documento_estado_de_cuenta/{id}/{descargar}/{email}', 'CementerioController@documento_estado_de_cuenta');
     /**fin de rutas del cementerio */
 
@@ -147,6 +148,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('metodos-pago/', 'MetodosPagoController@getAll');
     Route::post('compras/', 'ComprasController@save');
 });
+Route::get('inventarios/cementerio/referencias_de_pago/{id}/{descargar?}/{email?}', 'CementerioController@referencias_de_pago');
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
 
@@ -161,7 +163,7 @@ Route::post('/password/reset', 'Auth\Api\ResetPasswordController@reset');
 
 Route::get('ubicacion_texto', 'CementerioController@ubicacion_texto'); //borrar
 
-Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
+
 
 
 

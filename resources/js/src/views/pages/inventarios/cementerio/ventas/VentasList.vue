@@ -150,7 +150,7 @@
               <div class="flex flex-start">
                 <img
                   class="mr-3"
-                  style="width:19px;"
+                  style="width:20px;"
                   @click="ConsultarVenta(data[indextr].id)"
                   src="@assets/images/pdf.svg"
                   alt
@@ -525,9 +525,7 @@ export default {
 
           this.ListaReportes.push({
             nombre: "Referencias de Pago",
-            url:
-              "inventarios/cementerio/documento_estado_de_cuenta/" +
-              id_ultima_venta
+            url: "inventarios/cementerio/referencias_de_pago/" + id_ultima_venta
           });
 
           this.ListaReportes.push({

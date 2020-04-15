@@ -168,7 +168,7 @@ export default {
           this.$vs.loading.close();
           const file = new Blob([res.data], { type: "application/pdf" });
           this.pdf_iframe_source = URL.createObjectURL(file);
-          console.log(
+          /*console.log(
             "get_pdf -> this.pdf_iframe_source",
             this.pdf_iframe_source
           );
@@ -179,7 +179,7 @@ export default {
               today.getMinutes() +
               ":" +
               today.getSeconds()
-          );
+          );*/
         })
         .catch(err => {
           console.log(err.response);

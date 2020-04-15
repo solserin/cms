@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\User;
 use App\Ajustes;
 use Carbon\Carbon;
@@ -894,15 +895,16 @@ class CementerioController extends ApiController
 
 
     /**obtiene la venta por id */
-    public function get_venta_id(Request $request)
+    public function get_venta_id($venta_id = 0)
     {
-        $id_venta = $request[0];
+        $id_venta = $venta_id;
 
         $resultado =
             VentasPropiedades::select(
                 'email',
                 'ventas_propiedades.propiedades_area_id',
                 'nombre',
+                'mensualidades',
                 'ventas_propiedades.status',
                 'ventas_propiedades.id',
                 'numero_solicitud',
@@ -913,6 +915,8 @@ class CementerioController extends ApiController
                 'numero_titulo as numero_titulo_raw',
                 'ubicacion as ubicacion_raw',
                 'tipo_propiedades.tipo',
+                'fecha_venta',
+                'total',
                 'ventas_propiedades.status',
                 DB::raw(
                     '(CASE 
@@ -974,5 +978,36 @@ class CementerioController extends ApiController
 
         //se retorna el resultado
         return $resultado;
+    }
+
+
+
+
+
+
+
+    public function referencias_de_pago($id_venta = 75, $descargar = 0, $email = 0)
+    {
+        //obtengo la informacion de esa venta
+        $datos_venta = $this->get_venta_id($id_venta);
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/cementerios/referencias_de_pago', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $pdf->setOptions([
+            'title' => 'Reporte de Usuarios',
+            'footer-html' => view('footer'),
+            'header-html' => view('header'),
+        ]);
+
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 0);
+        $pdf->setOption('margin-right', 0);
+        $pdf->setOption('margin-top', 0);
+        $pdf->setOption('margin-bottom', 0);
+
+        return $pdf->inline();
     }
 }
