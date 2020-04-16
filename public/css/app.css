@@ -342,6 +342,58 @@
 
 /*FIN pdfs de los reportes de los modulos*/
 
+/**confirmar dialogos */
+
+.confirmar .vs-dialog {
+  max-width: 550px !important;
+  min-height: 350px !important;
+}
+
+.confirmar .password-checker .vs-dialog-cancel--icon {
+  display: none;
+}
+
+.confirmar .vs-dialog-cancel-button {
+  color: #fff !important;
+}
+
+[dir] .confirmar .vs-dialog-cancel-button {
+  background-color: #c1c1c1 !important;
+}
+
+.confirmar .vs-dialog .vs-dialog-header {
+  display: none !important;
+}
+
+.icono:before {
+  content: url(/images/question.svg?0dfe0426e72ced1ced4bf9f580e77ecc);
+}
+
+.confirmar .seguro-mensaje {
+  font-size: 1.8rem;
+  color: #636363 !important;
+  font-weight: 500 !important;
+}
+
+.confirmar .seguro-texto {
+  font-size: 1.2rem;
+  color: #999999 !important;
+}
+
+[dir] .cancelar {
+  background-color: #c1c1c1;
+}
+
+/*confirmar (sin password) checker*/
+
+.confirmarAceptar .icono:before {
+  content: url(/images/accept.svg?93d90fb7a2aeb988213472f8072f8fde);
+}
+
+/*fin confirmar (sin password) checker*/
+
+/**fin de  confirmar dialogos */
+
 /*=========================================================================================
   File Name: main.scss
   Description: Main scss file. Imports other scss partials from 'vuexy' folder
