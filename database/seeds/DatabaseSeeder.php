@@ -31,28 +31,9 @@ class DatabaseSeeder extends Seeder
         $this->call(SeccionesSeeder::class);
         $this->call(ModulosSeeder::class);
         $this->call(RolesSeederTable::class);
-        factory(User::class, 5)->create();
+        $this->call(UsuariosSeeder::class);
+        //factory(User::class, 5)->create();
         /**fin seeders de usuarios */
-
-
-
-
-        //$this->call(MetodosPagoSeeder::class);
-        //$this->call(EstadosTableSeeder::class);
-        //$this->call(MunicipiosTableSeeder::class);
-
-
-
-        //$this->call(SATImpuestosSeeder::class);
-
-        //$this->call(SATProductosServiciosSeeder::class);
-        //$this->call(TiposProductoSeeder::class);
-        //$this->call(UnidadesSeeder::class);
-        //$this->call(AlmacenesSeeder::class);
-        //$this->call(CategoriasSeeder::class);
-        //$this->call(FamiliasTableSeeder::class);
-        //$this->call(GruposProfecoTableSeeder::class);
-        // $this->call(PreciosSeeder::class);
 
         /**seeder de cementerio */
         $this->call(tiposPropiedadesSeeder::class);
@@ -66,5 +47,32 @@ class DatabaseSeeder extends Seeder
         $this->call(antiguedadVentasSeeder::class);
         $this->call(AjustesSeeder::class);
         /**fin de seeder de cementerio */
+
+
+
+
+
+
+
+
+
+
+
+        /**pendiente, hechas por andres */
+
+        //$this->call(MetodosPagoSeeder::class);
+        //$this->call(EstadosTableSeeder::class);
+        //$this->call(MunicipiosTableSeeder::class);
+        //$this->call(SATImpuestosSeeder::class);
+        //$this->call(SATProductosServiciosSeeder::class);
+        //$this->call(TiposProductoSeeder::class);
+        //$this->call(UnidadesSeeder::class);
+        //$this->call(AlmacenesSeeder::class);
+        //$this->call(CategoriasSeeder::class);
+        //$this->call(FamiliasTableSeeder::class);
+        //$this->call(GruposProfecoTableSeeder::class);
+        // $this->call(PreciosSeeder::class);
+
+
     }
 }

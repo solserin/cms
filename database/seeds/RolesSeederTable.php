@@ -38,7 +38,7 @@ class RolesSeederTable extends Seeder
         //4 permisos (1-Agregar, 2-Editar, 3-Eliminar y 4-Consultar)
         $modulos = DB::table('modulos')->select('id')->where('url', '<>', '')->get();
         foreach ($modulos as $key) {
-            $roles_res = DB::table('roles')->where('id', 1)->get();
+            $roles_res = DB::table('roles')->where('id', '<=', 2)->get();
             foreach ($roles_res as $rol) {
                 for ($i = 1; $i < 5; $i++) {
                     DB::table('modulos_roles_permisos')->insert([
