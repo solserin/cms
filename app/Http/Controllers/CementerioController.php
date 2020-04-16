@@ -256,7 +256,7 @@ class CementerioController extends ApiController
     {
         $numero_convenio = 0;
 
-        if ($request->venta_referencia_id == 2  && $request->ventaAntiguedad['value'] == 1) {
+        if ($request->ventaAntiguedad['value'] == 1) {
             //debo generar el numero de convenio
             //para aquellas ventas que son a futuro pero del sistema nuevo, con control sistematizado, el orden de convenios con sistemas comenzará con el numero
             //500 (quinientos)
@@ -275,12 +275,9 @@ class CementerioController extends ApiController
                 $ajustes->save();
                 $numero_convenio = 500;
             }
-        } else if ($request->venta_referencia_id == 2  && $request->ventaAntiguedad['value'] > 1) {
+        } else {
             //se debe ingresar manualmente
             $numero_convenio = $request->convenio; //es el que capturo el usuario
-        } else {
-            //no aplica y se debe retornar null
-            $numero_convenio = null;
         }
 
         //se retorna el nuevo numero de convenio generado
@@ -1002,7 +999,69 @@ class CementerioController extends ApiController
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
 
+        //obtengo la informacion de esa venta
+        $datos_venta = $this->get_venta_id($id_venta)->toArray();
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/cementerios/referencias_de_pago', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta[0]['nombre']) . '.pdf';
 
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            //'footer-html' => view('footer'),
+            'header-html' => view('header'),
+        ]);
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 0);
+        $pdf->setOption('margin-right', 0);
+        $pdf->setOption('margin-top', 0);
+        $pdf->setOption('margin-bottom', 0);
+        $pdf->setOption('page-size', 'A4');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_venta[0]['nombre']),
+                'REFERENCIAS DE PAGO CEMENTERIO',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
+
+    /**pdf del convenio plan de cementerio */
+    public function documento_convenio(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        /* $id_venta = 89;
+        $email = true;
+        $email_to = 'hector@gmail.com';
+        */
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_venta = $requestVentasList['venta_id'];
 
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta)->toArray();
@@ -1017,8 +1076,6 @@ class CementerioController extends ApiController
             //'footer-html' => view('footer'),
             'header-html' => view('header'),
         ]);
-
-
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
         $pdf->setOption('margin-left', 0);

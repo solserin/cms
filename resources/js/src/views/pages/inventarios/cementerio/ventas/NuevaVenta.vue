@@ -279,7 +279,7 @@
                       class="w-full pb-1 pt-1"
                       placeholder="Núm. Convenio"
                       v-model="form.convenio"
-                      :disabled="!((!tipo_venta)*(capturar_num_convenio))"
+                      :disabled="!((capturar_num_convenio))"
                       maxlength="16"
                     />
                     <div>
@@ -1476,10 +1476,7 @@ export default {
 
     num_convenio_validacion_computed: function() {
       //checo que el dato venta a futuro este activo y que sea de venta antes del sistema
-      if (
-        this.form.ventaAntiguedad.value >= 2 &&
-        this.form.venta_referencia_id == 2
-      ) {
+      if (this.form.ventaAntiguedad.value >= 2) {
         return this.form.convenio;
       } else return true;
     },
