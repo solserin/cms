@@ -27,7 +27,8 @@ class CementerioController extends ApiController
     //obtiene los usuarios para vendedores
     public function get_vendedores()
     {
-        return User::get();
+        //no super usuarios
+        return User::where('roles_id', '>', 1)->get();
     }
 
     public function get_sat_formas_pago()
