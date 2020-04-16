@@ -112,8 +112,10 @@ import store from "../../../store/store";
 export default {
   data() {
     return {
-      email: "admin@admin.com",
-      password: "password",
+      //email: "admin@admin.com",
+      //password: "password",
+      email: "",
+      password: "",
       checkbox_remember_me: false
     };
   },
