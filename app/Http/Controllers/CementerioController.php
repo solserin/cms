@@ -787,9 +787,7 @@ class CementerioController extends ApiController
                         WHEN ventas_propiedades.status = 1 THEN "Activa"
                         ELSE "Cancelada" 
                         END) AS status_des'
-                ),
-
-
+                )
             )
                 ->with(
                     ['pagosProgramados.pagosRealizados' => function ($q) {
@@ -951,9 +949,7 @@ class CementerioController extends ApiController
                         WHEN ventas_propiedades.status = 1 THEN "Activa"
                         ELSE "Cancelada" 
                         END) AS status_des'
-                ),
-
-
+                )
             )
             ->with(
                 ['pagosProgramados.pagosRealizados' => function ($q) {
