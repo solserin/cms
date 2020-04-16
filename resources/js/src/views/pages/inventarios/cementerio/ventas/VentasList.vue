@@ -534,6 +534,7 @@ export default {
             nombre: "Estado de cuenta",
             url: "/inventarios/cementerio/documento_estado_de_cuenta/"
           });
+
           this.request.venta_id = id_ultima_venta;
 
           //estado de cuenta

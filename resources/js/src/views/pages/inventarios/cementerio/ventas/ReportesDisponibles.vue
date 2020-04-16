@@ -97,7 +97,7 @@
 <script>
 import pdf from "@services/pdf";
 import vSelect from "vue-select";
-import ConfirmarAceptar from "../../../ConfirmarAceptar";
+import ConfirmarAceptar from "../../../confirmarAceptar";
 export default {
   watch: {
     show: function(newValue, oldValue) {
@@ -210,7 +210,6 @@ export default {
         .get_pdf(this.reporteSeleccionado.value, this.request_datos)
 
         .then(res => {
-          console.log("send_pdf -> res", res);
           this.$vs.loading.close();
           const file = new Blob([res.data], { type: "application/pdf" });
           this.pdf_iframe_source = URL.createObjectURL(file);
@@ -220,7 +219,6 @@ export default {
         })
         .catch(err => {
           this.pdf_iframe_source = "";
-          console.log(err.response);
           this.pdf_iframe_source = "";
           this.$vs.loading.close();
           if (err.response) {
@@ -279,7 +277,6 @@ export default {
         /**el uno indica que se va enviar el email */
 
         .then(res => {
-          console.log("send_pdf -> res", res);
           this.$vs.loading.close();
           if (res.data == 1) {
             this.$vs.notify({
@@ -303,7 +300,6 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err.response);
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
