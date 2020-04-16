@@ -3,7 +3,7 @@
     <vs-prompt
       type="confirm"
       title="¿Desea continuar?"
-      class="confirmar"
+      class="confirmarAceptar confirmar"
       :active.sync="showChecker"
       buttons-hidden
     >
@@ -112,44 +112,3 @@ export default {
   }
 };
 </script>
-<style language="scss">
-/*confirmar (sin password) checker*/
-.confirmar .password-checker .vs-dialog-cancel--icon {
-  display: none;
-}
-
-.confirmar .vs-dialog-cancel-button {
-  color: #fff !important;
-  background-color: #c1c1c1 !important;
-}
-
-.confirmar .vs-dialog {
-  max-width: 550px !important;
-  min-height: 350px !important;
-}
-
-.confirmar .vs-dialog .vs-dialog-header {
-  display: none !important;
-}
-
-.icono:before {
-  content: url("../../../../../resources/assets/images/accept.svg");
-}
-
-.confirmar .seguro-mensaje {
-  font-size: 1.8rem;
-  color: #636363 !important;
-  font-weight: 500 !important;
-}
-
-.confirmar .seguro-texto {
-  font-size: 1.2rem;
-  color: #999999 !important;
-}
-
-.cancelar {
-  background-color: #c1c1c1;
-}
-
-/*fin confirmar (sin password) checker*/
-</style>

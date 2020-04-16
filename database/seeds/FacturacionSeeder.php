@@ -13,8 +13,8 @@ class FacturacionSeeder extends Seeder
     {
         DB::table('facturacion')->insert(
             [
-                'cerFile' => '',
-                'keyFile' => '',
+                'cerFile' => null,
+                'keyFile' => null,
                 'fecha_solicitud' => now(),
                 'fecha_vencimiento' => now(),
                 'password' => '',
