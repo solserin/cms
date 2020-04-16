@@ -240,7 +240,7 @@
         $total_pagado_por_programado=0;
     @endphp
     @foreach ($pago['pagos_realizados'] as $pagado)
-        @if ($pagado[status]==1)
+        @if ($pagado['status']==1)
             @php
                  $total_pagado_por_programado+=$pagado['total'];
             @endphp
@@ -378,13 +378,13 @@
                        
                         </td>
                          <td width="45%">
-                           <div class="cuentas"><span class="dato bg-dato">Para pago en sucursales <span class="santader">Santander</span>, </span> <br> <span class="valor-ojo">Número de cuenta: 65-50040187-9</span></div>
-                           <div class="cuentas"><span class="bg-dato">Para transferencias electrónicas</span>, <br> <span class="valor-ojo">Clabe: 0147 3065 5004 0187 96 </span> <br> <span class="bg-dato"> Beneficiario</span>, <br> <span class="valor-ojo">{{$empresa->razon_social}} </span></div>
+                           <div class="cuentas"><span class="dato bg-dato">Para pago en sucursales <span class="santader">Santander</span>, </span> <br> <span class="valor-ojo">Número de cuenta: {{$empresa->cuenta}}</span></div>
+                           <div class="cuentas"><span class="bg-dato">Para transferencias electrónicas</span>, <br> <span class="valor-ojo">Clabe: {{$empresa->clabe}} </span> <br> <span class="bg-dato"> Beneficiario</span>, <br> <span class="valor-ojo">{{$empresa->razon_social}} </span></div>
                            <!--<div class="cuentas"><span class="dato-totales"> Sub Total</span> <span class="dato-totales-valor">$ 5,000.00 Pesos MXN</span></div>
                            <div class="cuentas"><span class="dato-totales"> IVA</span> <span class="dato-totales-valor">$ 5,000.00 Pesos MXN</span></div>
                            <div class="cuentas"><span class="dato-totales"> Descuento</span> <span class="dato-totales-valor">$ 5,000.00 Pesos MXN</span></div>
                            -->
-                           <div class="cuentas"><span class="bg-total"><span class="dato-totales"> Total a Pagar</span> <span class="dato-totales-valor">$ {{number_format($restante_pagar_de_este_pago,2)}} Pesos MXN</span></span> <br><span class="dato">({{numeros_a_letras($restante_pagar_de_este_pago)}} Pesos MXN, incluye IVA y descuentos aplicados)</span></div>
+                           <div class="cuentas"><span class="bg-total"><span class="dato-totales"> Total a Pagar</span> <span class="dato-totales-valor">$ {{number_format($pago['total'],2)}} Pesos MXN</span></span> <br><span class="dato">({{numeros_a_letras($pago['total'])}} Pesos MXN, incluye IVA y descuentos aplicados)</span></div>
                         </td>
                     </tr>
                 </tbody>

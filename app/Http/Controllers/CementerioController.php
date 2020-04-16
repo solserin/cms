@@ -14,6 +14,7 @@ use App\VentasPropiedades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\PagosProgramadosPropiedades;
+use Illuminate\Support\Facades\Mail;
 
 class CementerioController extends ApiController
 {
@@ -989,16 +990,33 @@ class CementerioController extends ApiController
 
 
 
-    public function referencias_de_pago($id_venta = 75, $descargar = 0, $email = 0)
+    public function referencias_de_pago(Request $request)
     {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        /* $id_venta = 89;
+        $email = true;
+        $email_to = 'hector@gmail.com';
+        */
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_venta = $requestVentasList['venta_id'];
+
+
+
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta)->toArray();
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
         $pdf = PDF::loadView('inventarios/cementerios/referencias_de_pago', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta[0]['nombre']) . '.pdf';
+
         $pdf->setOptions([
-            'title' => 'Reporte de Usuarios',
+            'title' => $name_pdf,
             //'footer-html' => view('footer'),
             'header-html' => view('header'),
         ]);
@@ -1010,9 +1028,31 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 0);
         $pdf->setOption('margin-top', 0);
         $pdf->setOption('margin-bottom', 0);
-
         $pdf->setOption('page-size', 'A4');
 
-        return $pdf->inline();
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_venta[0]['nombre']),
+                'REFERENCIAS DE PAGO CEMENTERIO',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
     }
 }

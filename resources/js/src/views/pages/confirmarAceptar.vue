@@ -13,7 +13,12 @@
       <div class="flex flex-wrap mt-2">
         <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
           <div class="mt-2">
-            <vs-button class="float-right mr-2" type="border" @click="cancel">(Esc) Cancelar</vs-button>
+            <vs-button
+              color="danger"
+              class="float-right mr-2"
+              type="border"
+              @click="cancel"
+            >(Esc) Cancelar</vs-button>
           </div>
         </div>
         <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
@@ -50,7 +55,7 @@ export default {
     },
     confirmarColor: {
       type: String,
-      default: "danger"
+      default: "success"
     }
   },
 
@@ -107,7 +112,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style language="scss">
 /*confirmar (sin password) checker*/
 .confirmar .password-checker .vs-dialog-cancel--icon {
   display: none;
@@ -128,7 +133,7 @@ export default {
 }
 
 .icono:before {
-  content: url("../../../../../resources/assets/images/question.svg");
+  content: url("../../../../../resources/assets/images/accept.svg");
 }
 
 .confirmar .seguro-mensaje {

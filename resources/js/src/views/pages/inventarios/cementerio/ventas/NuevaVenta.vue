@@ -1703,7 +1703,7 @@ export default {
               time: 5000
             });
             this.$emit("ver_pdfs_nueva_venta", res.data);
-            //this.limpiarVentana();
+            this.cerrarVentana();
           } else {
             this.$vs.notify({
               title: "Ventas de Propiedades",
@@ -1915,13 +1915,8 @@ export default {
       this.form.descuento = 0;
 
       this.form.beneficiarios = [];
-      (this.form.planVenta = {
-        label: "Seleccione 1",
-        value: "",
-        precio_neto: "",
-        enganche_inicial: ""
-      }),
-        (this.form.fecha_venta = "");
+      this.form.planVenta = this.planesVenta[1];
+      this.form.fecha_venta = "";
       this.form.opcionPagar = {
         label: "Pagar Después",
         value: 0

@@ -35,4 +35,11 @@ return [
         'client_id' => env('PASSPORT_CLIENT_ID'),
         'client_secret' => env('PASSPORT_CLIENT_SECRET'),
     ],
+
+    'mailsistema' => [
+        'address' => env('MAIL_SENDER'),
+        'name' => env('MAIL_SENDER_NAME'),
+    ],
+
+
 ];

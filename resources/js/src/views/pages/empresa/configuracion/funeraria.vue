@@ -367,6 +367,34 @@
                   <span class="text-danger text-sm" v-if="this.errores.estado">{{errores.estado[0]}}</span>
                 </div>
               </div>
+
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75">Cuenta Bancaria</label>
+                <vs-input
+                  name="cuenta"
+                  maxlength="75"
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Cuenta Bancaria"
+                  v-model="form.cuenta"
+                />
+
+                <div class="mt-2"></div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75">Clabe</label>
+                <vs-input
+                  name="clabe"
+                  maxlength="75"
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Clabe Interbancaria"
+                  v-model="form.clabe"
+                />
+
+                <div class="mt-2"></div>
+              </div>
             </div>
           </div>
           <vs-divider />
@@ -474,6 +502,8 @@ export default {
         telefono: "",
         email: "",
         fax: "",
+        cuenta: "",
+        clabe: "",
         calle: "",
         colonia: "",
         num_ext: "",
@@ -522,6 +552,8 @@ export default {
       this.form.telefono = this.getDatos.telefono;
       this.form.email = this.getDatos.email;
       this.form.fax = this.getDatos.fax;
+      this.form.cuenta = this.getDatos.cuenta;
+      this.form.clabe = this.getDatos.clabe;
       this.form.calle = this.getDatos.calle;
       this.form.colonia = this.getDatos.colonia;
       this.form.num_ext = this.getDatos.num_ext;

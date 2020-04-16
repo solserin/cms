@@ -41,13 +41,22 @@
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-10">
               <label class="text-sm opacity-75 font-medium">Enviar por Correo</label>
               <vs-input
-                name="num_solicitud"
+                name="email"
                 data-vv-as=" "
-                type="text"
+                data-vv-validate-on="blur"
+                v-validate="'email'"
+                maxlength="75"
+                type="email"
                 class="w-full pb-1 pt-1"
-                placeholder=" Ingrese un email"
-                maxlength="12"
+                placeholder="Ingrese el email"
+                v-model="request_datos.email_address"
               />
+              <div>
+                <span class="text-danger text-sm">{{ errors.first('email') }}</span>
+              </div>
+              <div class="mt-2">
+                <span class="text-danger text-sm" v-if="this.errores.email">{{errores.email[0]}}</span>
+              </div>
             </div>
 
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-6">
@@ -56,6 +65,7 @@
                 icon="icon-mail"
                 color="success"
                 class="w-full my-4"
+                @click="acceptAlert()"
               >Enviar</vs-button>
             </div>
           </div>
@@ -74,17 +84,28 @@
           </div>
         </div>
       </div>
+      <ConfirmarAceptar
+        :show="openConfirmarAceptar"
+        :callback-on-success="callBackConfirmar"
+        @closeVerificar="openConfirmarAceptar=false"
+        :accion="'Enviar el documento por correo'"
+        :confirmarButton="'Enviar Documento'"
+      ></ConfirmarAceptar>
     </vs-popup>
   </div>
 </template>
 <script>
 import pdf from "@services/pdf";
 import vSelect from "vue-select";
+import ConfirmarAceptar from "../../../ConfirmarAceptar";
 export default {
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == false) {
         this.pdf_iframe_source = "";
+      } else {
+        this.request_datos.request_parent = [];
+        this.request_datos.request_parent.push(this.Request);
       }
     },
     listadereportes: function(newValue, oldValue) {
@@ -100,6 +121,7 @@ export default {
       }
     },
     reporteSeleccionado: function(newValue, oldValue) {
+      this.request_datos.email_send = false;
       this.get_pdf();
     }
   },
@@ -116,17 +138,31 @@ export default {
       type: Array,
       required: true,
       default: {}
+    },
+    request: {
+      type: Object,
+      required: true,
+      default: []
     }
   },
   components: {
-    "v-select": vSelect
+    "v-select": vSelect,
+    ConfirmarAceptar
   },
 
   data() {
     return {
+      openConfirmarAceptar: false,
+      callBackConfirmar: Function,
       reportesDisponible: [],
       reporteSeleccionado: {},
-      pdf_iframe_source: ""
+      pdf_iframe_source: "",
+      errores: [],
+      request_datos: {
+        email_address: "",
+        email_send: false,
+        request_parent: []
+      }
     };
   },
   computed: {
@@ -153,6 +189,14 @@ export default {
       set(newValue) {
         return newValue;
       }
+    },
+    Request: {
+      get() {
+        return this.request;
+      },
+      set(newValue) {
+        return newValue;
+      }
     }
   },
   methods: {
@@ -163,25 +207,19 @@ export default {
     get_pdf() {
       this.$vs.loading();
       pdf
-        .get_pdf("/pdfs")
+        .get_pdf(this.reporteSeleccionado.value, this.request_datos)
+
         .then(res => {
+          console.log("send_pdf -> res", res);
           this.$vs.loading.close();
           const file = new Blob([res.data], { type: "application/pdf" });
           this.pdf_iframe_source = URL.createObjectURL(file);
-          /*console.log(
-            "get_pdf -> this.pdf_iframe_source",
-            this.pdf_iframe_source
-          );
-          var today = new Date();
-          console.log(
-            today.getHours() +
-              ":" +
-              today.getMinutes() +
-              ":" +
-              today.getSeconds()
-          );*/
+          if (res.data.type != "application/pdf") {
+            this.pdf_iframe_source = "";
+          }
         })
         .catch(err => {
+          this.pdf_iframe_source = "";
           console.log(err.response);
           this.pdf_iframe_source = "";
           this.$vs.loading.close();
@@ -199,22 +237,103 @@ export default {
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
-              //this.errores = err.response.data.error;
+              this.errores = JSON.parse(err.response);
             }
           }
-          this.cancel();
+        });
+    },
+
+    acceptAlert() {
+      this.$validator
+        .validateAll()
+        .then(result => {
+          if (!result) {
+            this.$vs.notify({
+              title: "Error",
+              text: "Verifique que capturo un email",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "4000"
+            });
+            return;
+          } else {
+            if (this.pdf_iframe_source != "") {
+              if (this.request_datos.email_address != "") {
+                this.openConfirmarAceptar = true;
+                this.callBackConfirmar = this.send_pdf;
+              }
+            }
+          }
+        })
+        .catch(() => {});
+    },
+
+    /**enviar pdf por mail */
+    send_pdf() {
+      this.request_datos.email_send = true;
+      this.$vs.loading();
+      pdf
+        .send_pdf(this.reporteSeleccionado.value, this.request_datos)
+        /**el uno indica que se va enviar el email */
+
+        .then(res => {
+          console.log("send_pdf -> res", res);
+          this.$vs.loading.close();
+          if (res.data == 1) {
+            this.$vs.notify({
+              title: "Enviar documento por correo",
+              text: "Se ha envaido el correo.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 6000
+            });
+            this.request_datos.email_address = "";
+          } else {
+            this.$vs.notify({
+              title: "Enviar documento por correo",
+              text: "Error al enviar el documento, por favor reintente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 6000
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err.response);
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              /**error de validacion */
+              this.errores = err.response.data.error;
+            }
+          }
         });
     }
   },
   mounted() {
     //cerrando el confirmar con esc
     document.body.addEventListener("keyup", e => {
-      if (e.keyCode === 27) {
+      /*if (e.keyCode === 27) {
         if (this.showChecker) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
           this.cancel();
         }
-      }
+      }*/
     });
 
     /*document.body.addEventListener("keyup", e => {

@@ -222,6 +222,7 @@
       :header="'consultar reporte de venta'"
       :show="openReportesLista"
       :listadereportes="ListaReportes"
+      :request="request"
       @closeReportes="openReportesLista=false"
     ></ReportesDisponible>
   </div>
@@ -340,7 +341,10 @@ export default {
       /**opciones para filtrar la peticion del server */
 
       /**user id para bajas y altas */
-      user_id: ""
+      user_id: "",
+      request: {
+        venta_id: ""
+      }
     };
   },
   methods: {
@@ -504,36 +508,33 @@ export default {
           if (res.data[0].numero_solicitud_raw != null) {
             this.ListaReportes.push({
               nombre: "Solicitud de venta",
-              url:
-                "inventarios/cementerio/documento_solicitud/" + id_ultima_venta
+              url: "/inventarios/cementerio/documento_solicitud/"
             });
           }
           if (res.data[0].numero_convenio_raw != null) {
             this.ListaReportes.push({
               nombre: "Convenio",
-              url:
-                "inventarios/cementerio/documento_convenio/" + id_ultima_venta
+              url: "/inventarios/cementerio/documento_convenio/"
             });
           }
 
           if (res.data[0].numero_titulo_raw != null) {
             this.ListaReportes.push({
               nombre: "Título",
-              url: "inventarios/cementerio/documento_titulo/" + id_ultima_venta
+              url: "/inventarios/cementerio/documento_titulo/"
             });
           }
 
           this.ListaReportes.push({
             nombre: "Referencias de Pago",
-            url: "inventarios/cementerio/referencias_de_pago/" + id_ultima_venta
+            url: "/inventarios/cementerio/referencias_de_pago/"
           });
 
           this.ListaReportes.push({
             nombre: "Estado de cuenta",
-            url:
-              "inventarios/cementerio/documento_estado_de_cuenta/" +
-              id_ultima_venta
+            url: "/inventarios/cementerio/documento_estado_de_cuenta/"
           });
+          this.request.venta_id = id_ultima_venta;
 
           //estado de cuenta
           this.ListaReportes.push();

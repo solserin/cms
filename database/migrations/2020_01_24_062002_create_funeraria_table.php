@@ -32,6 +32,8 @@ class CreateFunerariaTable extends Migration
             $table->string('email');
             $table->string('facebook')->nullable();
             $table->string('web')->nullable();
+            $table->string('cuenta')->nullable();
+            $table->string('clabe')->nullable();
             $table->string('zona_horaria');
             $table->unsignedBigInteger('sat_regimenes_id')->nullable();
             $table->timestamps();

@@ -8,10 +8,25 @@ export default {
     cancel: null,
 
     /**obtengo el blob del pdf */
-    get_pdf(service_end_point) {
+    get_pdf(service_end_point, param) {
         return new Promise((resolve, reject) => {
             axios.get(service_end_point, {
-                    responseType: "blob"
+                    responseType: "blob",
+                    params: param
+                })
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+    send_pdf(service_end_point, param) {
+        return new Promise((resolve, reject) => {
+            axios.get(service_end_point, {
+                    params: param
                 })
                 .then((response) => {
                     resolve(response)

@@ -79,6 +79,8 @@ class EmpresaController extends ApiController
                     'fax' => $request->fax,
                     'email' => $request->email,
                     'telefono' => $request->telefono,
+                    'cuenta' => $request->cuenta,
+                    'clabe' => $request->clabe,
                 ]
             );
         } else if ($request->modulo == "registro_publico") {

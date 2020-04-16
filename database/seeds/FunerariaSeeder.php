@@ -32,6 +32,8 @@ class FunerariaSeeder extends Seeder
                 'email' => 'administracion@aeternus.com.mx',
                 'facebook' => '',
                 'web' => '',
+                'cuenta' => '65-50040187-9',
+                'clabe' => '0147 3065 5004 0187 96',
                 'sat_regimenes_id' => '1', //General de Ley Personas Morales
             ]
         );
