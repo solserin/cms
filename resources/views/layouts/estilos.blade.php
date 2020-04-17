@@ -1,5 +1,5 @@
 <style>
-  @for ($i = 0; $i <= 30; $i++)   
+  @for ($i = 0; $i <= 100; $i++)   
         .px-{{$i}}{
         padding: 0 {{($i/3)}}em 0 {{($i/3)}}em !important;
         }
@@ -61,9 +61,36 @@
         .-mb-{{$i}}{
         margin-bottom: -{{($i/3)}}em !important;
         }
+
+        .mr-auto{
+         margin-right: auto !important;
+        }
+         .ml-auto{
+         margin-left: auto !important;
+        }
         
         /*fin negativos margin*/
+
+        .letter-spacing-{{$i}}{
+            letter-spacing: {{($i/3)}}px !important;
+        }
+
+        .word-spacing-{{$i}}{
+          word-spacing: {{($i/3)}}px !important;
+        }
+  
+        .w-{{$i}}{
+          width: {{($i)}}% !important;
+        }
   @endfor
+
+
+   .float-right{
+     float:right !important;
+    }
+    .float-left{
+      float: left !important;
+    }
   
    .justificar{
       text-align: justify !important;
@@ -88,7 +115,6 @@
       text-transform: uppercase;
     }
     /*transform**/
-
      .texto-base{
       font-size: 1em !important;
     }
@@ -126,4 +152,10 @@
     .bg-gray{
       background-color: #{{env('graycolor')}}
     }
+
+    .border-top{
+      border-top: 1px solid #000 !important; 
+    }
+
+    
   </style>

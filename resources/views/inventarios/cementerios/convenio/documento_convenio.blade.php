@@ -1,244 +1,612 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
-  <title>Reportes</title>
-  <style>
-    body{
-      font-family: 'Open Sans' !important;
-      color: #000 !important;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap"
+        rel="stylesheet">
+    <title>Reportes</title>
+    <style>
+        body {
+            font-family: 'Open Sans' !important;
+            color: #000 !important;
+        }
 
-    #header,#header section table{
-      width: 100% !important;
-      padding-top: 0px;
-    }
+        #header,
+        #header section table {
+            width: 100% !important;
+            padding-top: 0px;
+        }
 
-    #header section table {
-      border-collapse: collapse !important;
-    }
-   
-
-
-    .logo{
-      max-width: 100% !important;
-    }
+        #header section table {
+            border-collapse: collapse !important;
+        }
 
 
-    h1{
-      font-size: 1em;
-      line-height: .8em !important;
-      text-transform: uppercase;
-      text-align: center;
-    }
 
-    .datos-header{
-      text-align: center !important;
-      font-size: .9em;
-      line-height: 0.7em !important;
-      text-transform: uppercase !important;
-    }
+        .logo {
+            max-width: 100% !important;
+        }
 
-    .numeros-contrato{
-      width: 100% !important;
-    }
 
-    .numeros-contrato .control{
-      text-align: center;
-      text-transform: uppercase !important;
-      font-size: .8em;
-      line-height: 1.9em !important;
-      font-weight: 600 !important;
-    }
+        h1 {
+            font-size: 1em;
+            line-height: .8em !important;
+            text-transform: uppercase;
+            text-align: center;
+        }
 
-    .control-valor{
-      text-align: center;
-      font-size: .9em;
-      line-height: .3em !important;
-      text-transform: uppercase;
-    }
+        .datos-header {
+            text-align: center !important;
+            font-size: .9em;
+            line-height: 0.7em !important;
+            text-transform: uppercase !important;
+        }
 
-    /*parrafos**/
-     .contenido{
-      padding: 10px 0 0 0 !important;
-      margin: 0 !important;
-    }
-    /*fin de parrafos*/
-  </style>
+        .numeros-contrato {
+            width: 100% !important;
+        }
+
+        .numeros-contrato .control {
+            text-align: center;
+            text-transform: uppercase !important;
+            font-size: .8em;
+            line-height: 1.9em !important;
+            font-weight: 600 !important;
+        }
+
+        .control-valor {
+            text-align: center;
+            font-size: .9em;
+            line-height: .3em !important;
+            text-transform: uppercase;
+        }
+
+        /*parrafos**/
+        .contenido {
+            padding: 10px 0 0 0 !important;
+            margin: 0 !important;
+        }
+
+        /*fin de parrafos*/
+
+    </style>
 </head>
+
 <body>
-@include('layouts.estilos') 
-  <header id="header">
-    <section>
-      <table>
-        <tr>
-          <td style="width:23%;">
-          <img src="{{public_path(env('LOGOJPG'))}}" alt="" class="logo">
-          </td>
-          <td style="width:53%;">
-            <h1>
-               {{$empresa->razon_social}}
-            </h1>
-            <p class="datos-header">
-              r.f.c. {{$empresa->rfc}}
-            </p>
-            <p class="datos-header">
-              {{strtolower($empresa->calle)}} Núm. Ext {{$empresa->num_ext}}
-            </p>
-            <p class="datos-header">
-             Col. {{strtolower($empresa->colonia)}}. cp. {{$empresa->cp}}.  {{$empresa->ciudad}}  {{$empresa->estado}}
-            </p>
-            <p class="datos-header">
-              Tel. {{$empresa->telefono}}, fax {{$empresa->fax}}
-            </p>
-          </td>
-           <td style="width:25%;">
-            <div class="numeros-contrato">
-              <div class="control bg-gray">
-                solicitud de servicio
-              </div>
-              <p class="control-valor">
-                  4560707059549777777
-                </p>
+    @include('layouts.estilos')
+    <header id="header">
+        <section>
+            <table>
+                <tr>
+                    <td style="width:23%;">
+                        <img src="{{ public_path(env('LOGOJPG')) }}" alt="" class="logo">
+                    </td>
+                    <td style="width:53%;">
+                        <h1>
+                            {{ $empresa->razon_social }}
+                        </h1>
+                        <p class="datos-header">
+                            r.f.c. {{ $empresa->rfc }}
+                        </p>
+                        <p class="datos-header">
+                            {{ strtolower($empresa->calle) }} Núm. Ext {{ $empresa->num_ext }}
+                        </p>
+                        <p class="datos-header">
+                            Col. {{ strtolower($empresa->colonia) }}. cp. {{ $empresa->cp }}.
+                            {{ $empresa->ciudad }}
+                            {{ $empresa->estado }}
+                        </p>
+                        <p class="datos-header">
+                            Tel. {{ $empresa->telefono }}, fax {{ $empresa->fax }}
+                        </p>
+                    </td>
+                    <td style="width:25%;">
+                        <div class="numeros-contrato">
+                            <div class="control bg-gray">
+                                solicitud de servicio
+                            </div>
+                            <p class="control-valor">
+                                4560707059549777777
+                            </p>
 
-               <div style=""></div>
-              <div class="control bg-gray">
-                Número de convenio
-              </div>
-              <p class="control-valor">
-                  pfaf-020-0020
-                </p>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </section>
-  </header>
-  <p class="fecha capitalize right">
-      {{$empresa->ciudad}}, {{$empresa->estado}}, a <span class="bg-gray bold uppercase  pl-2 pr-1">{{fechahora_completa()}}</span>.
+                            <div style=""></div>
+                            <div class="control bg-gray">
+                                Número de convenio
+                            </div>
+                            <p class="control-valor">
+                                pfaf-020-0020
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </section>
+    </header>
+    <p class="fecha capitalize right">
+        {{ $empresa->ciudad }}, {{ $empresa->estado }}, a <span
+            class="bg-gray bold uppercase  pl-2 pr-1">{{ fechahora_completa() }}</span>.
     </p>
-  <div class="contenido parrafo1">
-    <p class="texto-base justificar line-base">
-    Convenio para el otorgamiento del derecho de uso mortuorio a perpetuidad con reserva de dominio, 
-    que celebran por una parte <span class="bold uppercase"><span class="texto-sm">{{$empresa->razon_social}}</span></span>, 
-    con domicilio en
-    <span class="uppercase texto-sm bold">{{$empresa->calle}}, {{$empresa->num_ext}}, Col. {{$empresa->colonia}} C.P {{$empresa->cp}}</span>, de esta ciudad; a quien en lo sucesivo se le denominara la <span class="bold uppercase texto-sm">"La Empresa"</span>, 
-    y por la otra parte, por su propio derecho, El (La) C. 
-    <span class="uppercase texto-sm bold bg-gray px-1">hector raul cruz perez</span>, 
-    quien en lo sucesivo se denominara <span class="uppercase texto-sm bold">"El cliente"</span> y será el Titular del presente convenio, 
-    el cual ambas partes se comprometen a firmar, de conformidad con las siguiente declaraciones y 
-    cláusulas:
-    </p>
-  </div>
-
-   
-
-   <div class="contenido parrafo2">
-     <h1 class="texto-base bold underline">
-      declaraciones
-  </h1>
-    <p class="texto-base justificar line-base">
-    <span class="uppercase bold">I. </span> Declara el representante legal de “La empresa”, que su representada está legalmente constituida conforme a las leyes mexicanas, 
-    según consta en escritura pública número <span class="bold texto-sm">4761</span> (<span class="uppercase bold texto-sm">cuatro mil setecientos sesenta y uno</span>) del volumen 
-    <span class="uppercase bold texto-sm">xxxix</span> (<span class="uppercase bold texto-sm">trigésimo noveno</span>), pasada en la ciudad de <span class="uppercase bold texto-sm">{{$empresa->registro_publico['ciudad_np']}}</span>, <span class="uppercase bold texto-sm">{{$empresa->registro_publico['estado_np']}}</span>, 
-    ante el protocolo a cargo del notario público número 9 (<span class="uppercase bold texto-sm">nueve</span>), licenciado <span class="uppercase bold texto-sm">{{$empresa->registro_publico['fe_lic']}}</span>.
-    </p>
-     <p class="texto-base justificar line-base">
-    <span class="uppercase bold">II. </span>
-    Sigue declarando “La empresa” que los servicios de inhumación amparados por este convenio, 
-     se realizaran en el cementerio denominado <span class="uppercase bold texto-sm">{{$empresa->cementerio['cementerio']}}</span>, ubicado en <span class="uppercase bold texto-sm">{{$empresa->cementerio->calle}}, {{$empresa->cementerio->num_ext}}, Col. {{$empresa->cementerio->colonia}} C.P {{$empresa->cementerio->cp}}</span>, 
-    en el municipio de
-    <span class="uppercase bold texto-sm">{{$empresa->cementerio->ciudad}}, {{$empresa->cementerio->estado}}</span>.
-  </p>
-
-   <p class="texto-base justificar line-base">
-    <span class="uppercase bold">III. </span>
-   Declara “El Cliente” tener el interés y capacidad legal para celebrar este convenio, y declara tener (<span class="uppercase bold texto-sm">56</span>) años de edad 
-   y su domicilio en: <span class="uppercase bold texto-sm">
-CARRETERA INTERNACIONAL, 58, COL. LÓPEZ MATEOS C.P 8140</span>, Tel. <span class="uppercase bold texto-sm">(669) 983 15 77</span>, Cel. <span class="uppercase bold texto-sm">(669) 983 15 77</span> y correo electrónico <span class="lowercase bold">administracion@aeternus.com.mx</span>
-    para efecto de notificaciones y demás efectos legales de este convenio.
-  </p>
-  </div>
-
-  
-   <div class="contenido parrafo3">
-   <p class="texto-base justificar line-base">
-  Hechas las aclaraciones anteriores. “La Empresa” y “El Cliente” proceden a la celebración del presente convenio, al tenor de las siguientes:
-  </p>
-  </div>
-
-  <div class="contenido parrafo4">
-     <h1 class="texto-base bold underline">
-      cláusulas
-  </h1>
-    <p class="texto-base justificar line-base">
-    <span class="uppercase bold texto-sm">primera.- </span>
-    “El Cliente" adquiere de "La Empresa", el derecho de uso mortuorio a perpetuidad con reserva de 
-    dominio de <span class="uppercase bold texto-sm">1</span> Terreno(s) <span class="uppercase bold texto-sm">cuadriplex</span>, ubicado en la 
-    <span class="uppercase bold texto-sm">"Teraza 7"</span>, 
-    <span class="uppercase bold texto-sm">"Fila E"</span>, 
-    <span class="uppercase bold texto-sm">"Lote 7"</span>, 
-    en el <span class="uppercase bold texto-sm">{{$empresa->cementerio['cementerio']}}</span>, 
-    con una capacidad de <span class="uppercase bold texto-sm">1</span> gavetas.
-    </p>
-
-    <p class="texto-base justificar line-base">
-    <span class="uppercase bold texto-sm">Segunda.- </span>
-    “La Empresa” se compromete a:
-    </p>
-    <div class="lista pl-11 -mt-1">
-      <p class="texto-base justificar line-base">
-          <span class="lowercase bold texto-sm -ml-6">a) </span>
-           <span class="ml-2">
-              Proporcionar un título de aportación que otorga el derecho de uso mortuorio a perpetuidad al titular de este convenio, 
-              o en caso del fallecimiento de este, a cualquiera de los beneficiarios del mismo, 
-              dentro de los treinta días siguientes a aquel en que se haya cubierto en forma total el pago de las 
-              aportaciones mencionadas en la cláusula tercera de este convenio.
-          </span>
-      </p>
-      <p class="texto-base justificar line-base">
-          <span class="lowercase bold texto-sm -ml-6">b) </span>
-           <span class="ml-2">
-              Garantizar que las gavetas mencionadas en la cláusula primera de este convenio fueron construidas con 
-              los materiales aprobados por las autoridades competentes, y cuenten con los cierres y sellamientos necesarios.
-          </span>
-      </p>
-       <p class="texto-base justificar line-base">
-          <span class="lowercase bold texto-sm -ml-6">c) </span>
-           <span class="ml-2">
-              Arreglar el lugar del sepelio, proporcionando el equipo necesario y adecuado para el mismo.
-          </span>
-      </p>
-       <p class="texto-base justificar line-base">
-          <span class="lowercase bold texto-sm -ml-6">d) </span>
-           <span class="ml-2">
-              Proporcionar e instalar en el espacio mortuorio amparado por este convenio una lápida de mármol, 
-              en el que se grabara su nombre, el año de nacimiento y el año de fallecimiento de 
-              cada una de las personas a inhumarse en el lote mencionado en la primera 
-              cláusula de dicho convenio. (<span class="texto-xs bold italic">solo aplica a terrenos Dúplex y Cuádruplex</span>).
-          </span>
-      </p>
-      <p class="texto-base justificar line-base">
-          <span class="lowercase bold texto-sm -ml-6">e) </span>
-           <span class="ml-2">
-             Conservar y mantener el parque funerario, incluyendo todos sus jardines y tomas de agua, mediante la aportación de un fondo especial establecido para dicho fin.
-          </span>
-      </p>
+    <div class="contenido parrafo1">
+        <p class="texto-base justificar line-base">
+            Convenio para el otorgamiento del derecho de uso mortuorio a perpetuidad con reserva de dominio,
+            que celebran por una parte <span class="bold uppercase"><span
+                    class="texto-sm">{{ $empresa->razon_social }}</span></span>,
+            con domicilio en
+            <span class="uppercase texto-sm bold">{{ $empresa->calle }}, {{ $empresa->num_ext }}, Col.
+                {{ $empresa->colonia }}
+                C.P {{ $empresa->cp }}</span>, de esta ciudad; a quien en lo sucesivo se le denominara la <span
+                class="bold uppercase texto-sm">"La Empresa"</span>,
+            y por la otra parte, por su propio derecho, El (La) C.
+            <span class="uppercase texto-sm bold bg-gray px-1">hector raul cruz perez</span>,
+            quien en lo sucesivo se denominara <span class="uppercase texto-sm bold">"El cliente"</span> y será el
+            Titular del presente convenio,
+            el cual ambas partes se comprometen a firmar, de conformidad con las siguiente declaraciones y
+            cláusulas:
+        </p>
     </div>
 
-    <p class="texto-base justificar line-base">
-    <span class="uppercase bold texto-sm">Tercera.- </span>
-    En contraparte, “El Cliente”, se compromete a pagar por concepto de aportaciones la cantidad de $<span class="bold texto-sm bg-gray px-2">5,000.00</span>.
-    </p>
 
-  </div>
-  
+
+    <div class="contenido parrafo2">
+        <h1 class="texto-base bold underline">
+            declaraciones
+        </h1>
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold">I. </span> Declara el representante legal de “La empresa”, que su representada
+            está legalmente constituida conforme a las leyes mexicanas,
+            según consta en escritura pública número <span class="bold texto-sm">4761</span> (<span
+                class="uppercase bold texto-sm">cuatro mil setecientos sesenta y uno</span>) del volumen
+            <span class="uppercase bold texto-sm">xxxix</span> (<span class="uppercase bold texto-sm">trigésimo
+                noveno</span>), pasada en la ciudad de <span
+                class="uppercase bold texto-sm">{{ $empresa->registro_publico['ciudad_np'] }}</span>,
+            <span
+                class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>,
+            ante el protocolo a cargo del notario público número 9 (<span class="uppercase bold texto-sm">nueve</span>),
+            licenciado <span
+                class="uppercase bold texto-sm">{{ $empresa->registro_publico['fe_lic'] }}</span>.
+        </p>
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold">II. </span>
+            Sigue declarando “La empresa” que los servicios de inhumación amparados por este convenio,
+            se realizaran en el cementerio denominado <span
+                class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
+            ubicado en <span class="uppercase bold texto-sm">{{ $empresa->cementerio->calle }},
+                {{ $empresa->cementerio->num_ext }}, Col.
+                {{ $empresa->cementerio->colonia }} C.P {{ $empresa->cementerio->cp }}</span>,
+            en el municipio de
+            <span class="uppercase bold texto-sm">{{ $empresa->cementerio->ciudad }},
+                {{ $empresa->cementerio->estado }}</span>.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold">III. </span>
+            Declara “El Cliente” tener el interés y capacidad legal para celebrar este convenio, y declara tener (<span
+                class="uppercase bold texto-sm">56</span>) años de edad
+            y su domicilio en: <span class="uppercase bold texto-sm">
+                CARRETERA INTERNACIONAL, 58, COL. LÓPEZ MATEOS C.P 8140</span>, Tel. <span
+                class="uppercase bold texto-sm">(669) 983 15 77</span>, Cel. <span class="uppercase bold texto-sm">(669)
+                983 15 77</span> y correo electrónico <span class="lowercase bold">administracion@aeternus.com.mx</span>
+            para efecto de notificaciones y demás efectos legales de este convenio.
+        </p>
+    </div>
+
+
+    <div class="contenido parrafo3">
+        <p class="texto-base justificar line-base">
+            Hechas las aclaraciones anteriores. “La Empresa” y “El Cliente” proceden a la celebración del presente
+            convenio, al tenor de las siguientes:
+        </p>
+    </div>
+
+    <div class="contenido parrafo4">
+        <h1 class="texto-base bold underline">
+            cláusulas
+        </h1>
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">primera.- </span>
+            “El Cliente" adquiere de "La Empresa", el derecho de uso mortuorio a perpetuidad con reserva de
+            dominio de <span class="uppercase bold texto-sm">1</span> Terreno(s) <span
+                class="uppercase bold texto-sm">cuadriplex</span>, ubicado en la
+            <span class="uppercase bold texto-sm">"Teraza 7"</span>,
+            <span class="uppercase bold texto-sm">"Fila E"</span>,
+            <span class="uppercase bold texto-sm">"Lote 7"</span>,
+            en el <span
+                class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
+            con una capacidad de <span class="uppercase bold texto-sm">1</span> gavetas.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Segunda.- </span>
+            “La Empresa” se compromete a:
+        </p>
+        <div class="lista pl-11 -mt-1">
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">a) </span>
+                <span class="ml-2">
+                    Proporcionar un título de aportación que otorga el derecho de uso mortuorio a perpetuidad al titular
+                    de este convenio,
+                    o en caso del fallecimiento de este, a cualquiera de los beneficiarios del mismo,
+                    dentro de los treinta días siguientes a aquel en que se haya cubierto en forma total el pago de las
+                    aportaciones mencionadas en la cláusula tercera de este convenio.
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">b) </span>
+                <span class="ml-2">
+                    Garantizar que las gavetas mencionadas en la cláusula primera de este convenio fueron construidas
+                    con
+                    los materiales aprobados por las autoridades competentes, y cuenten con los cierres y sellamientos
+                    necesarios.
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">c) </span>
+                <span class="ml-2">
+                    Arreglar el lugar del sepelio, proporcionando el equipo necesario y adecuado para el mismo.
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">d) </span>
+                <span class="ml-2">
+                    Proporcionar e instalar en el espacio mortuorio amparado por este convenio una lápida de mármol,
+                    en el que se grabara su nombre, el año de nacimiento y el año de fallecimiento de
+                    cada una de las personas a inhumarse en el lote mencionado en la primera
+                    cláusula de dicho convenio. (<span class="texto-xs bold italic">solo aplica a terrenos Dúplex y
+                        Cuádruplex</span>).
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">e) </span>
+                <span class="ml-2">
+                    Conservar y mantener el parque funerario, incluyendo todos sus jardines y tomas de agua, mediante la
+                    aportación de un fondo especial establecido para dicho fin.
+                </span>
+            </p>
+        </div>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Tercera.- </span>
+            En contraparte, “El Cliente”, se compromete a pagar por concepto de aportaciones la cantidad de $ <span
+                class="bold texto-sm bg-gray px-2">5,000.00</span>.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Cuarta.- </span>
+            “El Cliente” se obliga a cubrir sus aportaciones sin necesidad de cobro acudiendo para tal efecto a las
+            oficinas de “La Empresa”
+            localizadas en <span class="uppercase texto-sm bold">{{ $empresa->calle }}, {{ $empresa->num_ext }},
+                Col.
+                {{ $empresa->colonia }} C.P {{ $empresa->cp }}. {{ $empresa->ciudad }}, {{ $empresa->estado }}
+            </span>; o a las
+            de los bancos que para estos determine la misma, dentro de los primeros diez días de cada mes.
+            Mediante la siguiente forma:
+        </p>
+        <div class="lista pl-11 -mt-1">
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">a) </span>
+                <span class="ml-2">
+                    Una aportación inicial de $ <span class="bg-gray bold px-2">5,000.00</span>.
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">b) </span>
+                <span class="ml-2">
+                    Y un saldo de $ <span class="bg-gray bold px-2">5,000.00</span>. En <span
+                        class="bg-gray bold px-2">6</span> abonos consecutivos.
+                </span>
+            </p>
+        </div>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Quinta.- </span>
+            Cuando “El Cliente” requiera un servicio de inhumación, deberá CUBRIR en las oficinas
+            de “La Empresa” un <span class="uppercase bold texto-sm">cargo</span> por los <span
+                class="uppercase bold texto-sm">derechos de apertura</span>, así como por las <span
+                class="uppercase bold texto-sm">lozas</span> necesarias para el servicio.
+            El monto de dicho cargo será por el que conste en las listas de precios de “La Empresa” en el momento de
+            solicitar el servicio.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">sexta.- </span>
+            A fin de que “La Empresa” esté en posibilidad de arreglar el lugar donde se realizara el servicio de
+            inhumación motivo de este convenio, así como de proporcionar el equipo adecuado y necesario para el mismo,
+            “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
+                class="uppercase bold texto-sm">cinco</span> horas de anticipación.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
+            “La Empresa” ofrecerá el servicio de inhumación amparado por este convenio de <span
+                class="uppercase bold texto-sm">lunes a domingo de, 09:00 a 17:00 horas</span>.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Octava.- </span>
+            “La Empresa” se reserva el dominio del derecho de inhumación a perpetuidad hasta en tanto no hayan sido
+            cubierta en forma total el pago de las aportaciones especificadas en la cláusula tercera.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Novena.- </span>
+            “El Cliente” se compromete a pagar a “La Empresa” a más tardar el día 31 de enero de cada año, una cuota por
+            concepto de mantenimiento del parque funerario. El monto de dicho cargo será el equivalente a <span
+                class="uppercase bold texto-sm">12 (DOCE)</span>
+            salarios mínimos del distrito Federal (CDMX), vigentes al día <span class="uppercase bold texto-sm">15
+                (QUINCE)</span> del mes de enero de cada año.
+        </p>
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima primera.- </span>
+            Ambas partes acuerdan expresamente que el destino del lote mencionado en la cláusula primera será únicamente
+            para la inhumación de los restos humanos que “El Cliente” señale por escrito a “La Empresa”, y que una vez
+            ocupadas las gavetas respectivas, los restos solamente podrán ser exhumados cuando se hayan cumplido las
+            disposiciones establecidas por las autoridades competentes.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima segunda.- </span>
+            A fin de recibir el servicio de inhumación amparado por este convenio, “El Cliente” entregara en las
+            instalaciones de “La Empresa”, ubicadas en <span class="uppercase texto-sm bold">{{ $empresa->calle }},
+                {{ $empresa->num_ext }},
+                Col.
+                {{ $empresa->colonia }} C.P {{ $empresa->cp }}. {{ $empresa->ciudad }}, {{ $empresa->estado }}
+            </span>, de esta ciudad:
+        </p>
+        <div class="lista pl-11 -mt-1">
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">a) </span>
+                <span class="ml-2">
+                    El convenio que ampara dicho servicio de inhumación
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">b) </span>
+                <span class="ml-2">
+                    El certificado de defunción de la persona que recibirá el servicio amparado por el convenio en
+                    cuestión
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">c) </span>
+                <span class="ml-2">
+                    Cualquier otra documentación que sea necesaria para efectuar los trámites correspondientes y/o
+                    conseguir los permisos necesarios para la realización de dicho servicio.
+                </span>
+            </p>
+        </div>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima tercera.- </span>
+            “El Cliente” declara haber leído y conocer perfectamente el reglamento interior de el <span
+                class="uppercase bold texto-sm">"{{ $empresa->cementerio->cementerio }}"</span>, el cual
+            acepta y se obliga a respetar y a hacer respetar, así como se compromete a cumplir todas las disposiciones
+            legales que en el se establezcan o que en el futuro se adopten por parte de las autoridades competentes.
+            Copia de dicho reglamento se les entrega a “El Cliente” es este acto.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima cuarta.- </span>
+            En caso de cambio de domicilio por parte de “El Cliente” se conviene que, en este, en un plazo máximo de
+            <span class="uppercase bold texto-sm">quince días</span>, después de efectuado el cambio, deberá comunicarlo
+            por escrito a “La Empresa” con acuse de
+            recibo por parte de este.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima quinta.- </span>
+            Los servicios amparados por este convenio únicamente podrán ser ofrecidos a “El Cliente” o a uno de los
+            beneficiarios establecidos en la cláusula Decima Sexta.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima sexta.- </span>
+            “El Cliente” designa como beneficiario(s) a las siguiente(s) persona(s):
+        </p>
+
+        <table class="w-100 center">
+            <thead>
+                <tr>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">#</span></th>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">Nombre</span></th>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">Parentesco</span></th>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">teléfono</span></th>
+                </tr>
+            </thead>
+            <tr>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">1</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hector raul cruz
+                        perez</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hermano</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">6691435645</span></td>
+            </tr>
+            <tr>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">1</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hector raul cruz
+                        perez</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hermano</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">6691435645</span></td>
+            </tr>
+            <tr>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">1</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hector raul cruz
+                        perez</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hermano</span></td>
+                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">6691435645</span></td>
+            </tr>
+
+        </table>
+
+        <p class="texto-base justificar line-base">
+            En caso de que “El Cliente” quisiera cambiar a los beneficiarios designados inicialmente, lo podrá hacer
+            mediante un escrito a la “Empresa” con acuse de recibo.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima séptima.- </span>
+            “El Cliente” tendrá la facultad de ceder los derechos de uso de teste convenio, mediante su renuncia a la
+            membresía de “La Empresa”, lo cual podrá hacer mediante la entrega de un escrito a “La Empresa” con acuse de
+            recibo, siempre y cuando este al corriente de sus pagos. En dicho escrito deberá especificar el nombre de la
+            persona que recibirá los derechos del convenio.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima octava.- </span>
+            Para la cesión de los derechos de uso de este convenio, “El Cliente” deberá pagar en las instalaciones de
+            “La Empresa” un cargo por concepto de la realización de dicho trámite. El importe del mismo será el que
+            conste en lista de precios de “La Empresa” al momento de realizar la cesión antes mencionada. El adquiere de
+            los derechos de uso de un convenio transferido, estará obligado a cubrir las aportaciones pendientes de
+            pagar en los planes establecidos en el convenio transferido.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Decima novena.- </span>
+            En caso de realizar la cesión de derechos de este convenio, fuera necesario cubrir algún tipo de cuota,
+            derecho, impuesto, etc. A entidades ajenas a “La Empresa”, tales como la secretaria de salud, Gobierno
+            Municipal, etc., “El Cliente” será responsable de pago de las mismas.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima.- </span>
+            “El Cliente” podrá designar un titular sustituto, el cual debe estar plenamente facultado para decidir sobre
+            la utilización de los servicios funerarios motivo de este convenio, cuando el cliente este imposibilitado
+            para hacerlo. Asimismo, podrá modificad esta designación en cualquier momento, obligándose en ambos casos a
+            hacer a notificación por escrito con acuse de recibo, tanto “La Empresa” como el titular sustituto, en un
+            plazo de <span class="uppercase bold texto-sm">quince días</span> naturales después de efectuada dicha
+            designación o modificación, anexando el escrito de
+            aceptación por parte del titular sustituto.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima primera.- </span>
+            El importe de los gatos, derecho y/o erogaciones efectuados por “La Empresa” por cuenta de “El Cliente”, por
+            los conceptos adicionales a los ofrecidos por este convenio, deberán ser cubiertos en las oficinas de “La
+            Empresa” a más tardar dos horas antes de que se realice el servicio de inhumación.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima segunda.- </span>
+            En el supuesto incumplimiento en el pago de las aportaciones mencionadas en la cláusula tercera de este
+            convenio; y/o en el pago de los gastos, derechos y/o erogaciones mencionadas en la cláusula vigésima
+            primera, “El Cliente” se obligará a pagar a “La Empresa”, los gastos de administración, cobranza y
+            comisiones pagadas comprobables y, en su caso, los gastos y costos judiciales.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima tercera.- </span>
+            En caso de retrasarse en el pago mensual de las aportaciones, “El Cliente” deberá cubrir una pena
+            convencional del <span class="uppercase bold texto-sm">20%</span> sobre el monto de la mensualidad vencida,
+            importe que se considerará como aportación
+            adicional complementaria al cliente.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima cuarta.- </span>
+            Queda establecido que “La Empresa” podrá cancelar el convenio, si este incurriera en cualquiera de los
+            supuestos siguiente:
+        </p>
+
+        <div class="lista pl-11 -mt-1">
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">a) </span>
+                <span class="ml-2">
+                    El incumplimiento del pago de <span class="uppercase bold texto-sm">3</span> de las aportaciones en
+                    forma consecutiva
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">b) </span>
+                <span class="ml-2">
+                    Si “El Cliente” cede en favor de tercera persona los derechos de uso de este convenio sin aceptación
+                    por escrito de parte de “La Empresa”.
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">c) </span>
+                <span class="ml-2">
+                    Si “El Cliente” grava en cualquier forma los derechos que este convenio le confiere
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">d) </span>
+                <span class="ml-2">
+                    Si “El Cliente” dejare de cumplir algunas de las obligaciones que contrae en este convenio distintos
+                    a los estipulados anteriormente, de tal manera graves, que conduzcan a la recisión de este convenio
+                    o a que “La Empresa” haga exigible anticipadamente el saldo a cargo de “El Cliente”.
+                </span>
+            </p>
+        </div>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima quinta.- </span>
+            En los casos estipulados den la cláusula anterior, y siempre y cuando no haya sido utilizado el lote materia
+            de este convenio, “La Empresa” en avisar a “El Cliente” que ha incurrido en las cláusulas de recisión de
+            este convenio. En caso de que el lote en cuestión se encuentre utilizado, queda facultada “La Empresa” para
+            exhumar los restos humanos conforme a las aportaciones a las disposiciones legales correspondientes.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima sexta.- </span>
+            “El Cliente” tendrá el derecho de rescindir este convenio dentro de los <span
+                class="uppercase bold texto-sm">5 días</span> hábiles siguientes a su
+            firma, sin menoscabo de las aportaciones realizadas, comprometiéndose “La Empresa” a devolver íntegramente
+            de las mismas en un plazo no mayor a los <span class="uppercase bold texto-sm">5 dias</span> hábiles
+            siguientes a la fecha en que le sea notificada
+            por escrito con acuse de recibo dicha cancelación.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima séptima.- </span>
+            Pasado el plazo mencionado en la cláusula anterior, en los casos de cancelación del presente convenio a
+            solicitud de “El Cliente”, bajo ningún concepto o circunstancia “La Empresa” quedará obligada a reintegrarle
+            a “El Cliente”, el monto de los pagos que haya entregado a “La Empresa” en el cumplimiento de las
+            operaciones celebradas en el presente convenio.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima octava.- </span>
+            Toda documentación adicional que se firme por ambas partes en relación y con motivo de este convenio,
+            constituirá un anexo del mismo, y, por lo tanto, formara parte integral del presente convenio.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima novena.- </span>
+            Para la interpretación, cumplimiento cualquier controversia con motivo del presente convenio, las partes se
+            someten a la jurisdicción y competencia de los tribunales del fuero común de <span
+                class="uppercase bold texto-sm">{{ $empresa->registro_publico['ciudad_np'] }}</span>,
+            <span
+                class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>
+            y renunciar
+            desde luego a cualquier otro fuero que por la razón de su domicilio podría convenir.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Trigésima.- </span>
+            Para ofrecer servicios de inhumación en cripta el cuerpo deberá ser debidamente embalsamado en la funeraria
+            que le está ofreciendo el servicio.
+        </p>
+
+        <div class="w-100 center mt-90">
+            <div class="w-50 float-left">
+                <div class="w-90 mr-auto ml-auto border-top">
+                <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{$empresa->razon_social}}</span></div>
+                    <span class="uppercase bold texto-sm">"la empresa"</span>
+                </div>
+            </div>
+            <div class="w-50 float-right">
+                <div class="w-90 mr-auto ml-auto border-top">
+                  <div class="pt-3 pb-1"><span class="uppercase  texto-sm">El (La) C. Hector raul cruz perez</span></div>
+                    <span class="uppercase bold texto-sm">"el cliente"</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </body>
+
 </html>
-   <span class="uppercase bold texto-sm"></span>
-
-
+<span class="uppercase bold texto-sm"></span>
