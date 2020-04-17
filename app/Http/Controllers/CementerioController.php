@@ -1003,7 +1003,7 @@ class CementerioController extends ApiController
         $datos_venta = $this->get_venta_id($id_venta)->toArray();
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/referencias_de_pago', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
+        $pdf = PDF::loadView('inventarios/cementerios/pagos/referencias_de_pago', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta[0]['nombre']) . '.pdf';
 
@@ -1051,38 +1051,38 @@ class CementerioController extends ApiController
     public function documento_convenio(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        $email =  $request->email_send === 'true' ? true : false;
-        $email_to = $request->email_address;
+        //$email =  $request->email_send === 'true' ? true : false;
+        //$email_to = $request->email_address;
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /* $id_venta = 89;
-        $email = true;
+        $id_venta = 1;
+        $email = false;
         $email_to = 'hector@gmail.com';
-        */
-        $requestVentasList = json_decode($request->request_parent[0], true);
-        $id_venta = $requestVentasList['venta_id'];
+
+        // $requestVentasList = json_decode($request->request_parent[0], true);
+        //$id_venta = $requestVentasList['venta_id'];
 
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta)->toArray();
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/referencias_de_pago', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
+        $pdf = PDF::loadView('inventarios/cementerios/convenio/documento_convenio', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta[0]['nombre']) . '.pdf';
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            //'footer-html' => view('footer'),
-            'header-html' => view('header'),
+            'footer-html' => view('inventarios.cementerios.convenio.footer'),
+            'header-html' => view('inventarios.cementerios.convenio.header'),
         ]);
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 0);
-        $pdf->setOption('margin-right', 0);
-        $pdf->setOption('margin-top', 0);
-        $pdf->setOption('margin-bottom', 0);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-left', 25.4);
+        $pdf->setOption('margin-right', 25.4);
+        $pdf->setOption('margin-top', 15.4);
+        $pdf->setOption('margin-bottom', 15.4);
+        $pdf->setOption('page-size', 'legal');
 
         if ($email == true) {
             /**email */
