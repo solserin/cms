@@ -28,6 +28,16 @@ class CreateCementeriosTable extends Migration
             $table->string('ciudad');
             $table->string('estado');
             $table->string('telefono');
+            /**horarios */
+            $table->string('hora_apertura');
+            $table->string('hora_cierre');
+            /**horarios */
+            /**pagos de mantenimiento */
+            $table->double('salario_minimo');
+            $table->tinyInteger('numero_salarios');
+            $table->tinyInteger('mes_maximo_pago');
+            $table->tinyInteger('dia_maximo_pago');
+            /**pagos de mantenimiento */
             $table->string('fax')->nullable();
             $table->timestamps();
         });

@@ -22,6 +22,7 @@ mix.js('resources/js/app.js', 'public/js')
                 '@assets': path.resolve(__dirname, 'resources/assets'),
                 '@sass': path.resolve(__dirname, 'resources/sass'),
                 '@services': path.resolve(__dirname, 'resources/js/src/services'),
+                '@pages': path.resolve(__dirname, 'resources/js/src/views/pages'),
             }
         }
     })

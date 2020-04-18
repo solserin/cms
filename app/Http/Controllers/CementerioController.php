@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\PagosProgramadosPropiedades;
 use Illuminate\Support\Facades\Mail;
+use NumerosEnLetras;
 
 class CementerioController extends ApiController
 {
@@ -265,9 +266,13 @@ class CementerioController extends ApiController
             if ($ajustes->numero_convenios_sistematizados == true) {
                 //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
                 //$numero_convenio = ((int) VentasPropiedades::where('antiguedad_ventas_id', 1)->where('ventas_referencias_id', 2)->max('numero_convenio')) + 1;
-                $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_convenio NOT LIKE '%[^0-9]%' THEN numero_convenio END) as int)) AS max_numero_convenio  from ventas_propiedades where ventas_referencias_id=2 and antiguedad_ventas_id=1"));
+                $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_convenio NOT LIKE '%[^0-9]%' THEN numero_convenio END) as int)) AS max_numero_convenio  from ventas_propiedades where antiguedad_ventas_id=1"));
                 $ultimo_convenio = json_decode(json_encode($result), true)[0]['max_numero_convenio'];
-                $numero_convenio = $ultimo_convenio + 1;
+                $numero_convenio = ((float) $ultimo_convenio) + 1;
+                if ($numero_convenio < 500) {
+                    //lo forzo a iniciar desde el 500
+                    $numero_convenio = 500;
+                }
             } else {
                 //comenzamos en numero 500 (quinientos) y marcamos numero_convenios_sistematizados como true en la base de datos
                 $ajustes->numero_convenios_sistematizados = true;
@@ -901,6 +906,7 @@ class CementerioController extends ApiController
                 'email',
                 'ventas_propiedades.propiedades_area_id',
                 'nombre',
+                'rfc',
                 'mensualidades',
                 'ventas_propiedades.status',
                 'ventas_propiedades.id',
@@ -913,8 +919,15 @@ class CementerioController extends ApiController
                 'ubicacion as ubicacion_raw',
                 'tipo_propiedades.tipo',
                 'fecha_venta',
+                'fecha_nac',
                 'total',
+                'domicilio',
+                'telefono',
+                'celular',
+                'tel_oficina',
+                'email',
                 'ventas_propiedades.status',
+                'antiguedad_ventas_id',
                 DB::raw(
                     '(CASE 
                         WHEN ventas_propiedades.ventas_referencias_id = "1" THEN "Inmediato"
@@ -956,6 +969,12 @@ class CementerioController extends ApiController
             )
             ->with(
                 'pagosProgramados.tipoPago'
+            )
+            ->with(
+                'propiedad.tipoPropiedad'
+            )
+            ->with(
+                'beneficiarios'
             )
             ->where('ventas_propiedades.id', $id_venta)
             ->join('propiedades', 'ventas_propiedades.propiedades_area_id', '=', 'propiedades.id')
@@ -1001,6 +1020,7 @@ class CementerioController extends ApiController
 
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta)->toArray();
+
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
         $pdf = PDF::loadView('inventarios/cementerios/pagos/referencias_de_pago', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
@@ -1051,30 +1071,36 @@ class CementerioController extends ApiController
     public function documento_convenio(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        //$email =  $request->email_send === 'true' ? true : false;
-        //$email_to = $request->email_address;
+        $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $id_venta = 1;
+        /* $id_venta = 3;
         $email = false;
-        $email_to = 'hector@gmail.com';
+        $email_to = 'hector@gmail.com';*/
 
-        // $requestVentasList = json_decode($request->request_parent[0], true);
-        //$id_venta = $requestVentasList['venta_id'];
-
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_venta = $requestVentasList['venta_id'];
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta)->toArray();
+
+        /**verificando si el documento aplica para esta solictitud */
+        if ($datos_venta[0]['numero_convenio_raw'] == null) {
+            return 0;
+        }
+
+
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
         $pdf = PDF::loadView('inventarios/cementerios/convenio/documento_convenio', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta[0]['nombre']) . '.pdf';
+        $name_pdf = "CONVENIO TITULAR " . strtoupper($datos_venta[0]['nombre']) . '.pdf';
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.convenio.footer'),
-            'header-html' => view('inventarios.cementerios.convenio.header'),
+            'footer-html' => view('inventarios.cementerios.footer'),
+            'header-html' => view('inventarios.cementerios.header'),
         ]);
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
@@ -1099,7 +1125,82 @@ class CementerioController extends ApiController
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
                 strtoupper($datos_venta[0]['nombre']),
-                'REFERENCIAS DE PAGO CEMENTERIO',
+                'COPIA DEL CONVENIO / CEMENTERIO AETERNUS',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
+
+
+
+    /**pdf de la solicitud de plan de cementerio */
+    public function documento_solicitud(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /* $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_venta = $requestVentasList['venta_id'];
+        */
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        $id_venta = 29;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+
+
+
+        //obtengo la informacion de esa venta
+        $datos_venta = $this->get_venta_id($id_venta)->toArray();
+
+        /**verificando si el documento aplica para esta solictitud */
+        if ($datos_venta[0]['numero_solicitud_raw'] == null) {
+            return 0;
+        }
+
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/cementerios/solicitud/documento_solicitud', ['datos' => $datos_venta[0], 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta[0]['nombre']) . '.pdf';
+
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('inventarios.cementerios.solicitud.footer'),
+            'header-html' => view('inventarios.cementerios.header'),
+        ]);
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 25.4);
+        $pdf->setOption('margin-right', 25.4);
+        $pdf->setOption('margin-top', 05.4);
+        $pdf->setOption('margin-bottom', 10.4);
+        $pdf->setOption('page-size', 'a4');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_venta[0]['nombre']),
+                'COPIA DEL CONVENIO / CEMENTERIO AETERNUS',
                 $name_pdf,
                 $pdf
             );

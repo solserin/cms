@@ -97,7 +97,7 @@
 <script>
 import pdf from "@services/pdf";
 import vSelect from "vue-select";
-import ConfirmarAceptar from "../../../confirmarAceptar";
+import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 export default {
   watch: {
     show: function(newValue, oldValue) {
@@ -105,6 +105,7 @@ export default {
         this.pdf_iframe_source = "";
       } else {
         this.request_datos.request_parent = [];
+        this.request_datos.email_address = this.Request.email;
         this.request_datos.request_parent.push(this.Request);
       }
     },
@@ -215,6 +216,15 @@ export default {
           this.pdf_iframe_source = URL.createObjectURL(file);
           if (res.data.type != "application/pdf") {
             this.pdf_iframe_source = "";
+            this.$vs.notify({
+              title: "Consultar documento",
+              text: "No se encontró este documento",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "4000"
+            });
           }
         })
         .catch(err => {
@@ -287,7 +297,6 @@ export default {
               color: "success",
               time: 6000
             });
-            this.request_datos.email_address = "";
           } else {
             this.$vs.notify({
               title: "Enviar documento por correo",

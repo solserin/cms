@@ -465,7 +465,7 @@
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75 font-bold">Tél. Domicilio</label>
                 <vs-input
-                  maxlength="10"
+                  maxlength="25"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese el teléfono del domicilio"
@@ -482,8 +482,8 @@
                   name="celular"
                   data-vv-as=" "
                   data-vv-validate-on="blur"
-                  v-validate="'required|min:10|max:10|numeric'"
-                  maxlength="10"
+                  v-validate="'required|min:10'"
+                  maxlength="25"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese un número de celular"
@@ -503,7 +503,7 @@
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75 font-bold">Tél. Oficina</label>
                 <vs-input
-                  maxlength="10"
+                  maxlength="25"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese un teléfono de oficina"
@@ -632,8 +632,8 @@
                     :name="'telefono'+index"
                     data-vv-as=" "
                     data-vv-validate-on="blur"
-                    v-validate="'required|min:10|max:10|numeric'"
-                    maxlength="10"
+                    v-validate="'required|min:10'"
+                    maxlength="35"
                     type="text"
                     class="w-full pb-1 pt-1"
                     placeholder="Teléfono"
@@ -1181,18 +1181,27 @@
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
     ></Confirmar>
+
+    <ConfirmarAceptar
+      :show="openConfirmarAceptar"
+      :callback-on-success="callBackConfirmarAceptar"
+      @closeVerificar="openConfirmarAceptar=false"
+      :accion="'He revisado la información y quiero guardar la venta'"
+      :confirmarButton="'Guardar Venta'"
+    ></ConfirmarAceptar>
   </div>
 </template>
 <script>
-import Mapa from "../ventas/Mapa";
-import Confirmar from "../../../Confirmar";
+import Mapa from "../Mapa";
+import Confirmar from "@pages/Confirmar";
 //componente de password
-import Password from "../../../confirmar_password";
+import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
+import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 
 /**VARIABLES GLOBALES */
 import { alfabeto } from "@/VariablesGlobales";
@@ -1203,7 +1212,8 @@ export default {
     Password,
     Datepicker,
     Mapa,
-    Confirmar
+    Confirmar,
+    ConfirmarAceptar
   },
   props: {
     show: {
@@ -1542,6 +1552,8 @@ export default {
 
       callback: Function,
       callBackConfirmar: Function,
+      openConfirmarAceptar: false,
+      callBackConfirmarAceptar: Function,
       accionNombre: "Guardar Venta",
       ventasReferencias: [],
       ventasAntiguedad: [],
@@ -1674,8 +1686,8 @@ export default {
             this.form.minima_cuota_inicial = this.cuota_inicial;
             this.form.maxima_cuota_inicial = this.maxima_cuota_inicial;
             //fin de actualizar datos de ubicacion
-            this.callback = this.guardarVenta;
-            this.operConfirmar = true;
+            this.callBackConfirmarAceptar = this.guardarVenta;
+            this.openConfirmarAceptar = true;
           }
         })
         .catch(() => {});
@@ -1895,6 +1907,7 @@ export default {
     //regresa los datos a su estado inicial
     limpiarVentana() {
       //area de la terraza 1
+      this.form.lotes = this.lotes[0];
       this.form.venta_referencia_id = 1;
       this.form.num_solicitud = "";
       this.form.convenio = "";
@@ -1932,7 +1945,8 @@ export default {
     agregar_beneficiario() {
       //verifico si todos los datos estan completos para dejarle agregar nuevos
       let errores_de_captura_en_datos = 0;
-      if (this.form.beneficiarios.length < 5) {
+      /**maximo 10 beneficiarios */
+      if (this.form.beneficiarios.length < 10) {
         this.form.beneficiarios.forEach(element => {
           if (
             element.nombre === "" ||
@@ -1965,7 +1979,7 @@ export default {
         //pasa de 5 beneficiarios
         this.$vs.notify({
           title: "Límite de Beneficiarios",
-          text: "Ha llegado a 5, el límite de beneficiarios",
+          text: "Ha llegado a 10, el límite de beneficiarios",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",

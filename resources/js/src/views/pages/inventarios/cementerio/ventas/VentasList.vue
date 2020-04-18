@@ -217,30 +217,28 @@
       @closeVerificar="closeStatus"
       :accion="accionNombre"
     ></Password>
-    <pdf :show="verPdf" :pdf="pdfLink" @closePdf="verPdf=false"></pdf>
-    <ReportesDisponible
+    <Reporteador
       :header="'consultar reporte de venta'"
       :show="openReportesLista"
       :listadereportes="ListaReportes"
       :request="request"
-      @closeReportes="openReportesLista=false"
-    ></ReportesDisponible>
+      @closeReportes="openReportesLista=false;get_data(1)"
+    ></Reporteador>
   </div>
 </template>
 
 <script>
 //planes de venta
-import ReportesDisponible from "../ventas/ReportesDisponibles";
+import Reporteador from "@pages/Reporteador";
 import PlanesVenta from "../ventas/PlanesVentas";
 
 import cementerio from "@services/cementerio";
-import pdf from "../../../pdf_viewer";
 /**IMPORTAR EL COMPONENTE DE ROLES */
 import NuevaVenta from "../ventas/NuevaVenta";
 import UpdateUsuario from "../UpdateUsuario";
 
 //componente de password
-import Password from "../../../confirmar_password";
+import Password from "@pages/confirmar_password";
 
 import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
@@ -253,9 +251,8 @@ export default {
     Password,
     NuevaVenta,
     UpdateUsuario,
-    pdf,
     PlanesVenta,
-    ReportesDisponible
+    Reporteador
   },
   watch: {
     actual: function(newValue, oldValue) {
@@ -274,7 +271,6 @@ export default {
       ListaReportes: [],
       tipo_propiedades: [],
       propiedad: { label: "Todos", value: "" },
-      id_venta_consultar: 0,
       openReportesLista: false,
       mostrarOptions: mostrarOptions,
       mostrar: { label: "15", value: "15" },
@@ -326,9 +322,6 @@ export default {
       actual: 1,
       ventas: [],
       //fin variables
-
-      verPdf: false,
-      pdfLink: "",
       openStatus: false,
       callback: Function,
       accionNombre: "",
@@ -343,7 +336,8 @@ export default {
       /**user id para bajas y altas */
       user_id: "",
       request: {
-        venta_id: ""
+        venta_id: "",
+        email: ""
       }
     };
   },
@@ -495,7 +489,7 @@ export default {
       this.openStatus = false;
     },
 
-    ConsultarVenta(id_ultima_venta) {
+    ConsultarVenta(id_venta) {
       this.ListaReportes = [];
       let self = this;
       if (cementerio.cancel) {
@@ -503,7 +497,7 @@ export default {
       }
       this.$vs.loading();
       cementerio
-        .get_venta_id(id_ultima_venta)
+        .get_venta_id(id_venta)
         .then(res => {
           if (res.data[0].numero_solicitud_raw != null) {
             this.ListaReportes.push({
@@ -534,12 +528,11 @@ export default {
             nombre: "Estado de cuenta",
             url: "/inventarios/cementerio/documento_estado_de_cuenta/"
           });
-
-          this.request.venta_id = id_ultima_venta;
-
           //estado de cuenta
-          this.ListaReportes.push();
 
+          this.request.email = res.data[0].email;
+          this.request.venta_id = id_venta;
+          this.openReportesLista = true;
           this.$vs.loading.close();
         })
         .catch(err => {
@@ -559,9 +552,6 @@ export default {
             }
           }
         });
-
-      this.id_venta_consultar = id_ultima_venta;
-      this.openReportesLista = true;
     }
   },
   created() {

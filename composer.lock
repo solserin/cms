@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0eea7f51defd2499030ed89cc7ffa64",
+    "content-hash": "2f4f40e0701a5afdccc79febfdf1e96f",
     "packages": [
         {
             "name": "barryvdh/laravel-snappy",
@@ -4316,6 +4316,43 @@
             "time": "2019-10-24T08:53:34+00:00"
         },
         {
+            "name": "villca/numeros-en-letras",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/villca/Numeros-en-Letras.git",
+                "reference": "15b78a2cec778f2ec9cc742656836ae43ca3ce5c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/villca/Numeros-en-Letras/zipball/15b78a2cec778f2ec9cc742656836ae43ca3ce5c",
+                "reference": "15b78a2cec778f2ec9cc742656836ae43ca3ce5c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "NumerosEnLetras": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jesus Villca",
+                    "email": "24villca@gmail.com",
+                    "homepage": "https://24villca.blogspot.com"
+                }
+            ],
+            "description": "Convierte cualquier número en letras con el valor correspondiente.",
+            "time": "2018-01-13T23:20:14+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v3.6.3",
             "source": {
@@ -4763,6 +4800,55 @@
                 "test"
             ],
             "time": "2016-01-20T08:20:44+00:00"
+        },
+        {
+            "name": "luecano/numero-a-letras",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/luecano/numero-a-letras.git",
+                "reference": "a41a381216be993413046f4a44fe489833c0d270"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/luecano/numero-a-letras/zipball/a41a381216be993413046f4a44fe489833c0d270",
+                "reference": "a41a381216be993413046f4a44fe489833c0d270",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Luecano\\NumeroALetras\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luis Cano",
+                    "email": "luecano@gmail.com",
+                    "homepage": "https://github.com/luecano/numero-a-letras",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Convierte un número a letras.",
+            "homepage": "https://github.com/luecano/numero-a-letras",
+            "keywords": [
+                "convertir",
+                "facturacion",
+                "letras",
+                "numero",
+                "sunat"
+            ],
+            "time": "2020-04-09T17:05:48+00:00"
         },
         {
             "name": "mockery/mockery",

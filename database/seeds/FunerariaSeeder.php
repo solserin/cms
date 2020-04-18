@@ -21,7 +21,7 @@ class FunerariaSeeder extends Seeder
                 'calle' => 'carretera internacional',
                 'num_ext' => '58',
                 'num_int' => '',
-                'colonia' => 'lópez mateos',
+                'colonia' => 'Adolfo lópez mateos',
                 'cp' => '8140',
                 'ciudad' => 'Mazatlán',
                 'estado' => 'Sinaloa',

@@ -15,4 +15,16 @@ class VentasPropiedades extends Model
         return $this->hasMany('App\PagosProgramadosPropiedades', 'ventas_propiedades_id', 'id');
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
     }
+
+    public function propiedad()
+    {
+        return $this->belongsTo('App\Propiedades', 'propiedades_area_id', 'id');
+        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+    }
+
+    public function beneficiarios()
+    {
+        return $this->hasMany('App\BeneficiariosPropiedades', 'ventas_propiedades_id', 'id');
+        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+    }
 }

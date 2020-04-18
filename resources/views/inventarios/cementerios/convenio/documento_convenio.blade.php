@@ -5,16 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap"
-        rel="stylesheet">
     <title>Reportes</title>
     <style>
-        body {
-            font-family: 'Open Sans' !important;
-            color: #000 !important;
-        }
-
         #header,
         #header section table {
             width: 100% !important;
@@ -110,7 +102,7 @@
                                 solicitud de servicio
                             </div>
                             <p class="control-valor">
-                                4560707059549777777
+                                {{ $datos['numero_solicitud'] }}
                             </p>
 
                             <div style=""></div>
@@ -118,7 +110,7 @@
                                 Número de convenio
                             </div>
                             <p class="control-valor">
-                                pfaf-020-0020
+                                {{ $datos['numero_convenio'] }}
                             </p>
                         </div>
                     </td>
@@ -126,9 +118,9 @@
             </table>
         </section>
     </header>
-    <p class="fecha capitalize right">
-        {{ $empresa->ciudad }}, {{ $empresa->estado }}, a <span
-            class="bg-gray bold uppercase  pl-2 pr-1">{{ fechahora_completa() }}</span>.
+    <p class="fecha  right">
+        {{ $empresa->ciudad }}, {{ $empresa->estado }} a <span
+            class="bg-gray bold uppercase texto-sm  pl-2 pr-1">{{ fecha_only($datos['fecha_venta']) }}</span>.
     </p>
     <div class="contenido parrafo1">
         <p class="texto-base justificar line-base">
@@ -141,7 +133,7 @@
                 C.P {{ $empresa->cp }}</span>, de esta ciudad; a quien en lo sucesivo se le denominara la <span
                 class="bold uppercase texto-sm">"La Empresa"</span>,
             y por la otra parte, por su propio derecho, El (La) C.
-            <span class="uppercase texto-sm bold bg-gray px-1">hector raul cruz perez</span>,
+            <span class="uppercase texto-sm bold bg-gray px-1">{{ $datos['nombre'] }}</span>,
             quien en lo sucesivo se denominara <span class="uppercase texto-sm bold">"El cliente"</span> y será el
             Titular del presente convenio,
             el cual ambas partes se comprometen a firmar, de conformidad con las siguiente declaraciones y
@@ -158,14 +150,18 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold">I. </span> Declara el representante legal de “La empresa”, que su representada
             está legalmente constituida conforme a las leyes mexicanas,
-            según consta en escritura pública número <span class="bold texto-sm">4761</span> (<span
-                class="uppercase bold texto-sm">cuatro mil setecientos sesenta y uno</span>) del volumen
+            según consta en escritura pública número <span
+                class="bold texto-sm">{{ $empresa->registro_publico['t_nep'] }}</span> (<span
+                class="uppercase bold texto-sm">{{ NumerosEnLetras::convertir($empresa->registro_publico['t_nep']) }}</span>)
+            del volumen
             <span class="uppercase bold texto-sm">xxxix</span> (<span class="uppercase bold texto-sm">trigésimo
                 noveno</span>), pasada en la ciudad de <span
                 class="uppercase bold texto-sm">{{ $empresa->registro_publico['ciudad_np'] }}</span>,
             <span
                 class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>,
-            ante el protocolo a cargo del notario público número 9 (<span class="uppercase bold texto-sm">nueve</span>),
+            ante el protocolo a cargo del notario público número
+            {{ $empresa->registro_publico['num_np'] }} (<span
+                class="uppercase bold texto-sm">{{ NumerosEnLetras::convertir($empresa->registro_publico['num_np']) }}</span>),
             licenciado <span
                 class="uppercase bold texto-sm">{{ $empresa->registro_publico['fe_lic'] }}</span>.
         </p>
@@ -175,7 +171,9 @@
             se realizaran en el cementerio denominado <span
                 class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
             ubicado en <span class="uppercase bold texto-sm">{{ $empresa->cementerio->calle }},
-                {{ $empresa->cementerio->num_ext }}, Col.
+                #.
+                {{ ($empresa->cementerio->num_ext)!=0 ? $empresa->cementerio->num_ext:'N/A' }}
+                , Col.
                 {{ $empresa->cementerio->colonia }} C.P {{ $empresa->cementerio->cp }}</span>,
             en el municipio de
             <span class="uppercase bold texto-sm">{{ $empresa->cementerio->ciudad }},
@@ -184,12 +182,22 @@
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold">III. </span>
-            Declara “El Cliente” tener el interés y capacidad legal para celebrar este convenio, y declara tener (<span
-                class="uppercase bold texto-sm">56</span>) años de edad
+            Declara “El Cliente” tener el interés y capacidad legal para celebrar este convenio, y declara tener
+            <span class="bg-gray px-1 mr-1">
+
+
+                (<span
+                    class="uppercase bold texto-sm">{{ calculaedad((String)($datos['fecha_nac'])) }}</span>)
+                años de
+                edad
+            </span>
             y su domicilio en: <span class="uppercase bold texto-sm">
-                CARRETERA INTERNACIONAL, 58, COL. LÓPEZ MATEOS C.P 8140</span>, Tel. <span
-                class="uppercase bold texto-sm">(669) 983 15 77</span>, Cel. <span class="uppercase bold texto-sm">(669)
-                983 15 77</span> y correo electrónico <span class="lowercase bold">administracion@aeternus.com.mx</span>
+                {{ $datos['domicilio'] }}</span>, Tel. <span
+                class="uppercase bold texto-sm">
+                {{ ($datos['telefono'])!='' ? ($datos['telefono']):'"No registrado"' }}</span>,
+            Cel. <span class="uppercase bold texto-sm">{{ ($datos['celular']) }}</span> y correo
+            electrónico <span
+                class="lowercase bold">{{ ($datos['email'])!='' ? $datos['email']:'"No registrado"' }}</span>
             para efecto de notificaciones y demás efectos legales de este convenio.
         </p>
     </div>
@@ -209,14 +217,16 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">primera.- </span>
             “El Cliente" adquiere de "La Empresa", el derecho de uso mortuorio a perpetuidad con reserva de
-            dominio de <span class="uppercase bold texto-sm">1</span> Terreno(s) <span
-                class="uppercase bold texto-sm">cuadriplex</span>, ubicado en la
-            <span class="uppercase bold texto-sm">"Teraza 7"</span>,
-            <span class="uppercase bold texto-sm">"Fila E"</span>,
-            <span class="uppercase bold texto-sm">"Lote 7"</span>,
+            dominio de <span class="uppercase bold texto-sm">1</span> Terreno(s) <span class="uppercase bold texto-sm">
+            </span>, ubicado en la
+            <span class="uppercase bold texto-sm bg-gray px-2">
+                {{ $datos['ubicacion_texto'] }}
+            </span>,
             en el <span
                 class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
-            con una capacidad de <span class="uppercase bold texto-sm">1</span> gavetas.
+            con una capacidad de <span
+                class="uppercase bold texto-sm">{{ $datos['propiedad']['tipo_propiedad']['capacidad'] }}</span>
+            gaveta(s).
         </p>
 
         <p class="texto-base justificar line-base">
@@ -271,7 +281,11 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Tercera.- </span>
             En contraparte, “El Cliente”, se compromete a pagar por concepto de aportaciones la cantidad de $ <span
-                class="bold texto-sm bg-gray px-2">5,000.00</span>.
+                class="bold texto-sm bg-gray px-2 uppercase">
+                {{ number_format($datos['total'],2) }} (
+                {{ NumerosEnLetras::convertir($datos['total'],'Pesos m.n',false) }}
+                )
+            </span>.
         </p>
 
         <p class="texto-base justificar line-base">
@@ -286,19 +300,44 @@
             Mediante la siguiente forma:
         </p>
         <div class="lista pl-11 -mt-1">
-            <p class="texto-base justificar line-base">
-                <span class="lowercase bold texto-sm -ml-6">a) </span>
-                <span class="ml-2">
-                    Una aportación inicial de $ <span class="bg-gray bold px-2">5,000.00</span>.
-                </span>
-            </p>
-            <p class="texto-base justificar line-base">
-                <span class="lowercase bold texto-sm -ml-6">b) </span>
-                <span class="ml-2">
-                    Y un saldo de $ <span class="bg-gray bold px-2">5,000.00</span>. En <span
-                        class="bg-gray bold px-2">6</span> abonos consecutivos.
-                </span>
-            </p>
+
+            @php
+                /*determino si lleva abonos o es pago unico*/
+            @endphp
+            @if(count($datos['pagos_programados'])==1)
+                <p class="texto-base justificar line-base">
+                    <span class="lowercase bold texto-sm -ml-6">a) </span>
+                    <span class="ml-2">
+                        Una aportación (Pago Único) de $ <span
+                            class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['total'],2) }}
+                            ({{ NumerosEnLetras::convertir($datos['pagos_programados'][0]['total'],'Pesos m.n',false) }})</span>.
+                    </span>
+                </p>
+            @else
+                <p class="texto-base justificar line-base">
+                    <span class="lowercase bold texto-sm -ml-6">a) </span>
+                    <span class="ml-2">
+                        Una aportación inicial de $ <span
+                            class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['total'],2) }}
+                            ({{ NumerosEnLetras::convertir((($datos['pagos_programados'][0]['total'])),'Pesos m.n',false) }})</span>.
+                    </span>
+                </p>
+
+                <p class="texto-base justificar line-base">
+                    <span class="lowercase bold texto-sm -ml-6">b) </span>
+                    <span class="ml-2">
+                        Y un saldo de $ <span class="bg-gray bold px-2 uppercase texto-sm">
+                            {{ number_format($datos['total']-$datos['pagos_programados'][0]['total'],2) }}
+                            (
+                            {{ NumerosEnLetras::convertir((($datos['total']-$datos['pagos_programados'][0]['total'])),'Pesos m.n',false) }})
+                        </span>. En <span
+                            class="bg-gray bold px-2 uppercase texto-sm">{{ count($datos['pagos_programados'])-1 }}</span>
+                        abonos consecutivos.
+                    </span>
+                </p>
+            @endif
+
+
         </div>
 
         <p class="texto-base justificar line-base">
@@ -322,7 +361,8 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
             “La Empresa” ofrecerá el servicio de inhumación amparado por este convenio de <span
-                class="uppercase bold texto-sm">lunes a domingo de, 09:00 a 17:00 horas</span>.
+                class="uppercase bold texto-sm">lunes a domingo de, {{ $empresa->cementerio->hora_apertura }} a
+                {{ $empresa->cementerio->hora_cierre }} horas</span>.
         </p>
 
         <p class="texto-base justificar line-base">
@@ -333,9 +373,14 @@
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Novena.- </span>
-            “El Cliente” se compromete a pagar a “La Empresa” a más tardar el día 31 de enero de cada año, una cuota por
+            “El Cliente” se compromete a pagar a “La Empresa” a más tardar el <span class="uppercase bold texto-sm ">
+                día {{ $empresa->cementerio->dia_maximo_pago }} de
+                {{ mes($empresa->cementerio->mes_maximo_pago) }}</span> de cada año, una cuota por
             concepto de mantenimiento del parque funerario. El monto de dicho cargo será el equivalente a <span
-                class="uppercase bold texto-sm">12 (DOCE)</span>
+                class="uppercase bold texto-sm">
+                {{ $empresa->cementerio->numero_salarios }}
+                ({{ NumerosEnLetras::convertir($empresa->cementerio->numero_salarios,'',false) }})
+            </span>
             salarios mínimos del distrito Federal (CDMX), vigentes al día <span class="uppercase bold texto-sm">15
                 (QUINCE)</span> del mes de enero de cada año.
         </p>
@@ -406,39 +451,39 @@
             <span class="uppercase bold texto-sm underline pr-2">Decima sexta.- </span>
             “El Cliente” designa como beneficiario(s) a las siguiente(s) persona(s):
         </p>
-
-        <table class="w-100 center">
-            <thead>
-                <tr>
-                    <th><span class="uppercase bold texto-sm bg-gray px-3">#</span></th>
-                    <th><span class="uppercase bold texto-sm bg-gray px-3">Nombre</span></th>
-                    <th><span class="uppercase bold texto-sm bg-gray px-3">Parentesco</span></th>
-                    <th><span class="uppercase bold texto-sm bg-gray px-3">teléfono</span></th>
-                </tr>
-            </thead>
-            <tr>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">1</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hector raul cruz
-                        perez</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hermano</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">6691435645</span></td>
-            </tr>
-            <tr>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">1</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hector raul cruz
-                        perez</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hermano</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">6691435645</span></td>
-            </tr>
-            <tr>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">1</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hector raul cruz
-                        perez</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">hermano</span></td>
-                <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">6691435645</span></td>
-            </tr>
-
-        </table>
+        @if(count($datos['beneficiarios'])>0)
+            <table class="w-100 center">
+                <thead>
+                    <tr>
+                        <th><span class="uppercase bold texto-sm bg-gray px-3">#</span></th>
+                        <th><span class="uppercase bold texto-sm bg-gray px-3">Nombre</span></th>
+                        <th><span class="uppercase bold texto-sm bg-gray px-3">Parentesco</span></th>
+                        <th><span class="uppercase bold texto-sm bg-gray px-3">teléfono</span></th>
+                    </tr>
+                </thead>
+                @php
+                    $num=1;
+                @endphp
+                @foreach($datos['beneficiarios'] as $beneficiario)
+                    <tr>
+                        <td class="pt-1 pb-1"><span
+                        class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">{{$num}}</span>
+                        </td>
+                      <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['nombre']}}</span></td>
+                        <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['parentesco']}}</span></td>
+                        <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['telefono']}}</span>
+                        </td>
+                    </tr>
+                    @php
+                        $num++;
+                    @endphp
+                @endforeach
+            </table>
+        @else
+          <p class="texto-base justificar line-base center uppercase bg-gray bold">
+           no se han capturado beneficiarios hasta la fecha.
+          </p>
+        @endif
 
         <p class="texto-base justificar line-base">
             En caso de que “El Cliente” quisiera cambiar a los beneficiarios designados inicialmente, lo podrá hacer
@@ -592,13 +637,14 @@
         <div class="w-100 center mt-90">
             <div class="w-50 float-left">
                 <div class="w-90 mr-auto ml-auto border-top">
-                <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{$empresa->razon_social}}</span></div>
+                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span></div>
                     <span class="uppercase bold texto-sm">"la empresa"</span>
                 </div>
             </div>
             <div class="w-50 float-right">
                 <div class="w-90 mr-auto ml-auto border-top">
-                  <div class="pt-3 pb-1"><span class="uppercase  texto-sm">El (La) C. Hector raul cruz perez</span></div>
+                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm">El (La) C. Hector raul cruz perez</span>
+                    </div>
                     <span class="uppercase bold texto-sm">"el cliente"</span>
                 </div>
             </div>
