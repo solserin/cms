@@ -515,7 +515,12 @@
                             <div class="left">
                                 <div class="float-left w-20 left bg-nada">
                                     <div class="bold uppercase texto-sm center">
+                                        @if ($programado['tipo_pagos_id']==3)
+                                        pago único
+                                        @else
                                         {{$programado['tipo_pagos_id']==1?'enganche':'abono '.($key)}}
+                                        @endif
+
                                     </div>
                                 </div>
                                 <div class="float-right bg-nada w-40">
