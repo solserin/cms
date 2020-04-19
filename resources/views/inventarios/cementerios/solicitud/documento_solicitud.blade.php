@@ -64,7 +64,6 @@
         /*fin de parrafos*/
     </style>
 </head>
-
 <body>
     @include('layouts.estilos')
     <header id="header">

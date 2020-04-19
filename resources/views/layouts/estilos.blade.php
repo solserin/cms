@@ -93,6 +93,9 @@
         .w-{{$i}}{
           width: {{($i)}}% !important;
         }
+        .h-{{$i}}{
+          min-height: {{($i)}}vh !important;
+        }
 
         .radius-{{$i}}{
           border-radius: {{($i)}}px !important;
@@ -109,6 +112,27 @@
         .border-bottom-black-{{$i}}{
           border-bottom: {{$i}}px solid #000 !important; 
         }
+
+
+          .top-{{$i}}{
+              top: {{$i}}%  !important; 
+          }
+
+          .bottom-{{$i}}{
+              bottom: {{$i}}%  !important; 
+          }
+
+          .right-{{$i}}{
+              right: {{$i}}%  !important; 
+          }
+          .left-{{$i}}{
+              left: {{$i}}%  !important; 
+          }
+
+          .size-{{$i}}{
+              font-size: {{$i}}em !important;
+          }
+        
   @endfor
 
 
@@ -145,6 +169,7 @@
       text-transform: lowercase;
     }
     /*transform**/
+    
      .texto-base{
       font-size: 1em !important;
     }
@@ -220,7 +245,58 @@
       color: #fff !important;
     }
 
-    
 
-    
+ 
+
+  .watermark{
+      display: inline-block;
+      opacity: 1 !important;
+      transform: rotate(-45deg);
+      text-align: center;
+      z-index: 1000;
+      transform: rotate(-45deg) !important;
+      /* Legacy vendor prefixes that you probably don't need... */
+      /* Safari */
+      -webkit-transform: rotate(-45deg) !important;
+      /* Firefox */
+      -moz-transform: rotate(-45deg) !important;
+      /* IE */
+      -ms-transform: rotate(-45deg) !important;
+      /* Opera */
+      -o-transform: rotate(-45deg) !important;
+      /* Internet Explorer */
+      filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  }
+
+
+  .watermark-danger {
+    border: 3px dashed #dc3545 !important;
+    color: #dc3545 !important;
+  }
+
+  .watermark-success {
+      border: 3px dashed #22BB33 !important;
+      color: #22BB33 !important;
+  }
+  /*positions*/
+  .absolute{
+    position: absolute !important;
+  }
+
+  .relative{
+    position: relative !important;
+  }
+
+  .fixed{
+    position: fixed !important;
+  }
+
+   .static{
+    position: static !important;
+  }
+
+  .sticky{
+    position: sticky !important;
+  }
+
   </style>

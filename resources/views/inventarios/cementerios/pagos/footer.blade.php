@@ -4,7 +4,7 @@
     <style>
     table{
       width: 100%;
-      padding: 0px 0px 0px 0px !important;
+      padding: 0px 0px 10px 0px;
     }
     </style>
   <script>
@@ -30,7 +30,7 @@
   </script></head>
   @include('layouts.estilos')
   <body class="m-0 p-0" onload="subst()">
-  <table class="pt-2 italic">
+  <table class="pt-7 italic">
     <tr>
       <td align="left" class="texto-sm">
  Impresión, {{fechahora_completa()}}. 

@@ -903,6 +903,7 @@ class CementerioController extends ApiController
 
         $resultado =
             VentasPropiedades::select(
+                'ventas_propiedades.status',
                 'email',
                 'ventas_propiedades.propiedades_area_id',
                 'nombre',
@@ -1042,9 +1043,17 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            //'footer-html' => view('footer'),
-            'header-html' => view('header'),
+            'footer-html' => view('inventarios.cementerios.pagos.footer'),
         ]);
+        if ($datos_venta[0]['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('inventarios.cementerios.pagos.header')
+            ]);
+        }
+
+
+
+
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
         $pdf->setOption('margin-left', 0);
@@ -1113,8 +1122,12 @@ class CementerioController extends ApiController
         $pdf->setOptions([
             'title' => $name_pdf,
             'footer-html' => view('inventarios.cementerios.footer'),
-            'header-html' => view('inventarios.cementerios.header'),
         ]);
+        if ($datos_venta[0]['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('inventarios.cementerios.convenio.header')
+            ]);
+        }
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
         $pdf->setOption('margin-left', 25.4);
@@ -1189,8 +1202,13 @@ class CementerioController extends ApiController
         $pdf->setOptions([
             'title' => $name_pdf,
             'footer-html' => view('inventarios.cementerios.solicitud.footer'),
-            'header-html' => view('inventarios.cementerios.header'),
         ]);
+        if ($datos_venta[0]['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('inventarios.cementerios.solicitud.header')
+            ]);
+        }
+
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
         $pdf->setOption('margin-left', 5.4);
@@ -1214,7 +1232,7 @@ class CementerioController extends ApiController
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
                 strtoupper($datos_venta[0]['nombre']),
-                'COPIA DEL CONVENIO / CEMENTERIO AETERNUS',
+                'SOLICITUD DE PROPIEDAD / CEMENTERIO AETERNUS',
                 $name_pdf,
                 $pdf
             );
