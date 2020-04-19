@@ -141,6 +141,9 @@
     .uppercase{
       text-transform: uppercase;
     }
+    .lowercase{
+      text-transform: lowercase;
+    }
     /*transform**/
      .texto-base{
       font-size: 1em !important;
@@ -150,6 +153,19 @@
     }
     .texto-xs{
       font-size: .8em !important;
+    }
+
+ .texto-xs2{
+      font-size: .7em !important;
+    }
+
+
+    .line-0{
+      line-height: 0em !important;
+    } 
+
+    .line-lg{
+      line-height: 1.9em !important;
     }
 
     .line-base{
@@ -181,11 +197,27 @@
     }
 
     .bg-gray{
-      background-color: #{{env('graycolor')}}
+      background-color: #{{env('graycolor')}};
+    }
+
+     .bg-black{
+      background-color: #000 !important;
+    }
+
+    .bg-info{
+      background-color: #0061ff !important;
+    }
+
+    .bg-white{
+      background-color:#fff !important;
     }
 
     .border-top{
       border-top: 1px solid #000 !important; 
+    }
+
+    .text-white{
+      color: #fff !important;
     }
 
     

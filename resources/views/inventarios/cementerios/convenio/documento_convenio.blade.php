@@ -64,7 +64,6 @@
         }
 
         /*fin de parrafos*/
-
     </style>
 </head>
 
@@ -157,13 +156,11 @@
             <span class="uppercase bold texto-sm">xxxix</span> (<span class="uppercase bold texto-sm">trigésimo
                 noveno</span>), pasada en la ciudad de <span
                 class="uppercase bold texto-sm">{{ $empresa->registro_publico['ciudad_np'] }}</span>,
-            <span
-                class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>,
+            <span class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>,
             ante el protocolo a cargo del notario público número
             {{ $empresa->registro_publico['num_np'] }} (<span
                 class="uppercase bold texto-sm">{{ NumerosEnLetras::convertir($empresa->registro_publico['num_np']) }}</span>),
-            licenciado <span
-                class="uppercase bold texto-sm">{{ $empresa->registro_publico['fe_lic'] }}</span>.
+            licenciado <span class="uppercase bold texto-sm">{{ $empresa->registro_publico['fe_lic'] }}</span>.
         </p>
         <p class="texto-base justificar line-base">
             <span class="uppercase bold">II. </span>
@@ -186,14 +183,12 @@
             <span class="bg-gray px-1 mr-1">
 
 
-                (<span
-                    class="uppercase bold texto-sm">{{ calculaedad((String)($datos['fecha_nac'])) }}</span>)
+                (<span class="uppercase bold texto-sm">{{ calculaedad((String)($datos['fecha_nac'])) }}</span>)
                 años de
                 edad
             </span>
             y su domicilio en: <span class="uppercase bold texto-sm">
-                {{ $datos['domicilio'] }}</span>, Tel. <span
-                class="uppercase bold texto-sm">
+                {{ $datos['domicilio'] }}</span>, Tel. <span class="uppercase bold texto-sm">
                 {{ ($datos['telefono'])!='' ? ($datos['telefono']):'"No registrado"' }}</span>,
             Cel. <span class="uppercase bold texto-sm">{{ ($datos['celular']) }}</span> y correo
             electrónico <span
@@ -222,8 +217,7 @@
             <span class="uppercase bold texto-sm bg-gray px-2">
                 {{ $datos['ubicacion_texto'] }}
             </span>,
-            en el <span
-                class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
+            en el <span class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
             con una capacidad de <span
                 class="uppercase bold texto-sm">{{ $datos['propiedad']['tipo_propiedad']['capacidad'] }}</span>
             gaveta(s).
@@ -302,39 +296,39 @@
         <div class="lista pl-11 -mt-1">
 
             @php
-                /*determino si lleva abonos o es pago unico*/
+            /*determino si lleva abonos o es pago unico*/
             @endphp
             @if(count($datos['pagos_programados'])==1)
-                <p class="texto-base justificar line-base">
-                    <span class="lowercase bold texto-sm -ml-6">a) </span>
-                    <span class="ml-2">
-                        Una aportación (Pago Único) de $ <span
-                            class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['total'],2) }}
-                            ({{ NumerosEnLetras::convertir($datos['pagos_programados'][0]['total'],'Pesos m.n',false) }})</span>.
-                    </span>
-                </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">a) </span>
+                <span class="ml-2">
+                    Una aportación (Pago Único) de $ <span
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['total'],2) }}
+                        ({{ NumerosEnLetras::convertir($datos['pagos_programados'][0]['total'],'Pesos m.n',false) }})</span>.
+                </span>
+            </p>
             @else
-                <p class="texto-base justificar line-base">
-                    <span class="lowercase bold texto-sm -ml-6">a) </span>
-                    <span class="ml-2">
-                        Una aportación inicial de $ <span
-                            class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['total'],2) }}
-                            ({{ NumerosEnLetras::convertir((($datos['pagos_programados'][0]['total'])),'Pesos m.n',false) }})</span>.
-                    </span>
-                </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">a) </span>
+                <span class="ml-2">
+                    Una aportación inicial de $ <span
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['total'],2) }}
+                        ({{ NumerosEnLetras::convertir((($datos['pagos_programados'][0]['total'])),'Pesos m.n',false) }})</span>.
+                </span>
+            </p>
 
-                <p class="texto-base justificar line-base">
-                    <span class="lowercase bold texto-sm -ml-6">b) </span>
-                    <span class="ml-2">
-                        Y un saldo de $ <span class="bg-gray bold px-2 uppercase texto-sm">
-                            {{ number_format($datos['total']-$datos['pagos_programados'][0]['total'],2) }}
-                            (
-                            {{ NumerosEnLetras::convertir((($datos['total']-$datos['pagos_programados'][0]['total'])),'Pesos m.n',false) }})
-                        </span>. En <span
-                            class="bg-gray bold px-2 uppercase texto-sm">{{ count($datos['pagos_programados'])-1 }}</span>
-                        abonos consecutivos.
-                    </span>
-                </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">b) </span>
+                <span class="ml-2">
+                    Y un saldo de $ <span class="bg-gray bold px-2 uppercase texto-sm">
+                        {{ number_format($datos['total']-$datos['pagos_programados'][0]['total'],2) }}
+                        (
+                        {{ NumerosEnLetras::convertir((($datos['total']-$datos['pagos_programados'][0]['total'])),'Pesos m.n',false) }})
+                    </span>. En <span
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ count($datos['pagos_programados'])-1 }}</span>
+                    abonos consecutivos.
+                </span>
+            </p>
             @endif
 
 
@@ -452,37 +446,40 @@
             “El Cliente” designa como beneficiario(s) a las siguiente(s) persona(s):
         </p>
         @if(count($datos['beneficiarios'])>0)
-            <table class="w-100 center">
-                <thead>
-                    <tr>
-                        <th><span class="uppercase bold texto-sm bg-gray px-3">#</span></th>
-                        <th><span class="uppercase bold texto-sm bg-gray px-3">Nombre</span></th>
-                        <th><span class="uppercase bold texto-sm bg-gray px-3">Parentesco</span></th>
-                        <th><span class="uppercase bold texto-sm bg-gray px-3">teléfono</span></th>
-                    </tr>
-                </thead>
-                @php
-                    $num=1;
-                @endphp
-                @foreach($datos['beneficiarios'] as $beneficiario)
-                    <tr>
-                        <td class="pt-1 pb-1"><span
+        <table class="w-100 center">
+            <thead>
+                <tr>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">#</span></th>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">Nombre</span></th>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">Parentesco</span></th>
+                    <th><span class="uppercase bold texto-sm bg-gray px-3">teléfono</span></th>
+                </tr>
+            </thead>
+            @php
+            $num=1;
+            @endphp
+            @foreach($datos['beneficiarios'] as $beneficiario)
+            <tr>
+                <td class="pt-1 pb-1"><span
                         class="uppercase bold texto-sm letter-spacing-3 bg-gray px-2">{{$num}}</span>
-                        </td>
-                      <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['nombre']}}</span></td>
-                        <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['parentesco']}}</span></td>
-                        <td class="pt-1 pb-1"><span class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['telefono']}}</span>
-                        </td>
-                    </tr>
-                    @php
-                        $num++;
-                    @endphp
-                @endforeach
-            </table>
+                </td>
+                <td class="pt-1 pb-1"><span
+                        class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['nombre']}}</span></td>
+                <td class="pt-1 pb-1"><span
+                        class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['parentesco']}}</span></td>
+                <td class="pt-1 pb-1"><span
+                        class="uppercase bold texto-sm letter-spacing-3">{{$beneficiario['telefono']}}</span>
+                </td>
+            </tr>
+            @php
+            $num++;
+            @endphp
+            @endforeach
+        </table>
         @else
-          <p class="texto-base justificar line-base center uppercase bg-gray bold">
-           no se han capturado beneficiarios hasta la fecha.
-          </p>
+        <p class="texto-base justificar line-base center uppercase bg-gray bold">
+            no se han capturado beneficiarios hasta la fecha.
+        </p>
         @endif
 
         <p class="texto-base justificar line-base">
@@ -622,8 +619,7 @@
             Para la interpretación, cumplimiento cualquier controversia con motivo del presente convenio, las partes se
             someten a la jurisdicción y competencia de los tribunales del fuero común de <span
                 class="uppercase bold texto-sm">{{ $empresa->registro_publico['ciudad_np'] }}</span>,
-            <span
-                class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>
+            <span class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>
             y renunciar
             desde luego a cualquier otro fuero que por la razón de su domicilio podría convenir.
         </p>

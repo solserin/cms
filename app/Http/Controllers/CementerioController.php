@@ -906,7 +906,10 @@ class CementerioController extends ApiController
                 'email',
                 'ventas_propiedades.propiedades_area_id',
                 'nombre',
+                'ciudad',
+                'estado',
                 'rfc',
+                'fecha_registro',
                 'mensualidades',
                 'ventas_propiedades.status',
                 'ventas_propiedades.id',
@@ -921,6 +924,9 @@ class CementerioController extends ApiController
                 'fecha_venta',
                 'fecha_nac',
                 'total',
+                'subtotal',
+                'descuento',
+                'iva',
                 'domicilio',
                 'telefono',
                 'celular',
@@ -928,6 +934,7 @@ class CementerioController extends ApiController
                 'email',
                 'ventas_propiedades.status',
                 'antiguedad_ventas_id',
+                'vendedor_id',
                 DB::raw(
                     '(CASE 
                         WHEN ventas_propiedades.ventas_referencias_id = "1" THEN "Inmediato"
@@ -968,11 +975,17 @@ class CementerioController extends ApiController
                 }]
             )
             ->with(
+                'pagosProgramados.pagosRealizados.tipoPagoSat'
+            )
+            ->with(
                 'pagosProgramados.tipoPago'
             )
             ->with(
                 'propiedad.tipoPropiedad'
             )
+            ->with(array('vendedor' => function ($query) {
+                $query->select('id', 'nombre');
+            }))
             ->with(
                 'beneficiarios'
             )
@@ -1143,17 +1156,18 @@ class CementerioController extends ApiController
     public function documento_solicitud(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        /* $email =  $request->email_send === 'true' ? true : false;
+        $email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
-        */
+
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $id_venta = 29;
+        /*$id_venta = 35;
         $email = false;
         $email_to = 'hector@gmail.com';
+        */
 
 
 
@@ -1179,9 +1193,9 @@ class CementerioController extends ApiController
         ]);
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 25.4);
-        $pdf->setOption('margin-right', 25.4);
-        $pdf->setOption('margin-top', 05.4);
+        $pdf->setOption('margin-left', 5.4);
+        $pdf->setOption('margin-right', 5.4);
+        $pdf->setOption('margin-top', 5.4);
         $pdf->setOption('margin-bottom', 10.4);
         $pdf->setOption('page-size', 'a4');
 

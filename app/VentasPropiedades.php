@@ -27,4 +27,9 @@ class VentasPropiedades extends Model
         return $this->hasMany('App\BeneficiariosPropiedades', 'ventas_propiedades_id', 'id');
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
     }
+
+    public function vendedor()
+    {
+        return $this->belongsTo('App\User', 'vendedor_id', 'id');
+    }
 }
