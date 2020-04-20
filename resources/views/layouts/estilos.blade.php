@@ -222,7 +222,7 @@
     }
 
     .bg-gray{
-      background-color: #{{env('graycolor')}};
+      background-color: #{{env('GRAYCOLOR')}} !important;
     }
 
      .bg-black{
