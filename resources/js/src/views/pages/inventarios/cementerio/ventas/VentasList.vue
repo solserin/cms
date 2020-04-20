@@ -526,7 +526,7 @@ export default {
 
           this.ListaReportes.push({
             nombre: "Estado de cuenta",
-            url: "/inventarios/cementerio/documento_estado_de_cuenta/"
+            url: "/inventarios/cementerio/documento_estado_de_cuenta_cementerio/"
           });
           //estado de cuenta
 

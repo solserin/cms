@@ -245,6 +245,14 @@
       color: #fff !important;
     }
 
+    .text-danger{
+      color: #EA5455 !important;
+    }
+
+    .text-success{
+      color: #28C76F !important;
+    }
+
 
  
 
