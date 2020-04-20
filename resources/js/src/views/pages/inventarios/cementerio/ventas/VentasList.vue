@@ -502,31 +502,31 @@ export default {
           if (res.data[0].numero_solicitud_raw != null) {
             this.ListaReportes.push({
               nombre: "Solicitud de venta",
-              url: "/inventarios/cementerio/documento_solicitud/"
+              url: "/inventarios/cementerio/documento_solicitud"
             });
           }
           if (res.data[0].numero_convenio_raw != null) {
             this.ListaReportes.push({
               nombre: "Convenio",
-              url: "/inventarios/cementerio/documento_convenio/"
+              url: "/inventarios/cementerio/documento_convenio"
             });
           }
 
           if (res.data[0].numero_titulo_raw != null) {
             this.ListaReportes.push({
               nombre: "Título",
-              url: "/inventarios/cementerio/documento_titulo/"
+              url: "/inventarios/cementerio/documento_titulo"
             });
           }
 
           this.ListaReportes.push({
             nombre: "Referencias de Pago",
-            url: "/inventarios/cementerio/referencias_de_pago/"
+            url: "/inventarios/cementerio/referencias_de_pago"
           });
 
           this.ListaReportes.push({
             nombre: "Estado de cuenta",
-            url: "/inventarios/cementerio/documento_estado_de_cuenta_cementerio/"
+            url: "/inventarios/cementerio/documento_estado_de_cuenta_cementerio"
           });
           //estado de cuenta
 

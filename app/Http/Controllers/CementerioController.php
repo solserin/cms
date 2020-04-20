@@ -1121,7 +1121,7 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.footer'),
+            'footer-html' => view('inventarios.cementerios.convenio.footer'),
         ]);
         if ($datos_venta[0]['status'] == 0) {
             $pdf->setOptions([
