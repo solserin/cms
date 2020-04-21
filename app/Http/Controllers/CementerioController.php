@@ -230,6 +230,7 @@ class CementerioController extends ApiController
                     'rfc' => $request->rfc,
                     'email' => $request->email,
                     'mensualidades' => (int) $request->planVenta['value'],
+                    'enganche_inicial_plan_origen' => $request->planVenta['enganche_inicial'],
                     'ventas_referencias_id' => (int) $request->venta_referencia_id,
                 ]
             );
@@ -912,6 +913,7 @@ class CementerioController extends ApiController
                 'rfc',
                 'fecha_registro',
                 'mensualidades',
+                'enganche_inicial_plan_origen',
                 'ventas_propiedades.status',
                 'ventas_propiedades.id',
                 'numero_solicitud',
@@ -936,6 +938,16 @@ class CementerioController extends ApiController
                 'ventas_propiedades.status',
                 'antiguedad_ventas_id',
                 'vendedor_id',
+                'ventas_referencias_id',
+                DB::raw(
+                    '(NULL) AS tipo_raw'
+                ),
+                DB::raw(
+                    '(NULL) AS fila_raw'
+                ),
+                DB::raw(
+                    '(NULL) AS lote_raw'
+                ),
                 DB::raw(
                     '(CASE 
                         WHEN ventas_propiedades.ventas_referencias_id = "1" THEN "Inmediato"
@@ -990,6 +1002,9 @@ class CementerioController extends ApiController
             ->with(
                 'beneficiarios'
             )
+            ->with(
+                'antiguedad'
+            )
             ->where('ventas_propiedades.id', $id_venta)
             ->join('propiedades', 'ventas_propiedades.propiedades_area_id', '=', 'propiedades.id')
             ->join('tipo_propiedades', 'propiedades.tipo_propiedades_id', '=', 'tipo_propiedades.id')
@@ -1005,7 +1020,14 @@ class CementerioController extends ApiController
         //**se actualiza la propiedad a formato legible para el usuario */
         foreach ($resultado as $valor) {
             $valor->ubicacion_texto = $this->ubicacion_texto($valor->ubicacion_raw, $datos_cementerio);
+
+            /**agregando fila, lote, y tipo, por separado en valor numrico */
+            $valor->tipo_raw = explode("-", $valor->ubicacion_raw)[0];
+            $valor->fila_raw = explode("-", $valor->ubicacion_raw)[2];
+            $valor->lote_raw = explode("-", $valor->ubicacion_raw)[3];
         }
+
+
 
         //se retorna el resultado
         return $resultado;

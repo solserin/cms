@@ -3,7 +3,7 @@
     <vs-popup
       fullscreen
       close="cancelar"
-      title="Venta de Propiedades del Cementerio"
+      title="Modificación de Venta de Propiedades del Cementerio"
       :active.sync="showVentana"
       @close="cancelar"
     >
@@ -24,6 +24,10 @@
                 <!--fin del mapa del cementerio-->
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <h3 class="text-xl">
+                  <feather-icon icon="EditIcon" class="mr-2 mb-5" svgClasses="w-5 h-5" />
+                  <span class="font-bold text-primary">MODIFICACIÓN DE DATOS DE LA VENTA</span>
+                </h3>
                 <div class="flex flex-wrap">
                   <div class="w-full">
                     <h3 class="text-xl">
@@ -863,7 +867,7 @@
                       v-validate:plan_de_venta_computed.immediate="'required'"
                       name="plan_venta"
                       data-vv-as="Plan de Venta"
-                      :disabled="opcionPagar_validacion_computed"
+                      :disabled="true"
                     >
                       <div slot="no-options">Seleccione una opción</div>
                     </v-select>
@@ -1011,7 +1015,7 @@
                       color="success"
                       class="w-full"
                       @click="acceptAlert()"
-                    >Guardar Venta</vs-button>
+                    >Modificar Venta</vs-button>
                   </div>
                   <div class="w-full px-2 pt-3 pb-3">
                     <div>
@@ -1219,6 +1223,10 @@ export default {
     show: {
       type: Boolean,
       required: true
+    },
+    id_venta: {
+      type: Number,
+      required: true
     }
   },
   watch: {
@@ -1228,9 +1236,10 @@ export default {
         this.get_vendedores();
         this.get_sat_formas_pago();
         this.get_antiguedades();
-        this.idAreaInicial = 29;
+        this.ConsultarVenta(this.id_venta_modificar);
       } else {
         this.idAreaInicial = 0;
+        this.form.filas = this.filas[0];
       }
     },
 
@@ -1262,11 +1271,18 @@ export default {
                 }
               }
               //la primero opcion
-
-              this.form.lotes = this.lotes[1];
-              return;
+              //this.form.lotes = this.lotes[1];
             }
           });
+          if (this.lote_origen != "") {
+            this.lotes.forEach(element => {
+              if (element.value == this.lote_origen) {
+                this.form.lotes = element;
+              }
+              return 0;
+            });
+            this.lote_origen = ""; //lo reinicio para que no afecte en otro cambio de fila ya dentro de modificar
+          }
         } else {
           this.lotes = [];
           this.lotes.push({ label: "Seleccione 1", value: "" });
@@ -1335,8 +1351,15 @@ export default {
         this.form.enganche_inicial = newValue.precio_neto - this.form.descuento;
       } else if (newValue.value > 0) {
         this.form.precio_neto = newValue.precio_neto - this.form.descuento;
-        this.form.enganche_inicial =
-          (newValue.precio_neto - this.form.descuento) / 10;
+        if (newValue.tipo == "normal") {
+          this.form.enganche_inicial =
+            (newValue.precio_neto - this.form.descuento) / 10;
+        } else {
+          //ps al ser espcial se respeta el enganche inicial que la venta tiene registrada
+          this.form.enganche_inicial = Number(
+            this.datosVenta.pagos_programados[0].total
+          );
+        }
       }
     },
     "form.descuento": function(newValue, oldValue) {
@@ -1388,6 +1411,14 @@ export default {
     showVentana: {
       get() {
         return this.show;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
+    id_venta_modificar: {
+      get() {
+        return this.id_venta;
       },
       set(newValue) {
         return newValue;
@@ -1539,6 +1570,7 @@ export default {
   },
   data() {
     return {
+      datosVenta: [],
       idAreaInicial: 1,
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
@@ -1546,6 +1578,7 @@ export default {
       disabledDates: {
         from: new Date()
       },
+      lote_origen: "",
       spanishDatepicker: es,
       operConfirmar: false,
       openConfirmarSinPassword: false,
@@ -1566,7 +1599,8 @@ export default {
           label: "Seleccione 1",
           value: "",
           precio_neto: "",
-          enganche_inicial: ""
+          enganche_inicial: "",
+          tipo_plan: "normal" //para saber si es un plan normal o un plan especial
         }
       ],
       datosAreas: [],
@@ -1620,7 +1654,8 @@ export default {
           label: "Seleccione 1",
           value: "",
           precio_neto: "",
-          enganche_inicial: ""
+          enganche_inicial: "",
+          tipo_plan: "normal" //para saber si es un plan normal o un plan especial
         },
         ventaAntiguedad: {
           label: "Seleccione 1",
@@ -1806,7 +1841,7 @@ export default {
               value: element.id
             });
           });
-          this.form.vendedor = this.vendedores[0];
+          //this.form.vendedor = this.vendedores[0];
         })
         .catch(err => {});
     },
@@ -1852,7 +1887,8 @@ export default {
         label: "Seleccione 1",
         value: "",
         precio_neto: "",
-        enganche_inicial: ""
+        enganche_inicial: "",
+        tipo_plan: "normal" //para saber si es un plan normal o un plan especial
       });
       if (this.datosAreas.id) {
         this.datosAreas["tipo_propiedad"].precios.forEach(element => {
@@ -1865,7 +1901,8 @@ export default {
                 label: "Pago de contado",
                 value: Number(element.meses),
                 precio_neto: Number(element.precio_neto),
-                enganche_inicial: Number(element.enganche_inicial)
+                enganche_inicial: Number(element.enganche_inicial),
+                tipo_plan: "normal" //para saber si es un plan normal o un plan especial
               });
             }
           } else {
@@ -1877,7 +1914,8 @@ export default {
                 label: "Pago de contado",
                 value: Number(element.meses),
                 precio_neto: Number(element.precio_neto),
-                enganche_inicial: Number(element.enganche_inicial)
+                enganche_inicial: Number(element.enganche_inicial),
+                tipo_plan: "normal" //para saber si es un plan normal o un plan especial
               });
             } else {
               //precios de pagos a meses
@@ -1885,14 +1923,64 @@ export default {
                 label: element.meses + " Meses",
                 value: Number(element.meses),
                 precio_neto: Number(element.precio_neto),
-                enganche_inicial: Number(element.enganche_inicial)
+                enganche_inicial: Number(element.enganche_inicial),
+                tipo_plan: "normal" //para saber si es un plan normal o un plan especial
               });
             }
           }
         });
 
-        //selecciono el primero precio automaticamente
-        this.form.planVenta = this.planesVenta[1];
+        /**
+         * checando si el plan de venta original todavia existe con el mismo precio y mensualiades, si es asi para seleccionarlo o sino para crearlo
+         * y seleccionarlo como valor de inicio
+         */
+        let index_plan_original_sin_modificaciones = 0;
+        let existe = false;
+        this.planesVenta.forEach(element => {
+          //precio neto de la propiedad sin descuentos
+          let precio_neto =
+            Number(this.datosVenta.subtotal) + Number(this.datosVenta.iva);
+          if (
+            Number(this.datosVenta.enganche_inicial_plan_origen) ==
+              Number(element.enganche_inicial) &&
+            Number(precio_neto) == Number(element.precio_neto) &&
+            Number(this.datosVenta.mensualidades) == Number(element.value)
+          ) {
+            /**el plan de venta se mantiene y no ha sufrido modifcaciones por la que se selecciona por default */
+            existe = true;
+            /**lo seleccionono */
+            this.form.planVenta = element;
+            return 0;
+          } else {
+            /**aumento el index en caso de existir */
+            index_plan_original_sin_modificaciones += 1;
+          }
+        });
+        /**en caso de no existir lo creamos con un valor especial */
+        if (!existe) {
+          let precio_neto = this.datosVenta.subtotal + this.datosVenta.iva;
+
+          let label = "";
+          if (Number(this.datosVenta.mensualidades) == 0) {
+            //es a contado el plan anterior
+            label = "Plan Anterior(a contado)";
+          } else {
+            label =
+              "Plan Anterior(" + this.datosVenta.mensualidades + " Meses)";
+          }
+          this.planesVenta.push({
+            label: label,
+            value: Number(this.datosVenta.mensualidades),
+            precio_neto: Number(precio_neto),
+            enganche_inicial: Number(
+              this.datosVenta.enganche_inicial_plan_origen
+            ),
+            tipo_plan: "especial" //para saber si es un plan normal o un plan especial
+          });
+          this.form.planVenta = this.planesVenta[
+            index_plan_original_sin_modificaciones
+          ];
+        }
       }
     },
     cancelar() {
@@ -2005,6 +2093,94 @@ export default {
     //remover beneficiario callback quita del array al beneficiario seleccionado
     remover_beneficiario_callback() {
       this.form.beneficiarios.splice(this.form.index_beneficiario, 1);
+    },
+
+    ConsultarVenta(id_venta) {
+      let self = this;
+      if (cementerio.cancel) {
+        cementerio.cancel("Operation canceled by the user.");
+      }
+      this.$vs.loading();
+      cementerio
+        .get_venta_id(id_venta)
+        .then(res => {
+          this.datosVenta = res.data[0];
+          /**datos de la venta */
+          this.idAreaInicial = res.data[0].propiedades_area_id;
+          this.form.venta_referencia_id = res.data[0].ventas_referencias_id;
+          this.form.ventaAntiguedad = {
+            label: this.datosVenta.antiguedad.antiguedad,
+            value: res.data[0].antiguedad.id
+          };
+          this.form.vendedor = {
+            label: res.data[0].vendedor.nombre,
+            value: res.data[0].vendedor.id
+          };
+          this.form.num_solicitud = res.data[0].numero_solicitud_raw;
+          this.form.convenio = res.data[0].numero_convenio_raw;
+          this.form.titulo = res.data[0].numero_titulo_raw;
+
+          /**llenando la "fila" de la propiedad */
+          this.filas.forEach(element => {
+            if (element.value == res.data[0].fila_raw) {
+              this.form.filas = element;
+            }
+          });
+          /**el lote lo selecciono despues de selecionar la "fila" porque se desencadena el evento del watch para form.fila ahi checo si hay algun lote que se vaya selecionar
+           * con una variable especial para eso en data que se llama lote_origen
+           */
+
+          if (res.data[0].tipo_raw == 4) {
+            //se ocupa un lote
+            this.lote_origen = res.data[0].lote_raw;
+          } else {
+            this.lote_origen = "";
+          }
+
+          var partes = res.data[0].fecha_venta.split("-");
+          //yyyy-mm-dd
+          this.form.fecha_venta = new Date(partes[0], partes[1] - 1, partes[2]);
+
+          /**fin de datos de la venta */
+
+          this.form.titular = res.data[0].nombre;
+          this.form.domicilio = res.data[0].domicilio;
+          this.form.ciudad = res.data[0].ciudad;
+          this.form.estado = res.data[0].estado;
+          this.form.tel_domicilio = res.data[0].tel_domicilio;
+          this.form.celular = res.data[0].celular;
+          this.form.tel_oficina = res.data[0].tel_oficina;
+          this.form.rfc = res.data[0].rfc;
+          this.form.email = res.data[0].email;
+          var partes = res.data[0].fecha_nac.split("-");
+          //yyyy-mm-dd
+          this.form.fecha_nac = new Date(partes[0], partes[1] - 1, partes[2]);
+
+          /**beneficairios */
+          this.form.beneficiarios = res.data[0].beneficiarios;
+
+          /**informacion de la venta */
+          this.form.descuento = this.datosVenta.descuento;
+
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            }
+          }
+        });
     }
   },
   created() {}

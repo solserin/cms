@@ -64,6 +64,7 @@ class CreateVentasPropiedadesTable extends Migration
             $table->date('fecha_nac')->nullable();
             //modalidad de pago de la venta
             $table->tinyInteger('mensualidades')->nullable();
+            $table->double('enganche_inicial_plan_origen')->nullable();
             $table->unsignedBigInteger('ventas_referencias_id');
             $table->foreign('ventas_referencias_id')->references('id')->on('ventas_referencias');
             $table->longText('nota')->nullable();

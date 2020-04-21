@@ -163,7 +163,7 @@
                   icon="icon-edit"
                   color="dark"
                   type="flat"
-                  @click="openModificar(data[indextr].id_user)"
+                  @click="openModificar(data[indextr].id)"
                 ></vs-button>
                 <vs-button
                   v-if="data[indextr].status==1"
@@ -205,12 +205,13 @@
       @closeVentana="verAgregar = false"
       @ver_pdfs_nueva_venta="ConsultarVenta"
     ></NuevaVenta>
-    <UpdateUsuario
+    <UpdateVenta
+      :id_venta="id_venta_modificar"
       :show="verModificar"
-      @closeModificar="closeModificar"
-      :datos="datosModifcar"
-      @get_data="get_data(actual)"
-    ></UpdateUsuario>
+      @closeVentana="verModificar = false"
+      @ver_pdfs_nueva_venta="ConsultarVenta"
+    ></UpdateVenta>
+
     <Password
       :show="openStatus"
       :callback-on-success="callback"
@@ -233,9 +234,9 @@ import Reporteador from "@pages/Reporteador";
 import PlanesVenta from "../ventas/PlanesVentas";
 
 import cementerio from "@services/cementerio";
-/**IMPORTAR EL COMPONENTE DE ROLES */
+
 import NuevaVenta from "../ventas/NuevaVenta";
-import UpdateUsuario from "../UpdateUsuario";
+import UpdateVenta from "../ventas/UpdateVenta";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -250,7 +251,7 @@ export default {
     "v-select": vSelect,
     Password,
     NuevaVenta,
-    UpdateUsuario,
+    UpdateVenta,
     PlanesVenta,
     Reporteador
   },
@@ -325,10 +326,10 @@ export default {
       openStatus: false,
       callback: Function,
       accionNombre: "",
-      verModificar: false,
       datosModifcar: {},
       verAgregar: false,
-
+      verModificar: false,
+      id_venta_modificar: 0,
       selected: [],
       users: [],
       /**opciones para filtrar la peticion del server */
@@ -413,14 +414,9 @@ export default {
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
-    openModificar(id_user) {
-      this.users.forEach(element => {
-        if (element.id_user == id_user) {
-          this.datosModifcar = element;
-          this.verModificar = true;
-          return false;
-        }
-      });
+    openModificar(id_venta) {
+      this.id_venta_modificar = id_venta;
+      this.verModificar = true;
     },
 
     //eliminar usuario logicamente

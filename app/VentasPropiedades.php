@@ -32,4 +32,9 @@ class VentasPropiedades extends Model
     {
         return $this->belongsTo('App\User', 'vendedor_id', 'id');
     }
+
+    public function antiguedad()
+    {
+        return $this->belongsTo('App\AntiguedadesVenta', 'antiguedad_ventas_id', 'id');
+    }
 }
