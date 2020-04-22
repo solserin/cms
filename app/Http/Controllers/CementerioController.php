@@ -439,11 +439,13 @@ class CementerioController extends ApiController
             if ($request->venta_referencia_id == 1 || (int) $request->planVenta['value'] == 0) {
                 //de uso inmediato sin importar si es seleccionado a futuro o inmediato ya que selecciono pagarlo de contado
                 /**se crea un solo pago */
-
+                //se agregan tres dias a los enfanches y a las liquidaciones para ser capturadas
+                $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fecha_venta)))->add(3, 'day');
                 $id_pago_programado_unico = DB::table('pagos_programados_propiedades')->insertGetId(
                     [
+
                         'num_pago' => 1, //numero 1, pues es unico
-                        'fecha_programada' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                        'fecha_programada' => $fecha_maxima, //fecha de la venta
                         'ventas_propiedades_id' => $id_venta, //id de la venta
                         'tipo_pagos_id' => 3, //3-liquidacion //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
                         'referencia_pago' => '01' . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
@@ -501,13 +503,14 @@ class CementerioController extends ApiController
                 $descuento_enganche = ($descuento * $porcentaje_enganche_inicial) / 100;
 
                 $total_enganche = $subtotal_enganche + $iva_enganche - $descuento_enganche;
-
+                //se agregan tres dias a los enfanches y a las liquidaciones para ser capturadas
+                $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fecha_venta)))->add(3, 'day');
                 $id_pago_programado_enganche = DB::table('pagos_programados_propiedades')->insertGetId(
                     [
                         'num_pago' => 1, //numero 1, pues es enganche
-                        'fecha_programada' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)), //fecha de la venta
+                        'fecha_programada' => $fecha_maxima, //fecha de la venta
                         'ventas_propiedades_id' => $id_venta, //id de la venta
-                        'tipo_pagos_id' => 1, //3-enganche //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
+                        'tipo_pagos_id' => 1, //1-enganche //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
                         'referencia_pago' => '02'
                             /**tipo 02 por ser a meses */
                             . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece

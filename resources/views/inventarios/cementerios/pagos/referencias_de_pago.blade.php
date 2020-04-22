@@ -352,7 +352,7 @@
             </td>
             <td width="40%" align="center">
               <span class="bg-dato">
-                <span class="dato">Fecha Programada: </span> <span
+                <span class="dato">Pago puntual antes de: </span> <span
                   class="valor">{{fecha_no_day($pago['fecha_programada'])}}</span>
               </span>
             </td>
@@ -413,7 +413,7 @@
               <div class="cuentas"><span class="bg-total"><span class="dato-totales"> Total a Pagar</span> <span
                     class="dato-totales-valor">$ {{number_format($pago['total'],2)}} Pesos MXN</span></span> <br><span
                   class="dato">({{numeros_a_letras($pago['total'])}} Pesos MXN, incluye IVA y descuentos
-                  aplicados)</span></div>
+                  aplicados, <span><strong>NO</strong> intereses</span>)</span></div>
             </td>
           </tr>
         </tbody>

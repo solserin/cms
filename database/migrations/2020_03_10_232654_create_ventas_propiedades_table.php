@@ -51,8 +51,6 @@ class CreateVentasPropiedadesTable extends Migration
 
             //informacion del comprador (titular)
             $table->string('nombre');
-            $table->string('apellido_m')->nullable();
-            $table->string('apellido_p')->nullable();
             $table->string('domicilio')->nullable();
             $table->string('ciudad')->nullable();
             $table->string('estado')->nullable();
@@ -62,6 +60,21 @@ class CreateVentasPropiedadesTable extends Migration
             $table->string('rfc')->nullable();
             $table->string('email')->nullable();
             $table->date('fecha_nac')->nullable();
+
+            //informacion del titular sustituto
+            $table->string('titular_sustituto');
+            $table->string('parentesto_titular_sustituto')->nullable();
+            $table->string('telefono_titular_sustituto')->nullable();
+
+
+
+            //informacion para el control de intereses moratorios
+            $table->double('tasa_fija_anual')->nullable();
+            $table->integer('dias_antes_vencimiento')->nullable();
+            $table->integer('maximo_dias_retraso')->nullable();
+            $table->double('porcentaje_pena_convencional_minima')->nullable();
+            $table->integer('minima_partes_cubiertas')->nullable();
+
             //modalidad de pago de la venta
             $table->tinyInteger('mensualidades')->nullable();
             $table->double('enganche_inicial_plan_origen')->nullable();
