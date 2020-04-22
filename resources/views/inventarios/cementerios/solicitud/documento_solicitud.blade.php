@@ -259,6 +259,60 @@
             </tr>
         </table>
     </div>
+
+     <div class="border-black-1 radius-5 uppercase texto-sm  px-3 py-2">
+        <div class="uppercase bg-black text-white py-1 px-2 bold mb-1">
+            información del titular Sustituto
+        </div>
+        <table class="w-100 center">
+            <tr>
+                <td class="w-100 px-2 py-2">
+                    <div class="left">
+                        <div class="float-left w-8 left">
+                            <span class="bold uppercase texto-sm">
+                                nombre:
+                            </span>
+                        </div>
+                        <div class="float-right bg-gray w-92 center">
+                            {{ $datos['titular_sustituto'] }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="w-100 center">
+            <tr>
+                <td class="w-50 px-2 py-2" colspan="2">
+                    <div class="left">
+                        <div class="float-left w-23 left">
+                            <span class="bold uppercase texto-sm">
+                               parentesco:
+                            </span>
+                        </div>
+                        <div class="float-right bg-gray w-77 center">
+                           {{ $datos['parentesco_titular_sustituto'] }}
+                        </div>
+                    </div>
+                </td>
+                <td class="w-50 px-2 py-2" colspan="2">
+                    <div class="left">
+                        <div class="float-left w-19 left">
+                            <span class="bold uppercase texto-sm">
+                                teléfono:
+                            </span>
+                        </div>
+                        <div class="float-right bg-gray w-81 center">
+                            {{ $datos['telefono_titular_sustituto'] }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
     <div class="border-black-1 radius-5 uppercase texto-sm  px-3 py-2">
         <div class="uppercase bg-black text-white py-1 px-2 bold mb-1">
             información de la propiedad
@@ -605,7 +659,7 @@ pagadero este documento a la vista por el saldo insoluto del mismo, en los
 términos señalados por el artículo 79 de la Ley General de Títulos y Operaciones
 de crédito. Este pagaré es causal y no negociable desde la fecha del primer
 vencimiento no pagado hasta el día de la solución del adeudo. Este causará interés
-        moratorio a tasa mensual del <span class="bold uppercase">{{($datos['tasa_fija_anual']/12)}}%</span> en Mazatlán, Sinaloa <span class="bold lowercase capitalize">{{fecha_no_day($datos['fecha_venta'])}}</span>
+        moratorio a tasa mensual del <span class="bold uppercase">{{($datos['tasa_fija_anual']/12)}}%</span> en Mazatlán, Sinaloa <span class="bold lowercase capitalize">{{fecha_no_day($datos['fecha_venta'])}}</span>.
         </p>
          <p class="texto-xs justificar line-base">
         El contratante se obliga a pagar a la agencia funeraria las parcialidades contratadas dentro
@@ -618,7 +672,7 @@ corresponda.
 el contratante se ha obligado a cubrir, no existiendo ningún gasto, interés o cualquier
 cargo adicional, siempre que el contratante pague en tiempo las parcialidades convenidas.
 En caso de retraso mensual, el contratante se obliga a pagar a la agencia funeraria interés
-moratorio del <span class="bold">{{$datos['tasa_fija_anual']}}</span>% (doce por cierto) fija anual, la que se calculará y liquidará sobre
+moratorio del <span class="bold">{{$datos['tasa_fija_anual']}}</span>% ({{ NumerosEnLetras::convertir($datos['tasa_fija_anual'],'',false) }} por ciento) fija anual, la que se calculará y liquidará sobre
 cantidades que adeude el Contratante a la Agencia Funeraria. Los intereses moratorios se
 calcularán multiplicando el monto de lo que adeude el contratante por la tasa de interés
 anual, dividida entre 365, este resultado se multiplica por el número de días transcurridos
