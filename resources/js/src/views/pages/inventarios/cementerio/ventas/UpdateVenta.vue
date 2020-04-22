@@ -559,6 +559,95 @@
               <!--fin de datos del titular-->
 
               <vs-divider />
+              <div class="w-full pt-3 pb-3 px-2">
+                <h3 class="text-xl">
+                  <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Titular Sustituto
+                </h3>
+              </div>
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Nombre del titular sustituto
+                  <span class="text-danger text-sm">(*)</span>
+                </label>
+                <vs-input
+                  name="titular_sustituto"
+                  data-vv-as=" "
+                  data-vv-validate-on="blur"
+                  v-validate="'required'"
+                  maxlength="150"
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Nombre del titular sustituto"
+                  v-model="form.titular_sustituto"
+                />
+                <div>
+                  <span class="text-danger text-sm">{{ errors.first('titular_sustituto') }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="text-danger text-sm"
+                    v-if="this.errores.titular_sustituto"
+                  >{{errores.titular_sustituto[0]}}</span>
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Parentesco con el titular sustituto
+                  <span class="text-danger text-sm">(*)</span>
+                </label>
+                <vs-input
+                  name="parentesco_titular_sustituto"
+                  data-vv-as=" "
+                  data-vv-validate-on="blur"
+                  v-validate="'required'"
+                  maxlength="45"
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Ej. Hermano"
+                  v-model="form.parentesco_titular_sustituto"
+                />
+                <div>
+                  <span
+                    class="text-danger text-sm"
+                  >{{ errors.first('parentesco_titular_sustituto') }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="text-danger text-sm"
+                    v-if="this.errores.parentesco_titular_sustituto"
+                  >{{errores.parentesco_titular_sustituto[0]}}</span>
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Teléfono de contacto
+                  <span class="text-danger text-sm">(*)</span>
+                </label>
+                <vs-input
+                  name="telefono_titular_sustituto"
+                  data-vv-as=" "
+                  data-vv-validate-on="blur"
+                  v-validate="'required'"
+                  maxlength="45"
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Ingrese un teléfono"
+                  v-model="form.telefono_titular_sustituto"
+                />
+                <div>
+                  <span class="text-danger text-sm">{{ errors.first('telefono_titular_sustituto') }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="text-danger text-sm"
+                    v-if="this.errores.telefono_titular_sustituto"
+                  >{{errores.telefono_titular_sustituto[0]}}</span>
+                </div>
+              </div>
+
+              <vs-divider />
             </div>
             <!--fin de datos del titular y beneficiarios-->
 
@@ -1636,6 +1725,10 @@ export default {
         rfc: "",
         email: "",
         fecha_nac: "",
+        /**titular substituto */
+        titular_sustituto: "",
+        parentesco_titular_sustituto: "",
+        telefono_titular_sustituto: "",
         //
         num_solicitud: "",
         convenio: "",
@@ -2152,6 +2245,13 @@ export default {
           this.form.tel_oficina = res.data[0].tel_oficina;
           this.form.rfc = res.data[0].rfc;
           this.form.email = res.data[0].email;
+
+          /**datos del titular sustituto */
+          this.form.titular_sustituto = res.data[0].titular_sustituto;
+          this.form.parentesco_titular_sustituto =
+            res.data[0].parentesco_titular_sustituto;
+          this.form.telefono_titular_sustituto =
+            res.data[0].telefono_titular_sustituto;
           var partes = res.data[0].fecha_nac.split("-");
           //yyyy-mm-dd
           this.form.fecha_nac = new Date(partes[0], partes[1] - 1, partes[2]);

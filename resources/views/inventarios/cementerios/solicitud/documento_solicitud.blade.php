@@ -595,6 +595,104 @@
             @endif
         </table>
     </div>
+    <div class="border-black-1 radius-5 texto-sm  px-3 py-2">
+        <p class="texto-xs justificar line-base">
+            <span class="- bold texto-sm pr-2 uppercase">Nota.- </span>
+        Debo y pagaré incondicionalmente por este pagaré a la orden de <span class="bold uppercase">{{$empresa->razon_social}}</span> en Mazatlán, Sinaloa o en cualquier otra
+        ciudad que se me requiera el pago por la cantidad de: $ <span class="bold uppercase">{{number_format($datos['total'],2)}}</span>({{ NumerosEnLetras::convertir($datos['total'],'Pesos MXN',false) }}). Este pagaré tendrá vencimiento los días <span class="bold uppercase">{{dia_numero($datos['fecha_venta'])}}</span> de cada mes hasta cubrir la totalidad
+de este documento. El primer pago vencerá el <span class="bold uppercase">{{fecha_no_day($datos['pagos_programados'][0]['fecha_programada'])}}</span> ({{$datos['pagos_programados'][0]['tipo_pago']['tipo']}}), en caso de falta de pago de <span class="bold uppercase">{{ $datos['maximo_pagos_vencidos'] }}({{ NumerosEnLetras::convertir($datos['maximo_pagos_vencidos'],'',false) }})</span> o más vencimientos sucesivos, se entenderá
+pagadero este documento a la vista por el saldo insoluto del mismo, en los
+términos señalados por el artículo 79 de la Ley General de Títulos y Operaciones
+de crédito. Este pagaré es causal y no negociable desde la fecha del primer
+vencimiento no pagado hasta el día de la solución del adeudo. Este causará interés
+        moratorio a tasa mensual del <span class="bold uppercase">{{($datos['tasa_fija_anual']/12)}}%</span> en Mazatlán, Sinaloa <span class="bold lowercase capitalize">{{fecha_no_day($datos['fecha_venta'])}}</span>
+        </p>
+         <p class="texto-xs justificar line-base">
+        El contratante se obliga a pagar a la agencia funeraria las parcialidades contratadas dentro
+         de los primeros <span class="bold">{{$datos['dias_antes_vencimiento']}}</span> días hábiles naturales a la fecha de vencimiento mensual que le
+corresponda. 
+        </p>
+
+         <p class="texto-xs justificar line-base">
+         El monto a pagar a la Agencia Funeraria comprende todas las cantidades y conceptos que
+el contratante se ha obligado a cubrir, no existiendo ningún gasto, interés o cualquier
+cargo adicional, siempre que el contratante pague en tiempo las parcialidades convenidas.
+En caso de retraso mensual, el contratante se obliga a pagar a la agencia funeraria interés
+moratorio del <span class="bold">{{$datos['tasa_fija_anual']}}</span>% (doce por cierto) fija anual, la que se calculará y liquidará sobre
+cantidades que adeude el Contratante a la Agencia Funeraria. Los intereses moratorios se
+calcularán multiplicando el monto de lo que adeude el contratante por la tasa de interés
+anual, dividida entre 365, este resultado se multiplica por el número de días transcurridos
+entre la fecha de pago que debió ser hecho y la fecha que el contratante liquide el adeudo.
+        </p>
+
+        <p class="texto-xs justificar line-base">
+      En caso de que el retraso supere los <span class="bold">{{$datos['maximo_dias_retraso']}}</span> días, la agencia funeraria podrá elegir entre exigir
+el pago de todas las mensualidades aun no pagadas por el contratante y los intereses
+moratorios acumulados o bien rescindir el contrato y aplicar como pena convencional por
+incumplimiento el <span class="bold">{{$datos['porcentaje_pena_convencional_minima']}}%</span> del monto pagado por el contratante, debiendo a la Agencia
+Funeraria regresar las cantidades en exceso y que sobren de dicha pena al contratante. En
+caso de que el retraso en el pago sea superior a los <span class="bold">{{$datos['maximo_dias_retraso']}}</span> días, la Agencia Funeraria podrá
+igualmente rescindir el Contrato y aplicar como pena convencional la totalidad de los
+pagos efectuados por el contratante. 
+        </p>
+
+         <p class="texto-xs justificar line-base">
+       En los términos de los dispuestos por el artículo 71 de la Ley Federal de Protección al
+consumidor, cuando el contratante haya pagado más de la tercera parte del precio o
+número total de los pagos convenidos ante la notificación de rescisión que le realice la
+Agencia Funeraria, el contratante podrá optar porque se aplique el mecanismo indicado
+en el párrafo anterior o bien pagar el saldo del contrato más los intereses moratorios
+generados por su incumplimiento. En el primer caso (rescisión con penalidad) solo si el 
+retraso fuera menor a <span class="bold">{{$datos['maximo_dias_retraso']}}</span> días, la agencia funeraria devolverá al contratante la cantidad
+que corresponda una vez aplicada la penalidad y los intereses moratorios. En el segundo
+caso (pago total de saldo insoluto), la Agencia Funeraria entregará al contratante el recibo
+de finiquito correspondiente solo si este paga la cantidad total adeudada (saldo insoluto
+contratado más los intereses moratorios).
+        </p>
+
+        <p class="texto-xs justificar line-base">
+       Sólo podrán reconocerse los pagos de mensualidades por los recibos firmados y sellados
+por la empresa, cuando se efectúen en cajas de la Agencia Funeraria, o los recibos
+firmados por el Banco Santander (México), S.A. a la cuenta <span class="bold">{{$empresa['cuenta']}}</span> a más tardar en
+la fecha límite establecida. Ninguna otra persona está autorizada para recibir pagos y, por
+lo tanto, estos no podrán ser reconocidos por la Agencia Funeraria. 
+        </p>
+
+        <p class="texto-xs justificar line-base">
+       El contratante o Titular Sustituto será quien al requerir los servicios para el usuario que se
+solicitaron, deberá entregar el contrato, recibos de pagos efectuados o en su caso liquidar el
+saldo total que persista hasta la fecha y cualquier otro adeudo del servicio contratado. 
+        </p>
+
+        @php
+            /*
+        @endphp
+        <div class="lista pl-11 -mt-1">
+            <p class="texto-xs justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">a) </span>
+                <span class="ml-2">
+                    El convenio que ampara dicho servicio de inhumación
+                </span>
+            </p>
+            <p class="texto-xs justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">b) </span>
+                <span class="ml-2">
+                    El certificado de defunción de la persona que recibirá el servicio amparado por el convenio en
+                    cuestión
+                </span>
+            </p>
+            <p class="texto-xs justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">c) </span>
+                <span class="ml-2">
+                    Cualquier otra documentación que sea necesaria para efectuar los trámites correspondientes y/o
+                    conseguir los permisos necesarios para la realización de dicho servicio.
+                </span>
+            </p>
+        </div>
+        @php
+            */
+        @endphp
+    </div>
 </body>
 
 </html>

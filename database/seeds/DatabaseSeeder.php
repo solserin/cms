@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         /**fin seeders de usuarios */
 
         /**seeder de cementerio */
+        $this->call(AjustesInteresesPropiedadesSeeder::class);
         $this->call(tiposPropiedadesSeeder::class);
         $this->call(PropiedadesSeeder::class);
         $this->call(columnasFilasSeeder::class);

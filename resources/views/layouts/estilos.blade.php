@@ -159,7 +159,7 @@
 
     /*transform**/
     .capitalize{
-      text-transform: capitalize;
+      text-transform: capitalize !important;
     }
 
     .uppercase{

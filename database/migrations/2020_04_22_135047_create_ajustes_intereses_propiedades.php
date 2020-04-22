@@ -20,6 +20,7 @@ class CreateAjustesInteresesPropiedades extends Migration
             $table->integer('maximo_dias_retraso')->default(120);
             $table->double('porcentaje_pena_convencional_minima')->default(60);
             $table->integer('minima_partes_cubiertas')->default(3);
+            $table->integer('maximo_pagos_vencidos')->default(3);
         });
     }
 

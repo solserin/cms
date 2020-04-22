@@ -63,7 +63,7 @@ class CreateVentasPropiedadesTable extends Migration
 
             //informacion del titular sustituto
             $table->string('titular_sustituto');
-            $table->string('parentesto_titular_sustituto')->nullable();
+            $table->string('parentesco_titular_sustituto')->nullable();
             $table->string('telefono_titular_sustituto')->nullable();
 
 
@@ -74,6 +74,8 @@ class CreateVentasPropiedadesTable extends Migration
             $table->integer('maximo_dias_retraso')->nullable();
             $table->double('porcentaje_pena_convencional_minima')->nullable();
             $table->integer('minima_partes_cubiertas')->nullable();
+            $table->integer('maximo_pagos_vencidos')->nullable();
+
 
             //modalidad de pago de la venta
             $table->tinyInteger('mensualidades')->nullable();

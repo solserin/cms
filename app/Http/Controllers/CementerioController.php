@@ -7,15 +7,16 @@ use App\User;
 use App\Ajustes;
 use Carbon\Carbon;
 use App\Propiedades;
+use NumerosEnLetras;
 use App\SatFormasPago;
 use App\tipoPropiedades;
 use App\AntiguedadesVenta;
 use App\VentasPropiedades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\AjustesInteresesPropiedades;
 use App\PagosProgramadosPropiedades;
 use Illuminate\Support\Facades\Mail;
-use NumerosEnLetras;
 
 class CementerioController extends ApiController
 {
@@ -91,6 +92,11 @@ class CementerioController extends ApiController
             'email' => 'nullable|email',
             'fecha_nac' => 'required|date',
             //fin de datos del titular
+
+            /**titular_sustituto */
+            'titular_sustituto' => 'required',
+            'parentesco_titular_sustituto' => 'required',
+            'telefono_titular_sustituto' => 'required',
 
             /**beneficiarios */
             'beneficiarios.*.nombre' => [
@@ -183,7 +189,7 @@ class CementerioController extends ApiController
         $descuento = (float) $request->descuento;
         $total_neto = $subtotal + $iva - $descuento;
 
-
+        $ajustes_intereses = AjustesInteresesPropiedades::find(1);
 
         //aqui procedemos a guardar segun los datas recibidos
 
@@ -226,12 +232,26 @@ class CementerioController extends ApiController
                     'telefono' => $request->tel_domicilio,
                     'tel_oficina' => $request->tel_oficina,
                     'celular' => $request->celular,
+
+                    /** titular_sustituto */
+                    'titular_sustituto' => $request->titular_sustituto,
+                    'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
+                    'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
+
                     //agregar'tel_oficina' => $request->ubicacion,
                     'rfc' => $request->rfc,
                     'email' => $request->email,
                     'mensualidades' => (int) $request->planVenta['value'],
                     'enganche_inicial_plan_origen' => $request->planVenta['enganche_inicial'],
                     'ventas_referencias_id' => (int) $request->venta_referencia_id,
+
+                    /**guardando los datos de la tasa para intereses */
+                    'tasa_fija_anual' => $ajustes_intereses->tasa_fija_anual,
+                    'dias_antes_vencimiento' => $ajustes_intereses->dias_antes_vencimiento,
+                    'maximo_dias_retraso' => $ajustes_intereses->maximo_dias_retraso,
+                    'porcentaje_pena_convencional_minima' => $ajustes_intereses->porcentaje_pena_convencional_minima,
+                    'minima_partes_cubiertas' => $ajustes_intereses->minima_partes_cubiertas,
+                    'maximo_pagos_vencidos' => $ajustes_intereses->maximo_pagos_vencidos,
                 ]
             );
             //captura de los beneficiarios
@@ -904,9 +924,14 @@ class CementerioController extends ApiController
     public function get_venta_id($venta_id = 0)
     {
         $id_venta = $venta_id;
-
         $resultado =
             VentasPropiedades::select(
+                'tasa_fija_anual',
+                'dias_antes_vencimiento',
+                'maximo_dias_retraso',
+                'porcentaje_pena_convencional_minima',
+                'minima_partes_cubiertas',
+                'maximo_pagos_vencidos',
                 'ventas_propiedades.status',
                 'email',
                 'ventas_propiedades.propiedades_area_id',
@@ -914,6 +939,9 @@ class CementerioController extends ApiController
                 'ciudad',
                 'estado',
                 'rfc',
+                'titular_sustituto',
+                'parentesco_titular_sustituto',
+                'telefono_titular_sustituto',
                 'fecha_registro',
                 'mensualidades',
                 'enganche_inicial_plan_origen',
@@ -1202,7 +1230,7 @@ class CementerioController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*$id_venta = 35;
+        /*$id_venta = 50;
         $email = false;
         $email_to = 'hector@gmail.com';
         */

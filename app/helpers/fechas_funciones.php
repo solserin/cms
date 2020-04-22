@@ -104,13 +104,18 @@ function dia($fecha)
 }
 
 
+function dia_numero($fecha)
+{
+    return date('d', strtotime($fecha));
+}
+
+
 function mes_from_fecha($fecha)
 {
     $arrayMeses = array(
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     );
-
     return strtoupper(($arrayMeses[date('m', strtotime($fecha)) - 1]));
 }
 
