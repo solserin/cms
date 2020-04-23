@@ -78,6 +78,20 @@ export default {
     },
 
 
+    modificarVenta(datos) {
+        let call = "/inventarios/cementerio/modificar_venta"
+        return new Promise((resolve, reject) => {
+            axios.post(call, datos)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
+
 
 
 

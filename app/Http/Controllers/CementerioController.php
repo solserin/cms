@@ -13,6 +13,7 @@ use App\tipoPropiedades;
 use App\AntiguedadesVenta;
 use App\VentasPropiedades;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\AjustesInteresesPropiedades;
 use App\PagosProgramadosPropiedades;
@@ -273,6 +274,296 @@ class CementerioController extends ApiController
         /**********FIN DE CASOS DE VENTA 1 - NUEVA VENTA "SISTEMATIZADA" */
     }
 
+
+
+
+
+
+    /**MODIFICAR LA VENTA */
+    public function modificar_venta(Request $request)
+    {
+        //return $request->id_venta;
+        //return $request->minima_cuota_inicial;
+        //validaciones directas sin condicionales
+        $validaciones = [
+            //datos de la propiedad
+            'tipo_propiedades_id' => 'required|min:1',
+            'propiedades_id' => 'required|min:1',
+            'ubicacion' => [
+                'required',
+                Rule::unique('ventas_propiedades', 'ubicacion')->ignore($request->id_venta),
+            ],
+            //fin de datos de la propiedad
+            //datos de la venta
+            'fecha_venta' => 'required|date',
+            'ventaAntiguedad.value' => 'required',
+            'venta_referencia_id' => 'required',
+            'filas.value' => 'required',
+            'lotes.value' => '', //modificada segun condiciones
+            'vendedor.value' => 'required',
+            'num_solicitud' => '',
+            'convenio' => '',
+            'titulo' => '',
+            //info del plan de venta y pagos
+            'planVenta.value' => 'required',
+            'precio_neto' => 'required|numeric',
+            'descuento' => 'nullable|numeric|lte:planVenta.precio_neto',
+            'precio_neto' => 'numeric|min:0',
+            'enganche_inicial' => 'numeric|min:' . $request->minima_cuota_inicial . '|' . 'max:' . $request->maxima_cuota_inicial,
+            'opcionPagar.value' => 'required',
+            'formaPago.value' => 'required',
+            'banco' => '',
+            'ultimosdigitos' => '',
+            'num_operacion' => '',
+            //enganche inicial sera calculado
+            //fin info de plan de ventas y pagos
+
+
+            //fin de datos de la venta
+
+            //datos del titular
+            'titular' => 'required',
+            'domicilio' => 'required',
+            'ciudad' => 'required',
+            'estado' => 'required',
+            'celular' => 'required',
+            'email' => 'nullable|email',
+            'fecha_nac' => 'required|date',
+            //fin de datos del titular
+
+            /**titular_sustituto */
+            'titular_sustituto' => 'required',
+            'parentesco_titular_sustituto' => 'required',
+            'telefono_titular_sustituto' => 'required',
+
+            /**beneficiarios */
+            'beneficiarios.*.nombre' => [
+                'required',
+            ],
+            'beneficiarios.*.parentesco' => [
+                'required',
+            ],
+            'beneficiarios.*.telefono' => [
+                'required',
+            ],
+        ];
+
+        /**VALIDACIONES CONDICIONADAS*/
+        //validando que mande el user el lote en caso de ser terraza
+        if ($request->tipo_propiedades_id == 4) {
+            //checando que tipo de propiedad es, si es terraza
+            $validaciones['lotes.value'] = "required";
+        }
+
+        //validnado en caso de que sea de uso inmediato y de venta antes del sistema.
+        if ($request->venta_referencia_id == 1 && $request->ventaAntiguedad['value'] == 3) {
+            //venta de uso inmediato
+            $validaciones['titulo'] = [
+                'required',
+                Rule::unique('ventas_propiedades', 'numero_titulo')->ignore($request->id_venta),
+            ];
+        }
+
+        //validnado en caso de que sea de uso futuro
+        if ($request->venta_referencia_id == 2) {
+            //venta de uso inmediato
+            $validaciones['num_solicitud'] = [
+                'required',
+                Rule::unique('ventas_propiedades', 'numero_solicitud')->ignore($request->id_venta),
+            ];
+
+            //valido si es de venta antes del sistema
+            if ($request->ventaAntiguedad['value'] == 2) {
+                $validaciones['convenio'] = [
+                    'required',
+                    Rule::unique('ventas_propiedades', 'numero_convenio')->ignore($request->id_venta),
+                ];
+            } else if ($request->ventaAntiguedad['value'] == 3) {
+                $validaciones['convenio'] =  [
+                    'required',
+                    Rule::unique('ventas_propiedades', 'numero_convenio')->ignore($request->id_venta),
+                ];
+                $validaciones['titulo'] =  [
+                    'required',
+                    Rule::unique('ventas_propiedades', 'numero_titulo')->ignore($request->id_venta),
+                ];
+            }
+        }
+        //validando si el tipo de pago requiere de banco y digitos
+        if ($request->opcionPagar['value'] == 1) {
+            //si desea pagar desde la venta
+            if ($request->formaPago['value'] > 1) {
+                //cuqlquiera menos efectivo
+                $validaciones['banco'] = 'required';
+            }
+
+
+            //pago con trasferencia de fondos
+            if ($request->formaPago['value'] == 3) {
+                //cuqlquiera menos efectivo
+                if (trim($validaciones['num_operacion']) != '') {
+                    $validaciones['num_operacion'] = 'unique:pagos_propiedades,referencia_operacion';
+                }
+            }
+
+
+            if ($request->formaPago['value'] == 4 || $request->formaPago['value'] == 5) {
+                //cuqlquiera menos efectivo
+                $validaciones['ultimosdigitos'] = 'nullable|numeric|digits_between:4,4';
+            }
+        }
+
+
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+
+        $mensajes = [
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'ubicacion.unique' => 'Este terreno ya fue vendido',
+            'num_solicitud.unique' => 'Esta solicitud ya fue registrada en otra venta',
+            'convenio.unique' => 'Este convenio ya fue registrado en otra venta',
+            'titulo.unique' => 'Este título ya fue registrado en otra venta',
+            'num_operacion.unique' => 'Este número de operación ya fue capturado',
+            //beneficiarios
+            '*.nombre.required' => 'ingrese este dato',
+            '*.parentesco.required' => 'ingrese este dato',
+            '*.telefono.required' => 'ingrese este dato',
+            'lte' => 'verifique la cantidad',
+            'unique.num_operacion' => 'Este número de operación ya fue registrado.',
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+
+        /**aqui comienzan a gurdar los datos */
+        $subtotal = (((float) $request->planVenta['precio_neto'])) * .84; //sin iva
+        $iva = (((float) $request->planVenta['precio_neto'])) * .16; //solo el iva
+        $descuento = (float) $request->descuento;
+        $total_neto = $subtotal + $iva - $descuento;
+
+
+
+        //aqui procedemos a guardar segun los datas recibidos
+
+        /**obtengo los datos originales de la venta para manejar los numeros de solicitud, conveio y titulo segun
+         * convenga en cada caso
+         */
+        $datos_venta = $this->get_venta_id($request->id_venta)[0];
+
+        /*revisando si hubo cambios drasticos para la programacion de los pagos
+         * estos cambios son referente a si la fecha de la venta cambio
+         * el precio de la propiedad cambio
+         * el descuento cambio
+         * el plan de venta cambio
+         */
+        if ($datos_venta['fecha_venta'] != $request->fecha_venta) {
+            /**
+             * se cambio la fecha de venta,
+             * lo cual quiere decir que ocupo mover las fechas de la boleta de abonos
+             */
+        }
+
+
+
+        $numero_convenio_original = $datos_venta['numero_convenio_raw'];
+        /**checando si aplica una generacion de numero de convenio o debe seguir con el que ya tenia*/
+
+        $numero_convenio = "";
+        if ($request->ventaAntiguedad['value'] == 1) {
+            if (is_numeric($numero_convenio_original)) {
+                $numero_convenio =  $numero_convenio_original;
+                /**se mantiene el mismo que esta anteriormente ya que la antiguedad uno deja modificar el numero manulamete si no que es generado
+                 * en este caso ya fue generado y es el mismo que se dejara despies de la modifcacion
+                 */
+            } else {
+                /**se genera uno  nuevo porque el que estaba antes era alfanumerico y no va con el orden del sistema */
+                $numero_convenio =  $this->generarNumeroConvenio($request);
+            }
+        } else {
+            /**sin importar si sea sinliquidad "2" o ya liquiedada "3", uso inmediato a a futuro se cambiará por el que ellos manden de fabrica */
+            $numero_convenio = $request->convenio;
+        }
+
+
+
+        $numero_titulo_original = $datos_venta['numero_titulo_raw'];
+
+
+        //if ($request->venta_referencia_id == 1 && $request->ventaAntiguedad['value'] == 1) {
+        /**********CASO DE VENTA 1 - NUEVA VENTA "SISTEMATIZADA" */
+        /**VENTA DE USO INMEDIATO */
+        //no se captura ningun numero de referencia, pues el numero de titulo se genera al cubrir la totalidad de la venta
+        //return $request->vendedor['value'];
+        try {
+            DB::beginTransaction();
+            //venta de uso inmediato y de control sistematizado
+            //captura de la venta
+            DB::table('ventas_propiedades')->where('id', $request->id_venta)->update(
+                [
+                    /**venta a futuro solamente */
+                    'numero_solicitud' => ($request->venta_referencia_id == 2) ? $request->num_solicitud : null,
+                    /**venta  liquidada solamente */
+                    //aqui no debe cambiarse el numero de convenio si permanece en la misma antiguedad "1" puesto que fue fenerado por el sistema
+                    'numero_convenio' => $numero_convenio,
+                    'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : $numero_titulo_original,
+                    'antiguedad_ventas_id' => (int) $request->ventaAntiguedad['value'],
+                    'propiedades_area_id' => (int) $request->propiedades_id,
+                    /**la ubicacion consiste de 4 valores id_tipo_propiedad-id_propiedad-fila-lote */
+                    /**ejem 4-29-1-3 */
+                    'ubicacion' => $request->ubicacion,
+                    //'fecha_registro' => now(),
+                    //'fecha_venta' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                    'registro_id' => (int) $request->user()->id,
+                    'subtotal' => $subtotal,
+                    'descuento' => $descuento,
+                    'iva' => $iva,
+                    'total' => $total_neto,
+                    'vendedor_id' => (int) $request->vendedor['value'],
+                    'nombre' => $request->titular,
+                    'fecha_nac' => date('Y-m-d', strtotime($request->fecha_nac)),
+                    'domicilio' => $request->domicilio,
+                    'ciudad' => $request->ciudad,
+                    'estado' => $request->estado,
+                    'telefono' => $request->tel_domicilio,
+                    'tel_oficina' => $request->tel_oficina,
+                    'celular' => $request->celular,
+                    //agregar'tel_oficina' => $request->ubicacion,
+
+                    'titular_sustituto' => $request->titular_sustituto,
+                    'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
+                    'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
+
+
+                    'rfc' => $request->rfc,
+                    'email' => $request->email,
+                    'mensualidades' => (int) $request->planVenta['value'],
+                    'enganche_inicial_plan_origen' => $request->planVenta['enganche_inicial'],
+                    'ventas_referencias_id' => (int) $request->venta_referencia_id,
+                ]
+            );
+
+
+            //captura de los beneficiarios
+            $this->guardarBeneficiariosVenta($request, $request->id_venta);
+
+
+            /**fin de captura de pagos */
+            DB::commit();
+            return $request->id_venta;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+        /**FIN DE VENTA A USO INMEDIATO */
+        /**********FIN DE CASOS DE VENTA 1 - NUEVA VENTA "SISTEMATIZADA" */
+    }
+
+
+
     /**generar numero de convenio automatico */
     public function generarNumeroConvenio(Request $request)
     {
@@ -339,7 +630,9 @@ class CementerioController extends ApiController
                 $total_pagado = 0;
                 foreach ($pagos_venta['pagos_programados'] as $pago_programado) {
                     foreach ($pago_programado['pagos_realizados'] as $pago_realizado) {
-                        $total_pagado += $pago_realizado['total'];
+                        if ($pago_realizado['status']) {
+                            $total_pagado += $pago_realizado['total'];
+                        }
                     }
                 }
 
@@ -380,6 +673,12 @@ class CementerioController extends ApiController
     //guarda los beneficiarios de la venta de una propiedad
     public function guardarBeneficiariosVenta(Request $request, $id_venta = 0)
     {
+
+        /**primero elimino beneficiarios si existen, de esta forma
+         * la funcion me sirve perfecto tanto para insertar beneficiarios y actualizarlos
+         */
+        DB::table('beneficiarios_propiedades')->where('ventas_propiedades_id', $id_venta)->delete();
+
         //id del conjunto de propieades
         for ($i = 0; $i < count($request['beneficiarios']); $i++) {
             DB::table('beneficiarios_propiedades')->insert(
@@ -463,7 +762,6 @@ class CementerioController extends ApiController
                 $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fecha_venta)))->add(3, 'day');
                 $id_pago_programado_unico = DB::table('pagos_programados_propiedades')->insertGetId(
                     [
-
                         'num_pago' => 1, //numero 1, pues es unico
                         'fecha_programada' => $fecha_maxima, //fecha de la venta
                         'ventas_propiedades_id' => $id_venta, //id de la venta

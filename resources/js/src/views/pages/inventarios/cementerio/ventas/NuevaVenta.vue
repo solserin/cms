@@ -24,6 +24,12 @@
                 <!--fin del mapa del cementerio-->
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <h3 class="text-xl">
+                  <feather-icon icon="ShoppingCartIcon" class="mr-2 mb-5" svgClasses="w-5 h-5" />
+                  <span
+                    class="font-bold text-primary"
+                  >FORMULARIO DE REGISTRO DE VENTAS DEL CEMENTERIO</span>
+                </h3>
                 <div class="flex flex-wrap">
                   <div class="w-full">
                     <h3 class="text-xl">
@@ -1089,7 +1095,7 @@
                   <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5">
                     <div
                       class="pb-6 text-center"
-                      v-if="this.form.planVenta.precio_neto==this.form.descuento && this.form.planVenta.value>=0"
+                      v-if="this.form.planVenta.precio_neto==this.form.descuento"
                     >
                       <span
                         class="bg-danger text-white font-medium pr-3 pl-3"
@@ -1320,7 +1326,12 @@ export default {
         this.get_antiguedades();
         this.idAreaInicial = 29;
       } else {
-        this.idAreaInicial = 0;
+        /**forzando el cambio de area para que se actualice al reabrir la ventana */
+        if (this.idAreaInicial > 2) {
+          this.idAreaInicial -= 1;
+        } else {
+          this.idAreaInicial += 1;
+        }
       }
     },
 
@@ -1410,12 +1421,13 @@ export default {
         //la primero opcion
         this.form.filas = this.filas[1];
         //cargo los precios
-        this.cargarPlanes();
+
+        if (this.form.venta_referencia_id > 0) this.cargarPlanes();
       }
     },
 
     "form.venta_referencia_id": function(newValue, oldValue) {
-      this.cargarPlanes();
+      if (this.form.venta_referencia_id > 0) this.cargarPlanes();
     },
 
     "form.planVenta": function(newValue, oldValue) {
@@ -1968,12 +1980,13 @@ export default {
             /**AGREGO LOS DEMAS ROLES */
             if (element.tipo_precios_id == 1) {
               //precio de contado a 0 meses 1 solo pago
-              this.planesVenta.push({
+              /* this.planesVenta.push({
                 label: "Pago de contado",
                 value: Number(element.meses),
                 precio_neto: Number(element.precio_neto),
                 enganche_inicial: Number(element.enganche_inicial)
               });
+              */
             } else {
               //precios de pagos a meses
               this.planesVenta.push({
@@ -1987,7 +2000,21 @@ export default {
         });
 
         //selecciono el primero precio automaticamente
-        this.form.planVenta = this.planesVenta[1];
+        if (this.planesVenta.length > 1) {
+          this.form.planVenta = this.planesVenta[1];
+        } else {
+          this.form.planVenta = this.planesVenta[0];
+          this.$vs.notify({
+            title: "Planes de Venta",
+            text:
+              "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Ventas'",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "10000"
+          });
+        }
       }
     },
     cancelar() {
@@ -2007,7 +2034,7 @@ export default {
     limpiarVentana() {
       //area de la terraza 1
       this.form.lotes = this.lotes[0];
-      this.form.venta_referencia_id = 1;
+      this.form.venta_referencia_id = 0;
       this.form.num_solicitud = "";
       this.form.convenio = "";
       this.form.titulo = "";
@@ -2024,7 +2051,7 @@ export default {
       this.form.descuento = 0;
 
       this.form.beneficiarios = [];
-      this.form.planVenta = this.planesVenta[1];
+      this.form.planVenta = this.planesVenta[0];
       this.form.fecha_venta = "";
       this.form.opcionPagar = {
         label: "Pagar Después",

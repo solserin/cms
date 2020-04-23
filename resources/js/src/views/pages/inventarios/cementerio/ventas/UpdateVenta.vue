@@ -787,6 +787,17 @@
               </div>
             </div>
             <vs-divider />
+            <div class="flex flex-wrap my-6">
+              <div class="w-full sm:w-12/12 md:w-12/12 px-2">
+                <div class="w-full py-2 px-2 bg-danger text-white">
+                  <h3 class="text-xl font-medium">
+                    <feather-icon svgClasses="w-6 h-6" icon="AlertTriangleIcon" />
+                    <span class="font-semibold">ATENCIÓN:</span>
+                  </h3>
+                </div>
+              </div>
+              <vs-divider />
+            </div>
 
             <!--checkout-->
             <div class="flex flex-wrap my-6">
@@ -1092,7 +1103,7 @@
                   <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5">
                     <div
                       class="pb-6 text-center"
-                      v-if="this.form.planVenta.precio_neto==this.form.descuento && this.form.planVenta.value>=0"
+                      v-if="this.form.planVenta.precio_neto==this.form.descuento"
                     >
                       <span
                         class="bg-danger text-white font-medium pr-3 pl-3"
@@ -1321,14 +1332,18 @@ export default {
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
+        this.ConsultarVenta(this.id_venta_modificar);
         this.get_ventas_referencias_propiedades();
         this.get_vendedores();
         this.get_sat_formas_pago();
         this.get_antiguedades();
-        this.ConsultarVenta(this.id_venta_modificar);
       } else {
-        this.idAreaInicial = 0;
-        this.form.filas = this.filas[0];
+        /**forzando el cambio de area para que se actualice al reabrir la ventana */
+        if (this.idAreaInicial > 2) {
+          this.idAreaInicial -= 1;
+        } else {
+          this.idAreaInicial += 1;
+        }
       }
     },
 
@@ -1359,18 +1374,20 @@ export default {
                   });
                 }
               }
-              //la primero opcion
-              //this.form.lotes = this.lotes[1];
             }
           });
           if (this.lote_origen != "") {
             this.lotes.forEach(element => {
               if (element.value == this.lote_origen) {
+                //lo reinicio para que no afecte en otro cambio de fila ya dentro de modificar
+                this.lote_origen = "";
                 this.form.lotes = element;
+                return;
               }
-              return 0;
             });
-            this.lote_origen = ""; //lo reinicio para que no afecte en otro cambio de fila ya dentro de modificar
+          } else {
+            //la primero opcion
+            this.form.lotes = this.lotes[1];
           }
         } else {
           this.lotes = [];
@@ -1422,15 +1439,27 @@ export default {
             });
           }
         }
-        //la primero opcion
-        this.form.filas = this.filas[1];
+
+        if (this.fila_origen != "") {
+          this.filas.forEach(element => {
+            if (element.value == this.datosVenta.fila_raw) {
+              this.form.filas = element;
+            }
+          });
+          this.fila_origen = "";
+        } else {
+          //la primero opcion
+          this.form.filas = this.filas[1];
+        }
         //cargo los precios
-        this.cargarPlanes();
+        if (this.form.venta_referencia_id > 0) this.cargarPlanes();
       }
     },
 
     "form.venta_referencia_id": function(newValue, oldValue) {
-      this.cargarPlanes();
+      if (newValue > 0) {
+        if (this.form.venta_referencia_id > 0) this.cargarPlanes();
+      }
     },
 
     "form.planVenta": function(newValue, oldValue) {
@@ -1440,7 +1469,7 @@ export default {
         this.form.enganche_inicial = newValue.precio_neto - this.form.descuento;
       } else if (newValue.value > 0) {
         this.form.precio_neto = newValue.precio_neto - this.form.descuento;
-        if (newValue.tipo == "normal") {
+        if (newValue.tipo_plan == "normal") {
           this.form.enganche_inicial =
             (newValue.precio_neto - this.form.descuento) / 10;
         } else {
@@ -1667,11 +1696,11 @@ export default {
       disabledDates: {
         from: new Date()
       },
+      fila_origen: "",
       lote_origen: "",
       spanishDatepicker: es,
       operConfirmar: false,
       openConfirmarSinPassword: false,
-
       callback: Function,
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
@@ -1706,6 +1735,7 @@ export default {
       ],
       //fin var con mapa
       form: {
+        id_venta: "",
         //ubicacion
         tipo_propiedades_id: 0,
         propiedades_id: 0,
@@ -1807,28 +1837,28 @@ export default {
           } else {
             //se confirma la cntraseña
             //una vez todo validado, actualizo los ultimos datos de ubicacion
+            this.form.id_venta = this.datosVenta.id;
             this.form.propiedades_id = this.datosAreas.id;
             this.form.tipo_propiedades_id = this.datosAreas.tipo_propiedades_id;
-
             this.form.ubicacion = this.crear_ubicacion_computed;
             this.form.minima_cuota_inicial = this.cuota_inicial;
             this.form.maxima_cuota_inicial = this.maxima_cuota_inicial;
             //fin de actualizar datos de ubicacion
-            this.callBackConfirmarAceptar = this.guardarVenta;
+            this.callBackConfirmarAceptar = this.modificarVenta;
             this.openConfirmarAceptar = true;
           }
         })
         .catch(() => {});
     },
 
-    guardarVenta() {
+    modificarVenta() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
       cementerio
-        .guardarVenta(this.form)
+        .modificarVenta(this.form)
         .then(res => {
-          //console.log(res);
+          console.log(res);
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -1950,7 +1980,7 @@ export default {
               value: element.id
             });
           });
-          this.form.ventaAntiguedad = this.ventasAntiguedad[0];
+          //this.form.ventaAntiguedad = this.ventasAntiguedad[0];
         })
         .catch(err => {});
     },
@@ -2003,13 +2033,13 @@ export default {
             /**AGREGO LOS DEMAS ROLES */
             if (element.tipo_precios_id == 1) {
               //precio de contado a 0 meses 1 solo pago
-              this.planesVenta.push({
+              /* this.planesVenta.push({
                 label: "Pago de contado",
                 value: Number(element.meses),
                 precio_neto: Number(element.precio_neto),
                 enganche_inicial: Number(element.enganche_inicial),
                 tipo_plan: "normal" //para saber si es un plan normal o un plan especial
-              });
+              });*/
             } else {
               //precios de pagos a meses
               this.planesVenta.push({
@@ -2023,57 +2053,110 @@ export default {
           }
         });
 
-        /**
-         * checando si el plan de venta original todavia existe con el mismo precio y mensualiades, si es asi para seleccionarlo o sino para crearlo
-         * y seleccionarlo como valor de inicio
-         */
-        let index_plan_original_sin_modificaciones = 0;
-        let existe = false;
-        this.planesVenta.forEach(element => {
-          //precio neto de la propiedad sin descuentos
-          let precio_neto =
-            Number(this.datosVenta.subtotal) + Number(this.datosVenta.iva);
-          if (
-            Number(this.datosVenta.enganche_inicial_plan_origen) ==
-              Number(element.enganche_inicial) &&
-            Number(precio_neto) == Number(element.precio_neto) &&
-            Number(this.datosVenta.mensualidades) == Number(element.value)
-          ) {
-            /**el plan de venta se mantiene y no ha sufrido modifcaciones por la que se selecciona por default */
-            existe = true;
-            /**lo seleccionono */
-            this.form.planVenta = element;
-            return 0;
-          } else {
-            /**aumento el index en caso de existir */
-            index_plan_original_sin_modificaciones += 1;
-          }
-        });
-        /**en caso de no existir lo creamos con un valor especial */
-        if (!existe) {
-          let precio_neto = this.datosVenta.subtotal + this.datosVenta.iva;
+        if (this.datosAreas.tipo_propiedades_id == this.datosVenta.tipo_raw) {
+          /**
+           * checando si el plan de venta original todavia existe con el mismo precio y mensualiades, si es asi para seleccionarlo o sino para crearlo
+           * y seleccionarlo como valor de inicio
+           */
+          let index_plan_original_sin_modificaciones = 0;
 
-          let label = "";
-          if (Number(this.datosVenta.mensualidades) == 0) {
-            //es a contado el plan anterior
-            label = "Plan Anterior(a contado)";
-          } else {
-            label =
-              "Plan Anterior(" + this.datosVenta.mensualidades + " Meses)";
-          }
-          this.planesVenta.push({
-            label: label,
-            value: Number(this.datosVenta.mensualidades),
-            precio_neto: Number(precio_neto),
-            enganche_inicial: Number(
-              this.datosVenta.enganche_inicial_plan_origen
-            ),
-            tipo_plan: "especial" //para saber si es un plan normal o un plan especial
+          let existe = false;
+          this.planesVenta.forEach(element => {
+            //precio neto de la propiedad sin descuentos
+            let precio_neto =
+              Number(this.datosVenta.subtotal) + Number(this.datosVenta.iva);
+            if (
+              Number(this.datosVenta.enganche_inicial_plan_origen) ==
+                Number(element.enganche_inicial) &&
+              Number(precio_neto) == Number(element.precio_neto) &&
+              Number(this.datosVenta.mensualidades) == Number(element.value)
+            ) {
+              /**el plan de venta se mantiene y no ha sufrido modifcaciones por la que se selecciona por default */
+              existe = true;
+              /**lo seleccionono */
+              this.form.planVenta = element;
+              return 0;
+            } else {
+              /**aumento el index en caso de existir */
+              index_plan_original_sin_modificaciones += 1;
+            }
           });
-          this.form.planVenta = this.planesVenta[
-            index_plan_original_sin_modificaciones
-          ];
+          /**en caso de no existir lo creamos con un valor especial */
+          if (!existe) {
+            /**checando si esta el tipo de venta en contado o a meses
+             * ps si esta a meses no deberia cargar el plan de contado si no a meses
+             */
+
+            let precio_neto = this.datosVenta.subtotal + this.datosVenta.iva;
+
+            let label = "";
+            if (Number(this.datosVenta.mensualidades) == 0) {
+              //es a contado el plan anterior
+              label = "Plan Anterior(a contado)";
+            } else {
+              label =
+                "Plan Anterior(" + this.datosVenta.mensualidades + " Meses)";
+            }
+
+            //**checando si se debe adjuntar esta opcion segun el nuevo tipo de venta que quiere manejar el usuario */
+            if (this.datosVenta.mensualidades > 0) {
+              if (this.form.venta_referencia_id == 2) {
+                this.planesVenta.push({
+                  label: label,
+                  value: Number(this.datosVenta.mensualidades),
+                  precio_neto: Number(precio_neto),
+                  enganche_inicial: Number(
+                    this.datosVenta.enganche_inicial_plan_origen
+                  ),
+                  tipo_plan: "especial" //para saber si es un plan normal o un plan especial
+                });
+                this.form.planVenta = this.planesVenta[
+                  index_plan_original_sin_modificaciones
+                ];
+              } else {
+                this.seleccionarPlanVenta();
+              }
+            } else {
+              //la venta era de a contado
+              if (this.form.venta_referencia_id == 1) {
+                this.planesVenta.push({
+                  label: label,
+                  value: Number(this.datosVenta.mensualidades),
+                  precio_neto: Number(precio_neto),
+                  enganche_inicial: Number(
+                    this.datosVenta.enganche_inicial_plan_origen
+                  ),
+                  tipo_plan: "especial" //para saber si es un plan normal o un plan especial
+                });
+                this.form.planVenta = this.planesVenta[
+                  index_plan_original_sin_modificaciones
+                ];
+              } else {
+                this.seleccionarPlanVenta();
+              }
+            }
+          }
+        } else {
+          this.seleccionarPlanVenta();
         }
+      }
+    },
+    seleccionarPlanVenta() {
+      //selecciono el primero precio automaticamente
+      if (this.planesVenta.length > 1) {
+        this.form.planVenta = this.planesVenta[1];
+      } else {
+        this.form.planVenta = this.planesVenta[0];
+        this.$vs.notify({
+          title: "Planes de Venta",
+          text:
+            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Ventas'",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "10000"
+        });
       }
     },
     cancelar() {
@@ -2093,7 +2176,7 @@ export default {
     limpiarVentana() {
       //area de la terraza 1
       this.form.lotes = this.lotes[0];
-      this.form.venta_referencia_id = 1;
+      this.form.venta_referencia_id = 0;
       this.form.num_solicitud = "";
       this.form.convenio = "";
       this.form.titulo = "";
@@ -2110,7 +2193,7 @@ export default {
       this.form.descuento = 0;
 
       this.form.beneficiarios = [];
-      this.form.planVenta = this.planesVenta[1];
+      this.form.planVenta = this.planesVenta[0];
       this.form.fecha_venta = "";
       this.form.opcionPagar = {
         label: "Pagar Después",
@@ -2213,22 +2296,21 @@ export default {
           this.form.convenio = res.data[0].numero_convenio_raw;
           this.form.titulo = res.data[0].numero_titulo_raw;
 
-          /**llenando la "fila" de la propiedad */
-          this.filas.forEach(element => {
-            if (element.value == res.data[0].fila_raw) {
-              this.form.filas = element;
-            }
-          });
           /**el lote lo selecciono despues de selecionar la "fila" porque se desencadena el evento del watch para form.fila ahi checo si hay algun lote que se vaya selecionar
            * con una variable especial para eso en data que se llama lote_origen
            */
-
+          this.fila_origen = res.data[0].fila_raw;
           if (res.data[0].tipo_raw == 4) {
             //se ocupa un lote
             this.lote_origen = res.data[0].lote_raw;
-          } else {
-            this.lote_origen = "";
           }
+
+          /**llenando la "fila" de la propiedad */
+          /*this.filas.forEach(element => {
+            if (element.value == res.data[0].fila_raw) {
+              this.form.filas = element;
+            }
+          });*/
 
           var partes = res.data[0].fecha_venta.split("-");
           //yyyy-mm-dd
@@ -2240,7 +2322,7 @@ export default {
           this.form.domicilio = res.data[0].domicilio;
           this.form.ciudad = res.data[0].ciudad;
           this.form.estado = res.data[0].estado;
-          this.form.tel_domicilio = res.data[0].tel_domicilio;
+          this.form.tel_domicilio = res.data[0].telefono;
           this.form.celular = res.data[0].celular;
           this.form.tel_oficina = res.data[0].tel_oficina;
           this.form.rfc = res.data[0].rfc;
