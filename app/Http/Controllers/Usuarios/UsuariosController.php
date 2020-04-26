@@ -220,6 +220,7 @@ class UsuariosController extends ApiController
                                 }
                             }
                         } else {
+                            $modulos = [];
                             //haciendo el submenu
                             //este es en caso es un modulo de tipo agrupado 
                             foreach ($resultado as $agrupados) {
@@ -240,6 +241,7 @@ class UsuariosController extends ApiController
                                     );
                                 }
                             }
+
                             //se crea el grupo y se le adjunta su submenu con todos los modulos registrados en la instruccion anterior
                             array_push($grupos, [
                                 'id' => $grupo->id,
