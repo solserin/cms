@@ -119,7 +119,7 @@
     }
 
     .venta {
-      margin-top: 10px;
+      margin-top: 6px;
       text-align: justify;
     }
 

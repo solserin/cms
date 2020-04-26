@@ -104,7 +104,7 @@
         noDataText="0 Resultados"
       >
         <template slot="header">
-          <h3 class="pb-5 text-primary">Listado de Usuarios</h3>
+          <h3 class="pb-5 text-primary">Listado de Ventas Realizadas del Cementerio</h3>
         </template>
         <template slot="thead">
           <vs-th>Núm. Venta</vs-th>

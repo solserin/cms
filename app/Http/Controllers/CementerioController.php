@@ -10,6 +10,7 @@ use App\Propiedades;
 use NumerosEnLetras;
 use App\SatFormasPago;
 use App\tipoPropiedades;
+use App\PagosPropiedades;
 use App\AntiguedadesVenta;
 use App\VentasPropiedades;
 use Illuminate\Http\Request;
@@ -242,7 +243,7 @@ class CementerioController extends ApiController
                     //agregar'tel_oficina' => $request->ubicacion,
                     'rfc' => $request->rfc,
                     'email' => $request->email,
-                    'mensualidades' => (int) $request->planVenta['value'],
+                    'mensualidades' => $total_neto > 0 ? (int) $request->planVenta['value'] : 0,
                     'enganche_inicial_plan_origen' => $request->planVenta['enganche_inicial'],
                     'ventas_referencias_id' => (int) $request->venta_referencia_id,
 
@@ -438,7 +439,6 @@ class CementerioController extends ApiController
         );
 
 
-
         /**aqui comienzan a gurdar los datos */
         $subtotal = (((float) $request->planVenta['precio_neto'])) * .84; //sin iva
         $iva = (((float) $request->planVenta['precio_neto'])) * .16; //solo el iva
@@ -460,19 +460,79 @@ class CementerioController extends ApiController
          * el descuento cambio
          * el plan de venta cambio
          */
-        if ($datos_venta['fecha_venta'] != $request->fecha_venta) {
-            /**
-             * se cambio la fecha de venta,
-             * lo cual quiere decir que ocupo mover las fechas de la boleta de abonos
+        /**veririficando si hubo cambio de fecha de la venta
+         * el cambio de venta de fecha solo es posible cuando no hay pagos registrados en la venta
+         * lo cual quiere decir que la venta se reajusta nuevamente
+         */
+        if (date('Y-m-d', strtotime($request->fecha_venta)) != $datos_venta['fecha_venta']) {
+            /**la fecha es diferente */
+            if ($datos_venta['pagos_realizados_num'] > 0) {
+                //ya tiene varios pagos realizados vigentes, por lo cual no procede la modificacion de la fecha y 
+                //la nueva generacion de pagos programados
+                return $this->errorResponse('El cambio de fecha no puede proceder, 
+            esto se debe a que la venta ya cuenta con uno o más pagos realizados a cuenta. 
+            Para poder modificar la fecha de la venta debe cancelar los pagos realizados y 
+            volver a crear la programación de referencias de pago.', 409);
+            } else {
+                /**si procede a progrmar nuevamente los pagos */
+                /**primero borro los pagos actuales */
+                $res = $this->borrar_pagos_venta_id($request->id_venta);
+                if ($res > 0) {
+                    /**se procede con crear los nuevos pagos */
+                    $this->programarPagosVenta($request, $request->id_venta);
+                    $datos_venta = $this->get_venta_id($request->id_venta)[0];
+                } else {
+                    return $this->errorResponse('Error al eliminar los pagos de esta venta, recargue la página e intente nuevamente', 409);
+                }
+            }
+        } else {
+            /**quiere decir que vamos a hacer un ajuste por precios segun lo siguiente
+             * si la venta fue cambiada a otro plan de ventas
              */
+            if ($request->planVenta['value'] != $datos_venta['mensualidades']) {
+                /**aqui la venta fue modificada a otro tipo de plan */
+                /**revisando si el plan de ventas nuevo es mayor o menor */
+                if ($request->planVenta['value'] > $datos_venta['mensualidades']) {
+                    /**es mayor */
+                    if ($datos_venta['pagos_realizados_num'] > 0) {
+                        //ya tiene varios pagos realizados vigentes, por lo cual debo de verificar si es posible hacer el nuevo cambio de plan
+                        /**debe checar si tiene adedudos en sus pagos */
+                    } else {
+                        /**si procede a progrmar nuevamente los pagos */
+                        /**primero borro los pagos actuales */
+                        $res = $this->borrar_pagos_venta_id($request->id_venta);
+                        if ($res > 0) {
+                            /**se procede con crear los nuevos pagos */
+                            $this->programarPagosVenta($request, $request->id_venta);
+                            $datos_venta = $this->get_venta_id($request->id_venta)[0];
+                        } else {
+                            return $this->errorResponse('Error al eliminar los pagos de esta venta, recargue la página e intente nuevamente', 409);
+                        }
+                    }
+                } else {
+                    /**es menor */
+                    return $this->errorResponse('el plan de ventas es menor', 409);
+                }
+            } else {
+                /**no cambio el plan de ventas */
+                /**verificando si cambio alguna cantidad, precio_total, descuento, total a pagar */
+            }
         }
 
+
+        $numero_titulo_original = $datos_venta['numero_titulo_raw'];
+        if ($request->ventaAntiguedad['value'] == 3) {
+            $numero_titulo_original =   $request->titulo;
+        }
+        /**fin de validacion de fecha de venta */
 
 
         $numero_convenio_original = $datos_venta['numero_convenio_raw'];
         /**checando si aplica una generacion de numero de convenio o debe seguir con el que ya tenia*/
 
         $numero_convenio = "";
+
+
         if ($request->ventaAntiguedad['value'] == 1) {
             if (is_numeric($numero_convenio_original)) {
                 $numero_convenio =  $numero_convenio_original;
@@ -490,7 +550,6 @@ class CementerioController extends ApiController
 
 
 
-        $numero_titulo_original = $datos_venta['numero_titulo_raw'];
 
 
         //if ($request->venta_referencia_id == 1 && $request->ventaAntiguedad['value'] == 1) {
@@ -509,14 +568,14 @@ class CementerioController extends ApiController
                     /**venta  liquidada solamente */
                     //aqui no debe cambiarse el numero de convenio si permanece en la misma antiguedad "1" puesto que fue fenerado por el sistema
                     'numero_convenio' => $numero_convenio,
-                    'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : $numero_titulo_original,
+                    'numero_titulo' => $numero_titulo_original,
                     'antiguedad_ventas_id' => (int) $request->ventaAntiguedad['value'],
                     'propiedades_area_id' => (int) $request->propiedades_id,
                     /**la ubicacion consiste de 4 valores id_tipo_propiedad-id_propiedad-fila-lote */
                     /**ejem 4-29-1-3 */
                     'ubicacion' => $request->ubicacion,
                     //'fecha_registro' => now(),
-                    //'fecha_venta' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                    'fecha_venta' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
                     'registro_id' => (int) $request->user()->id,
                     'subtotal' => $subtotal,
                     'descuento' => $descuento,
@@ -550,7 +609,7 @@ class CementerioController extends ApiController
             //captura de los beneficiarios
             $this->guardarBeneficiariosVenta($request, $request->id_venta);
 
-
+            $this->generarNumeroTitulo($request->id_venta);
             /**fin de captura de pagos */
             DB::commit();
             return $request->id_venta;
@@ -649,7 +708,11 @@ class CementerioController extends ApiController
                         //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
                         $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_titulo NOT LIKE '%[^0-9]%' THEN numero_titulo END) as int)) AS max_numero_titulo  from ventas_propiedades"));
                         $ultimo_titulo = json_decode(json_encode($result), true)[0]['max_numero_titulo'];
-                        $numero_titulo = $ultimo_titulo + 1;
+                        if (intval($ultimo_titulo) > 0) {
+                            $numero_titulo = $ultimo_titulo + 1;
+                        } else {
+                            $numero_titulo = 500;
+                        }
                     } else {
                         //comenzamos en numero 500 (quinientos) y marcamos numero_titulos_sistematizados como true en la base de datos
                         $ajustes->numero_titulos_sistematizados = true;
@@ -657,13 +720,15 @@ class CementerioController extends ApiController
                         $ajustes->save();
                         $numero_titulo = 500;
                     }
-
-                    $venta = VentasPropiedades::find($id_venta);
-                    //actualizamos la venta con su nuevo numero de titulo
-                    $venta->numero_titulo = $numero_titulo;
-                    $venta->timestamps = false;
-                    $venta->save();
+                } else {
+                    /**se remueve el numero de titulo sis existe ya que no esta 100 pagado */
+                    //$numero_titulo = null;
                 }
+                $venta = VentasPropiedades::find($id_venta);
+                //actualizamos la venta con su nuevo numero de titulo
+                $venta->numero_titulo = $numero_titulo;
+                $venta->timestamps = false;
+                $venta->save();
             }
         }
     }
@@ -689,6 +754,27 @@ class CementerioController extends ApiController
                     'ventas_propiedades_id' => $id_venta,
                 ]
             );
+        }
+    }
+
+    /**con esta fucnion borro todos los pagos de una venta, es para uso solo dentro del backend */
+    public function borrar_pagos_venta_id($id_venta = 0)
+    {
+        try {
+            DB::beginTransaction();
+            $datos_venta = $this->get_venta_id($id_venta);
+            foreach ($datos_venta as $valor) {
+                foreach ($valor->toArray()['pagos_programados'] as $programado) {
+                    PagosPropiedades::where('pagos_programados_propiedades_id', $programado['id'])->delete();
+                }
+            }
+            /**elimino el pago programado */
+            PagosProgramadosPropiedades::where('ventas_propiedades_id', $id_venta)->delete();
+            DB::commit();
+            return 1;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 0;
         }
     }
 
@@ -886,7 +972,7 @@ class CementerioController extends ApiController
                             'num_pago' => ($i + 1), //numero 1, pues es enganche
                             'fecha_programada' => $fecha, //fecha de la venta
                             'ventas_propiedades_id' => $id_venta, //id de la venta
-                            'tipo_pagos_id' => 2, //3-enganche //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
+                            'tipo_pagos_id' => 2, //2-enganche //que tipo de pago es, segun los tipos de pago, abono, enganche o liquidacion
                             'referencia_pago' => '02'
                                 /**tipo 02 por ser a meses */
                                 . date('Ymd', strtotime($request->fecha_venta)) . $numero_pago_para_referencia . $id_venta, //se crea una referencia para saber a que pago pertenece
@@ -1269,6 +1355,21 @@ class CementerioController extends ApiController
                 'vendedor_id',
                 'ventas_referencias_id',
                 DB::raw(
+                    '(NULL) AS pagos_realizados_num'
+                ),
+                DB::raw(
+                    '(NULL) AS total_pagado'
+                ),
+                DB::raw(
+                    '(NULL) AS restante_pagar'
+                ),
+                DB::raw(
+                    '(NULL) AS liquidacion_pagada'
+                ),
+                DB::raw(
+                    '(NULL) AS enganche_pagado'
+                ),
+                DB::raw(
                     '(NULL) AS tipo_raw'
                 ),
                 DB::raw(
@@ -1354,9 +1455,23 @@ class CementerioController extends ApiController
             $valor->tipo_raw = explode("-", $valor->ubicacion_raw)[0];
             $valor->fila_raw = explode("-", $valor->ubicacion_raw)[2];
             $valor->lote_raw = explode("-", $valor->ubicacion_raw)[3];
+
+            /**obteniendo el num de pagos realizados y vigentes */
+            $pagos_realizados_vigentes = 0;
+            $total_pagado = 0;
+
+            foreach ($valor->toArray()['pagos_programados'] as $programado) {
+                foreach ($programado['pagos_realizados'] as $realizado) {
+                    if ($realizado['status'] == 1) {
+                        $pagos_realizados_vigentes++;
+                        $total_pagado += (doubleVal($realizado['total']));
+                    }
+                }
+            }
+            $valor->pagos_realizados_num = $pagos_realizados_vigentes;
+            $valor->total_pagado = $total_pagado;
+            $valor->restante_pagar = $valor->total - $total_pagado;
         }
-
-
 
         //se retorna el resultado
         return $resultado;
@@ -1528,10 +1643,10 @@ class CementerioController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*$id_venta = 50;
+        /* $id_venta = 59;
         $email = false;
         $email_to = 'hector@gmail.com';
-        */
+*/
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta)->toArray();
 

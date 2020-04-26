@@ -16,6 +16,7 @@
                 <!--mapa del cementerio-->
                 <div mt-5>
                   <Mapa
+                    :disabled="venta_ya_pagada"
                     :idAreaInicial="idAreaInicial"
                     @getDatosTipoPropiedad="getDatosTipoPropiedad"
                   ></Mapa>
@@ -75,6 +76,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <v-select
+                      :disabled="venta_ya_pagada"
                       :options="filas"
                       :clearable="false"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -108,7 +110,7 @@
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
                       v-model="form.lotes"
                       class="mb-4 sm:mb-0 pb-1 pt-1"
-                      :disabled="this.datosAreas.tipo_propiedades_id!=4"
+                      :disabled="(this.datosAreas.tipo_propiedades_id!=4)"
                       v-validate:ubicacion_validacion_computed.immediate="'required'"
                       name="ubicacion_validacion"
                       data-vv-as=" "
@@ -134,6 +136,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <v-select
+                      :disabled="true"
                       :options="ventasAntiguedad"
                       :clearable="false"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -163,12 +166,14 @@
                         v-model="form.venta_referencia_id"
                         :vs-value="1"
                         class="mr-4"
+                        :disabled="venta_ya_pagada"
                       >Uso inmediato</vs-radio>
                       <vs-radio
                         vs-name="tipoVenta"
                         v-model="form.venta_referencia_id"
                         :vs-value="2"
                         class="mr-4"
+                        :disabled="venta_ya_pagada"
                       >A futuro</vs-radio>
                     </div>
                   </div>
@@ -194,6 +199,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <v-select
+                      :disabled="venta_ya_pagada"
                       :options="vendedores"
                       :clearable="false"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -216,13 +222,13 @@
                     </div>
                   </div>
                   <!--Fin de vendedor-->
-
                   <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                     <label class="text-sm opacity-75 font-bold">
                       Fecha de la Venta
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <datepicker
+                      :disabled="pagos_realizados_hechos"
                       :language="spanishDatepicker"
                       :disabled-dates="disabledDates"
                       name="fecha_venta"
@@ -787,17 +793,6 @@
               </div>
             </div>
             <vs-divider />
-            <div class="flex flex-wrap my-6">
-              <div class="w-full sm:w-12/12 md:w-12/12 px-2">
-                <div class="w-full py-2 px-2 bg-danger text-white">
-                  <h3 class="text-xl font-medium">
-                    <feather-icon svgClasses="w-6 h-6" icon="AlertTriangleIcon" />
-                    <span class="font-semibold">ATENCIÓN:</span>
-                  </h3>
-                </div>
-              </div>
-              <vs-divider />
-            </div>
 
             <!--checkout-->
             <div class="flex flex-wrap my-6">
@@ -823,6 +818,7 @@
                       v-validate:plan_de_venta_computed.immediate="'required'"
                       name="plan_venta"
                       data-vv-as=" "
+                      :disabled="venta_ya_pagada"
                     >
                       <div slot="no-options">No Se Ha Seleccionado Ningún Área</div>
                     </v-select>
@@ -843,6 +839,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <vs-input
+                      :disabled="venta_ya_pagada"
                       name="precio_neto"
                       data-vv-as=" "
                       v-validate="'required|numeric'"
@@ -876,6 +873,7 @@
                       class="w-full pb-1 pt-1"
                       placeholder="$ 0.00"
                       v-model="form.descuento"
+                      :disabled="venta_ya_pagada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('descuento_neto') }}</span>
@@ -893,6 +891,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <vs-input
+                      :disabled="venta_ya_pagada"
                       name="total_pagar"
                       data-vv-as=" "
                       v-validate="'numeric|min_value:0'"
@@ -1516,6 +1515,26 @@ export default {
     //fin de watchs con mapa
   },
   computed: {
+    /**verificadno si la venta ya tiene pagos realizados */
+    pagos_realizados_hechos: function() {
+      if (this.datosVenta != []) {
+        if (this.datosVenta["pagos_realizados_num"] > 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+
+    venta_ya_pagada: function() {
+      if (this.datosVenta != []) {
+        if (
+          this.datosVenta["restante_pagar"] == 0 &&
+          this.datosVenta["pagos_realizados_num"] > 0
+        ) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+
     banco_computed: function() {
       if (this.form.formaPago.value != 1) {
         return this.form.banco;
@@ -1921,6 +1940,17 @@ export default {
                 time: 5000
               });
               //console.log(err.response);
+            } else if (err.response.status == 409) {
+              //este error es por alguna condicion que el contrano no cumple para modificar
+              //la propiedad esa ya ha sido vendida
+              this.$vs.notify({
+                title: "Modificar información de la venta",
+                text: err.response.data.error,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 30000
+              });
             }
           }
           this.$vs.loading.close();

@@ -16,6 +16,7 @@
                 <!--mapa del cementerio-->
                 <div mt-5>
                   <Mapa
+                    :disabled="false"
                     :idAreaInicial="idAreaInicial"
                     @getDatosTipoPropiedad="getDatosTipoPropiedad"
                   ></Mapa>
