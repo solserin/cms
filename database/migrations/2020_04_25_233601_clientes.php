@@ -25,7 +25,7 @@ class Clientes extends Migration
             $table->string('telefono', 50)->nullable();
             $table->string('celular', 50)->nullable();
             $table->string('telefono_extra', 50)->nullable();
-            $table->string('email_personal', 75)->nullable();
+            $table->string('email', 75)->nullable();
             $table->unsignedBigInteger('nacionalidades_id')->nullable()->desciption('define la nacionalidad del cliente');
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades');
             $table->string('nombre_contacto', 100)->nullable()->description('nombre de algun contacto');
@@ -34,7 +34,6 @@ class Clientes extends Migration
             $table->string('rfc', 13)->nullable()->description('rfc en caso de requerir facturas');
             $table->string('razon_social', 150)->nullable()->description('razon social del rfc');
             $table->string('direccion_fiscal', 175)->nullable()->description('direccion fiscal del registro del rfc');
-            $table->string('email_fiscal', 75)->nullable()->description('email fiscal para envio de facturas');
             $table->dateTime('fecha_registro')->nullable()->description('fecha de ingreso en la bd');
             $table->dateTime('fecha_modificacion')->nullable()->description('fecha de la ultima modifcacion en la bd');
             $table->dateTime('fecha_cancelacion')->nullable()->description('fecha en que se cancelo en la bd');

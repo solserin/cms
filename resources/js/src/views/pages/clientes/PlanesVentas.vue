@@ -221,8 +221,8 @@
   </div>
 </template>
 <script>
-import Confirmar from "@pages/Confirmar";
-import Password from "@pages/confirmar_password";
+import Confirmar from "../../../Confirmar";
+import Password from "../../../confirmar_password";
 import cementerio from "@services/cementerio";
 export default {
   components: {

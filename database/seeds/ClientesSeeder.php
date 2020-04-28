@@ -20,7 +20,7 @@ class ClientesSeeder extends Seeder
                 'telefono' => 'N/A',
                 'celular' => 'N/A',
                 'telefono_extra' => 'N/A',
-                'email_personal' => 'N/A',
+                'email' => 'N/A',
                 'fecha_nac' => now(),
                 'nacionalidades_id' => 122,
                 /**mexico */
@@ -30,7 +30,6 @@ class ClientesSeeder extends Seeder
                 'rfc' => 'XAXX010101000',
                 'razon_social' => 'N/A',
                 'direccion_fiscal' => 'N/A',
-                'email_fiscal' => 'N/A',
                 'fecha_registro' => now(),
                 'fecha_modificacion' => null,
                 'fecha_cancelacion' =>  null,

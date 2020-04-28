@@ -193,6 +193,10 @@ padding-left: 1rem
   background-color: #1f1714 !important
 }
 
+[dir] .bg-silver {
+  background-color: #b6babd !important
+}
+
 [dir] .hover\:bg-transparent:hover {
   background-color: transparent !important
 }
@@ -225,6 +229,10 @@ padding-left: 1rem
   background-color: #1f1714 !important
 }
 
+[dir] .hover\:bg-silver:hover {
+  background-color: #b6babd !important
+}
+
 [dir] .focus\:bg-transparent:focus {
   background-color: transparent !important
 }
@@ -255,6 +263,10 @@ padding-left: 1rem
 
 [dir] .focus\:bg-textos_theme:focus {
   background-color: #1f1714 !important
+}
+
+[dir] .focus\:bg-silver:focus {
+  background-color: #b6babd !important
 }
 
 [dir] .bg-auto {
@@ -305,6 +317,10 @@ padding-left: 1rem
   border-color: #1f1714 !important
 }
 
+[dir] .border-silver {
+  border-color: #b6babd !important
+}
+
 [dir] .hover\:border-transparent:hover {
   border-color: transparent !important
 }
@@ -331,6 +347,10 @@ padding-left: 1rem
 
 [dir] .hover\:border-textos_theme:hover {
   border-color: #1f1714 !important
+}
+
+[dir] .hover\:border-silver:hover {
+  border-color: #b6babd !important
 }
 
 [dir] .rounded-none {
@@ -3434,6 +3454,26 @@ padding-left: 2.2rem !important
   color: #1f1714 !important
 }
 
+.placeholder-silver::-webkit-input-placeholder {
+  color: #b6babd !important
+}
+
+.placeholder-silver::-moz-placeholder {
+  color: #b6babd !important
+}
+
+.placeholder-silver:-ms-input-placeholder {
+  color: #b6babd !important
+}
+
+.placeholder-silver::-ms-input-placeholder {
+  color: #b6babd !important
+}
+
+.placeholder-silver::placeholder {
+  color: #b6babd !important
+}
+
 .focus\:placeholder-transparent:focus::-webkit-input-placeholder {
   color: transparent !important
 }
@@ -3592,6 +3632,26 @@ padding-left: 2.2rem !important
 
 .focus\:placeholder-textos_theme:focus::placeholder {
   color: #1f1714 !important
+}
+
+.focus\:placeholder-silver:focus::-webkit-input-placeholder {
+  color: #b6babd !important
+}
+
+.focus\:placeholder-silver:focus::-moz-placeholder {
+  color: #b6babd !important
+}
+
+.focus\:placeholder-silver:focus:-ms-input-placeholder {
+  color: #b6babd !important
+}
+
+.focus\:placeholder-silver:focus::-ms-input-placeholder {
+  color: #b6babd !important
+}
+
+.focus\:placeholder-silver:focus::placeholder {
+  color: #b6babd !important
 }
 
 .pointer-events-none {
@@ -3931,6 +3991,10 @@ text-align: right !important
   color: #1f1714 !important
 }
 
+.text-silver {
+  color: #b6babd !important
+}
+
 .hover\:text-inherit:hover {
   color: inherit !important
 }
@@ -3967,6 +4031,10 @@ text-align: right !important
   color: #1f1714 !important
 }
 
+.hover\:text-silver:hover {
+  color: #b6babd !important
+}
+
 .focus\:text-inherit:focus {
   color: inherit !important
 }
@@ -4001,6 +4069,10 @@ text-align: right !important
 
 .focus\:text-textos_theme:focus {
   color: #1f1714 !important
+}
+
+.focus\:text-silver:focus {
+  color: #b6babd !important
 }
 
 .text-xs {
@@ -4591,6 +4663,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .sm\:bg-silver {
+    background-color: #b6babd !important
+  }
+
   [dir] .sm\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -4623,6 +4699,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .sm\:hover\:bg-silver:hover {
+    background-color: #b6babd !important
+  }
+
   [dir] .sm\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -4653,6 +4733,10 @@ text-align: right !important
 
   [dir] .sm\:focus\:bg-textos_theme:focus {
     background-color: #1f1714 !important
+  }
+
+  [dir] .sm\:focus\:bg-silver:focus {
+    background-color: #b6babd !important
   }
 
   [dir] .sm\:bg-auto {
@@ -4695,6 +4779,10 @@ text-align: right !important
     border-color: #1f1714 !important
   }
 
+  [dir] .sm\:border-silver {
+    border-color: #b6babd !important
+  }
+
   [dir] .sm\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -4721,6 +4809,10 @@ text-align: right !important
 
   [dir] .sm\:hover\:border-textos_theme:hover {
     border-color: #1f1714 !important
+  }
+
+  [dir] .sm\:hover\:border-silver:hover {
+    border-color: #b6babd !important
   }
 
   [dir] .sm\:border-solid {
@@ -7408,6 +7500,26 @@ padding-left: 2.2rem !important
     color: #1f1714 !important
   }
 
+  .sm\:placeholder-silver::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:placeholder-silver::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:placeholder-silver:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:placeholder-silver::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:placeholder-silver::placeholder {
+    color: #b6babd !important
+  }
+
   .sm\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -7566,6 +7678,26 @@ padding-left: 2.2rem !important
 
   .sm\:focus\:placeholder-textos_theme:focus::placeholder {
     color: #1f1714 !important
+  }
+
+  .sm\:focus\:placeholder-silver:focus::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:focus\:placeholder-silver:focus::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:focus\:placeholder-silver:focus:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:focus\:placeholder-silver:focus::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .sm\:focus\:placeholder-silver:focus::placeholder {
+    color: #b6babd !important
   }
 
   .sm\:pointer-events-none {
@@ -7897,6 +8029,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .sm\:text-silver {
+    color: #b6babd !important
+  }
+
   .sm\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -7933,6 +8069,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .sm\:hover\:text-silver:hover {
+    color: #b6babd !important
+  }
+
   .sm\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -7967,6 +8107,10 @@ text-align: right !important
 
   .sm\:focus\:text-textos_theme:focus {
     color: #1f1714 !important
+  }
+
+  .sm\:focus\:text-silver:focus {
+    color: #b6babd !important
   }
 
   .sm\:text-xs {
@@ -8543,6 +8687,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .md\:bg-silver {
+    background-color: #b6babd !important
+  }
+
   [dir] .md\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -8575,6 +8723,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .md\:hover\:bg-silver:hover {
+    background-color: #b6babd !important
+  }
+
   [dir] .md\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -8605,6 +8757,10 @@ text-align: right !important
 
   [dir] .md\:focus\:bg-textos_theme:focus {
     background-color: #1f1714 !important
+  }
+
+  [dir] .md\:focus\:bg-silver:focus {
+    background-color: #b6babd !important
   }
 
   [dir] .md\:bg-auto {
@@ -8647,6 +8803,10 @@ text-align: right !important
     border-color: #1f1714 !important
   }
 
+  [dir] .md\:border-silver {
+    border-color: #b6babd !important
+  }
+
   [dir] .md\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -8673,6 +8833,10 @@ text-align: right !important
 
   [dir] .md\:hover\:border-textos_theme:hover {
     border-color: #1f1714 !important
+  }
+
+  [dir] .md\:hover\:border-silver:hover {
+    border-color: #b6babd !important
   }
 
   [dir] .md\:border-solid {
@@ -11360,6 +11524,26 @@ padding-left: 2.2rem !important
     color: #1f1714 !important
   }
 
+  .md\:placeholder-silver::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:placeholder-silver::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:placeholder-silver:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:placeholder-silver::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:placeholder-silver::placeholder {
+    color: #b6babd !important
+  }
+
   .md\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -11518,6 +11702,26 @@ padding-left: 2.2rem !important
 
   .md\:focus\:placeholder-textos_theme:focus::placeholder {
     color: #1f1714 !important
+  }
+
+  .md\:focus\:placeholder-silver:focus::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:focus\:placeholder-silver:focus::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:focus\:placeholder-silver:focus:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:focus\:placeholder-silver:focus::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .md\:focus\:placeholder-silver:focus::placeholder {
+    color: #b6babd !important
   }
 
   .md\:pointer-events-none {
@@ -11849,6 +12053,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .md\:text-silver {
+    color: #b6babd !important
+  }
+
   .md\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -11885,6 +12093,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .md\:hover\:text-silver:hover {
+    color: #b6babd !important
+  }
+
   .md\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -11919,6 +12131,10 @@ text-align: right !important
 
   .md\:focus\:text-textos_theme:focus {
     color: #1f1714 !important
+  }
+
+  .md\:focus\:text-silver:focus {
+    color: #b6babd !important
   }
 
   .md\:text-xs {
@@ -12495,6 +12711,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .lg\:bg-silver {
+    background-color: #b6babd !important
+  }
+
   [dir] .lg\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -12527,6 +12747,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .lg\:hover\:bg-silver:hover {
+    background-color: #b6babd !important
+  }
+
   [dir] .lg\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -12557,6 +12781,10 @@ text-align: right !important
 
   [dir] .lg\:focus\:bg-textos_theme:focus {
     background-color: #1f1714 !important
+  }
+
+  [dir] .lg\:focus\:bg-silver:focus {
+    background-color: #b6babd !important
   }
 
   [dir] .lg\:bg-auto {
@@ -12599,6 +12827,10 @@ text-align: right !important
     border-color: #1f1714 !important
   }
 
+  [dir] .lg\:border-silver {
+    border-color: #b6babd !important
+  }
+
   [dir] .lg\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -12625,6 +12857,10 @@ text-align: right !important
 
   [dir] .lg\:hover\:border-textos_theme:hover {
     border-color: #1f1714 !important
+  }
+
+  [dir] .lg\:hover\:border-silver:hover {
+    border-color: #b6babd !important
   }
 
   [dir] .lg\:border-solid {
@@ -15312,6 +15548,26 @@ padding-left: 2.2rem !important
     color: #1f1714 !important
   }
 
+  .lg\:placeholder-silver::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:placeholder-silver::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:placeholder-silver:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:placeholder-silver::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:placeholder-silver::placeholder {
+    color: #b6babd !important
+  }
+
   .lg\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -15470,6 +15726,26 @@ padding-left: 2.2rem !important
 
   .lg\:focus\:placeholder-textos_theme:focus::placeholder {
     color: #1f1714 !important
+  }
+
+  .lg\:focus\:placeholder-silver:focus::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:focus\:placeholder-silver:focus::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:focus\:placeholder-silver:focus:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:focus\:placeholder-silver:focus::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .lg\:focus\:placeholder-silver:focus::placeholder {
+    color: #b6babd !important
   }
 
   .lg\:pointer-events-none {
@@ -15801,6 +16077,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .lg\:text-silver {
+    color: #b6babd !important
+  }
+
   .lg\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -15837,6 +16117,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .lg\:hover\:text-silver:hover {
+    color: #b6babd !important
+  }
+
   .lg\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -15871,6 +16155,10 @@ text-align: right !important
 
   .lg\:focus\:text-textos_theme:focus {
     color: #1f1714 !important
+  }
+
+  .lg\:focus\:text-silver:focus {
+    color: #b6babd !important
   }
 
   .lg\:text-xs {
@@ -16447,6 +16735,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .xl\:bg-silver {
+    background-color: #b6babd !important
+  }
+
   [dir] .xl\:hover\:bg-transparent:hover {
     background-color: transparent !important
   }
@@ -16479,6 +16771,10 @@ text-align: right !important
     background-color: #1f1714 !important
   }
 
+  [dir] .xl\:hover\:bg-silver:hover {
+    background-color: #b6babd !important
+  }
+
   [dir] .xl\:focus\:bg-transparent:focus {
     background-color: transparent !important
   }
@@ -16509,6 +16805,10 @@ text-align: right !important
 
   [dir] .xl\:focus\:bg-textos_theme:focus {
     background-color: #1f1714 !important
+  }
+
+  [dir] .xl\:focus\:bg-silver:focus {
+    background-color: #b6babd !important
   }
 
   [dir] .xl\:bg-auto {
@@ -16551,6 +16851,10 @@ text-align: right !important
     border-color: #1f1714 !important
   }
 
+  [dir] .xl\:border-silver {
+    border-color: #b6babd !important
+  }
+
   [dir] .xl\:hover\:border-transparent:hover {
     border-color: transparent !important
   }
@@ -16577,6 +16881,10 @@ text-align: right !important
 
   [dir] .xl\:hover\:border-textos_theme:hover {
     border-color: #1f1714 !important
+  }
+
+  [dir] .xl\:hover\:border-silver:hover {
+    border-color: #b6babd !important
   }
 
   [dir] .xl\:border-solid {
@@ -19264,6 +19572,26 @@ padding-left: 2.2rem !important
     color: #1f1714 !important
   }
 
+  .xl\:placeholder-silver::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:placeholder-silver::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:placeholder-silver:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:placeholder-silver::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:placeholder-silver::placeholder {
+    color: #b6babd !important
+  }
+
   .xl\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent !important
   }
@@ -19422,6 +19750,26 @@ padding-left: 2.2rem !important
 
   .xl\:focus\:placeholder-textos_theme:focus::placeholder {
     color: #1f1714 !important
+  }
+
+  .xl\:focus\:placeholder-silver:focus::-webkit-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:focus\:placeholder-silver:focus::-moz-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:focus\:placeholder-silver:focus:-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:focus\:placeholder-silver:focus::-ms-input-placeholder {
+    color: #b6babd !important
+  }
+
+  .xl\:focus\:placeholder-silver:focus::placeholder {
+    color: #b6babd !important
   }
 
   .xl\:pointer-events-none {
@@ -19753,6 +20101,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .xl\:text-silver {
+    color: #b6babd !important
+  }
+
   .xl\:hover\:text-inherit:hover {
     color: inherit !important
   }
@@ -19789,6 +20141,10 @@ text-align: right !important
     color: #1f1714 !important
   }
 
+  .xl\:hover\:text-silver:hover {
+    color: #b6babd !important
+  }
+
   .xl\:focus\:text-inherit:focus {
     color: inherit !important
   }
@@ -19823,6 +20179,10 @@ text-align: right !important
 
   .xl\:focus\:text-textos_theme:focus {
     color: #1f1714 !important
+  }
+
+  .xl\:focus\:text-silver:focus {
+    color: #b6babd !important
   }
 
   .xl\:text-xs {

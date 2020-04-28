@@ -201,6 +201,27 @@ const router = new Router({
                 // Application Routes
                 // =============================================================================
 
+                {
+                    path: '/clientes',
+                    name: 'catalogo_clientes',
+                    component: () => import('@/views/pages/clientes/ClientesList.vue'),
+                    meta: {
+                        breadcrumb: [{
+                                title: 'Home',
+                                url: '/'
+                            },
+                            {
+                                title: 'Catálogos'
+                            },
+                            {
+                                title: 'Control de clientes',
+                                active: true
+                            },
+                        ],
+                        pageTitle: 'Clientes',
+                        rule: 'editor'
+                    },
+                },
 
 
                 // =============================================================================

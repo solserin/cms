@@ -72,7 +72,8 @@ module.exports = {
             'grey-light': '#dae1e7',
             'info': '#0061ff',
             'default': '#C1C1C1',
-            'textos_theme': '#1f1714'
+            'textos_theme': '#1f1714',
+            'silver': '#b6babd'
         },
 
         /*
