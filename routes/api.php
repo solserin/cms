@@ -92,6 +92,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('regimenes/', 'SATRegimenesController@getAll');
     Route::get('monedas/', 'SATMonedasController@getAll');
 
+    /**CLIENTES */
+    Route::get('/clientes/get_clientes', 'ClientesController@get_clientes');
+    Route::get('/clientes/get_nacionalidades', 'ClientesController@get_nacionalidades');
+    Route::post('/clientes/guardar_cliente', 'ClientesController@guardar_cliente');
+    Route::post('/clientes/modificar_cliente', 'ClientesController@modificar_cliente');
+    Route::get('/clientes/get_cliente_id', 'ClientesController@get_cliente_id');
+    Route::post('/clientes/baja_cliente', 'ClientesController@baja_cliente');
+    Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
     //Proveedores
 
     Route::post('empresa/inventario/proveedores', 'ProveedoresController@create')->middleware('permiso:5,1');

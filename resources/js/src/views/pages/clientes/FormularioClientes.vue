@@ -16,7 +16,9 @@
                 <div class="flex flex-wrap">
                   <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2">
                     <h3 class="text-xl">
-                      <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />Formulario de Registro
+                      <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />
+                      <span v-if="getTipoformulario=='agregar'">Formulario de Registro</span>
+                      <span v-else>Formulario de Modificación de Clientes</span>
                     </h3>
                     <p class="pt-2 text-silver font-medium">Por favor ingrese los siguientes datos.</p>
                   </div>
@@ -26,7 +28,11 @@
                       icon="icon-database"
                       color="success"
                       class="w-full"
-                    >Guardar Datos</vs-button>
+                      @click="acceptAlert()"
+                    >
+                      <span v-if="getTipoformulario=='agregar'">Guardar Cliente</span>
+                      <span v-else>Modificar Cliente</span>
+                    </vs-button>
                   </div>
                 </div>
                 <vs-divider />
@@ -67,7 +73,7 @@
                 </div>
               </div>
 
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   Fecha de Nacimiento
                   <span class="text-danger text-sm">(*)</span>
@@ -91,6 +97,34 @@
                     class="text-danger text-sm"
                     v-if="this.errores.fecha_nac"
                   >{{errores.fecha_nac[0]}}</span>
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  <span>Género</span>
+                  <span class="text-danger text-sm">(*)</span>
+                </label>
+                <v-select
+                  :options="generos"
+                  :clearable="false"
+                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                  v-model="form.genero"
+                  class="pb-1 pt-1"
+                  v-validate:genero_computed.immediate="'required'"
+                  name="genero"
+                  data-vv-as=" "
+                >
+                  <div slot="no-options">Seleccione una opción</div>
+                </v-select>
+                <div>
+                  <span class="text-danger text-sm">{{ errors.first('genero') }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="text-danger text-sm"
+                    v-if="this.errores['genero.value']"
+                  >{{errores['genero.value'][0]}}</span>
                 </div>
               </div>
 
@@ -131,9 +165,9 @@
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
                   v-model="form.nacionalidad"
                   class="pb-1 pt-1"
-                  v-validate:plan_de_venta_computed.immediate="'required'"
+                  v-validate:nacionalidad_computed.immediate="'required'"
                   name="nacionalidades_id"
-                  data-vv-as="Nacionalidad"
+                  data-vv-as=" "
                 >
                   <div slot="no-options">Seleccione una opción</div>
                 </v-select>
@@ -143,8 +177,8 @@
                 <div class="mt-2">
                   <span
                     class="text-danger text-sm"
-                    v-if="this.errores.nacionalidades_id"
-                  >{{errores.nacionalidades_id[0]}}</span>
+                    v-if="this.errores['nacionalidad.value']"
+                  >{{errores['nacionalidad.value'][0]}}</span>
                 </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
@@ -265,15 +299,14 @@
                   <span v-if="datos_fiscales_validacion_computed" class="text-danger text-sm">(*)</span>
                 </label>
                 <vs-input
+                  data-vv-as=" "
                   name="rfc"
                   maxlength="13"
-                  data-vv-validate-on="blur"
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="e.j. MELM8305281H0"
                   v-model="form.rfc"
-                  v-validate:datos_fiscales_validacion_computed.immediate="'required'"
-                  v-validate="'min:12|max:13'"
+                  v-validate:rfc_validacion_computed="'required'"
                 />
                 <div>
                   <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
@@ -294,8 +327,7 @@
                 <vs-input
                   name="razon_social"
                   data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate:datos_fiscales_validacion_computed.immediate="'required'"
+                  v-validate:razon_social_validacion_computed="'required'"
                   maxlength="95"
                   type="text"
                   class="w-full pb-1 pt-1"
@@ -324,8 +356,7 @@
                 <vs-input
                   name="direccion_fiscal"
                   data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate:datos_fiscales_validacion_computed.immediate="'required'"
+                  v-validate:direccion_fiscal_validacion_computed="'required'"
                   maxlength="95"
                   type="text"
                   class="w-full pb-1 pt-1"
@@ -433,7 +464,7 @@ import Confirmar from "@pages/Confirmar";
 //componente de password
 import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
-import usuarios from "@services/Usuarios";
+import clientes from "@services/clientes";
 import vSelect from "vue-select";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -453,12 +484,27 @@ export default {
     show: {
       type: Boolean,
       required: true
+    },
+    tipo: {
+      type: String,
+      required: true
+    },
+    id_cliente: {
+      type: Number,
+      required: false,
+      default: 0
     }
   },
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
-        this.$nextTick(() => this.setFocusOnInput("nombre_cliente"));
+        this.$nextTick(() =>
+          this.$refs["nombre_cliente"].$el.querySelector("input").focus()
+        );
+        if (this.getTipoformulario == "modificar") {
+          /**se cargan los datos al formulario */
+          this.get_cliente_by_id(this.get_cliente_id);
+        }
       }
     }
   },
@@ -471,6 +517,29 @@ export default {
         return newValue;
       }
     },
+    getTipoformulario: {
+      get() {
+        return this.tipo;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
+    get_cliente_id: {
+      get() {
+        return this.id_cliente;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
+
+    nacionalidad_computed: function() {
+      return this.form.nacionalidad.value;
+    },
+    genero_computed: function() {
+      return this.form.genero.value;
+    },
     fecha_nacimiento_validacion_computed: function() {
       return this.form.fecha_nac;
     },
@@ -482,6 +551,33 @@ export default {
       )
         return true;
       else return false;
+    },
+    rfc_validacion_computed: function() {
+      if (
+        this.form.rfc.trim() != "" ||
+        this.form.razon_social.trim() != "" ||
+        this.form.direccion_fiscal.trim() != ""
+      )
+        return this.form.rfc;
+      else return true;
+    },
+    razon_social_validacion_computed: function() {
+      if (
+        this.form.rfc.trim() != "" ||
+        this.form.razon_social.trim() != "" ||
+        this.form.direccion_fiscal.trim() != ""
+      )
+        return this.form.razon_social;
+      else return true;
+    },
+    direccion_fiscal_validacion_computed: function() {
+      if (
+        this.form.rfc.trim() != "" ||
+        this.form.razon_social.trim() != "" ||
+        this.form.direccion_fiscal.trim() != ""
+      )
+        return this.form.direccion_fiscal;
+      else return true;
     }
   },
   data() {
@@ -498,10 +594,26 @@ export default {
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
-      accionNombre: "Guardar Cliente",
+      accionNombre: "Modificar Cliente",
       nacionalidades: [],
+      generos: [
+        {
+          value: "1",
+          label: "Hombre"
+        },
+        {
+          value: "2",
+          label: "Mujer"
+        }
+      ],
       form: {
+        /**en caso de modificar */
+        id_cliente_modificar: 0,
         /**datos del cliente personal */
+        genero: {
+          value: "1",
+          label: "Hombre"
+        },
         nombre: "",
         direccion: "",
         ciudad: "",
@@ -532,15 +644,76 @@ export default {
     };
   },
   methods: {
-    setFocusOnInput(inputName) {
-      /**
-       * @see https://vuejs.org/v2/api/#vm-el
-       * @see https://vuejs.org/v2/api/#vm-refs
-       */
-      // you could just call this.$refs[inputName].focusInput() but i'm not shure if it belongs to the public API
-      let inputEl = this.$refs[inputName].$el.querySelector("input");
-      console.log(inputEl.focus); // <== See if `focus` method avaliable
-      inputEl.focus(); //  <== This time the focus will work properly
+    get_cliente_by_id() {
+      /**trae la informacion de el cliente por id */
+      this.$vs.loading();
+      clientes
+        .get_cliente_id(this.get_cliente_id)
+        .then(res => {
+          //actualizo los datos en el formulario
+          this.form.nombre = res.data.nombre;
+          this.form.direccion = res.data.direccion;
+          this.form.ciudad = res.data.ciudad;
+          this.form.estado = res.data.estado;
+          this.form.nacionalidad = {
+            value: res.data.nacionalidad["id"],
+            label: res.data.nacionalidad["nacionalidad"]
+          };
+          this.form.genero = {
+            value: res.data.genero["id"],
+            label: res.data.genero["genero"]
+          };
+          this.form.telefono = res.data.telefono;
+          this.form.celular = res.data.celular;
+          this.form.telefono_extra = res.data.telefono_extra;
+          this.form.email = res.data.email;
+
+          var partes = res.data.fecha_nac.split("-");
+          //yyyy-mm-dd
+          this.form.fecha_nac = new Date(partes[0], partes[1] - 1, partes[2]);
+
+          /**datos del cliente fiscal */
+          this.form.rfc = res.data.rfc != null ? res.data.rfc : "";
+          this.form.direccion_fiscal =
+            res.data.direccion_fiscal != null ? res.data.direccion_fiscal : "";
+          this.form.razon_social =
+            res.data.razon_social != null ? res.data.razon_social : "";
+          /**datos del contacto extra de referencia */
+          this.form.nombre_contacto = res.data.nombre_contacto;
+          this.form.parentesco_contacto = res.data.parentesco_contacto;
+          this.form.telefono_contacto = res.data.telefono_contacto;
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          this.$vs.notify({
+            title: "Modificar Cliente",
+            text: "Ocurrió un error al traer la informacion, reintente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "4000"
+          });
+          this.cerrarVentana();
+        });
+    },
+    get_nacionalidades() {
+      clientes
+        .get_nacionalidades()
+        .then(res => {
+          //le agrego las nacionalidades
+          this.nacionalidades = [];
+          this.nacionalidades.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach(element => {
+            this.nacionalidades.push({
+              label: element.nacionalidad,
+              value: element.id
+            });
+          });
+          this.form.nacionalidad = this.nacionalidades[122];
+        })
+        .catch(err => {});
     },
     acceptAlert() {
       this.$validator
@@ -548,7 +721,7 @@ export default {
         .then(result => {
           if (!result) {
             this.$vs.notify({
-              title: "Error",
+              title: "Guardar Cliente",
               text: "Verifique que todos los datos han sido capturados",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -556,46 +729,51 @@ export default {
               position: "bottom-right",
               time: "4000"
             });
-            return;
           } else {
-            this.callBackConfirmarAceptar = this.guardarVenta;
-            this.openConfirmarAceptar = true;
+            this.errores = [];
+            if (this.getTipoformulario == "guardar") {
+              this.callBackConfirmarAceptar = this.guardar_cliente;
+              this.openConfirmarAceptar = true;
+            } else {
+              /**modificar, se valida con password */
+              this.form.id_cliente_modificar = this.get_cliente_id;
+              this.callback = this.modificar_cliente;
+              this.operConfirmar = true;
+            }
           }
         })
         .catch(() => {});
     },
 
-    guardarVenta() {
+    guardar_cliente() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
-      cementerio
-        .guardarVenta(this.form)
+      clientes
+        .guardar_cliente(this.form)
         .then(res => {
-          //console.log(res);
           if (res.data >= 1) {
             //success
             this.$vs.notify({
-              title: "Ventas de Propiedades",
-              text: "Se ha guardado la venta correctamente.",
+              title: "Registro de Clientes",
+              text: "Se ha guardado el cliente correctamente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
               time: 5000
             });
-            this.$emit("ver_pdfs_nueva_venta", res.data);
+            this.$emit("retornar_id", res.data);
             this.cerrarVentana();
           } else {
             this.$vs.notify({
-              title: "Ventas de Propiedades",
-              text: "Error al guardar la venta, por favor reintente.",
+              title: "Registro de Clientes",
+              text: "Error al guardar el cliente, por favor reintente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
               time: 4000
             });
           }
-
           this.$vs.loading.close();
         })
         .catch(err => {
@@ -615,20 +793,71 @@ export default {
             } else if (err.response.status == 422) {
               //checo si existe cada error
               this.errores = err.response.data.error;
-              if (this.errores.ubicacion) {
-                //la propiedad esa ya ha sido vendida
-                this.$vs.notify({
-                  title: "Seleccionar Terreno",
-                  text: "Este terreno ya ha sido vendido previamente.",
-                  iconPack: "feather",
-                  icon: "icon-alert-circle",
-                  color: "danger",
-                  time: 5000
-                });
-              }
-
               this.$vs.notify({
-                title: "Guardar Venta",
+                title: "Registro de Clientes",
+                text: "Verifique los errores encontrados en los datos.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 5000
+              });
+              //console.log(err.response);
+            }
+          }
+          this.$vs.loading.close();
+        });
+    },
+
+    modificar_cliente() {
+      //aqui mando modoificar los datos
+      this.errores = [];
+      this.$vs.loading();
+      clientes
+        .modificar_cliente(this.form)
+        .then(res => {
+          if (res.data >= 1) {
+            //success
+            this.$vs.notify({
+              title: "Modificación de Clientes",
+              text: "Se ha modificó el cliente correctamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 5000
+            });
+            this.$emit("retornar_id", res.data);
+            this.cerrarVentana();
+          } else {
+            this.$vs.notify({
+              title: "Modificación de Clientes",
+              text: "Error al guardar el cliente, por favor reintente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 4000
+            });
+          }
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          if (err.response) {
+            //console.log("guardarVenta -> err.response", err.response);
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              //checo si existe cada error
+              this.errores = err.response.data.error;
+              this.$vs.notify({
+                title: "Modificación de Clientes",
                 text: "Verifique los errores encontrados en los datos.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
@@ -652,7 +881,6 @@ export default {
       this.openConfirmarSinPassword = true;
       this.callBackConfirmar = this.cerrarVentana;
     },
-
     cerrarVentana() {
       this.openConfirmarSinPassword = false;
       this.limpiarVentana();
@@ -667,6 +895,10 @@ export default {
       this.form.nacionalidad = {
         value: "122",
         label: "Mexicana"
+      };
+      this.form.genero = {
+        value: "1",
+        label: "Hombre"
       };
       this.form.telefono = "";
       this.form.celular = "";
@@ -687,6 +919,9 @@ export default {
       this.operConfirmar = false;
     }
   },
-  created() {}
+  created() {
+    //cargo nacionalidades
+    this.get_nacionalidades();
+  }
 };
 </script>

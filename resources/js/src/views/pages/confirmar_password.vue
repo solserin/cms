@@ -14,8 +14,7 @@
         Ingrese su contraseña para
         <span class="accion_nombre">{{accionNombre}}</span>.
         <vs-input
-          id="password"
-          ref="password"
+          ref="contra"
           type="password"
           class="w-full pt-3 pb-3"
           placeholder="Contraseña"
@@ -42,6 +41,9 @@ export default {
       type: String,
       required: true
     }
+  },
+  watch: {
+    show: function(newValue, oldValue) {}
   },
 
   data() {
@@ -96,6 +98,9 @@ export default {
             time: "4000"
           });
           this.pass = "";
+          this.$nextTick(() =>
+            this.$refs["contra"].$el.querySelector("input").focus()
+          );
         });
     },
     cancel() {

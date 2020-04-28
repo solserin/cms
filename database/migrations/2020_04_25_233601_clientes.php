@@ -15,7 +15,7 @@ class Clientes extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('generos_id')->nullable()->desciption('define hombre o mujer');
+            $table->unsignedBigInteger('generos_id')->desciption('define hombre o mujer');
             $table->foreign('generos_id')->references('id')->on('generos');
             $table->string('nombre', 100)->nullable()->description('nombre completo del cliente');
             $table->string('direccion', 175)->nullable()->description('direccion completa del cliente');
@@ -26,7 +26,7 @@ class Clientes extends Migration
             $table->string('celular', 50)->nullable();
             $table->string('telefono_extra', 50)->nullable();
             $table->string('email', 75)->nullable();
-            $table->unsignedBigInteger('nacionalidades_id')->nullable()->desciption('define la nacionalidad del cliente');
+            $table->unsignedBigInteger('nacionalidades_id')->desciption('define la nacionalidad del cliente');
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades');
             $table->string('nombre_contacto', 100)->nullable()->description('nombre de algun contacto');
             $table->string('parentesco_contacto', 100)->nullable()->description('parentescon con el contacto');
@@ -37,7 +37,7 @@ class Clientes extends Migration
             $table->dateTime('fecha_registro')->nullable()->description('fecha de ingreso en la bd');
             $table->dateTime('fecha_modificacion')->nullable()->description('fecha de la ultima modifcacion en la bd');
             $table->dateTime('fecha_cancelacion')->nullable()->description('fecha en que se cancelo en la bd');
-            $table->unsignedBigInteger('registro_id')->nullable();
+            $table->unsignedBigInteger('registro_id');
             $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('cancelo_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');

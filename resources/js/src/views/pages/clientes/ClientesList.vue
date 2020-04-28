@@ -9,9 +9,9 @@
           <vs-button
             class="ml-auto"
             icon-pack="feather"
-            icon="icon-shopping-cart"
+            icon="icon-user-plus"
             color="success"
-            @click="verAgregar=true"
+            @click="formulario('agregar')"
           >Registrar Cliente</vs-button>
         </div>
       </div>
@@ -59,7 +59,7 @@
               <vs-input
                 class="w-full"
                 icon="search"
-                maxlength="14"
+                maxlength="75"
                 placeholder="Filtrar por dato específico"
                 v-model="serverOptions.numero_control"
                 v-on:keyup.enter="get_data(1)"
@@ -110,8 +110,7 @@
           <vs-th>Nombre</vs-th>
           <vs-th>Domicilio</vs-th>
           <vs-th>Celular</vs-th>
-          <vs-th>Email</vs-th>
-          <vs-th>RFC</vs-th>
+          <vs-th>Status</vs-th>
           <vs-th>Acciones</vs-th>
         </template>
         <template slot-scope="{data}">
@@ -120,23 +119,20 @@
               <span class="font-semibold">{{data[indextr].id}}</span>
             </vs-td>
             <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
-            <vs-td :data="data[indextr].uso_venta">{{data[indextr].uso_venta}}</vs-td>
-            <vs-td :data="data[indextr].numero_solicitud">
-              <span class="font-medium">{{data[indextr].numero_solicitud}}</span>
-            </vs-td>
-            <vs-td :data="data[indextr].numero_convenio">
-              <span class="font-medium">{{data[indextr].numero_convenio}}</span>
+            <vs-td :data="data[indextr].direccion">{{data[indextr].direccion}}</vs-td>
+            <vs-td :data="data[indextr].celular">
+              <span class="font-medium">{{data[indextr].celular}}</span>
             </vs-td>
 
             <vs-td :data="data[indextr].status">
               <p v-if="data[indextr].status==1">
                 <span class="flex items-center px-2 py-1 rounded">
-                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-success'"></div>Activa
+                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-success'"></div>Activo
                 </span>
               </p>
               <p v-else>
                 <span class="flex items-center px-2 py-1 rounded">
-                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-danger'"></div>Cancelada
+                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-danger'"></div>Cancelado
                 </span>
               </p>
             </vs-td>
@@ -161,7 +157,7 @@
                   icon="icon-shield-off"
                   color="danger"
                   type="flat"
-                  @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
+                  @click="deleteCliente(data[indextr].id,data[indextr].nombre)"
                 ></vs-button>
                 <vs-button
                   v-else
@@ -171,7 +167,7 @@
                   icon="icon-shield"
                   color="success"
                   type="flat"
-                  @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
+                  @click="altaCliente(data[indextr].id,data[indextr].nombre)"
                 ></vs-button>
               </div>
             </vs-td>
@@ -197,11 +193,13 @@
       :request="request"
       @closeReportes="openReportesLista=false;"
     ></Reporteador>
-    <NuevoCliente
-      :show="verAgregar"
-      @closeVentana="verAgregar = false"
-      @ver_pdfs_nueva_venta="alert(1)"
-    ></NuevoCliente>
+    <FormularioClientes
+      :id_cliente="id_cliente_modificar"
+      :tipo="tipoFormulario"
+      :show="verFormularioClientes"
+      @closeVentana="verFormularioClientes = false"
+      @retornar_id="retorno_id"
+    ></FormularioClientes>
   </div>
 </template>
 
@@ -209,9 +207,9 @@
 //planes de venta
 import Reporteador from "@pages/Reporteador";
 
-import cementerio from "@services/cementerio";
+import clientes from "@services/clientes";
 
-import NuevoCliente from "@pages/clientes/NuevoCliente";
+import FormularioClientes from "@pages/clientes/FormularioClientes";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -224,18 +222,18 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    NuevoCliente,
+    FormularioClientes,
     Reporteador
   },
   watch: {
     actual: function(newValue, oldValue) {
-      //this.get_data(this.actual);
+      this.get_data(this.actual);
     },
     mostrar: function(newValue, oldValue) {
-      //this.get_data(1);
+      this.get_data(1);
     },
     estado: function(newVal, previousVal) {
-      //this.get_data(1);
+      this.get_data(1);
     }
   },
   data() {
@@ -298,14 +296,15 @@ export default {
       callback: Function,
       accionNombre: "",
       datosModifcar: {},
-      verAgregar: false,
+      tipoFormulario: "",
+      verFormularioClientes: false,
       verModificar: false,
       id_cliente_modificar: 0,
       selected: [],
       users: [],
       /**opciones para filtrar la peticion del server */
       /**user id para bajas y altas */
-      user_id: "",
+      cliente_id: "",
       request: {
         venta_id: "",
         email: ""
@@ -315,20 +314,78 @@ export default {
   methods: {
     reset(card) {
       card.removeRefreshAnimation(500);
-      this.filtroEspecifico = { label: "Núm. Solicitud", value: "1" };
+      this.filtroEspecifico = {
+        label: "Núm. Cliente",
+        value: "1"
+      };
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
-      this.estado = { label: "Todas", value: "" };
+      this.estado = { label: "Todos", value: "" };
       this.serverOptions.cliente = "";
-      //this.get_data(this.actual);
+      this.get_data(this.actual);
+    },
+
+    get_data(page, evento = "") {
+      if (evento == "blur") {
+        if (
+          this.serverOptions.titular != "" ||
+          this.serverOptions.titular == ""
+        ) {
+          //la funcion no avanza
+
+          return false;
+        }
+        if (
+          this.serverOptions.numero_control == "" ||
+          this.serverOptions.numero_control != ""
+        ) {
+          //la funcion no avanza
+
+          return false;
+        }
+      }
+      let self = this;
+      if (clientes.cancel) {
+        clientes.cancel("Operation canceled by the user.");
+      }
+      this.$vs.loading();
+      this.verPaginado = false;
+      this.serverOptions.page = page;
+      this.serverOptions.per_page = this.mostrar.value;
+      this.serverOptions.status = this.estado.value;
+      this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
+      clientes
+        .get_clientes(this.serverOptions)
+        .then(res => {
+          //console.log("get_data -> res", res);
+          this.clientes = res.data.data;
+          this.total = res.data.last_page;
+          this.actual = res.data.current_page;
+          this.verPaginado = true;
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          this.ver = true;
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            }
+          }
+        });
     },
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
-    openModificar(id_cliente) {
-      this.id_cliente_modificar = id_cliente;
-      this.verModificar = true;
-    },
 
     //eliminar usuario logicamente
 
@@ -338,8 +395,139 @@ export default {
 
     closeStatus() {
       this.openStatus = false;
+    },
+
+    formulario(tipo) {
+      this.tipoFormulario = tipo;
+      this.verFormularioClientes = true;
+    },
+    openModificar(id_cliente) {
+      this.tipoFormulario = "modificar";
+      this.id_cliente_modificar = id_cliente;
+      this.verFormularioClientes = true;
+    },
+    retorno_id(dato) {
+      //alert(dato);
+    },
+    deleteCliente(id_cliente, nombre) {
+      this.accionNombre = "deshabilitar cliente " + nombre;
+      this.cliente_id = id_cliente;
+      this.openStatus = true;
+      this.callback = this.delete_cliente;
+    },
+
+    altaCliente(id_cliente, nombre) {
+      this.accionNombre = "Habilitar cliente " + nombre;
+      this.cliente_id = id_cliente;
+      this.openStatus = true;
+      this.callback = this.habilitar_cliente;
+    },
+    delete_cliente() {
+      this.$vs.loading();
+      let datos = {
+        cliente_id: this.cliente_id
+      };
+      clientes
+        .delete_cliente(datos)
+        .then(res => {
+          this.$vs.loading.close();
+          this.get_data(this.actual);
+          if (res.data == 1) {
+            this.$vs.notify({
+              title: "Deshabilitar Cliente",
+              text: "Se ha deshabilitado al cliente exitosamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 5000
+            });
+          } else {
+            this.$vs.notify({
+              title: "Deshabilitar Cliente",
+              text: "No se realizaron cambios.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 5000
+            });
+          }
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 8000
+              });
+            } else if (err.response.status == 422) {
+              /**error de validacion */
+              this.errores = err.response.data.error;
+            }
+          }
+        });
+    },
+    habilitar_cliente() {
+      this.$vs.loading();
+      let datos = {
+        cliente_id: this.cliente_id
+      };
+      clientes
+        .alta_cliente(datos)
+        .then(res => {
+          this.$vs.loading.close();
+          this.get_data(this.actual);
+          if (res.data == 1) {
+            this.$vs.notify({
+              title: "Habilitar Cliente",
+              text: "Se ha habilitado al cliente exitosamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 5000
+            });
+          } else {
+            this.$vs.notify({
+              title: "Habilitar Cliente",
+              text: "No se realizaron cambios.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 5000
+            });
+          }
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          if (err.response) {
+            console.log("habilitar_cliente -> err.response", err.response);
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 8000
+              });
+            } else if (err.response.status == 422) {
+              /**error de validacion */
+              this.errores = err.response.data.error;
+            }
+          }
+        });
     }
   },
-  created() {}
+  created() {
+    this.get_data(this.actual);
+  }
 };
 </script>
