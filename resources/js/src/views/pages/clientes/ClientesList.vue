@@ -138,7 +138,7 @@
             </vs-td>
             <vs-td :data="data[indextr].id_user">
               <div class="flex flex-start">
-                <img class="mr-3" style="width:20px;" src="@assets/images/pdf.svg" alt />
+                <img class="mr-3 hidden" style="width:20px;" src="@assets/images/pdf.svg" alt />
 
                 <vs-button
                   title="Editar"
