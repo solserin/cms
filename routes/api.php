@@ -168,8 +168,6 @@ Route::get('ubicacion_texto', 'CementerioController@ubicacion_texto'); //borrar
 
 
 
-
-
 //Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
 
 

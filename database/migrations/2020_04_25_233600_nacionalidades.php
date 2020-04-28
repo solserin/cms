@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TipoPreciosTable extends Migration
+class Nacionalidades extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class TipoPreciosTable extends Migration
      */
     public function up()
     {
-        Schema::create('tipo_precios', function (Blueprint $table) {
+        Schema::create('nacionalidades', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('tipo')->nullable();
+            $table->string('pais', 75)->nullable();
+            $table->string('nacionalidad', 75)->nullable();
+            $table->string('iso_nac', 25)->nullable();
         });
     }
 
@@ -26,6 +28,6 @@ class TipoPreciosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipo_precios');
+        Schema::dropIfExists('nacionalidades');
     }
 }

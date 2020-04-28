@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVentasReferenciasTable extends Migration
+class MotivosCancelacion extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateVentasReferenciasTable extends Migration
      */
     public function up()
     {
-        Schema::create('ventas_referencias', function (Blueprint $table) {
+        /**
+         * 1- falta de pago
+         * 2- a peticion del cliente
+         * 3- error de captura
+         */
+        Schema::create('motivos_cancelacion', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('referencia_pagos');
-            $table->string('tipo_venta');
+            $table->string('motivo', 50)->nullable();
         });
     }
 
@@ -27,6 +31,6 @@ class CreateVentasReferenciasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ventas_referencias');
+        Schema::dropIfExists('motivos_cancelacion');
     }
 }

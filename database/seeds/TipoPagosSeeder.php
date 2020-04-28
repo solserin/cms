@@ -11,8 +11,7 @@ class TipoPagosSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tipo_pagos')->insert(['tipo' => 'Enganche']);
-        DB::table('tipo_pagos')->insert(['tipo' => 'Abono']);
-        DB::table('tipo_pagos')->insert(['tipo' => 'Liquidación']);
+        DB::table('tipo_pagos')->insert(['tipo' => 'Abono a Capital']);
+        DB::table('tipo_pagos')->insert(['tipo' => 'Abono a Intereses']);
     }
 }

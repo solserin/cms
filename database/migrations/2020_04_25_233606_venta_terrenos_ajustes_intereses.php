@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAjustesInteresesPropiedades extends Migration
+class VentaTerrenosAjustesIntereses extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateAjustesInteresesPropiedades extends Migration
      */
     public function up()
     {
-        Schema::create('ajustes_intereses_propiedades', function (Blueprint $table) {
+        Schema::create('venta_terrenos_ajustes_intereses', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('ventas_terrenos_id')->nullable();
+            $table->foreign('ventas_terrenos_id')->references('id')->on('ventas_terrenos');
             $table->double('tasa_fija_anual')->default(12);
             $table->integer('dias_antes_vencimiento')->default(5);
             $table->integer('maximo_dias_retraso')->default(120);
@@ -31,6 +33,6 @@ class CreateAjustesInteresesPropiedades extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ajustes_intereses_propiedades');
+        Schema::dropIfExists('venta_terrenos_ajustes_intereses');
     }
 }
