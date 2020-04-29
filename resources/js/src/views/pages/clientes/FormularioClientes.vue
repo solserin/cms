@@ -7,7 +7,7 @@
       :active.sync="showVentana"
       @close="cancelar"
     >
-      <!--inicio venta-->
+      <!--inicio cliente-->
       <vx-card>
         <template slot="no-body">
           <div class="pt-6">
@@ -434,7 +434,7 @@
           </div>
         </template>
       </vx-card>
-      <!--fin venta-->
+      <!--fin cliente-->
     </vs-popup>
     <Password
       :show="operConfirmar"
@@ -454,8 +454,8 @@
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar=false"
-      :accion="'He revisado la información y quiero guardar la venta'"
-      :confirmarButton="'Guardar Venta'"
+      :accion="'He revisado la información y quiero registrar a este cliente'"
+      :confirmarButton="'Guardar Cliente'"
     ></ConfirmarAceptar>
   </div>
 </template>
@@ -731,7 +731,7 @@ export default {
             });
           } else {
             this.errores = [];
-            if (this.getTipoformulario == "guardar") {
+            if (this.getTipoformulario == "agregar") {
               this.callBackConfirmarAceptar = this.guardar_cliente;
               this.openConfirmarAceptar = true;
             } else {
@@ -778,7 +778,6 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            //console.log("guardarVenta -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -841,7 +840,6 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            //console.log("guardarVenta -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
