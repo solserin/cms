@@ -236,7 +236,7 @@
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese el teléfono del domicilio"
-                  v-model="form.telefono"
+                  v-model.trim="form.telefono"
                 />
               </div>
 
@@ -249,7 +249,7 @@
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese un número de celular"
-                  v-model="form.celular"
+                  v-model.trim="form.celular"
                 />
               </div>
 
@@ -275,7 +275,7 @@
                   type="email"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese el email"
-                  v-model="form.email"
+                  v-model.trim="form.email"
                 />
                 <div>
                   <span class="text-danger text-sm">{{ errors.first('email') }}</span>
@@ -415,7 +415,7 @@
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_contacto"
+                  v-model.trim="form.telefono_contacto"
                 />
               </div>
 

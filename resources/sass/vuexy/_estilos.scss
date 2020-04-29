@@ -12,7 +12,6 @@
     background-color: rgba(var(--vs-primary), 1) !important;
     //background-color: transparent !important;
     border-radius: 0;
-
 }
 
 .vs-popup--title h3 {
@@ -51,7 +50,6 @@
     border-radius: 0 !important;
 }
 
-
 .usuarios .vs-popup {
     width: 100% !important;
 }
@@ -59,7 +57,6 @@
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
 @media (min-width: 576px) {
-
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -71,7 +68,6 @@
 
 // Small devices (landscape phones, less than 768px)
 @media (min-width: 768px) {
-
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -83,7 +79,6 @@
 
 // Medium devices (tablets, less than 992px)
 @media (min-width: 992px) {
-
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -95,7 +90,6 @@
 
 // Large devices (desktops, less than 1200px)
 @media (min-width: 1200px) {
-
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -105,12 +99,9 @@
     }
 }
 
-
 .vs-popup--background {
-    background: rgba(0, 0, 0, .5);
+    background: rgba(0, 0, 0, 0.5);
 }
-
-
 
 [dir] .vs__dropdown-toggle {
     padding: 0 0 4px 0;
@@ -141,7 +132,7 @@
 }
 
 .vs-input--placeholder {
-    color: rgba(0, 0, 0, .7);
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .texto-informacion {
@@ -151,10 +142,8 @@
     color: rgba(var(--vs-primary), 1) !important;
 }
 
-
-
 .vs-table--tbody-table tr {
-    background-color: #E7EBF0;
+    background-color: #e7ebf0;
     color: rgba(var(--vs-textos_theme), 1) !important;
 }
 
@@ -164,7 +153,6 @@
     color: rgba(var(--vs-primary), 1) !important;
     background-color: #fff !important;
 }
-
 
 /*tarifas card*/
 .card-tarifas .vs-card--header {
@@ -191,7 +179,6 @@
 
 /*fin password checker*/
 
-
 /*ESTILOS DEL COMPONENTE DE VENTAS*/
 
 .venta-details .propiedad_tipo {
@@ -209,10 +196,6 @@
     background-size: cover;
 }*/
 
-
-
-
-
 /*fin de estilos del login*/
 
 /* estilos de videos tutoriales*/
@@ -223,32 +206,25 @@
     cursor: pointer;
 }
 
-
 /*fin de estilos de videos tutoriales*/
 
 /* buttons*/
 
-
 .vs-card--content {
     font-size: 1rem !important;
 }
-
 
 .firma-digital .con-input-upload {
     margin: 0 auto 0 auto !important;
     float: none !important;
 }
 
-
 .firma-digital .con-img-upload .img-upload {
     margin: 0 auto 0 auto !important;
     float: none !important;
 }
 
-
-
 /*fin de buttons*/
-
 
 [dir] .layout--full-page .bg-img {
     background: url(/images/aeternus/login.jpg) !important;
@@ -276,7 +252,6 @@
     z-index: 1000 !important;
 }
 
-
 .login-img {
     max-width: 295px !important;
 }
@@ -298,8 +273,6 @@
     line-height: 32px;
 }
 
-
-
 /*pdfs de los reportes de los modulos*/
 /*.pdfs_modulos .vs-popup--header,
 .pdfs_modulos .vs-popup--footer {
@@ -315,9 +288,6 @@
     font-weight: 500 !important;
 }
 
-
-
-
 .pdfs_modulos .iframe_viewer {
     min-height: 100vh !important;
     min-width: 100% !important;
@@ -329,16 +299,12 @@
     background-color: rgba(var(--vs-secondary_theme), 1) !important;
 }
 
-
-
-
 .vs-popup--close {
     border-radius: 0px !important;
     color: rgba(0, 0, 0, 1);
 }
 
 /*FIN pdfs de los reportes de los modulos*/
-
 
 /**confirmar dialogos */
 .confirmar .vs-dialog {
@@ -354,8 +320,6 @@
     color: #fff !important;
     background-color: #c1c1c1 !important;
 }
-
-
 
 .confirmar .vs-dialog .vs-dialog-header {
     display: none !important;
@@ -380,9 +344,6 @@
     background-color: #c1c1c1;
 }
 
-
-
-
 /*confirmar (sin password) checker*/
 
 .confirmarAceptar .icono:before {
@@ -393,23 +354,18 @@
 
 /**fin de  confirmar dialogos */
 
-
 /*searcher clientes*/
 .searcher_clientes {
     z-index: 52001 !important;
 }
 
-
 .searcher_clientes .vs-popup--header {
-    padding: 20px 2px 2px 2px !important;
-    background-color: #fff !important;
+    background-color: rgba(var(--vs-secondary_theme), 1) !important;
 }
 
 .searcher_clientes .vs-popup--content {
     padding-top: 0px !important;
 }
-
-
 
 .searcher_clientes .vs-popup--header i {
     font-weight: bold !important;

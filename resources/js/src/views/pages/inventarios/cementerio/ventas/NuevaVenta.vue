@@ -191,35 +191,59 @@
                   </div>
 
                   <!--nombre del cliente-->
-                  <div
-                    class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 cursor-pointer"
-                  >
-                    <label class="text-sm opacity-75 font-bold cursor-pointer">
-                      Nombre del Cliente
-                      <span class="text-danger text-sm">(*)</span>
-                    </label>
-                    <vs-input
-                      size="large"
-                      icon="search"
-                      readonly
-                      v-validate="'required'"
-                      name="cliente_id"
-                      data-vv-as=" "
-                      type="text"
-                      class="w-full pb-1 pt-1 cursor-pointer"
-                      placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR LA VENTA."
-                      v-model="form.cliente"
-                      maxlength="100"
-                      @click="openBuscador=true"
-                    />
-                    <div>
-                      <span class="text-danger text-sm">{{ errors.first('cliente_id') }}</span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger text-sm"
-                        v-if="this.errores.cliente_id"
-                      >{{errores.cliente_id[0]}}</span>
+                  <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+                    <div class="flex flex-wrap mt-1">
+                      <div class="w-full px-2">
+                        <label class="text-sm opacity-75 font-bold">
+                          Nombre del Cliente
+                          <span class="text-danger text-sm">(*)</span>
+                        </label>
+                      </div>
+                      <div class="w-full sm:w-3/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
+                        <vs-button
+                          v-if="this.form.id_cliente==''"
+                          class="mt-2 py-3"
+                          title="Buscar"
+                          icon-pack="feather"
+                          size="large"
+                          icon="icon-search"
+                          color="primary"
+                          @click="openBuscador=true"
+                        ></vs-button>
+                        <vs-button
+                          v-else
+                          class="mt-2 py-3"
+                          title="Quitar"
+                          icon-pack="feather"
+                          size="large"
+                          icon="icon-x"
+                          color="danger"
+                          @click="quitarCliente"
+                        ></vs-button>
+                      </div>
+                      <div class="w-full sm:w-9/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2">
+                        <vs-input
+                          size="large"
+                          readonly
+                          v-validate="'required'"
+                          name="cliente_id"
+                          data-vv-as=" "
+                          type="text"
+                          class="w-full pb-1 pt-1 cursor-pointer"
+                          placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR LA VENTA."
+                          v-model="form.cliente"
+                          maxlength="100"
+                        />
+                        <div>
+                          <span class="text-danger text-sm">{{ errors.first('cliente_id') }}</span>
+                        </div>
+                        <div class="mt-2">
+                          <span
+                            class="text-danger text-sm"
+                            v-if="this.errores.cliente_id"
+                          >{{errores.cliente_id[0]}}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <!--fin nombre del cliente-->
@@ -369,235 +393,6 @@
             <div class="flex flex-wrap px-2">
               <div class="w-full pt-3 pb-3 px-2">
                 <h3 class="text-xl">
-                  <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Información del Titular
-                </h3>
-              </div>
-              <!--datos del titular-->
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Nombre completo
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="titular"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="75"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el nombre del titular"
-                  v-model="form.titular"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('titular') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger text-sm"
-                    v-if="this.errores.titular"
-                  >{{errores.titular[0]}}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Fecha de Nacimiento
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <datepicker
-                  :language="spanishDatepicker"
-                  :disabled-dates="disabledDates"
-                  name="fecha_nacimiento"
-                  data-vv-as=" "
-                  v-validate="'required'"
-                  format="yyyy-MM-dd"
-                  placeholder="Fecha de Nacimiento"
-                  v-model="form.fecha_nac"
-                  class="w-full pb-1 pt-1"
-                ></datepicker>
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('fecha_nacimiento') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger text-sm"
-                    v-if="this.errores.fecha_nac"
-                  >{{errores.fecha_nac[0]}}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Domicilio Completo
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="domicilio"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="150"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Domicilio Completo"
-                  v-model="form.domicilio"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('domicilio') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger text-sm"
-                    v-if="this.errores.domicilio"
-                  >{{errores.domicilio[0]}}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Ciudad
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="ciudad"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese la ciudad"
-                  v-model="form.ciudad"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('ciudad') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.ciudad">{{errores.ciudad[0]}}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Estado
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="estado"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el estado"
-                  v-model="form.estado"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('estado') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.estado">{{errores.estado[0]}}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">Tél. Domicilio</label>
-                <vs-input
-                  maxlength="25"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el teléfono del domicilio"
-                  v-model="form.tel_domicilio"
-                />
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Celular
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="celular"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required|min:10'"
-                  maxlength="25"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un número de celular"
-                  v-model="form.celular"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('celular') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger text-sm"
-                    v-if="this.errores.celular"
-                  >{{errores.celular[0]}}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">Tél. Oficina</label>
-                <vs-input
-                  maxlength="25"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono de oficina"
-                  v-model="form.tel_oficina"
-                />
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">RFC</label>
-                <vs-input
-                  maxlength="13"
-                  name="rfc"
-                  data-vv-validate-on="blur"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="e.j. MELM8305281H0"
-                  v-model="form.rfc"
-                  v-validate="'min:12|max:13'"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">Email</label>
-                <vs-input
-                  name="email"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'email'"
-                  maxlength="75"
-                  type="email"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el email"
-                  v-model="form.email"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('email') }}</span>
-                </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.email">{{errores.email[0]}}</span>
-                </div>
-              </div>
-
-              <!--fin de datos del titular-->
-
-              <vs-divider />
-
-              <div class="w-full pt-3 pb-3 px-2">
-                <h3 class="text-xl">
                   <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Titular Sustituto
                 </h3>
               </div>
@@ -690,7 +485,7 @@
 
             <div class="w-full pt-3 pb-3 px-2">
               <h3 class="text-xl">
-                <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />Información de los Beneficiarios
+                <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />Lista de Beneficiarios
               </h3>
             </div>
             <div v-if="form.beneficiarios.length>0">
@@ -1320,7 +1115,11 @@
       :confirmarButton="'Guardar Venta'"
     ></ConfirmarAceptar>
 
-    <ClientesBuscador :show="openBuscador" @closeBuscador="openBuscador=false"></ClientesBuscador>
+    <ClientesBuscador
+      :show="openBuscador"
+      @closeBuscador="openBuscador=false"
+      @retornoCliente="clienteSeleccionado"
+    ></ClientesBuscador>
   </div>
 </template>
 <script>
@@ -1680,7 +1479,7 @@ export default {
   data() {
     return {
       openBuscador: false,
-      cliente: "",
+
       idAreaInicial: 1,
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
@@ -1725,6 +1524,9 @@ export default {
       ],
       //fin var con mapa
       form: {
+        /**datos del cliente seleccionado */
+        cliente: "",
+        id_cliente: "",
         //ubicacion
         tipo_propiedades_id: 0,
         propiedades_id: 0,
@@ -2167,6 +1969,16 @@ export default {
     //remover beneficiario callback quita del array al beneficiario seleccionado
     remover_beneficiario_callback() {
       this.form.beneficiarios.splice(this.form.index_beneficiario, 1);
+    },
+    clienteSeleccionado(datos) {
+      /**obtiene los datos retornados del buscar cliente */
+      this.form.cliente = datos.nombre;
+      this.form.id_cliente = datos.id_nombre;
+      //alert(datos.id_cliente);
+    },
+    quitarCliente() {
+      this.form.id_cliente = "";
+      this.form.cliente = "";
     }
   },
   created() {}

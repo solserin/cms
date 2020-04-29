@@ -24,6 +24,11 @@ class ClientesController extends ApiController
         $numero_control = $request->numero_control;
         $status = $request->status;
 
+        $id_cliente = $request->id_cliente;
+        $rfc = $request->rfc;
+        $celular = $request->celular;
+        $nacionalidad = $request->nacionalidad_id;
+
 
         $resultado = $this->showAllPaginated(
             Clientes::select(
@@ -63,6 +68,26 @@ class ClientesController extends ApiController
                 ->where(function ($q) use ($cliente) {
                     if (trim($cliente) != '') {
                         $q->where('clientes.nombre', 'like', '%' . $cliente . '%');
+                    }
+                })
+                ->where(function ($q) use ($id_cliente) {
+                    if (trim($id_cliente) != '') {
+                        $q->where('clientes.id', '=', $id_cliente);
+                    }
+                })
+                ->where(function ($q) use ($celular) {
+                    if (trim($celular) != '') {
+                        $q->where('clientes.celular', 'like', '%' . $celular . '%');
+                    }
+                })
+                ->where(function ($q) use ($rfc) {
+                    if (trim($rfc) != '') {
+                        $q->where('clientes.rfc', 'like', '%' . $rfc . '%');
+                    }
+                })
+                ->where(function ($q) use ($nacionalidad) {
+                    if (trim($nacionalidad) != '') {
+                        $q->where('clientes.nacionalidades_id', '=', $nacionalidad);
                     }
                 })
                 /**descartando el cliente publico en general */
@@ -144,9 +169,9 @@ class ClientesController extends ApiController
                 'ciudad' => $request->ciudad,
                 'estado' => $request->estado,
                 'fecha_nac' =>  date('Y-m-d H:i:s', strtotime($request->fecha_nac)),
-                'telefono' => $request->telefono,
-                'celular' => $request->celular,
-                'telefono_extra' => $request->telefono_extra,
+                'telefono' => trim($request->telefono),
+                'celular' => trim($request->celular),
+                'telefono_extra' => trim($request->telefono_extra),
                 'email' => $request->email,
                 'nacionalidades_id' => (int) $request->nacionalidad['value'],
                 /**informacion fiscal */
@@ -156,7 +181,7 @@ class ClientesController extends ApiController
                 /**datos del contacto */
                 'nombre_contacto' => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,
-                'telefono_contacto' => $request->telefono_contacto,
+                'telefono_contacto' => trim($request->telefono_contacto),
 
                 'fecha_registro' => now(),
                 'registro_id' => (int) $request->user()->id,
@@ -225,9 +250,9 @@ class ClientesController extends ApiController
                 'ciudad' => $request->ciudad,
                 'estado' => $request->estado,
                 'fecha_nac' =>  date('Y-m-d H:i:s', strtotime($request->fecha_nac)),
-                'telefono' => $request->telefono,
-                'celular' => $request->celular,
-                'telefono_extra' => $request->telefono_extra,
+                'telefono' => trim($request->telefono),
+                'celular' => trim($request->celular),
+                'telefono_extra' => trim($request->telefono_extra),
                 'email' => $request->email,
                 'nacionalidades_id' => (int) $request->nacionalidad['value'],
                 /**informacion fiscal */
@@ -237,7 +262,7 @@ class ClientesController extends ApiController
                 /**datos del contacto */
                 'nombre_contacto' => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,
-                'telefono_contacto' => $request->telefono_contacto,
+                'telefono_contacto' => trim($request->telefono_contacto),
 
                 'fecha_modificacion' => now(),
                 'modifico_id' => (int) $request->user()->id,

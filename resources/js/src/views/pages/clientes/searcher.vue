@@ -13,7 +13,7 @@
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap">
-                <div class="w-full sm:w-12/12 md:w-8/12 lg:w-10/12 xl:w-10/12 px-2">
+                <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
                   <label class="text-sm opacity-75 font-bold">Nombre</label>
                   <vs-input
                     ref="nombre_cliente"
@@ -23,16 +23,16 @@
                     class="w-full pb-1 pt-1"
                     placeholder="Ej. Juan Pérez"
                     maxlength="12"
-                    v-model="serverOptions.cliente"
-                    v-on:keyup.enter="get_data(1)"
-                    v-on:blur="get_data(1,'blur')"
+                    v-model.trim="serverOptions.cliente"
+                    v-on:keyup.enter="get_data('cliente',1)"
+                    v-on:blur="get_data('cliente',1,'blur')"
                   />
                   <div>
                     <span class="text-danger text-sm">{{ errors.first('nombre_cliente') }}</span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-4/12 lg:w-2/12 xl:w-2/12 px-2">
+                <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                   <label class="text-sm opacity-75 font-bold">Núm. Cliente</label>
                   <vs-input
                     name="num_cliente"
@@ -40,8 +40,10 @@
                     type="text"
                     class="w-full pb-1 pt-1"
                     placeholder="Ej. 1258"
-                    maxlength="12"
-                    v-model="serverOptions.id_cliente"
+                    maxlength="6"
+                    v-model.trim="serverOptions.id_cliente"
+                    v-on:keyup.enter="get_data('id_cliente',1)"
+                    v-on:blur="get_data('id_cliente',1,'blur')"
                   />
                   <div>
                     <span class="text-danger text-sm">{{ errors.first('num_cliente') }}</span>
@@ -56,8 +58,10 @@
                     type="text"
                     class="w-full pb-1 pt-1"
                     placeholder="ej. DIS961210RG9"
-                    maxlength="12"
-                    v-model="serverOptions.rfc"
+                    maxlength="13"
+                    v-model.trim="serverOptions.rfc"
+                    v-on:keyup.enter="get_data('rfc',1)"
+                    v-on:blur="get_data('rfc',1,'blur')"
                   />
                   <div>
                     <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
@@ -72,8 +76,10 @@
                     type="text"
                     class="w-full pb-1 pt-1"
                     placeholder="ej. 6691435645"
-                    maxlength="12"
-                    v-model="serverOptions.celular"
+                    maxlength="25"
+                    v-model.trim="serverOptions.celular"
+                    v-on:keyup.enter="get_data('celular',1)"
+                    v-on:blur="get_data('celular',1,'blur')"
                   />
                   <div>
                     <span class="text-danger text-sm">{{ errors.first('celular') }}</span>
@@ -150,7 +156,7 @@
                     icon="icon-check-circle"
                     color="success"
                     type="flat"
-                    @click="openModificar(data[indextr].id)"
+                    @click="retornarSeleccion(data[indextr].nombre,data[indextr].id)"
                   ></vs-button>
                 </vs-td>
               </vs-tr>
@@ -185,8 +191,11 @@ export default {
     }
   },
   watch: {
+    "serverOptions.nacionalidad": function(newVal, previousVal) {
+      this.get_data("", 1);
+    },
     actual: function(newValue, oldValue) {
-      this.get_data(this.actual);
+      this.get_data("", this.actual);
     },
     show: function(newValue, oldValue) {
       if (newValue == true) {
@@ -198,6 +207,14 @@ export default {
         ).onclick = () => {
           this.cancelar();
         };
+        this.get_data("", 1);
+      } else {
+        /**cerrar y limpiar el formulario */
+        this.serverOptions.id_cliente = "";
+        this.serverOptions.cliente = "";
+        this.serverOptions.rfc = "";
+        this.serverOptions.celular = "";
+        this.serverOptions.nacionalidad = this.nacionalidades[0];
       }
     }
   },
@@ -229,7 +246,8 @@ export default {
         nacionalidad: {
           value: "122",
           label: "Mexicana"
-        }
+        },
+        nacionalidad_id: ""
       },
       verPaginado: true,
       total: 0,
@@ -244,8 +262,8 @@ export default {
       this.serverOptions.cliente = "";
       this.serverOptions.rfc = "";
       this.serverOptions.celular = "";
-      this.serverOptions.cliente = "";
-      this.get_data(this.actual);
+      this.serverOptions.nacionalidad = this.nacionalidades[0];
+      this.get_data("", this.actual);
     },
     cancelar() {
       this.$emit("closeBuscador");
@@ -268,16 +286,30 @@ export default {
         })
         .catch(err => {});
     },
-    get_data(page, evento = "") {
+    get_data(origen = "", page, evento = "") {
       if (evento == "blur") {
-        if (
-          this.serverOptions.cliente != "" ||
-          this.serverOptions.cliente == ""
-        ) {
-          //la funcion no avanza
-          return false;
+        return;
+      } else {
+        /**checando el origen */
+        if (origen == "cliente") {
+          if (this.serverOptions.cliente.trim() == "") {
+            return;
+          }
+        } else if (origen == "id_cliente") {
+          if (this.serverOptions.id_cliente.trim() == "") {
+            return;
+          }
+        } else if (origen == "rfc") {
+          if (this.serverOptions.rfc.trim() == "") {
+            return;
+          }
+        } else if (origen == "celular") {
+          if (this.serverOptions.celular.trim() == "") {
+            return;
+          }
         }
       }
+
       let self = this;
       if (clientes.cancel) {
         clientes.cancel("Operation canceled by the user.");
@@ -287,10 +319,10 @@ export default {
       this.serverOptions.page = page;
       this.serverOptions.per_page = 5;
       this.serverOptions.status = 1;
+      this.serverOptions.nacionalidad_id = this.serverOptions.nacionalidad.value;
       clientes
         .get_clientes(this.serverOptions)
         .then(res => {
-          //console.log("get_data -> res", res);
           this.clientes = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
@@ -318,11 +350,15 @@ export default {
     },
     handleSearch(searching) {},
     handleChangePage(page) {},
-    handleSort(key, active) {}
+    handleSort(key, active) {},
+    retornarSeleccion(nombre = "", id = "") {
+      /**retorna los datos seleccionados a la venta que los solicita */
+      this.$emit("retornoCliente", { id_cliente: id, nombre: nombre });
+      this.$emit("closeBuscador");
+    }
   },
   created() {
     this.get_nacionalidades();
-    this.get_data(this.actual);
   }
 };
 </script>

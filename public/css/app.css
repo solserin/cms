@@ -150,7 +150,7 @@
 }
 
 [dir] .vs-table--tbody-table tr {
-  background-color: #E7EBF0;
+  background-color: #e7ebf0;
 }
 
 .vs-table--thead tr {
@@ -405,8 +405,7 @@
 }
 
 [dir] .searcher_clientes .vs-popup--header {
-  padding: 20px 2px 2px 2px !important;
-  background-color: #fff !important;
+  background-color: rgba(var(--vs-secondary_theme), 1) !important;
 }
 
 [dir] .searcher_clientes .vs-popup--content {
