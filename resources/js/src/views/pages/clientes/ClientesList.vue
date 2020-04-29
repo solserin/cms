@@ -328,8 +328,8 @@ export default {
     get_data(page, evento = "") {
       if (evento == "blur") {
         if (
-          this.serverOptions.titular != "" ||
-          this.serverOptions.titular == ""
+          this.serverOptions.cliente != "" ||
+          this.serverOptions.cliente == ""
         ) {
           //la funcion no avanza
 

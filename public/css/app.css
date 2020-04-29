@@ -70,28 +70,32 @@
 @media (min-width: 576px) {
   .usuarios .vs-popup,
   .aet-popup .vs-popup {
-    width: 85% !important;
+    width: 90% !important;
+    min-height: 90vh !important;
   }
 }
 
 @media (min-width: 768px) {
   .usuarios .vs-popup,
   .aet-popup .vs-popup {
-    width: 85% !important;
+    width: 90% !important;
+    min-height: 90vh !important;
   }
 }
 
 @media (min-width: 992px) {
   .usuarios .vs-popup,
   .aet-popup .vs-popup {
-    width: 75% !important;
+    width: 90% !important;
+    min-height: 90vh !important;
   }
 }
 
 @media (min-width: 1200px) {
   .usuarios .vs-popup,
   .aet-popup .vs-popup {
-    width: 80% !important;
+    width: 90% !important;
+    min-height: 90vh !important;
   }
 }
 
@@ -393,6 +397,40 @@
 /*fin confirmar (sin password) checker*/
 
 /**fin de  confirmar dialogos */
+
+/*searcher clientes*/
+
+.searcher_clientes {
+  z-index: 52001 !important;
+}
+
+[dir] .searcher_clientes .vs-popup--header {
+  padding: 20px 2px 2px 2px !important;
+  background-color: #fff !important;
+}
+
+[dir] .searcher_clientes .vs-popup--content {
+  padding-top: 0px !important;
+}
+
+.searcher_clientes .vs-popup--header i {
+  font-weight: bold !important;
+}
+
+.searcher_clientes .vs-popup--title h3 {
+  color: #22292f !important;
+  text-transform: capitalize !important;
+  font-weight: normal !important;
+  font-size: 1.4em !important;
+}
+
+[dir=ltr] .searcher_clientes .vs-popup--title h3 {
+  margin-left: 10px !important;
+}
+
+[dir=rtl] .searcher_clientes .vs-popup--title h3 {
+  margin-right: 10px !important;
+}
 
 /*=========================================================================================
   File Name: main.scss

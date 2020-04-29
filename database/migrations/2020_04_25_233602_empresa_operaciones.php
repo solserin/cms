@@ -25,7 +25,7 @@ class EmpresaOperaciones extends Migration
         Schema::create('empresa_operaciones', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('referencia_pago', 5)->nullable();
-            $table->string('descipcion', 75)->nullable();
+            $table->string('descripcion', 75)->nullable();
             $table->string('nombre_corto', 50)->nullable();
         });
     }

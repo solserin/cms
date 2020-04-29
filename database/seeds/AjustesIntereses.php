@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class AjustesInteresesPropiedadesSeeder extends Seeder
+class AjustesIntereses extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,7 @@ class AjustesInteresesPropiedadesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('ajustes_intereses_propiedades')->insert(
+        DB::table('ajustes_intereses')->insert(
             [
                 'tasa_fija_anual' => 12,
                 'dias_antes_vencimiento' => 5,

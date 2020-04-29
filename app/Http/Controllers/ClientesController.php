@@ -30,16 +30,12 @@ class ClientesController extends ApiController
                 'id',
                 'nombre',
                 'direccion',
-                'celular',
                 'email',
                 'rfc as rfc_raw',
                 'status',
-                DB::raw(
-                    '(CASE 
-                        WHEN clientes.rfc = NULL THEN "N/A"
-                        ELSE rfc 
-                        END) AS rfc'
-                ),
+                DB::Raw('IFNULL( clientes.rfc , "N/A" ) as rfc'),
+                DB::Raw('IFNULL( clientes.celular , "No registrado" ) as celular'),
+
                 'nacionalidades_id',
                 'generos_id'
             )->with('nacionalidad')->with('genero')->where(function ($q) use ($status) {

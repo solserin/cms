@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         /**sedders de SAT */
         $this->call(SATRegimenesSeeder::class);
         //$this->call(SATMonedasSeeder::class);
-        //$this->call(formasPagoSeeder::class);
+        $this->call(formasPagoSeeder::class);
         /**sedders de SAT */
 
 
@@ -44,21 +44,22 @@ class DatabaseSeeder extends Seeder
 
 
         /**seeders para el control de ventas del cementerio y pagos */
+        $this->call(AjustesIntereses::class);
         $this->call(ConceptosPagosSeeder::class);
         $this->call(MotivosCancelacionSeeder::class);
         $this->call(TipoPagosSeeder::class);
+        $this->call(EmpresaOperaciones::class);
         /**seeder de cementerio */
-        //$this->call(AjustesInteresesPropiedadesSeeder::class);
-        //$this->call(tiposPropiedadesSeeder::class);
-        //$this->call(PropiedadesSeeder::class);
-        //$this->call(columnasFilasSeeder::class);
-        //$this->call(TipoPreciosSeeder::class);
-        //$this->call(PreciosPropiedadesSeeder::class);
-        //$this->call(ventasReferenciasSeeder::class);
+        //
+        $this->call(tiposPropiedadesSeeder::class);
+        $this->call(PropiedadesSeeder::class);
+        $this->call(columnasFilasSeeder::class);
+        $this->call(TipoPreciosSeeder::class);
+        $this->call(PreciosPropiedadesSeeder::class);
+        $this->call(antiguedadVentasSeeder::class);
         /**pagos */
         //
-        //$this->call(antiguedadVentasSeeder::class);
-        //$this->call(AjustesSeeder::class);
+        //
         /**fin de seeder de cementerio */
 
 

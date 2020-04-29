@@ -190,6 +190,39 @@
                     </h3>
                   </div>
 
+                  <!--nombre del cliente-->
+                  <div
+                    class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 cursor-pointer"
+                  >
+                    <label class="text-sm opacity-75 font-bold cursor-pointer">
+                      Nombre del Cliente
+                      <span class="text-danger text-sm">(*)</span>
+                    </label>
+                    <vs-input
+                      size="large"
+                      icon="search"
+                      readonly
+                      v-validate="'required'"
+                      name="cliente_id"
+                      data-vv-as=" "
+                      type="text"
+                      class="w-full pb-1 pt-1 cursor-pointer"
+                      placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR LA VENTA."
+                      v-model="form.cliente"
+                      maxlength="100"
+                      @click="openBuscador=true"
+                    />
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('cliente_id') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.cliente_id"
+                      >{{errores.cliente_id[0]}}</span>
+                    </div>
+                  </div>
+                  <!--fin nombre del cliente-->
                   <!--vendedor-->
                   <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
                     <label class="text-sm opacity-75 font-bold">
@@ -1286,6 +1319,8 @@
       :accion="'He revisado la información y quiero guardar la venta'"
       :confirmarButton="'Guardar Venta'"
     ></ConfirmarAceptar>
+
+    <ClientesBuscador :show="openBuscador" @closeBuscador="openBuscador=false"></ClientesBuscador>
   </div>
 </template>
 <script>
@@ -1299,6 +1334,7 @@ import vSelect from "vue-select";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
+import ClientesBuscador from "@pages/clientes/searcher.vue";
 
 /**VARIABLES GLOBALES */
 import { alfabeto } from "@/VariablesGlobales";
@@ -1310,7 +1346,8 @@ export default {
     Datepicker,
     Mapa,
     Confirmar,
-    ConfirmarAceptar
+    ConfirmarAceptar,
+    ClientesBuscador
   },
   props: {
     show: {
@@ -1642,6 +1679,8 @@ export default {
   },
   data() {
     return {
+      openBuscador: false,
+      cliente: "",
       idAreaInicial: 1,
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
