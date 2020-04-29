@@ -407,7 +407,7 @@ export default {
       this.verFormularioClientes = true;
     },
     retorno_id(dato) {
-      //alert(dato);
+      this.get_data(this.actual);
     },
     deleteCliente(id_cliente, nombre) {
       this.accionNombre = "deshabilitar cliente " + nombre;
