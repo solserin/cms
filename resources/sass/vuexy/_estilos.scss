@@ -57,6 +57,7 @@
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
 @media (min-width: 576px) {
+
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -68,6 +69,7 @@
 
 // Small devices (landscape phones, less than 768px)
 @media (min-width: 768px) {
+
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -79,6 +81,7 @@
 
 // Medium devices (tablets, less than 992px)
 @media (min-width: 992px) {
+
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -90,6 +93,7 @@
 
 // Large devices (desktops, less than 1200px)
 @media (min-width: 1200px) {
+
     .usuarios,
     .aet-popup {
         .vs-popup {
@@ -360,7 +364,7 @@
 }
 
 .searcher_clientes .vs-popup--header {
-    background-color: rgba(var(--vs-secondary_theme), 1) !important;
+    background-color: rgba(var(--vs-primary), 1) !important;
 }
 
 .searcher_clientes .vs-popup--content {
@@ -373,7 +377,7 @@
 
 .searcher_clientes .vs-popup--title h3 {
     margin-left: 10px !important;
-    color: #22292f !important;
+    color: #fff !important;
     text-transform: capitalize !important;
     font-weight: normal !important;
     font-size: 1.4em !important;

@@ -10,27 +10,57 @@
       <!--inicio venta-->
       <vx-card class="pt-5">
         <template slot="no-body">
+          <div class="flex flex-wrap pb-5">
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-3">
+              <h3 class="text-xl">
+                <feather-icon icon="ShoppingCartIcon" class="mr-2 mb-5" svgClasses="w-5 h-5" />
+                <span class="font-bold text-primary uppercase">
+                  <span
+                    class="uppercase"
+                    v-if="getTipoformulario=='agregar'"
+                  >Formulario de Ventas de Terrenos en Cementerio</span>
+                  <span v-else class="uppercase">Modificación de Ventas de Terrenos en Cementerio</span>
+                </span>
+              </h3>
+            </div>
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-3">
+              <div class="flex flex-wrap" v-if="getTipoformulario=='agregar'">
+                <a href="#" target="_blank" class="tutorial text-base m-0 ml-auto">
+                  <feather-icon icon="PlayIcon" class="mr-2" svgClasses="w-5 h-5" />
+                  <span class="mt-2 text-black">
+                    Ver guía de usuario "
+                    <span class="font-semibold">Vender Terreno</span> "
+                  </span>
+                </a>
+              </div>
+              <div class="flex flex-wrap" v-else>
+                <a href="#" target="_blank" class="tutorial text-base m-0 ml-auto">
+                  <feather-icon icon="PlayIcon" class="mr-2" svgClasses="w-5 h-5" />
+                  <span class="mt-2 text-black">
+                    Ver guía de usuario "
+                    <span class="font-semibold">Modificar venta de Terreno</span> "
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
           <div class="venta-details">
             <div class="flex flex-wrap">
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
                 <!--mapa del cementerio-->
                 <div mt-5>
                   <Mapa
-                    :disabled="false"
+                    :disabled="tienePagosVencidos || ventaLiquidada"
                     :idAreaInicial="idAreaInicial"
                     @getDatosTipoPropiedad="getDatosTipoPropiedad"
+                    @respuestaDeshabilitado="respuestaDeshabilitado"
                   ></Mapa>
                 </div>
 
                 <!--fin del mapa del cementerio-->
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <h3 class="text-xl">
-                  <feather-icon icon="ShoppingCartIcon" class="mr-2 mb-5" svgClasses="w-5 h-5" />
-                  <span
-                    class="font-bold text-primary"
-                  >FORMULARIO DE REGISTRO DE VENTAS DEL CEMENTERIO</span>
-                </h3>
                 <div class="flex flex-wrap">
                   <div class="w-full">
                     <h3 class="text-xl">
@@ -78,6 +108,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <v-select
+                      :disabled="tienePagosVencidos || ventaLiquidada"
                       :options="filas"
                       :clearable="false"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -111,7 +142,7 @@
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
                       v-model="form.lotes"
                       class="mb-4 sm:mb-0 pb-1 pt-1"
-                      :disabled="this.datosAreas.tipo_propiedades_id!=4"
+                      :disabled="(this.datosAreas.tipo_propiedades_id!=4 || tienePagosVencidos || ventaLiquidada)"
                       v-validate:ubicacion_validacion_computed.immediate="'required'"
                       name="ubicacion_validacion"
                       data-vv-as=" "
@@ -137,6 +168,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <v-select
+                      :disabled="ModificarVenta"
                       :options="ventasAntiguedad"
                       :clearable="false"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -163,15 +195,17 @@
                     <div class="mt-3">
                       <vs-radio
                         vs-name="tipoVenta"
-                        v-model="form.venta_referencia_id"
+                        v-model="form.empresa_operaciones_id"
                         :vs-value="1"
                         class="mr-4"
+                        :disabled="tienePagosVencidos || ventaLiquidada"
                       >Uso inmediato</vs-radio>
                       <vs-radio
                         vs-name="tipoVenta"
-                        v-model="form.venta_referencia_id"
+                        v-model="form.empresa_operaciones_id"
                         :vs-value="2"
                         class="mr-4"
+                        :disabled="tienePagosVencidos || ventaLiquidada"
                       >A futuro</vs-radio>
                     </div>
                   </div>
@@ -226,7 +260,7 @@
                           size="large"
                           readonly
                           v-validate="'required'"
-                          name="cliente_id"
+                          name="id_cliente"
                           data-vv-as=" "
                           type="text"
                           class="w-full pb-1 pt-1 cursor-pointer"
@@ -235,13 +269,13 @@
                           maxlength="100"
                         />
                         <div>
-                          <span class="text-danger text-sm">{{ errors.first('cliente_id') }}</span>
+                          <span class="text-danger text-sm">{{ errors.first('id_cliente') }}</span>
                         </div>
                         <div class="mt-2">
                           <span
                             class="text-danger text-sm"
-                            v-if="this.errores.cliente_id"
-                          >{{errores.cliente_id[0]}}</span>
+                            v-if="this.errores.id_cliente"
+                          >{{errores.id_cliente[0]}}</span>
                         </div>
                       </div>
                     </div>
@@ -283,6 +317,7 @@
                       <span class="text-danger text-sm">(*)</span>
                     </label>
                     <datepicker
+                      :disabled="tienePagosRealizados"
                       :language="spanishDatepicker"
                       :disabled-dates="disabledDates"
                       name="fecha_venta"
@@ -644,6 +679,7 @@
                       v-validate:plan_de_venta_computed.immediate="'required'"
                       name="plan_venta"
                       data-vv-as=" "
+                      :disabled="tienePagosVencidos || ventaLiquidada"
                     >
                       <div slot="no-options">No Se Ha Seleccionado Ningún Área</div>
                     </v-select>
@@ -666,12 +702,13 @@
                     <vs-input
                       name="precio_neto"
                       data-vv-as=" "
-                      v-validate="'required|numeric'"
+                      v-validate="'required|decimal:2'"
                       type="text"
                       class="w-full pb-1 pt-1"
                       placeholder="Precio Neto de la Propiedad"
                       v-model="form.planVenta.precio_neto"
                       readonly
+                      :disabled="tienePagosVencidos || ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('precio_neto') }}</span>
@@ -691,12 +728,13 @@
                     <vs-input
                       name="descuento_neto"
                       data-vv-as=" "
-                      v-validate="'numeric|min_value:0|max_value:'+this.form.planVenta.precio_neto"
+                      v-validate="'decimal:2|min_value:0|max_value:'+this.form.planVenta.precio_neto"
                       maxlength="7"
                       type="text"
                       class="w-full pb-1 pt-1"
                       placeholder="$ 0.00"
                       v-model="form.descuento"
+                      :disabled="tienePagosVencidos || ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('descuento_neto') }}</span>
@@ -716,12 +754,13 @@
                     <vs-input
                       name="total_pagar"
                       data-vv-as=" "
-                      v-validate="'numeric|min_value:0'"
+                      v-validate="'decimal:2|min_value:0'"
                       type="text"
                       class="w-full pb-1 pt-1"
                       placeholder="$ 0.00"
                       v-model="form.precio_neto"
                       readonly
+                      :disabled="tienePagosVencidos || ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('total_pagar') }}</span>
@@ -754,13 +793,13 @@
                     <vs-input
                       name="cuota_inicial"
                       data-vv-as=" "
-                      v-validate="'required|numeric|min_value:'+(cuota_inicial)+'|max_value:'+(maxima_cuota_inicial)"
+                      v-validate="'required|decimal:2|min_value:'+(cuota_inicial)+'|max_value:'+(maxima_cuota_inicial)"
                       maxlength="7"
                       type="text"
                       class="w-full pb-1 pt-1"
                       placeholder="$ 0.00"
                       v-model="form.enganche_inicial"
-                      :disabled="plan_venta"
+                      :disabled="plan_venta || tienePagosVencidos || ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('cuota_inicial') }}</span>
@@ -853,7 +892,6 @@
                           >{{errores.banco[0]}}</span>
                         </div>
                       </div>
-
                       <div
                         class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                         v-if="this.form.formaPago.value==3"
@@ -924,19 +962,28 @@
                   <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5">
                     <div
                       class="pb-6 text-center"
-                      v-if="this.form.planVenta.precio_neto==this.form.descuento"
+                      v-if="this.form.planVenta.precio_neto!='' && this.form.planVenta.precio_neto==this.form.descuento"
                     >
                       <span
                         class="bg-danger text-white font-medium pr-3 pl-3"
                       >Ojo, está haciendo un descuento del 100%, verifique si desea continuar.</span>
                     </div>
                     <vs-button
+                      v-if="getTipoformulario=='agregar'"
                       icon-pack="feather"
                       icon="icon-database"
                       color="success"
                       class="w-full"
                       @click="acceptAlert()"
                     >Guardar Venta</vs-button>
+                    <vs-button
+                      v-else
+                      icon-pack="feather"
+                      icon="icon-database"
+                      color="success"
+                      class="w-full"
+                      @click="acceptAlert()"
+                    >Modificar Venta</vs-button>
                   </div>
                   <div class="w-full px-2 pt-3 pb-3">
                     <div>
@@ -1008,7 +1055,7 @@
                       <div
                         class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
                       >
-                        <span v-if="this.form.venta_referencia_id==1">Uso inmediato</span>
+                        <span v-if="this.form.empresa_operaciones_id==1">Uso inmediato</span>
                         <span v-else>A futuro</span>
                       </div>
                     </div>
@@ -1026,7 +1073,7 @@
                           >Pago Único de {{this.form.precio_neto | numFormat('0,000.00')}} Pesos</span>
                           <span
                             v-else
-                          >Pago Inicial de {{this.form.enganche_inicial | numFormat('0,000.00')}} Pesos. Más {{this.form.planVenta.value}} Mensualidades de {{((this.form.precio_neto-this.form.enganche_inicial)/this.form.planVenta.value) | numFormat('0,000.00')}} Pesos</span>
+                          >Pago Inicial de ${{this.form.enganche_inicial | numFormat('0,000.00')}} Pesos. Más {{this.form.planVenta.value}} Mensualidades de ${{((this.form.precio_neto-this.form.enganche_inicial)/this.form.planVenta.value) | numFormat('0,000.00')}} Pesos</span>
                         </span>
                         <span v-else class="text-danger">Seleccione un Plan de Venta</span>
                       </div>
@@ -1041,7 +1088,7 @@
                         <!--obtencion del precio total menos iva-->
                         <span
                           class="text-gray-900 font-medium"
-                        >{{(this.form.precio_neto*.84) | numFormat('0,000.00')}} Pesos</span>
+                        >${{(this.form.precio_neto*.84) | numFormat('0,000.00')}} Pesos</span>
                       </div>
                     </div>
                     <vs-divider />
@@ -1066,7 +1113,7 @@
                         <!--obtencion del  iva-->
                         <span
                           class="text-gray-900 font-medium"
-                        >{{(this.form.precio_neto*.16) | numFormat('0,000.00')}} Pesos</span>
+                        >${{(this.form.precio_neto*.16) | numFormat('0,000.00')}} Pesos</span>
                       </div>
                     </div>
                     <vs-divider />
@@ -1077,7 +1124,7 @@
                       <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right">
                         <span
                           class="text-gray-900 font-medium"
-                        >{{this.form.precio_neto | numFormat('0,000.00')}} Pesos</span>
+                        >${{this.form.precio_neto | numFormat('0,000.00')}} Pesos</span>
                       </div>
                     </div>
                     <vs-divider />
@@ -1152,23 +1199,41 @@ export default {
     show: {
       type: Boolean,
       required: true
+    },
+    //para saber que tipo de formulario es
+    tipo: {
+      type: String,
+      required: true
+    },
+    id_venta: {
+      type: Number,
+      required: false,
+      default: 0
     }
   },
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
-        this.get_ventas_referencias_propiedades();
         this.get_vendedores();
         this.get_sat_formas_pago();
-        this.get_antiguedades();
-        this.idAreaInicial = 29;
+        if (this.getTipoformulario == "agregar") {
+          this.idAreaInicial = 29;
+          this.form.empresa_operaciones_id = 1;
+        } else {
+          /**pasando el valor de la venta id */
+          this.form.id_venta = this.get_venta_id;
+          this.form.empresa_operaciones_id = "";
+          /**se cargan los datos al formulario */
+          this.ConsultarVenta();
+        }
       } else {
+        this.idAreaInicial = 0;
         /**forzando el cambio de area para que se actualice al reabrir la ventana */
-        if (this.idAreaInicial > 2) {
+        /*if (this.idAreaInicial > 2) {
           this.idAreaInicial -= 1;
         } else {
           this.idAreaInicial += 1;
-        }
+        }*/
       }
     },
 
@@ -1200,11 +1265,23 @@ export default {
                 }
               }
               //la primero opcion
-
               this.form.lotes = this.lotes[1];
               return;
             }
           });
+          if (this.lote_origen != "") {
+            this.lotes.forEach(element => {
+              if (element.value == this.lote_origen) {
+                //lo reinicio para que no afecte en otro cambio de fila ya dentro de modificar
+                this.lote_origen = "";
+                this.form.lotes = element;
+                return;
+              }
+            });
+          } else {
+            //la primero opcion
+            this.form.lotes = this.lotes[1];
+          }
         } else {
           this.lotes = [];
           this.lotes.push({ label: "Seleccione 1", value: "" });
@@ -1256,15 +1333,33 @@ export default {
           }
         }
         //la primero opcion
-        this.form.filas = this.filas[1];
-        //cargo los precios
+        if (this.getTipoformulario == "agregar") {
+          this.form.filas = this.filas[1];
+        } else {
+          if (this.fila_origen != "") {
+            this.filas.forEach(element => {
+              if (element.value == this.datosVenta.fila_raw) {
+                this.form.filas = element;
+              }
+            });
+            this.fila_origen = "";
+          } else {
+            //la primero opcion
+            this.form.filas = this.filas[1];
+          }
+        }
 
-        if (this.form.venta_referencia_id > 0) this.cargarPlanes();
+        //cargo los precios
+        if (this.form.empresa_operaciones_id != "") {
+          this.cargarPlanes();
+        }
       }
     },
 
-    "form.venta_referencia_id": function(newValue, oldValue) {
-      if (this.form.venta_referencia_id > 0) this.cargarPlanes();
+    "form.empresa_operaciones_id": function(newValue, oldValue) {
+      if (newValue != "") {
+        this.cargarPlanes();
+      }
     },
 
     "form.planVenta": function(newValue, oldValue) {
@@ -1274,8 +1369,12 @@ export default {
         this.form.enganche_inicial = newValue.precio_neto - this.form.descuento;
       } else if (newValue.value > 0) {
         this.form.precio_neto = newValue.precio_neto - this.form.descuento;
-        this.form.enganche_inicial =
-          (newValue.precio_neto - this.form.descuento) / 10;
+        if (this.form.enganche_inicial_origen == "") {
+          this.form.enganche_inicial =
+            (newValue.precio_neto - this.form.descuento) / 10;
+        } else {
+          this.form.enganche_inicial = this.form.enganche_inicial_origen;
+        }
       }
     },
     "form.descuento": function(newValue, oldValue) {
@@ -1314,13 +1413,60 @@ export default {
     //fin de watchs con mapa
   },
   computed: {
+    /**checando si la venta ya fue liquidada*/
+    ventaLiquidada: function() {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.restante_pagar == 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    /**checando si ya hay pagos vigentes realizados en la venta, por lo cual no puede cambiar la fecha de la venta */
+    tienePagosRealizados: function() {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.numero_pagos_realizados > 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    /**checar si tiene pagos vencidos */
+    tienePagosVencidos: function() {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.pagos_vencidos > 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    /**validar si es modificar el formulario */
+    ModificarVenta: function() {
+      if (this.getTipoformulario == "modificar") {
+        return true;
+      } else return false;
+    },
+
+    getTipoformulario: {
+      get() {
+        return this.tipo;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
+    get_venta_id: {
+      get() {
+        return this.id_venta;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
     banco_computed: function() {
       if (this.form.formaPago.value != 1) {
         return this.form.banco;
       } else return true;
     },
     opcionPagar_validacion_computed: function() {
-      if (this.form.precio_neto == 0) {
+      if (this.form.precio_neto == 0 || this.ModificarVenta) {
         return true;
       } else return false;
     },
@@ -1334,7 +1480,7 @@ export default {
     },
     tipo_venta: function() {
       //definiendo el tipo de uso, si es true es venta de uso inmediato si es false es venta de uso futuro
-      if (this.form.venta_referencia_id == 1) {
+      if (this.form.empresa_operaciones_id == 1) {
         //uso inmediato
         return true;
       } else {
@@ -1418,7 +1564,7 @@ export default {
 
     num_solicitud_validacion_computed: function() {
       //checo que el dato venta a futuro este activo
-      if (this.form.venta_referencia_id == 2) {
+      if (this.form.empresa_operaciones_id == 2) {
         return this.form.num_solicitud;
       } else return true;
     },
@@ -1496,8 +1642,21 @@ export default {
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
       accionNombre: "Guardar Venta",
-      ventasReferencias: [],
-      ventasAntiguedad: [],
+      ventasAntiguedad: [
+        {
+          label: "NUEVA VENTA",
+          value: 1
+        },
+        {
+          label: "A/S SIN LIQUIDAR",
+          value: 2
+        },
+        {
+          label: "A/S - LIQUIDADA",
+          value: 3
+        }
+      ],
+
       filas: [],
       lotes: [],
       vendedores: [],
@@ -1511,6 +1670,7 @@ export default {
         }
       ],
       datosAreas: [],
+      datosVenta: [],
       formasPago: [],
       opcionesPagar: [
         {
@@ -1524,6 +1684,7 @@ export default {
       ],
       //fin var con mapa
       form: {
+        id_venta: "",
         /**datos del cliente seleccionado */
         cliente: "",
         id_cliente: "",
@@ -1535,17 +1696,6 @@ export default {
         ubicacion: "",
         //fin de ubicacion
         fecha_venta: "",
-        //datos del titular
-        titular: "",
-        domicilio: "",
-        ciudad: "",
-        estado: "",
-        tel_domicilio: "",
-        celular: "",
-        tel_oficina: "",
-        rfc: "",
-        email: "",
-        fecha_nac: "",
         /**titular substituto */
         titular_sustituto: "",
         parentesco_titular_sustituto: "",
@@ -1554,7 +1704,7 @@ export default {
         num_solicitud: "",
         convenio: "",
         titulo: "",
-        venta_referencia_id: 1,
+        empresa_operaciones_id: "",
         filas: {
           label: "Seleccione 1",
           value: ""
@@ -1571,10 +1721,12 @@ export default {
           enganche_inicial: ""
         },
         ventaAntiguedad: {
-          label: "Seleccione 1",
-          value: ""
+          label: "NUEVA VENTA",
+          value: 1
         },
         enganche_inicial: "",
+        /**muestra el enganche original con el que se hizo la venta */
+        enganche_inicial_origen: "",
         precio_neto: "",
         descuento: 0,
         minima_cuota_inicial: 0,
@@ -1629,13 +1781,18 @@ export default {
             //una vez todo validado, actualizo los ultimos datos de ubicacion
             this.form.propiedades_id = this.datosAreas.id;
             this.form.tipo_propiedades_id = this.datosAreas.tipo_propiedades_id;
-
             this.form.ubicacion = this.crear_ubicacion_computed;
             this.form.minima_cuota_inicial = this.cuota_inicial;
             this.form.maxima_cuota_inicial = this.maxima_cuota_inicial;
             //fin de actualizar datos de ubicacion
-            this.callBackConfirmarAceptar = this.guardarVenta;
-            this.openConfirmarAceptar = true;
+            if (this.getTipoformulario == "agregar") {
+              this.callBackConfirmarAceptar = this.guardarVenta;
+              this.openConfirmarAceptar = true;
+            } else {
+              /**es modificacion */
+              this.callBackConfirmarAceptar = this.modificarVenta;
+              this.openConfirmarAceptar = true;
+            }
           }
         })
         .catch(() => {});
@@ -1648,7 +1805,6 @@ export default {
       cementerio
         .guardarVenta(this.form)
         .then(res => {
-          //console.log(res);
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -1659,7 +1815,7 @@ export default {
               color: "success",
               time: 5000
             });
-            //this.$emit("ver_pdfs_nueva_venta", res.data);
+            this.$emit("ver_pdfs_nueva_venta", res.data);
             this.cerrarVentana();
           } else {
             this.$vs.notify({
@@ -1676,7 +1832,7 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            //console.log("guardarVenta -> err.response", err.response);
+            console.log("guardarVenta -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -1712,6 +1868,104 @@ export default {
                 time: 5000
               });
               //console.log(err.response);
+            } else if (err.response.status == 409) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Guardar Venta",
+                text: err.response.data.error,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 8000
+              });
+            }
+          }
+          this.$vs.loading.close();
+        });
+    },
+
+    modificarVenta() {
+      //aqui mando guardar los datos
+      this.errores = [];
+      this.$vs.loading();
+      cementerio
+        .modificarVenta(this.form)
+        .then(res => {
+          if (res.data >= 1) {
+            //success
+            this.$vs.notify({
+              title: "Ventas de Propiedades",
+              text: "Se ha guardado la venta correctamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 5000
+            });
+            this.$emit("ver_pdfs_nueva_venta", res.data);
+            this.cerrarVentana();
+          } else {
+            this.$vs.notify({
+              title: "Ventas de Propiedades",
+              text: "Error al guardar la venta, por favor reintente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 4000
+            });
+          }
+
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log("modificarVenta -> err.response", err.response);
+
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              //checo si existe cada error
+              this.errores = err.response.data.error;
+              if (this.errores.ubicacion) {
+                //la propiedad esa ya ha sido vendida
+                this.$vs.notify({
+                  title: "Seleccionar Terreno",
+                  text: "Este terreno ya ha sido vendido previamente.",
+                  iconPack: "feather",
+                  icon: "icon-alert-circle",
+                  color: "danger",
+                  time: 5000
+                });
+              }
+
+              this.$vs.notify({
+                title: "Modificar Venta",
+                text: "Verifique los errores encontrados en los datos.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 5000
+              });
+              //console.log(err.response);
+            } else if (err.response.status == 409) {
+              //este error es por alguna condicion que el contrano no cumple para modificar
+              //la propiedad esa ya ha sido vendida
+              this.$vs.notify({
+                title: "Modificar información de la venta",
+                text: err.response.data.error,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 30000
+              });
             }
           }
           this.$vs.loading.close();
@@ -1719,27 +1973,6 @@ export default {
     },
     cancel() {
       this.$emit("closeVentana");
-    },
-    get_ventas_referencias_propiedades() {
-      this.$vs.loading();
-      cementerio
-        .get_ventas_referencias_propiedades()
-        .then(res => {
-          //le agrego todos los roles
-          this.ventasReferencias = [];
-          this.ventasReferencias.push({ label: "Seleccione 1", value: "" });
-          res.data.forEach(element => {
-            /**AGREGO LOS DEMAS ROLES */
-            this.ventasReferencias.push({
-              label: element.tipo_venta,
-              value: element.id
-            });
-          });
-          this.$vs.loading.close();
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-        });
     },
     //get vendedores
     get_vendedores() {
@@ -1749,29 +1982,15 @@ export default {
           //le agrego todos los usuarios vendedores
           this.vendedores = [];
           this.vendedores.push({ label: "Seleccione 1", value: "" });
+          if (this.getTipoformulario == "agregar") {
+            this.form.vendedor = this.vendedores[0];
+          }
           res.data.forEach(element => {
             this.vendedores.push({
               label: element.nombre,
               value: element.id
             });
           });
-          this.form.vendedor = this.vendedores[0];
-        })
-        .catch(err => {});
-    },
-    get_antiguedades() {
-      cementerio
-        .get_antiguedades()
-        .then(res => {
-          //le agrego todos los usuarios vendedores
-          this.ventasAntiguedad = [];
-          res.data.forEach(element => {
-            this.ventasAntiguedad.push({
-              label: element.antiguedad,
-              value: element.id
-            });
-          });
-          this.form.ventaAntiguedad = this.ventasAntiguedad[0];
         })
         .catch(err => {});
     },
@@ -1806,7 +2025,7 @@ export default {
       if (this.datosAreas.id) {
         this.datosAreas["tipo_propiedad"].precios.forEach(element => {
           //verifico si la compra es a futuro o de uso inmediato
-          if (this.form.venta_referencia_id == 1) {
+          if (this.form.empresa_operaciones_id == 1) {
             if (element.tipo_precios_id == 1) {
               //es una venta de uso inmediato y no puede haber opciones de meses
               //precio de contado a 0 meses 1 solo pago
@@ -1842,21 +2061,129 @@ export default {
         });
 
         //selecciono el primero precio automaticamente
-        if (this.planesVenta.length > 1) {
-          this.form.planVenta = this.planesVenta[1];
+        if (this.getTipoformulario == "agregar") {
+          this.seleccionarPlanVenta();
         } else {
-          this.form.planVenta = this.planesVenta[0];
-          this.$vs.notify({
-            title: "Planes de Venta",
-            text:
-              "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Ventas'",
-            iconPack: "feather",
-            icon: "icon-alert-circle",
-            color: "danger",
-            position: "bottom-right",
-            time: "10000"
-          });
+          if (this.datosAreas.tipo_propiedades_id == this.datosVenta.tipo_raw) {
+            /**
+             * checando si el plan de venta original todavia existe con el mismo precio y mensualiades, si es asi para seleccionarlo o sino para crearlo
+             * y seleccionarlo como valor de inicio
+             */
+            let index_plan_original_sin_modificaciones = 0;
+
+            let existe = false;
+            this.planesVenta.forEach(element => {
+              //precio neto de la propiedad sin descuentos
+              let precio_neto =
+                Number(this.datosVenta.subtotal) + Number(this.datosVenta.iva);
+              if (
+                Number(this.datosVenta.enganche_inicial_plan_origen) ==
+                  Number(element.enganche_inicial) &&
+                Number(precio_neto) == Number(element.precio_neto) &&
+                Number(this.datosVenta.mensualidades) == Number(element.value)
+              ) {
+                /**el plan de venta se mantiene y no ha sufrido modifcaciones por la que se selecciona por default */
+                existe = true;
+                /**lo seleccionono */
+                this.form.planVenta = element;
+                return 0;
+              } else {
+                /**aumento el index en caso de existir */
+                index_plan_original_sin_modificaciones += 1;
+              }
+            });
+            /**en caso de no existir lo creamos con un valor especial
+             * y que sea de uso a futuro
+             */
+            if (!existe && this.form.empresa_operaciones_id == 2) {
+              /**checando si esta el tipo de venta en contado o a meses
+               * ps si esta a meses no deberia cargar el plan de contado si no a meses
+               */
+
+              let precio_neto = this.datosVenta.subtotal + this.datosVenta.iva;
+
+              let label = "";
+              if (Number(this.datosVenta.mensualidades) == 0) {
+                //es a contado el plan anterior
+                label = "Plan Original(a contado)";
+              } else {
+                label =
+                  "Plan Original(" +
+                  this.datosVenta["programacion_pagos_actual"][0]
+                    .mensualidades +
+                  " Meses)";
+              }
+
+              //**checando si se debe adjuntar esta opcion segun el nuevo tipo de venta que quiere manejar el usuario */
+              if (this.datosVenta.mensualidades > 0) {
+                if (this.form.empresa_operaciones_id == 2) {
+                  this.planesVenta.push({
+                    label: label,
+                    value: Number(
+                      this.datosVenta["programacion_pagos_actual"][0]
+                        .mensualidades
+                    ),
+                    precio_neto: Number(precio_neto),
+                    enganche_inicial: Number(
+                      this.datosVenta["programacion_pagos_actual"][0]
+                        .enganche_inicial
+                    ),
+                    tipo_plan: "especial" //para saber si es un plan normal o un plan especial
+                  });
+                  this.form.planVenta = this.planesVenta[
+                    index_plan_original_sin_modificaciones
+                  ];
+                } else {
+                  this.seleccionarPlanVenta();
+                }
+              } else {
+                //la venta era de a contado
+                if (this.form.empresa_operaciones_id == 1) {
+                  this.planesVenta.push({
+                    label: label,
+                    value: Number(
+                      this.datosVenta["programacion_pagos_actual"][0]
+                        .mensualidades
+                    ),
+                    precio_neto: Number(precio_neto),
+                    enganche_inicial: Number(
+                      this.datosVenta["programacion_pagos_actual"][0]
+                        .enganche_inicial
+                    ),
+                    tipo_plan: "especial" //para saber si es un plan normal o un plan especial
+                  });
+                  this.form.planVenta = this.planesVenta[
+                    index_plan_original_sin_modificaciones
+                  ];
+                } else {
+                  this.seleccionarPlanVenta();
+                }
+              }
+            } else {
+              this.seleccionarPlanVenta();
+            }
+          } else {
+            this.seleccionarPlanVenta();
+          }
         }
+      }
+    },
+    seleccionarPlanVenta() {
+      //selecciono el primero precio automaticamente
+      if (this.planesVenta.length > 1) {
+        this.form.planVenta = this.planesVenta[1];
+      } else {
+        this.form.planVenta = this.planesVenta[0];
+        this.$vs.notify({
+          title: "Planes de Venta",
+          text:
+            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Ventas'",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "10000"
+        });
       }
     },
     cancelar() {
@@ -1874,23 +2201,19 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
-      //area de la terraza 1
+      this.form.ventaAntiguedad = this.ventasAntiguedad[0];
+      //area de la terraza
       this.form.lotes = this.lotes[0];
-      this.form.venta_referencia_id = 0;
+      this.form.empresa_operaciones_id = "";
       this.form.num_solicitud = "";
       this.form.convenio = "";
       this.form.titulo = "";
-      this.form.titular = "";
-      this.form.fecha_nac = "";
-      this.form.domicilio = "";
-      this.form.ciudad = "";
-      this.form.estado = "";
-      this.form.telefono = "";
-      this.form.celular = "";
-      this.form.tel_oficina = "";
-      this.form.rfc = "";
-      this.form.email = "";
-      this.form.descuento = 0;
+
+      this.form.titular_sustituto = "";
+      this.form.parentesco_titular_sustituto = "";
+      this.form.telefono_titular_sustituto = "";
+      this.form.cliente = "";
+      this.form.id_cliente = "";
 
       this.form.beneficiarios = [];
       this.form.planVenta = this.planesVenta[0];
@@ -1899,6 +2222,12 @@ export default {
         label: "Pagar Después",
         value: 0
       };
+      this.form.vendedor = { label: "Seleccione 1", value: "" };
+
+      this.form.descuento = 0;
+      this.form.convenio = "";
+      this.form.titulo = "";
+
       this.form.banco = "";
       this.form.num_cheque = "";
       this.form.ultimosdigitos = "";
@@ -1956,7 +2285,6 @@ export default {
         });
       }
     },
-
     //remover beneficiario
     remover_beneficiario(index_beneficiario) {
       this.botonConfirmarSinPassword = "eliminar";
@@ -1973,12 +2301,124 @@ export default {
     clienteSeleccionado(datos) {
       /**obtiene los datos retornados del buscar cliente */
       this.form.cliente = datos.nombre;
-      this.form.id_cliente = datos.id_nombre;
+      this.form.id_cliente = datos.id_cliente;
       //alert(datos.id_cliente);
     },
     quitarCliente() {
       this.form.id_cliente = "";
       this.form.cliente = "";
+    },
+    ConsultarVenta() {
+      let self = this;
+      if (cementerio.cancel) {
+        cementerio.cancel("Operation canceled by the user.");
+      }
+      this.$vs.loading();
+      cementerio
+        .get_venta_id(this.form.id_venta)
+        .then(res => {
+          this.form.id_cliente = res.data.clientes_id;
+          this.form.cliente = res.data.cliente_nombre;
+
+          this.datosVenta = res.data;
+          /**datos de la venta */
+          this.idAreaInicial = res.data.id_propiedad_raw;
+          this.form.empresa_operaciones_id = res.data.empresa_operaciones_id;
+          this.form.ventaAntiguedad = {
+            label: this.datosVenta.antiguedad.antiguedad,
+            value: res.data.antiguedad.id
+          };
+          this.form.vendedor = {
+            label: res.data.vendedor.nombre,
+            value: res.data.vendedor.id
+          };
+          this.form.num_solicitud = res.data.numero_solicitud_raw;
+          this.form.convenio = res.data.numero_convenio_raw;
+          this.form.titulo = res.data.numero_titulo_raw;
+
+          /**el lote lo selecciono despues de selecionar la "fila" porque se desencadena el evento del watch para form.fila ahi checo si hay algun lote que se vaya selecionar
+           * con una variable especial para eso en data que se llama lote_origen
+           */
+          this.fila_origen = res.data.fila_raw;
+
+          if (parseInt(res.data.tipo_raw) == 4) {
+            //se ocupa un lote
+            this.lote_origen = res.data.lote_raw;
+          }
+
+          /**llenando la "fila" de la propiedad */
+          /*this.filas.forEach(element => {
+            if (element.value == res.data.fila_raw) {
+              this.form.filas = element;
+            }
+          });*/
+
+          var partes = res.data.fecha_venta.split("-");
+          //yyyy-mm-dd
+          this.form.fecha_venta = new Date(partes[0], partes[1] - 1, partes[2]);
+
+          /**fin de datos de la venta */
+
+          /**datos del titular sustituto */
+          this.form.titular_sustituto = res.data.titular_sustituto;
+          this.form.parentesco_titular_sustituto =
+            res.data.parentesco_titular_sustituto;
+          this.form.telefono_titular_sustituto =
+            res.data.telefono_titular_sustituto;
+
+          /**beneficairios */
+          this.form.beneficiarios = res.data.beneficiarios;
+
+          this.form.enganche_inicial_origen = Number(
+            this.datosVenta["programacion_pagos_actual"][0].enganche_inicial
+          );
+          /**informacion de la venta */
+          this.form.descuento = this.datosVenta.descuento;
+
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            }
+          }
+        });
+    },
+    respuestaDeshabilitado() {
+      if (this.tienePagosVencidos) {
+        this.$vs.notify({
+          title: "Seleccionar Área del Cementerio",
+          text:
+            "No está permitido cambiar la ubicación de la propiedad mientras no esté al corriente con los pagos establecidos.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "10000"
+        });
+      } else if (this.ventaLiquidada) {
+        this.$vs.notify({
+          title: "Seleccionar Área del Cementerio",
+          text:
+            "No está permitido cambiar la ubicación de la propiedad una vez ya liquidado el total de la cuenta.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "10000"
+        });
+      }
     }
   },
   created() {}

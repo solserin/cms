@@ -16,8 +16,8 @@ class PagosProgramadosTerrenos extends Migration
         Schema::create('pagos_programados_terrenos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('num_pago');
-            $table->unsignedBigInteger('ventas_terrenos_id')->nullable();
-            $table->foreign('ventas_terrenos_id')->references('id')->on('ventas_terrenos');
+            $table->unsignedBigInteger('programacion_id')->nullable();
+            $table->foreign('programacion_id')->references('id')->on('programacion_pagos_terrenos');
             $table->unsignedBigInteger('conceptos_pagos_id')->nullable();
             $table->foreign('conceptos_pagos_id')->references('id')->on('conceptos_pagos');
             $table->date('fecha_programada');

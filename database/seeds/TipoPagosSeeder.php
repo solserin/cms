@@ -13,5 +13,6 @@ class TipoPagosSeeder extends Seeder
     {
         DB::table('tipo_pagos')->insert(['tipo' => 'Abono a Capital']);
         DB::table('tipo_pagos')->insert(['tipo' => 'Abono a Intereses']);
+        DB::table('tipo_pagos')->insert(['tipo' => 'Reajuste sistema']);
     }
 }

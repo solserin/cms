@@ -37,6 +37,8 @@ class PagosTerrenos extends Migration
             $table->foreign('motivos_cancelacion_id')->references('id')->on('motivos_cancelacion'); //en caso de cancelar la venta
             $table->unsignedBigInteger('sat_formas_pago_id')->nullable();
             $table->foreign('sat_formas_pago_id')->references('id')->on('sat_formas_pago');
+            $table->unsignedBigInteger('tipo_pagos_id')->nullable();
+            $table->foreign('tipo_pagos_id')->references('id')->on('tipo_pagos');
             $table->longText('nota')->nullable();
             $table->tinyInteger('status')->default(1);
         });

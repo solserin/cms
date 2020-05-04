@@ -43,7 +43,13 @@ export default {
     }
   },
   watch: {
-    show: function(newValue, oldValue) {}
+    show: function(newValue, oldValue) {
+      if (newValue == true) {
+        this.$nextTick(() =>
+          this.$refs["contra"].$el.querySelector("input").focus()
+        );
+      }
+    }
   },
 
   data() {

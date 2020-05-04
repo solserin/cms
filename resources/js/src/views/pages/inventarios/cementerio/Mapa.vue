@@ -135,37 +135,37 @@
       <g>
         <!--NICHOS 8-->
         <path
-          :class="[status_propiedadades[24],id_area_activa==24 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[24],id_area_activa==24 ? 'activado':'']"
           d="M262.2,552.8l18.1-54.6c0,0,8.6,2.6,15.6,8L262.2,552.8z"
           @click="seleccionarArea(24)"
         />
         <!--NICHOS 11-->
         <path
-          :class="[status_propiedadades[27],id_area_activa==27 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[27],id_area_activa==27 ? 'activado':'']"
           d="M262.2,552.8l54.4-21.5c0,0,3.6,8.7,4.3,14.9L262.2,552.8z"
           @click="seleccionarArea(27)"
         />
         <!--NICHOS 7-->
         <path
-          :class="[status_propiedadades[23],id_area_activa==23 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[23],id_area_activa==23 ? 'activado':'']"
           d="M262.2,495.3c0,0,7.6-0.3,18.1,2.8l-18.1,54.6V495.3z"
           @click="seleccionarArea(23)"
         />
         <!--NICHOS 9-->
         <path
-          :class="[status_propiedadades[25],id_area_activa==25 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[25],id_area_activa==25 ? 'activado':'']"
           d="M295.9,506.2c0,0,7,3.5,12.2,11.1l-46,35.5L295.9,506.2z"
           @click="seleccionarArea(25)"
         />
         <!--NICHOS 10-->
         <path
-          :class="[status_propiedadades[26],id_area_activa==26 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[26],id_area_activa==26 ? 'activado':'']"
           d="M308.1,517.3l-46,35.5l54.4-21.5C316.6,531.3,314.5,525.4,308.1,517.3z"
           @click="seleccionarArea(26)"
         />
         <!--NICHOS 12-->
         <path
-          :class="[status_propiedadades[28],id_area_activa==28 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[28],id_area_activa==28 ? 'activado':'']"
           d="M262.2,552.8l58.3,10.9c0,0,1.4-6.8,0.3-17.4L262.2,552.8z"
           @click="seleccionarArea(28)"
         />
@@ -175,37 +175,37 @@
         />
         <!--NICHOS 5-->
         <path
-          :class="[status_propiedadades[21],id_area_activa==21 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[21],id_area_activa==21 ? 'activado':'']"
           d="M262.1,552.8L244,498.2c0,0-8.6,2.6-15.6,8L262.1,552.8z"
           @click="seleccionarArea(21)"
         />
         <!--NICHOS 2-->
         <path
-          :class="[status_propiedadades[18],id_area_activa==18 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[18],id_area_activa==18 ? 'activado':'']"
           d="M262.1,552.8l-54.4-21.5c0,0-3.6,8.7-4.3,14.9L262.1,552.8z"
           @click="seleccionarArea(18)"
         />
         <!--NICHOS 6-->
         <path
-          :class="[status_propiedadades[22],id_area_activa==22 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[22],id_area_activa==22 ? 'activado':'']"
           d="M262.1,495.3c0,0-7.6-0.3-18.1,2.8l18.1,54.6V495.3z"
           @click="seleccionarArea(22)"
         />
         <!--NICHOS 4-->
         <path
-          :class="[status_propiedadades[20],id_area_activa==20 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[20],id_area_activa==20 ? 'activado':'']"
           d="M228.4,506.2c0,0-7,3.5-12.2,11.1l46,35.5L228.4,506.2z"
           @click="seleccionarArea(20)"
         />
         <!--NICHOS 3-->
         <path
-          :class="[status_propiedadades[19],id_area_activa==19 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[19],id_area_activa==19 ? 'activado':'']"
           d="M216.2,517.3l46,35.5l-54.4-21.5C207.7,531.3,209.8,525.4,216.2,517.3z"
           @click="seleccionarArea(19)"
         />
         <!--NICHOS 1-->
         <path
-          :class="[status_propiedadades[17],id_area_activa==17 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[17],id_area_activa==17 ? 'activado':'']"
           d="M262.1,552.8l-58.3,10.9c0,0-1.4-6.8-0.3-17.4L262.1,552.8z"
           @click="seleccionarArea(17)"
         />
@@ -217,7 +217,7 @@
             x="98.2"
             y="348.6"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -259.0843 314.0718)"
-            :class="[status_propiedadades[10],id_area_activa==10 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[10],id_area_activa==10 ? 'activado':'']"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(10)"
@@ -231,7 +231,7 @@
             x="106.4"
             y="329.3"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -236.3726 309.7916)"
-            :class="[status_propiedadades[11],id_area_activa==11 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[11],id_area_activa==11 ? 'activado':'']"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(11)"
@@ -245,7 +245,7 @@
             x="114.5"
             y="310"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -213.5523 305.4909)"
-            :class="[status_propiedadades[12],id_area_activa==12 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[12],id_area_activa==12 ? 'activado':'']"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(12)"
@@ -259,7 +259,7 @@
             x="122.7"
             y="290.7"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -190.8407 301.2107)"
-            :class="[status_propiedadades[13],id_area_activa==13 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[13],id_area_activa==13 ? 'activado':'']"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(13)"
@@ -273,7 +273,7 @@
             x="130.8"
             y="271.3"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -168.0205 296.91)"
-            :class="[status_propiedadades[14],id_area_activa==14 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[14],id_area_activa==14 ? 'activado':'']"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(14)"
@@ -287,7 +287,7 @@
             x="139"
             y="252.1"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -145.3089 292.6298)"
-            :class="[status_propiedadades[15],id_area_activa==15 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[15],id_area_activa==15 ? 'activado':'']"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(15)"
@@ -301,7 +301,7 @@
             x="147"
             y="232.7"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -122.5091 288.2204)"
-            :class="[status_propiedadades[16],id_area_activa==16 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[16],id_area_activa==16 ? 'activado':'']"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(16)"
@@ -315,7 +315,7 @@
             x="300.3"
             y="291"
             transform="matrix(0.6033 -0.7975 0.7975 0.6033 -118.576 361.4763)"
-            :class="[status_propiedadades[47],id_area_activa==47 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[47],id_area_activa==47 ? 'activado':'']"
             width="7.5"
             height="17.9"
             @click="seleccionarArea(47)"
@@ -329,7 +329,7 @@
             x="158"
             y="217.5"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -104.5519 284.9159)"
-            :class="[status_propiedadades[5],id_area_activa==5 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[5],id_area_activa==5 ? 'activado':'']"
             width="9"
             height="7.5"
             @click="seleccionarArea(5)"
@@ -343,7 +343,7 @@
             x="164.7"
             y="205.9"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -100.1601 216.1504)"
-            :class="[status_propiedadades[6],id_area_activa==6 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[6],id_area_activa==6 ? 'activado':'']"
             width="9"
             height="7.5"
             @click="seleccionarArea(6)"
@@ -357,7 +357,7 @@
             x="180.4"
             y="203.6"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -93.0207 227.4189)"
-            :class="[status_propiedadades[7],id_area_activa==7 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[7],id_area_activa==7 ? 'activado':'']"
             width="7.5"
             height="9"
             @click="seleccionarArea(7)"
@@ -371,7 +371,7 @@
             x="189.8"
             y="210.8"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -95.0665 237.6387)"
-            :class="[status_propiedadades[8],id_area_activa==8 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[8],id_area_activa==8 ? 'activado':'']"
             width="7.5"
             height="9"
             @click="seleccionarArea(8)"
@@ -385,7 +385,7 @@
             x="208.4"
             y="213.3"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -99.1293 257.9475)"
-            :class="[status_propiedadades[48],id_area_activa==48 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[48],id_area_activa==48 ? 'activado':'']"
             width="7.5"
             height="32.5"
             @click="seleccionarArea(48)"
@@ -399,7 +399,7 @@
             x="276.3"
             y="265.4"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -113.84 332.2195)"
-            :class="[status_propiedadades[49],id_area_activa==49 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[49],id_area_activa==49 ? 'activado':'']"
             width="7.5"
             height="32.5"
             @click="seleccionarArea(49)"
@@ -413,7 +413,7 @@
             x="242.1"
             y="234.7"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -106.7848 295.0168)"
-            :class="[status_propiedadades[50],id_area_activa==50 ? 'activado':'']"
+            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[50],id_area_activa==50 ? 'activado':'']"
             width="7.5"
             height="42.3"
             @click="seleccionarArea(50)"
@@ -426,7 +426,7 @@
           x="92.2"
           y="380.7"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -299.47 369.6841)"
-          :class="[status_propiedadades[4],id_area_activa==4 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[4],id_area_activa==4 ? 'activado':'']"
           width="9"
           height="7.5"
           @click="seleccionarArea(4)"
@@ -438,7 +438,7 @@
           x="87.4"
           y="396.7"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -318.297 376.6368)"
-          :class="[status_propiedadades[3],id_area_activa==3 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[3],id_area_activa==3 ? 'activado':'']"
           width="9"
           height="7.5"
           @click="seleccionarArea(3)"
@@ -450,7 +450,7 @@
           x="77.7"
           y="417.1"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -341.6591 386.2634)"
-          :class="[status_propiedadades[9],id_area_activa==9 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[9],id_area_activa==9 ? 'activado':'']"
           width="17.9"
           height="7.5"
           @click="seleccionarArea(9)"
@@ -462,7 +462,7 @@
           x="74.7"
           y="440"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -368.9612 395.6353)"
-          :class="[status_propiedadades[2],id_area_activa==2 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[2],id_area_activa==2 ? 'activado':'']"
           width="9"
           height="7.5"
           @click="seleccionarArea(2)"
@@ -474,7 +474,7 @@
           x="70.2"
           y="455.9"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -387.4639 402.7869)"
-          :class="[status_propiedadades[1],id_area_activa==1 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[1],id_area_activa==1 ? 'activado':'']"
           width="9"
           height="7.5"
           @click="seleccionarArea(1)"
@@ -483,7 +483,7 @@
       <g id="LWPOLYLINE_514_">
         <!--TERRAZA 1-->
         <polygon
-          :class="[status_propiedadades[29],id_area_activa==29 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[29],id_area_activa==29 ? 'activado':'']"
           points="243.2,404.8 199.6,412.5 200.1,415.8 206.3,450.7 249.9,443 	"
           @click="seleccionarArea(29)"
         />
@@ -491,7 +491,7 @@
       <g id="LWPOLYLINE_513_">
         <!--TERRAZA 2-->
         <polygon
-          :class="[status_propiedadades[30],id_area_activa==30 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[30],id_area_activa==30 ? 'activado':'']"
           points="193.4,413.5 149.9,421.2 150.5,424.5 156.6,459.4 200.2,451.8 	"
           @click="seleccionarArea(30)"
         />
@@ -499,7 +499,7 @@
       <g id="LWPOLYLINE_512_">
         <!--TERRAZA 6-->
         <polygon
-          :class="[status_propiedadades[34],id_area_activa==34 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[34],id_area_activa==34 ? 'activado':'']"
           points="240.4,388.8 239.8,385.5 236.5,366.6 192.8,374.2 193.4,377.6 196.2,393.2 196.7,396.5 199.6,412.5 
 		243.2,404.8 	"
           @click="seleccionarArea(34)"
@@ -508,7 +508,7 @@
       <g id="LWPOLYLINE_511_">
         <!--TERRAZA 5-->
         <polygon
-          :class="[status_propiedadades[33],id_area_activa==33 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[33],id_area_activa==33 ? 'activado':'']"
           points="190.6,397.6 190,394.3 186.7,375.3 143.1,383 143.7,386.3 146.5,401.9 147.1,405.3 149.9,421.2 
 		193.4,413.5 	"
           @click="seleccionarArea(33)"
@@ -517,7 +517,7 @@
       <g id="LWPOLYLINE_510_">
         <!--TERRAZA 10-->
         <polygon
-          :class="[status_propiedadades[38],id_area_activa==38 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[38],id_area_activa==38 ? 'activado':'']"
           points="233,346.9 189.4,354.6 189.9,357.9 192.8,374.2 236.5,366.6 	"
           @click="seleccionarArea(38)"
         />
@@ -525,7 +525,7 @@
       <g id="LWPOLYLINE_509_">
         <!--TERRAZA 9-->
         <polygon
-          :class="[status_propiedadades[37],id_area_activa==37 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[37],id_area_activa==37 ? 'activado':'']"
           points="183,355.7 139.2,364 139.7,367.3 142.8,382.7 186.7,375.3 	"
           @click="seleccionarArea(37)"
         />
@@ -533,7 +533,7 @@
       <g id="LWPOLYLINE_508_">
         <!--TERRAZA 14-->
         <polygon
-          :class="[status_propiedadades[42],id_area_activa==42 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[42],id_area_activa==42 ? 'activado':'']"
           points="229.6,327.3 185.9,335 186.5,338.3 189.4,354.6 233,346.9 	"
           @click="seleccionarArea(42)"
         />
@@ -541,7 +541,7 @@
       <g id="LWPOLYLINE_507_">
         <!--TERRAZA 13-->
         <polygon
-          :class="[status_propiedadades[41],id_area_activa==41 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[41],id_area_activa==41 ? 'activado':'']"
           points="179.8,336.1 135,344 138.4,363.7 140,363.4 183.2,355.7 	"
           @click="seleccionarArea(41)"
         />
@@ -552,7 +552,7 @@
           x="132.5"
           y="320.3"
           transform="matrix(0.9848 -0.1735 0.1735 0.9848 -54.942 31.9743)"
-          :class="[status_propiedadades[44],id_area_activa==44 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[44],id_area_activa==44 ? 'activado':'']"
           width="45.9"
           height="19.9"
           @click="seleccionarArea(44)"
@@ -561,7 +561,7 @@
       <g id="LWPOLYLINE_505_">
         <!--TERRAZA 17-->
         <polygon
-          :class="[status_propiedadades[45],id_area_activa==45 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[45],id_area_activa==45 ? 'activado':'']"
           points="226.1,307.7 182.4,315.4 183,318.7 185.9,335 229.6,327.3 	"
           @click="seleccionarArea(45)"
         />
@@ -569,7 +569,7 @@
       <g id="LWPOLYLINE_504_">
         <!--TERRAZA 3-->
         <path
-          :class="[status_propiedadades[31],id_area_activa==31 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[31],id_area_activa==31 ? 'activado':'']"
           d="M144.3,425.6l-0.6-3.3l-46.4,8.2l-2.2,8.4c4.4,1,7.5,4.9,7.5,9.4l8.5-2.9l25.3,18l14-3l-2.6-14.9l-0.6-3.3
 		L144.3,425.6z"
           @click="seleccionarArea(31)"
@@ -578,7 +578,7 @@
       <g id="LWPOLYLINE_503_">
         <!--TERRAZA 4-->
         <polygon
-          :class="[status_propiedadades[32],id_area_activa==32 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[32],id_area_activa==32 ? 'activado':'']"
           points="140.9,406.3 140.3,403 137.6,387.4 137,384.1 108.5,389.1 97.3,430.5 143.7,422.3 	"
           @click="seleccionarArea(32)"
         />
@@ -586,7 +586,7 @@
       <g id="LWPOLYLINE_502_">
         <!--TERRAZA 8-->
         <polygon
-          :class="[status_propiedadades[36],id_area_activa==36 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[36],id_area_activa==36 ? 'activado':'']"
           points="134.1,367.8 133.6,364.5 114.3,367.8 108.5,389.1 137,384.1 	"
           @click="seleccionarArea(36)"
         />
@@ -594,7 +594,7 @@
       <g id="LWPOLYLINE_501_">
         <!--TERRAZA 7-->
         <path
-          :class="[status_propiedadades[35],id_area_activa==35 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[35],id_area_activa==35 ? 'activado':'']"
           d="M271.8,402.8c-7.5-0.9-15.1-0.6-22.5,0.9l0.6,3.3l2.9,16.7l0.3,1.7l18.1-3.2L271.8,402.8z"
           @click="seleccionarArea(35)"
         />
@@ -602,7 +602,7 @@
       <g id="LWPOLYLINE_500_">
         <!--TERRAZA 15-->
         <path
-          :class="[status_propiedadades[43],id_area_activa==43 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[43],id_area_activa==43 ? 'activado':'']"
           d="M274.1,323.1c-12.9-0.2-25.7,0.8-38.4,3.1l0.6,3.4l2.9,16.3v0.2c11.4-1.4,22.9-2.5,34.4-3L274.1,323.1z"
           @click="seleccionarArea(43)"
         />
@@ -610,7 +610,7 @@
       <g id="LWPOLYLINE_499_">
         <!--TERRAZA 18-->
         <path
-          :class="[status_propiedadades[46],id_area_activa==46 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[46],id_area_activa==46 ? 'activado':'']"
           d="M274.7,303.1c-14.2-0.2-28.4,0.9-42.5,3.4l0.6,3.4l2.9,16.3c12.7-2.3,25.5-3.3,38.4-3.1
 		C274.1,323.1,274.7,303.1,274.7,303.1z"
           @click="seleccionarArea(46)"
@@ -780,7 +780,7 @@
       <g id="LWPOLYLINE_445_">
         <!--TERRAZA 11-->
         <path
-          :class="[status_propiedadades[39],id_area_activa==39 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[39],id_area_activa==39 ? 'activado':'']"
           d="M273,362.9c-10.2-0.1-20.4,0.7-30.4,2.5l0.6,3.4l2.8,15.6l0.6,3.3l2.8,16c7.4-1.5,15-1.8,22.5-0.9L273,362.9z"
           @click="seleccionarArea(39)"
         />
@@ -801,7 +801,7 @@
       <g id="LWPOLYLINE_391_">
         <!--TERRAZA 12-->
         <path
-          :class="[status_propiedadades[40],id_area_activa==40 ? 'activado':'']"
+          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[40],id_area_activa==40 ? 'activado':'']"
           d="M273.5,343c-11.5,0.6-23,1.6-34.4,3l0.6,3.2l2.9,16.3c10-1.8,20.2-2.6,30.4-2.5L273.5,343z"
           @click="seleccionarArea(40)"
         />
@@ -2453,23 +2453,20 @@ export default {
     idAreaInicial: function(newValue, oldValue) {
       if (newValue > 0) {
         this.id_area_activa = newValue;
+      } else {
+        this.status_propiedadades = [];
+        this.id_area_activa = 0;
       }
     },
     id_area_activa: function(newValue, oldValue) {
-      this.get_cementerio();
-    },
-    disabled: function(newValue, oldValue) {
-      if (newValue == true) {
-        this.cambiosMapa++;
-      } else {
-        this.cambiosMapa = 0;
+      if (newValue > 0) {
+        this.get_cementerio();
       }
     }
   },
   components: {},
   data() {
     return {
-      cambiosMapa: 0,
       propiedades: [],
       //todas las status_propiedadades
       status_propiedadades: [],
@@ -2497,6 +2494,8 @@ export default {
   },
   methods: {
     get_cementerio() {
+      this.$vs.loading();
+
       this.datosAreaSeleccionada = [];
       cementerio
         .get_cementerio()
@@ -2518,18 +2517,25 @@ export default {
           });
           //mando los datos al parent
           this.$emit("getDatosTipoPropiedad", this.datosAreaSeleccionada);
+          this.$vs.loading.close();
         })
-        .catch(err => {});
+        .catch(err => {
+          this.$vs.loading.close();
+        });
     },
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
     seleccionarArea(id_area) {
-      if (!this.deshabilitado) this.id_area_activa = id_area;
+      if (!this.deshabilitado) {
+        this.id_area_activa = id_area;
+      } else {
+        this.$emit("respuestaDeshabilitado");
+      }
     }
   },
   created() {
-    this.id_area_activa = this.area_inicial;
+    // this.id_area_activa = this.area_inicial;
   }
 };
 </script>
@@ -2568,6 +2574,10 @@ export default {
 
 .activado {
   fill: rgba(var(--vs-primary), 1) !important;
+}
+
+.loading {
+  fill: rgba(var(--vs-secondary_theme), 1) !important;
 }
 
 .bloqueado {

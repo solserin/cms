@@ -405,7 +405,7 @@
 }
 
 [dir] .searcher_clientes .vs-popup--header {
-  background-color: rgba(var(--vs-secondary_theme), 1) !important;
+  background-color: rgba(var(--vs-primary), 1) !important;
 }
 
 [dir] .searcher_clientes .vs-popup--content {
@@ -417,7 +417,7 @@
 }
 
 .searcher_clientes .vs-popup--title h3 {
-  color: #22292f !important;
+  color: #fff !important;
   text-transform: capitalize !important;
   font-weight: normal !important;
   font-size: 1.4em !important;

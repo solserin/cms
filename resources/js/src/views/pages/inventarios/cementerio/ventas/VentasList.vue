@@ -12,7 +12,7 @@
             icon-pack="feather"
             icon="icon-shopping-cart"
             color="success"
-            @click="verAgregar=true"
+            @click="formulario('agregar')"
           >Nueva Venta</vs-button>
         </div>
       </div>
@@ -200,17 +200,13 @@
       <PlanesVenta></PlanesVenta>
     </div>
 
-    <NuevaVenta
-      :show="verAgregar"
-      @closeVentana="verAgregar = false"
-      @ver_pdfs_nueva_venta="ConsultarVenta"
-    ></NuevaVenta>
-    <UpdateVenta
+    <FormularioVentas
       :id_venta="id_venta_modificar"
-      :show="verModificar"
-      @closeVentana="verModificar = false"
+      :tipo="tipoFormulario"
+      :show="verFormularioVentas"
+      @closeVentana="verFormularioVentas = false"
       @ver_pdfs_nueva_venta="ConsultarVenta"
-    ></UpdateVenta>
+    ></FormularioVentas>
 
     <Password
       :show="openStatus"
@@ -235,8 +231,7 @@ import PlanesVenta from "../ventas/PlanesVentas";
 
 import cementerio from "@services/cementerio";
 
-import NuevaVenta from "../ventas/NuevaVenta";
-import UpdateVenta from "../ventas/UpdateVenta";
+import FormularioVentas from "../ventas/FormularioVentas";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -250,8 +245,7 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    NuevaVenta,
-    UpdateVenta,
+    FormularioVentas,
     PlanesVenta,
     Reporteador
   },
@@ -268,6 +262,8 @@ export default {
   },
   data() {
     return {
+      verFormularioVentas: false,
+      tipoFormulario: "",
       //variable
       ListaReportes: [],
       tipo_propiedades: [],
@@ -414,10 +410,6 @@ export default {
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
-    openModificar(id_venta) {
-      this.id_venta_modificar = id_venta;
-      this.verModificar = true;
-    },
 
     //eliminar usuario logicamente
     habilitarUsuario(id_user, nombre) {
@@ -495,20 +487,20 @@ export default {
       cementerio
         .get_venta_id(id_venta)
         .then(res => {
-          if (res.data[0].numero_solicitud_raw != null) {
+          if (res.data.numero_solicitud_raw != null) {
             this.ListaReportes.push({
               nombre: "Solicitud de venta",
               url: "/inventarios/cementerio/documento_solicitud"
             });
           }
-          if (res.data[0].numero_convenio_raw != null) {
+          if (res.data.numero_convenio_raw != null) {
             this.ListaReportes.push({
               nombre: "Convenio",
               url: "/inventarios/cementerio/documento_convenio"
             });
           }
 
-          if (res.data[0].numero_titulo_raw != null) {
+          if (res.data.numero_titulo_raw != null) {
             this.ListaReportes.push({
               nombre: "Título",
               url: "/inventarios/cementerio/documento_titulo"
@@ -525,8 +517,7 @@ export default {
             url: "/inventarios/cementerio/documento_estado_de_cuenta_cementerio"
           });
           //estado de cuenta
-
-          this.request.email = res.data[0].email;
+          //this.request.email = res.data[0].email;
           this.request.venta_id = id_venta;
           this.openReportesLista = true;
           this.$vs.loading.close();
@@ -548,6 +539,15 @@ export default {
             }
           }
         });
+    },
+    openModificar(id_venta) {
+      this.tipoFormulario = "modificar";
+      this.id_venta_modificar = id_venta;
+      this.verFormularioVentas = true;
+    },
+    formulario(tipo) {
+      this.tipoFormulario = tipo;
+      this.verFormularioVentas = true;
     }
   },
   created() {

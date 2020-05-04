@@ -26,6 +26,9 @@ class VentasTerrenos extends Migration
             $table->string('ubicacion', 15); //se crea una estructura para poder hacer la relacion de las propiedades
             /**fin de datos de la ubicacion */
             $table->dateTime('fecha_registro');
+            $table->dateTime('fecha_modificacion')->nullable();
+            $table->unsignedBigInteger('modifico_id')->nullable();
+            $table->foreign('modifico_id')->references('id')->on('usuarios');
             $table->date('fecha_venta');
             $table->double('subtotal')->nullable();
             $table->double('descuento')->nullable();
@@ -50,9 +53,8 @@ class VentasTerrenos extends Migration
             $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('vendedor_id');
             $table->foreign('vendedor_id')->references('id')->on('usuarios'); //quien hizo la venta
-            //modalidad de pago de la venta
-            $table->tinyInteger('mensualidades')->nullable();
-            $table->double('enganche_inicial_plan_origen')->nullable();
+            $table->unsignedBigInteger('empresa_operaciones_id')->nullable();
+            $table->foreign('empresa_operaciones_id')->references('id')->on('empresa_operaciones');
             $table->longText('nota')->nullable();
             $table->tinyInteger('status')->default(1);
         });
