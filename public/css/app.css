@@ -373,6 +373,10 @@
   content: url(/images/question.svg?0dfe0426e72ced1ced4bf9f580e77ecc);
 }
 
+.password_icono:before {
+  content: url(/images/password.svg?5c95b46463fb727c8dda36e6098154ea);
+}
+
 .confirmar .seguro-mensaje {
   font-size: 1.8rem;
   color: #636363 !important;
@@ -400,7 +404,8 @@
 
 /*searcher clientes*/
 
-.searcher_clientes {
+.searcher_clientes,
+.contrasena {
   z-index: 52001 !important;
 }
 
@@ -429,6 +434,10 @@
 
 [dir=rtl] .searcher_clientes .vs-popup--title h3 {
   margin-right: 10px !important;
+}
+
+.contrasena .vs-popup--header {
+  display: none !important;
 }
 
 /*=========================================================================================

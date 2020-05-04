@@ -1,28 +1,48 @@
 <template >
   <div class="centerx">
-    <vs-prompt
-      type="confirm"
-      title="Confirmar contraseña"
-      class="password-checker"
-      @cancel="cancel"
-      @accept="acceptAlert"
+    <vs-popup
+      class="confirmarAceptar confirmar contrasena"
+      close="cancelar"
+      title="contraseña"
       :active.sync="showChecker"
-      accept-text="Confirmar"
-      cancel-text="(Esc) Cancelar"
+      ref="contra"
     >
-      <div class="con-exemple-prompt">
-        Ingrese su contraseña para
-        <span class="accion_nombre">{{accionNombre}}</span>.
-        <vs-input
-          ref="contra"
-          type="password"
-          class="w-full pt-3 pb-3"
-          placeholder="Contraseña"
-          v-model.trim="pass"
-          @keyup.enter="acceptAlert"
-        />
+      <div class="text-center password_icono"></div>
+      <div class="text-center seguro-mensaje mt-3">Confirmar con Contraseña</div>
+      <div class="text-center seguro-texto mt-3">
+        Para poder
+        <span class="font-semibold text-primary">{{accionNombre}}</span>, es necesario que verifique su identidad mediante contraseña. Esto reduce el riesgo de que usuarios no autorizados realicen operaciones sin su autorización.
       </div>
-    </vs-prompt>
+      <div class="flex flex-wrap mt-2">
+        <div class="w-full px-5">
+          <vs-input
+            maxlength="50"
+            size="large"
+            ref="contra"
+            type="password"
+            class="w-full pt-3 pb-3"
+            placeholder="Contraseña"
+            v-model.trim="pass"
+            @keyup.enter="acceptAlert"
+          />
+        </div>
+        <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
+          <div class="mt-2">
+            <vs-button
+              color="danger"
+              class="float-right mr-2"
+              type="border"
+              @click="cancel"
+            >(Esc) Cancelar</vs-button>
+          </div>
+        </div>
+        <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
+          <div class="mt-2">
+            <vs-button color="success" class="float-left ml-2" @click="acceptAlert">(Ent) Confirmar</vs-button>
+          </div>
+        </div>
+      </div>
+    </vs-popup>
   </div>
 </template>
 <script>
@@ -48,6 +68,9 @@ export default {
         this.$nextTick(() =>
           this.$refs["contra"].$el.querySelector("input").focus()
         );
+        this.$refs["contra"].$el.querySelector(".vs-icon").onclick = () => {
+          this.cancel();
+        };
       }
     }
   },

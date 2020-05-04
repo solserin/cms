@@ -5,7 +5,7 @@
       close="cancelar"
       title="Venta de Propiedades del Cementerio"
       :active.sync="showVentana"
-      @close="cancelar"
+      ref="formulario"
     >
       <!--inicio venta-->
       <vx-card class="pt-5">
@@ -1214,6 +1214,9 @@ export default {
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
+        this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
+          this.cancelar();
+        };
         this.get_vendedores();
         this.get_sat_formas_pago();
         if (this.getTipoformulario == "agregar") {
@@ -1641,7 +1644,7 @@ export default {
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
-      accionNombre: "Guardar Venta",
+      accionNombre: "Modificar Venta",
       ventasAntiguedad: [
         {
           label: "NUEVA VENTA",
@@ -1790,8 +1793,8 @@ export default {
               this.openConfirmarAceptar = true;
             } else {
               /**es modificacion */
-              this.callBackConfirmarAceptar = this.modificarVenta;
-              this.openConfirmarAceptar = true;
+              this.callback = this.modificarVenta;
+              this.operConfirmar = true;
             }
           }
         })

@@ -2,7 +2,6 @@
   <div class="centerx">
     <vs-popup
       class="searcher_clientes aet-popup"
-      close="cancelar"
       title="búsqueda de Clientes | Filtros de selección"
       :active.sync="showVentana"
       ref="buscador_cliente"

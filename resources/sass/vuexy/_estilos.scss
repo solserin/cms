@@ -333,6 +333,10 @@
     content: url("../../../../../resources/assets/images/question.svg");
 }
 
+.password_icono:before {
+    content: url("../../../../../resources/assets/images/password.svg");
+}
+
 .confirmar .seguro-mensaje {
     font-size: 1.8rem;
     color: #636363 !important;
@@ -359,7 +363,8 @@
 /**fin de  confirmar dialogos */
 
 /*searcher clientes*/
-.searcher_clientes {
+.searcher_clientes,
+.contrasena {
     z-index: 52001 !important;
 }
 
@@ -381,4 +386,9 @@
     text-transform: capitalize !important;
     font-weight: normal !important;
     font-size: 1.4em !important;
+}
+
+
+.contrasena .vs-popup--header {
+    display: none !important;
 }

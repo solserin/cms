@@ -5,7 +5,7 @@
       close="cancelar"
       title="catálogo de clientes"
       :active.sync="showVentana"
-      @close="cancelar"
+      ref="formulario"
     >
       <!--inicio cliente-->
       <vx-card>
@@ -498,6 +498,9 @@ export default {
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
+        this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
+          this.cancelar();
+        };
         this.$nextTick(() =>
           this.$refs["nombre_cliente"].$el.querySelector("input").focus()
         );
