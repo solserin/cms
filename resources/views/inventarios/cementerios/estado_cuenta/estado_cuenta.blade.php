@@ -129,7 +129,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-85 center">
-                            {{ $datos['nombre'] }}
+                            {{ $datos['cliente_nombre'] }}
                         </div>
                     </div>
                 </td>
@@ -169,7 +169,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-80 center">
-                            {{ $datos['propiedad']['tipo_propiedad']['tipo'] }}
+                            {{ $datos['tipo_propiedad_des'] }}
                         </div>
                     </div>
                 </td>
@@ -181,7 +181,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-55 center">
-                            {{ $datos['propiedad']['tipo_propiedad']['capacidad'] }}
+                            {{ $datos['tipo_propiedad_capacidad'] }}
                             gaveta (s)
                         </div>
                     </div>
@@ -201,7 +201,7 @@
                                 <span class="bold"> plan de venta:</span>
                             </td>
                             <td class="w-30 py-1 right bg-gray">
-                                {{ $datos['mensualidades']==0? 'contado': ($datos['mensualidades'].' meses' ) }}
+                                {{ $datos['programacion_pagos_actual'][0]['mensualidades']==0? 'contado': ($datos['programacion_pagos_actual'][0]['mensualidades'].' meses' ) }}
                             </td>
                         </tr>
                         <tr>
@@ -252,7 +252,7 @@
                                 /*calculando el total recibido hasta la fecha*/
                                 $recibido=0;
                                 @endphp
-                                @foreach ($datos['pagos_programados'] as $programado)
+                                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
                                 @foreach ($programado['pagos_realizados'] as $realizado)
                                 @if ($realizado['status']==1)
                                 @php
@@ -283,7 +283,7 @@
                     <table class="w-100">
                         <tr>
                             <td>
-                                @foreach ($datos['pagos_programados'] as $programado)
+                                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
                                     @php
                                         /*calculando el total recibido hasta la fecha*/
                                         $total=0;
@@ -343,7 +343,7 @@
         <table class="w-100">
             <tr>
                 <td class="w-50 px-2 pt-2 center">
-                    <span>{{$datos['nombre']}}</span>
+                    <span>{{$datos['cliente_nombre']}}</span>
                     <div class="w-80 mr-auto ml-auto border-top-black-1 pt-1">
                         firma del cliente
                     </div>
@@ -380,7 +380,7 @@
             </thead>
             <tbody>
 
-                @foreach ($datos['pagos_programados'] as $programado)
+                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
                  @php
                 /*calculando el total recibido hasta la fecha*/
                 $total=0;
@@ -412,7 +412,7 @@
                        @endif
                     </td>
                     <td class="center py-5 letter-spacing-2">{{$programado['referencia_pago']}}</td>
-                    <td class="center py-5">{{$programado['tipo_pago']['tipo']}}</td>
+                    <td class="center py-5">{{$programado['concepto_pago']['concepto']}}</td>
                     <td class="center py-5">
                         {{ fecha_abr(($programado['fecha_programada'])) }}
                     </td>

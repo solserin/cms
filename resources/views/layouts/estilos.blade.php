@@ -11,6 +11,11 @@
           padding-right:{{($i/3)}}em !important;
           padding-left:{{($i/3)}}em !important;
         }
+        .px-{{$i}}px{
+          padding-right:{{$i}}px !important;
+          padding-left:{{$i}}px !important;
+        }
+
         .pr-{{$i}}{
           padding-right:{{($i/3)}}em !important;
         }
@@ -49,6 +54,9 @@
         }
         .mt-{{$i}}{
           margin-top: {{($i/3)}}em !important;
+        }
+        .mt-{{$i}}px{
+          margin-top: {{($i)}}px !important;
         }
 
         .mb-{{$i}}{
@@ -97,6 +105,10 @@
           min-height: {{($i)}}vh !important;
         }
 
+        .h-{{$i}}-p{
+          min-height: {{($i)}}% !important;
+        }
+
         .radius-{{$i}}{
           border-radius: {{($i)}}px !important;
         }
@@ -132,9 +144,19 @@
           .size-{{$i}}{
               font-size: {{$i}}em !important;
           }
+           .size-{{$i}}px{
+              font-size: {{$i}}px !important;
+          }
+
+           .b-spacing-{{$i}}px{
+               border-spacing:{{$i}}px !important;
+          }
+
         
   @endfor
-
+      .w-content{
+         display: inline-block;
+        }
 
    .float-right{
      float:right !important;
@@ -169,7 +191,7 @@
       text-transform: lowercase;
     }
     /*transform**/
-    
+
      .texto-base{
       font-size: 1em !important;
     }
@@ -206,12 +228,34 @@
     }
     
     .bold{
-      font-weight: 600 !important;
+      font-weight: 700 !important;
+    }
+
+    .light{
+     font-weight: 300;
+    }
+
+    .thin{
+        font-weight: 200;
+    }
+
+    .semibold{
+     font-weight: 600;
     }
 
     .w-normal{
       font-weight: normal !important;
     }
+    .font-hairline{
+      font-weight: 100;
+    }	
+    .font-extrabold	{
+      font-weight: 800;
+    }
+    .font-black	{
+      font-weight: 900;
+    }
+
 
     .underline{
       text-decoration: underline;
@@ -222,8 +266,12 @@
     }
 
     .bg-gray{
-      background-color: #{{env('GRAYCOLOR')}} !important;
+      background-color: #E5E8E8 !important;
     }
+    .bg-gray-dark{
+      background-color: #BFBFBF !important;
+    }
+    
 
      .bg-black{
       background-color: #000 !important;
@@ -252,6 +300,11 @@
     .text-success{
       color: #28C76F !important;
     }
+
+     .text-black{
+      color: #000 !important;
+    }
+
 
 
  

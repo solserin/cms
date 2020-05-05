@@ -517,7 +517,7 @@ export default {
             url: "/inventarios/cementerio/documento_estado_de_cuenta_cementerio"
           });
           //estado de cuenta
-          //this.request.email = res.data[0].email;
+          this.request.email = res.data.cliente_email;
           this.request.venta_id = id_venta;
           this.openReportesLista = true;
           this.$vs.loading.close();

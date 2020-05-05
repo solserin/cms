@@ -119,6 +119,15 @@ function mes_from_fecha($fecha)
     return strtoupper(($arrayMeses[date('m', strtotime($fecha)) - 1]));
 }
 
+function mes_year_from_fecha($fecha)
+{
+    $arrayMeses = array(
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    );
+    return strtoupper(($arrayMeses[date('m', strtotime($fecha)) - 1]) . "/" . date('Y', strtotime($fecha)));
+}
+
 
 function calculaedad($fechanacimiento)
 {

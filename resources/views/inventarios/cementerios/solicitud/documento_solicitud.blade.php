@@ -129,7 +129,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-85 center">
-                            {{ $datos['nombre'] }}
+                            {{ $datos['cliente_nombre'] }}
                         </div>
                     </div>
                 </td>
@@ -155,9 +155,9 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-81 center">
-                            {{ $datos['domicilio'] }},
-                            {{ $datos['ciudad'] }}
-                            {{ $datos['estado'] }}.
+                            {{ $datos['cliente_direccion'] }},
+                            {{ $datos['cliente_ciudad'] }}
+                            {{ $datos['cliente_estado'] }}.
                         </div>
                     </div>
                 </td>
@@ -173,7 +173,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-47 center">
-                            {{ $datos['telefono']!=''?$datos['telefono']:'No capturado' }}
+                            {{ $datos['cliente_telefono']!=''?$datos['cliente_telefono']:'No capturado' }}
                         </div>
                     </div>
                 </td>
@@ -185,7 +185,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-72 center">
-                            {{ $datos['celular']!=''?$datos['celular']:'No capturado' }}
+                            {{ $datos['cliente_celular']!=''?$datos['cliente_celular']:'No capturado' }}
                         </div>
                     </div>
                 </td>
@@ -194,11 +194,11 @@
                     <div class="right">
                         <div class="float-left w-32 left bg-nada">
                             <span class="bold uppercase texto-sm">
-                                tel. oficina:
+                                Tel. Extra:
                             </span>
                         </div>
                         <div class="float-right bg-gray w-68 center">
-                            {{ $datos['tel_oficina']!=''?$datos['tel_oficina']:'No capturado' }}
+                            {{ $datos['cliente_telefono_extra']!=''?$datos['cliente_telefono_extra']:'No capturado' }}
                         </div>
                     </div>
                 </td>
@@ -215,7 +215,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-78 center">
-                            {{ $datos['rfc']!=''?$datos['rfc']:'No capturado' }}
+                            {{ $datos['cliente_rfc']!=''?$datos['cliente_rfc']:'No capturado' }}
                         </div>
                     </div>
                 </td>
@@ -227,7 +227,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-82 center lowercase">
-                            {{ $datos['email']!=''?$datos['email']:'No capturado' }}
+                            {{ $datos['cliente_email']!=''?$datos['cliente_email']:'No capturado' }}
                         </div>
                     </div>
                 </td>
@@ -240,7 +240,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-55 center">
-                            {{ fecha_abr(($datos['fecha_nac'])) }}
+                            {{ fecha_abr(($datos['cliente_fecha_nac'])) }}
                         </div>
                     </div>
                 </td>
@@ -252,7 +252,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-60 center">
-                            {{ calculaedad((String)($datos['fecha_nac'])) }} años
+                            {{ calculaedad((String)($datos['cliente_fecha_nac'])) }} años
                         </div>
                     </div>
                 </td>
@@ -339,7 +339,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-80 center">
-                            {{ $datos['propiedad']['tipo_propiedad']['tipo'] }}
+                            {{ $datos['tipo_propiedad_des'] }}
                         </div>
                     </div>
                 </td>
@@ -351,7 +351,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-55 center">
-                            {{ $datos['propiedad']['tipo_propiedad']['capacidad'] }}
+                            {{ $datos['tipo_propiedad_capacidad'] }}
                             gaveta (s)
                         </div>
                     </div>
@@ -371,7 +371,8 @@
                                 <span class="bold"> plan de venta:</span>
                             </td>
                             <td class="w-30 py-1 right bg-gray">
-                                {{ $datos['mensualidades']==0? 'contado': ($datos['mensualidades'].' meses' ) }}
+                                 {{ $datos['programacion_pagos_actual'][0]['mensualidades']==0? 'contado': ($datos['programacion_pagos_actual'][0]['mensualidades'].' meses' ) }}
+                                
                             </td>
                         </tr>
                         <tr>
@@ -422,14 +423,14 @@
                                 /*calculando el total recibido hasta la fecha*/
                                 $recibido=0;
                                 @endphp
-                                @foreach ($datos['pagos_programados'] as $programado)
-                                @foreach ($programado['pagos_realizados'] as $realizado)
-                                @if ($realizado['status']==1)
-                                @php
-                                $recibido+=$realizado['total'];
-                                @endphp
-                                @endif
-                                @endforeach
+                                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
+                                    @foreach ($programado['pagos_realizados'] as $realizado)
+                                        @if ($realizado['status']==1)
+                                            @php
+                                                $recibido+=$realizado['total'];
+                                            @endphp
+                                        @endif
+                                    @endforeach
                                 @endforeach
                                 $ {{ number_format( $recibido,2)}}
                             </td>
@@ -458,9 +459,9 @@
                         $anticipo=0;
                         $metodo_pago='';
                         @endphp
-                        @foreach ($datos['pagos_programados'] as $programado)
+                        @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
                         @foreach ($programado['pagos_realizados'] as $realizado)
-                        @if ($realizado['status']==1 && $realizado['fecha_registro']==$datos['fecha_registro'])
+                        @if ($realizado['status']==1 && $realizado['fecha_registro']==$datos['fecha_venta'])
                         @php
                         $anticipo=$realizado['total'];
                         $metodo_pago=$realizado['tipo_pago_sat']['forma'];
@@ -497,7 +498,7 @@
             </tr>
             <tr>
                 <td class="w-40 px-2 pt-2 center">
-                    <span>{{$datos['nombre']}}</span>
+                    <span>{{$datos['cliente_nombre']}}</span>
                     <div class="w-80 mr-auto ml-auto border-top-black-1 pt-1">
                         firma del cliente
                     </div>
@@ -526,12 +527,13 @@
                     <div class="left">
                         <div class="float-left w-53 left bg-nada">
                             <span class="bold uppercase texto-sm">
-                                {{$datos['pagos_programados'][0]['tipo_pagos_id']==1?'enganche acordado':'pago único'}}
+                               
+                                {{ $datos['programacion_pagos_actual'][0]['pagos_programados'][0]['conceptos_pagos_id']==1?'enganche acordado':'pago único'}}
                                 :
                             </span>
                         </div>
                         <div class="float-right bg-gray w-47 center">
-                            {{number_format($datos['pagos_programados'][0]['total'],2)}} mxn
+                            {{number_format($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'],2)}} mxn
                         </div>
                     </div>
                 </td>
@@ -543,7 +545,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-50 center">
-                            {{ $datos['mensualidades']!='0'?$datos['mensualidades'].' meses':'n/a' }}
+                            {{ $datos['programacion_pagos_actual'][0]['mensualidades']!='0'?$datos['programacion_pagos_actual'][0]['mensualidades'].' meses':'n/a' }}
                         </div>
                     </div>
                 </td>
@@ -555,7 +557,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-62 center">
-                            {{ $datos['mensualidades']!='0'? number_format($datos['pagos_programados'][1]['total']).' mxn':'n/a' }}
+                            {{ $datos['programacion_pagos_actual'][0]['mensualidades']!='0'? number_format($datos['programacion_pagos_actual'][0]['pagos_programados'][1]['total']).' mxn':'n/a' }}
                         </div>
                     </div>
                 </td>
@@ -563,15 +565,15 @@
             <tr>
                 <td colspan="3">
                     <div class="w-100">
-                        @foreach ($datos['pagos_programados'] as $key=>$programado)
+                        @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $key=>$programado)
                         <div class="w-48 px-2 py-1 {{($key%2>0)?'float-right':'float-left'}}">
                             <div class="left">
                                 <div class="float-left w-20 left bg-nada">
                                     <div class="bold uppercase texto-sm center">
-                                        @if ($programado['tipo_pagos_id']==3)
+                                        @if ($programado['conceptos_pagos_id']==3)
                                         pago único
                                         @else
-                                        {{$programado['tipo_pagos_id']==1?'enganche':'abono '.($key)}}
+                                        {{$programado['conceptos_pagos_id']==1?'enganche':'abono '.($key)}}
                                         @endif
 
                                     </div>
@@ -654,16 +656,16 @@
             <span class="- bold texto-sm pr-2 uppercase">Nota.- </span>
         Debo y pagaré incondicionalmente por este pagaré a la orden de <span class="bold uppercase">{{$empresa->razon_social}}</span> en Mazatlán, Sinaloa o en cualquier otra
         ciudad que se me requiera el pago por la cantidad de: $ <span class="bold uppercase">{{number_format($datos['total'],2)}}</span>({{ NumerosEnLetras::convertir($datos['total'],'Pesos MXN',false) }}). Este pagaré tendrá vencimiento los días <span class="bold uppercase">{{dia_numero($datos['fecha_venta'])}}</span> de cada mes hasta cubrir la totalidad
-de este documento. El primer pago vencerá el <span class="bold uppercase">{{fecha_no_day($datos['pagos_programados'][0]['fecha_programada'])}}</span> ({{$datos['pagos_programados'][0]['tipo_pago']['tipo']}}), en caso de falta de pago de <span class="bold uppercase">{{ $datos['maximo_pagos_vencidos'] }}({{ NumerosEnLetras::convertir($datos['maximo_pagos_vencidos'],'',false) }})</span> o más vencimientos sucesivos, se entenderá
+de este documento. El primer pago vencerá el <span class="bold uppercase">{{fecha_no_day($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['fecha_programada'])}}</span> ({{$datos['programacion_pagos_actual'][0]['pagos_programados'][0]['concepto_pago']['concepto']}}), en caso de falta de pago de <span class="bold uppercase">{{ $datos['ajustes_intereses']['maximo_pagos_vencidos'] }}({{ NumerosEnLetras::convertir($datos['ajustes_intereses']['maximo_pagos_vencidos'],'',false) }})</span> o más vencimientos sucesivos, se entenderá
 pagadero este documento a la vista por el saldo insoluto del mismo, en los
 términos señalados por el artículo 79 de la Ley General de Títulos y Operaciones
 de crédito. Este pagaré es causal y no negociable desde la fecha del primer
 vencimiento no pagado hasta el día de la solución del adeudo. Este causará interés
-        moratorio a tasa mensual del <span class="bold uppercase">{{($datos['tasa_fija_anual']/12)}}%</span> en Mazatlán, Sinaloa <span class="bold lowercase capitalize">{{fecha_no_day($datos['fecha_venta'])}}</span>.
+        moratorio a tasa mensual del <span class="bold uppercase">{{($datos['ajustes_intereses']['tasa_fija_anual']/12)}}%</span> en Mazatlán, Sinaloa <span class="bold lowercase capitalize">{{fecha_no_day($datos['fecha_venta'])}}</span>.
         </p>
          <p class="texto-xs justificar line-base">
         El contratante se obliga a pagar a la agencia funeraria las parcialidades contratadas dentro
-         de los primeros <span class="bold">{{$datos['dias_antes_vencimiento']}}</span> días hábiles naturales a la fecha de vencimiento mensual que le
+         de los primeros <span class="bold">{{$datos['ajustes_intereses']['dias_antes_vencimiento']}}</span> días hábiles naturales a la fecha de vencimiento mensual que le
 corresponda. 
         </p>
 
@@ -672,7 +674,7 @@ corresponda.
 el contratante se ha obligado a cubrir, no existiendo ningún gasto, interés o cualquier
 cargo adicional, siempre que el contratante pague en tiempo las parcialidades convenidas.
 En caso de retraso mensual, el contratante se obliga a pagar a la agencia funeraria interés
-moratorio del <span class="bold">{{$datos['tasa_fija_anual']}}</span>% ({{ NumerosEnLetras::convertir($datos['tasa_fija_anual'],'',false) }} por ciento) fija anual, la que se calculará y liquidará sobre
+moratorio del <span class="bold">{{$datos['ajustes_intereses']['tasa_fija_anual']}}</span>% ({{ NumerosEnLetras::convertir($datos['ajustes_intereses']['tasa_fija_anual'],'',false) }} por ciento) fija anual, la que se calculará y liquidará sobre
 cantidades que adeude el Contratante a la Agencia Funeraria. Los intereses moratorios se
 calcularán multiplicando el monto de lo que adeude el contratante por la tasa de interés
 anual, dividida entre 365, este resultado se multiplica por el número de días transcurridos
@@ -680,12 +682,12 @@ entre la fecha de pago que debió ser hecho y la fecha que el contratante liquid
         </p>
 
         <p class="texto-xs justificar line-base">
-      En caso de que el retraso supere los <span class="bold">{{$datos['maximo_dias_retraso']}}</span> días, la agencia funeraria podrá elegir entre exigir
+      En caso de que el retraso supere los <span class="bold">{{$datos['ajustes_intereses']['maximo_dias_retraso']}}</span> días, la agencia funeraria podrá elegir entre exigir
 el pago de todas las mensualidades aun no pagadas por el contratante y los intereses
 moratorios acumulados o bien rescindir el contrato y aplicar como pena convencional por
-incumplimiento el <span class="bold">{{$datos['porcentaje_pena_convencional_minima']}}%</span> del monto pagado por el contratante, debiendo a la Agencia
+incumplimiento el <span class="bold">{{$datos['ajustes_intereses']['porcentaje_pena_convencional_minima']}}%</span> del monto pagado por el contratante, debiendo a la Agencia
 Funeraria regresar las cantidades en exceso y que sobren de dicha pena al contratante. En
-caso de que el retraso en el pago sea superior a los <span class="bold">{{$datos['maximo_dias_retraso']}}</span> días, la Agencia Funeraria podrá
+caso de que el retraso en el pago sea superior a los <span class="bold">{{$datos['ajustes_intereses']['maximo_dias_retraso']}}</span> días, la Agencia Funeraria podrá
 igualmente rescindir el Contrato y aplicar como pena convencional la totalidad de los
 pagos efectuados por el contratante. 
         </p>
@@ -697,7 +699,7 @@ número total de los pagos convenidos ante la notificación de rescisión que le
 Agencia Funeraria, el contratante podrá optar porque se aplique el mecanismo indicado
 en el párrafo anterior o bien pagar el saldo del contrato más los intereses moratorios
 generados por su incumplimiento. En el primer caso (rescisión con penalidad) solo si el 
-retraso fuera menor a <span class="bold">{{$datos['maximo_dias_retraso']}}</span> días, la agencia funeraria devolverá al contratante la cantidad
+retraso fuera menor a <span class="bold">{{$datos['ajustes_intereses']['maximo_dias_retraso']}}</span> días, la agencia funeraria devolverá al contratante la cantidad
 que corresponda una vez aplicada la penalidad y los intereses moratorios. En el segundo
 caso (pago total de saldo insoluto), la Agencia Funeraria entregará al contratante el recibo
 de finiquito correspondiente solo si este paga la cantidad total adeudada (saldo insoluto

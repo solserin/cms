@@ -10,94 +10,14 @@
     rel="stylesheet">
   <title>Reportes</title>
   <style>
-    body {
-      font-family: 'Open Sans' !important;
-    }
-
-
-    /*#header,#header section table{
-      margin-top: -30px !important;
-      width: 100%;
-      padding-top: 0px;
-    }
-
-    #header section table {
-      border-collapse: collapse;
-      color: #{{env('TEXTOSCOLOR')}};
-    }
-
-    #header section table, #header section table th, #header section table td {
-      border-bottom: 1px solid #{{env('MAINCOLOR')}};
-    }
-
-     #header section table td {
-       padding:10px;
-     }
-
-    .logo{
-      max-width: 270px;
-    }
-
-    h1{
-      font-size: .8em;
-      line-height: 1.2em !important;
-      text-transform: uppercase;
-      text-align: right;
-      color:  #{{env('TEXTOSCOLOR')}};
-    }
-
-    .datos{
-      text-align: right !important;
-      font-size: .9em;
-      line-height: .6em !important;
-      text-transform: capitalize !important;
-    }
-
-
-
-     .data table thead tr th{
-        padding: 6px;
-     }
-    .data table thead tr th{
-      font-size: .9em;
-      text-align: center;
-      color:  #{{env('MAINCOLOR')}};
-    }
-
-    .data table tr td{
-      text-align: center;
-    }
-
-    .data table {
-      margin-top: 30px !important;
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .data table th,  .data table tr,.data table td {
-      border: 1px solid #{{env('SECONDCOLOR')}};
-    }
-    */
-    .pagos .tablas {
-      width: 100%;
-    }
-
-    .pagos {
-      border: 1px dashed #000;
-      border-right: none;
-      border-left: none;
-      padding: 6px 20px 0px 20px;
-      min-height: 121mm !important;
-      max-height: 121mm !important;
-    }
 
     .logos {
-      max-width: 160px;
+      min-width: 200px;
+      max-width: 200px;
     }
 
     .banco {
-      display: block;
-      margin-left: auto;
+      border: 2px solid #E5E8E8 !important;
     }
 
     .logo {
@@ -105,325 +25,409 @@
       margin-right: auto;
     }
 
-    .concepto {
-      font-weight: 500;
-      font-size: 1em;
-      line-height: .8em;
-    }
-
-    .mes {
-      font-size: 1.1em;
-      font-weight: 550;
-      line-height: .5em;
-      text-transform: uppercase;
-    }
-
-    .venta {
-      margin-top: 6px;
-      text-align: justify;
-    }
-
-    .venta table {
-      padding: 1px 0 1px 0;
-    }
-
-    .dato {
-      font-size: 1em;
-    }
-
-    .valor {
-      font-size: .9em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .info-header {
-      padding: 5px 3px 5px 3px;
-      color: #fff;
-      margin-top: 3px !important;
-      background-color: #b18b1e;
-      font-weight: 600;
-      font-size: 1em;
-      line-height: 1em;
-      text-transform: uppercase;
-    }
-
-    .bg-dato {
-      padding: 0 2px 0 2px;
-      background-color: #dae1e7;
-    }
-
-    .bg-total {
-      padding: 0 4px 0 4px;
-      background-color: #FE0000;
-      color: #fff;
-    }
-
-    .cuentas {
-      text-align: right;
-      padding: 0px 0 10px 0;
-    }
-
-    .santader {
-      color: #FE0000;
-      font-weight: 600;
-    }
-
-    .pendiente {
-      color: #FE0000;
-    }
-
-    .impuestos {
-      color: #FE0000;
-    }
-
-    .valor-ojo {
-      font-size: 1em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-
-    .numero-referencia {
-      text-transform: uppercase;
-      color: #FE0000;
-    }
-
-    .dato-totales {
-      font-size: 1.2em;
-      line-height: .8em;
-    }
-
-    .dato-totales-valor {
-      font-size: 1.2em;
-      line-height: .8em;
-      font-weight: 600;
-    }
-
-    .digitos {
-      width: 90% !important;
-      margin: 0 auto 0 auto;
+    .santander{
+    color:#D31413 !important;
     }
 
     .digito {
       padding: 3px 7px 3px 7px;
       border: 1px solid #dae1e7;
       font-size: 1em;
-      line-height: 2.3em;
+      line-height: 1.5em;
     }
 
     .barcode div {
-      min-height: 30px !important;
+      min-height: 40px !important;
     }
 
-    .barcode {
-      width: 60%;
-      margin: 10px auto 0 auto;
-    }
-
-    .ojo {
-      font-size: .8em;
-      margin-top: 25px;
-    }
-
-    .sello {
-      margin-top: 40px !important;
-      text-align: center;
-      margin: 0 auto 0 auto;
-      width: 50%;
-      font-size: 1em !important;
-      line-height: 1.3em !important;
-      padding: 0 0 10px 0;
-      border-bottom-width: 1px;
-      border-bottom-style: solid;
-      border-bottom-color: black;
-    }
+    .bg-total {
+            background-color: #FE0000;
+            color: #fff;
+        }
 
 
-    .pagado {
-      color: #22BB33;
-    }
+          .numeros-contrato {
+            width: 100% !important;
+        }
 
-    
+        .numeros-contrato .control {
+            text-align: center;
+            text-transform: uppercase !important;
+            font-size: .8em;
+            line-height: 1.9em !important;
+            font-weight: 600 !important;
+        }
+
+        .control-valor {
+            text-align: center;
+            font-size: .9em;
+            line-height: .3em !important;
+            text-transform: uppercase;
+        }
+
   </style>
 </head>
 
 <body>
   @include('layouts.estilos')
-  @foreach ($datos['pagos_programados'] as $pago)
+
+  @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $key=>$pago)
   @php
-  //checa cuanto se ha pagado por cada pago programado
-  $total_pagado_por_programado=0;
+    //checa cuanto se ha pagado por cada pago programado
+    $total_pagado_por_programado=0;
   @endphp
   @foreach ($pago['pagos_realizados'] as $pagado)
-  @if ($pagado['status']==1)
-  @php
-  $total_pagado_por_programado+=$pagado['total'];
-  @endphp
-  @endif
+    @if ($pagado['status']==1)
+      @php
+        $total_pagado_por_programado+=$pagado['total'];
+      @endphp
+    @endif
   @endforeach
   @php
-  $restante_pagar_de_este_pago=$pago['total']-$total_pagado_por_programado;
+    $restante_pagar_de_este_pago=$pago['total']-$total_pagado_por_programado;
   @endphp
 
-
   <div class="pagos relative">
-    <table class="tablas">
+    <table class="w-100">
       <thead>
         <tr>
-          <th>
-            <img class="logo logos" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
+          <th class="w-70">
+            <img class="logo logos -mt-6" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
           </th>
-          <th>
-            <h1 class="concepto">
-              RECIBO DE PAGO DE PLAN FUNERARIO EN CEMENTERIO
-            </h1>
-            <h2 class="mes">
-              @if ($pago['tipo_pagos_id']==1)
-              ENGANCHE INICIAL
-              @elseif($pago['tipo_pagos_id']==2)
-              mensualidad número {{$pago['num_pago']}} / {{mes_from_fecha($pago['fecha_programada'])}}
-              @else
-              Pago único de liquidación
-              @endif
-            </h2>
-          </th>
-          <th>
-            <img class="logos banco" src="{{asset('images/santander.png')}}" alt="">
+          <th class="w-30">
+           <div class="numeros-contrato">
+                            <div class="control bg-gray">
+                                solicitud de servicio
+                            </div>
+                            <p class="control-valor">
+                                {{ $datos['numero_solicitud'] }}
+                            </p>
+
+                            <div style=""></div>
+                            <div class="control bg-gray">
+                                Número de convenio
+                            </div>
+                            <p class="control-valor">
+                                {{ $datos['numero_convenio'] }}
+                            </p>
+                        </div>
           </th>
         </tr>
       </thead>
     </table>
+    <div class="ficha mt-1">
+      <span class="bold size-25px letter-spacing-1">Ficha de Pago</span>
+      <p class="texto-base justificar line-base">
+       Puede realizar el pago en la sucursal de <span class="capitalize bold">{{$empresa->nombre_comercial}}</span> llevando este documento o en 
+       cualquier sucursal 
+       <span class="santander">Santander</span> (depósito o transferencia), debiendo tomar en cuenta 
+       los plazos y cantidades establecidas según su contrato.
+      </p>
 
-    <div class="venta">
-      <table class="tablas">
-        <tbody>
-          <tr>
-            <td width="70%">
-              <span class="dato"> Nombre del Titular:</span> <span class="valor">{{$datos['nombre']}}</span>
-            </td>
-            <td width="30%" align="right">
-              <span class="dato"> Fecha Impresión:</span> <span class="valor">{{fecha_completa()}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="tablas">
-        <tbody>
-          <tr>
-            <td width="25%">
-              <span class="dato"> Núm. Venta (Sistemas): </span> <span class="valor">{{$datos['id']}}</span>
-            </td>
-            <td width="25%" align="right">
-              <span class="dato"> Num. Solicitud: </span> <span class="valor">{{$datos['numero_solicitud']}}</span>
-            </td>
-            <td width="25%" align="right">
-              <span class="dato"> Núm. Convenio: </span> <span class="valor">{{$datos['numero_convenio']}}</span>
-            </td>
-            <td width="25%" align="right">
-              <span class="dato"> Núm. Título: </span> <span class="valor">{{$datos['numero_titulo']}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!--
-        <table class="tablas">
+       <table class="w-100 texto-base">
                 <tbody>
                     <tr>
-                       <td width="30%">
-                          <span class="dato">Tipo de Venta : </span> <span class="valor">uso inmediato</span>
+                        <td width="21%">
+                          <div class="py-1 bg-gray-dark">
+                              <div class="px-7px bold"> Nombre del Titular</div>
+                          </div>
                         </td>
-                        <td width="40%" align="center">
-                           <span class="dato"> Ubicación: </span> <span class="valor">Terraza 2, Fila A Lote 3</span>
+                        <td width="42%">
+                          <div class="px-1px">
+                            <div class="bg-gray px-7px py-1">
+                               {{$datos['cliente_nombre']}}
+                            </div>
+                          </div>
                         </td>
-                        <td width="30%" align="right">
-                          <span class="dato">Fecha Venta: </span> <span class="valor">10 enero 2020</span>
+                        <td width="27%">
+                          <div class="px-1px">
+                            <div class="bg-gray-dark px-7px py-1 bold">
+                               Núm. Venta (Cementerio)
+                            </div>
+                          </div>
+
+                        </td>
+                         <td width="10%">
+                          <div class="bg-gray px-6px py-1 center">
+                             {{$datos['id']}}
+                          </div>
+                        </td>
+                    </tr>
+                </tbody>
+        </table>
+        <!--<table class="w-100">
+                <tbody>
+                   <td width="17%">
+                          <div class="py-1 bg-gray-dark py-1">
+                              <div class="px-7px bold">Núm. Solicitud</div>
+                          </div>
+                        </td>
+                        <td width="16%">
+                          <div class="px-1px">
+                            <div class="bg-gray px-7px py-1">
+                               {{$datos['numero_solicitud']}}
+                            </div>
+                          </div>
+                        </td>
+                        <td width="18%">
+                          <div class="px-1px">
+                            <div class="bg-gray-dark px-7px py-1 bold">
+                              Núm. Convenio
+                            </div>
+                          </div>
+
+                        </td>
+                         <td width="16%">
+                          <div class="bg-gray px-6px py-1">
+                             {{$datos['numero_convenio']}}
+                          </div>
+                        </td>
+
+                         <td width="17%">
+                          <div class="px-1px">
+                            <div class="bg-gray-dark px-7px py-1 bold">
+                               Núm. Título
+                            </div>
+                          </div>
+
+                        </td>
+                         <td width="16%">
+                          <div class="bg-gray px-6px py-1">
+                             {{$datos['numero_titulo']}}
+                          </div>
                         </td>
                     </tr>
                 </tbody>
         </table>
       -->
-      <h3 class="info-header">Información para el Pago: </h3>
-      <table class="tablas">
-        <tbody>
-          <tr>
-            <td width="15%">
-              <span class="dato">Núm. Pago : </span> <span class="valor">{{$pago['num_pago']}}</span>
-            </td>
-            <td width="40%" align="center">
-              <span class="bg-dato">
-                <span class="dato">Pago puntual antes de: </span> <span
-                  class="valor">{{fecha_no_day($pago['fecha_programada'])}}</span>
-              </span>
-            </td>
-            <td width="27%" align="center">
-              <span class="dato"> Tipo Pago: </span> <span class="valor">{{$pago['tipo_pago']['tipo']}}</span>
-            </td>
-            <td width="18%" align="right">
-              <span class="dato">Estatus: </span> <span class="valor">
 
-                @if ($restante_pagar_de_este_pago>0)
-                <span class="pendiente">Pendiente</span>
-                @else
-                <span class="pagado">Pagado</span>
-                 <span class="watermark watermark-success top-45 right-30 px-5 uppercase size-2 w-normal absolute">
-                    pagado
-                </span>
-                @endif
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="tablas">
-        <tbody>
-          <tr>
-            <td width="50%">
-              <p class="numero-referencia"><span class="dato bg-dato">Número de Referencia</span></p>
-              <p class="digitos">
-                @for($i = 0; $i < strlen($pago['referencia_pago']); $i++) <span class="digito">
-                  {{$pago['referencia_pago'][$i]}}</span>
-                  @endfor
-              </p>
-              <!--<div class="barcode">
-                            {!!DNS1D::getBarcodeHTML("02202004020780", "C128")!!}
+        <div class="banco mt-4 texto-sm">
+          <div class="bg-gray-dark ">
+            <table class="w-100">
+                <tbody>
+                  <tr>
+                    <td width="100%" class="py-1 px-1 semibold texto-sm">
+                        Ficha de pago Banco <span class="santander">Santander</span>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+          <table class="w-100 mt-1">
+                <tbody>
+                  <tr>
+                    <td width="50%" class="py-1 px-2">
+                        <img class="logos" src="{{asset('images/santander.png')}}" alt="">
+                    </td>
+                    <td width="50%" class="py-1 px-2">
+                        <div class="barcode w-100 right">
+                          <div class="w-content center w-normal">
+                            {!!DNS1D::getBarcodeHTML($pago['referencia_pago'], "C128")!!}
+                          </div>
                         </div>
-                      -->
-              <!--<p class="sello">
-                        sello del banco
-                      </p>-->
-              <p class="ojo">
-                <strong>NOTA</strong>: Por ningun motivo será considerado como comprobante de pago sin el sello del
-                banco o el número de operación que resulte de hacer el pago por cualquier otro medio. <strong>El titular
-                  deberá guardar los recibos para futuras aclaraciones</strong>.
-              </p>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+            @if ($pago['pagado']==1)
+                <!--pagado-->
+                 <table class="w-100">
+                  <tbody>
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Estatus:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px text-success">pagado</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Fecha Límite de Pago:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px">{{fecha_no_day($pago['fecha_a_pagar'])}}</span>(Solicitar una nueva ficha en caso de vencimiento).
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Concepto:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px">{{$pago['concepto']}}</span>
+                      </td>
+                    </tr>
 
-            </td>
-            <td width="45%">
-              <div class="cuentas"><span class="dato bg-dato">Para pago en sucursales <span
-                    class="santader">Santander</span>, </span> <br> <span class="valor-ojo">Número de cuenta:
-                  {{$empresa->cuenta}}</span></div>
-              <div class="cuentas"><span class="bg-dato">Para transferencias electrónicas</span>, <br> <span
-                  class="valor-ojo">Clabe: {{$empresa->clabe}} </span> <br> <span class="bg-dato"> Beneficiario</span>,
-                <br> <span class="valor-ojo">{{$empresa->razon_social}} </span></div>
-              <!--<div class="cuentas"><span class="dato-totales"> Sub Total</span> <span class="dato-totales-valor">$ 5,000.00 Pesos MXN</span></div>
-                           <div class="cuentas"><span class="dato-totales"> IVA</span> <span class="dato-totales-valor">$ 5,000.00 Pesos MXN</span></div>
-                           <div class="cuentas"><span class="dato-totales"> Descuento</span> <span class="dato-totales-valor">$ 5,000.00 Pesos MXN</span></div>
-                           -->
-              <div class="cuentas"><span class="bg-total"><span class="dato-totales"> Total a Pagar</span> <span
-                    class="dato-totales-valor">$ {{number_format($pago['total'],2)}} Pesos MXN</span></span> <br><span
-                  class="dato">({{numeros_a_letras($pago['total'])}} Pesos MXN, incluye IVA y descuentos
-                  aplicados, <span><strong>NO</strong> intereses</span>)</span></div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Monto pago:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px">$ {{number_format($pago['total'],2)}} Pesos MXN </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Penalización:</span>
+                      </td>
+                      <td width="74%" class=" px-2 uppercase">
+                        @if ($pago['dias_vencido']>0)
+                         <span class="bold size-15px">$ {{number_format($pago['intereses_a_pagar'],2)}} Pesos MXN ({{$pago['dias_vencido']}} Días de retraso)</span>
+                        @else
+                           <span class="bold size-15px">$ {{number_format($pago['intereses_a_pagar'],2)}} Pesos MXN</span>
+                        @endif
+                      </td>
+                    </tr>
+                      <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-18px">total a pagar:</span>
+                      </td>
+                      <td width="74%" class=" px-2 uppercase">
+                          <span class="bold size-21px">$ {{number_format($pago['total_a_pagar'],2)}} Pesos MXN </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="100%" colspan="2" class="px-2 uppercase pt-6">
+                        ({{numeros_a_letras($pago['total_a_pagar'])}} Pesos MXN, incluye IVA, descuentos y las penalizaciones que apliquen)
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+            @else
+              <table class="w-100">
+                  <tbody>
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Fecha Límite de Pago:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px">{{fecha_no_day($pago['fecha_a_pagar'])}}</span>(Solicitar una nueva ficha en caso de vencimiento).
+                      </td>
+                    </tr>
+                      <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Concepto:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px">{{$pago['concepto']}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Monto pago:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px">$ {{number_format($pago['total']-$pago['total_pagado'],2)}} Pesos MXN </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Penalización:</span>
+                      </td>
+                      <td width="74%" class=" px-2 uppercase">
+                        @if ($pago['dias_vencido']>0)
+                         <span class="bold size-15px">$ {{number_format($pago['intereses_a_pagar'],2)}} Pesos MXN ({{$pago['dias_vencido']}} Días de retraso)</span>
+                        @else
+                           <span class="bold size-15px">$ {{number_format($pago['intereses_a_pagar'],2)}} Pesos MXN</span>
+                        @endif
+                      </td>
+                    </tr>
+                      <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-18px">total a pagar:</span>
+                      </td>
+                      <td width="74%" class=" px-2 uppercase">
+                          <span class="bold size-21px">$ {{number_format($pago['total_a_pagar'],2)}} Pesos MXN </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="100%" colspan="2" class="px-2 uppercase pt-6">
+                        ({{numeros_a_letras($pago['total_a_pagar'])}} Pesos MXN, incluye IVA, descuentos y las penalizaciones que apliquen)
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+            @endif
+           
+             <table class="w-100">
+                <tbody>
+                  <tr>
+                    <td width="30%" class="py-1 px-2 uppercase">
+                     <span class="bg-gray bold px-1">Número de Referencia pago</span>
+                    </td>
+                    <td width="70%" class="py-1 px-2">
+                        <p class="digitos right">
+                            @for($i = 0; $i < strlen($pago['referencia_pago']); $i++) <span class="digito">
+                              {{$pago['referencia_pago'][$i]}}</span>
+                            @endfor
+                        </p>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+             <table class="w-100">
+                <tbody>
+                  <tr>
+                    <td width="60%" class=" px-2 uppercase">
+                     <div class="pt-4">
+                        <div class="bg-gray-dark px-1 bold w-content">para depósitos en ventanilla de banco</div>
+                        <div class=" mt-3 px-1"><span class="bold">Número de cuenta</span>: {{$empresa->cuenta}}</div>
+                     </div>
+                     <div class="pt-4">
+                        <div class="bg-gray-dark px-1 bold w-content">para transferencias electrónicas</div>
+                        <div class=" mt-3 px-1"> <span class="bold">Clabe: </span> {{$empresa->clabe}}</div>
+                        <div class=" mt-3 px-1"> <span class="bold">Beneficiario:</span> {{$empresa->razon_social}}</div>
+                     </div>
+                    </td>
+                    <td width="40%" class="py-1 px-2 uppercase">
+                    
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
+     <div class="instrucciones">
+       <div class="mt-3">
+         <span class="bold uppercase">nota importante:</span>
+       </div>
+     
+         <p class="texto-sm justificar line-base">
+            Este documento no es un comprobante de pago si no cuenta con el sello del banco o la firma del personal de 
+           <span class="capitalize bold">{{$empresa->nombre_comercial}}</span> que haya registrado el pago.
+        </p>
+         <p class="texto-sm justificar line-base">
+           El titular deberá hacer llegar una copia del comprobante de pago al personal responsable de <span class="capitalize bold">{{$empresa->nombre_comercial}}</span>.
+        </p>
+         <p class="texto-sm justificar line-base">
+            El titular de este convenio deberá guardar las copias de los recibos para futuras aclaraciones.
+        </p>
+         <p class="texto-sm justificar line-base">
+            Para solicitar su factura, debe acudir a las instalaciones de <span class="capitalize bold">{{$empresa->nombre_comercial}}</span> a más tardar a fin de mes que haya realizado la operación de pago.
+        </p>
+      
+       
+         <p class="texto-sm justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">cláusula Vigésima tercera.- </span>
+            En caso de retrasarse en el pago mensual de las aportaciones, “El Cliente” deberá cubrir una pena
+            convencional sobre el total del monto de la mensualidad vencida,
+            importe que se considerará como aportación
+            adicional complementaria al cliente. El contratante se obliga a pagar a la agencia funeraria interés
+moratorio del <span class="bold">{{$datos['ajustes_intereses']['tasa_fija_anual']}}</span>% ({{ NumerosEnLetras::convertir($datos['ajustes_intereses']['tasa_fija_anual'],'',false) }} por ciento) fija anual, la que se calculará y liquidará sobre
+cantidades que adeude el Contratante a la Agencia Funeraria. Los intereses moratorios se
+calcularán multiplicando el monto de lo que adeude el contratante por la tasa de interés
+anual, dividida entre 365, este resultado se multiplica por el número de días transcurridos
+entre la fecha de pago que debió ser hecho y la fecha que el contratante liquide el adeudo.
+        </p>
+       
+     </div>
   </div>
-  @endforeach
 
+  @isset($datos['programacion_pagos_actual'][0]['pagos_programados'][($key+1)])
+      <div style = "display:block; clear:both; page-break-after:always;"></div>
+  @endisset
+      
+  @endforeach
 </body>
 
 </html>

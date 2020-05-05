@@ -5,7 +5,7 @@
       :title="HeaderNombre"
       class="pdfs_modulos bg-grey-light h-screen"
       :active.sync="showChecker"
-      @close="cancel"
+      ref="formulario"
     >
       <!-- <img style="width:100px;" src="@assets/images/pdf.svg" alt />-->
       <div class="flex flex-wrap">
@@ -104,6 +104,9 @@ export default {
       if (newValue == false) {
         this.pdf_iframe_source = "";
       } else {
+        this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
+          this.cancel();
+        };
         this.request_datos.request_parent = [];
         this.request_datos.email_address = this.Request.email;
         this.request_datos.request_parent.push(this.Request);
