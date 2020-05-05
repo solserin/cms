@@ -287,7 +287,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td width="100%" colspan="2" class="px-2 uppercase pt-6">
+                      <td width="100%" colspan="2" class="px-2 uppercase pt-2">
                         ({{numeros_a_letras($pago['total_a_pagar'])}} Pesos MXN, incluye IVA, descuentos y las penalizaciones que apliquen)
                       </td>
                     </tr>
@@ -299,13 +299,31 @@
                     @if ($pago['vencido'])
                      <tr>
                       <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Estatus:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px text-danger">pendiente vencido</span>
+                      </td>
+                    </tr>
+                     <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
                           <span class="bg-gray px-1 bold size-14px">Fecha Programada:</span>
                       </td>
                       <td width="74%" class="px-2 uppercase">
                           <span class="bold size-15px">{{fecha_no_day($pago['fecha_programada'])}}</span>.
                       </td>
                     </tr>
+                    @else
+                      <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Estatus:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px text-black">pendiente</span>
+                      </td>
+                    </tr>
                     @endif
+                  
                     <tr>
                       <td width="26%" class="px-2 uppercase py-1">
                           <span class="bg-gray px-1 bold size-14px">Fecha Límite de Pago:</span>
@@ -351,7 +369,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td width="100%" colspan="2" class="px-2 uppercase pt-6">
+                      <td width="100%" colspan="2" class="px-2 uppercase pt-2">
                         ({{numeros_a_letras($pago['total_a_pagar'])}} Pesos MXN, incluye IVA, descuentos y las penalizaciones que apliquen)
                       </td>
                     </tr>
@@ -383,14 +401,22 @@
                         <div class="bg-gray-dark px-1 bold w-content">para depósitos en ventanilla de banco</div>
                         <div class=" mt-3 px-1"><span class="bold">Número de cuenta</span>: {{$empresa->cuenta}}</div>
                      </div>
-                     <div class="pt-4">
+                     <div class="pt-3">
                         <div class="bg-gray-dark px-1 bold w-content">para transferencias electrónicas</div>
                         <div class=" mt-3 px-1"> <span class="bold">Clabe: </span> {{$empresa->clabe}}</div>
                         <div class=" mt-3 px-1"> <span class="bold">Beneficiario:</span> {{$empresa->razon_social}}</div>
                      </div>
                     </td>
                     <td width="40%" class="py-1 px-2 uppercase">
-                    
+                      <table class="w-100">
+                        <tr>
+                            <td class="w-100 px-2 pt-2 center">
+                                <div class="w-100 mr-auto ml-auto border-top-black-1 pt-1 mt-20">
+                                    firma o sello del banco
+                                </div>
+                            </td>
+                        </tr>
+                      </table>
                     </td>
                   </tr>
                 </tbody>

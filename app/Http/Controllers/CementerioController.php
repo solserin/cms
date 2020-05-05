@@ -2012,18 +2012,18 @@ class CementerioController extends ApiController
     public function documento_estado_de_cuenta_cementerio(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        /*$email =  $request->email_send === 'true' ? true : false;
+        $email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
-*/
+
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $id_venta = 5;
+        /*$id_venta = 5;
         $email = false;
         $email_to = 'hector@gmail.com';
-
+*/
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta);
 
