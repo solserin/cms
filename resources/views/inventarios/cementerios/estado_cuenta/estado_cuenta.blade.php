@@ -116,7 +116,7 @@
         </section>
     </header>
     <div class="border-black-1 radius-5 uppercase texto-sm  px-3 py-2">
-        <div class="uppercase bg-black text-white py-1 px-2 bold mb-1 texto-sm">
+        <div class="uppercase bg-gray-dark text-black py-1 px-2 bold mb-1 texto-sm">
             estado de cuenta {{fechahora_completa()}}
         </div>
         <table class="w-100 center">
@@ -191,7 +191,7 @@
         <table class="w-100">
             <tr>
                 <td class="w-40 px-0 py-2">
-                    <div class="uppercase bg-black text-white py-1 px-2 bold mb-1 texto-sm">
+                    <div class="uppercase bg-gray-dark text-black py-1 px-2 bold mb-1 texto-sm">
                         costos acordados
                     </div>
                     <table class="w-100">
@@ -206,7 +206,7 @@
                         </tr>
                         <tr>
                             <td class="w-70 py-1 left bg-nada">
-                                <span class="bold"> costo:</span>
+                                <span class="bold"> sub-total propiedad:</span>
 
                             </td>
                             <td class="w-30 py-1 right bg-gray">
@@ -233,11 +233,29 @@
                         </tr>
                         <tr>
                             <td class="w-70 py-1 left bg-nada">
-                                <span class="bold">importe total:</span>
 
+                                <span class="bold">costo neto propiedad:</span>
                             </td>
                             <td class="w-30 py-1 right bg-gray">
                                 $ {{ number_format( $datos['total'],2)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-70 py-1 left bg-nada">
+                                <span class="bold">intereses generados(<span class="texto-xs w-normal capitalize">fecha
+                                        impresión</span>):</span>
+                            </td>
+                            <td class="w-30 py-1 right bg-gray">
+                                $ {{ number_format( $datos['intereses_generados'],2)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-70 py-1 left bg-nada">
+                                <span class="bold">intereses pagados(<span class="texto-xs w-normal capitalize">fecha
+                                        impresión</span>):</span>
+                            </td>
+                            <td class="w-30 py-1 right bg-gray">
+                                $ {{ number_format( $datos['intereses_pagados'],2)}}
                             </td>
                         </tr>
                         <tr>
@@ -248,20 +266,8 @@
                             </td>
 
                             <td class="w-55 py-1 right bg-gray">
-                                @php
-                                /*calculando el total recibido hasta la fecha*/
-                                $recibido=0;
-                                @endphp
-                                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
-                                @foreach ($programado['pagos_realizados'] as $realizado)
-                                @if ($realizado['status']==1)
-                                @php
-                                $recibido+=$realizado['total'];
-                                @endphp
-                                @endif
-                                @endforeach
-                                @endforeach
-                                $ {{ number_format( $recibido,2)}}
+                               
+                                $ {{ number_format($datos['total_pagado']+$datos['intereses_pagados'],2)}}
                             </td>
                         </tr>
                         <tr>
@@ -271,53 +277,29 @@
 
                             </td>
                             <td class="w-55 py-1 right bg-gray">
-                                $ {{ number_format( ($datos['total']-$recibido),2)}}
+                                $ {{ number_format( ($datos['saldo_pagar_neto_con_intereses']),2)}}
                             </td>
                         </tr>
                     </table>
                 </td>
                 <td class="w-60">
-                    <div class="uppercase bg-black text-white py-1 px-2 bold mb-1 texto-sm">
+                    <div class="uppercase bg-gray-dark text-black py-1 px-2 bold mb-1 texto-sm">
                        resumen general
                     </div>
                     <table class="w-100">
                         <tr>
                             <td>
-                                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
-                                    @php
-                                        /*calculando el total recibido hasta la fecha*/
-                                        $total=0;
-                                        $vencidos=0;
-                                    @endphp
-                                    @foreach ($programado['pagos_realizados'] as $realizado)
-                                        @if ($realizado['status']==1)
-                                            @php
-                                                $total+=$realizado['total'];
-                                            @endphp
-                                        @endif
-                                    @endforeach
-                                    @php
-                                        /*checando si el pago ha sido pagado en tiempo y forma*/
-                                        if($total!=$programado['total']){
-                                            $date_now = new DateTime();
-                                            $fecha_programada = new DateTime($programado['fecha_programada']);
-                                            if($date_now>$fecha_programada){
-                                                $vencidos++;
-                                            }
-                                        }
-                                    @endphp
-                                @endforeach
-                                @if ($vencidos>0)
-                                    <div class="border-black-1 radius-5 uppercase texto-sm  px-3 {{$vencidos>=3?'py-3':'py-14'}} justificar line-base">
+                                @if ($datos['pagos_vencidos']>0)
+                                    <div class="border-black-1 radius-5 uppercase texto-sm  px-3 {{$datos['pagos_vencidos']>=3?'py-3':'py-14'}} justificar line-base">
                                         <span class="bold texto-sm">ojo. </span>
-                                        este contrato cuenta con (<span class="bold texto-sm"> {{$vencidos}} </span>) pagos vencidos. 
+                                        este contrato cuenta con (<span class="bold texto-sm"> {{$datos['pagos_vencidos']}} </span>) pagos vencidos. 
                                         En base a la cláusula  <span class="bold texto-sm">VIGÉSIMA TERCERA</span> del contrato, “La Empresa” tiene el derecho de aumentar <span class="bold texto-sm">1 (un)</span>
                                         cargo extra como aportación complementaria por concepto de pago 
                                         impuntual por cada uno de los pagos vencidos.
                                     </div>
-                                     @if ($vencidos>=3)
+                                     @if ($datos['pagos_vencidos']>=3)
                                     <div class="border-black-1 radius-5 uppercase texto-sm  px-3 py-3">
-                                    <span class="bold texto-sm">ojo. </span>hasta la fecha de esta impresión se han detectado <span class="bold texto-sm">{{$vencidos}}</span> pagos vencidos. 
+                                    <span class="bold texto-sm">ojo. </span>hasta la fecha de esta impresión se han detectado <span class="bold texto-sm">{{$datos['pagos_vencidos']}}</span> pagos vencidos. 
                                          En base a lo estipulado en la cláusula <span class="bold texto-sm">VIGÉSIMA CUARTA</span> del contrato del convenio, 
                                          “La Empresa” tiene el derecho de cancelar el presente convenio por motivo de falta de 
                                          pago.
@@ -361,7 +343,7 @@
         @endphp
     </div>
     <div class="border-black-1 radius-5 uppercase texto-sm  px-3 py-2">
-        <div class="uppercase bg-black text-white py-1 px-2 bold mb-1 texto-sm">
+        <div class="uppercase bg-gray-dark text-black py-1 px-2 bold mb-1 texto-sm">
             detalle de pagos programados y pagos cobrados
         </div>
         <table class="w-100">
@@ -372,6 +354,7 @@
                     <th class=" center py-1">referencia de pago</th>
                     <th class=" center py-1">concepto</th>
                     <th class=" center py-1">fecha programada</th>
+                    <th class=" right py-1">intereses</th>
                     <th class=" right py-1">subtotal</th>
                     <th class=" right py-1">iva</th>
                     <th class=" right py-1">descuento</th>
@@ -381,117 +364,104 @@
             <tbody>
 
                 @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
-                 @php
-                /*calculando el total recibido hasta la fecha*/
-                $total=0;
-                @endphp
-                @foreach ($programado['pagos_realizados'] as $realizado)
-                @if ($realizado['status']==1)
-                @php
-                $total+=$realizado['total'];
-                @endphp
-                @endif
-                @endforeach
                 <tr>
                     <td class="center">
                         <span class="uppercase bold texto-sm">{{$programado['num_pago']}}</span>
                     </td>
-                    <td class="center py-5">
-                       @if ($total==$programado['total'])
+                    <td class="center py-2">
+                       @if (1==$programado['pagado'])
                             <span class="text-success bold">
                                pagado
-                            </span>
+                            </span> 
                        @else
-                    @php
-                        $date_now = new DateTime();
-                        $fecha_programada = new DateTime($programado['fecha_programada']);
-                    @endphp 
-                            <span class="{{($date_now>$fecha_programada)?'text-danger':''}} bold">
-                                {{($date_now>$fecha_programada)?'vencido':'pendiente'}}
-                            </span>
+                        @if (1==$programado['vencido'])
+                                <span class="text-danger bold">
+                                vencido
+                                </span> 
+                        @else
+                                <span class="text-black bold">
+                                pendiente
+                                </span> 
+                        @endif
                        @endif
                     </td>
-                    <td class="center py-5 letter-spacing-2">{{$programado['referencia_pago']}}</td>
-                    <td class="center py-5">{{$programado['concepto_pago']['concepto']}}</td>
-                    <td class="center py-5">
+                    <td class="center py-2 letter-spacing-2">{{$programado['referencia_pago']}}</td>
+                    <td class="center py-2">{{$programado['concepto_pago']['concepto']}}</td>
+                    <td class="center py-2">
                         {{ fecha_abr(($programado['fecha_programada'])) }}
                     </td>
-                    <td class="right py-5">
+                     <td class="right py-2">
+                        {{number_format($programado['intereses_a_pagar'],2)}}
+                    </td>
+                    <td class="right py-2">
                         {{number_format($programado['subtotal'],2)}}
                     </td>
-                    <td class="right py-5">
+                    <td class="right py-2">
                         {{number_format($programado['iva'],2)}}
                     </td>
-                    <td class="right py-5">
+                    <td class="right py-2">
                         {{number_format($programado['descuento'],2)}}
                     </td>
-                    <td class="right py-5">
-                        {{number_format($programado['total'],2)}}
+                   
+                    <td class="right py-2">
+                        {{number_format($programado['total']+$programado['intereses_a_pagar'],2)}}
                     </td>
                 </tr>
-                @php
-                /*calculando el total recibido hasta la fecha*/
-                $total=0;
-                $subtotal=0;
-                $iva=0;
-                $descuento=0;
-                $status=0;
-                @endphp
+            
                 @foreach ($programado['pagos_realizados'] as $realizado)
-                @if ($realizado['status']==1)
-                @php
-                $status=1;
-                $total+=$realizado['total'];
-                $subtotal+=$realizado['subtotal'];
-                $iva+=$realizado['iva'];
-                $descuento+=$realizado['descuento'];
-                @endphp
+                @if ($realizado['tipo_pagos_id']==2)
+                    <!--es de intereses-->
+                     <tr class="{{$realizado['status']==0?'italic text-danger':''}}">
+                        <td class="right texto-xs bold py-2" colspan="5">
+                            abono a intereses
+                        </td>
+                        <td class="right texto-xs bold" colspan="1">
+                            pago realizado el {{ fecha_abr(($realizado['fecha_pago'])) }} <span>{{$realizado['status']==0?'(cancelado)':''}}</span>
+                        </td>
+                        <td class="right">{{number_format($realizado['subtotal'],2)}}</td>
+                        <td class="right">{{number_format($realizado['iva'],2)}}</td>
+                        <td class="right">{{number_format(0,2)}}</td>
+                        <td class="right">{{number_format($realizado['total'],2)}}</td>
+                        </td>
+                    </tr>
+                 @else
+                    <!--es de capital-->
+                    <tr class="{{$realizado['status']==0?'italic text-danger':''}}">
+                        <td class="right texto-xs bold py-2" colspan="5">
+                            abono a capital
+                        </td>
+                        <td class="right texto-xs bold" colspan="1">
+                            pago realizado el {{ fecha_abr(($realizado['fecha_pago'])) }} <span>{{$realizado['status']==0?'(cancelado)':''}}</span>
+                        </td>
+                        <td class="right">{{number_format($realizado['subtotal'],2)}}</td>
+                        <td class="right">{{number_format($realizado['iva'],2)}}</td>
+                        <td class="right">{{number_format($realizado['descuento'],2)}}</td>
+                        <td class="right">{{number_format($realizado['total'],2)}}</td>
+                        </td>
+                    </tr>
                 @endif
-                <tr class="{{$status==0?'italic text-danger':''}}">
-                    <td colspan="2" class="right">
-                    </td>
-                    <td class="right texto-xs bold" colspan="3">
-                        pago realizado el {{ fecha_abr(($realizado['fecha_pago'])) }} <span>{{$status==0?'(cancelado)':''}}</span>
-                    </td>
-                    <td colspan="4" class="right">
-                        <table class="w-100">
-                            <tr>
-                                <td>{{number_format($realizado['subtotal'],2)}}</td>
-                                <td>{{number_format($realizado['iva'],2)}}</td>
-                                <td>{{number_format($realizado['descuento'],2)}}</td>
-                                <td>{{number_format($realizado['total'],2)}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
                 @endforeach
-                <tr>
-                    <td colspan="4" class="right">
-                    </td>
-                    <td class="center">
+                <tr class="bg-gray">
+                    <td colspan="5" class="right">
                         <span class="uppercase bold texto-sm">totales</span>
                     </td>
-                    <td colspan="4" class="right">
-                        <table class="w-100">
-                            <tr>
-                                <td>
-                                    <span class="uppercase bold texto-sm">{{number_format($subtotal,2)}}</span>
-                                </td>
-                                <td>
-                                    <span class="uppercase bold texto-sm">{{number_format($iva,2)}}</span>
-                                </td>
-                                <td>
-                                    <span class="uppercase bold texto-sm">{{number_format($descuento,2)}}</span>
-                                </td>
-                                <td>
-                                    <span class="uppercase bold texto-sm">{{number_format($total,2)}}</span>
-                                </td>
-                            </tr>
-                        </table>
+                     <td class="right">
+                        <span class="uppercase bold texto-sm">{{number_format($programado['intereses_pagado'],2)}}</span>
+                    </td>
+                    <td class="right">
+                        <span class="uppercase bold texto-sm">{{number_format($programado['subtotal_pagado'],2)}}</span>
+                    </td>
+                    <td class="right">
+                        <span class="uppercase bold texto-sm">{{number_format($programado['iva_pagado'],2)}}</span>
+                    </td>
+                    <td class="right">
+                        <span class="uppercase bold texto-sm">{{number_format($programado['descuento_pagado'],2)}}</span>
+                    </td>
+                    <td class="right">
+                        <span class="uppercase bold texto-sm">{{number_format($programado['total_pagado'],2)}}</span>
                     </td>
                 </tr>
                 @endforeach
-
             </tbody>
         </table>
     </div>

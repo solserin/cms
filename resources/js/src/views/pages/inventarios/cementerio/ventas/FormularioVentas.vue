@@ -1419,7 +1419,7 @@ export default {
     /**checando si la venta ya fue liquidada*/
     ventaLiquidada: function() {
       if (this.getTipoformulario == "modificar") {
-        if (this.datosVenta.restante_pagar == 0) {
+        if (this.datosVenta.restante_pagar_subtotal == 0) {
           return true;
         } else return false;
       } else return false;

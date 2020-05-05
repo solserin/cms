@@ -1409,6 +1409,12 @@ class CementerioController extends ApiController
                     '(NULL) AS tipo_propiedad_capacidad'
                 ),
                 DB::raw(
+                    '(NULL) AS intereses_generados'
+                ),
+                DB::raw(
+                    '(NULL) AS intereses_pagados'
+                ),
+                DB::raw(
                     '(NULL) AS sub_total_pagado'
                 ),
                 DB::raw(
@@ -1421,7 +1427,13 @@ class CementerioController extends ApiController
                     '(NULL) AS total_pagado'
                 ),
                 DB::raw(
-                    '(NULL) AS restante_pagar'
+                    '(NULL) AS restante_pagar_subtotal'
+                ),
+                DB::raw(
+                    '(NULL) AS saldo_pagar_neto_con_intereses'
+                ),
+                DB::raw(
+                    '(NULL) AS total_pagar_neto_con_intereses'
                 ),
                 DB::raw(
                     '(0) AS pagos_vencidos'
@@ -1552,9 +1564,12 @@ class CementerioController extends ApiController
         /**fecha del primer pago vencido para scar la diferencia */
         $fecha_primer_pago_vencido = '';
 
-
+        $intereses_generados = 0;
+        $intereses_pagados = 0;
 
         foreach ($resultado['programacion_pagos_actual'][0]['pagos_programados'] as $key => &$programado) {
+
+
             /**definiendo el conceptop del pago */
             if ($programado['concepto_pago']['id'] == 1) {
                 /**enganche */
@@ -1719,7 +1734,14 @@ class CementerioController extends ApiController
                     }
                 }
             }
+
+            $intereses_generados += $interes_a_pagar;
+            $intereses_pagados += $programado['intereses_pagado'];
         }
+
+
+        $resultado['intereses_generados'] =  $intereses_generados;
+        $resultado['intereses_pagados'] =  $intereses_pagados;
 
 
         $resultado['numero_pagos_programados'] = count($resultado['programacion_pagos_actual'][0]['pagos_programados']);
@@ -1744,8 +1766,12 @@ class CementerioController extends ApiController
         $resultado['descuento_pagado'] = $descuento_pagado;
         $resultado['total_pagado'] = $total_pagado;
 
-        $resultado['restante_pagar'] = $resultado['subtotal'] - $sub_total_pagado;
+        $resultado['restante_pagar_subtotal'] = $resultado['subtotal'] - $sub_total_pagado;
         //se retorna el resultado
+
+
+        $resultado['total_pagar_neto_con_intereses'] =  $resultado['total']  + $resultado['intereses_generados'];
+        $resultado['saldo_pagar_neto_con_intereses'] =  $resultado['total_pagar_neto_con_intereses'] - $resultado['total_pagado'] - $resultado['intereses_pagados'];
         return $resultado;
     }
 
@@ -1986,18 +2012,18 @@ class CementerioController extends ApiController
     public function documento_estado_de_cuenta_cementerio(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        $email =  $request->email_send === 'true' ? true : false;
+        /*$email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
-
+*/
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*$id_venta = 2;
+        $id_venta = 5;
         $email = false;
         $email_to = 'hector@gmail.com';
-*/
+
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_venta_id($id_venta);
 
@@ -2024,10 +2050,11 @@ class CementerioController extends ApiController
 
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 5.4);
-        $pdf->setOption('margin-right', 5.4);
-        $pdf->setOption('margin-top', 5.4);
-        $pdf->setOption('margin-bottom', 10.4);
+        $pdf->setOption('orientation', 'landscape');
+        $pdf->setOption('margin-left', 12.4);
+        $pdf->setOption('margin-right', 12.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 12.4);
         $pdf->setOption('page-size', 'a4');
 
         if ($email == true) {

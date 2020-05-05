@@ -115,7 +115,7 @@
         </tr>
       </thead>
     </table>
-    <div class="ficha mt-1">
+    <div class="ficha">
       <span class="bold size-25px letter-spacing-1">Ficha de Pago</span>
       <p class="texto-base justificar line-base">
        Puede realizar el pago en la sucursal de <span class="capitalize bold">{{$empresa->nombre_comercial}}</span> llevando este documento o en 
@@ -296,6 +296,16 @@
             @else
               <table class="w-100">
                   <tbody>
+                    @if ($pago['vencido'])
+                     <tr>
+                      <td width="26%" class="px-2 uppercase py-1">
+                          <span class="bg-gray px-1 bold size-14px">Fecha Programada:</span>
+                      </td>
+                      <td width="74%" class="px-2 uppercase">
+                          <span class="bold size-15px">{{fecha_no_day($pago['fecha_programada'])}}</span>.
+                      </td>
+                    </tr>
+                    @endif
                     <tr>
                       <td width="26%" class="px-2 uppercase py-1">
                           <span class="bg-gray px-1 bold size-14px">Fecha Límite de Pago:</span>
@@ -369,7 +379,7 @@
                 <tbody>
                   <tr>
                     <td width="60%" class=" px-2 uppercase">
-                     <div class="pt-4">
+                     <div class="pt-1">
                         <div class="bg-gray-dark px-1 bold w-content">para depósitos en ventanilla de banco</div>
                         <div class=" mt-3 px-1"><span class="bold">Número de cuenta</span>: {{$empresa->cuenta}}</div>
                      </div>
