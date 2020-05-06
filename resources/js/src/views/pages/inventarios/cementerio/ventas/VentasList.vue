@@ -122,7 +122,7 @@
             <vs-td :data="data[indextr].id">
               <span class="font-semibold">{{data[indextr].id}}</span>
             </vs-td>
-            <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
+            <vs-td :data="data[indextr].cliente_nombre">{{data[indextr].cliente_nombre}}</vs-td>
             <vs-td :data="data[indextr].uso_venta">{{data[indextr].uso_venta}}</vs-td>
             <vs-td :data="data[indextr].numero_solicitud">
               <span class="font-medium">{{data[indextr].numero_solicitud}}</span>
@@ -173,7 +173,7 @@
                   icon="icon-shield-off"
                   color="danger"
                   type="flat"
-                  @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
+                  @click="deleteUsuario(data[indextr].id_user,data[indextr].cliente_nombre)"
                 ></vs-button>
                 <vs-button
                   v-else
@@ -183,13 +183,15 @@
                   icon="icon-shield"
                   color="success"
                   type="flat"
-                  @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
+                  @click="habilitarUsuario(data[indextr].id_user,data[indextr].cliente_nombre)"
                 ></vs-button>
               </div>
             </vs-td>
+            <template class="expand-user" slot="expand"></template>
           </vs-tr>
         </template>
       </vs-table>
+
       <div>
         <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
       </div>

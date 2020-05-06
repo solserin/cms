@@ -24,7 +24,7 @@
               </h3>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-3">
-              <div class="flex flex-wrap" v-if="getTipoformulario=='agregar'">
+              <div class="flex flex-wrap hidden" v-if="getTipoformulario=='agregar'">
                 <a href="#" target="_blank" class="tutorial text-base m-0 ml-auto">
                   <feather-icon icon="PlayIcon" class="mr-2" svgClasses="w-5 h-5" />
                   <span class="mt-2 text-black">
@@ -33,7 +33,7 @@
                   </span>
                 </a>
               </div>
-              <div class="flex flex-wrap" v-else>
+              <div class="flex flex-wrap hidden" v-else>
                 <a href="#" target="_blank" class="tutorial text-base m-0 ml-auto">
                   <feather-icon icon="PlayIcon" class="mr-2" svgClasses="w-5 h-5" />
                   <span class="mt-2 text-black">
