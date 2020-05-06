@@ -43,6 +43,33 @@
                 </a>
               </div>
             </div>
+
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-3"
+              v-if="tienePagosVencidos"
+            >
+              <div>
+                <vs-alert title="ATENCIÓN" active="true" color="danger">
+                  Hemos detectado que esta venta cuenta con pagos vencidos,
+                  por lo cual se encuentra restringida la modificación de planes de venta o
+                  cualquier modificación relativa a los pagos programados.
+                  Estos datos solo son modificables cuando la venta se encuentra al corriente
+                  en sus pagos.
+                </vs-alert>
+              </div>
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-3"
+              v-if="ventaLiquidada"
+            >
+              <div>
+                <vs-alert
+                  title="ATENCIÓN"
+                  active="true"
+                  color="danger"
+                >Hemos detectado que esta venta ya fue liquidada, por lo cual solo se permite modificar información relativa al cliente(Titular) y beneficiarios.</vs-alert>
+              </div>
+            </div>
           </div>
 
           <div class="venta-details">
@@ -198,14 +225,14 @@
                         v-model="form.empresa_operaciones_id"
                         :vs-value="1"
                         class="mr-4"
-                        :disabled="tienePagosVencidos || ventaLiquidada"
+                        :disabled="tienePagosVencidos || ventaLiquidada || ModificarVenta"
                       >Uso inmediato</vs-radio>
                       <vs-radio
                         vs-name="tipoVenta"
                         v-model="form.empresa_operaciones_id"
                         :vs-value="2"
                         class="mr-4"
-                        :disabled="tienePagosVencidos || ventaLiquidada"
+                        :disabled="tienePagosVencidos || ventaLiquidada || ModificarVenta"
                       >A futuro</vs-radio>
                     </div>
                   </div>

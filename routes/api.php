@@ -37,11 +37,11 @@ Route::middleware(['auth:api'])->group(function () {
      * EL SEGUNDO EL NUMERO DE PERMISO
      */
     Route::get('get_usuarios', 'Usuarios\UsuariosController@index');
-    Route::post('add_usuario', 'Usuarios\UsuariosController@add_usuario')->middleware('permiso:1,1');
-    Route::post('update_usuario', 'Usuarios\UsuariosController@update_usuario')->middleware('permiso:1,2');
-    Route::post('delete_usuario', 'Usuarios\UsuariosController@delete_usuario')->middleware('permiso:1,3');
-    Route::post('activate_usuario', 'Usuarios\UsuariosController@activate_usuario')->middleware('permiso:1,3');
-    Route::get('usuarios_pdfs', 'Usuarios\UsuariosController@pdfs')->middleware('permiso:1,4');
+    Route::post('add_usuario', 'Usuarios\UsuariosController@add_usuario');
+    Route::post('update_usuario', 'Usuarios\UsuariosController@update_usuario');
+    Route::post('delete_usuario', 'Usuarios\UsuariosController@delete_usuario');
+    Route::post('activate_usuario', 'Usuarios\UsuariosController@activate_usuario');
+    Route::get('usuarios_pdfs', 'Usuarios\UsuariosController@pdfs');
     Route::post('/usuarios/actualizar_perfil', 'Usuarios\UsuariosController@actualizar_perfil');
 
     /**verificar el password del usuario recibe el request del token y el password */
@@ -52,9 +52,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('get_roles', 'Usuarios\RolesController@index');
     Route::get('get_modulos', 'Usuarios\RolesController@get_modulos');
     Route::get('get_rol_permisos', 'Usuarios\RolesController@get_rol_permisos');
-    Route::post('add_rol', 'Usuarios\RolesController@add_rol')->middleware('permiso:1,1');
-    Route::post('update_rol', 'Usuarios\RolesController@update_rol')->middleware('permiso:1,2');
-    Route::post('delete_rol', 'Usuarios\RolesController@delete_rol')->middleware('permiso:1,3');
+    Route::post('add_rol', 'Usuarios\RolesController@add_rol');
+    Route::post('update_rol', 'Usuarios\RolesController@update_rol');
+    Route::post('delete_rol', 'Usuarios\RolesController@delete_rol');
 
     //municipios y estados
     Route::get('estados/', 'EstadosController@getEstados');
@@ -62,31 +62,31 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('localidades/{municipioId}', 'LocalidadesController@getLocalidades');
 
     //Empresa
-    Route::get('empresa/get_datos_empresa', 'EmpresaController@get_datos_empresa')->middleware('permiso:2,4');
+    Route::get('empresa/get_datos_empresa', 'EmpresaController@get_datos_empresa');
 
-    Route::get('empresa/get_regimenes', 'EmpresaController@get_regimenes')->middleware('permiso:2,4');
+    Route::get('empresa/get_regimenes', 'EmpresaController@get_regimenes');
     Route::post('empresa/modificar_datos', 'EmpresaController@modificar_datos');
 
 
 
 
-    Route::get('empresa/funeraria', 'EmpresaController@get')->middleware('permiso:2,4');
-    Route::post('empresa/funeraria', 'EmpresaController@save')->middleware('permiso:2,2');
-    Route::post('empresa/registro-publico', 'EmpresaController@saveRegistroPublico')->middleware('permiso:2,2');
-    Route::get('empresa/registro-publico', 'EmpresaController@getRegistroPublico')->middleware('permiso:2,4');
+    Route::get('empresa/funeraria', 'EmpresaController@get');
+    Route::post('empresa/funeraria', 'EmpresaController@save');
+    Route::post('empresa/registro-publico', 'EmpresaController@saveRegistroPublico');
+    Route::get('empresa/registro-publico', 'EmpresaController@getRegistroPublico');
     //Cementerio
-    Route::get('empresa/cementerio', 'EmpresaController@getCementerio')->middleware('permiso:2,4');
-    Route::post('empresa/cementerio', 'EmpresaController@saveCementerio')->middleware('permiso:2,2');
+    Route::get('empresa/cementerio', 'EmpresaController@getCementerio');
+    Route::post('empresa/cementerio', 'EmpresaController@saveCementerio');
     //crematorio
-    Route::get('empresa/crematorio', 'EmpresaController@getCrematorio')->middleware('permiso:2,4');
-    Route::post('empresa/crematorio', 'EmpresaController@saveCrematorio')->middleware('permiso:2,2');
+    Route::get('empresa/crematorio', 'EmpresaController@getCrematorio');
+    Route::post('empresa/crematorio', 'EmpresaController@saveCrematorio');
     //velatorio
-    Route::get('empresa/velatorio', 'EmpresaController@getVelatorio')->middleware('permiso:2,4');
-    Route::post('empresa/velatorio', 'EmpresaController@saveVelatorio')->middleware('permiso:2,2');
+    Route::get('empresa/velatorio', 'EmpresaController@getVelatorio');
+    Route::post('empresa/velatorio', 'EmpresaController@saveVelatorio');
     //validate cer file
     Route::post('empresa/facturacion/validateCER', 'EmpresaController@validateCERFile');
     Route::post('empresa/facturacion/validateKEY', 'EmpresaController@validateKEYFile');
-    Route::post('empresa/facturacion', 'EmpresaController@saveFacturacion')->middleware('permiso:2,2');
+    Route::post('empresa/facturacion', 'EmpresaController@saveFacturacion');
 
     ///SAT
     Route::get('regimenes/', 'SATRegimenesController@getAll');
@@ -102,12 +102,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
     //Proveedores
 
-    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create')->middleware('permiso:5,1');
-    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save')->middleware('permiso:5,2');
-    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll')->middleware('permiso:5,4');
-    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF')->middleware('permiso:5,4');
+    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create');
+    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save');
+    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll');
+    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF');
     Route::get('empresa/inventario/proveedores-active', 'ProveedoresController@getActive');
-    Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF')->middleware('permiso:5,4');
+    Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF');
 
     /**rutas del cementerio */
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
@@ -119,7 +119,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_ventas_referencias_propiedades', 'CementerioController@get_ventas_referencias_propiedades');
     Route::get('inventarios/cementerio/get_columna_fila_terraza', 'CementerioController@get_columna_fila_terraza');
     Route::get('inventarios/cementerio/precios_tarifas', 'CementerioController@precios_tarifas');
-    Route::post('inventarios/cementerio/actualizar_precios_tarifas', 'CementerioController@actualizar_precios_tarifas')->middleware('permiso:6,2');
+    Route::post('inventarios/cementerio/actualizar_precios_tarifas', 'CementerioController@actualizar_precios_tarifas');
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::get('inventarios/cementerio/get_vendedores', 'CementerioController@get_vendedores');
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
