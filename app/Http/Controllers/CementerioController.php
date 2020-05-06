@@ -1339,6 +1339,18 @@ class CementerioController extends ApiController
                     '"" as ubicacion_texto'
                 ),
                 DB::raw(
+                    '"" as tipo_texto'
+                ),
+                DB::raw(
+                    '"" as fila_texto'
+                ),
+                DB::raw(
+                    '"" as area_nombre'
+                ),
+                DB::raw(
+                    '"" as lote_texto'
+                ),
+                DB::raw(
                     '(CASE 
                         WHEN ventas_terrenos.status = 1 THEN "Activa"
                         ELSE "Cancelada" 
@@ -1406,7 +1418,11 @@ class CementerioController extends ApiController
         //**se actualiza la propiedad a formato legible para el usuario */
 
         foreach ($resultado['data'] as $key_data => &$venta) {
-            $venta['ubicacion_texto'] = $this->ubicacion_texto($venta['ubicacion_raw'], $datos_cementerio);
+            $venta['ubicacion_texto'] = $this->ubicacion_texto($venta['ubicacion_raw'], $datos_cementerio)['ubicacion_texto'];
+            $venta['area_nombre'] = $this->ubicacion_texto($venta['ubicacion_raw'], $datos_cementerio)['area_nombre'];
+            $venta['tipo_texto'] = $this->ubicacion_texto($venta['ubicacion_raw'], $datos_cementerio)['tipo_texto'];
+            $venta['fila_texto'] = $this->ubicacion_texto($venta['ubicacion_raw'], $datos_cementerio)['fila_texto'];
+            $venta['lote_texto'] = $this->ubicacion_texto($venta['ubicacion_raw'], $datos_cementerio)['lote_texto'];
 
             /**agregando fila, lote, y tipo, por separado en valor numrico */
             $venta['tipo_raw'] = (intval(explode("-", $venta['ubicacion_raw'])[0]));
@@ -1650,6 +1666,28 @@ class CementerioController extends ApiController
 
     public function ubicacion_texto($dato = '', $datos_cementerio = [])
     {
+        /**se hace un arreglo para regresar la ubicacion completa y por separado (fila, pripieda, lote tipo) */
+
+        /**para decidir el nombre del area, en caso de ser teraza, seria 1,2,3,4,5 en tipo 
+         * de unplex seria a,b,c
+         */
+        $areas_nombres = [
+            /**uniplex */
+            1 => 'a', 2 => 'b', 3 => 'd', 4 => 'e', 5 => 'm', 6 => 'n', 7 => 'ñ', 8 => 'o',
+            /**duplex */
+            9 => 'c', 10 => 'f', 11 => 'g', 12 => 'h', 13 => 'i', 14 => 'j', 15 => 'k', 16 => 'l',
+            /**nichos */
+            17 => '1', 18 => '2', 19 => '3', 20 => '4', 21 => '5', 22 => '6', 23 => '7', 24 => '8', 25 => '9', 26 => '10', 27 => '11', 28 => '12',
+            /**terrazas */
+            29 => '1', 30 => '2', 31 => '3', 32 => '4', 33 => '5', 34 => '6', 35 => '7', 36 => '8', 37 => '9', 38 => '10', 39 => '11', 40 => '12', 41 => '13', 42 => '14', 43 => '15', 44 => '16', 45 => '16', 46 => '18',
+            /**duplex */
+            47 => 's',
+            /**triplex */
+            48 => 'p', 49 => 'r',
+            /**cuadriplex sin terraza */
+            50 => 'q'
+        ];
+
         //checo si los datos del cemeterio vienen vacios para llenar el arreglo
         if (count($datos_cementerio) == 0) {
             /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
@@ -1675,26 +1713,52 @@ class CementerioController extends ApiController
                 if ($propiedad->tipo_propiedades_id == 1) {
                     //uniplex
                     $ubicacion_texto .= "Uniplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                    $datos['tipo_texto'] = "uniplex";
+                    $datos['fila_texto'] = " Módulo " . $fila;
+                    $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
+                    $datos['lote_texto'] = "n/a";
                 } else if ($propiedad->tipo_propiedades_id == 2) {
                     //duplex
                     $ubicacion_texto .= "Duplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                    $datos['tipo_texto'] = "duplex";
+                    $datos['fila_texto'] = " Módulo " . $fila;
+                    $datos['lote_texto'] = "n/a";
+                    $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
                 } else if ($propiedad->tipo_propiedades_id == 3) {
                     //nicho
                     $ubicacion_texto .= "Nichos - Columna " . $propiedad->propiedad_indicador . ", Fila " . $fila;
+                    $datos['tipo_texto'] = "nicho";
+                    $datos['fila_texto'] =  $fila;
+                    $datos['area_nombre'] = "Columna " . $areas_nombres[($id_propiedad)];
+                    $datos['lote_texto'] = "n/a";
                 } else if ($propiedad->tipo_propiedades_id == 4) {
+                    $datos['lote_texto'] = $lote;
+                    $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
+                    $datos['tipo_texto'] = "terraza";
+                    $datos['fila_texto'] = strtoupper($alfabeto[$fila - 1]);
                     //cuadriplex
                     $ubicacion_texto .= "Terraza " . $propiedad->propiedad_indicador . ", Fila " . strtoupper($alfabeto[$fila - 1]) . " Lote " . $lote;
                 } else if ($propiedad->tipo_propiedades_id == 5) {
+                    $datos['lote_texto'] = "n/a";
+                    $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
+                    $datos['tipo_texto'] = "triplex";
+                    $datos['fila_texto'] =  " Módulo " . $fila;
                     //triplex
                     $ubicacion_texto .= "Triplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
                 } else if ($propiedad->tipo_propiedades_id == 6) {
+                    $datos['lote_texto'] = $lote;
+                    $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
+                    $datos['tipo_texto'] = "cuadriplex";
+                    $datos['fila_texto'] =  " Módulo " . $fila;
                     //cuadriplex sin terraza
                     $ubicacion_texto .= "cuadriplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
                 }
             }
         }
+        $datos['ubicacion_texto'] = $ubicacion_texto;
 
-        return $ubicacion_texto;
+
+        return $datos;
     }
 
 
@@ -1830,6 +1894,19 @@ class CementerioController extends ApiController
                     '"" as ubicacion_texto'
                 ),
                 DB::raw(
+                    '"" as tipo_texto'
+                ),
+                DB::raw(
+                    '"" as fila_texto'
+                ),
+                /**por decir unoplex "a",b , terraza "1", duplex "b" */
+                DB::raw(
+                    '"" as area_nombre'
+                ),
+                DB::raw(
+                    '"" as lote_texto'
+                ),
+                DB::raw(
                     '(CASE 
                         WHEN ventas_terrenos.status = 1 THEN "Activa"
                         ELSE "Cancelada" 
@@ -1866,10 +1943,12 @@ class CementerioController extends ApiController
         /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
         $datos_cementerio = $this->get_cementerio();
         /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
-
         //**se actualiza la propiedad a formato legible para el usuario */
-
-        $resultado['ubicacion_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio);
+        $resultado['area_nombre'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['area_nombre'];
+        $resultado['ubicacion_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['ubicacion_texto'];
+        $resultado['lote_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['lote_texto'];
+        $resultado['tipo_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['tipo_texto'];
+        $resultado['fila_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['fila_texto'];
 
         /**agregando fila, lote, y tipo, por separado en valor numrico */
         $resultado['tipo_raw'] = (intval(explode("-", $resultado['ubicacion_raw'])[0]));
@@ -2115,6 +2194,80 @@ class CementerioController extends ApiController
 
 
 
+
+
+    public function documento_titulo(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_venta = $requestVentasList['venta_id'];
+
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        /*$id_venta = 8;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+*/
+
+
+        //obtengo la informacion de esa venta
+        $datos_venta = $this->get_venta_id($id_venta);
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/cementerios/titulo/titulo', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "FORMATO DE TITULO " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
+
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('inventarios.cementerios.titulo.footer'),
+        ]);
+        if ($datos_venta['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('inventarios.cementerios.titulo.header')
+            ]);
+        }
+
+
+
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 24.4);
+        $pdf->setOption('margin-right', 24.4);
+        $pdf->setOption('margin-top', 24.4);
+        $pdf->setOption('margin-bottom', 24.4);
+        $pdf->setOption('page-size', 'A4');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_venta['cliente_nombre']),
+                'FORMATO DE TITULO',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
 
 
     public function referencias_de_pago(Request $request)

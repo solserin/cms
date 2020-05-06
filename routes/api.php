@@ -130,12 +130,13 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 
-    Route::get('inventarios/cementerio/documento_titulo/{id}/{email?}', 'CementerioController@documento_titulo');
+
     Route::get('inventarios/cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
     Route::get('inventarios/cementerio/get_venta_id/{id_venta?}', 'CementerioController@get_venta_id');
     Route::get('inventarios/cementerio/referencias_de_pago', 'CementerioController@referencias_de_pago');
     Route::get('inventarios/cementerio/documento_convenio', 'CementerioController@documento_convenio');
     Route::get('inventarios/cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
+    Route::get('inventarios/cementerio/documento_titulo', 'CementerioController@documento_titulo');
 
     /**fin de rutas del cementerio */
 

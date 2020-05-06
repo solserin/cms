@@ -125,6 +125,19 @@
           border-bottom: {{$i}}px solid #000 !important; 
         }
 
+         .border-bottom-primary-{{$i}}{
+          border-bottom: {{$i}}px solid #{{env('maincolor')}} !important;
+        }
+
+        .border-right-black-{{$i}}{
+          border-right: {{$i}}px solid #000 !important; 
+        }
+
+
+        .border-left-black-{{$i}}{
+          border-left: {{$i}}px solid #000 !important; 
+        }
+
 
           .top-{{$i}}{
               top: {{$i}}%  !important; 
@@ -265,6 +278,11 @@
      font-style: italic;
     }
 
+    .bg-primary{
+      background-color: #{{env('maincolor')}} !important;
+    }
+
+
     .bg-gray{
       background-color: #E5E8E8 !important;
     }
@@ -305,6 +323,10 @@
       color: #000 !important;
     }
 
+
+    .text-primary{
+      color: #{{env('maincolor')}} !important;
+    }
 
 
  
