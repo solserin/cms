@@ -134,7 +134,7 @@ class UsuariosController extends ApiController
         //DICHO TOEKN
         if ($request->user()) {
             $resultado = DB::table('usuarios')
-                ->select('secciones.id', 'seccion', 'secciones_id', 'url', 'parent_modulo_id', 'modulo', 'modulos.id as modulo_id', 'secciones.icon as iconseccion', 'modulos.icon as moduloicon')
+                ->select('modulos.status as mod_status', 'secciones.id', 'seccion', 'secciones_id', 'url', 'parent_modulo_id', 'modulo', 'modulos.id as modulo_id', 'secciones.icon as iconseccion', 'modulos.icon as moduloicon')
                 ->join('roles', 'usuarios.roles_id', '=', 'roles.id')
                 ->join('modulos_roles_permisos', 'modulos_roles_permisos.roles_id', '=', 'roles.id')
                 ->join('modulos', 'modulos_roles_permisos.modulos_id', '=', 'modulos.id')
@@ -178,7 +178,7 @@ class UsuariosController extends ApiController
             //fin de sacar las secciones que le competen a este usuario
             /**todos los modulos 'independientes y tipos grupo' */
             $grupos_modulos_todos = DB::table('modulos')
-                ->select('modulo', 'modulos.id', 'parent_modulo_id', 'url', 'secciones_id', 'modulos.icon')
+                ->select('status', 'modulo', 'modulos.id', 'parent_modulo_id', 'url', 'secciones_id', 'modulos.icon')
                 ->where('parent_modulo_id', '=', 0)
                 ->get();
             /**fin de todos los modulos */
@@ -202,20 +202,23 @@ class UsuariosController extends ApiController
                             foreach ($resultado as $agrupados) {
                                 if ($agrupados->modulo_id == $grupo->id) {
                                     //si se encuentra este modulo de tipo independiente sin grupo
-                                    array_push($grupos, [
-                                        'id' => $grupo->id,
-                                        'url' => $grupo->url,
-                                        'name' => $grupo->modulo,
-                                        'slug' => $grupo->modulo,
-                                        'secciones_id' => $grupo->secciones_id,
-                                        'icon' => $grupo->icon
-                                    ]);
+                                    /**verificando si esta disponible para el resto de usuarios o solo para el superusuario */
+                                    if ($agrupados->mod_status == 1 || $request->user()->id == 1) {
+                                        array_push($grupos, [
+                                            'status' => $agrupados->mod_status,
+                                            'id' => $grupo->id,
+                                            'url' => $grupo->url,
+                                            'name' => $grupo->modulo,
+                                            'slug' => $grupo->modulo,
+                                            'secciones_id' => $grupo->secciones_id,
+                                            'icon' => $grupo->icon
+                                        ]);
+                                    }
                                     //se agrega a los modulos que ya fueron agregados al menue
                                     array_push(
                                         $modulos_ids_agregados,
                                         $grupo->id
                                     );
-
                                     break;
                                 }
                             }
@@ -226,14 +229,18 @@ class UsuariosController extends ApiController
                             foreach ($resultado as $agrupados) {
                                 //se agregan todos los modulos que pertenezcan a este grupo segun su parent_modulo_id
                                 if ($agrupados->parent_modulo_id == $grupo->id) {
-                                    array_push($modulos, [
-                                        'id' => $agrupados->modulo_id,
-                                        'url' => $agrupados->url,
-                                        'name' => $agrupados->modulo,
-                                        'slug' => $agrupados->modulo,
-                                        'secciones_id' => $agrupados->secciones_id,
-                                        'icon' => $agrupados->moduloicon
-                                    ]);
+                                    /**verificando si esta disponible para el resto de usuarios o solo para el superusuario */
+                                    if ($agrupados->mod_status == 1 || $request->user()->id == 1) {
+                                        array_push($modulos, [
+                                            'status' => $agrupados->mod_status,
+                                            'id' => $agrupados->modulo_id,
+                                            'url' => $agrupados->url,
+                                            'name' => $agrupados->modulo,
+                                            'slug' => $agrupados->modulo,
+                                            'secciones_id' => $agrupados->secciones_id,
+                                            'icon' => $agrupados->moduloicon
+                                        ]);
+                                    }
                                     //se agregan a esta lista pqra que no vuelvan a ser tomados en cuenta
                                     array_push(
                                         $modulos_ids_agregados,
@@ -241,16 +248,18 @@ class UsuariosController extends ApiController
                                     );
                                 }
                             }
-
                             //se crea el grupo y se le adjunta su submenu con todos los modulos registrados en la instruccion anterior
-                            array_push($grupos, [
-                                'id' => $grupo->id,
-                                'url' => null,
-                                'name' => $grupo->modulo,
-                                'icon' => $grupo->icon,
-                                'secciones_id' => $grupo->secciones_id,
-                                'submenu' => $modulos
-                            ]);
+
+                            if (count($modulos) > 0) {
+                                array_push($grupos, [
+                                    'id' => $grupo->id,
+                                    'url' => null,
+                                    'name' => $grupo->modulo,
+                                    'icon' => $grupo->icon,
+                                    'secciones_id' => $grupo->secciones_id,
+                                    'submenu' => $modulos
+                                ]);
+                            }
                         }
                     }
                 }
@@ -261,6 +270,7 @@ class UsuariosController extends ApiController
                     'items' => $grupos
                 ]);
             }
+
 
             return $menu;
         } else

@@ -43,20 +43,23 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => $seccion_1,
+                'status' => 1
             ],
             [
                 'modulo' => 'Empresa',
                 'icon' => 'BriefcaseIcon',
                 'parent_modulo_id' => 1,
                 'url' => '/configuracion/empresa',
-                'secciones_id' => $seccion_1
+                'secciones_id' => $seccion_1,
+                'status' => 1
             ],
             [
                 'modulo' => 'Usuarios',
                 'icon' => 'UserIcon',
                 'parent_modulo_id' => 1,
                 'url' => '/configuracion/usuarios',
-                'secciones_id' => $seccion_1
+                'secciones_id' => $seccion_1,
+                'status' => 1
             ],
 
             /**modulos de operaciones */
@@ -66,6 +69,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => '/clientes',
                 'secciones_id' => $seccion_2,
+                'status' => 1
             ],
             [ //5
                 'modulo' => 'Cementerio',
@@ -73,6 +77,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => $seccion_2,
+                'status' => 1
             ],
             [
                 'modulo' => 'Venta de Terrenos',
@@ -80,6 +85,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 5,
                 'url' => '/inventarios/cementerio/ventas',
                 'secciones_id' => $seccion_2,
+                'status' => 1
             ],
             [
                 'modulo' => 'Inventario General',
@@ -87,6 +93,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 5,
                 'url' => '/inventarios/cementerio/distribucion',
                 'secciones_id' => $seccion_2,
+                'status' => 1
             ],
             [ //8
                 'modulo' => 'Cobro de Cuotas',
@@ -94,6 +101,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 5,
                 'url' => '/inventarios/cementerio/cobranza',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [ //9
                 'modulo' => 'Inventario',
@@ -101,6 +109,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Proveedores.',
@@ -108,6 +117,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 9,
                 'url' => '1',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Artículos/Servicios',
@@ -115,6 +125,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 9,
                 'url' => '2',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Ajustes de inventario',
@@ -122,6 +133,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 9,
                 'url' => '3',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Surtir inventario',
@@ -129,6 +141,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 9,
                 'url' => '4',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [ //14
                 'modulo' => 'Salida de Artículos',
@@ -136,6 +149,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 9,
                 'url' => '5',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [ //15
                 'modulo' => 'Ventas',
@@ -143,20 +157,23 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Artículos Funerarios.',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 15,
                 'url' => '4',
-                'secciones_id' => $seccion_2
+                'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [ //17
                 'modulo' => 'Consumibles',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 15,
                 'url' => '12',
-                'secciones_id' => $seccion_2
+                'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Servicios Funerarios',
@@ -164,6 +181,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => 'servicios_funerarios',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [ //19
                 'modulo' => 'Cobranza',
@@ -171,6 +189,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => 'cobranza',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [ //20
                 'modulo' => 'Reportes',
@@ -178,34 +197,39 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Cobranza.',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 20,
                 'url' => 'cobranza',
-                'secciones_id' => $seccion_2
+                'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Ventas',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 20,
                 'url' => 'ventas',
-                'secciones_id' => $seccion_2
+                'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Inventario',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 20,
                 'url' => 'inventario',
-                'secciones_id' => $seccion_2
+                'secciones_id' => $seccion_2,
+                'status' => 0
             ],
             [
                 'modulo' => 'Estados de Cuenta',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 20,
                 'url' => 'estados_cuenta',
-                'secciones_id' => $seccion_2
+                'secciones_id' => $seccion_2,
+                'status' => 0
             ]
         ];
 
@@ -223,6 +247,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => $modulo['parent_modulo_id'],
                 'url' =>  $modulo['url'],
                 'secciones_id' => $modulo['secciones_id'],
+                'status' => $modulo['status'],
             ]);
         }
     }

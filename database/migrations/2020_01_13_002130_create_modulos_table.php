@@ -20,6 +20,7 @@ class CreateModulosTable extends Migration
             $table->integer('parent_modulo_id')->nullable()->comment('debera ser nulo en caso de ser un modulo independiente');
             $table->string('url')->nullable()->comment('url del modulo');
             $table->unsignedInteger('secciones_id');
+            $table->tinyInteger('status')->nullable()->default(1); //para decidir si se va a ver en produccion 1- si 0 -no y solo se vera duranre desarrollo por el super usuario
         });
     }
 

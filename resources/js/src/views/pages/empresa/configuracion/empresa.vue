@@ -2,9 +2,10 @@
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
       <vs-tab label="FUNERARIA" icon="supervisor_account" class="pb-5"></vs-tab>
-      <vs-tab label="REGISTRO PÚBLICO" icon="fingerprint"></vs-tab>
-      <vs-tab label="CEMENTERIO" icon="fingerprint"></vs-tab>
-      <vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>
+      <vs-tab label="REGISTRO PÚBLICO" icon="gavel"></vs-tab>
+      <vs-tab label="CEMENTERIO" icon="location_on"></vs-tab>
+      <vs-tab label="FACTURACIÓN" icon="attach_file"></vs-tab>
+      <vs-tab label="PLANES / CEMENTERIO" icon="shopping_cart"></vs-tab>
       <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
@@ -25,6 +26,9 @@
     <div class="tab-content mt-1" v-show="activeTab==3">
       <Facturacion :datos="datosEmpresa" :erroresForm="erroresFacturacion" @actualizar="actualizar"></Facturacion>
     </div>
+    <div class="tab-content mt-1" v-show="activeTab==4">
+      <PlanesVenta></PlanesVenta>
+    </div>
     <Password
       :show="operConfirmar"
       :callback-on-success="callback"
@@ -41,6 +45,7 @@ import RegistroPublico from "../configuracion/registro_publico";
 import Cementerio from "../configuracion/cementerio";
 import Facturacion from "../configuracion/facturacion";
 import pdf from "../../pdf_viewer";
+import PlanesVenta from "@pages/inventarios/cementerio/ventas/PlanesVentas";
 
 //componente de password
 import Password from "../../confirmar_password";
@@ -62,7 +67,8 @@ export default {
     Funeraria,
     RegistroPublico,
     Cementerio,
-    Facturacion
+    Facturacion,
+    PlanesVenta
   },
   watch: {},
   data() {

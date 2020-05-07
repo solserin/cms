@@ -1862,7 +1862,6 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            console.log("guardarVenta -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -1948,8 +1947,6 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            console.log("modificarVenta -> err.response", err.response);
-
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -2207,7 +2204,7 @@ export default {
         this.$vs.notify({
           title: "Planes de Venta",
           text:
-            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Ventas'",
+            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Ventas del módulos de Empresa.'",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",

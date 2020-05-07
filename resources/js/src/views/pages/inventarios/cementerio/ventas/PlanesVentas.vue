@@ -1,6 +1,5 @@
 <template >
   <div>
-    <h4 class="ml-2 pb-4">Lista de precios de uso inmediato y a futuro</h4>
     <div class="flex flex-wrap">
       <div
         :key="indextr"

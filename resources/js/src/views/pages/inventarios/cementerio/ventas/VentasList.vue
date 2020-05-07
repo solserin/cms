@@ -2,7 +2,6 @@
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
       <vs-tab label="CONTROL DE VENTAS" icon="supervisor_account" class="pb-5"></vs-tab>
-      <vs-tab label="PLANES DE VENTAS" icon="supervisor_account" class="pb-5"></vs-tab>
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
       <div class="flex flex-wrap">
@@ -198,10 +197,6 @@
       <pre ref="pre"></pre>
     </div>
 
-    <div class="tab-content mt-1" v-show="activeTab==1">
-      <PlanesVenta></PlanesVenta>
-    </div>
-
     <FormularioVentas
       :id_venta="id_venta_modificar"
       :tipo="tipoFormulario"
@@ -216,24 +211,23 @@
       @closeVerificar="closeStatus"
       :accion="accionNombre"
     ></Password>
-    <Reporteador
-      :header="'consultar reporte de venta'"
-      :show="openReportesLista"
-      :listadereportes="ListaReportes"
-      :request="request"
-      @closeReportes="openReportesLista=false;get_data(1)"
-    ></Reporteador>
+
+    <ReportesVentas
+      :show="openReportes"
+      @closeListaReportes="openReportes=false;id_venta=0"
+      :id_venta="id_venta"
+    ></ReportesVentas>
   </div>
 </template>
 
 <script>
 //planes de venta
-import Reporteador from "@pages/Reporteador";
-import PlanesVenta from "../ventas/PlanesVentas";
 
 import cementerio from "@services/cementerio";
 
 import FormularioVentas from "../ventas/FormularioVentas";
+
+import ReportesVentas from "../ventas/ReportesVentas";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -248,8 +242,7 @@ export default {
     "v-select": vSelect,
     Password,
     FormularioVentas,
-    PlanesVenta,
-    Reporteador
+    ReportesVentas
   },
   watch: {
     actual: function(newValue, oldValue) {
@@ -264,10 +257,10 @@ export default {
   },
   data() {
     return {
+      openReportes: false,
       verFormularioVentas: false,
       tipoFormulario: "",
       //variable
-      ListaReportes: [],
       tipo_propiedades: [],
       propiedad: { label: "Todos", value: "" },
       openReportesLista: false,
@@ -329,15 +322,9 @@ export default {
       verModificar: false,
       id_venta_modificar: 0,
       selected: [],
-      users: [],
-      /**opciones para filtrar la peticion del server */
 
-      /**user id para bajas y altas */
-      user_id: "",
-      request: {
-        venta_id: "",
-        email: ""
-      }
+      /**opciones para filtrar la peticion del server */
+      id_venta: 0 /**para consultar los reportesw */
     };
   },
   methods: {
@@ -480,67 +467,8 @@ export default {
     },
 
     ConsultarVenta(id_venta) {
-      this.ListaReportes = [];
-      let self = this;
-      if (cementerio.cancel) {
-        cementerio.cancel("Operation canceled by the user.");
-      }
-      this.$vs.loading();
-      cementerio
-        .get_venta_id(id_venta)
-        .then(res => {
-          if (res.data.numero_solicitud_raw != null) {
-            this.ListaReportes.push({
-              nombre: "Solicitud de venta",
-              url: "/inventarios/cementerio/documento_solicitud"
-            });
-          }
-          if (res.data.numero_convenio_raw != null) {
-            this.ListaReportes.push({
-              nombre: "Convenio",
-              url: "/inventarios/cementerio/documento_convenio"
-            });
-          }
-
-          if (res.data.numero_titulo_raw != null) {
-            this.ListaReportes.push({
-              nombre: "Título",
-              url: "/inventarios/cementerio/documento_titulo"
-            });
-          }
-
-          this.ListaReportes.push({
-            nombre: "Referencias de Pago",
-            url: "/inventarios/cementerio/referencias_de_pago"
-          });
-
-          this.ListaReportes.push({
-            nombre: "Estado de cuenta",
-            url: "/inventarios/cementerio/documento_estado_de_cuenta_cementerio"
-          });
-          //estado de cuenta
-          this.request.email = res.data.cliente_email;
-          this.request.venta_id = id_venta;
-          this.openReportesLista = true;
-          this.$vs.loading.close();
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 4000
-              });
-            }
-          }
-        });
+      this.id_venta = id_venta;
+      this.openReportes = true;
     },
     openModificar(id_venta) {
       this.tipoFormulario = "modificar";

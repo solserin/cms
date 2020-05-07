@@ -440,6 +440,11 @@
   display: none !important;
 }
 
+.reportes_show_list .vs-popup {
+  max-width: 75% !important;
+  min-height: 70vh !important;
+}
+
 /*=========================================================================================
   File Name: main.scss
   Description: Main scss file. Imports other scss partials from 'vuexy' folder
