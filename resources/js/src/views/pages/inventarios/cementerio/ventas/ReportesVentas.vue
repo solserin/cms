@@ -10,8 +10,8 @@
         <span class="uppercase bold">Seleccione el documento que necesita</span>
       </h3>
       <vs-tabs alignment="center" position="top" v-model="activeTab">
-        <vs-tab label="DOCUMENTOS DEL CONTRATO" icon="supervisor_account"></vs-tab>
-        <vs-tab label="LISTA DE PAGOS" icon="supervisor_account"></vs-tab>
+        <vs-tab label="DOCUMENTOS DEL CONTRATO" icon="attach_file"></vs-tab>
+        <vs-tab label="LISTA DE PAGOS" icon="attach_money"></vs-tab>
       </vs-tabs>
 
       <div class="tab-content mt-3" v-show="activeTab==0">

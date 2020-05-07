@@ -2975,9 +2975,9 @@ class CementerioController extends ApiController
         $datos_venta = $this->get_venta_id($id_venta);
 
         /**verificando si el documento aplica para esta solictitud */
-        if ($datos_venta['numero_solicitud_raw'] == null) {
+        /*if ($datos_venta['numero_solicitud_raw'] == null) {
             return 0;
-        }
+        }*/
 
 
         $get_funeraria = new EmpresaController();
