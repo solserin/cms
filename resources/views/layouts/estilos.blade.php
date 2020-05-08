@@ -126,7 +126,7 @@
         }
 
          .border-bottom-primary-{{$i}}{
-          border-bottom: {{$i}}px solid #{{env('maincolor')}} !important;
+          border-bottom: {{$i}}px solid #{{env('MAINCOLOR')}} !important;
         }
 
         .border-right-black-{{$i}}{
@@ -279,7 +279,7 @@
     }
 
     .bg-primary{
-      background-color: #{{env('maincolor')}} !important;
+      background-color: #{{env('MAINCOLOR')}} !important;
     }
 
 
@@ -325,7 +325,7 @@
 
 
     .text-primary{
-      color: #{{env('maincolor')}} !important;
+      color: #{{env('MAINCOLOR')}} !important;
     }
 
 

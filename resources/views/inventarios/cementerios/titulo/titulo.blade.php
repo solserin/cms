@@ -38,7 +38,7 @@
 
         .numeros-contrato {
             width: 100% !important;
-            border: 2px solid #{{env('maincolor')}};
+            border: 2px solid #{{env('MAINCOLOR')}};
         }
 
         .numeros-contrato .control {
