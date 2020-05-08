@@ -60,9 +60,7 @@ class ProgramacionPagosTerrenos extends Model
             ),
             DB::raw(
                 '("") AS fecha_programada_texto'
-            ),
-
-
+            )
         )->orderBy('id', 'asc');
     }
 }

@@ -735,16 +735,14 @@ class CementerioController extends ApiController
              * por lo tanto debemos checar en los pagos hechos a esta venta y ver si el total de pagos realizados
               es igual al total neto de la venta
              */
-            $pagos_venta = VentasTerrenos::with(['programacionPagosActual.pagosProgramados.pagosRealizados' => function ($q) {
+            $pagos_venta = VentasTerrenos::with(['programacionPagos.pagosProgramados.pagosRealizados' => function ($q) {
                 $q->where('status', '=', 1);
             }])->find($id_venta)->toArray();
 
             //debemos verificar que la venta no sea liquidada antes del sistema ps deberia llevar el titulo asigando por el usuario y no el calculado
             if ($pagos_venta['antiguedad_ventas_id'] != 3) {
                 //la venta no fue hecha y liquidada antes del sistema
-
                 //return $pagos_venta['pagos_programados'];
-
                 $total_pagado = 0;
                 foreach ($pagos_venta['programacion_pagos'][0]['pagos_programados'] as $pago_programado) {
                     foreach ($pago_programado['pagos_realizados'] as $pago_realizado) {
