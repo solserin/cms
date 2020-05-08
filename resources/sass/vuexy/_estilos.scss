@@ -395,6 +395,16 @@
 
 
 .reportes_show_list .vs-popup {
-    max-width: 75% !important;
-    min-height: 70vh !important;
+    max-width: 90% !important;
+    min-height: 90vh !important;
+}
+
+
+th .sort-th,
+th .vs-table-text {
+    justify-content: center;
+}
+
+.vs-table--td {
+    text-align: center !important;
 }

@@ -371,7 +371,7 @@
                                 <span class="bold"> plan de venta:</span>
                             </td>
                             <td class="w-30 py-1 right bg-gray">
-                                 {{ $datos['programacion_pagos_actual'][0]['mensualidades']==0? 'contado': ($datos['programacion_pagos_actual'][0]['mensualidades'].' meses' ) }}
+                                 {{ $datos['programacion_pagos'][0]['mensualidades']==0? 'contado': ($datos['programacion_pagos'][0]['mensualidades'].' meses' ) }}
                                 
                             </td>
                         </tr>
@@ -423,7 +423,7 @@
                                 /*calculando el total recibido hasta la fecha*/
                                 $recibido=0;
                                 @endphp
-                                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
+                                @foreach ($datos['programacion_pagos'][0]['pagos_programados'] as $programado)
                                     @foreach ($programado['pagos_realizados'] as $realizado)
                                         @if ($realizado['status']==1)
                                             @php
@@ -459,7 +459,7 @@
                         $anticipo=0;
                         $metodo_pago='';
                         @endphp
-                        @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
+                        @foreach ($datos['programacion_pagos'][0]['pagos_programados'] as $programado)
                         @foreach ($programado['pagos_realizados'] as $realizado)
                         @if ($realizado['status']==1 && $realizado['fecha_registro']==$datos['fecha_venta'])
                         @php
@@ -528,12 +528,12 @@
                         <div class="float-left w-53 left bg-nada">
                             <span class="bold uppercase texto-sm">
                                
-                                {{ $datos['programacion_pagos_actual'][0]['pagos_programados'][0]['conceptos_pagos_id']==1?'enganche acordado':'pago único'}}
+                                {{ $datos['programacion_pagos'][0]['pagos_programados'][0]['conceptos_pagos_id']==1?'enganche acordado':'pago único'}}
                                 :
                             </span>
                         </div>
                         <div class="float-right bg-gray w-47 center">
-                            {{number_format($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'],2)}} mxn
+                            {{number_format($datos['programacion_pagos'][0]['pagos_programados'][0]['total'],2)}} mxn
                         </div>
                     </div>
                 </td>
@@ -545,7 +545,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-50 center">
-                            {{ $datos['programacion_pagos_actual'][0]['mensualidades']!='0'?$datos['programacion_pagos_actual'][0]['mensualidades'].' meses':'n/a' }}
+                            {{ $datos['programacion_pagos'][0]['mensualidades']!='0'?$datos['programacion_pagos'][0]['mensualidades'].' meses':'n/a' }}
                         </div>
                     </div>
                 </td>
@@ -557,7 +557,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-62 center">
-                            {{ $datos['programacion_pagos_actual'][0]['mensualidades']!='0'? number_format($datos['programacion_pagos_actual'][0]['pagos_programados'][1]['total']).' mxn':'n/a' }}
+                            {{ $datos['programacion_pagos'][0]['mensualidades']!='0'? number_format($datos['programacion_pagos'][0]['pagos_programados'][1]['total']).' mxn':'n/a' }}
                         </div>
                     </div>
                 </td>
@@ -565,7 +565,7 @@
             <tr>
                 <td colspan="3">
                     <div class="w-100">
-                        @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $key=>$programado)
+                        @foreach ($datos['programacion_pagos'][0]['pagos_programados'] as $key=>$programado)
                         <div class="w-48 px-2 py-1 {{($key%2>0)?'float-right':'float-left'}}">
                             <div class="left">
                                 <div class="float-left w-20 left bg-nada">
@@ -656,7 +656,7 @@
             <span class="- bold texto-sm pr-2 uppercase">Nota.- </span>
         Debo y pagaré incondicionalmente por este pagaré a la orden de <span class="bold uppercase">{{$empresa->razon_social}}</span> en Mazatlán, Sinaloa o en cualquier otra
         ciudad que se me requiera el pago por la cantidad de: $ <span class="bold uppercase">{{number_format($datos['total'],2)}}</span>({{ NumerosEnLetras::convertir($datos['total'],'Pesos MXN',false) }}). Este pagaré tendrá vencimiento los días <span class="bold uppercase">{{dia_numero($datos['fecha_venta'])}}</span> de cada mes hasta cubrir la totalidad
-de este documento. El primer pago vencerá el <span class="bold uppercase">{{fecha_no_day($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['fecha_programada'])}}</span> ({{$datos['programacion_pagos_actual'][0]['pagos_programados'][0]['concepto_pago']['concepto']}}), en caso de falta de pago de <span class="bold uppercase">{{ $datos['ajustes_intereses']['maximo_pagos_vencidos'] }}({{ NumerosEnLetras::convertir($datos['ajustes_intereses']['maximo_pagos_vencidos'],'',false) }})</span> o más vencimientos sucesivos, se entenderá
+de este documento. El primer pago vencerá el <span class="bold uppercase">{{fecha_no_day($datos['programacion_pagos'][0]['pagos_programados'][0]['fecha_programada'])}}</span> ({{$datos['programacion_pagos'][0]['pagos_programados'][0]['concepto_pago']['concepto']}}), en caso de falta de pago de <span class="bold uppercase">{{ $datos['ajustes_intereses']['maximo_pagos_vencidos'] }}({{ NumerosEnLetras::convertir($datos['ajustes_intereses']['maximo_pagos_vencidos'],'',false) }})</span> o más vencimientos sucesivos, se entenderá
 pagadero este documento a la vista por el saldo insoluto del mismo, en los
 términos señalados por el artículo 79 de la Ley General de Títulos y Operaciones
 de crédito. Este pagaré es causal y no negociable desde la fecha del primer

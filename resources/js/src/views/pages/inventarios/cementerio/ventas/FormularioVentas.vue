@@ -1385,7 +1385,6 @@ export default {
         }
       }
     },
-
     "form.empresa_operaciones_id": function(newValue, oldValue) {
       if (newValue != "") {
         this.cargarPlanes();
@@ -1947,6 +1946,8 @@ export default {
         })
         .catch(err => {
           if (err.response) {
+            console.log("modificarVenta -> err.response", err.response);
+
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -2136,8 +2137,7 @@ export default {
               } else {
                 label =
                   "Plan Original(" +
-                  this.datosVenta["programacion_pagos_actual"][0]
-                    .mensualidades +
+                  this.datosVenta["programacion_pagos"][0].mensualidades +
                   " Meses)";
               }
 
@@ -2147,13 +2147,11 @@ export default {
                   this.planesVenta.push({
                     label: label,
                     value: Number(
-                      this.datosVenta["programacion_pagos_actual"][0]
-                        .mensualidades
+                      this.datosVenta["programacion_pagos"][0].mensualidades
                     ),
                     precio_neto: Number(precio_neto),
                     enganche_inicial: Number(
-                      this.datosVenta["programacion_pagos_actual"][0]
-                        .enganche_inicial
+                      this.datosVenta["programacion_pagos"][0].enganche_inicial
                     ),
                     tipo_plan: "especial" //para saber si es un plan normal o un plan especial
                   });
@@ -2169,13 +2167,11 @@ export default {
                   this.planesVenta.push({
                     label: label,
                     value: Number(
-                      this.datosVenta["programacion_pagos_actual"][0]
-                        .mensualidades
+                      this.datosVenta["programacion_pagos"][0].mensualidades
                     ),
                     precio_neto: Number(precio_neto),
                     enganche_inicial: Number(
-                      this.datosVenta["programacion_pagos_actual"][0]
-                        .enganche_inicial
+                      this.datosVenta["programacion_pagos"][0].enganche_inicial
                     ),
                     tipo_plan: "especial" //para saber si es un plan normal o un plan especial
                   });
@@ -2397,7 +2393,7 @@ export default {
           this.form.beneficiarios = res.data.beneficiarios;
 
           this.form.enganche_inicial_origen = Number(
-            this.datosVenta["programacion_pagos_actual"][0].enganche_inicial
+            this.datosVenta["programacion_pagos"][0].enganche_inicial
           );
           /**informacion de la venta */
           this.form.descuento = this.datosVenta.descuento;

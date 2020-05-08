@@ -507,7 +507,7 @@ class CementerioController extends ApiController
 
 
         /**revisnado si el plan de ventas es diferente */
-        if ($request->planVenta['value'] != $datos_venta['programacion_pagos_actual'][0]['mensualidades']) {
+        if ($request->planVenta['value'] != $datos_venta['programacion_pagos'][0]['mensualidades']) {
             /**aqui la venta fue modificada a otro tipo de plan */
             /**verificando que la venta no tenga pagos vencidos */
             if ($datos_venta['pagos_vencidos'] > 0) {
@@ -530,10 +530,10 @@ class CementerioController extends ApiController
          * y nos causaria dinero de mas
          */
 
-        if ($total_neto != $datos_venta['total'] || $descuento != $datos_venta['descuento'] ||  (float) $request->enganche_inicial != $datos_venta['programacion_pagos_actual'][0]['enganche_inicial']) {
+        if ($total_neto != $datos_venta['total'] || $descuento != $datos_venta['descuento'] ||  (float) $request->enganche_inicial != $datos_venta['programacion_pagos'][0]['enganche_inicial']) {
             if ($datos_venta['pagos_vencidos'] > 0) {
                 return $this->errorResponse('Solicitud rechazada, no se puede hacer cambio de plan de venta porque al parecer esta venta no está al corriente con sus pagos. Para cualquier aclaración, consulte el estado de cuenta de esta venta.', 409);
-            } else if ($datos_venta['restante_pagar'] <= 0) {
+            } else if ($datos_venta['restante_pagar_subtotal'] <= 0) {
                 return $this->errorResponse('Esta venta ya fue liquidada en su totalidad, 
                     no se puede hacer modificaciones en las cantidades relativas al precio.', 409);
             } else if ($datos_venta['total_pagado'] >  $total_neto) {
@@ -595,7 +595,7 @@ class CementerioController extends ApiController
 
             if ($generar_nueva_version_programacion_pagos == true || $correr_reiniciar_programacion_completa == true) {
                 /**creamos la nueva  progrmacion de pagos (original del contrato)*/
-                $version_anterior = intval($datos_venta['programacion_pagos_actual'][0]['num_version']);
+                $version_anterior = intval($datos_venta['programacion_pagos'][0]['num_version']);
                 $programacion_pagos_id = DB::table('programacion_pagos_terrenos')->insertGetId(
                     [
                         'num_version' => ($version_anterior + 1),
@@ -618,7 +618,7 @@ class CementerioController extends ApiController
                 /**rellenar con los pagos actuales realizados */
                 $datos_nueva_programacion = $this->get_venta_id($request->id_venta);
                 $total_a_repagar = $datos_venta['total_pagado'];
-                foreach ($datos_nueva_programacion['programacion_pagos_actual'][0]['pagos_programados'] as $programado) {
+                foreach ($datos_nueva_programacion['programacion_pagos'][0]['pagos_programados'] as $programado) {
                     if ($total_a_repagar > 0) {
                         if ($total_a_repagar >= $programado['total']) {
                             $subtotal = $programado['subtotal']; //sin iva
@@ -746,7 +746,7 @@ class CementerioController extends ApiController
                 //return $pagos_venta['pagos_programados'];
 
                 $total_pagado = 0;
-                foreach ($pagos_venta['programacion_pagos_actual'][0]['pagos_programados'] as $pago_programado) {
+                foreach ($pagos_venta['programacion_pagos'][0]['pagos_programados'] as $pago_programado) {
                     foreach ($pago_programado['pagos_realizados'] as $pago_realizado) {
                         if ($pago_realizado['status']) {
                             $total_pagado += $pago_realizado['subtotal'];
@@ -1453,8 +1453,8 @@ class CementerioController extends ApiController
             $intereses_pagados = 0;
 
 
-            if (isset($venta['programacion_pagos_actual'][0]['pagos_programados'])) {
-                foreach ($venta['programacion_pagos_actual'][0]['pagos_programados'] as &$programado) {
+            if (isset($venta['programacion_pagos'][0]['pagos_programados'])) {
+                foreach ($venta['programacion_pagos'][0]['pagos_programados'] as &$programado) {
                     /**definiendo el conceptop del pago */
                     if ($programado['concepto_pago']['id'] == 1) {
                         /**enganche */
@@ -1628,7 +1628,7 @@ class CementerioController extends ApiController
                 $venta['intereses_pagados'] =  $intereses_pagados;
 
 
-                $venta['numero_pagos_programados'] = count($venta['programacion_pagos_actual'][0]['pagos_programados']);
+                $venta['numero_pagos_programados'] = count($venta['programacion_pagos'][0]['pagos_programados']);
                 $venta['numero_pagos_programados_cubiertos'] = $pagados;
 
                 $venta['numero_pagos_realizados'] = $pagos_realizados;
@@ -1816,8 +1816,8 @@ class CementerioController extends ApiController
                 )
             )
 
-                ->with(array('programacionPagosActual.pagosProgramados.conceptoPago'))
-                ->with(array('programacionPagosActual.pagosProgramados.pagosRealizados'))
+                ->with(array('programacionPagos.pagosProgramados.conceptoPago'))
+                ->with(array('programacionPagos.pagosProgramados.pagosRealizados'))
                 ->with(array('vendedor' => function ($query) {
                     $query->select('id', 'nombre');
                 }))
@@ -1914,8 +1914,8 @@ class CementerioController extends ApiController
             $intereses_pagados = 0;
 
 
-            if (isset($venta['programacion_pagos_actual'][0]['pagos_programados'])) {
-                foreach ($venta['programacion_pagos_actual'][0]['pagos_programados'] as &$programado) {
+            if (isset($venta['programacion_pagos'][0]['pagos_programados'])) {
+                foreach ($venta['programacion_pagos'][0]['pagos_programados'] as &$programado) {
                     /**definiendo el conceptop del pago */
                     if ($programado['concepto_pago']['id'] == 1) {
                         /**enganche */
@@ -2089,7 +2089,7 @@ class CementerioController extends ApiController
                 $venta['intereses_pagados'] =  $intereses_pagados;
 
 
-                $venta['numero_pagos_programados'] = count($venta['programacion_pagos_actual'][0]['pagos_programados']);
+                $venta['numero_pagos_programados'] = count($venta['programacion_pagos'][0]['pagos_programados']);
                 $venta['numero_pagos_programados_cubiertos'] = $pagados;
 
                 $venta['numero_pagos_realizados'] = $pagos_realizados;
@@ -2372,8 +2372,8 @@ class CementerioController extends ApiController
                 )
             )
 
-            ->with(array('programacionPagosActual.pagosProgramados.conceptoPago'))
-            ->with(array('programacionPagosActual.pagosProgramados.pagosRealizados'))
+            ->with(array('programacionPagos.pagosProgramados.conceptoPago'))
+            ->with(array('programacionPagos.pagosProgramados.pagosRealizados'))
             ->with(array('vendedor' => function ($query) {
                 $query->select('id', 'nombre');
             }))
@@ -2440,211 +2440,206 @@ class CementerioController extends ApiController
         $intereses_generados = 0;
         $intereses_pagados = 0;
 
-        foreach ($resultado['programacion_pagos_actual'][0]['pagos_programados'] as $key => &$programado) {
+        foreach ($resultado['programacion_pagos'] as $index => &$programacion) {
 
+            foreach ($programacion['pagos_programados'] as $key => &$programado) {
+                /**fecha_programada con texto */
+                $programado['fecha_programada_texto'] = fecha_abr($programado['fecha_programada']);
 
-            /**definiendo el conceptop del pago */
-            if ($programado['concepto_pago']['id'] == 1) {
-                /**enganche */
-                $programado['concepto'] = "Enganche inicial.";
-            } else if ($programado['concepto_pago']['id'] == 2) {
-                /**abono */
-                $programado['concepto'] = "Abono Núm." . ($programado['num_pago'] - 1) . " correspondiente al mes de " . mes_year_from_fecha($programado['fecha_programada']) . ".";
-            } else {
-                /**liquidacion */
-                $programado['concepto'] = "Pago único de liquidación.";
-            }
-
-            /**valores por default */
-            $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-            $programado['total_a_pagar'] = $programado['total'];
-            $cubierto = 0;
-            $vencido = 0;
-
-            /**manejo de intereses */
-            $dias_retrasados_del_pago = 0;
-            $interes_a_pagar = 0;
-            /**veririca si el pago vencio y no se ha pagado ndd*/
-            if (count($programado['pagos_realizados']) == 0) {
-                if (strtotime(date('Y-m-d')) > strtotime($programado['fecha_programada'])) {
-                    $vencidos++;
-                    $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
-                    /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
-                    $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
-                    $programado['fecha_a_pagar'] = date('Y-m-d');
-                    /**
-                     * Los intereses moratorios se calcularán
-                     * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
-                     * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
-                     * ser hecho y la fecha que el contratante
-                     * liquide el adeudo.
-                     **/
-                    $interes_a_pagar = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
-
-                    /**actualizando los datos de vencimiento, en caso de que hayan vencido */
-
-                    $programado['total_a_pagar'] = doubleVal($programado['total']) + $interes_a_pagar;
-
-                    $programado['intereses_a_pagar'] = $interes_a_pagar;
-
-                    $programado['vencido'] = 1;
-                    /**actualizando los datos de vencimiento, en caso de que hayan vencido */
-                    $programado['dias_vencido'] =  $dias_retrasados_del_pago;
-                    $programado['intereses'] = $interes_a_pagar;
-
-                    if ($fecha_primer_pago_vencido == '') {
-                        $fecha_primer_pago_vencido = $programado['fecha_programada'];
-                    }
-                }
-            } else {
-                /**hay pagos realizados */
-                $monto_pagado_interes = 0;
-                $fecha_ultimo_pago_realizado = '';
-                foreach ($programado['pagos_realizados'] as $realizado) {
-                    if ($realizado['status'] == 1) {
-                        $pagos_realizados++;
-                        /***sacando monto pagado a cuenta de intereses */
-                        if ($realizado['tipo_pagos_id'] == 2) {
-                            /**es abono a intereses */
-                            /**me baso en subtotal */
-                            $monto_pagado_interes += (doubleVal($realizado['total']));
-                            $programado['intereses_pagado'] += (doubleVal($realizado['total']));
-                        } else {
-                            /**total cuvierto del pago */
-                            $programado['subtotal_pagado'] += (doubleVal($realizado['subtotal']));
-                            $programado['iva_pagado'] += (doubleVal($realizado['iva']));
-                            $programado['descuento_pagado'] += (doubleVal($realizado['descuento']));
-                            $programado['total_pagado'] += (doubleVal($realizado['total']));
-
-
-                            /**es abono a capital */
-                            $sub_total_pagado += (doubleVal($realizado['subtotal']));
-                            $iva_pagado +=  (doubleVal($realizado['iva']));
-                            $descuento_pagado += (doubleVal($realizado['descuento']));
-                            $total_pagado += (doubleVal($realizado['total']));
-                            $cubierto += (doubleVal($realizado['subtotal']));
-                        }
-
-                        $next = next($realizado);
-                        if (false !== $next) {
-                            $fecha_ultimo_pago_realizado = $realizado['fecha_pago'];
-                            //do something with $current
-                        }
-                    }
-                }
-                if ($cubierto >= $programado['subtotal']) {
-                    /**checar si se pago el abono dentro de la fecha limite */
-                    if (strtotime($fecha_ultimo_pago_realizado) <= strtotime($programado['fecha_programada'])) {
-                        /**pago cubierto en fecha y orden */
-                        $programado['intereses_a_pagar'] = 0;
-                        $programado['total_a_pagar'] = 0;
-                        $programado['pagado'] = 1;
-                        $pagados++;
-                        $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-                    } else {
-                        /**checando si el monto de los intereses pagados corresponde a los dias vencidos */
-                        $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                        $fecha_pago_realizado = Carbon::createFromFormat('Y-m-d', $fecha_ultimo_pago_realizado);
-                        /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
-                        $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_pago_realizado);
-                        /**
-                         * Los intereses moratorios se calcularán
-                         * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
-                         * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
-                         * ser hecho y la fecha que el contratante
-                         * liquide el adeudo.
-                         */
-                        $interes_a_pagar = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
-                        if ($interes_a_pagar < $monto_pagado_interes) {
-                            if ($fecha_primer_pago_vencido == '') {
-                                $fecha_primer_pago_vencido = $programado['fecha_programada'];
-                            }
-                            $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'] + $interes_a_pagar - $programado['intereses_pagado'];
-                            $programado['intereses_a_pagar'] = $interes_a_pagar - $programado['intereses_pagado'];
-                            $vencidos++;
-                            $programado['vencido'] = 1;
-                            /**actualizando los datos de vencimiento, en caso de que hayan vencido */
-                            $programado['dias_vencido'] =  $dias_retrasados_del_pago;
-                            $programado['intereses'] = $interes_a_pagar;
-                            $programado['fecha_a_pagar'] = date('Y-m-d');
-                        } else {
-                            $programado['fecha_a_pagar'] = $fecha_pago_realizado;
-                            /**pago cubierto en fecha y orden */
-                            $programado['pagado'] = 1;
-                            /**el monto es igual o mayor */
-                            $pagados++;
-                        }
-                    }
+                /**definiendo el conceptop del pago */
+                if ($programado['concepto_pago']['id'] == 1) {
+                    /**enganche */
+                    $programado['concepto'] = "Enganche inicial.";
+                } else if ($programado['concepto_pago']['id'] == 2) {
+                    /**abono */
+                    $programado['concepto'] = "Abono Núm." . ($programado['num_pago'] - 1) . " correspondiente al mes de " . mes_year_from_fecha($programado['fecha_programada']) . ".";
                 } else {
+                    /**liquidacion */
+                    $programado['concepto'] = "Pago único de liquidación.";
+                }
+
+                /**valores por default */
+                $programado['fecha_a_pagar'] = $programado['fecha_programada'];
+                $programado['total_a_pagar'] = $programado['total'];
+                $cubierto = 0;
+                $vencido = 0;
+
+                /**manejo de intereses */
+                $dias_retrasados_del_pago = 0;
+                $interes_a_pagar = 0;
+                /**veririca si el pago vencio y no se ha pagado ndd*/
+                if (count($programado['pagos_realizados']) == 0) {
                     if (strtotime(date('Y-m-d')) > strtotime($programado['fecha_programada'])) {
                         $vencidos++;
-                        $programado['fecha_a_pagar'] = date('Y-m-d');
                         $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
                         $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
                         /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
                         $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
+                        $programado['fecha_a_pagar'] = date('Y-m-d');
                         /**
                          * Los intereses moratorios se calcularán
                          * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
                          * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
                          * ser hecho y la fecha que el contratante
                          * liquide el adeudo.
-                         */
+                         **/
                         $interes_a_pagar = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
+
+                        /**actualizando los datos de vencimiento, en caso de que hayan vencido */
+
+                        $programado['total_a_pagar'] = doubleVal($programado['total']) + $interes_a_pagar;
+
+                        $programado['intereses_a_pagar'] = $interes_a_pagar;
 
                         $programado['vencido'] = 1;
                         /**actualizando los datos de vencimiento, en caso de que hayan vencido */
                         $programado['dias_vencido'] =  $dias_retrasados_del_pago;
                         $programado['intereses'] = $interes_a_pagar;
 
-                        $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'] + $interes_a_pagar - $programado['intereses_pagado'];
-                        $programado['intereses_a_pagar'] = $interes_a_pagar - $programado['intereses_pagado'];
-
                         if ($fecha_primer_pago_vencido == '') {
                             $fecha_primer_pago_vencido = $programado['fecha_programada'];
                         }
                     }
+                } else {
+                    /**hay pagos realizados */
+                    $monto_pagado_interes = 0;
+                    $fecha_ultimo_pago_realizado = '';
+                    foreach ($programado['pagos_realizados'] as &$realizado) {
+                        if ($realizado['status'] == 1) {
+                            $pagos_realizados++;
+                            /***sacando monto pagado a cuenta de intereses */
+                            if ($realizado['tipo_pagos_id'] == 2) {
+                                /**es abono a intereses */
+                                /**me baso en subtotal */
+                                $monto_pagado_interes += (doubleVal($realizado['total']));
+                                $programado['intereses_pagado'] += (doubleVal($realizado['total']));
+                            } else {
+                                /**total cuvierto del pago */
+                                $programado['subtotal_pagado'] += (doubleVal($realizado['subtotal']));
+                                $programado['iva_pagado'] += (doubleVal($realizado['iva']));
+                                $programado['descuento_pagado'] += (doubleVal($realizado['descuento']));
+                                $programado['total_pagado'] += (doubleVal($realizado['total']));
+
+
+                                /**es abono a capital */
+                                $sub_total_pagado += (doubleVal($realizado['subtotal']));
+                                $iva_pagado +=  (doubleVal($realizado['iva']));
+                                $descuento_pagado += (doubleVal($realizado['descuento']));
+                                $total_pagado += (doubleVal($realizado['total']));
+                                $cubierto += (doubleVal($realizado['subtotal']));
+                            }
+
+                            $next = next($realizado);
+                            if (false !== $next) {
+                                $fecha_ultimo_pago_realizado = $realizado['fecha_pago'];
+                                //do something with $current
+                            }
+                        }
+                    }
+                    if ($cubierto >= $programado['subtotal']) {
+                        /**checar si se pago el abono dentro de la fecha limite */
+                        if (strtotime($fecha_ultimo_pago_realizado) <= strtotime($programado['fecha_programada'])) {
+                            /**pago cubierto en fecha y orden */
+                            $programado['intereses_a_pagar'] = 0;
+                            $programado['total_a_pagar'] = 0;
+                            $programado['pagado'] = 1;
+                            $pagados++;
+                            $programado['fecha_a_pagar'] = $programado['fecha_programada'];
+                        } else {
+                            /**checando si el monto de los intereses pagados corresponde a los dias vencidos */
+                            $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
+                            $fecha_pago_realizado = Carbon::createFromFormat('Y-m-d', $fecha_ultimo_pago_realizado);
+                            /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
+                            $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_pago_realizado);
+                            /**
+                             * Los intereses moratorios se calcularán
+                             * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
+                             * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
+                             * ser hecho y la fecha que el contratante
+                             * liquide el adeudo.
+                             */
+                            $interes_a_pagar = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
+                            if ($interes_a_pagar < $monto_pagado_interes) {
+                                if ($fecha_primer_pago_vencido == '') {
+                                    $fecha_primer_pago_vencido = $programado['fecha_programada'];
+                                }
+                                $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'] + $interes_a_pagar - $programado['intereses_pagado'];
+                                $programado['intereses_a_pagar'] = $interes_a_pagar - $programado['intereses_pagado'];
+                                $vencidos++;
+                                $programado['vencido'] = 1;
+                                /**actualizando los datos de vencimiento, en caso de que hayan vencido */
+                                $programado['dias_vencido'] =  $dias_retrasados_del_pago;
+                                $programado['intereses'] = $interes_a_pagar;
+                                $programado['fecha_a_pagar'] = date('Y-m-d');
+                            } else {
+                                $programado['fecha_a_pagar'] = $fecha_pago_realizado;
+                                /**pago cubierto en fecha y orden */
+                                $programado['pagado'] = 1;
+                                /**el monto es igual o mayor */
+                                $pagados++;
+                            }
+                        }
+                    } else {
+                        if (strtotime(date('Y-m-d')) > strtotime($programado['fecha_programada'])) {
+                            $vencidos++;
+                            $programado['fecha_a_pagar'] = date('Y-m-d');
+                            $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
+                            $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                            /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
+                            $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
+                            /**
+                             * Los intereses moratorios se calcularán
+                             * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
+                             * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
+                             * ser hecho y la fecha que el contratante
+                             * liquide el adeudo.
+                             */
+                            $interes_a_pagar = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
+
+                            $programado['vencido'] = 1;
+                            /**actualizando los datos de vencimiento, en caso de que hayan vencido */
+                            $programado['dias_vencido'] =  $dias_retrasados_del_pago;
+                            $programado['intereses'] = $interes_a_pagar;
+
+                            $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'] + $interes_a_pagar - $programado['intereses_pagado'];
+                            $programado['intereses_a_pagar'] = $interes_a_pagar - $programado['intereses_pagado'];
+
+                            if ($fecha_primer_pago_vencido == '') {
+                                $fecha_primer_pago_vencido = $programado['fecha_programada'];
+                            }
+                        } else {
+                            /**al no esta vencido el pago solo se actualiza el total a pagar de ese pago programado */
+                            $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'];
+                        }
+                    }
                 }
+                $intereses_generados += $interes_a_pagar;
+                $intereses_pagados += $programado['intereses_pagado'];
             }
-
-            $intereses_generados += $interes_a_pagar;
-            $intereses_pagados += $programado['intereses_pagado'];
+            if ($index == 0) {
+                /**solo se toma en cuenta los valores de las sumas para la programacion actual */
+                $resultado['intereses_generados'] =  $intereses_generados;
+                $resultado['intereses_pagados'] =  $intereses_pagados;
+                $resultado['numero_pagos_programados'] = count($resultado['programacion_pagos'][0]['pagos_programados']);
+                $resultado['numero_pagos_programados_cubiertos'] = $pagados;
+                $resultado['numero_pagos_realizados'] = $pagos_realizados;
+                $resultado['pagos_vencidos'] = $vencidos;
+                if ($fecha_primer_pago_vencido != '') {
+                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                    $fecha_del_primer_pago_vencido = Carbon::createFromFormat('Y-m-d', $fecha_primer_pago_vencido);
+                    $diferencia_en_dias = $fecha_hoy->diffInDays($fecha_del_primer_pago_vencido);
+                    $resultado['dias_vencidos'] = $diferencia_en_dias;
+                }
+                $resultado['sub_total_pagado'] = $sub_total_pagado;
+                $resultado['iva_pagado'] = $iva_pagado;
+                $resultado['descuento_pagado'] = $descuento_pagado;
+                $resultado['total_pagado'] = $total_pagado;
+                $resultado['restante_pagar_subtotal'] = $resultado['subtotal'] - $sub_total_pagado;
+                //se retorna el resultado
+                $resultado['total_pagar_neto_con_intereses'] =  $resultado['total']  + $resultado['intereses_generados'];
+                $resultado['saldo_pagar_neto_con_intereses'] =  $resultado['total_pagar_neto_con_intereses'] - $resultado['total_pagado'] - $resultado['intereses_pagados'];
+            }
         }
-
-
-        $resultado['intereses_generados'] =  $intereses_generados;
-        $resultado['intereses_pagados'] =  $intereses_pagados;
-
-
-        $resultado['numero_pagos_programados'] = count($resultado['programacion_pagos_actual'][0]['pagos_programados']);
-        $resultado['numero_pagos_programados_cubiertos'] = $pagados;
-
-        $resultado['numero_pagos_realizados'] = $pagos_realizados;
-
-
-        $resultado['pagos_vencidos'] = $vencidos;
-
-
-        if ($fecha_primer_pago_vencido != '') {
-            $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
-            $fecha_del_primer_pago_vencido = Carbon::createFromFormat('Y-m-d', $fecha_primer_pago_vencido);
-            $diferencia_en_dias = $fecha_hoy->diffInDays($fecha_del_primer_pago_vencido);
-            $resultado['dias_vencidos'] = $diferencia_en_dias;
-        }
-
-
-        $resultado['sub_total_pagado'] = $sub_total_pagado;
-        $resultado['iva_pagado'] = $iva_pagado;
-        $resultado['descuento_pagado'] = $descuento_pagado;
-        $resultado['total_pagado'] = $total_pagado;
-
-        $resultado['restante_pagar_subtotal'] = $resultado['subtotal'] - $sub_total_pagado;
-        //se retorna el resultado
-
-
-        $resultado['total_pagar_neto_con_intereses'] =  $resultado['total']  + $resultado['intereses_generados'];
-        $resultado['saldo_pagar_neto_con_intereses'] =  $resultado['total_pagar_neto_con_intereses'] - $resultado['total_pagado'] - $resultado['intereses_pagados'];
         return $resultado;
     }
 
@@ -2728,7 +2723,7 @@ class CementerioController extends ApiController
     }
 
 
-    public function referencias_de_pago(Request $request)
+    public function referencias_de_pago(Request $request, $id_pago = '')
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         $email =  $request->email_send === 'true' ? true : false;
@@ -2749,7 +2744,7 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/pagos/referencias_de_pago', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('inventarios/cementerios/pagos/referencias_de_pago', ['id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
 

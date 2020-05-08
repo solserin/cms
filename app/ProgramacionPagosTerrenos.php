@@ -55,9 +55,11 @@ class ProgramacionPagosTerrenos extends Model
             DB::raw(
                 '(0) AS fecha_a_pagar'
             ),
-
             DB::raw(
                 '("") AS concepto'
+            ),
+            DB::raw(
+                '("") AS fecha_programada_texto'
             ),
 
 

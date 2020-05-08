@@ -201,7 +201,7 @@
                                 <span class="bold"> plan de venta:</span>
                             </td>
                             <td class="w-30 py-1 right bg-gray">
-                                {{ $datos['programacion_pagos_actual'][0]['mensualidades']==0? 'contado': ($datos['programacion_pagos_actual'][0]['mensualidades'].' meses' ) }}
+                                {{ $datos['programacion_pagos'][0]['mensualidades']==0? 'contado': ($datos['programacion_pagos'][0]['mensualidades'].' meses' ) }}
                             </td>
                         </tr>
                         <tr>
@@ -363,7 +363,7 @@
             </thead>
             <tbody>
 
-                @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $programado)
+                @foreach ($datos['programacion_pagos'][0]['pagos_programados'] as $programado)
                 <tr>
                     <td class="center">
                         <span class="uppercase bold texto-sm">{{$programado['num_pago']}}</span>

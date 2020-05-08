@@ -12,7 +12,7 @@ class VentasTerrenos extends Model
     /**la venta tiene uno o muchos pagos programados */
     public function programacionPagos()
     {
-        return $this->hasMany('App\ProgramacionPagosTerrenos', 'ventas_terrenos_id', 'id');
+        return $this->hasMany('App\ProgramacionPagosTerrenos', 'ventas_terrenos_id', 'id')->orderBy('id', 'desc');
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
     }
 

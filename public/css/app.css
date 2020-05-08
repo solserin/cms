@@ -441,8 +441,18 @@
 }
 
 .reportes_show_list .vs-popup {
-  max-width: 75% !important;
-  min-height: 70vh !important;
+  max-width: 90% !important;
+  min-height: 90vh !important;
+}
+
+th .sort-th,
+th .vs-table-text {
+  -webkit-box-pack: center;
+          justify-content: center;
+}
+
+[dir] .vs-table--td {
+  text-align: center !important;
 }
 
 /*=========================================================================================

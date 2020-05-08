@@ -310,13 +310,13 @@
             @php
             /*determino si lleva abonos o es pago unico*/
             @endphp
-            @if(count($datos['programacion_pagos_actual'][0]['pagos_programados'])==1)
+            @if(count($datos['programacion_pagos'][0]['pagos_programados'])==1)
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
                 <span class="ml-2">
                     Una aportación (Pago Único) de $ <span
-                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'],2) }}
-                        ({{ NumerosEnLetras::convertir($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'],'Pesos m.n',false) }})</span>.
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['programacion_pagos'][0]['pagos_programados'][0]['total'],2) }}
+                        ({{ NumerosEnLetras::convertir($datos['programacion_pagos'][0]['pagos_programados'][0]['total'],'Pesos m.n',false) }})</span>.
                 </span>
             </p>
             @else
@@ -324,8 +324,8 @@
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
                 <span class="ml-2">
                     Una aportación inicial de $ <span
-                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'],2) }}
-                        ({{ NumerosEnLetras::convertir((($datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'])),'Pesos m.n',false) }})</span>.
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['programacion_pagos'][0]['pagos_programados'][0]['total'],2) }}
+                        ({{ NumerosEnLetras::convertir((($datos['programacion_pagos'][0]['pagos_programados'][0]['total'])),'Pesos m.n',false) }})</span>.
                 </span>
             </p>
 
@@ -333,11 +333,11 @@
                 <span class="lowercase bold texto-sm -ml-6">b) </span>
                 <span class="ml-2">
                     Y un saldo de $ <span class="bg-gray bold px-2 uppercase texto-sm">
-                        {{ number_format($datos['total']-$datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'],2) }}
+                        {{ number_format($datos['total']-$datos['programacion_pagos'][0]['pagos_programados'][0]['total'],2) }}
                         (
-                        {{ NumerosEnLetras::convertir((($datos['total']-$datos['programacion_pagos_actual'][0]['pagos_programados'][0]['total'])),'Pesos m.n',false) }})
+                        {{ NumerosEnLetras::convertir((($datos['total']-$datos['programacion_pagos'][0]['pagos_programados'][0]['total'])),'Pesos m.n',false) }})
                     </span>. En <span
-                        class="bg-gray bold px-2 uppercase texto-sm">{{ count($datos['programacion_pagos_actual'][0]['pagos_programados'])-1 }}</span>
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ count($datos['programacion_pagos'][0]['pagos_programados'])-1 }}</span>
                     abonos consecutivos.
                 </span>
             </p>

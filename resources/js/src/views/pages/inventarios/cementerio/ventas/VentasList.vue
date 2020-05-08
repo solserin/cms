@@ -146,7 +146,7 @@
               </p>
             </vs-td>
             <vs-td :data="data[indextr].id_user">
-              <div class="flex flex-start">
+              <div class="flex justify-center">
                 <img
                   class="mr-3"
                   style="width:20px;"

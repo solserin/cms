@@ -71,8 +71,13 @@
 <body>
   @include('layouts.estilos')
 
-  @foreach ($datos['programacion_pagos_actual'][0]['pagos_programados'] as $key=>$pago)
+  @foreach ($datos['programacion_pagos'][0]['pagos_programados'] as $key=>$pago)
   @php
+  if($id_pago!=''){
+    if($id_pago!=$pago['id']){
+      continue;
+    }
+  }
     //checa cuanto se ha pagado por cada pago programado
     $total_pagado_por_programado=0;
   @endphp
@@ -458,8 +463,12 @@ entre la fecha de pago que debió ser hecho y la fecha que el contratante liquid
        
      </div>
   </div>
-
-  @isset($datos['programacion_pagos_actual'][0]['pagos_programados'][($key+1)])
+@php
+    if($pago['id']==$id_pago){
+    break;
+    }
+@endphp
+  @isset($datos['programacion_pagos'][0]['pagos_programados'][($key+1)])
       <div style = "display:block; clear:both; page-break-after:always;"></div>
   @endisset
       
