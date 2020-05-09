@@ -124,7 +124,7 @@
                   :name="'pago_inicial'+indextr+indexprecio"
                   data-vv-as="Pago Inicial"
                   data-vv-validate-on="blur"
-                  v-validate="'required|min_value:1|max_value:500000'"
+                  v-validate="'required|decimal:2|min_value:'+(dato.precios[0].precio_neto*.10)+'|max_value:'+(precio.precio_neto*.5)"
                   maxlength="6"
                 />
                 <div>
