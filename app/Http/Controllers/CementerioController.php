@@ -2721,13 +2721,14 @@ class CementerioController extends ApiController
     }
 
 
-    public function referencias_de_pago(Request $request, $id_pago = '')
+    public function referencias_de_pago(Request $request, $id_pago = '', $id_programacion = '')
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         $email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
+
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
@@ -2742,7 +2743,7 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/pagos/referencias_de_pago', ['id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('inventarios/cementerios/pagos/referencias_de_pago', ['id_programacion' => $id_programacion, 'id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
 

@@ -107,6 +107,13 @@
                           class="pr-3 pl-3 text-white bg-success propiedad_tipo"
                           v-if="this.datosAreas.tipo_propiedades_id == 4"
                         >Propiedades {{this.datosAreas['tipo_propiedad'].tipo+' Terraza '+this.datosAreas.propiedad_indicador}}</span>
+
+                        <vs-button
+                          size="small"
+                          class="float-right hidden"
+                          color="primary"
+                          icon="check_circle_outline"
+                        >Ver disponibillidad</vs-button>
                       </span>
                       <span
                         class="pr-3 pl-3 text-white bg-danger propiedad_tipo"

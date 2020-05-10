@@ -48,7 +48,7 @@
           <img
             class="cursor-pointer"
             src="@assets/images/reportes/pdf_download.svg"
-            @click="openReporte('Referencias de Pago','/inventarios/cementerio/referencias_de_pago','')"
+            @click="openReporte('Referencias de Pago','/inventarios/cementerio/referencias_de_pago','',0)"
           />
           <h4 class="py-3 capitalize">Fichas de Pago</h4>
         </div>
@@ -109,7 +109,7 @@
                       style="width:20px;"
                       src="@assets/images/pdf.svg"
                       alt
-                      @click="openReporte('Referencias de Pago # '+programados.num_pago,'/inventarios/cementerio/referencias_de_pago/'+programados.id,'')"
+                      @click="openReporte('Referencia de Pago # '+programados.num_pago,'/inventarios/cementerio/referencias_de_pago/'+programados.id,'')"
                     />
                   </div>
                 </vs-td>

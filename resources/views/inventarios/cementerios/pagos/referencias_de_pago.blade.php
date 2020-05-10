@@ -70,8 +70,19 @@
 
 <body>
   @include('layouts.estilos')
+@php
+    if($id_pago==''){
+      /*debe recorrer solo el cero,es la version actual*/
+      $recorrer_ciclo=1;
+    }else{
+      /*debe recorrer todo*/
+      $recorrer_ciclo=count($datos['programacion_pagos']);
+    }
+@endphp
 
-  @foreach ($datos['programacion_pagos'][0]['pagos_programados'] as $key=>$pago)
+@for ($i = 0; $i < $recorrer_ciclo; $i++)
+
+  @foreach ($datos['programacion_pagos'][$i]['pagos_programados'] as $key=>$pago)
   @php
   if($id_pago!=''){
     if($id_pago!=$pago['id']){
@@ -473,6 +484,8 @@ entre la fecha de pago que debió ser hecho y la fecha que el contratante liquid
   @endisset
       
   @endforeach
+      
+@endfor
 </body>
 
 </html>
