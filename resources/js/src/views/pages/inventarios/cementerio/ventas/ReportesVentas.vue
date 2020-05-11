@@ -48,7 +48,7 @@
           <img
             class="cursor-pointer"
             src="@assets/images/reportes/pdf_download.svg"
-            @click="openReporte('Referencias de Pago','/inventarios/cementerio/referencias_de_pago','',0)"
+            @click="openReporte('Referencias de Pago','/inventarios/cementerio/referencias_de_pago','')"
           />
           <h4 class="py-3 capitalize">Fichas de Pago</h4>
         </div>

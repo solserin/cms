@@ -110,9 +110,10 @@
 
                         <vs-button
                           size="small"
-                          class="float-right hidden"
+                          class="float-right"
                           color="primary"
                           icon="check_circle_outline"
+                          @click="verDisponibilidad=true"
                         >Ver disponibillidad</vs-button>
                       </span>
                       <span
@@ -1201,9 +1202,16 @@
       @closeBuscador="openBuscador=false"
       @retornoCliente="clienteSeleccionado"
     ></ClientesBuscador>
+
+    <Disponibilidad
+      :datosAreas="datosAreas"
+      :show="verDisponibilidad"
+      @closeVentana="verDisponibilidad=false"
+    ></Disponibilidad>
   </div>
 </template>
 <script>
+import Disponibilidad from "../Disponibilidad";
 import Mapa from "../Mapa";
 import Confirmar from "@pages/Confirmar";
 //componente de password
@@ -1227,7 +1235,8 @@ export default {
     Mapa,
     Confirmar,
     ConfirmarAceptar,
-    ClientesBuscador
+    ClientesBuscador,
+    Disponibilidad
   },
   props: {
     show: {
@@ -1660,8 +1669,8 @@ export default {
   },
   data() {
     return {
+      verDisponibilidad: false,
       openBuscador: false,
-
       idAreaInicial: 1,
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",

@@ -23,6 +23,8 @@ class VentasTerrenos extends Migration
             $table->string('numero_convenio')->nullable();
             $table->string('numero_titulo')->nullable();
             /**datos de la ubicacion */
+            $table->unsignedBigInteger('propiedades_id')->nullable();
+            $table->foreign('propiedades_id')->references('id')->on('propiedades'); //id de la propieda a la que pertenece
             $table->string('ubicacion', 15); //se crea una estructura para poder hacer la relacion de las propiedades
             /**fin de datos de la ubicacion */
             $table->dateTime('fecha_registro');

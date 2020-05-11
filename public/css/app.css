@@ -405,7 +405,8 @@
 /*searcher clientes*/
 
 .searcher_clientes,
-.contrasena {
+.contrasena,
+.ver_disponibilidad {
   z-index: 52001 !important;
 }
 

@@ -30,8 +30,39 @@ class CementerioController extends ApiController
 {
     public function get_cementerio()
     {
-        return
-            Propiedades::with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get();
+
+        $datos = Propiedades::select(
+            '*',
+            DB::raw(
+                '(NULL) AS nombre_area'
+            )
+        )
+            ->with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get()->toArray();
+
+        foreach ($datos as $key => &$dato) {
+            if ($dato['tipo_propiedades_id'] == 1) {
+                /**uniplex */
+                $dato['nombre_area'] = 'Sección uniplex ' . $dato['propiedad_indicador'];
+            } else  if ($dato['tipo_propiedades_id'] == 2) {
+                /**duplex */
+                $dato['nombre_area'] = 'Sección duplex ' . $dato['propiedad_indicador'];
+            } else  if ($dato['tipo_propiedades_id'] == 3) {
+                /**nichos */
+                $dato['nombre_area'] = 'nichos columna ' . $dato['propiedad_indicador'];
+            } else  if ($dato['tipo_propiedades_id'] == 4) {
+                /**terrazas */
+                $dato['nombre_area'] = 'Terraza ' . $dato['propiedad_indicador'];
+            } else  if ($dato['tipo_propiedades_id'] == 5) {
+                /**triplex */
+                $dato['nombre_area'] = 'Sección Triplex ' . $dato['propiedad_indicador'];
+            } else {
+                /**cuadriplez dsin terraza */
+                $dato['nombre_area'] = 'Sección de cuadriplex ' . $dato['propiedad_indicador'];
+            }
+        }
+
+
+        return $datos;
     }
 
     //obtiene los usuarios para vendedores
@@ -221,6 +252,7 @@ class CementerioController extends ApiController
                     /**la ubicacion consiste de 4 valores id_tipo_propiedad-id_propiedad-fila-lote */
                     /**ejem 4-29-1-3 */
                     'ubicacion' => $request->ubicacion,
+                    'propiedades_id' => $request->propiedades_id,
                     'fecha_registro' => now(),
                     'fecha_venta' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
                     'registro_id' => (int) $request->user()->id,
@@ -570,6 +602,7 @@ class CementerioController extends ApiController
                     /**la ubicacion consiste de 4 valores id_tipo_propiedad-id_propiedad-fila-lote */
                     /**ejem 4-29-1-3 */
                     'ubicacion' => $request->ubicacion,
+                    'propiedades_id' => $request->propiedades_id,
                     'fecha_modificacion' => now(),
                     'fecha_venta' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
                     'modifico_id' => (int) $request->user()->id,
@@ -1054,8 +1087,36 @@ class CementerioController extends ApiController
     {
         //id del conjunto de propieades
         $id_propiedad = $request->id_propiedad;
-        return
-            Propiedades::with('filas_columnas')->with('tipoPropiedad')->orderBy('tipo_propiedades_id', 'asc')->where('propiedades.id', '=', $id_propiedad)->get();
+
+        $datos = Propiedades::select(
+            '*',
+            DB::raw(
+                '(NULL) AS nombre_area'
+            )
+        )
+            ->with('filas_columnas')->with('tipoPropiedad')->orderBy('tipo_propiedades_id', 'asc')->where('propiedades.id', '=', $id_propiedad)->get()->toArray();
+
+        if ($datos[0]['tipo_propiedades_id'] == 1) {
+            /**uniplex */
+            $datos[0]['nombre_area'] = 'Sección uniplex ' . $datos[0]['propiedad_indicador'];
+        } else  if ($datos[0]['tipo_propiedades_id'] == 2) {
+            /**duplex */
+            $datos[0]['nombre_area'] = 'Sección duplex ' . $datos[0]['propiedad_indicador'];
+        } else  if ($datos[0]['tipo_propiedades_id'] == 3) {
+            /**nichos */
+            $datos[0]['nombre_area'] = 'nichos columna ' . $datos[0]['propiedad_indicador'];
+        } else  if ($datos[0]['tipo_propiedades_id'] == 4) {
+            /**terrazas */
+            $datos[0]['nombre_area'] = 'Terraza ' . $datos[0]['propiedad_indicador'];
+        } else  if ($datos[0]['tipo_propiedades_id'] == 5) {
+            /**triplex */
+            $datos[0]['nombre_area'] = 'Sección Triplex ' . $datos[0]['propiedad_indicador'];
+        } else {
+            /**cuadriplez dsin terraza */
+            $datos[0]['nombre_area'] = 'Sección de cuadriplex ' . $datos[0]['propiedad_indicador'];
+        }
+
+        return $datos;
     }
 
     //retorna los tipos de propiedad
@@ -2164,50 +2225,50 @@ class CementerioController extends ApiController
         $ubicacion_texto = '';
         foreach ($datos_cementerio as $propiedad) {
             //recorriendo propiedades
-            if ($propiedad->id == $id_propiedad) {
+            if ($propiedad['id'] == $id_propiedad) {
                 //una vez encontrada el id defino si es terraza que es
-                if ($propiedad->tipo_propiedades_id == 1) {
+                if ($propiedad['tipo_propiedades_id'] == 1) {
                     //uniplex
-                    $ubicacion_texto .= "Uniplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                    $ubicacion_texto .= "Uniplex " . $propiedad['propiedad_indicador'] . " Módulo " . $fila;
                     $datos['tipo_texto'] = "uniplex";
                     $datos['fila_texto'] = " Módulo " . $fila;
                     $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
                     $datos['lote_texto'] = "n/a";
-                } else if ($propiedad->tipo_propiedades_id == 2) {
+                } else if ($propiedad['tipo_propiedades_id'] == 2) {
                     //duplex
-                    $ubicacion_texto .= "Duplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                    $ubicacion_texto .= "Duplex " . $propiedad['propiedad_indicador'] . " Módulo " . $fila;
                     $datos['tipo_texto'] = "duplex";
                     $datos['fila_texto'] = " Módulo " . $fila;
                     $datos['lote_texto'] = "n/a";
                     $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
-                } else if ($propiedad->tipo_propiedades_id == 3) {
+                } else if ($propiedad['tipo_propiedades_id'] == 3) {
                     //nicho
-                    $ubicacion_texto .= "Nichos - Columna " . $propiedad->propiedad_indicador . ", Fila " . $fila;
+                    $ubicacion_texto .= "Nichos - Columna " . $propiedad['propiedad_indicador'] . ", Fila " . $fila;
                     $datos['tipo_texto'] = "nicho";
                     $datos['fila_texto'] =  $fila;
                     $datos['area_nombre'] = "Columna " . $areas_nombres[($id_propiedad)];
                     $datos['lote_texto'] = "n/a";
-                } else if ($propiedad->tipo_propiedades_id == 4) {
+                } else if ($propiedad['tipo_propiedades_id'] == 4) {
                     $datos['lote_texto'] = $lote;
                     $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
                     $datos['tipo_texto'] = "terraza";
                     $datos['fila_texto'] = strtoupper($alfabeto[$fila - 1]);
                     //cuadriplex
-                    $ubicacion_texto .= "Terraza " . $propiedad->propiedad_indicador . ", Fila " . strtoupper($alfabeto[$fila - 1]) . " Lote " . $lote;
-                } else if ($propiedad->tipo_propiedades_id == 5) {
+                    $ubicacion_texto .= "Terraza " . $propiedad['propiedad_indicador'] . ", Fila " . strtoupper($alfabeto[$fila - 1]) . " Lote " . $lote;
+                } else if ($propiedad['tipo_propiedades_id'] == 5) {
                     $datos['lote_texto'] = "n/a";
                     $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
                     $datos['tipo_texto'] = "triplex";
                     $datos['fila_texto'] =  " Módulo " . $fila;
                     //triplex
-                    $ubicacion_texto .= "Triplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
-                } else if ($propiedad->tipo_propiedades_id == 6) {
+                    $ubicacion_texto .= "Triplex " . $propiedad['propiedad_indicador'] . " Módulo " . $fila;
+                } else if ($propiedad['tipo_propiedades_id'] == 6) {
                     $datos['lote_texto'] = $lote;
                     $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
                     $datos['tipo_texto'] = "cuadriplex";
                     $datos['fila_texto'] =  " Módulo " . $fila;
                     //cuadriplex sin terraza
-                    $ubicacion_texto .= "cuadriplex " . $propiedad->propiedad_indicador . " Módulo " . $fila;
+                    $ubicacion_texto .= "cuadriplex " . $propiedad['propiedad_indicador'] . " Módulo " . $fila;
                 }
             }
         }
