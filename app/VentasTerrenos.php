@@ -46,4 +46,10 @@ class VentasTerrenos extends Model
     {
         return $this->hasOne('App\VentaTerrenosAjustesIntereses', 'ventas_terrenos_id', 'id');
     }
+
+
+    public function cliente()
+    {
+        return $this->belongsTo('App\Clientes', 'clientes_id', 'id');
+    }
 }

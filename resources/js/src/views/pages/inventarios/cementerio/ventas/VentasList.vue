@@ -194,6 +194,13 @@
       <div>
         <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
       </div>
+      <vx-tooltip
+        title="Are you sure?"
+        color="warning"
+        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras scelerisque non neque sed aliquet."
+      >
+        <vs-button color="warning" type="flat">Title Tooltip</vs-button>
+      </vx-tooltip>
       <pre ref="pre"></pre>
     </div>
 

@@ -17,6 +17,25 @@
             </span>
           </h3>
         </div>
+
+        <div class="w-full px-2">
+          <table class="tabla-descripciones py-5">
+            <tr>
+              <td class="text-center">
+                <span class="p-4 bg-success text-white text-center font-bold">Disponible</span>
+              </td>
+              <td class="text-center">
+                <span class="p-4 bg-danger text-white text-center font-bold">Vendido</span>
+              </td>
+              <td class="text-center">
+                <span class="p-4 bg-info text-white text-center font-bold">Ocupado</span>
+              </td>
+              <td class="text-center">
+                <span class="p-4 bg-espacio-muerto text-white text-center font-bold">Área de relleno</span>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
       <Distribucion :datosAreas="getDatosAreas"></Distribucion>
     </vs-popup>

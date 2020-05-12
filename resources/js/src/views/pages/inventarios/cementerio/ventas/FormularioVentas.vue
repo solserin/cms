@@ -8,6 +8,7 @@
       ref="formulario"
     >
       <!--inicio venta-->
+
       <vx-card class="pt-5">
         <template slot="no-body">
           <div class="flex flex-wrap pb-5">

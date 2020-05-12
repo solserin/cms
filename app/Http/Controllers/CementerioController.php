@@ -35,9 +35,10 @@ class CementerioController extends ApiController
             '*',
             DB::raw(
                 '(NULL) AS nombre_area'
-            )
+            ),
+
         )
-            ->with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get()->toArray();
+            ->with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->with('ventas.cliente')->orderBy('id', 'asc')->get()->toArray();
 
         foreach ($datos as $key => &$dato) {
             if ($dato['tipo_propiedades_id'] == 1) {
@@ -58,6 +59,12 @@ class CementerioController extends ApiController
             } else {
                 /**cuadriplez dsin terraza */
                 $dato['nombre_area'] = 'Sección de cuadriplex ' . $dato['propiedad_indicador'];
+            }
+
+            /**agregando fila, lote, y tipo, por separado en valor numrico */
+            foreach ($dato['ventas'] as $key_venta => &$venta) {
+                $venta['fila_raw'] = (intval(explode("-", $venta['ubicacion'])[2]));
+                $venta['lote_raw'] = (intval(explode("-", $venta['ubicacion'])[3]));
             }
         }
 

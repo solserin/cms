@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class
+      class="reportes_show_list"
       fullscreen
       title="Documentos Disponibles de La Venta"
       :active.sync="showVentana"
