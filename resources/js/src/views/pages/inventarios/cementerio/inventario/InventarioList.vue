@@ -1,8 +1,10 @@
 <template>
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
-      <vs-tab label="CONTROL DE VENTAS" icon="supervisor_account" class="pb-5"></vs-tab>
+      <vs-tab label="FILTROS DE BÚSQUEDA" icon="supervisor_account" class="pb-5"></vs-tab>
+      <vs-tab label="INVENTARIO GRÁFICO" icon="location_on" class="pb-5"></vs-tab>
     </vs-tabs>
+
     <div class="tab-content mt-1" v-show="activeTab==0">
       <div class="flex flex-wrap">
         <div class="w-full sm:w-12/12 ml-auto md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
@@ -172,7 +174,7 @@
                   icon="icon-shield-off"
                   color="danger"
                   type="flat"
-                  @click="cancelarVenta(data[indextr].id)"
+                  @click="deleteUsuario(data[indextr].id_user,data[indextr].cliente_nombre)"
                 ></vs-button>
                 <vs-button
                   v-else
@@ -197,14 +199,11 @@
 
       <pre ref="pre"></pre>
     </div>
-
-    <FormularioVentas
-      :id_venta="id_venta_modificar"
-      :tipo="tipoFormulario"
-      :show="verFormularioVentas"
-      @closeVentana="verFormularioVentas = false"
-      @ver_pdfs_nueva_venta="ConsultarVenta"
-    ></FormularioVentas>
+    <div class="tab-content mt-1" v-show="activeTab==1">
+      <div class="flex flex-wrap">
+        <div class="w-full sm:w-12/12 ml-auto md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">grafico</div>
+      </div>
+    </div>
 
     <Password
       :show="openStatus"
@@ -218,13 +217,6 @@
       @closeListaReportes="closeListaReportes"
       :id_venta="id_venta"
     ></ReportesVentas>
-
-    <CancelarVenta
-      :show="openCancelar"
-      @closeCancelarVenta="openCancelar=false"
-      @closeCancelarVentaRefrescar="closeCancelarVentaRefrescar"
-      :id_venta="id_venta"
-    ></CancelarVenta>
   </div>
 </template>
 
@@ -233,10 +225,7 @@
 
 import cementerio from "@services/cementerio";
 
-import FormularioVentas from "../ventas/FormularioVentas";
-
 import ReportesVentas from "../ventas/ReportesVentas";
-import CancelarVenta from "../ventas/CancelarVenta";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -250,9 +239,7 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    FormularioVentas,
-    ReportesVentas,
-    CancelarVenta
+    ReportesVentas
   },
   watch: {
     actual: function(newValue, oldValue) {
@@ -267,7 +254,6 @@ export default {
   },
   data() {
     return {
-      openCancelar: false,
       openReportes: false,
       verFormularioVentas: false,
       tipoFormulario: "",
@@ -486,11 +472,6 @@ export default {
       this.id_venta_modificar = id_venta;
       this.verFormularioVentas = true;
     },
-
-    cancelarVenta(id_venta) {
-      this.id_venta = id_venta;
-      this.openCancelar = true;
-    },
     formulario(tipo) {
       this.tipoFormulario = tipo;
       this.verFormularioVentas = true;
@@ -499,10 +480,6 @@ export default {
     closeListaReportes() {
       this.openReportes = false;
       this.id_venta = 0;
-      this.get_data(this.actual);
-    },
-    closeCancelarVentaRefrescar() {
-      this.openCancelar = false;
       this.get_data(this.actual);
     }
   },

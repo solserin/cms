@@ -135,6 +135,10 @@
   color: rgba(0, 0, 0, 0.7);
 }
 
+[dir] .vs-con-textarea {
+  border-radius: 0px !important;
+}
+
 .texto-informacion {
   font-size: 14px;
   text-transform: uppercase;
@@ -527,6 +531,19 @@ th .vs-table-text {
 .vs-tooltip {
   z-index: 55002 !important;
 }
+
+/*cancelar ventas del cementerio**/
+
+.cancelar_ventas_cementerio .vs-popup {
+  max-width: 90% !important;
+  min-height: 90vh !important;
+}
+
+.cancelar_ventas_cementerio {
+  z-index: 52002 !important;
+}
+
+/*fin de cancelar ventas del cementerio*/
 
 /*=========================================================================================
   File Name: main.scss

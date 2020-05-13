@@ -2435,7 +2435,10 @@ class CementerioController extends ApiController
                         WHEN ventas_terrenos.status = 1 THEN "Activa"
                         ELSE "Cancelada" 
                         END) AS status_des'
-                )
+                ),
+                DB::raw(
+                    '"" as fecha_venta_texto'
+                ),
             )
 
             ->with(array('programacionPagos.pagosProgramados.conceptoPago'))
@@ -2684,6 +2687,8 @@ class CementerioController extends ApiController
             }
             if ($index == 0) {
                 /**solo se toma en cuenta los valores de las sumas para la programacion actual */
+
+                $resultado['fecha_venta_texto'] = fecha_abr($resultado['fecha_venta']);
                 $resultado['intereses_generados'] =  $intereses_generados;
                 $resultado['intereses_pagados'] =  $intereses_pagados;
                 $resultado['numero_pagos_programados'] = count($resultado['programacion_pagos'][0]['pagos_programados']);

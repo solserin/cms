@@ -130,12 +130,9 @@ const router = new Router({
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
                 /**RUTAS PARA EL MODULO DE inventarios */
                 {
-                    redirect: {
-                        name: 'page-maintenance'
-                    },
                     path: '/inventarios/cementerio/distribucion',
                     name: 'inventario_cementerio',
-                    component: () => import('@/views/pages/inventarios/cementerio/ventas/VentasList.vue'),
+                    component: () => import('@/views/pages/inventarios/cementerio/inventario/InventarioList.vue'),
                     meta: {
                         breadcrumb: [{
                                 title: 'Home',

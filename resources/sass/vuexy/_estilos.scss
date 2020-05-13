@@ -139,6 +139,10 @@
     color: rgba(0, 0, 0, 0.7);
 }
 
+.vs-con-textarea {
+    border-radius: 0px !important;
+}
+
 .texto-informacion {
     padding: 10px 0px 10px 0px;
     font-size: 14px;
@@ -487,3 +491,16 @@ th .vs-table-text {
 .vs-tooltip {
     z-index: 55002 !important;
 }
+
+
+/*cancelar ventas del cementerio**/
+.cancelar_ventas_cementerio .vs-popup {
+    max-width: 90% !important;
+    min-height: 90vh !important;
+}
+
+.cancelar_ventas_cementerio {
+    z-index: 52002 !important;
+}
+
+/*fin de cancelar ventas del cementerio*/

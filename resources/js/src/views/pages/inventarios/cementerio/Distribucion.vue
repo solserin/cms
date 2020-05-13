@@ -55,7 +55,14 @@
                   disposicionTerreno((getDatosAreas.filas-index_fila),(getDatosAreas.columnas-index_columna))
                 )"
               >
-                <span>{{(getDatosAreas.columnas+1)-columna}}</span>
+                <span
+                  v-if="get_titular((getDatosAreas.filas+1)-fila,(getDatosAreas.columnas-index_columna))[0]!=''"
+                >
+                  <vx-tooltip
+                    :text="'Titular: '+get_titular((getDatosAreas.filas+1)-fila,(getDatosAreas.columnas-index_columna))[0]"
+                  >{{(getDatosAreas.columnas+1)-columna}}</vx-tooltip>
+                </span>
+                <span v-else>{{(getDatosAreas.columnas+1)-columna}}</span>
               </td>
               <td
                 class="bg-primary bold text-white letra-fila"
