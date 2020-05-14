@@ -259,7 +259,6 @@
             </tr>
         </table>
     </div>
-
      <div class="border-black-1 radius-5 uppercase texto-sm  px-3 py-2">
         <div class="uppercase bg-black text-white py-1 px-2 bold mb-1">
             información del titular Sustituto

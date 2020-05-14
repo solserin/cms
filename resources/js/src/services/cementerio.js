@@ -91,6 +91,19 @@ export default {
         })
     },
 
+    cancelar_venta(datos) {
+        let call = "/inventarios/cementerio/cancelar_venta"
+        return new Promise((resolve, reject) => {
+            axios.post(call, datos)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
+
 
 
 
@@ -265,23 +278,6 @@ export default {
 
     //obtiene la venta por id
     get_venta_id(param) {
-        let self = this
-        return new Promise((resolve, reject) => {
-            axios.get('/inventarios/cementerio/get_venta_id/' + param, {
-                    cancelToken: new CancelToken((c) => {
-                        self.cancel = c
-                    })
-                })
-                .then((response) => {
-                    resolve(response)
-                })
-                .catch((error) => {
-                    if (axiosSuper.isCancel(error)) {
-                        reject(error.message)
-                    } else {
-                        reject(error)
-                    }
-                })
-        })
+        return axios.get('/inventarios/cementerio/get_venta_id/' + param)
     },
 }

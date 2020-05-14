@@ -28,6 +28,68 @@ use PhpParser\Node\Stmt\Foreach_;
 
 class CementerioController extends ApiController
 {
+
+    /**CANCELAR LA VENTA */
+    public function cancelar_venta(Request $request)
+    {
+        //return $request->minima_cuota_inicial;
+        //validaciones directas sin condicionales
+        $datos_venta = $this->get_venta_id($request->venta_id);
+        $validaciones = [
+            'venta_id' => 'required',
+            'motivo.value' => 'required',
+            'cantidad' => 'numeric|min:0|' . 'max:' . $datos_venta['total_pagado'],
+        ];
+
+
+        $mensajes = [
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'max' => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($datos_venta['total_pagado'], 2),
+            'min' => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        /**validar si la propiedad tiene gente sepultada */
+        /**pendiente
+         * pendiente
+         * pendiente
+         * pendiente
+         */
+
+        /**validar si la propiedad no fue dada de baja ya */
+
+        if ($datos_venta['status'] != 1) {
+            return $this->errorResponse('Esta venta ya habia sido dada de baja.', 409);
+        }
+
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('ventas_terrenos')->where('id', $request->venta_id)->update(
+                [
+                    'motivos_cancelacion_id' => $request['motivo.value'],
+                    'fecha_cancelacion' => now(),
+                    'cancelo_id' => (int) $request->user()->id,
+                    'nota_cancelacion' => $request->comentario,
+                    'status' => 0
+                ]
+            );
+            DB::commit();
+            return $request->venta_id;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+
+
     public function get_cementerio()
     {
 
@@ -62,6 +124,7 @@ class CementerioController extends ApiController
             }
 
             /**agregando fila, lote, y tipo, por separado en valor numrico */
+
             foreach ($dato['ventas'] as $key_venta => &$venta) {
                 $venta['fila_raw'] = (intval(explode("-", $venta['ubicacion'])[2]));
                 $venta['lote_raw'] = (intval(explode("-", $venta['ubicacion'])[3]));
@@ -96,7 +159,7 @@ class CementerioController extends ApiController
             //datos de la propiedad
             'tipo_propiedades_id' => 'required|min:1',
             'propiedades_id' => 'required|min:1',
-            'ubicacion' => 'required|unique:ventas_terrenos,ubicacion',
+            'ubicacion' => 'required',
             //fin de datos de la propiedad
             //datos de la venta
             'fecha_venta' => 'required|date',
@@ -146,6 +209,12 @@ class CementerioController extends ApiController
             ],
         ];
 
+        /**validando de manera manual si la ubicacion enviada ya esta registrada y esta activa */
+        $ubicacion_enviada = VentasTerrenos::where('ubicacion', $request->ubicacion)->where('status', 1)->first();
+        if (!empty($ubicacion_enviada)) {
+            return $this->errorResponse('La ubicación seleccionada ya ha sido vendida.', 409);
+        }
+
         /**VALIDACIONES CONDICIONADAS*/
         //validando que mande el user el lote en caso de ser terraza
         if ($request->tipo_propiedades_id == 4) {
@@ -156,19 +225,49 @@ class CementerioController extends ApiController
         //validnado en caso de que sea de uso inmediato y de venta antes del sistema.
         if ($request->empresa_operaciones_id == 1 && $request->ventaAntiguedad['value'] == 3) {
             //venta de uso inmediato
-            $validaciones['titulo'] = 'required|unique:ventas_terrenos,numero_titulo';
+            $validaciones['titulo'] = 'required';
+            /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
+            $titulo = VentasTerrenos::where('numero_titulo', $request->titulo)->where('status', 1)->first();
+            if (!empty($titulo)) {
+                return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
+            }
         }
 
         //validnado en caso de que sea de uso futuro
         if ($request->empresa_operaciones_id == 2) {
             //venta de uso inmediato
-            $validaciones['num_solicitud'] = 'required|unique:ventas_terrenos,numero_solicitud';
+            $validaciones['num_solicitud'] = 'required';
+
+            /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+            $solicitud = VentasTerrenos::where('numero_solicitud', $request->num_solicitud)->where('status', 1)->first();
+            if (!empty($solicitud)) {
+                return $this->errorResponse('El número de solicitud ingresado ya ha sido registrado.', 409);
+            }
+
+
             //valido si es de venta antes del sistema
             if ($request->ventaAntiguedad['value'] == 2) {
-                $validaciones['convenio'] = 'required|unique:ventas_terrenos,numero_convenio';
+                $validaciones['convenio'] = 'required';
+
+                /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+                $convenio = VentasTerrenos::where('numero_convenio', $request->convenio)->where('status', 1)->first();
+                if (!empty($convenio)) {
+                    return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                }
             } else if ($request->ventaAntiguedad['value'] == 3) {
-                $validaciones['convenio'] = 'required|unique:ventas_terrenos,numero_convenio';
-                $validaciones['titulo'] = 'required|unique:ventas_terrenos,numero_titulo';
+                $validaciones['convenio'] = 'required';
+                $validaciones['titulo'] = 'required';
+
+                /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+                $convenio = VentasTerrenos::where('numero_convenio', $request->convenio)->where('status', 1)->first();
+                if (!empty($convenio)) {
+                    return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                }
+                /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
+                $titulo = VentasTerrenos::where('numero_titulo', $request->titulo)->where('status', 1)->first();
+                if (!empty($titulo)) {
+                    return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
+                }
             }
         }
         //validando si el tipo de pago requiere de banco y digitos
@@ -333,8 +432,7 @@ class CementerioController extends ApiController
             'tipo_propiedades_id' => 'required|min:1',
             'propiedades_id' => 'required|min:1',
             'ubicacion' => [
-                'required',
-                Rule::unique('ventas_terrenos', 'ubicacion')->ignore($request->id_venta, 'id'),
+                'required'
             ],
             //fin de datos de la propiedad
             //datos de la venta
@@ -383,6 +481,13 @@ class CementerioController extends ApiController
             ],
         ];
 
+        /**validando de manera manual si la ubicacion enviada ya esta registrada y esta activa */
+        $ubicacion_enviada = VentasTerrenos::where('ubicacion', $request->ubicacion)->where('status', 1)->first();
+        if (!empty($ubicacion_enviada)) {
+            if ($ubicacion_enviada->id != $request->id_venta)
+                return $this->errorResponse('La ubicación seleccionada ya ha sido vendida.', 409);
+        }
+
         /**VALIDACIONES CONDICIONADAS*/
         //validando que mande el user el lote en caso de ser terraza
         if ($request->tipo_propiedades_id == 4) {
@@ -394,34 +499,61 @@ class CementerioController extends ApiController
         if ($request->empresa_operaciones_id == 1 && $request->ventaAntiguedad['value'] == 3) {
             //venta de uso inmediato
             $validaciones['titulo'] = [
-                'required',
-                Rule::unique('ventas_terrenos', 'numero_titulo')->ignore($request->id_venta),
+                'required'
             ];
+            /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
+            $titulo = VentasTerrenos::where('numero_titulo', $request->titulo)->where('status', 1)->first();
+            if (!empty($titulo)) {
+                if ($titulo->id != $request->id_venta)
+                    return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
+            }
         }
 
         //validnado en caso de que sea de uso futuro
         if ($request->empresa_operaciones_id == 2) {
             //venta de uso inmediato
             $validaciones['num_solicitud'] = [
-                'required',
-                Rule::unique('ventas_terrenos', 'numero_solicitud')->ignore($request->id_venta),
+                'required'
             ];
+
+            /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+            $solicitud = VentasTerrenos::where('numero_solicitud', $request->num_solicitud)->where('status', 1)->first();
+            if (!empty($solicitud)) {
+                if ($solicitud->id != $request->id_venta)
+                    return $this->errorResponse('El número de solicitud ingresado ya ha sido registrado.', 409);
+            }
 
             //valido si es de venta antes del sistema
             if ($request->ventaAntiguedad['value'] == 2) {
                 $validaciones['convenio'] = [
                     'required',
-                    Rule::unique('ventas_terrenos', 'numero_convenio')->ignore($request->id_venta),
                 ];
+                $convenio = VentasTerrenos::where('numero_convenio', $request->convenio)->where('status', 1)->first();
+                if (!empty($convenio)) {
+                    return $this->errorResponse('no.', 409);
+                    if ($convenio->id != $request->id_venta)
+                        return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                }
             } else if ($request->ventaAntiguedad['value'] == 3) {
                 $validaciones['convenio'] =  [
-                    'required',
-                    Rule::unique('ventas_terrenos', 'numero_convenio')->ignore($request->id_venta),
+                    'required'
                 ];
                 $validaciones['titulo'] =  [
-                    'required',
-                    Rule::unique('ventas_terrenos', 'numero_titulo')->ignore($request->id_venta),
+                    'required'
                 ];
+
+                /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+                $convenio = VentasTerrenos::where('numero_convenio', $request->convenio)->where('status', 1)->first();
+                if (!empty($convenio)) {
+                    if ($convenio->id != $request->id_venta)
+                        return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                }
+                /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
+                $titulo = VentasTerrenos::where('numero_titulo', $request->titulo)->where('status', 1)->first();
+                if (!empty($titulo)) {
+                    if ($titulo->id != $request->id_venta)
+                        return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
+                }
             }
         }
         //validando si el tipo de pago requiere de banco y digitos
@@ -528,12 +660,12 @@ class CementerioController extends ApiController
 
 
         if ($datos_venta['ubicacion_raw'] != $request->ubicacion) {
-            if ($datos_venta['restante_pagar'] <= 0) {
+            if ($datos_venta['restante_pagar_subtotal'] <= 0) {
                 return $this->errorResponse('Esta venta ya fue liquidada en su totalidad, 
                     no se puede hacer cambio de propiedad en este caso según las 
                     políticas de la empresa.', 409);
             } else
-            if ($datos_venta['restante_pagar'] <= 0) {
+            if ($datos_venta['restante_pagar_subtotal'] <= 0) {
                 return $this->errorResponse('Esta venta ya fue liquidada en su totalidad, 
                     no se puede hacer cambio de propiedad en este caso según las 
                     políticas de la empresa.', 409);
@@ -570,11 +702,17 @@ class CementerioController extends ApiController
          */
 
         if ($total_neto != $datos_venta['total'] || $descuento != $datos_venta['descuento'] ||  (float) $request->enganche_inicial != $datos_venta['programacion_pagos'][0]['enganche_inicial']) {
-            if ($datos_venta['pagos_vencidos'] > 0) {
+
+            /**esta validacion queda pendiente ya que lamgerente quiere poder tener la libertad de cambiar los precios
+             * segun los meses a que se haya pagala venta al final
+             * deshabilite la vliadacion de pagosVencidos en l frontend de esta funcion
+             */
+            /*if ($datos_venta['pagos_vencidos'] > 0) {
                 return $this->errorResponse('Solicitud rechazada, no se puede hacer cambio de plan de venta porque al parecer esta venta no está al corriente con sus pagos. Para cualquier aclaración, consulte el estado de cuenta de esta venta.', 409);
-            } else if ($datos_venta['restante_pagar_subtotal'] <= 0) {
+            } else*/
+            if ($datos_venta['restante_pagar_subtotal'] <= 0) {
                 return $this->errorResponse('Esta venta ya fue liquidada en su totalidad, 
-                    no se puede hacer modificaciones en las cantidades relativas al precio.', 409);
+                    no se puede hacer modificaciones en las cantidades relativas al precio.ok', 409);
             } else if ($datos_venta['total_pagado'] >  $total_neto) {
                 /**el nuevo precio (subtotal a pagar es mayor y no debe proceder la venta) */
                 return $this->errorResponse('Solicitud rechazada, no se puede hacer cambio de plan de venta porque 
@@ -2461,10 +2599,7 @@ class CementerioController extends ApiController
             ->get();
 
 
-
         $resultado = $datos[0]->toArray();
-
-
 
 
         /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
@@ -2717,6 +2852,81 @@ class CementerioController extends ApiController
 
 
 
+
+
+
+    public function acuse_cancelacion(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /*  $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_venta = $requestVentasList['venta_id'];
+*/
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        $id_venta = 9;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+
+
+
+        //obtengo la informacion de esa venta
+        $datos_venta = $this->get_venta_id($id_venta);
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/cementerios/titulo/titulo', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
+
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('inventarios.cementerios.titulo.footer'),
+        ]);
+        if ($datos_venta['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('inventarios.cementerios.titulo.header')
+            ]);
+        }
+
+
+
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 24.4);
+        $pdf->setOption('margin-right', 24.4);
+        $pdf->setOption('margin-top', 24.4);
+        $pdf->setOption('margin-bottom', 24.4);
+        $pdf->setOption('page-size', 'A4');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_venta['cliente_nombre']),
+                'ACUSE DE CANCELACIÓN',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
 
 
 

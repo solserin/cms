@@ -174,16 +174,21 @@
                   type="flat"
                   @click="cancelarVenta(data[indextr].id)"
                 ></vs-button>
-                <vs-button
+                <vx-tooltip
+                  color="danger"
+                  text="Esta venta ya ha sido cancelada, puede consultar el acuse de cancelación dando click aquí."
                   v-else
-                  title="Activar"
-                  icon-pack="feather"
-                  size="large"
-                  icon="icon-shield"
-                  color="success"
-                  type="flat"
-                  @click="habilitarUsuario(data[indextr].id_user,data[indextr].cliente_nombre)"
-                ></vs-button>
+                >
+                  <vs-button
+                    title="Cancelar"
+                    icon-pack="feather"
+                    size="large"
+                    icon="icon-shield-off"
+                    color="danger"
+                    type="flat"
+                    @click="ConsultarVenta(data[indextr].id)"
+                  ></vs-button>
+                </vx-tooltip>
               </div>
             </vs-td>
             <template class="expand-user" slot="expand"></template>
@@ -222,7 +227,7 @@
     <CancelarVenta
       :show="openCancelar"
       @closeCancelarVenta="openCancelar=false"
-      @closeCancelarVentaRefrescar="closeCancelarVentaRefrescar"
+      @ConsultarVenta="ConsultarVenta"
       :id_venta="id_venta"
     ></CancelarVenta>
   </div>

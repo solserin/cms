@@ -10,7 +10,6 @@
       <h3 class="text-base text-center pt-1 pb-6 hidden">
         <span class="uppercase bold">Seleccione el documento que necesita</span>
       </h3>
-
       <div class="flex flex-wrap">
         <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center py-3">
           <img
@@ -52,8 +51,18 @@
           />
           <h4 class="py-3 capitalize">Fichas de Pago</h4>
         </div>
+        <div
+          class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center py-3"
+          v-if="datosVenta.status==0"
+        >
+          <img
+            class="cursor-pointer"
+            src="@assets/images/reportes/pdf_download.svg"
+            @click="openReporte('Acuse de cancelación','/inventarios/cementerio/acuse_cancelacion','')"
+          />
+          <h4 class="py-3 capitalize text-danger">Acuse de Cancelación</h4>
+        </div>
       </div>
-
       <div
         v-for="(programacion, index) in datosVenta.programacion_pagos"
         v-bind:key="programacion.num_version"
@@ -224,7 +233,6 @@ export default {
           .get_venta_id(newValue)
           .then(res => {
             this.datosVenta = res.data;
-
             if (this.datosVenta.programacion_pagos.length > 0) {
               /**calculando el total de rows */
               this.datosVenta.programacion_pagos.forEach(programacion => {

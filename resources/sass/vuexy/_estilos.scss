@@ -372,9 +372,13 @@
 
 /*searcher clientes*/
 .searcher_clientes,
-.contrasena,
 .ver_disponibilidad {
     z-index: 52001 !important;
+}
+
+.contrasena {
+    z-index: 52100 !important;
+
 }
 
 .searcher_clientes .vs-popup--header {

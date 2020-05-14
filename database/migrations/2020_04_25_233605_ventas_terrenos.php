@@ -25,7 +25,7 @@ class VentasTerrenos extends Migration
             /**datos de la ubicacion */
             $table->unsignedBigInteger('propiedades_id')->nullable();
             $table->foreign('propiedades_id')->references('id')->on('propiedades'); //id de la propieda a la que pertenece
-            $table->string('ubicacion', 15); //se crea una estructura para poder hacer la relacion de las propiedades
+            $table->string('ubicacion', 15)->nullable(); //se crea una estructura para poder hacer la relacion de las propiedades
             /**fin de datos de la ubicacion */
             $table->dateTime('fecha_registro');
             $table->dateTime('fecha_modificacion')->nullable();
@@ -41,10 +41,6 @@ class VentasTerrenos extends Migration
             $table->string('parentesco_titular_sustituto')->nullable();
             $table->string('telefono_titular_sustituto')->nullable();
             /**datos en caso de cancelacion */
-            $table->string('numero_solicitud_cancelacion')->nullable();
-            $table->string('numero_convenio_cancelacion')->nullable();
-            $table->string('numero_titulo_cancelacion')->nullable();
-            $table->string('ubicacion_cancelacion')->nullable(); //ubicacion en caso de que cancele 
             $table->dateTime('fecha_cancelacion')->nullable();
             $table->unsignedBigInteger('cancelo_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios'); //en caso de cancelar la venta
@@ -58,6 +54,7 @@ class VentasTerrenos extends Migration
             $table->unsignedBigInteger('empresa_operaciones_id')->nullable();
             $table->foreign('empresa_operaciones_id')->references('id')->on('empresa_operaciones');
             $table->longText('nota')->nullable();
+            $table->longText('nota_cancelacion')->nullable();
             $table->tinyInteger('status')->default(1);
         });
     }

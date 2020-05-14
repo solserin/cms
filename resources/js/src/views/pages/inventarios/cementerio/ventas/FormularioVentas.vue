@@ -715,7 +715,7 @@
                       v-validate:plan_de_venta_computed.immediate="'required'"
                       name="plan_venta"
                       data-vv-as=" "
-                      :disabled="tienePagosVencidos || ventaLiquidada"
+                      :disabled=" ventaLiquidada"
                     >
                       <div slot="no-options">No Se Ha Seleccionado Ningún Área</div>
                     </v-select>
@@ -744,7 +744,7 @@
                       placeholder="Precio Neto de la Propiedad"
                       v-model="form.planVenta.precio_neto"
                       readonly
-                      :disabled="tienePagosVencidos || ventaLiquidada"
+                      :disabled=" ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('precio_neto') }}</span>
@@ -770,7 +770,7 @@
                       class="w-full pb-1 pt-1"
                       placeholder="$ 0.00"
                       v-model="form.descuento"
-                      :disabled="tienePagosVencidos || ventaLiquidada"
+                      :disabled=" ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('descuento_neto') }}</span>
@@ -796,7 +796,7 @@
                       placeholder="$ 0.00"
                       v-model="form.precio_neto"
                       readonly
-                      :disabled="tienePagosVencidos || ventaLiquidada"
+                      :disabled=" ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('total_pagar') }}</span>
@@ -835,7 +835,7 @@
                       class="w-full pb-1 pt-1"
                       placeholder="$ 0.00"
                       v-model="form.enganche_inicial"
-                      :disabled="plan_venta || tienePagosVencidos || ventaLiquidada"
+                      :disabled="plan_venta  || ventaLiquidada"
                     />
                     <div>
                       <span class="text-danger text-sm">{{ errors.first('cuota_inicial') }}</span>
@@ -1851,6 +1851,7 @@ export default {
       cementerio
         .guardarVenta(this.form)
         .then(res => {
+          console.log("guardarVenta -> res", res);
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -1878,6 +1879,7 @@ export default {
         })
         .catch(err => {
           if (err.response) {
+            console.log("guardarVenta -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({

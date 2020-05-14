@@ -64,7 +64,7 @@
                   <div class="w-full pt-2">
                     <h3 class="text-base">
                       <span class="text-black">
-                        <span class="uppercase font-bold">no ocupada / ocupado por (n) personas</span>
+                        <span class="uppercase font-bold">no ocupada</span>
                       </span>
                     </h3>
                   </div>
@@ -78,7 +78,9 @@
                   <div class="w-full py-1">
                     <h3 class="text-lg">
                       <span class="font-bold text-black uppercase">
-                        <span class="uppercase">$ 50,000.00 pesos mxn</span>
+                        <span
+                          class="uppercase"
+                        >$ {{datosVenta.total | numFormat('0,000.00')}} Pesos mxn</span>
                       </span>
                     </h3>
                   </div>
@@ -88,7 +90,9 @@
                   <div class="w-full py-1">
                     <h3 class="text-lg">
                       <span class="font-bold text-black uppercase">
-                        <span class="uppercase">$ 20,000.00 pesos mxn</span>
+                        <span
+                          class="uppercase"
+                        >$ {{datosVenta.total_pagado | numFormat('0,000.00')}} Pesos mxn</span>
                       </span>
                     </h3>
                   </div>
@@ -101,14 +105,23 @@
                   <div class="w-full">
                     <vs-input
                       v-model="form.cantidad"
-                      v-validate="'required'"
-                      name="num_solicitud"
+                      v-validate="'decimal:2'"
+                      name="cantidad"
                       data-vv-as=" "
                       type="text"
                       class="w-full"
                       placeholder=" $ 00.00 Pesos MXN"
-                      maxlength="12"
+                      maxlength="7"
                     />
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('cantidad') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores.cantidad"
+                      >{{errores.cantidad[0]}}</span>
+                    </div>
                   </div>
 
                   <div class="w-full py-3">
@@ -121,12 +134,21 @@
                       v-model="form.motivo"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
                       class="pb-1 pt-1"
-                      v-validate="'required'"
+                      v-validate:motivo_computed.immediate="'required'"
                       name="plan_venta"
                       data-vv-as=" "
                     >
                       <div slot="no-options">No Se Ha Seleccionado Ningún Motivo</div>
                     </v-select>
+                    <div>
+                      <span class="text-danger text-sm">{{ errors.first('motivo') }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores['motivo.value']"
+                      >{{errores['motivo.value'][0]}}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -172,14 +194,22 @@
           </div>
         </template>
       </vx-card>
+      <Password
+        :show="openConfirmar"
+        :callback-on-success="callback"
+        @closeVerificar="openConfirmar=false"
+        :accion="'Cancelar venta de propiedad'"
+      ></Password>
     </vs-popup>
   </div>
 </template>
 <script>
+import Password from "@pages/confirmar_password";
 import vSelect from "vue-select";
 import cementerio from "@services/cementerio";
 export default {
   components: {
+    Password,
     "v-select": vSelect
   },
   props: {
@@ -212,6 +242,7 @@ export default {
     },
     id_venta: function(newValue, oldValue) {
       if (newValue > 0) {
+        this.form.venta_id = newValue;
         let self = this;
         if (cementerio.cancel) {
           cementerio.cancel("Operation canceled by the user.");
@@ -239,10 +270,15 @@ export default {
               }
             }
           });
+      } else {
+        this.form.venta_id = 0;
       }
     }
   },
   computed: {
+    motivo_computed: function() {
+      return this.form.motivo.value;
+    },
     showVentana: {
       get() {
         return this.show;
@@ -254,6 +290,9 @@ export default {
   },
   data() {
     return {
+      callback: Function,
+      openConfirmar: false,
+      errores: [],
       datosVenta: [],
       motivos: [
         {
@@ -270,20 +309,132 @@ export default {
         }
       ],
       form: {
+        venta_id: "",
         motivo: {
           label: "FALTA DE PAGO",
           value: 1
         },
-        cantidad: "",
+        cantidad: Number(0.0),
         comentario: ""
       }
     };
   },
   methods: {
+    acceptAlert() {
+      this.$validator
+        .validateAll()
+        .then(result => {
+          if (!result) {
+            this.$vs.notify({
+              title: "Error",
+              text: "Verifique que todos los datos han sido capturados",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "4000"
+            });
+            return;
+          } else {
+            this.callback = this.cancelar_venta;
+            this.openConfirmar = true;
+          }
+        })
+        .catch(() => {});
+    },
+
     cancelar() {
-      this.activeTab = 0;
-      this.$emit("closeCancelarVenta");
+      this.form.comentario = "";
+      this.form.cantidad = 0;
+      (this.form.motivo = {
+        label: "FALTA DE PAGO",
+        value: 1
+      }),
+        this.$emit("closeCancelarVenta");
       return;
+    },
+    cancelar_venta() {
+      this.errores = [];
+      this.$vs.loading();
+      cementerio
+        .cancelar_venta(this.form)
+        .then(res => {
+          if (res.data >= 1) {
+            //success
+            this.$vs.notify({
+              title: "Ventas de Propiedades",
+              text: "Se ha cancelado la venta correctamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 5000
+            });
+            this.$emit("ConsultarVenta", res.data);
+            this.cancelar();
+          } else {
+            this.$vs.notify({
+              title: "Ventas de Propiedades",
+              text: "Error al cancelar la venta, por favor reintente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 4000
+            });
+          }
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log("modificarVenta -> err.response", err.response);
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              //checo si existe cada error
+              this.errores = err.response.data.error;
+              if (this.errores.venta_id) {
+                //la propiedad esa ya ha sido vendida
+                this.$vs.notify({
+                  title: "Seleccione una venta",
+                  text: "No se ha seleccionado una venta a cancelar",
+                  iconPack: "feather",
+                  icon: "icon-alert-circle",
+                  color: "danger",
+                  time: 5000
+                });
+              }
+
+              this.$vs.notify({
+                title: "Cancelar Venta",
+                text: "Verifique los errores encontrados en los datos.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 5000
+              });
+            } else if (err.response.status == 409) {
+              //este error es por alguna condicion que el contrano no cumple para modificar
+              //la propiedad esa ya ha sido vendida
+              this.$vs.notify({
+                title: "Cancelar información de la venta",
+                text: err.response.data.error,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 30000
+              });
+            }
+          }
+          this.$vs.loading.close();
+        });
     }
   },
   created() {},
@@ -300,29 +451,3 @@ export default {
   }
 };
 </script>
-
-<style lang="stylus">
-.con-expand-users {
-  width: 100%;
-
-  .con-btns-user {
-    display: flex;
-    padding: 10px;
-    padding-bottom: 0px;
-    align-items: center;
-    justify-content: space-between;
-
-    .con-userx {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
-  }
-
-  .list-icon {
-    i {
-      font-size: 0.9rem !important;
-    }
-  }
-}
-</style>
