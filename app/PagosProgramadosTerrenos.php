@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class PagosProgramadosTerrenos extends Model
@@ -12,8 +13,12 @@ class PagosProgramadosTerrenos extends Model
     /**la venta tiene uno o muchos pagos programados */
     public function pagosRealizados()
     {
-        return $this->hasMany('App\PagosTerrenos', 'pagos_programados_terrenos_id', 'id');
-        //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+        return $this->hasMany('App\PagosTerrenos', 'pagos_programados_terrenos_id', 'id')->select(
+            '*',
+            DB::raw(
+                '("") AS fecha_realizado_texto'
+            )
+        )->orderBy('id', 'asc');
     }
 
     public function conceptoPago()

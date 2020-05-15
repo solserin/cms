@@ -74,6 +74,7 @@ class CementerioController extends ApiController
                 [
                     'motivos_cancelacion_id' => $request['motivo.value'],
                     'fecha_cancelacion' => now(),
+                    'cantidad_a_regresar_cancelacion' => (float) $request->cantidad,
                     'cancelo_id' => (int) $request->user()->id,
                     'nota_cancelacion' => $request->comentario,
                     'status' => 0
@@ -620,6 +621,14 @@ class CementerioController extends ApiController
          * convenga en cada caso
          */
         $datos_venta = $this->get_venta_id($request->id_venta);
+
+        /**verificando si la venta sigue activa
+         * si ya fue dada de baja no se puede proceder
+         */
+        if ($datos_venta['status'] != 1) {
+            return $this->errorResponse('Solicitud denegada, esta venta ya ha sido cancelada y solo queda disponible para efectos de historial y consulta.', 409);
+        }
+
 
         /*revisando si hubo cambios drasticos para la programacion de los pagos
          * estos cambios son referente a si la fecha de la venta cambio
@@ -1912,6 +1921,11 @@ class CementerioController extends ApiController
                 'antiguedad_ventas_id',
                 'vendedor_id',
                 'empresa_operaciones_id',
+                'ventas_terrenos.fecha_cancelacion',
+                'ventas_terrenos.nota_cancelacion',
+                'ventas_terrenos.cantidad_a_regresar_cancelacion',
+                'ventas_terrenos.cancelo_id',
+                'ventas_terrenos.motivos_cancelacion_id',
                 DB::raw(
                     '(NULL) AS tipo_propiedad_des'
                 ),
@@ -2019,8 +2033,20 @@ class CementerioController extends ApiController
                         END) AS status_des'
                 )
             )
-
+                ->with(array('cancelador' => function ($query) {
+                    $query->select('id', 'nombre');
+                }))
+                ->with(array('motivoCancelacion' => function ($query) {
+                    $query->select('id', 'motivo');
+                }))
                 ->with(array('programacionPagos.pagosProgramados.conceptoPago'))
+                ->with(array('programacionPagos.pagosProgramados.pagosRealizados.RegistroUsuario' => function ($query) {
+                    $query->select('id', 'nombre');
+                }))
+                ->with(array('programacionPagos.pagosProgramados.pagosRealizados.Tipo'))
+                ->with(array('programacionPagos.pagosProgramados.pagosRealizados.Cobrador' => function ($query) {
+                    $query->select('id', 'nombre');
+                }))
                 ->with(array('programacionPagos.pagosProgramados.pagosRealizados'))
                 ->with(array('vendedor' => function ($query) {
                     $query->select('id', 'nombre');
@@ -2118,6 +2144,15 @@ class CementerioController extends ApiController
             $intereses_pagados = 0;
 
 
+            /**fecha a tomar en cuenta 
+             * esto se refiere  a que cuando la venta ya fue cancelada, 
+             * el sistema debe considerar como ultima fecha para el calculo de intereses
+             * la fecha de cancelacion, o si la venta esta activa, se debe tomar el dia en curso (fecha actual del sistema)
+             */
+            $ultima_fecha_para_intereses = $venta['status'] == 1 ? date('Y-m-d') : date('Y-m-d', strtotime($venta['fecha_cancelacion']));
+
+
+
             if (isset($venta['programacion_pagos'][0]['pagos_programados'])) {
                 foreach ($venta['programacion_pagos'][0]['pagos_programados'] as &$programado) {
                     /**definiendo el conceptop del pago */
@@ -2143,13 +2178,13 @@ class CementerioController extends ApiController
                     $interes_a_pagar = 0;
                     /**veririca si el pago vencio y no se ha pagado ndd*/
                     if (count($programado['pagos_realizados']) == 0) {
-                        if (strtotime(date('Y-m-d')) > strtotime($programado['fecha_programada'])) {
+                        if (strtotime($ultima_fecha_para_intereses) > strtotime($programado['fecha_programada'])) {
                             $vencidos++;
                             $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                            $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                            $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
                             /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
                             $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
-                            $programado['fecha_a_pagar'] = date('Y-m-d');
+                            $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
                             /**
                              * Los intereses moratorios se calcularán
                              * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
@@ -2179,6 +2214,9 @@ class CementerioController extends ApiController
                         $monto_pagado_interes = 0;
                         $fecha_ultimo_pago_realizado = '';
                         foreach ($programado['pagos_realizados'] as $realizado) {
+                            /**creando la fecha del pago a texto */
+                            $realizado['fecha_realizado_texto'] = fecha_abr($realizado['fecha_pago']);
+
                             if ($realizado['status'] == 1) {
                                 $pagos_realizados++;
                                 /***sacando monto pagado a cuenta de intereses */
@@ -2244,7 +2282,7 @@ class CementerioController extends ApiController
                                     /**actualizando los datos de vencimiento, en caso de que hayan vencido */
                                     $programado['dias_vencido'] =  $dias_retrasados_del_pago;
                                     $programado['intereses'] = $interes_a_pagar;
-                                    $programado['fecha_a_pagar'] = date('Y-m-d');
+                                    $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
                                 } else {
                                     $programado['fecha_a_pagar'] = $fecha_pago_realizado;
                                     /**pago cubierto en fecha y orden */
@@ -2254,11 +2292,11 @@ class CementerioController extends ApiController
                                 }
                             }
                         } else {
-                            if (strtotime(date('Y-m-d')) > strtotime($programado['fecha_programada'])) {
+                            if (strtotime($ultima_fecha_para_intereses) > strtotime($programado['fecha_programada'])) {
                                 $vencidos++;
-                                $programado['fecha_a_pagar'] = date('Y-m-d');
+                                $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
                                 $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                                $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                                $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
                                 /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
                                 $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
                                 /**
@@ -2287,6 +2325,17 @@ class CementerioController extends ApiController
 
                     $intereses_generados += $interes_a_pagar;
                     $intereses_pagados += $programado['intereses_pagado'];
+
+                    /**veririficando el status del pago programado */
+                    if ($programado['vencido'] == 1) {
+                        $programado['status_texto'] = 'vencido';
+                    } else {
+                        if ($programado['total_a_pagar'] > 0) {
+                            $programado['status_texto'] = 'pendiente';
+                        } else {
+                            $programado['status_texto'] = 'pagado';
+                        }
+                    }
                 }
 
                 $venta['intereses_generados'] =  $intereses_generados;
@@ -2303,7 +2352,7 @@ class CementerioController extends ApiController
 
 
                 if ($fecha_primer_pago_vencido != '') {
-                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
                     $fecha_del_primer_pago_vencido = Carbon::createFromFormat('Y-m-d', $fecha_primer_pago_vencido);
                     $diferencia_en_dias = $fecha_hoy->diffInDays($fecha_del_primer_pago_vencido);
                     $venta['dias_vencidos'] = $diferencia_en_dias;
@@ -2467,6 +2516,11 @@ class CementerioController extends ApiController
                 'antiguedad_ventas_id',
                 'vendedor_id',
                 'empresa_operaciones_id',
+                'ventas_terrenos.fecha_cancelacion',
+                'ventas_terrenos.nota_cancelacion',
+                'ventas_terrenos.cantidad_a_regresar_cancelacion',
+                'ventas_terrenos.cancelo_id',
+                'ventas_terrenos.motivos_cancelacion_id',
                 DB::raw(
                     '(NULL) AS tipo_propiedad_des'
                 ),
@@ -2578,8 +2632,20 @@ class CementerioController extends ApiController
                     '"" as fecha_venta_texto'
                 ),
             )
-
+            ->with(array('cancelador' => function ($query) {
+                $query->select('id', 'nombre');
+            }))
+            ->with(array('motivoCancelacion' => function ($query) {
+                $query->select('id', 'motivo');
+            }))
             ->with(array('programacionPagos.pagosProgramados.conceptoPago'))
+            ->with(array('programacionPagos.pagosProgramados.pagosRealizados.RegistroUsuario' => function ($query) {
+                $query->select('id', 'nombre');
+            }))
+            ->with(array('programacionPagos.pagosProgramados.pagosRealizados.Tipo'))
+            ->with(array('programacionPagos.pagosProgramados.pagosRealizados.Cobrador' => function ($query) {
+                $query->select('id', 'nombre');
+            }))
             ->with(array('programacionPagos.pagosProgramados.pagosRealizados'))
             ->with(array('vendedor' => function ($query) {
                 $query->select('id', 'nombre');
@@ -2644,6 +2710,14 @@ class CementerioController extends ApiController
         $intereses_generados = 0;
         $intereses_pagados = 0;
 
+
+        /**fecha a tomar en cuenta 
+         * esto se refiere  a que cuando la venta ya fue cancelada, 
+         * el sistema debe considerar como ultima fecha para el calculo de intereses
+         * la fecha de cancelacion, o si la venta esta activa, se debe tomar el dia en curso (fecha actual del sistema)
+         */
+        $ultima_fecha_para_intereses = $resultado['status'] == 1 ? date('Y-m-d') : date('Y-m-d', strtotime($resultado['fecha_cancelacion']));
+
         foreach ($resultado['programacion_pagos'] as $index => &$programacion) {
 
             foreach ($programacion['pagos_programados'] as $key => &$programado) {
@@ -2673,13 +2747,15 @@ class CementerioController extends ApiController
                 $interes_a_pagar = 0;
                 /**veririca si el pago vencio y no se ha pagado ndd*/
                 if (count($programado['pagos_realizados']) == 0) {
-                    if (strtotime(date('Y-m-d')) > strtotime($programado['fecha_programada'])) {
+
+
+                    if (strtotime($ultima_fecha_para_intereses) > strtotime($programado['fecha_programada'])) {
                         $vencidos++;
                         $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                        $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                        $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
                         /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
                         $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
-                        $programado['fecha_a_pagar'] = date('Y-m-d');
+                        $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
                         /**
                          * Los intereses moratorios se calcularán
                          * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
@@ -2709,6 +2785,8 @@ class CementerioController extends ApiController
                     $monto_pagado_interes = 0;
                     $fecha_ultimo_pago_realizado = '';
                     foreach ($programado['pagos_realizados'] as &$realizado) {
+                        /**creando la fecha del pago a texto */
+                        $realizado['fecha_realizado_texto'] = fecha_abr($realizado['fecha_pago']);
                         if ($realizado['status'] == 1) {
                             $pagos_realizados++;
                             /***sacando monto pagado a cuenta de intereses */
@@ -2774,7 +2852,7 @@ class CementerioController extends ApiController
                                 /**actualizando los datos de vencimiento, en caso de que hayan vencido */
                                 $programado['dias_vencido'] =  $dias_retrasados_del_pago;
                                 $programado['intereses'] = $interes_a_pagar;
-                                $programado['fecha_a_pagar'] = date('Y-m-d');
+                                $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
                             } else {
                                 $programado['fecha_a_pagar'] = $fecha_pago_realizado;
                                 /**pago cubierto en fecha y orden */
@@ -2784,11 +2862,11 @@ class CementerioController extends ApiController
                             }
                         }
                     } else {
-                        if (strtotime(date('Y-m-d')) > strtotime($programado['fecha_programada'])) {
+                        if (strtotime($ultima_fecha_para_intereses) > strtotime($programado['fecha_programada'])) {
                             $vencidos++;
-                            $programado['fecha_a_pagar'] = date('Y-m-d');
+                            $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
                             $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                            $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                            $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
                             /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
                             $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
                             /**
@@ -2819,6 +2897,18 @@ class CementerioController extends ApiController
                 }
                 $intereses_generados += $interes_a_pagar;
                 $intereses_pagados += $programado['intereses_pagado'];
+
+
+                /**veririficando el status del pago programado */
+                if ($programado['vencido'] == 1) {
+                    $programado['status_texto'] = 'vencido';
+                } else {
+                    if ($programado['total_a_pagar'] > 0) {
+                        $programado['status_texto'] = 'pendiente';
+                    } else {
+                        $programado['status_texto'] = 'pagado';
+                    }
+                }
             }
             if ($index == 0) {
                 /**solo se toma en cuenta los valores de las sumas para la programacion actual */
@@ -2831,7 +2921,7 @@ class CementerioController extends ApiController
                 $resultado['numero_pagos_realizados'] = $pagos_realizados;
                 $resultado['pagos_vencidos'] = $vencidos;
                 if ($fecha_primer_pago_vencido != '') {
-                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
                     $fecha_del_primer_pago_vencido = Carbon::createFromFormat('Y-m-d', $fecha_primer_pago_vencido);
                     $diferencia_en_dias = $fecha_hoy->diffInDays($fecha_del_primer_pago_vencido);
                     $resultado['dias_vencidos'] = $diferencia_en_dias;
@@ -2858,18 +2948,18 @@ class CementerioController extends ApiController
     public function acuse_cancelacion(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        /*  $email =  $request->email_send === 'true' ? true : false;
+        $email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
-*/
+
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $id_venta = 9;
+        /*$id_venta = 9;
         $email = false;
         $email_to = 'hector@gmail.com';
-
+        */
 
 
         //obtengo la informacion de esa venta
@@ -2877,17 +2967,17 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/titulo/titulo', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('inventarios/cementerios/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.titulo.footer'),
+            'footer-html' => view('inventarios.cementerios.acuse_cancelacion.footer'),
         ]);
         if ($datos_venta['status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('inventarios.cementerios.titulo.header')
+                'header-html' => view('inventarios.cementerios.acuse_cancelacion.header')
             ]);
         }
 
@@ -2896,11 +2986,11 @@ class CementerioController extends ApiController
 
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 24.4);
-        $pdf->setOption('margin-right', 24.4);
-        $pdf->setOption('margin-top', 24.4);
-        $pdf->setOption('margin-bottom', 24.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-left', 5.4);
+        $pdf->setOption('margin-right', 5.4);
+        $pdf->setOption('margin-top', 5.4);
+        $pdf->setOption('margin-bottom', 10.4);
+        $pdf->setOption('page-size', 'a4');
 
         if ($email == true) {
             /**email */

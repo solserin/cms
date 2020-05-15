@@ -36,6 +36,7 @@ class VentasTerrenos extends Migration
             $table->double('descuento')->nullable();
             $table->double('iva')->nullable();
             $table->double('total')->nullable();
+
             //informacion del titular sustituto
             $table->string('titular_sustituto');
             $table->string('parentesco_titular_sustituto')->nullable();
@@ -55,6 +56,7 @@ class VentasTerrenos extends Migration
             $table->foreign('empresa_operaciones_id')->references('id')->on('empresa_operaciones');
             $table->longText('nota')->nullable();
             $table->longText('nota_cancelacion')->nullable();
+            $table->double('cantidad_a_regresar_cancelacion')->nullable();
             $table->tinyInteger('status')->default(1);
         });
     }

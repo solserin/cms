@@ -136,7 +136,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_venta_id/{id_venta?}', 'CementerioController@get_venta_id');
     Route::get('inventarios/cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('inventarios/cementerio/documento_convenio', 'CementerioController@documento_convenio');
-
+    Route::get('inventarios/cementerio/acuse_cancelacion', 'CementerioController@acuse_cancelacion');
+    Route::get('inventarios/cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
     Route::get('inventarios/cementerio/documento_titulo', 'CementerioController@documento_titulo');
 
     /**fin de rutas del cementerio */
@@ -164,8 +165,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('compras/', 'ComprasController@save');
 });
 
-Route::get('inventarios/cementerio/acuse_cancelacion', 'CementerioController@acuse_cancelacion');
-Route::get('inventarios/cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
 
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
 

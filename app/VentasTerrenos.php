@@ -52,4 +52,15 @@ class VentasTerrenos extends Model
     {
         return $this->belongsTo('App\Clientes', 'clientes_id', 'id');
     }
+
+
+    public function cancelador()
+    {
+        return $this->belongsTo('App\User', 'cancelo_id', 'id');
+    }
+
+    public function motivoCancelacion()
+    {
+        return $this->belongsTo('App\MotivosCancelacion', 'motivos_cancelacion_id', 'id');
+    }
 }

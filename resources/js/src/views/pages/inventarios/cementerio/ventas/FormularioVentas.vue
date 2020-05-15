@@ -50,7 +50,7 @@
               v-if="tienePagosVencidos"
             >
               <div>
-                <vs-alert title="ATENCIÓN" active="true" color="danger">
+                <vs-alert title="ATENCIÓN" active="true" color="danger" class="py-1">
                   Hemos detectado que esta venta cuenta con pagos vencidos,
                   por lo cual se encuentra restringida la modificación de planes de venta o
                   cualquier modificación relativa a los pagos programados.

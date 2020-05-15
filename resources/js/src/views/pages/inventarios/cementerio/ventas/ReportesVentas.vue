@@ -94,6 +94,7 @@
               <vs-th>Intereses Generados</vs-th>
               <vs-th>Restante a Pagar</vs-th>
               <vs-th>Concepto</vs-th>
+              <vs-th>Estatus</vs-th>
               <vs-th>Recibo de Pago</vs-th>
             </template>
             <template>
@@ -102,15 +103,30 @@
                 v-bind:key="programados.id"
                 ref="row"
               >
-                <vs-td>
+                <vs-td :class="[programados.vencido==1?'text-danger':'']">
                   <span class="font-semibold">{{programados.num_pago}}</span>
                 </vs-td>
-                <vs-td>{{programados.referencia_pago}}</vs-td>
-                <vs-td>{{programados.fecha_programada_texto}}</vs-td>
-                <vs-td>$ {{programados.total | numFormat('0,000.00')}}</vs-td>
-                <vs-td>$ {{programados.intereses_a_pagar | numFormat('0,000.00')}}</vs-td>
-                <vs-td>$ {{programados.total_a_pagar | numFormat('0,000.00')}}</vs-td>
-                <vs-td>{{programados.concepto}}</vs-td>
+                <vs-td
+                  :class="[programados.vencido==1?'text-danger':'']"
+                >{{programados.referencia_pago}}</vs-td>
+                <vs-td
+                  :class="[programados.vencido==1?'text-danger':'']"
+                >{{programados.fecha_programada_texto}}</vs-td>
+                <vs-td
+                  :class="[programados.vencido==1?'text-danger':'']"
+                >$ {{programados.total | numFormat('0,000.00')}}</vs-td>
+                <vs-td
+                  :class="[programados.vencido==1?'text-danger':'']"
+                >$ {{programados.intereses_a_pagar | numFormat('0,000.00')}}</vs-td>
+                <vs-td
+                  :class="[programados.vencido==1?'text-danger':'']"
+                >$ {{programados.total_a_pagar | numFormat('0,000.00')}}</vs-td>
+                <vs-td :class="[programados.vencido==1?'text-danger':'']">{{programados.concepto}}</vs-td>
+                <vs-td
+                  :class="[programados.vencido==1?'text-danger':'',programados.total_a_pagar<=0?'text-success font-bold':'']"
+                >
+                  <span>{{programados.status_texto}}</span>
+                </vs-td>
                 <vs-td>
                   <div class="flex justify-center">
                     <img
@@ -153,10 +169,10 @@
                             <span class="font-semibold">{{(index_pagado+1)}}</span>
                           </vs-td>
                           <vs-td>{{pagado.id}}</vs-td>
-                          <vs-td>{{pagado.fecha_registro}}</vs-td>
+                          <vs-td>{{pagado.fecha_realizado_texto}}</vs-td>
                           <vs-td>$ {{pagado.total | numFormat('0,000.00')}}</vs-td>
-                          <vs-td>$ {{pagado.tipo_pagos_id}}</vs-td>
-                          <vs-td>$ {{pagado.registro_id }}</vs-td>
+                          <vs-td>{{pagado.tipo['tipo']}}</vs-td>
+                          <vs-td>{{pagado.registro_usuario['nombre'] }}</vs-td>
 
                           <vs-td>
                             <div class="flex justify-center">
@@ -215,14 +231,7 @@ export default {
         ).onclick = () => {
           this.cancelar();
         };
-      } else {
-        /**cerrar ventana */
-        this.datosVenta = [];
-        this.total = 0;
-      }
-    },
-    id_venta: function(newValue, oldValue) {
-      if (newValue > 0) {
+
         this.ListaReportes = [];
         let self = this;
         if (cementerio.cancel) {
@@ -230,7 +239,7 @@ export default {
         }
         this.$vs.loading();
         cementerio
-          .get_venta_id(newValue)
+          .get_venta_id(this.getVentaId)
           .then(res => {
             this.datosVenta = res.data;
             if (this.datosVenta.programacion_pagos.length > 0) {
@@ -279,6 +288,10 @@ export default {
               }
             }
           });
+      } else {
+        /**cerrar ventana */
+        this.datosVenta = [];
+        this.total = 0;
       }
     }
   },
@@ -286,6 +299,14 @@ export default {
     showVentana: {
       get() {
         return this.show;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
+    getVentaId: {
+      get() {
+        return this.id_venta;
       },
       set(newValue) {
         return newValue;

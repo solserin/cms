@@ -385,7 +385,7 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            console.log("modificarVenta -> err.response", err.response);
+            //console.log("modificarVenta -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
