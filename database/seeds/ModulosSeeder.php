@@ -80,14 +80,22 @@ class ModulosSeeder extends Seeder
                 'status' => 1
             ],
             [
-                'modulo' => 'Lista de Terrenos',
+                'modulo' => 'Venta de Terrenos',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 5,
                 'url' => '/inventarios/cementerio/ventas',
                 'secciones_id' => $seccion_2,
                 'status' => 1
             ],
-            [ //7
+            [
+                'modulo' => 'Inventario General',
+                'icon' => 'PackageIcon',
+                'parent_modulo_id' => 5,
+                'url' => '/inventarios/cementerio/distribucion',
+                'secciones_id' => $seccion_2,
+                'status' => 1
+            ],
+            [ //8
                 'modulo' => 'Cobro de Cuotas',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 5,
@@ -95,7 +103,7 @@ class ModulosSeeder extends Seeder
                 'secciones_id' => $seccion_2,
                 'status' => 0
             ],
-            [ //8
+            [ //9
                 'modulo' => 'Inventario',
                 'icon' => 'PackageIcon',
                 'parent_modulo_id' => 0,
@@ -106,7 +114,7 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Proveedores.',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 8,
+                'parent_modulo_id' => 9,
                 'url' => '1',
                 'secciones_id' => $seccion_2,
                 'status' => 0
@@ -114,7 +122,7 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Artículos/Servicios',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 8,
+                'parent_modulo_id' => 9,
                 'url' => '2',
                 'secciones_id' => $seccion_2,
                 'status' => 0
@@ -122,7 +130,7 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Ajustes de inventario',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 8,
+                'parent_modulo_id' => 9,
                 'url' => '3',
                 'secciones_id' => $seccion_2,
                 'status' => 0
@@ -130,22 +138,22 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Surtir inventario',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 8,
+                'parent_modulo_id' => 9,
                 'url' => '4',
                 'secciones_id' => $seccion_2,
                 'status' => 0
             ],
-            [ //13
+            [ //14
                 'modulo' => 'Salida de Artículos',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 8,
+                'parent_modulo_id' => 9,
                 'url' => '5',
                 'secciones_id' => $seccion_2,
                 'status' => 0
             ],
-            [ //14
+            [ //15
                 'modulo' => 'Ventas',
-                'icon' => 'PackageIcon',
+                'icon' => 'ShoppingCartIcon',
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => $seccion_2,
@@ -154,15 +162,15 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Artículos Funerarios.',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 14,
+                'parent_modulo_id' => 15,
                 'url' => '4',
                 'secciones_id' => $seccion_2,
                 'status' => 0
             ],
-            [ //16
+            [ //17
                 'modulo' => 'Consumibles',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 14,
+                'parent_modulo_id' => 15,
                 'url' => '12',
                 'secciones_id' => $seccion_2,
                 'status' => 0
@@ -175,17 +183,17 @@ class ModulosSeeder extends Seeder
                 'secciones_id' => $seccion_2,
                 'status' => 0
             ],
-            [ //18
+            [ //19
                 'modulo' => 'Cobranza',
-                'icon' => 'UsersIcon',
+                'icon' => 'DollarSignIcon',
                 'parent_modulo_id' => 0,
                 'url' => 'cobranza',
                 'secciones_id' => $seccion_2,
                 'status' => 0
             ],
-            [ //19
+            [ //20
                 'modulo' => 'Reportes',
-                'icon' => 'PackageIcon',
+                'icon' => 'BarChart2Icon',
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => $seccion_2,
@@ -194,15 +202,15 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Cobranza.',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 19,
+                'parent_modulo_id' => 20,
                 'url' => 'cobranza',
                 'secciones_id' => $seccion_2,
                 'status' => 0
             ],
             [
                 'modulo' => 'Ventas',
-                'icon' => 'PackageIcon',
-                'parent_modulo_id' => 19,
+                'icon' => 'ShoppingCartIcon',
+                'parent_modulo_id' => 20,
                 'url' => 'ventas',
                 'secciones_id' => $seccion_2,
                 'status' => 0
@@ -210,7 +218,7 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Inventario',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 19,
+                'parent_modulo_id' => 20,
                 'url' => 'inventario',
                 'secciones_id' => $seccion_2,
                 'status' => 0
@@ -218,7 +226,7 @@ class ModulosSeeder extends Seeder
             [
                 'modulo' => 'Estados de Cuenta',
                 'icon' => 'PackageIcon',
-                'parent_modulo_id' => 19,
+                'parent_modulo_id' => 20,
                 'url' => 'estados_cuenta',
                 'secciones_id' => $seccion_2,
                 'status' => 0

@@ -1,222 +1,230 @@
 <template >
-  <div>
-    <div class="flex flex-wrap">
-      <div
-        :key="indextr"
-        v-for="(dato, indextr) in tipo_propiedades"
-        class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
-      >
-        <vs-card class="cardx card-tarifas" fixedHeight>
-          <div slot="header">
-            <h3>{{dato.tipo}}</h3>
-          </div>
-          <div>
-            <div
-              :key="indexprecio"
-              v-for="(precio, indexprecio) in dato.precios"
-              class="flex flex-wrap"
-            >
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
-                <label class="text-sm opacity-75">
-                  <strong>Tipo Precio</strong>
-                </label>
-                <div class="mt-5" v-if="precio.tipo_precios_id==1">0 - 1 Meses / Contado</div>
-                <div class="mt-2" v-else>
-                  <vs-button
-                    color="danger"
-                    type="flat"
-                    size="small"
-                    icon="remove_circle_outline"
-                    @click="remover_tarifa(indextr,indexprecio)"
-                  >Quitar - {{precio.meses}} Meses</vs-button>
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
-                <label class="text-sm opacity-75">
-                  <strong>Meses</strong>
-                </label>
-                <vs-input
-                  v-if="precio.tipo_precios_id==1"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  v-model="precio.meses"
-                  :disabled="meses(precio.tipo_precios_id)"
-                />
-                <vs-input
-                  v-else
-                  :data-vv-scope="'add-'+indextr"
-                  :name="'meses'+indextr+indexprecio"
-                  data-vv-as="Meses"
-                  data-vv-validate-on="blur"
-                  v-validate="'required|numeric|min:1|max:2|between:2,64'"
-                  maxlength="2"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  v-model="precio.meses"
-                  placeholder="Meses"
-                  :disabled="meses(precio.tipo_precios_id)"
-                />
-                <div>
-                  <span
-                    class="text-danger text-sm"
-                  >{{ errors.first(('meses'+indextr+indexprecio),('add-'+indextr)) }}</span>
-                </div>
-                <div :key="indexerror" v-for="(error, indexerror) in errores">
-                  <div
-                    v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.meses']"
-                  >
-                    <span class="text-danger text-sm">{{error['error'][indexprecio+'.meses'][0]}}</span>
+  <div class="centerx">
+    <vs-popup
+      class="reportes_show_list"
+      fullscreen
+      title="listado de precios para propiedades en cementerio"
+      :active.sync="showVentana"
+      ref="planes_cementerio"
+    >
+      <div class="flex flex-wrap">
+        <div
+          :key="indextr"
+          v-for="(dato, indextr) in tipo_propiedades"
+          class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
+        >
+          <vs-card class="cardx card-tarifas" fixedHeight>
+            <div slot="header">
+              <h3 class="uppercase">propiedad tipo {{dato.tipo}}</h3>
+            </div>
+            <div>
+              <div
+                :key="indexprecio"
+                v-for="(precio, indexprecio) in dato.precios"
+                class="flex flex-wrap"
+              >
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
+                  <label class="text-sm opacity-75">
+                    <strong>Tipo Precio</strong>
+                  </label>
+                  <div class="mt-5" v-if="precio.tipo_precios_id==1">0 - 1 Meses / Contado</div>
+                  <div class="mt-2" v-else>
+                    <vs-button
+                      color="danger"
+                      type="flat"
+                      size="small"
+                      icon="remove_circle_outline"
+                      @click="remover_tarifa(indextr,indexprecio)"
+                    >Quitar - {{precio.meses}} Meses</vs-button>
                   </div>
                 </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">
-                  <strong>Precio Neto</strong>
-                </label>
-                <vs-input
-                  :data-vv-scope="'add-'+indextr"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Precio"
-                  v-model="precio.precio_neto"
-                  :name="'precio'+indextr+indexprecio"
-                  data-vv-as="Precio Neto"
-                  data-vv-validate-on="blur"
-                  v-validate="'required|min_value:1|max_value:500000'"
-                  maxlength="6"
-                />
-                <div>
-                  <span
-                    class="text-danger text-sm"
-                  >{{ errors.first(('precio'+indextr+indexprecio),('add-'+indextr)) }}</span>
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
+                  <label class="text-sm opacity-75">
+                    <strong>Meses</strong>
+                  </label>
+                  <vs-input
+                    v-if="precio.tipo_precios_id==1"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    v-model="precio.meses"
+                    :disabled="meses(precio.tipo_precios_id)"
+                  />
+                  <vs-input
+                    v-else
+                    :data-vv-scope="'add-'+indextr"
+                    :name="'meses'+indextr+indexprecio"
+                    data-vv-as="Meses"
+                    data-vv-validate-on="blur"
+                    v-validate="'required|numeric|min:1|max:2|between:2,64'"
+                    maxlength="2"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    v-model="precio.meses"
+                    placeholder="Meses"
+                    :disabled="meses(precio.tipo_precios_id)"
+                  />
+                  <div>
+                    <span
+                      class="text-danger text-sm"
+                    >{{ errors.first(('meses'+indextr+indexprecio),('add-'+indextr)) }}</span>
+                  </div>
+                  <div :key="indexerror" v-for="(error, indexerror) in errores">
+                    <div
+                      v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.meses']"
+                    >
+                      <span class="text-danger text-sm">{{error['error'][indexprecio+'.meses'][0]}}</span>
+                    </div>
+                  </div>
                 </div>
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+                  <label class="text-sm opacity-75">
+                    <strong>Precio Neto</strong>
+                  </label>
+                  <vs-input
+                    :data-vv-scope="'add-'+indextr"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Precio"
+                    v-model="precio.precio_neto"
+                    :name="'precio'+indextr+indexprecio"
+                    data-vv-as="Precio Neto"
+                    data-vv-validate-on="blur"
+                    v-validate="'required|min_value:1|max_value:500000'"
+                    maxlength="6"
+                  />
+                  <div>
+                    <span
+                      class="text-danger text-sm"
+                    >{{ errors.first(('precio'+indextr+indexprecio),('add-'+indextr)) }}</span>
+                  </div>
 
-                <div :key="indexerror" v-for="(error, indexerror) in errores">
-                  <div
-                    v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.precio_neto']"
-                  >
-                    <span
-                      class="text-danger text-sm"
-                    >{{error['error'][indexprecio+'.precio_neto'][0]}}</span>
+                  <div :key="indexerror" v-for="(error, indexerror) in errores">
+                    <div
+                      v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.precio_neto']"
+                    >
+                      <span
+                        class="text-danger text-sm"
+                      >{{error['error'][indexprecio+'.precio_neto'][0]}}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">
-                  <strong>Pago Inicial</strong>
-                </label>
-                <vs-input
-                  v-if="precio.tipo_precios_id==1"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Pago Inicial"
-                  v-model="precio.precio_neto"
-                  :disabled="meses(precio.tipo_precios_id)"
-                />
-                <vs-input
-                  v-else
-                  :data-vv-scope="'add-'+indextr"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Pago Inicial"
-                  v-model="precio.enganche_inicial"
-                  :disabled="meses(precio.tipo_precios_id)"
-                  :name="'pago_inicial'+indextr+indexprecio"
-                  data-vv-as="Pago Inicial"
-                  data-vv-validate-on="blur"
-                  v-validate="'required|decimal:2|min_value:'+(dato.precios[0].precio_neto*.10)+'|max_value:'+(precio.precio_neto*.5)"
-                  maxlength="6"
-                />
-                <div>
-                  <span
-                    class="text-danger text-sm"
-                  >{{ errors.first(('pago_inicial'+indextr+indexprecio),('add-'+indextr)) }}</span>
-                </div>
-                <div :key="indexerror" v-for="(error, indexerror) in errores">
-                  <div
-                    v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.enganche_inicial']"
-                  >
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
+                  <label class="text-sm opacity-75">
+                    <strong>Pago Inicial</strong>
+                  </label>
+                  <vs-input
+                    v-if="precio.tipo_precios_id==1"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Pago Inicial"
+                    v-model="precio.precio_neto"
+                    :disabled="meses(precio.tipo_precios_id)"
+                  />
+                  <vs-input
+                    v-else
+                    :data-vv-scope="'add-'+indextr"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Pago Inicial"
+                    v-model="precio.enganche_inicial"
+                    :disabled="meses(precio.tipo_precios_id)"
+                    :name="'pago_inicial'+indextr+indexprecio"
+                    data-vv-as="Pago Inicial"
+                    data-vv-validate-on="blur"
+                    v-validate="'required|decimal:2|min_value:'+(dato.precios[0].precio_neto*.10)+'|max_value:'+(precio.precio_neto*.5)"
+                    maxlength="6"
+                  />
+                  <div>
                     <span
                       class="text-danger text-sm"
-                    >{{error['error'][indexprecio+'.enganche_inicial'][0]}}</span>
+                    >{{ errors.first(('pago_inicial'+indextr+indexprecio),('add-'+indextr)) }}</span>
+                  </div>
+                  <div :key="indexerror" v-for="(error, indexerror) in errores">
+                    <div
+                      v-if="error['propiedad_id']==indextr && error['error'][indexprecio+'.enganche_inicial']"
+                    >
+                      <span
+                        class="text-danger text-sm"
+                      >{{error['error'][indexprecio+'.enganche_inicial'][0]}}</span>
+                    </div>
                   </div>
                 </div>
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
+                  <label class="text-sm opacity-75">
+                    <strong>Pagos Mensuales</strong>
+                  </label>
+                  <div
+                    v-if="precio.tipo_precios_id==1"
+                    class="mt-5 pago_mensual"
+                  >$ {{0 | numFormat('0,000.00')}} Pesos.</div>
+                  <div
+                    v-else
+                    class="mt-5 pago_mensual"
+                  >$ {{((precio.precio_neto-precio.enganche_inicial)/precio.meses) | numFormat('0,000.00')}} Pesos.</div>
+                </div>
               </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-2/12 px-2">
-                <label class="text-sm opacity-75">
-                  <strong>Pagos Mensuales</strong>
-                </label>
-                <div
-                  v-if="precio.tipo_precios_id==1"
-                  class="mt-5 pago_mensual"
-                >$ {{0 | numFormat('0,000.00')}} Pesos.</div>
-                <div
-                  v-else
-                  class="mt-5 pago_mensual"
-                >$ {{((precio.precio_neto-precio.enganche_inicial)/precio.meses) | numFormat('0,000.00')}} Pesos.</div>
+              <div class="flex flex-wrap pt-4">
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                  <div class="mt-5">
+                    <p
+                      class="precio_contado"
+                    >$ {{tipo_propiedades[indextr].precios[0].precio_neto | numFormat('0,000.00')}} Pesos</p>
+                  </div>
+                  <div class="mt-5">
+                    <p class="precio_contado_dato">Precio de Contado / Uso Inmediato</p>
+                  </div>
+                </div>
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                  <div class="mt-5">
+                    <vs-button
+                      type="flat"
+                      size="small"
+                      class="float-right"
+                      color="success"
+                      icon="add_circle_outline"
+                      @click="agregar_tarifa(indextr)"
+                    >Nuevo</vs-button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="flex flex-wrap pt-4">
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <div class="mt-5">
-                  <p
-                    class="precio_contado"
-                  >$ {{tipo_propiedades[indextr].precios[0].precio_neto | numFormat('0,000.00')}} Pesos</p>
+            <vs-divider />
+            <div>
+              <div class="flex flex-wrap">
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                  <p>Última Actualización: {{tipo_propiedades[indextr].precios[0].fecha_hora}}</p>
                 </div>
-                <div class="mt-5">
-                  <p class="precio_contado_dato">Precio de Contado / Uso Inmediato</p>
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <div class="mt-5">
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                   <vs-button
-                    type="flat"
                     size="small"
                     class="float-right"
                     color="success"
                     icon="add_circle_outline"
-                    @click="agregar_tarifa(indextr)"
-                  >Nuevo</vs-button>
+                    @click="abrirPassword(tipo_propiedades[indextr],indextr)"
+                  >Actualizar Precios</vs-button>
                 </div>
               </div>
             </div>
-          </div>
-          <vs-divider />
-          <div>
-            <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <p>Última Actualización: {{tipo_propiedades[indextr].precios[0].fecha_hora}}</p>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <vs-button
-                  size="small"
-                  class="float-right"
-                  color="success"
-                  icon="add_circle_outline"
-                  @click="abrirPassword(tipo_propiedades[indextr],indextr)"
-                >Actualizar Precios</vs-button>
-              </div>
-            </div>
-          </div>
-        </vs-card>
+          </vs-card>
+        </div>
       </div>
-    </div>
-    <!--componente de confirmar sin contraseña-->
-    <Confirmar
-      :show="operConfirmar"
-      :callback-on-success="callback"
-      @closeVerificar="operConfirmar=false"
-      :accion="'¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'"
-      :confirmarButton="'Eliminar'"
-    ></Confirmar>
+      <!--componente de confirmar sin contraseña-->
+      <Confirmar
+        :show="operConfirmar"
+        :callback-on-success="callback"
+        @closeVerificar="operConfirmar=false"
+        :accion="'¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'"
+        :confirmarButton="'Eliminar'"
+      ></Confirmar>
 
-    <Password
-      :show="openPassword"
-      :callback-on-success="callbackPassword"
-      @closeVerificar="openPassword=false"
-      :accion="accionPassword"
-    ></Password>
-    <!--fin de compornentes-->
+      <Password
+        :show="openPassword"
+        :callback-on-success="callbackPassword"
+        @closeVerificar="openPassword=false"
+        :accion="accionPassword"
+      ></Password>
+      <!--fin de compornentes-->
+    </vs-popup>
   </div>
 </template>
 <script>
@@ -224,6 +232,28 @@ import Confirmar from "@pages/Confirmar";
 import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
 export default {
+  props: {
+    show: {
+      type: Boolean,
+      required: true
+    }
+  },
+  watch: {
+    show: function(newValue, oldValue) {
+      if (newValue == true) {
+        this.$refs["planes_cementerio"].$el.querySelector(
+          ".vs-icon"
+        ).onclick = () => {
+          this.cancelar();
+        };
+        this.precios_tarifas();
+      } else {
+        /**cerrar ventana */
+        this.datosVenta = [];
+        this.total = 0;
+      }
+    }
+  },
   components: {
     Confirmar,
     Password
@@ -245,16 +275,29 @@ export default {
       index_datos: 0
     };
   },
-  computed: {},
+  computed: {
+    showVentana: {
+      get() {
+        return this.show;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    }
+  },
   methods: {
     //traigo los tipos de propieades que hay
     precios_tarifas() {
+      this.$vs.loading();
       cementerio
         .precios_tarifas()
         .then(res => {
           this.tipo_propiedades = res.data;
+          this.$vs.loading.close();
         })
-        .catch(err => {});
+        .catch(err => {
+          this.$vs.loading.close();
+        });
     },
 
     //agregar tarifa
@@ -414,11 +457,13 @@ export default {
           }
           this.$vs.loading.close();
         });
+    },
+    cancelar() {
+      this.$emit("closePlanesCementerio");
+      return;
     }
   },
-  created() {
-    this.precios_tarifas();
-  }
+  created() {}
 };
 </script>
 

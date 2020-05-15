@@ -1,216 +1,209 @@
 <template>
   <div>
-    <vs-tabs alignment="left" position="top" v-model="activeTab">
-      <vs-tab label="CONTROL DE VENTAS" icon="supervisor_account" class="pb-5"></vs-tab>
-      <!-- <vs-tab label="INVENTARIO GRÁFICO" icon="location_on" class="pb-5"></vs-tab>-->
-    </vs-tabs>
-
-    <div class="tab-content mt-1" v-show="activeTab==0">
-      <div class="flex flex-wrap">
-        <div class="w-full mb-1 px-2">
-          <vs-button
-            class="float-right"
-            icon-pack="feather"
-            icon="icon-shopping-cart"
-            color="success"
-            @click="formulario('agregar')"
-          >Nueva Venta</vs-button>
-          <vs-button
-            class="float-right mr-8"
-            icon-pack="feather"
-            icon="icon-search"
-            color="primary"
-          >Buscar Fallecido</vs-button>
-        </div>
+    <div class="flex flex-wrap">
+      <div class="w-full mb-1 px-2">
+        <vs-button
+          class="float-right"
+          icon-pack="feather"
+          icon="icon-shopping-cart"
+          color="success"
+          @click="formulario('agregar')"
+        >Nueva Venta</vs-button>
+        <vs-button
+          class="float-left"
+          icon-pack="feather"
+          icon="icon-tag"
+          color="primary"
+          @click="openPlanesVenta=true"
+        >Planes de venta(Precios)</vs-button>
       </div>
-      <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
-        <vx-card
-          no-radius
-          title="Filtros de selección"
-          refresh-content-action
-          @refresh="reset"
-          collapse-action
-        >
-          <div class="flex flex-wrap">
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
-              <label class="text-sm opacity-75">Mostrar</label>
-              <v-select
-                :options="mostrarOptions"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="mostrar"
-                class="mb-4 sm:mb-0"
-              />
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
-              <label class="text-sm opacity-75">Estado</label>
-              <v-select
-                :options="estadosOptions"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="estado"
-                class="mb-4 md:mb-0"
-              />
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
-              <label class="text-sm opacity-75">Filtrar Específico</label>
-              <v-select
-                :options="filtrosEspecificos"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="filtroEspecifico"
-                class="mb-4 md:mb-0"
-              />
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
-              <label class="text-sm opacity-75">Número de Control</label>
-              <vs-input
-                class="w-full"
-                icon="search"
-                maxlength="14"
-                placeholder="Filtrar por Número de Control"
-                v-model="serverOptions.numero_control"
-                v-on:keyup.enter="get_data(1)"
-                v-on:blur="get_data(1,'blur')"
-              />
-            </div>
-          </div>
-
-          <div class="flex flex-wrap">
-            <div class="w-full px-2">
-              <h3 class="text-base font-semibold my-3">
-                <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Titular
-              </h3>
-            </div>
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
-              <label class="text-sm opacity-75">Nombre del Titular</label>
-              <vs-input
-                class="w-full"
-                icon="search"
-                placeholder="Filtrar por Nombre del Titular"
-                v-model="serverOptions.titular"
-                v-on:keyup.enter="get_data(1)"
-                v-on:blur="get_data(1,'blur')"
-                maxlength="75"
-              />
-            </div>
-          </div>
-        </vx-card>
-      </div>
-
-      <br />
-      <vs-table
-        :sst="true"
-        @search="handleSearch"
-        @change-page="handleChangePage"
-        @sort="handleSort"
-        v-model="selected"
-        :max-items="serverOptions.per_page.value"
-        :data="ventas"
-        stripe
-        noDataText="0 Resultados"
+    </div>
+    <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
+      <vx-card
+        no-radius
+        title="Filtros de selección"
+        refresh-content-action
+        @refresh="reset"
+        collapse-action
       >
-        <template slot="header">
-          <h3 class="pb-5 text-primary">Listado de Ventas Realizadas del Cementerio</h3>
-        </template>
-        <template slot="thead">
-          <vs-th>Núm. Venta</vs-th>
-          <vs-th>Titular</vs-th>
-          <vs-th>Uso Venta</vs-th>
-          <vs-th>Solicitud</vs-th>
-          <vs-th>Convenio</vs-th>
-          <vs-th>Título</vs-th>
-          <vs-th>Ubicacion</vs-th>
-          <vs-th>Estatus</vs-th>
-          <vs-th>Acciones</vs-th>
-        </template>
-        <template slot-scope="{data}">
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-            <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{data[indextr].id}}</span>
-            </vs-td>
-            <vs-td :data="data[indextr].cliente_nombre">{{data[indextr].cliente_nombre}}</vs-td>
-            <vs-td :data="data[indextr].uso_venta">{{data[indextr].uso_venta}}</vs-td>
-            <vs-td :data="data[indextr].numero_solicitud">
-              <span class="font-medium">{{data[indextr].numero_solicitud}}</span>
-            </vs-td>
-            <vs-td :data="data[indextr].numero_convenio">
-              <span class="font-medium">{{data[indextr].numero_convenio}}</span>
-            </vs-td>
-            <vs-td :data="data[indextr].numero_titulo">
-              <span class="font-medium">{{data[indextr].numero_titulo}}</span>
-            </vs-td>
-            <vs-td :data="data[indextr].ubicacion_texto">{{data[indextr].ubicacion_texto}}</vs-td>
-            <vs-td :data="data[indextr].status">
-              <p v-if="data[indextr].status==1">
-                <span class="flex items-center px-2 py-1 rounded">
-                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-success'"></div>Activa
-                </span>
-              </p>
-              <p v-else>
-                <span class="flex items-center px-2 py-1 rounded">
-                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-danger'"></div>Cancelada
-                </span>
-              </p>
-            </vs-td>
-            <vs-td :data="data[indextr].id_user">
-              <div class="flex justify-center">
-                <img
-                  class="mr-3"
-                  style="width:20px;"
-                  @click="ConsultarVenta(data[indextr].id)"
-                  src="@assets/images/pdf.svg"
-                  alt
-                />
+        <div class="flex flex-wrap">
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+            <label class="text-sm opacity-75">Mostrar</label>
+            <v-select
+              :options="mostrarOptions"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="mostrar"
+              class="mb-4 sm:mb-0"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+            <label class="text-sm opacity-75">Estado</label>
+            <v-select
+              :options="estadosOptions"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="estado"
+              class="mb-4 md:mb-0"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+            <label class="text-sm opacity-75">Filtrar Específico</label>
+            <v-select
+              :options="filtrosEspecificos"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="filtroEspecifico"
+              class="mb-4 md:mb-0"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
+            <label class="text-sm opacity-75">Número de Control</label>
+            <vs-input
+              class="w-full"
+              icon="search"
+              maxlength="14"
+              placeholder="Filtrar por Número de Control"
+              v-model="serverOptions.numero_control"
+              v-on:keyup.enter="get_data(1)"
+              v-on:blur="get_data(1,'blur')"
+            />
+          </div>
+        </div>
 
+        <div class="flex flex-wrap">
+          <div class="w-full px-2">
+            <h3 class="text-base font-semibold my-3">
+              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Titular
+            </h3>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
+            <label class="text-sm opacity-75">Nombre del Titular</label>
+            <vs-input
+              class="w-full"
+              icon="search"
+              placeholder="Filtrar por Nombre del Titular"
+              v-model="serverOptions.titular"
+              v-on:keyup.enter="get_data(1)"
+              v-on:blur="get_data(1,'blur')"
+              maxlength="75"
+            />
+          </div>
+        </div>
+      </vx-card>
+    </div>
+
+    <br />
+    <vs-table
+      :sst="true"
+      @search="handleSearch"
+      @change-page="handleChangePage"
+      @sort="handleSort"
+      v-model="selected"
+      :max-items="serverOptions.per_page.value"
+      :data="ventas"
+      stripe
+      noDataText="0 Resultados"
+    >
+      <template slot="header">
+        <h3 class="pb-5 text-primary">Listado de Ventas Realizadas del Cementerio</h3>
+      </template>
+      <template slot="thead">
+        <vs-th>Núm. Venta</vs-th>
+        <vs-th>Titular</vs-th>
+        <vs-th>Uso Venta</vs-th>
+        <vs-th>Solicitud</vs-th>
+        <vs-th>Convenio</vs-th>
+        <vs-th>Título</vs-th>
+        <vs-th>Ubicacion</vs-th>
+        <vs-th>Estatus</vs-th>
+        <vs-th>Acciones</vs-th>
+      </template>
+      <template slot-scope="{data}">
+        <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+          <vs-td :data="data[indextr].id">
+            <span class="font-semibold">{{data[indextr].id}}</span>
+          </vs-td>
+          <vs-td :data="data[indextr].cliente_nombre">{{data[indextr].cliente_nombre}}</vs-td>
+          <vs-td :data="data[indextr].uso_venta">{{data[indextr].uso_venta}}</vs-td>
+          <vs-td :data="data[indextr].numero_solicitud">
+            <span class="font-medium">{{data[indextr].numero_solicitud}}</span>
+          </vs-td>
+          <vs-td :data="data[indextr].numero_convenio">
+            <span class="font-medium">{{data[indextr].numero_convenio}}</span>
+          </vs-td>
+          <vs-td :data="data[indextr].numero_titulo">
+            <span class="font-medium">{{data[indextr].numero_titulo}}</span>
+          </vs-td>
+          <vs-td :data="data[indextr].ubicacion_texto">{{data[indextr].ubicacion_texto}}</vs-td>
+          <vs-td :data="data[indextr].status">
+            <p v-if="data[indextr].status==1">
+              <span class="flex items-center px-2 py-1 rounded">
+                <div class="h-3 w-3 rounded-full mr-2" :class="'bg-success'"></div>Activa
+              </span>
+            </p>
+            <p v-else>
+              <span class="flex items-center px-2 py-1 rounded">
+                <div class="h-3 w-3 rounded-full mr-2" :class="'bg-danger'"></div>Cancelada
+              </span>
+            </p>
+          </vs-td>
+          <vs-td :data="data[indextr].id_user">
+            <div class="flex justify-center">
+              <img
+                class="mr-3"
+                style="width:20px;"
+                @click="ConsultarVenta(data[indextr].id)"
+                src="@assets/images/pdf.svg"
+                alt
+              />
+
+              <vs-button
+                title="Editar"
+                size="large"
+                icon-pack="feather"
+                icon="icon-edit"
+                color="dark"
+                type="flat"
+                @click="openModificar(data[indextr].id)"
+              ></vs-button>
+              <vs-button
+                v-if="data[indextr].status==1"
+                title="Cancelar"
+                icon-pack="feather"
+                size="large"
+                icon="icon-shield-off"
+                color="danger"
+                type="flat"
+                @click="cancelarVenta(data[indextr].id)"
+              ></vs-button>
+              <vx-tooltip
+                color="danger"
+                text="Esta venta ya ha sido cancelada, puede consultar el acuse de cancelación dando click aquí."
+                v-else
+              >
                 <vs-button
-                  title="Editar"
-                  size="large"
-                  icon-pack="feather"
-                  icon="icon-edit"
-                  color="dark"
-                  type="flat"
-                  @click="openModificar(data[indextr].id)"
-                ></vs-button>
-                <vs-button
-                  v-if="data[indextr].status==1"
                   title="Cancelar"
                   icon-pack="feather"
                   size="large"
                   icon="icon-shield-off"
                   color="danger"
                   type="flat"
-                  @click="cancelarVenta(data[indextr].id)"
+                  @click="ConsultarVenta(data[indextr].id)"
                 ></vs-button>
-                <vx-tooltip
-                  color="danger"
-                  text="Esta venta ya ha sido cancelada, puede consultar el acuse de cancelación dando click aquí."
-                  v-else
-                >
-                  <vs-button
-                    title="Cancelar"
-                    icon-pack="feather"
-                    size="large"
-                    icon="icon-shield-off"
-                    color="danger"
-                    type="flat"
-                    @click="ConsultarVenta(data[indextr].id)"
-                  ></vs-button>
-                </vx-tooltip>
-              </div>
-            </vs-td>
-            <template class="expand-user" slot="expand"></template>
-          </vs-tr>
-        </template>
-      </vs-table>
+              </vx-tooltip>
+            </div>
+          </vs-td>
+          <template class="expand-user" slot="expand"></template>
+        </vs-tr>
+      </template>
+    </vs-table>
 
-      <div>
-        <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
-      </div>
-
-      <pre ref="pre"></pre>
+    <div>
+      <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
     </div>
-    <div class="tab-content mt-1" v-show="activeTab==1">invnetario grafico</div>
+
+    <pre ref="pre"></pre>
 
     <FormularioVentas
       :id_venta="id_venta_modificar"
@@ -239,12 +232,13 @@
       @ConsultarVenta="ConsultarVenta"
       :id_venta="id_venta"
     ></CancelarVenta>
+    <PlanesVenta :show="openPlanesVenta" @closePlanesCementerio="openPlanesVenta=false"></PlanesVenta>
   </div>
 </template>
 
 <script>
 //planes de venta
-
+import PlanesVenta from "@pages/inventarios/cementerio/ventas/PlanesVentas";
 import cementerio from "@services/cementerio";
 
 import FormularioVentas from "../ventas/FormularioVentas";
@@ -266,7 +260,8 @@ export default {
     Password,
     FormularioVentas,
     ReportesVentas,
-    CancelarVenta
+    CancelarVenta,
+    PlanesVenta
   },
   watch: {
     actual: function(newValue, oldValue) {
@@ -281,6 +276,7 @@ export default {
   },
   data() {
     return {
+      openPlanesVenta: false,
       openCancelar: false,
       openReportes: false,
       verFormularioVentas: false,
