@@ -62,6 +62,15 @@
           />
           <h4 class="py-3 capitalize text-danger">Acuse de Cancelación</h4>
         </div>
+        <!-- <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center py-3">
+          <img
+            class="cursor-pointer"
+            src="@assets/images/reportes/pdf_download.svg"
+            @click="openReporte('Ubicación del Terreno','/inventarios/cementerio/documento_ubicacion_terreno','')"
+          />
+          <h4 class="py-3 capitalize">Ubicación del Terreno</h4>
+        </div>
+        -->
       </div>
       <div
         v-for="(programacion, index) in datosVenta.programacion_pagos"

@@ -2,17 +2,25 @@
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
       <vs-tab label="CONTROL DE VENTAS" icon="supervisor_account" class="pb-5"></vs-tab>
+      <!-- <vs-tab label="INVENTARIO GRÁFICO" icon="location_on" class="pb-5"></vs-tab>-->
     </vs-tabs>
+
     <div class="tab-content mt-1" v-show="activeTab==0">
       <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 ml-auto md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+        <div class="w-full mb-1 px-2">
           <vs-button
-            class="ml-auto"
+            class="float-right"
             icon-pack="feather"
             icon="icon-shopping-cart"
             color="success"
             @click="formulario('agregar')"
           >Nueva Venta</vs-button>
+          <vs-button
+            class="float-right mr-8"
+            icon-pack="feather"
+            icon="icon-search"
+            color="primary"
+          >Buscar Fallecido</vs-button>
         </div>
       </div>
       <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
@@ -202,6 +210,7 @@
 
       <pre ref="pre"></pre>
     </div>
+    <div class="tab-content mt-1" v-show="activeTab==1">invnetario grafico</div>
 
     <FormularioVentas
       :id_venta="id_venta_modificar"

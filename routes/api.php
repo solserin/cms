@@ -166,6 +166,8 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 
+Route::get('inventarios/cementerio/documento_ubicacion_terreno', 'CementerioController@documento_ubicacion_terreno');
+
 Route::get('pdfs', 'Usuarios\UsuariosController@pdfs');
 
 //RUTA DEL LOGUIN
