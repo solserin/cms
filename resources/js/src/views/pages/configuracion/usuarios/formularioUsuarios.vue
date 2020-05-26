@@ -3,7 +3,7 @@
     <vs-popup
       class="forms-popups"
       close="cancel"
-      title="Registrar nuevo usuario"
+      :title="title"
       :active.sync="showVentana"
       ref="usuarios"
     >
@@ -175,6 +175,7 @@
           </h3>
         </div>
         <vs-divider />
+
         <div
           class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 py-4"
           v-for="puesto in puestos"
@@ -187,6 +188,9 @@
           >
             <label class="text-sm opacity-75 font-bold dark-text">{{ puesto.puesto }}</label>
           </vs-checkbox>
+        </div>
+        <div class="w-full px-2 mt-2">
+          <span class="text-danger text-sm" v-if="this.errores.puestos">{{errores.puestos[0]}}</span>
         </div>
       </div>
 
@@ -228,6 +232,7 @@
           />
         </div>
       </div>
+
       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 mt-8 pb-20 px-2 mr-auto ml-auto">
         <vs-button class="w-full" @click="acceptAlert()" color="primary">
           <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
@@ -268,6 +273,15 @@ export default {
     show: {
       type: Boolean,
       required: true
+    },
+    tipo: {
+      type: String,
+      required: true
+    },
+    id_usuario: {
+      type: Number,
+      required: false,
+      default: 0
     }
   },
   watch: {
@@ -282,11 +296,20 @@ export default {
         this.get_roles();
         /**get puestos de trabajo */
         this.get_puestos();
+        if (this.getTipoformulario == "agregar") {
+          this.title = "Registrar nuevo usuario";
+        } else {
+          this.title = "Modificar Usuario";
+
+          /**se cargan los datos del usuario */
+          this.get_usuarioById(this.get_usuario_id);
+        }
       }
     }
   },
   data() {
     return {
+      title: "",
       botonConfirmarSinPassword: "",
       openConfirmarSinPassword: false,
       callBackConfirmar: Function,
@@ -304,6 +327,7 @@ export default {
       },
       puestos: [],
       form: {
+        user_id: "",
         puestos: [],
         rol_id: "",
         nombre: "",
@@ -329,18 +353,86 @@ export default {
       set(newValue) {
         return newValue;
       }
+    },
+    getTipoformulario: {
+      get() {
+        return this.tipo;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
+    get_usuario_id: {
+      get() {
+        return this.id_usuario;
+      },
+      set(newValue) {
+        return newValue;
+      }
     }
   },
   methods: {
+    get_usuarioById(id_user) {
+      this.$vs.loading();
+      usuarios
+        .get_usuarioById(id_user)
+        .then(res => {
+          this.$vs.loading.close();
+          this.roles = {
+            label: res.data[0].rol,
+            value: res.data[0].roles_id
+          };
+          this.genero = {
+            label: res.data[0].genero_des,
+            value: res.data[0].genero
+          };
+          this.form.user_id = res.data[0].id_user;
+          this.form.nombre = res.data[0].nombre;
+          this.form.usuario = res.data[0].email;
+          this.form.password = "nochanges";
+          this.form.repetir = "nochanges";
+          this.form.direccion = res.data[0].domicilio;
+          this.form.telefono = res.data[0].telefono;
+          this.form.celular = res.data[0].celular;
+
+          this.form.nombre_contacto = res.data[0].nombre_contacto;
+          this.form.tel_contacto = res.data[0].tel_contacto;
+          this.form.parentesco_contacto = res.data[0].parentesco;
+          /**llenando los puestos */
+          res.data[0].puestos.forEach(element => {
+            this.form.puestos.push(element.id);
+          });
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+        });
+    },
+
     acceptAlert() {
       this.$validator
         .validateAll()
         .then(result => {
           if (!result) {
+            this.$vs.notify({
+              title: "Error",
+              text: "Verifique que todos los datos han sido capturados",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "4000"
+            });
             return;
           } else {
             //se confirma la cntraseña
-            this.callback = this.saveUsuario;
+
+            if (this.getTipoformulario == "agregar") {
+              /**se manda llamar la funcion de agregar usuario */
+              this.callback = this.saveUsuario;
+            } else {
+              this.callback = this.updateUsuario;
+              /**se manda agregar  la funcion de modificar */
+            }
             this.operConfirmar = true;
           }
         })
@@ -405,7 +497,6 @@ export default {
         .then(res => {
           this.$vs.loading.close();
           this.$emit("get_data");
-          this.cancel();
           this.$vs.notify({
             title: "Agregar Usuarios",
             text: "Se ha creado el nuevo usuario exitosamente.",
@@ -414,6 +505,59 @@ export default {
             color: "success",
             time: 4000
           });
+          this.cerrarVentana();
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              this.$vs.notify({
+                title: "Error",
+                text: "Verifique que todos los datos han sido capturados",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                position: "bottom-right",
+                time: "4000"
+              });
+              /**error de validacion */
+              this.errores = err.response.data.error;
+            }
+          }
+        });
+    },
+
+    updateUsuario() {
+      this.$vs.loading();
+      //limpiando errores
+      this.errores = [];
+      this.form.rol_id = this.roles.value;
+      this.form.genero = this.genero.value;
+      usuarios
+        .update_usuario(this.form)
+        .then(res => {
+          this.$vs.loading();
+          this.$vs.notify({
+            title: "Modificar Usuarios",
+            text: "Se ha modificado el usuario exitosamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 4000
+          });
+          this.$emit("get_data");
+          this.cerrarVentana();
         })
         .catch(err => {
           this.$vs.loading.close();
@@ -431,11 +575,21 @@ export default {
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
+              this.$vs.notify({
+                title: "Error",
+                text: "Verifique que todos los datos han sido capturados",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                position: "bottom-right",
+                time: "4000"
+              });
               this.errores = err.response.data.error;
             }
           }
         });
     },
+
     closeChecker() {
       this.operConfirmar = false;
     }

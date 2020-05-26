@@ -66,18 +66,18 @@ html {
 
 ::-webkit-scrollbar {
   width: 0px;
-  /* Remove scrollbar space */
-  /* Optional: just make scrollbar invisible */
 }
 
 [dir] ::-webkit-scrollbar {
   background: transparent;
 }
 
-/* Optional: show position indicator in red */
-
 [dir] ::-webkit-scrollbar-thumb {
   background: #ff0000;
+}
+
+.vs-popup--content {
+  max-height: 80vh !important;
 }
 
 [dir] .vs-popup--header {

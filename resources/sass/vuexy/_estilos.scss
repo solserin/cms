@@ -32,17 +32,21 @@
 /* -------------------------------------------------------------------------- */
 /*                                 title forms                                */
 /* -------------------------------------------------------------------------- */
+
 html {
     overflow: scroll;
     overflow-x: hidden;
 }
 ::-webkit-scrollbar {
-    width: 0px; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
+    width: 0px;
+    background: transparent;
 }
-/* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
     background: #ff0000;
+}
+
+.vs-popup--content {
+    max-height: 80vh !important;
 }
 
 .vs-popup--header {

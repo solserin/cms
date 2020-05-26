@@ -316,6 +316,7 @@ class UsuariosController extends ApiController
     {
         return
             User::select(
+                'usuarios.id',
                 'usuarios.id as id_user',
                 'nombre',
                 'email',
@@ -337,6 +338,7 @@ class UsuariosController extends ApiController
                         ELSE "Mujer" 
                         END) AS genero_des')
             )
+            ->with('puestos')
             ->join('roles', 'roles.id', '=', 'usuarios.roles_id')
             ->where('usuarios.id', '=', $request->user_id)
             ->get();
@@ -387,11 +389,13 @@ class UsuariosController extends ApiController
                 'rol_id' => 'required',
                 'genero' => 'required',
                 'nombre' => 'required',
+                'puestos' => 'required',
                 'usuario' => 'required|email|unique:usuarios,email',
                 'password' => 'required',
                 'repetir' => 'required|same:password',
             ],
             [
+                'puestos.required' => 'Debe seleccionar al menos un puesto para este empleado.',
                 'genero.required' => 'Ingrese el género del usuario.',
                 'rol_id.required' => 'Ingrese el rol del usuario.',
                 'nombre.required' => 'Ingrese el nombre del usuario.',
@@ -403,75 +407,11 @@ class UsuariosController extends ApiController
                 'unique' => 'Este nombre de usuario ya ha sido registrado.'
             ]
         );
-        return DB::table('usuarios')->insertGetId(
-            [
-                'roles_id' => $request->rol_id,
-                'genero' => $request->genero,
-                'nombre' => $request->nombre,
-                'email' => $request->usuario,
-                'password' => Hash::make($request->password),
-                'domicilio' => $request->direccion,
-                'telefono' => $request->telefono,
-                'celular' => $request->celular,
-                'nombre_contacto' => $request->nombre_contacto,
-                'tel_contacto' => $request->tel_contacto,
-                'parentesco' => $request->parentesco_contacto,
-                'created_at' => now(),
-            ]
-        );
-    }
 
+        try {
+            DB::beginTransaction();
 
-    /**UPDATE USUARIOS */
-    public function update_usuario(Request $request)
-    {
-        $user_id = $request->user_id;
-        request()->validate(
-            [
-                'rol_id' => 'required',
-                'genero' => 'required',
-                'nombre' => 'required',
-                'usuario' => [
-                    'required',
-                    'email',
-                    Rule::unique('usuarios', 'email')->ignore($user_id),
-                ],
-                'password' => 'required',
-                'repetir' => 'required|same:password',
-            ],
-            [
-                'genero.required' => 'Ingrese el género del usuario.',
-                'rol_id.required' => 'Ingrese el rol del usuario.',
-                'nombre.required' => 'Ingrese el nombre del usuario.',
-                'usuario.required' => 'Ingrese el email del usuario.',
-                'usuario.email' => 'El email debe ser un correo válido.',
-                'password.required' => 'debe ingresar una contraseña.',
-                'repetir.required' => 'debe confirmar la contraseña.',
-                'repetir.same' => 'Las contraseñas no coinciden.',
-                'unique' => 'Este nombre de usuario ya ha sido registrado.'
-            ]
-        );
-        //con cambio de contraseña
-
-        if ($request->password == 'nochanges') {
-            return DB::table('usuarios')->where('id', $user_id)->update(
-                [
-                    'roles_id' => $request->rol_id,
-                    'genero' => $request->genero,
-                    'nombre' => $request->nombre,
-                    'email' => $request->usuario,
-                    'domicilio' => $request->direccion,
-                    'telefono' => $request->telefono,
-                    'celular' => $request->celular,
-                    'nombre_contacto' => $request->nombre_contacto,
-                    'tel_contacto' => $request->tel_contacto,
-                    'parentesco' => $request->parentesco_contacto,
-                    'updated_at' => now(),
-                ]
-            );
-        } else {
-            //con cambio de contraseñas
-            return DB::table('usuarios')->where('id', $user_id)->update(
+            $id_user = DB::table('usuarios')->insertGetId(
                 [
                     'roles_id' => $request->rol_id,
                     'genero' => $request->genero,
@@ -484,9 +424,120 @@ class UsuariosController extends ApiController
                     'nombre_contacto' => $request->nombre_contacto,
                     'tel_contacto' => $request->tel_contacto,
                     'parentesco' => $request->parentesco_contacto,
-                    'updated_at' => now(),
+                    'created_at' => now(),
                 ]
             );
+
+            /**inserto cada uno de los puestos que tiene este usuario */
+            foreach ($request->puestos as $puesto) {
+                DB::table('usuarios_puestos')->insert(
+                    [
+                        'usuarios_id' => $id_user,
+                        'puestos_id' => $puesto,
+                    ]
+                );
+            }
+            DB::commit();
+            return $id_user;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+    /**UPDATE USUARIOS */
+    public function update_usuario(Request $request)
+    {
+        $user_id = $request->user_id;
+        request()->validate(
+            [
+                'rol_id' => 'required',
+                'genero' => 'required',
+                'puestos' => 'required',
+                'nombre' => 'required',
+                'usuario' => [
+                    'required',
+                    'email',
+                    Rule::unique('usuarios', 'email')->ignore($user_id),
+                ],
+                'password' => 'required',
+                'repetir' => 'required|same:password',
+            ],
+            [
+                'puestos.required' => 'Debe seleccionar al menos un puesto para este empleado.',
+                'genero.required' => 'Ingrese el género del usuario.',
+                'rol_id.required' => 'Ingrese el rol del usuario.',
+                'nombre.required' => 'Ingrese el nombre del usuario.',
+                'usuario.required' => 'Ingrese el email del usuario.',
+                'usuario.email' => 'El email debe ser un correo válido.',
+                'password.required' => 'debe ingresar una contraseña.',
+                'repetir.required' => 'debe confirmar la contraseña.',
+                'repetir.same' => 'Las contraseñas no coinciden.',
+                'unique' => 'Este nombre de usuario ya ha sido registrado.'
+            ]
+        );
+
+        //con cambio de contraseña
+
+        try {
+            DB::beginTransaction();
+
+            /**eliminadmos los puestos asociados para crear los nuevos */
+            DB::table('usuarios_puestos')->where('usuarios_id', $user_id)->delete();
+
+            //actualizando los datos del usuario
+            if ($request->password == 'nochanges') {
+                DB::table('usuarios')->where('id', $user_id)->update(
+                    [
+                        'roles_id' => $request->rol_id,
+                        'genero' => $request->genero,
+                        'nombre' => $request->nombre,
+                        'email' => $request->usuario,
+                        'domicilio' => $request->direccion,
+                        'telefono' => $request->telefono,
+                        'celular' => $request->celular,
+                        'nombre_contacto' => $request->nombre_contacto,
+                        'tel_contacto' => $request->tel_contacto,
+                        'parentesco' => $request->parentesco_contacto,
+                        'updated_at' => now(),
+                    ]
+                );
+            } else {
+                //con cambio de contraseñas
+                DB::table('usuarios')->where('id', $user_id)->update(
+                    [
+                        'roles_id' => $request->rol_id,
+                        'genero' => $request->genero,
+                        'nombre' => $request->nombre,
+                        'email' => $request->usuario,
+                        'password' => Hash::make($request->password),
+                        'domicilio' => $request->direccion,
+                        'telefono' => $request->telefono,
+                        'celular' => $request->celular,
+                        'nombre_contacto' => $request->nombre_contacto,
+                        'tel_contacto' => $request->tel_contacto,
+                        'parentesco' => $request->parentesco_contacto,
+                        'updated_at' => now(),
+                    ]
+                );
+            }
+
+            /**inserto cada uno de los puestos que tiene este usuario */
+            foreach ($request->puestos as $puesto) {
+                DB::table('usuarios_puestos')->insert(
+                    [
+                        'usuarios_id' => $user_id,
+                        'puestos_id' => $puesto,
+                    ]
+                );
+            }
+
+            DB::commit();
+            return $user_id;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
         }
     }
 

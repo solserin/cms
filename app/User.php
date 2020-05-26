@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens,Notifiable;
+    use HasApiTokens, Notifiable;
     protected $table = 'usuarios';
 
     /**
@@ -46,5 +46,11 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new PasswordResetNotification($token));
+    }
+
+
+    public function puestos()
+    {
+        return $this->belongsToMany('App\Puestos', 'usuarios_puestos', 'usuarios_id', 'puestos_id');
     }
 }

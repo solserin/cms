@@ -7,7 +7,7 @@
     <div class="tab-content mt-1" v-show="activeTab==0">
       <vx-card ref="filterCard" title="Filtros de selección" class="user-list-filters">
         <div class="w-full sm:w-12/12 md:w-3/12 lg:w-2/12 xl:w-2/12 ml-auto px-2">
-          <vs-button color="success" size="small" class="w-full" @click="verAgregar=true">
+          <vs-button color="success" size="small" class="w-full" @click="verFormulario('agregar')">
             <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
             <span class="texto-btn">Agregar</span>
           </vs-button>
@@ -160,7 +160,13 @@
     <div class="tab-content mt-4 pb-3" v-show="activeTab==1">
       <rolesList @refreshRoles="get_roles"></rolesList>
     </div>
-    <AgregarUsuario :show="verAgregar" @closeVentana="closeVentana" @get_data="get_data(actual)"></AgregarUsuario>
+    <formularioUsuarios
+      :id_usuario="id_usuario_modificar"
+      :tipo="tipoFormulario"
+      :show="verFormularioUsuarios"
+      @closeVentana="closeVentana"
+      @get_data="get_data(actual)"
+    ></formularioUsuarios>
     <UpdateUsuario
       :show="verModificar"
       @closeModificar="closeModificar"
@@ -181,7 +187,7 @@
 import pdf from "../../pdf_viewer";
 /**IMPORTAR EL COMPONENTE DE ROLES */
 import rolesList from "../usuarios/RolesList";
-import AgregarUsuario from "../usuarios/AgregarUsuario";
+import formularioUsuarios from "../usuarios/formularioUsuarios";
 import UpdateUsuario from "../usuarios/UpdateUsuario.vue";
 
 //componente de password
@@ -204,7 +210,7 @@ export default {
     PrinterIcon,
     rolesList,
     Password,
-    AgregarUsuario,
+    formularioUsuarios,
     UpdateUsuario,
     pdf
   },
@@ -224,6 +230,8 @@ export default {
   },
   data() {
     return {
+      tipoFormulario: "",
+      id_usuario_modificar: 0,
       verPdf: false,
       pdfLink: "",
       openStatus: false,
@@ -231,7 +239,7 @@ export default {
       accionNombre: "",
       verModificar: false,
       datosModifcar: {},
-      verAgregar: false,
+      verFormularioUsuarios: false,
       activeTab: 0,
       ver: true,
       total: 0,
@@ -331,16 +339,11 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     closeVentana() {
-      this.verAgregar = false;
+      this.verFormularioUsuarios = false;
     },
     openModificar(id_user) {
-      this.users.forEach(element => {
-        if (element.id_user == id_user) {
-          this.datosModifcar = element;
-          this.verModificar = true;
-          return false;
-        }
-      });
+      this.id_usuario_modificar = id_user;
+      this.verFormulario("modificar");
     },
     //eliminar usuario logicamente
     deleteUsuario(id_user, nombre) {
@@ -476,6 +479,12 @@ export default {
         "&nombre=" +
         this.nombre;
       this.verPdf = true;
+    },
+    verFormulario(tipo) {
+      console.log("verFormulario -> tipo", tipo);
+
+      this.tipoFormulario = tipo;
+      this.verFormularioUsuarios = true;
     }
   },
   created() {
