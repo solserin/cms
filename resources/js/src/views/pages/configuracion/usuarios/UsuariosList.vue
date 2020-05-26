@@ -1,20 +1,20 @@
 <template>
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
-      <vs-tab label="CONTROL DE USUARIOS" icon="supervisor_account" class="pb-5"></vs-tab>
+      <vs-tab label="CONTROL DE USUARIOS / EMPLEADOS" icon="supervisor_account" class="pb-5"></vs-tab>
       <vs-tab label="ROLES DEL SISTEMA" icon="fingerprint"></vs-tab>
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
       <vx-card ref="filterCard" title="Filtros de selección" class="user-list-filters">
-        <div class="flex flex-wrap">
-          <div class="w-full">
-            <vs-button color="success" size="small" class="float-right" @click="verAgregar=true">
-              <user-plus-icon size="1x" class="custom-class mr-2"></user-plus-icon>Agregar
-            </vs-button>
-            <vs-button color="primary" size="small" class="float-right mr-3" @click="pdf()">
-              <printer-icon size="1x" class="custom-class mr-2"></printer-icon>Pdf
-            </vs-button>
-          </div>
+        <div class="w-full sm:w-12/12 md:w-3/12 lg:w-2/12 xl:w-2/12 ml-auto px-2">
+          <vs-button color="success" size="small" class="w-full" @click="verAgregar=true">
+            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
+            <span class="texto-btn">Agregar</span>
+          </vs-button>
+          <!--<vs-button color="primary" size="small" class="float-right mr-3 hidden" @click="pdf()">
+            <printer-icon size="1x" class="custom-class mr-2"></printer-icon>Pdf
+          </vs-button>
+          -->
         </div>
         <div class="flex flex-wrap">
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 mb-4 px-2">

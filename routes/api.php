@@ -21,6 +21,9 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 Route::middleware(['auth:api'])->group(function () {
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
 
+    /**RUTA PARA OBTENER LOS PUESTOS DISPONIBLEN EN LA EMPRESA */
+    Route::get('get_puestos', 'Usuarios\UsuariosController@get_puestos');
+
     /**RUTA PARA OBTENER LOS PERMISOS DEL USUARIO */
     Route::get('get_permisos', 'Usuarios\UsuariosController@get_permisos');
 

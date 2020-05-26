@@ -1,33 +1,28 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="usuarios"
-      close="cancelar"
-      title="Agregar Nuevos Usuarios"
+      class="forms-popups"
+      close="cancel"
+      title="Registrar nuevo usuario"
       :active.sync="showVentana"
-      button-close-hidden
+      ref="usuarios"
     >
-      <div class="w-full px-2">
-        <vs-button @click="acceptAlert()" color="success" size="small" class="float-right">Guardar</vs-button>
-        <vs-button @click="cancel()" color="danger" size="small" class="float-right mr-5">Cancelar</vs-button>
-      </div>
-      <span class="text-sm texto-importante">IMPORTANTE Los campos con (*) son obligatorios.</span>
-      <div class="vx-row w-full mt-2">
-        <div class="vx-col w-full">
-          <div class="flex items-end">
-            <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />
-            <span class="leading-none font-medium">Informacion del usuario</span>
-          </div>
-        </div>
+      <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2 pb-4">
+        <h3 class="text-xl">
+          <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />
+          <span>Información del Usuario</span>
+        </h3>
       </div>
       <vs-divider />
+
       <div class="flex flex-wrap">
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75">
+          <label class="text-sm opacity-75 font-bold">
             Nombre
             <span class="text-danger text-sm">(*)</span>
           </label>
           <vs-input
+            ref="nombre"
             name="Nombre"
             data-vv-validate-on="blur"
             v-validate="'required'"
@@ -44,7 +39,7 @@
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
+          <label class="text-sm opacity-75 font-bold">
             Rol
             <span class="text-danger text-sm">(*)</span>
           </label>
@@ -60,7 +55,7 @@
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
+          <label class="text-sm opacity-75 font-bold">
             Género
             <span class="text-danger text-sm">(*)</span>
           </label>
@@ -76,7 +71,7 @@
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75">
+          <label class="text-sm opacity-75 font-bold">
             Usuario (email)
             <span class="text-danger text-sm">(*)</span>
           </label>
@@ -97,7 +92,7 @@
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
+          <label class="text-sm opacity-75 font-bold">
             Password
             <span class="text-danger text-sm">(*)</span>
           </label>
@@ -119,7 +114,7 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75">
+          <label class="text-sm opacity-75 font-bold">
             Repetir Password
             <span class="text-danger text-sm">(*)</span>
           </label>
@@ -143,7 +138,7 @@
 
       <div class="flex flex-wrap">
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75">Dirección</label>
+          <label class="text-sm opacity-75 font-bold">Dirección</label>
           <vs-input
             type="text"
             class="w-full pb-1 pt-1"
@@ -152,7 +147,7 @@
           />
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 mb-3 px-2">
-          <label class="text-sm opacity-75">Teléfono</label>
+          <label class="text-sm opacity-75 font-bold">Teléfono</label>
           <vs-input
             type="text"
             class="w-full pb-1 pt-1"
@@ -162,7 +157,7 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 mb-2 px-2">
-          <label class="text-sm opacity-75">Celular</label>
+          <label class="text-sm opacity-75 font-bold">Celular</label>
           <vs-input
             type="text"
             class="w-full pb-1 pt-1"
@@ -173,17 +168,40 @@
       </div>
 
       <div class="flex flex-wrap">
-        <div class="vx-row w-full mt-2">
-          <div class="vx-col w-full">
-            <div class="flex items-end">
-              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />
-              <span class="leading-none font-medium">Informacion del contacto</span>
-            </div>
+        <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2 py-4">
+          <h3 class="text-xl">
+            <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />
+            <span>Seleccione las áreas de responsabilidad de este usuario</span>
+          </h3>
+        </div>
+        <vs-divider />
+        <div
+          class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 py-4"
+          v-for="puesto in puestos"
+          :key="puesto.id"
+        >
+          <vs-checkbox
+            class="bg-gray-headers px-2 py-4"
+            v-model="form.puestos"
+            :vs-value="puesto.id"
+          >
+            <label class="text-sm opacity-75 font-bold dark-text">{{ puesto.puesto }}</label>
+          </vs-checkbox>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap">
+        <div class="vx-row w-full mt-2 px-2">
+          <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2 py-4">
+            <h3 class="text-xl">
+              <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />
+              <span>Información de un Contacto</span>
+            </h3>
           </div>
         </div>
         <vs-divider />
         <div class="w-full mb-2 px-2">
-          <label class="text-sm opacity-75">Nombre de un contacto</label>
+          <label class="text-sm opacity-75 font-bold">Nombre de un contacto</label>
           <vs-input
             type="text"
             class="w-full pb-1 pt-1"
@@ -192,7 +210,7 @@
           />
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 mb-2 px-2">
-          <label class="text-sm opacity-75">Teléfono del contacto</label>
+          <label class="text-sm opacity-75 font-bold">Teléfono del contacto</label>
           <vs-input
             type="text"
             class="w-full pb-1 pt-1"
@@ -201,7 +219,7 @@
           />
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 mb-2 px-2">
-          <label class="text-sm opacity-75">Parentesco</label>
+          <label class="text-sm opacity-75 font-bold">Parentesco</label>
           <vs-input
             type="text"
             class="w-full pb-1 pt-1"
@@ -210,6 +228,12 @@
           />
         </div>
       </div>
+      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 mt-8 pb-20 px-2 mr-auto ml-auto">
+        <vs-button class="w-full" @click="acceptAlert()" color="primary">
+          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
+          <span class="texto-btn">Guardar Datos</span>
+        </vs-button>
+      </div>
     </vs-popup>
     <Password
       :show="operConfirmar"
@@ -217,6 +241,13 @@
       @closeVerificar="closeChecker"
       :accion="accionNombre"
     ></Password>
+    <Confirmar
+      :show="openConfirmarSinPassword"
+      :callback-on-success="callBackConfirmar"
+      @closeVerificar="openConfirmarSinPassword=false"
+      :accion="accionConfirmarSinPassword"
+      :confirmarButton="botonConfirmarSinPassword"
+    ></Confirmar>
   </div>
 </template>
 <script>
@@ -224,12 +255,14 @@
 import Password from "../../confirmar_password";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
+import Confirmar from "@pages/Confirmar";
 /**VARIABLES GLOBALES */
 import { generosOptions } from "../../../../VariablesGlobales";
 export default {
   components: {
     "v-select": vSelect,
-    Password
+    Password,
+    Confirmar
   },
   props: {
     show: {
@@ -240,12 +273,24 @@ export default {
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
+        this.$refs["usuarios"].$el.querySelector(".vs-icon").onclick = () => {
+          this.cancel();
+        };
+        this.$nextTick(() =>
+          this.$refs["nombre"].$el.querySelector("input").focus()
+        );
         this.get_roles();
+        /**get puestos de trabajo */
+        this.get_puestos();
       }
     }
   },
   data() {
     return {
+      botonConfirmarSinPassword: "",
+      openConfirmarSinPassword: false,
+      callBackConfirmar: Function,
+      accionConfirmarSinPassword: "",
       activeTab: 0,
       generosOptions: generosOptions,
       operConfirmar: false,
@@ -257,7 +302,9 @@ export default {
         label: "Seleccione 1",
         value: ""
       },
+      puestos: [],
       form: {
+        puestos: [],
         rol_id: "",
         nombre: "",
         usuario: "",
@@ -300,6 +347,13 @@ export default {
         .catch(() => {});
     },
     cancel() {
+      this.botonConfirmarSinPassword = "Salir y limpiar";
+      this.accionConfirmarSinPassword =
+        "Esta acción limpiará los datos que capturó en el formulario.";
+      this.openConfirmarSinPassword = true;
+      this.callBackConfirmar = this.cerrarVentana;
+    },
+    cerrarVentana() {
       this.roles = { label: "Seleccione 1", value: "" };
       this.genero = { label: "Seleccione 1", value: "" };
       this.form.rol_id = "";
@@ -313,6 +367,7 @@ export default {
       this.form.nombre_contacto = "";
       this.form.tel_contacto = "";
       this.form.parentesco_contacto = "";
+      this.form.puestos = [];
       this.$emit("closeVentana");
     },
     get_roles() {
@@ -326,6 +381,15 @@ export default {
             /**AGREGO LOS DEMAS ROLES */
             this.rolesOptions.push(element);
           });
+        })
+        .catch(err => {});
+    },
+    get_puestos() {
+      usuarios
+        .get_puestos()
+        .then(res => {
+          //le agrego todos los roles
+          this.puestos = res.data;
         })
         .catch(err => {});
     },

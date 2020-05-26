@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(PuestosSedder::class);
         /**ajustes para controlar la asginacion de numeros de convenios y titulos sistematizados */
         $this->call(Ajustes::class);
         /**sedders de SAT */

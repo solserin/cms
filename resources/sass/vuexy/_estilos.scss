@@ -1,3 +1,81 @@
+/* -------------------------------------------------------------------------- */
+/*                                   button                                   */
+/* -------------------------------------------------------------------------- */
+.texto-btn {
+    top: -5px !important;
+    margin-left: 5px !important;
+    position: relative !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.img-btn {
+    display: inline !important;
+    width: 22px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   estilos                                  */
+/* -------------------------------------------------------------------------- */
+.bg-gray-headers {
+    background-color: #cecece !important;
+}
+
+.dark-text {
+    color: #303030 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                          fin de estilos de botones                         */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                 title forms                                */
+/* -------------------------------------------------------------------------- */
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 0px; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #ff0000;
+}
+
+.vs-popup--header {
+    background-color: #fff !important;
+    border-radius: 0;
+    padding: 5px 0 5px 0 !important;
+}
+
+.vs-popup--title h3 {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    width: 50% !important;
+    border-bottom: 2px solid #cecece !important;
+    padding-bottom: 10px !important;
+    color: #303030 !important;
+    text-transform: none !important;
+    font-size: 18px !important;
+    font-weight: 550 !important;
+}
+
+.vs-popup--title h3:before {
+    content: url("../../../../../resources/assets/images/worker.svg");
+    display: block;
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 0 auto !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 title forms                                */
+/* -------------------------------------------------------------------------- */
+
 .texto-importante {
     color: rgba(var(--vs-danger), 1) !important;
     font-weight: 600;
@@ -5,20 +83,6 @@
 
 .opacity-75 {
     opacity: 1 !important;
-}
-
-.vs-popup--header {
-    padding: 10px 0 10px 0;
-    background-color: rgba(var(--vs-primary), 1) !important;
-    //background-color: transparent !important;
-    border-radius: 0;
-}
-
-.vs-popup--title h3 {
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 15px !important;
-    font-weight: 600;
 }
 
 .con-vs-popup .vs-popup {
@@ -50,55 +114,39 @@
     border-radius: 0 !important;
 }
 
-.usuarios .vs-popup {
-    width: 100% !important;
-}
-
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
 @media (min-width: 576px) {
-
-    .usuarios,
-    .aet-popup {
+    .forms-popups {
         .vs-popup {
             width: 90% !important;
-            min-height: 90vh !important;
         }
     }
 }
 
 // Small devices (landscape phones, less than 768px)
 @media (min-width: 768px) {
-
-    .usuarios,
-    .aet-popup {
+    .forms-popups {
         .vs-popup {
             width: 90% !important;
-            min-height: 90vh !important;
         }
     }
 }
 
 // Medium devices (tablets, less than 992px)
 @media (min-width: 992px) {
-
-    .usuarios,
-    .aet-popup {
+    .forms-popups {
         .vs-popup {
             width: 90% !important;
-            min-height: 90vh !important;
         }
     }
 }
 
 // Large devices (desktops, less than 1200px)
 @media (min-width: 1200px) {
-
-    .usuarios,
-    .aet-popup {
+    .forms-popups {
         .vs-popup {
             width: 90% !important;
-            min-height: 90vh !important;
         }
     }
 }
@@ -164,11 +212,11 @@
 
 /*tarifas card*/
 .card-tarifas .vs-card--header {
-    background-color: rgba(var(--vs-secondary_theme), 1) !important;
+    background-color: rgba(var(--vs-primary), 1) !important;
 }
 
 .card-tarifas .vs-card--header h3 {
-    color: rgba(var(--vs-textos_theme), 1) !important;
+    color: #fff !important;
     font-size: 14px;
     text-transform: capitalize;
     font-weight: 600 !important;
@@ -312,7 +360,14 @@
 }
 
 .vs-popup--close {
+    background-color: #fff !important;
+    color: #303030 !important;
+    font-size: 32px;
+    font-weight: bold !important;
     border-radius: 0px !important;
+    padding: 4px !important;
+    margin-top: -45px !important;
+    margin-right: 12px !important;
     color: rgba(0, 0, 0, 1);
 }
 
@@ -378,7 +433,6 @@
 
 .contrasena {
     z-index: 52100 !important;
-
 }
 
 .searcher_clientes .vs-popup--header {
@@ -401,11 +455,9 @@
     font-size: 1.4em !important;
 }
 
-
 .contrasena .vs-popup--header {
     display: none !important;
 }
-
 
 .reportes_show_list .vs-popup {
     max-width: 90% !important;
@@ -416,8 +468,6 @@
     z-index: 52002 !important;
 }
 
-
-
 th .sort-th,
 th .vs-table-text {
     justify-content: center;
@@ -427,8 +477,6 @@ th .vs-table-text {
     text-align: center !important;
 }
 
-
-
 .distribucion {
     width: 100% !important;
     text-align: center !important;
@@ -436,9 +484,6 @@ th .vs-table-text {
     border-spacing: 3px;
     height: 70vh !important;
 }
-
-
-
 
 .distribucion tr td {
     height: 20px !important;
@@ -449,11 +494,11 @@ th .vs-table-text {
 }
 
 .bg-info {
-    background-color: '#0061ff';
+    background-color: "#0061ff";
 }
 
 .bg-espacio-muerto {
-    background-color: #C1C1C1 !important;
+    background-color: #c1c1c1 !important;
 
     span {
         display: none !important;
@@ -466,7 +511,7 @@ th .vs-table-text {
 
 .distribucion tr:hover {
     .letra-fila {
-        background-color: #1E1E1E !important;
+        background-color: #1e1e1e !important;
     }
 }
 
@@ -477,25 +522,19 @@ th .vs-table-text {
 }
 
 .tabla-otras-propiedades tr:hover {
-
-
     td {
         background-color: rgba(var(--vs-primary), 1) !important;
     }
 }
 
-
 .tabla-otras-propiedades tr td {
     height: auto !important;
     padding: 5px;
-
 }
-
 
 .vs-tooltip {
     z-index: 55002 !important;
 }
-
 
 /*cancelar ventas del cementerio**/
 .cancelar_ventas_cementerio .vs-popup {

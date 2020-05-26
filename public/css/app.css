@@ -7,6 +7,126 @@
   Author URL: hhttp://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
+/* -------------------------------------------------------------------------- */
+
+/*                                   button                                   */
+
+/* -------------------------------------------------------------------------- */
+
+.texto-btn {
+  top: -5px !important;
+  position: relative !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+[dir=ltr] .texto-btn {
+  margin-left: 5px !important;
+}
+
+[dir=rtl] .texto-btn {
+  margin-right: 5px !important;
+}
+
+.img-btn {
+  display: inline !important;
+  width: 22px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                                   estilos                                  */
+
+/* -------------------------------------------------------------------------- */
+
+[dir] .bg-gray-headers {
+  background-color: #cecece !important;
+}
+
+.dark-text {
+  color: #303030 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                          fin de estilos de botones                         */
+
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+/*                                 title forms                                */
+
+/* -------------------------------------------------------------------------- */
+
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  /* Remove scrollbar space */
+  /* Optional: just make scrollbar invisible */
+}
+
+[dir] ::-webkit-scrollbar {
+  background: transparent;
+}
+
+/* Optional: show position indicator in red */
+
+[dir] ::-webkit-scrollbar-thumb {
+  background: #ff0000;
+}
+
+[dir] .vs-popup--header {
+  background-color: #fff !important;
+  border-radius: 0;
+  padding: 5px 0 5px 0 !important;
+}
+
+.vs-popup--title h3 {
+  width: 50% !important;
+  color: #303030 !important;
+  text-transform: none !important;
+  font-size: 18px !important;
+  font-weight: 550 !important;
+}
+
+[dir] .vs-popup--title h3 {
+  text-align: center !important;
+  border-bottom: 2px solid #cecece !important;
+  padding-bottom: 10px !important;
+}
+
+[dir=ltr] .vs-popup--title h3 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+[dir=rtl] .vs-popup--title h3 {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+.vs-popup--title h3:before {
+  content: url(/images/worker.svg?392f8a26204ab22b44fd47509404a311);
+  display: block;
+  width: 65px;
+  height: 65px;
+}
+
+[dir] .vs-popup--title h3:before {
+  margin: 0 auto 0 auto !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                                 title forms                                */
+
+/* -------------------------------------------------------------------------- */
+
 .texto-importante {
   color: rgba(var(--vs-danger), 1) !important;
   font-weight: 600;
@@ -14,19 +134,6 @@
 
 .opacity-75 {
   opacity: 1 !important;
-}
-
-[dir] .vs-popup--header {
-  padding: 10px 0 10px 0;
-  background-color: rgba(var(--vs-primary), 1) !important;
-  border-radius: 0;
-}
-
-.vs-popup--title h3 {
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 15px !important;
-  font-weight: 600;
 }
 
 [dir] .con-vs-popup .vs-popup {
@@ -61,41 +168,29 @@
   border-radius: 0 !important;
 }
 
-.usuarios .vs-popup {
-  width: 100% !important;
-}
-
 /**medias queries para el popup de captura de datos */
 
 @media (min-width: 576px) {
-  .usuarios .vs-popup,
-  .aet-popup .vs-popup {
+  .forms-popups .vs-popup {
     width: 90% !important;
-    min-height: 90vh !important;
   }
 }
 
 @media (min-width: 768px) {
-  .usuarios .vs-popup,
-  .aet-popup .vs-popup {
+  .forms-popups .vs-popup {
     width: 90% !important;
-    min-height: 90vh !important;
   }
 }
 
 @media (min-width: 992px) {
-  .usuarios .vs-popup,
-  .aet-popup .vs-popup {
+  .forms-popups .vs-popup {
     width: 90% !important;
-    min-height: 90vh !important;
   }
 }
 
 @media (min-width: 1200px) {
-  .usuarios .vs-popup,
-  .aet-popup .vs-popup {
+  .forms-popups .vs-popup {
     width: 90% !important;
-    min-height: 90vh !important;
   }
 }
 
@@ -170,11 +265,11 @@
 /*tarifas card*/
 
 [dir] .card-tarifas .vs-card--header {
-  background-color: rgba(var(--vs-secondary_theme), 1) !important;
+  background-color: rgba(var(--vs-primary), 1) !important;
 }
 
 .card-tarifas .vs-card--header h3 {
-  color: rgba(var(--vs-textos_theme), 1) !important;
+  color: #fff !important;
   font-size: 14px;
   text-transform: capitalize;
   font-weight: 600 !important;
@@ -345,11 +440,25 @@
 }
 
 .vs-popup--close {
+  color: #303030 !important;
+  font-size: 32px;
+  font-weight: bold !important;
   color: black;
 }
 
 [dir] .vs-popup--close {
+  background-color: #fff !important;
   border-radius: 0px !important;
+  padding: 4px !important;
+  margin-top: -45px !important;
+}
+
+[dir=ltr] .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .vs-popup--close {
+  margin-left: 12px !important;
 }
 
 /*FIN pdfs de los reportes de los modulos*/
@@ -494,11 +603,11 @@ th .vs-table-text {
 }
 
 [dir] .bg-info {
-  background-color: '#0061ff';
+  background-color: "#0061ff";
 }
 
 [dir] .bg-espacio-muerto {
-  background-color: #C1C1C1 !important;
+  background-color: #c1c1c1 !important;
 }
 
 .bg-espacio-muerto span {
@@ -510,7 +619,7 @@ th .vs-table-text {
 }
 
 [dir] .distribucion tr:hover .letra-fila {
-  background-color: #1E1E1E !important;
+  background-color: #1e1e1e !important;
 }
 
 .tabla-otras-propiedades {

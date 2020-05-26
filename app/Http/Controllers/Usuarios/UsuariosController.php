@@ -4,17 +4,18 @@
 namespace App\Http\Controllers\Usuarios;
 
 
-use App\User;
-use GuzzleHttp\Client;
 use PDF;
+use App\User;
+use App\Puestos;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\EmpresaController;
 use GuzzleHttp\Exception\RequestException;
+use App\Http\Controllers\EmpresaController;
 use GuzzleHttp\Exception\BadResponseException;
 
 class UsuariosController extends ApiController
@@ -620,14 +621,10 @@ class UsuariosController extends ApiController
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function get_puestos()
     {
-        //
+        return Puestos::get();
     }
 
 

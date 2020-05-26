@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="usuarios"
+      class="form-85"
       close="cancelar"
       title="Modificar Usuario"
       :active.sync="showVentana"
