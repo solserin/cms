@@ -42,11 +42,11 @@ html {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: #ff0000;
+    background: none !important;
 }
 
 .vs-popup--content {
-    max-height: 80vh !important;
+    max-height: 77vh !important;
 }
 
 .vs-popup--header {
@@ -55,25 +55,32 @@ html {
     padding: 5px 0 5px 0 !important;
 }
 
-.vs-popup--title h3 {
+.big-forms .vs-popup--title h3 {
     margin-left: auto !important;
     margin-right: auto !important;
     text-align: center !important;
     width: 50% !important;
     border-bottom: 2px solid #cecece !important;
     padding-bottom: 10px !important;
-    color: #303030 !important;
+    color: rgba(var(--vs-primary), 1) !important;
     text-transform: none !important;
     font-size: 18px !important;
     font-weight: 550 !important;
 }
 
 .vs-popup--title h3:before {
-    content: url("../../../../../resources/assets/images/worker.svg");
     display: block;
     width: 65px;
     height: 65px;
-    margin: 0 auto 0 auto !important;
+    margin: 0 auto 10px auto !important;
+}
+
+.usuarios .vs-popup--title h3:before {
+    content: url("../../../../../resources/assets/images/worker.svg");
+}
+
+.clientes .vs-popup--title h3:before {
+    content: url("../../../../../resources/assets/images/client.svg");
 }
 
 /* -------------------------------------------------------------------------- */
@@ -364,15 +371,18 @@ html {
 }
 
 .vs-popup--close {
-    background-color: #fff !important;
+    background-color: #cecece !important;
     color: #303030 !important;
     font-size: 32px;
     font-weight: bold !important;
     border-radius: 0px !important;
     padding: 4px !important;
-    margin-top: -45px !important;
-    margin-right: 12px !important;
     color: rgba(0, 0, 0, 1);
+}
+
+.big-forms .vs-popup--close {
+    margin-top: -60px !important;
+    margin-right: 12px !important;
 }
 
 /*FIN pdfs de los reportes de los modulos*/

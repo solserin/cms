@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups"
+      class="forms-popups usuarios big-forms"
       close="cancel"
       :title="title"
       :active.sync="showVentana"
@@ -236,7 +236,8 @@
       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 mt-8 pb-20 px-2 mr-auto ml-auto">
         <vs-button class="w-full" @click="acceptAlert()" color="primary">
           <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
-          <span class="texto-btn">Guardar Datos</span>
+          <span class="texto-btn" v-if="this.getTipoformulario=='agregar'">Guardar Datos</span>
+          <span class="texto-btn" v-else>Modificar Datos</span>
         </vs-button>
       </div>
     </vs-popup>
@@ -253,6 +254,13 @@
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
     ></Confirmar>
+    <ConfirmarAceptar
+      :show="openConfirmarAceptar"
+      :callback-on-success="callback"
+      @closeVerificar="openConfirmarAceptar=false"
+      :accion="'He revisado la información y quiero registrar a este usuario'"
+      :confirmarButton="'Guardar Usuario'"
+    ></ConfirmarAceptar>
   </div>
 </template>
 <script>
@@ -263,11 +271,13 @@ import vSelect from "vue-select";
 import Confirmar from "@pages/Confirmar";
 /**VARIABLES GLOBALES */
 import { generosOptions } from "../../../../VariablesGlobales";
+import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 export default {
   components: {
     "v-select": vSelect,
     Password,
-    Confirmar
+    Confirmar,
+    ConfirmarAceptar
   },
   props: {
     show: {
@@ -297,7 +307,7 @@ export default {
         /**get puestos de trabajo */
         this.get_puestos();
         if (this.getTipoformulario == "agregar") {
-          this.title = "Registrar nuevo usuario";
+          this.title = "Registrar Nuevo Usuario";
         } else {
           this.title = "Modificar Usuario";
 
@@ -309,6 +319,7 @@ export default {
   },
   data() {
     return {
+      openConfirmarAceptar: false,
       title: "",
       botonConfirmarSinPassword: "",
       openConfirmarSinPassword: false,
@@ -428,12 +439,13 @@ export default {
 
             if (this.getTipoformulario == "agregar") {
               /**se manda llamar la funcion de agregar usuario */
+              this.openConfirmarAceptar = true;
               this.callback = this.saveUsuario;
             } else {
               this.callback = this.updateUsuario;
               /**se manda agregar  la funcion de modificar */
+              this.operConfirmar = true;
             }
-            this.operConfirmar = true;
           }
         })
         .catch(() => {});

@@ -38,9 +38,10 @@ class ClientesController extends ApiController
                 'email',
                 'rfc as rfc_raw',
                 'status',
+                'vivo_b as vivo_b_raw',
                 DB::Raw('IFNULL( clientes.rfc , "N/A" ) as rfc'),
                 DB::Raw('IFNULL( clientes.celular , "No registrado" ) as celular'),
-
+                DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
                 'nacionalidades_id',
                 'generos_id'
             )->with('nacionalidad')->with('genero')->where(function ($q) use ($status) {
@@ -106,7 +107,13 @@ class ClientesController extends ApiController
     {
         $cliente_id = $request->cliente_id;
         $resultado =
-            Clientes::where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')
+            Clientes::select(
+                '*',
+                'vivo_b as vivo_b_raw',
+                DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
+                'nacionalidades_id',
+                'generos_id'
+            )->where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')
             ->first();
         //se retorna el resultado
         return $resultado;
@@ -185,6 +192,7 @@ class ClientesController extends ApiController
 
                 'fecha_registro' => now(),
                 'registro_id' => (int) $request->user()->id,
+                'vivo_b' => $request->status_cliente,
             ]
         );
     }
@@ -266,6 +274,7 @@ class ClientesController extends ApiController
 
                 'fecha_modificacion' => now(),
                 'modifico_id' => (int) $request->user()->id,
+                'vivo_b' => $request->status_cliente,
             ]
         );
 

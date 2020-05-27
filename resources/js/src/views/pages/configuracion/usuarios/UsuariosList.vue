@@ -167,12 +167,7 @@
       @closeVentana="closeVentana"
       @get_data="get_data(actual)"
     ></formularioUsuarios>
-    <UpdateUsuario
-      :show="verModificar"
-      @closeModificar="closeModificar"
-      :datos="datosModifcar"
-      @get_data="get_data(actual)"
-    ></UpdateUsuario>
+
     <Password
       :show="openStatus"
       :callback-on-success="callback"
@@ -188,7 +183,6 @@ import pdf from "../../pdf_viewer";
 /**IMPORTAR EL COMPONENTE DE ROLES */
 import rolesList from "../usuarios/RolesList";
 import formularioUsuarios from "../usuarios/formularioUsuarios";
-import UpdateUsuario from "../usuarios/UpdateUsuario.vue";
 
 //componente de password
 import Password from "../../confirmar_password";
@@ -211,7 +205,6 @@ export default {
     rolesList,
     Password,
     formularioUsuarios,
-    UpdateUsuario,
     pdf
   },
   watch: {

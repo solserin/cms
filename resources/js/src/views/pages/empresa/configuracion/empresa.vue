@@ -4,7 +4,7 @@
       <vs-tab label="FUNERARIA" icon="supervisor_account" class="pb-5"></vs-tab>
       <vs-tab label="REGISTRO PÚBLICO" icon="gavel"></vs-tab>
       <vs-tab label="CEMENTERIO" icon="location_on"></vs-tab>
-      <vs-tab label="FACTURACIÓN" icon="attach_file"></vs-tab>
+      <vs-tab label="FIRMA ELECTRÓNICA" icon="attach_file"></vs-tab>
       <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">

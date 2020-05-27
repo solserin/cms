@@ -5,14 +5,16 @@
     </vs-tabs>
     <div class="tab-content mt-1" v-show="activeTab==0">
       <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 ml-auto md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
           <vs-button
-            class="ml-auto"
-            icon-pack="feather"
-            icon="icon-user-plus"
             color="success"
+            size="small"
+            class="w-full ml-auto"
             @click="formulario('agregar')"
-          >Registrar Cliente</vs-button>
+          >
+            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
+            <span class="texto-btn">Registrar Cliente</span>
+          </vs-button>
         </div>
       </div>
       <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
