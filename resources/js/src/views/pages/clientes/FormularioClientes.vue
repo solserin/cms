@@ -428,13 +428,13 @@
       @closeVerificar="closeChecker"
       :accion="accionNombre"
     ></Password>
-    <Confirmar
+    <ConfirmarDanger
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword=false"
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
-    ></Confirmar>
+    ></ConfirmarDanger>
 
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
@@ -446,7 +446,7 @@
   </div>
 </template>
 <script>
-import Confirmar from "@pages/Confirmar";
+import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
@@ -463,7 +463,7 @@ export default {
     "v-select": vSelect,
     Password,
     Datepicker,
-    Confirmar,
+    ConfirmarDanger,
     ConfirmarAceptar
   },
   props: {

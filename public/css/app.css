@@ -9,6 +9,54 @@
 
 /* -------------------------------------------------------------------------- */
 
+/*                                roles estilos                               */
+
+/* -------------------------------------------------------------------------- */
+
+.roles .vs-collapse-item--header {
+  color: #fff !important;
+  font-size: 1em !important;
+  font-weight: 500 !important;
+}
+
+[dir] .roles .vs-collapse-item--header {
+  background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+.roles .vs-collapse-item--header div {
+  text-transform: uppercase !important;
+}
+
+.roles .modulos {
+  font-weight: normal;
+  font-size: 1.2em;
+  /*background-color: #cecece !important;*/
+  color: #303030 !important;
+}
+
+[dir] .roles .modulos {
+  background-color: #f8fafb !important;
+  border: 1px solid #cecece !important;
+}
+
+.roles .secciones {
+  color: #303030 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                               tablas de datos                              */
+
+/* -------------------------------------------------------------------------- */
+
+.header-table h3 {
+  text-transform: capitalize !important;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+/* -------------------------------------------------------------------------- */
+
 /*                                   button                                   */
 
 /* -------------------------------------------------------------------------- */
@@ -120,12 +168,16 @@ html {
   margin: 0 auto 10px auto !important;
 }
 
+.roles .vs-popup--title h3:before {
+  content: url(/images/roles.svg?b2727787dabda7f9bf1ca4b797b0491a);
+}
+
 .usuarios .vs-popup--title h3:before {
-  content: url(/images/worker.svg?392f8a26204ab22b44fd47509404a311);
+  content: url(/images/users.svg?4c5d341aaaabc90224ef51ac51cb2ae0);
 }
 
 .clientes .vs-popup--title h3:before {
-  content: url(/images/client.svg?e3b7d0109222086d1e5fdf311fe79c8a);
+  content: url(/images/client.svg?d4db091664107976d6bbe0f40d320f4d);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -175,11 +227,21 @@ html {
   border-radius: 0 !important;
 }
 
+/*default size for small devices*/
+
+.forms-popups-75 .vs-popup {
+  width: 100% !important;
+}
+
 /**medias queries para el popup de captura de datos */
 
 @media (min-width: 576px) {
   .forms-popups .vs-popup {
     width: 90% !important;
+  }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
   }
 }
 
@@ -187,17 +249,29 @@ html {
   .forms-popups .vs-popup {
     width: 90% !important;
   }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
+  }
 }
 
 @media (min-width: 992px) {
   .forms-popups .vs-popup {
     width: 90% !important;
   }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
+  }
 }
 
 @media (min-width: 1200px) {
   .forms-popups .vs-popup {
     width: 90% !important;
+  }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
   }
 }
 
@@ -450,7 +524,6 @@ html {
   color: #303030 !important;
   font-size: 32px;
   font-weight: bold !important;
-  color: black;
 }
 
 [dir] .vs-popup--close {

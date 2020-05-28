@@ -209,13 +209,13 @@
         </div>
       </div>
       <!--componente de confirmar sin contraseña-->
-      <Confirmar
+      <ConfirmarDanger
         :show="operConfirmar"
         :callback-on-success="callback"
         @closeVerificar="operConfirmar=false"
         :accion="'¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'"
         :confirmarButton="'Eliminar'"
-      ></Confirmar>
+      ></ConfirmarDanger>
 
       <Password
         :show="openPassword"
@@ -228,7 +228,7 @@
   </div>
 </template>
 <script>
-import Confirmar from "@pages/Confirmar";
+import ConfirmarDanger from "@pages/ConfirmarDanger";
 import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
 export default {
@@ -255,7 +255,7 @@ export default {
     }
   },
   components: {
-    Confirmar,
+    ConfirmarDanger,
     Password
   },
   data() {

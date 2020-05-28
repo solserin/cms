@@ -1,5 +1,6 @@
 /**SELECT OPTIONS */
-export const mostrarOptions = [{
+export const mostrarOptions = [
+    {
         label: "15",
         value: "15"
     },
@@ -23,12 +24,14 @@ export const mostrarOptions = [{
         label: "100",
         value: "100"
     }
-]
+];
 
-export const estadosOptions = [{
+export const estadosOptions = [
+    {
         label: "Todos",
         value: ""
-    }, {
+    },
+    {
         label: "Activo",
         value: "1"
     },
@@ -36,13 +39,10 @@ export const estadosOptions = [{
         label: "Sin Accceso",
         value: "0"
     }
-]
+];
 
-
-export const generosOptions = [{
-        label: "Seleccione 1",
-        value: ""
-    }, {
+export const generosOptions = [
+    {
         label: "Hombre",
         value: "1"
     },
@@ -50,35 +50,34 @@ export const generosOptions = [{
         label: "Mujer",
         value: "2"
     }
-]
-
+];
 
 //variables para poder crear las filas de las terrazas por nombre de letra
 export const alfabeto = [
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'Ñ',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'X',
-    'Y',
-    'Z'
-]
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "Ñ",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "X",
+    "Y",
+    "Z"
+];

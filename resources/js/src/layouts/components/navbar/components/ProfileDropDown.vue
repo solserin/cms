@@ -78,18 +78,18 @@
         </ul>
       </vs-dropdown-menu>
     </vs-dropdown>
-    <Confirmar
+    <ConfirmarDanger
       :show="openConfirmarSinPassword"
       :callback-on-success="logout"
       @closeVerificar="openConfirmarSinPassword=false"
       :accion="'Esta operación lo sacará de sistema.'"
       :confirmarButton="'Confirmar y salir'"
-    ></Confirmar>
+    ></ConfirmarDanger>
   </div>
 </template>
 
 <script>
-import Confirmar from "../../../../views/pages/Confirmar";
+import ConfirmarDanger from "@pages/ConfirmarDanger";
 export default {
   data() {
     return {
@@ -98,7 +98,7 @@ export default {
     };
   },
   components: {
-    Confirmar
+    ConfirmarDanger
   },
   methods: {
     logout() {

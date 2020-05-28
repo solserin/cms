@@ -1181,13 +1181,13 @@
       @closeVerificar="closeChecker"
       :accion="accionNombre"
     ></Password>
-    <Confirmar
+    <ConfirmarDanger
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword=false"
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
-    ></Confirmar>
+    ></ConfirmarDanger>
 
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
@@ -1213,7 +1213,7 @@
 <script>
 import Disponibilidad from "../Disponibilidad";
 import Mapa from "../Mapa";
-import Confirmar from "@pages/Confirmar";
+import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
@@ -1233,7 +1233,7 @@ export default {
     Password,
     Datepicker,
     Mapa,
-    Confirmar,
+    ConfirmarDanger,
     ConfirmarAceptar,
     ClientesBuscador,
     Disponibilidad

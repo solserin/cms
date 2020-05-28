@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ApiController;
+use App\Modulos;
+use App\Secciones;
 
 class RolesController extends ApiController
 {
@@ -26,6 +28,13 @@ class RolesController extends ApiController
                 ->where('roles.id', '>', 1)
                 ->get()
         );
+    }
+
+
+
+    public function get_modulos_permisos()
+    {
+        return $modulos = Secciones::with('modulos.permisos')->get();
     }
 
     /**get_modulos */
@@ -53,7 +62,7 @@ class RolesController extends ApiController
 
 
     /**AGREGAR ROLRES */
-    public function add_rol(Request $request)
+    public function add_roles(Request $request)
     {
         //verifico que si el rol esta dado de baja solo se habilite nuevamente
         /*$maxima_cantidad = Roles::where('id', $request->venta_id)->first();
@@ -63,15 +72,34 @@ class RolesController extends ApiController
         request()->validate(
             [
                 'rol' => 'required|unique:roles',
+                'permisos' => 'required',
             ],
             [
                 'required' => 'Este dato es obligatorio.',
                 'unique' => 'Este rol ya existe'
             ]
         );
-        return DB::table('roles')->insertGetId(
-            ['rol' => $request->rol]
-        );
+
+        try {
+            DB::beginTransaction();
+            $rol_id = DB::table('roles')->insertGetId(
+                ['rol' => $request->rol]
+            );
+
+            foreach ($request->permisos as $permiso) {
+                DB::table('roles_permisos')->insert(
+                    [
+                        'permisos_id' => ($permiso),
+                        'roles_id' => $rol_id
+                    ]
+                );
+            }
+            DB::commit();
+            return $rol_id;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 0;
+        }
     }
 
     /**OBTENGO LOS PERMISOS QUE TIENE CADA ROL SOBRE LOS MODULOS DEL SISTEMA */

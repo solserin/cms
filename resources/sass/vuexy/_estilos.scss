@@ -1,4 +1,39 @@
 /* -------------------------------------------------------------------------- */
+/*                                roles estilos                               */
+/* -------------------------------------------------------------------------- */
+.roles .vs-collapse-item--header {
+    background-color: rgba(var(--vs-primary), 1) !important;
+    color: #fff !important;
+    font-size: 1em !important;
+    font-weight: 500 !important;
+}
+.roles .vs-collapse-item--header div {
+    text-transform: uppercase !important;
+}
+
+.roles .modulos {
+    background-color: #f8fafb !important;
+    border: 1px solid #cecece !important;
+    font-weight: normal;
+    font-size: 1.2em;
+    /*background-color: #cecece !important;*/
+    color: #303030 !important;
+}
+
+.roles .secciones {
+    color: #303030 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               tablas de datos                              */
+/* -------------------------------------------------------------------------- */
+.header-table h3 {
+    text-transform: capitalize !important;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+/* -------------------------------------------------------------------------- */
 /*                                   button                                   */
 /* -------------------------------------------------------------------------- */
 .texto-btn {
@@ -75,8 +110,12 @@ html {
     margin: 0 auto 10px auto !important;
 }
 
+.roles .vs-popup--title h3:before {
+    content: url("../../../../../resources/assets/images/roles.svg");
+}
+
 .usuarios .vs-popup--title h3:before {
-    content: url("../../../../../resources/assets/images/worker.svg");
+    content: url("../../../../../resources/assets/images/users.svg");
 }
 
 .clientes .vs-popup--title h3:before {
@@ -125,12 +164,25 @@ html {
     border-radius: 0 !important;
 }
 
+/*default size for small devices*/
+.forms-popups-75 {
+    .vs-popup {
+        width: 100% !important;
+    }
+}
+
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
 @media (min-width: 576px) {
     .forms-popups {
         .vs-popup {
             width: 90% !important;
+        }
+    }
+
+    .forms-popups-75 {
+        .vs-popup {
+            width: 75% !important;
         }
     }
 }
@@ -142,6 +194,12 @@ html {
             width: 90% !important;
         }
     }
+
+    .forms-popups-75 {
+        .vs-popup {
+            width: 75% !important;
+        }
+    }
 }
 
 // Medium devices (tablets, less than 992px)
@@ -151,6 +209,12 @@ html {
             width: 90% !important;
         }
     }
+
+    .forms-popups-75 {
+        .vs-popup {
+            width: 75% !important;
+        }
+    }
 }
 
 // Large devices (desktops, less than 1200px)
@@ -158,6 +222,12 @@ html {
     .forms-popups {
         .vs-popup {
             width: 90% !important;
+        }
+    }
+
+    .forms-popups-75 {
+        .vs-popup {
+            width: 75% !important;
         }
     }
 }
@@ -377,7 +447,6 @@ html {
     font-weight: bold !important;
     border-radius: 0px !important;
     padding: 4px !important;
-    color: rgba(0, 0, 0, 1);
 }
 
 .big-forms .vs-popup--close {

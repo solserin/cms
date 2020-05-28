@@ -247,13 +247,13 @@
       @closeVerificar="closeChecker"
       :accion="accionNombre"
     ></Password>
-    <Confirmar
-      :show="openConfirmarSinPassword"
+    <ConfirmarDanger
+      :show="openConfirmarDanger"
       :callback-on-success="callBackConfirmar"
-      @closeVerificar="openConfirmarSinPassword=false"
-      :accion="accionConfirmarSinPassword"
-      :confirmarButton="botonConfirmarSinPassword"
-    ></Confirmar>
+      @closeVerificar="openConfirmarDanger=false"
+      :accion="accionConfirmarDanger"
+      :confirmarButton="botonConfirmarDanger"
+    ></ConfirmarDanger>
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
       :callback-on-success="callback"
@@ -265,18 +265,18 @@
 </template>
 <script>
 //componente de password
-import Password from "../../confirmar_password";
+import Password from "@pages/confirmar_password";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
-import Confirmar from "@pages/Confirmar";
+import ConfirmarDanger from "@pages/ConfirmarDanger";
 /**VARIABLES GLOBALES */
-import { generosOptions } from "../../../../VariablesGlobales";
+import { generosOptions } from "@/VariablesGlobales";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 export default {
   components: {
     "v-select": vSelect,
     Password,
-    Confirmar,
+    ConfirmarDanger,
     ConfirmarAceptar
   },
   props: {
@@ -321,10 +321,10 @@ export default {
     return {
       openConfirmarAceptar: false,
       title: "",
-      botonConfirmarSinPassword: "",
-      openConfirmarSinPassword: false,
+      botonConfirmarDanger: "",
+      openConfirmarDanger: false,
       callBackConfirmar: Function,
-      accionConfirmarSinPassword: "",
+      accionConfirmarDanger: "",
       activeTab: 0,
       generosOptions: generosOptions,
       operConfirmar: false,
@@ -332,10 +332,7 @@ export default {
       accionNombre: "agregar nuevo usuario",
       roles: { label: "Seleccione 1", value: "" },
       rolesOptions: [],
-      genero: {
-        label: "Seleccione 1",
-        value: ""
-      },
+      genero: generosOptions[0],
       puestos: [],
       form: {
         user_id: "",
@@ -451,10 +448,10 @@ export default {
         .catch(() => {});
     },
     cancel() {
-      this.botonConfirmarSinPassword = "Salir y limpiar";
-      this.accionConfirmarSinPassword =
+      this.botonConfirmarDanger = "Salir y limpiar";
+      this.accionConfirmarDanger =
         "Esta acción limpiará los datos que capturó en el formulario.";
-      this.openConfirmarSinPassword = true;
+      this.openConfirmarDanger = true;
       this.callBackConfirmar = this.cerrarVentana;
     },
     cerrarVentana() {
@@ -475,6 +472,7 @@ export default {
       this.$emit("closeVentana");
     },
     get_roles() {
+      this.$vs.loading();
       usuarios
         .getRoles()
         .then(res => {
@@ -485,8 +483,11 @@ export default {
             /**AGREGO LOS DEMAS ROLES */
             this.rolesOptions.push(element);
           });
+          this.$vs.loading.close();
         })
-        .catch(err => {});
+        .catch(err => {
+          this.$vs.loading.close();
+        });
     },
     get_puestos() {
       usuarios
@@ -508,7 +509,6 @@ export default {
         .add_usuario(this.form)
         .then(res => {
           this.$vs.loading.close();
-          this.$emit("get_data");
           this.$vs.notify({
             title: "Agregar Usuarios",
             text: "Se ha creado el nuevo usuario exitosamente.",
@@ -517,6 +517,7 @@ export default {
             color: "success",
             time: 4000
           });
+          this.$emit("get_data");
           this.cerrarVentana();
         })
         .catch(err => {

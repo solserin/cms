@@ -9,7 +9,7 @@
           @click="verFormulario('agregar')"
         >
           <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Registrar Usuario</span>
+          <span class="texto-btn">Crear Nuevo Rol</span>
         </vs-button>
       </div>
     </div>
@@ -159,13 +159,13 @@
       <vs-pagination v-if="ver" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
     </div>
 
-    <formularioUsuarios
+    <formularioRoles
       :id_usuario="id_usuario_modificar"
       :tipo="tipoFormulario"
       :show="verFormularioUsuarios"
       @closeVentana="closeVentana"
       @get_data="get_data(actual)"
-    ></formularioUsuarios>
+    ></formularioRoles>
 
     <Password
       :show="openStatus"
@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import formularioUsuarios from "@pages/configuracion/usuarios/formularioUsuarios";
+import formularioRoles from "@pages/configuracion/roles/formularioRoles";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -195,7 +195,7 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    formularioUsuarios
+    formularioRoles
   },
   watch: {
     actual: function(newValue, oldValue) {
