@@ -17,17 +17,61 @@ class RolesController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function get_roles()
     {
         return $this->showAll(
             Roles::select(
                 'id as value',
                 'rol as label'
             )
-                ->where('status', '=', 1)
                 ->where('roles.id', '>', 1)
                 ->get()
         );
+    }
+
+
+    public function index(Request $request)
+    {
+        $status = $request->status;
+        $rol_id = $request->rol_id;
+        $nombre = $request->nombre;
+        return $this->showAllPaginated(
+            Roles::select(
+                'id as id_rol',
+                'rol',
+                'descripcion',
+                'roles.status as status_rol'
+            )
+                ->where('roles.id', ">", 1)
+                ->where(function ($q) use ($status) {
+                    if ($status != '') {
+                        $q->where('roles.status', $status);
+                    }
+                })
+                ->where(function ($q) use ($nombre) {
+                    if ($nombre != '') {
+                        $q->where('roles.rol', 'like', '%' . $nombre . '%');
+                    }
+                })
+                ->get()
+        );
+    }
+
+
+
+    public function get_rol_id(Request $request)
+    {
+        return
+            $this->showOne(Roles::select(
+                'roles.id',
+                'roles.id as id_rol',
+                'rol',
+                'roles.descripcion',
+                'roles.status as status_rol'
+            )
+                ->with('permisos')
+                ->where('roles.id', '=', $request->rol_id)
+                ->get()->first());
     }
 
 
@@ -136,21 +180,19 @@ class RolesController extends ApiController
     /**OBTENGO LOS PERMISOS QUE TIENE CADA ROL SOBRE LOS MODULOS DEL SISTEMA */
     public function update_rol(Request $request)
     {
-        $rol_id = $request['id'];
-        $rol = $request['rol_modificar'];
-        $permisos = $request->roles_set;
+        $rol_id = $request['rol_id'];
+        $rol = $request['rol'];
 
         request()->validate(
             [
-                'id' => 'required',
                 'rol_modificar' => [
                     Rule::unique('roles', 'rol')->ignore($rol_id),
                 ],
-                'roles_set' => 'required'
+                'permisos' => 'required'
             ],
             [
-                'id.required' => 'Debe seleccionar un rol',
-                'roles_set.required' => 'Debe seleccionar 1 permiso al menos.',
+                'rol_modificar.required' => 'Debe seleccionar un rol',
+                'permisos.required' => 'Debe seleccionar 1 permiso al menos.',
                 'unique' => 'Este rol ya existe'
             ]
         );
@@ -158,27 +200,22 @@ class RolesController extends ApiController
         try {
             DB::beginTransaction();
             //al pasar la validacion borro todos los permisos del rol
-            DB::table('modulos_roles_permisos')->where('roles_id', '=', $rol_id)->delete();
+            DB::table('roles_permisos')->where('roles_id', '=', $rol_id)->delete();
             if (trim($rol)) {
                 //si el rol ha cambiado
                 $update = DB::table('roles')->where('id',  $rol_id)->update(['rol' => $rol]);
             }
-            $id_modulo = 0;
-            $id_permiso = 0;
-            $valores = "";
-            foreach ($permisos as $item) {
-                $valores = explode("_", $item);
-                $id_modulo = $valores[0];
-                $id_permiso = $valores[1];
-                //sacando el valor del modulo
-                DB::table('modulos_roles_permisos')->insert(
+
+
+            foreach ($request->permisos as $permiso) {
+                DB::table('roles_permisos')->insert(
                     [
-                        'modulos_id' => ($id_modulo),
-                        'permisos_id' => ($id_permiso),
+                        'permisos_id' => ($permiso),
                         'roles_id' => $rol_id
                     ]
                 );
             }
+
             DB::commit();
             return $rol_id;
         } catch (\Throwable $th) {
@@ -192,14 +229,14 @@ class RolesController extends ApiController
     /**BAJA LOGICA DEL ROL */
     public function delete_rol(Request $request)
     {
-        $rol_id = $request['id'];
+        $rol_id = $request['rol_id'];
 
         request()->validate(
             [
-                'id' => 'required'
+                'rol_id' => 'required'
             ],
             [
-                'id.required' => 'Debe seleccionar un rol',
+                'required' => 'Debe seleccionar un rol',
             ]
         );
 
@@ -212,7 +249,6 @@ class RolesController extends ApiController
             return $this->errorResponse('Esto rol no existe en la BD.', 409);
         }
 
-
         //verifico si el rol puede ser dado de baja por no tener usuarios asignados
         $usuarios = DB::table('usuarios')->select('id')
             ->where('roles_id', '=', $rol_id)
@@ -220,8 +256,21 @@ class RolesController extends ApiController
         if ($usuarios > 0) {
             return $this->errorResponse('Error al eliminar, este rol cuenta con usuarios relacionados.', 409);
         } else {
-            $deleted = DB::table('roles')->where('id',  $rol_id)->delete();
-            return $this->successResponse('Rol eliminado exitosamente.', 200);
+
+            /**el rol no tiene usuarios y se puede eliminar */
+            try {
+                DB::beginTransaction();
+                //al pasar la validacion borro todos los permisos del rol
+                DB::table('roles_permisos')->where('roles_id', '=', $rol_id)->delete();
+
+                DB::table('roles')->where('id',  $rol_id)->delete();
+
+                DB::commit();
+                return $rol_id;
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                return 0;
+            }
         }
     }
 

@@ -42,7 +42,7 @@ export default {
         });
     },
     getRoles() {
-        let call = "/get_roles";
+        let call = "/get_roles_lista";
         return new Promise((resolve, reject) => {
             axios
                 .get(call)
@@ -72,19 +72,6 @@ export default {
         return new Promise((resolve, reject) => {
             axios
                 .post("/update_rol", param)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
-    },
-
-    delete_rol(param) {
-        return new Promise((resolve, reject) => {
-            axios
-                .post("/delete_rol", param)
                 .then(response => {
                     resolve(response);
                 })

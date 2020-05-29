@@ -43,27 +43,12 @@
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 mb-4 px-2">
-            <label class="text-sm opacity-75">Roles</label>
-            <v-select
-              :options="rolesOptions"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="roles"
-              class="mb-4 md:mb-0"
-            />
-          </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
-            <div class="w-full px-2">
-              <h3 class="text-base font-semibold my-3">
-                <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Titular
-              </h3>
-            </div>
-            <label class="text-sm opacity-75">Nombre</label>
+          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-4/12 mb-4 px-2">
+            <label class="text-sm opacity-75">Nombre del rol</label>
             <vs-input
               class="w-full"
               icon="search"
-              placeholder="Filtrar por nombre"
+              placeholder="Filtrar por nombre de rol"
               v-model="nombre"
               v-on:keyup.enter="get_data(1)"
               v-on:blur="get_data(1,'blur')"
@@ -81,74 +66,52 @@
       @sort="handleSort"
       v-model="selected"
       :max-items="serverOptions.per_page.value"
-      :data="users"
+      :data="roles"
       stripe
       noDataText="0 Resultados"
     >
       <template slot="header">
-        <h3 class="pb-5 text-primary">Listado de Usuarios registrados</h3>
+        <h3 class="pb-5 text-primary">Listado de Roles registrados</h3>
       </template>
       <template slot="thead">
-        <vs-th>Clave</vs-th>
-        <vs-th>Nombre</vs-th>
-        <vs-th>Usuario</vs-th>
-        <vs-th>Género</vs-th>
-        <vs-th>Estado</vs-th>
+        <vs-th>Número de Rol</vs-th>
         <vs-th>Rol</vs-th>
+
+        <vs-th>Estado</vs-th>
+
         <vs-th>Acciones</vs-th>
       </template>
       <template slot-scope="{data}">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-          <vs-td :data="data[indextr].id_user">{{data[indextr].id_user}}</vs-td>
-          <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
-          <vs-td :data="data[indextr].email">{{data[indextr].email}}</vs-td>
-          <vs-td :data="data[indextr].genero">
-            <p v-if="data[indextr].genero==1">Hombre</p>
-            <p v-else>Mujer</p>
-          </vs-td>
+          <vs-td :data="data[indextr].id_rol">{{data[indextr].id_rol}}</vs-td>
+          <vs-td :data="data[indextr].nombre">{{data[indextr].rol}}</vs-td>
+
           <vs-td :data="data[indextr].estado">
-            <p v-if="data[indextr].estado==1">
-              <span class="flex items-center px-2 py-1 rounded">
-                <div class="h-3 w-3 rounded-full mr-2" :class="'bg-success'"></div>Activo
-              </span>
-            </p>
-            <p v-else>
-              <span class="flex items-center px-2 py-1 rounded">
-                <div class="h-3 w-3 rounded-full mr-2" :class="'bg-danger'"></div>Sin Acceso
-              </span>
-            </p>
+            <p v-if="data[indextr].status_rol==1" class="text-success font-medium">Activo</p>
+            <p v-else class="text-danger font-medium">Sin Acceso</p>
           </vs-td>
-          <vs-td :data="data[indextr].rol">{{data[indextr].rol}}</vs-td>
-          <vs-td :data="data[indextr].id_user">
-            <div class="flex flex-start">
+
+          <vs-td :data="data[indextr].id_rol">
+            <div class="flex flex-center">
               <vs-button
+                class="ml-auto"
                 title="Editar"
                 size="large"
                 icon-pack="feather"
                 icon="icon-edit"
                 color="dark"
                 type="flat"
-                @click="openModificar(data[indextr].id_user)"
+                @click="openModificar(data[indextr].id_rol)"
               ></vs-button>
               <vs-button
-                v-if="data[indextr].estado==1"
+                class="mr-auto"
                 title="Desactivar"
                 icon-pack="feather"
                 size="large"
                 icon="icon-shield-off"
                 color="danger"
                 type="flat"
-                @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
-              ></vs-button>
-              <vs-button
-                v-else
-                title="Activar"
-                icon-pack="feather"
-                size="large"
-                icon="icon-shield"
-                color="success"
-                type="flat"
-                @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
+                @click="deleteRol(data[indextr].id_rol,data[indextr].rol)"
               ></vs-button>
             </div>
           </vs-td>
@@ -160,9 +123,9 @@
     </div>
 
     <formularioRoles
-      :id_usuario="id_usuario_modificar"
+      :id_rol="id_rol_modificar"
       :tipo="tipoFormulario"
-      :show="verFormularioUsuarios"
+      :show="verFormularioRoles"
       @closeVentana="closeVentana"
       @get_data="get_data(actual)"
     ></formularioRoles>
@@ -183,12 +146,9 @@ import formularioRoles from "@pages/configuracion/roles/formularioRoles";
 import Password from "@pages/confirmar_password";
 
 import usuarios from "@services/Usuarios";
+import roles from "@services/Roles";
 /**VARIABLES GLOBALES */
-import {
-  mostrarOptions,
-  estadosOptions,
-  rolesOptions
-} from "@/VariablesGlobales";
+import { mostrarOptions, estadosOptions } from "@/VariablesGlobales";
 import vSelect from "vue-select";
 
 export default {
@@ -206,23 +166,18 @@ export default {
     },
     estado: function(newVal, previousVal) {
       this.get_data(1);
-    },
-    roles: function(newValue, oldValue) {
-      this.get_data(1);
     }
   },
   data() {
     return {
       tipoFormulario: "",
-      id_usuario_modificar: 0,
-      verPdf: false,
-      pdfLink: "",
+      id_rol_modificar: 0,
       openStatus: false,
       callback: Function,
       accionNombre: "",
       verModificar: false,
       datosModifcar: {},
-      verFormularioUsuarios: false,
+      verFormularioRoles: false,
       activeTab: 0,
       ver: true,
       total: 0,
@@ -232,10 +187,9 @@ export default {
       rolesOptions: [],
       mostrar: { label: "15", value: "15" },
       estado: { label: "Todos", value: "" },
-      roles: { label: "Todos", value: "" },
       nombre: "",
       selected: [],
-      users: [],
+      roles: [],
       /**opciones para filtrar la peticion del server */
       serverOptions: {
         page: "",
@@ -245,7 +199,7 @@ export default {
         nombre: ""
       },
       /**user id para bajas y altas */
-      user_id: ""
+      rol_id: ""
     };
   },
   methods: {
@@ -253,7 +207,6 @@ export default {
       card.removeRefreshAnimation(500);
       this.mostrar = { label: "15", value: "15" };
       this.estado = { label: "Todos", value: "" };
-      this.roles = { label: "Todos", value: "" };
       this.nombre = "";
       this.get_data(this.actual);
     },
@@ -262,25 +215,23 @@ export default {
       if (evento == "blur") {
         if (this.nombre != "") {
           //la funcion no avanza
-
           return false;
         }
       }
       let self = this;
-      if (usuarios.cancel) {
-        usuarios.cancel("Operation canceled by the user.");
+      if (roles.cancel) {
+        roles.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.ver = false;
       this.serverOptions.page = page;
       this.serverOptions.per_page = this.mostrar.value;
-      this.serverOptions.rol_id = this.roles.value;
       this.serverOptions.status = this.estado.value;
       this.serverOptions.nombre = this.nombre;
-      usuarios
-        .getUsuarios(this.serverOptions)
+      roles
+        .get_roles(this.serverOptions)
         .then(res => {
-          this.users = res.data.data;
+          this.roles = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.ver = true;
@@ -305,52 +256,37 @@ export default {
           }
         });
     },
-    get_roles() {
-      usuarios
-        .getRoles()
-        .then(res => {
-          this.rolesOptions = [];
-          //le agrego todos los roles
-          this.rolesOptions.push({ label: "Todos", value: "" });
-          res.data.data.forEach(element => {
-            /**AGREGO LOS DEMAS ROLES */
-            this.rolesOptions.push(element);
-          });
-          this.roles = { label: "Todos", value: "" };
-        })
-        .catch(err => {});
-    },
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
     closeVentana() {
-      this.verFormularioUsuarios = false;
+      this.verFormularioRoles = false;
     },
-    openModificar(id_user) {
-      this.id_usuario_modificar = id_user;
+    openModificar(id_rol) {
+      this.id_rol_modificar = id_rol;
       this.verFormulario("modificar");
     },
     //eliminar usuario logicamente
-    deleteUsuario(id_user, nombre) {
-      this.accionNombre = "deshabilitar usuario " + nombre;
-      this.user_id = id_user;
+    deleteRol(rol_id, nombre) {
+      this.accionNombre = "eliminar rol " + nombre;
+      this.rol_id = rol_id;
       this.openStatus = true;
-      this.callback = this.delete_usuario;
+      this.callback = this.delete_rol;
     },
-    delete_usuario() {
+    delete_rol() {
       this.$vs.loading();
       let datos = {
-        user_id: this.user_id
+        rol_id: this.rol_id
       };
-      usuarios
-        .delete_usuario(datos)
+      roles
+        .delete_rol(datos)
         .then(res => {
           this.$vs.loading.close();
           this.get_data(this.actual);
-          if (res.data == 1) {
+          if (res.data >= 1) {
             this.$vs.notify({
-              title: "Deshabilitar Usuario",
-              text: "Se ha deshabilitado el usuario exitosamente.",
+              title: "Eliminar Rol de Usuario",
+              text: "Se ha eliminado el rol exitosamente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
@@ -358,7 +294,7 @@ export default {
             });
           } else {
             this.$vs.notify({
-              title: "Deshabilitar Usuario",
+              title: "Eliminar Rol",
               text: "No se realizaron cambios.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -384,69 +320,21 @@ export default {
             } else if (err.response.status == 422) {
               /**error de validacion */
               this.errores = err.response.data.error;
+            } else if (err.response.status == 409) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Eliminar Rol",
+                text: err.response.data.error,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 8000
+              });
             }
           }
         });
     },
 
-    //eliminar usuario logicamente
-    habilitarUsuario(id_user, nombre) {
-      this.accionNombre = "habilitar usuario " + nombre;
-      this.user_id = id_user;
-      this.openStatus = true;
-      this.callback = this.habilitar_usuario;
-    },
-    habilitar_usuario() {
-      this.$vs.loading();
-      let datos = {
-        user_id: this.user_id
-      };
-      usuarios
-        .habilitar_usuario(datos)
-        .then(res => {
-          this.get_data(this.actual);
-          this.$vs.loading.close();
-          if (res.data == 1) {
-            this.$vs.notify({
-              title: "Habilitar Usuario",
-              text: "Se ha habilitado el usuario exitosamente.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "success",
-              time: 4000
-            });
-          } else {
-            this.$vs.notify({
-              title: "Habilitar Usuario",
-              text: "No se realizaron cambios.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "primary",
-              time: 4000
-            });
-          }
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 4000
-              });
-            } else if (err.response.status == 422) {
-              /**error de validacion */
-              this.errores = err.response.data.error;
-            }
-          }
-        });
-    },
     closeModificar() {
       this.verModificar = false;
     },
@@ -457,11 +345,10 @@ export default {
 
     verFormulario(tipo) {
       this.tipoFormulario = tipo;
-      this.verFormularioUsuarios = true;
+      this.verFormularioRoles = true;
     }
   },
   created() {
-    this.get_roles();
     this.get_data(this.actual);
   }
 };

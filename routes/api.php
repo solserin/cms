@@ -55,6 +55,11 @@ Route::middleware(['auth:api'])->group(function () {
     /**RUTAS PARA ROLES */
     Route::get('get_roles', 'Usuarios\RolesController@index');
 
+    Route::get('get_roles_lista', 'Usuarios\RolesController@get_roles');
+
+
+    Route::get('get_rol_id', 'Usuarios\RolesController@get_rol_id');
+
     Route::get('get_modulos_permisos', 'Usuarios\RolesController@get_modulos_permisos');
 
 

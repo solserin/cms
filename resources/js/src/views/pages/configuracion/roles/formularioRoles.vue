@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups roles big-forms"
+      class="forms-popups-75 roles big-forms"
       close="cancel"
       :title="title"
       :active.sync="showVentana"
@@ -61,7 +61,6 @@
                     v-model="form.modulos"
                     :vs-value="modulo.id"
                   >Seleccionar Todos</vs-checkbox>
-                  {{ form.modulos }}
                 </div>
                 <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
                   <div class="flex flex-wrap">
@@ -84,14 +83,14 @@
                 </div>
               </div>
             </div>
-            {{ form.permisos }}
           </div>
         </div>
       </div>
+
       <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 mt-8 pb-8 px-2 mr-auto ml-auto">
         <vs-button class="w-full" @click="acceptAlert()" color="primary">
           <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
-          <span class="texto-btn" v-if="this.getTipoformulario=='agregar'">Guardar Datos</span>
+          <span class="texto-btn" v-if="this.getTipoformulario=='agregar'">Crear Nuevo Rol</span>
           <span class="texto-btn" v-else>Modificar Datos</span>
         </vs-button>
       </div>
@@ -113,15 +112,14 @@
       :show="openConfirmarAceptar"
       :callback-on-success="callback"
       @closeVerificar="openConfirmarAceptar=false"
-      :accion="'He revisado la información y quiero registrar a este usuario'"
-      :confirmarButton="'Guardar Usuario'"
+      :accion="'He revisado la información y quiero registrar este rol'"
+      :confirmarButton="'Crear Rol'"
     ></ConfirmarAceptar>
   </div>
 </template>
 <script>
 //componente de password
 import Password from "@pages/confirmar_password";
-import usuarios from "@services/Usuarios";
 import roles from "@services/Roles";
 import vSelect from "vue-select";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
@@ -144,7 +142,7 @@ export default {
       type: String,
       required: true
     },
-    id_usuario: {
+    id_rol: {
       type: Number,
       required: false,
       default: 0
@@ -181,7 +179,7 @@ export default {
       generosOptions: generosOptions,
       operConfirmar: false,
       callback: Function,
-      accionNombre: "agregar nuevo usuario",
+      accionNombre: "Modificar un Rol",
       modulos: [],
       form: {
         modulos: [],
@@ -209,9 +207,9 @@ export default {
         return newValue;
       }
     },
-    get_usuario_id: {
+    get_rol_id_modificar: {
       get() {
-        return this.id_usuario;
+        return this.id_rol;
       },
       set(newValue) {
         return newValue;
@@ -219,6 +217,52 @@ export default {
     }
   },
   methods: {
+    get_rol_id(id_rol) {
+      this.$vs.loading();
+      roles
+        .get_rol_id(id_rol)
+        .then(res => {
+          this.form.rol = res.data.data.rol;
+          /**llenando los valores de permisos haciendo clicks */
+          this.$nextTick(() => {
+            let index_permiso = 0;
+            this.modulos.forEach(secciones => {
+              secciones.modulos.forEach(modulo => {
+                modulo.permisos.forEach(permiso => {
+                  res.data.data.permisos.forEach(element => {
+                    if (permiso.id == element.permisos_id) {
+                      /**se remueve el permiso del arreglo y se da el click */
+                      this.form.permisos.push(element.permisos_id);
+
+                      this.$refs["permiso"][index_permiso].$el.querySelector(
+                        "input"
+                      ).checked = true;
+
+                      var event = new Event("change");
+                      // Dispatch it.
+                      this.$refs["permiso"][index_permiso].$el
+                        .querySelector("input")
+                        .dispatchEvent(event);
+
+                      /**verificando cual aplica activar el selector de modulos completo */
+                      return false;
+                    }
+                  });
+
+                  index_permiso++;
+                });
+                /**checando el seleccionar todos de caca modulo si aplica */
+              });
+            });
+          });
+
+          this.$vs.loading.close();
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+        });
+    },
+
     es_agrupador(dato) {
       if (dato.parent_modulo_id == 0 && dato.url == "") {
         return true;
@@ -243,11 +287,11 @@ export default {
             //se confirma la cntraseña
 
             if (this.getTipoformulario == "agregar") {
-              /**se manda llamar la funcion de agregar usuario */
+              /**se manda llamar la funcion de agregar rol */
               this.openConfirmarAceptar = true;
               this.callback = this.saveRol;
             } else {
-              this.callback = this.updateUsuario;
+              this.callback = this.update_rol;
               /**se manda agregar  la funcion de modificar */
               this.operConfirmar = true;
             }
@@ -267,6 +311,29 @@ export default {
       this.form.rol = "";
       this.form.modulos = [];
       this.form.permisos = [];
+      this.$nextTick(() => {
+        let index_permiso = 0;
+        let index_modulo = 0;
+        this.modulos.forEach(secciones => {
+          secciones.modulos.forEach(modulo => {
+            //apagados todos los select all de cada modulo
+            if (modulo.url != "") {
+              this.$refs["permisos_modulo"][0].$el.querySelector(
+                "input"
+              ).checked = false;
+            }
+            modulo.permisos.forEach(permiso => {
+              this.$refs["permiso"][0].$el.querySelector(
+                "input"
+              ).checked = false;
+              index_permiso++;
+            });
+            /**checando el seleccionar todos de caca modulo si aplica */
+            index_modulo++;
+          });
+        });
+      });
+
       this.$emit("closeVentana");
     },
 
@@ -276,7 +343,6 @@ export default {
         .get_modulos_permisos()
         .then(res => {
           this.modulos = res.data;
-
           this.$nextTick(() => {
             let index_modulo = 0;
             let permiso_index = 0;
@@ -285,24 +351,25 @@ export default {
                 if (modulo.url != "") {
                   this.$refs["permisos_modulo"][index_modulo].$el.querySelector(
                     "input"
-                  ).onclick = $event => {
+                  ).onchange = $event => {
                     /**revisar si se activo el check */
                     this.checarTodosModulo($event, modulo.id);
                   };
-
                   index_modulo++;
                 }
-
                 modulo.permisos.forEach(permiso => {
                   this.$refs["permiso"][permiso_index].$el.querySelector(
                     "input"
-                  ).onclick = $event => {
+                  ).onchange = $event => {
                     this.updateChecarTodosModulo($event, modulo.id, permiso.id);
                   };
                   permiso_index++;
                 });
               });
             });
+            if (this.getTipoformulario == "modificar") {
+              this.get_rol_id(this.get_rol_id_modificar);
+            }
           });
           this.$vs.loading.close();
         })
@@ -316,14 +383,13 @@ export default {
         let total_permisos_modulo = 0; //total de permisos del modulo seleccionadp
         let total_permisos_activados = 0; //total de permisos que ha activado
         let index_permiso = 0; //index en el que se encuenta el permiso clickeado
+        let index_modulo = 0;
         if (event.target.checked == true) {
           /**checar si se debe de prender el boton de encender todos setgun si estan todos los permisos de ese modulo activado */
           this.modulos.forEach(secciones => {
             secciones.modulos.forEach(modulo => {
-              if (modulo.id == modulo_id) {
-                //si ya estamos en el modulo que buscamos prender se debe reccorer el total de permisos para sacar el total
-                //de activados
-                modulo.permisos.forEach(permiso => {
+              modulo.permisos.forEach(permiso => {
+                if (permiso.modulos_id == modulo_id) {
                   if (
                     this.$refs["permiso"][index_permiso].$el.querySelector(
                       "input"
@@ -331,32 +397,41 @@ export default {
                   ) {
                     total_permisos_activados++;
                   }
-                  //se aumenta el index cel permiso
-                  index_permiso++;
-                  if ((permiso.modulos_id = modulo_id)) {
-                    if (total_permisos_activados == modulo.permisos.length) {
-                      //aqui al ya coincidir se debe de activar el modulo al que pertenece el permiso activado
-                      this.removeA(this.form.modulos, modulo_id);
-                      this.form.modulos.push(modulo_id);
-                    }
+                  //si ya estamos en el modulo que buscamos prender se debe reccorer el total de permisos para sacar el total
+                  //de activados
+                  if (total_permisos_activados == modulo.permisos.length) {
+                    //aqui al ya coincidir se debe de activar el modulo al que pertenece el permiso activado
+                    this.removeA(this.form.modulos, modulo_id);
+                    this.form.modulos.push(modulo_id);
+                    this.$refs["permisos_modulo"][
+                      index_modulo
+                    ].$el.querySelector("input").onclick = $event => {
+                      /**revisar si se activo el check */
+                      this.checarTodosModulo($event, modulo.id);
+                    };
                   }
-                });
-                return false;
-              }
+                }
+
+                //se aumenta el index del permiso
+
+                index_permiso++;
+              });
             });
           });
         } else {
           /**aqui se apaga el checar modulo a fuerzas este o no prendido*/
-          let index_modulo = 0;
           this.modulos.forEach(secciones => {
             secciones.modulos.forEach(modulo => {
-              if (modulo.id == modulo_id) {
-                this.removeA(this.form.modulos, modulo_id);
-                this.$refs["permisos_modulo"][index_modulo].$el.querySelector(
-                  "input"
-                ).checked = false;
+              if (modulo.url != "") {
+                if (modulo.id == modulo_id) {
+                  this.removeA(this.form.modulos, modulo_id);
+                  this.$refs["permisos_modulo"][index_modulo].$el.querySelector(
+                    "input"
+                  ).checked = false;
+                  return false;
+                }
+                index_modulo++;
               }
-              index_modulo++;
             });
           });
         }
@@ -413,11 +488,10 @@ export default {
       roles
         .add_roles(this.form)
         .then(res => {
-          console.log("saveRol -> res", res);
           this.$vs.loading.close();
           this.$vs.notify({
-            title: "Agregar Usuarios",
-            text: "Se ha creado el nuevo usuario exitosamente.",
+            title: "Crear Roles de Usuario",
+            text: "Se ha creado el nuevo rol exitosamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
@@ -429,7 +503,6 @@ export default {
         .catch(err => {
           this.$vs.loading.close();
           if (err.response) {
-            console.log("saveRol -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -444,12 +517,13 @@ export default {
             } else if (err.response.status == 422) {
               this.$vs.notify({
                 title: "Error",
-                text: "Verifique que todos los datos han sido capturados",
+                text:
+                  "Verifique que todos los datos han sido capturados, ingrese un nombre para este rol y seleccione al menos un permiso.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
                 position: "bottom-right",
-                time: "4000"
+                time: "12000"
               });
               /**error de validacion */
               this.errores = err.response.data.error;
@@ -458,19 +532,18 @@ export default {
         });
     },
 
-    updateUsuario() {
+    update_rol() {
       this.$vs.loading();
       //limpiando errores
       this.errores = [];
-      this.form.rol_id = this.roles.value;
-      this.form.genero = this.genero.value;
-      usuarios
-        .update_usuario(this.form)
+      this.form.rol_id = this.get_rol_id_modificar;
+      roles
+        .update_rol(this.form)
         .then(res => {
           this.$vs.loading();
           this.$vs.notify({
-            title: "Modificar Usuarios",
-            text: "Se ha modificado el usuario exitosamente.",
+            title: "Modificar Roles",
+            text: "Se ha modificado el rol exitosamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
