@@ -127,22 +127,15 @@
             </vs-td>
 
             <vs-td :data="data[indextr].status">
-              <p v-if="data[indextr].status==1">
-                <span class="flex items-center px-2 py-1 rounded">
-                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-success'"></div>Activo
-                </span>
-              </p>
-              <p v-else>
-                <span class="flex items-center px-2 py-1 rounded">
-                  <div class="h-3 w-3 rounded-full mr-2" :class="'bg-danger'"></div>Cancelado
-                </span>
-              </p>
+              <p v-if="data[indextr].status==1" class="text-success font-medium">Activo</p>
+              <p v-else class="text-danger font-medium">Sin Acceso</p>
             </vs-td>
             <vs-td :data="data[indextr].id_user">
               <div class="flex flex-start">
                 <img class="mr-3 hidden" style="width:20px;" src="@assets/images/pdf.svg" alt />
 
                 <vs-button
+                  class="ml-auto"
                   title="Editar"
                   size="large"
                   icon-pack="feather"
@@ -152,6 +145,7 @@
                   @click="openModificar(data[indextr].id)"
                 ></vs-button>
                 <vs-button
+                  class="mr-auto"
                   v-if="data[indextr].status==1"
                   title="Cancelar"
                   icon-pack="feather"
@@ -162,6 +156,7 @@
                   @click="deleteCliente(data[indextr].id,data[indextr].nombre)"
                 ></vs-button>
                 <vs-button
+                  class="mr-auto"
                   v-else
                   title="Activar"
                   icon-pack="feather"

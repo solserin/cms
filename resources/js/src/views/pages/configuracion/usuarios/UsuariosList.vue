@@ -114,6 +114,7 @@
           <vs-td :data="data[indextr].id_user">
             <div class="flex flex-start">
               <vs-button
+                class="ml-auto"
                 title="Editar"
                 size="large"
                 icon-pack="feather"
@@ -123,6 +124,7 @@
                 @click="openModificar(data[indextr].id_user)"
               ></vs-button>
               <vs-button
+                class="mr-auto"
                 v-if="data[indextr].estado==1"
                 title="Desactivar"
                 icon-pack="feather"
@@ -133,6 +135,7 @@
                 @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
               ></vs-button>
               <vs-button
+                class="mr-auto"
                 v-else
                 title="Activar"
                 icon-pack="feather"

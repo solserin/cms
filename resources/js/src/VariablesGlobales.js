@@ -1,3 +1,19 @@
+import { Spanish } from "flatpickr/dist/l10n/es.js";
+export const configdateTimePickerWithTime = {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    locale: Spanish,
+    shorthandCurrentMonth: false,
+    time_24hr: false,
+    maxDate: new Date(new Date().setDate(new Date().getDate() + 25))
+};
+export const configdateTimePicker = {
+    enableTime: false,
+    dateFormat: "Y-m-d",
+    locale: Spanish,
+    shorthandCurrentMonth: false,
+    maxDate: new Date(new Date().setDate(new Date().getDate() + 25))
+};
 /**SELECT OPTIONS */
 export const mostrarOptions = [
     {

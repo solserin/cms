@@ -213,6 +213,7 @@ class NacionalidadesSeeder extends Seeder
             ['Yibuti', 'YIBUTIANA', 'DJI'],
             ['Zambia', 'ZAMBIANA', 'ZMB'],
             ['Zimbabue', 'ZIMBABUENSE', 'ZWE'],
+            ['Desconocida', 'Desconocida', 'N/A'],
         ];
 
         foreach ($paises as $key) {

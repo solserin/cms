@@ -7,739 +7,6 @@
   Author URL: hhttp://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-/* -------------------------------------------------------------------------- */
-
-/*                                roles estilos                               */
-
-/* -------------------------------------------------------------------------- */
-
-.roles .vs-collapse-item--header {
-  color: #fff !important;
-  font-size: 1em !important;
-  font-weight: 500 !important;
-}
-
-[dir] .roles .vs-collapse-item--header {
-  background-color: rgba(var(--vs-primary), 1) !important;
-}
-
-.roles .vs-collapse-item--header div {
-  text-transform: uppercase !important;
-}
-
-.roles .modulos {
-  font-weight: normal;
-  font-size: 1.2em;
-  /*background-color: #cecece !important;*/
-  color: #303030 !important;
-}
-
-[dir] .roles .modulos {
-  background-color: #f8fafb !important;
-  border: 1px solid #cecece !important;
-}
-
-.roles .secciones {
-  color: #303030 !important;
-}
-
-/* -------------------------------------------------------------------------- */
-
-/*                               tablas de datos                              */
-
-/* -------------------------------------------------------------------------- */
-
-.header-table h3 {
-  text-transform: capitalize !important;
-  font-weight: 600;
-  font-size: 1.1em;
-}
-
-/* -------------------------------------------------------------------------- */
-
-/*                                   button                                   */
-
-/* -------------------------------------------------------------------------- */
-
-.texto-btn {
-  top: -5px !important;
-  position: relative !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-}
-
-[dir=ltr] .texto-btn {
-  margin-left: 5px !important;
-}
-
-[dir=rtl] .texto-btn {
-  margin-right: 5px !important;
-}
-
-.img-btn {
-  display: inline !important;
-  width: 22px !important;
-}
-
-/* -------------------------------------------------------------------------- */
-
-/*                                   estilos                                  */
-
-/* -------------------------------------------------------------------------- */
-
-[dir] .bg-gray-headers {
-  background-color: #cecece !important;
-}
-
-.dark-text {
-  color: #303030 !important;
-}
-
-/* -------------------------------------------------------------------------- */
-
-/*                          fin de estilos de botones                         */
-
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-
-/*                                 title forms                                */
-
-/* -------------------------------------------------------------------------- */
-
-html {
-  overflow: scroll;
-  overflow-x: hidden;
-}
-
-::-webkit-scrollbar {
-  width: 0px;
-}
-
-[dir] ::-webkit-scrollbar {
-  background: transparent;
-}
-
-[dir] ::-webkit-scrollbar-thumb {
-  background: none !important;
-}
-
-.vs-popup--content {
-  max-height: 77vh !important;
-}
-
-[dir] .vs-popup--header {
-  background-color: #fff !important;
-  border-radius: 0;
-  padding: 5px 0 5px 0 !important;
-}
-
-.big-forms .vs-popup--title h3 {
-  width: 50% !important;
-  color: rgba(var(--vs-primary), 1) !important;
-  text-transform: none !important;
-  font-size: 18px !important;
-  font-weight: 550 !important;
-}
-
-[dir] .big-forms .vs-popup--title h3 {
-  text-align: center !important;
-  border-bottom: 2px solid #cecece !important;
-  padding-bottom: 10px !important;
-}
-
-[dir=ltr] .big-forms .vs-popup--title h3 {
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-[dir=rtl] .big-forms .vs-popup--title h3 {
-  margin-right: auto !important;
-  margin-left: auto !important;
-}
-
-.vs-popup--title h3:before {
-  display: block;
-  width: 65px;
-  height: 65px;
-}
-
-[dir] .vs-popup--title h3:before {
-  margin: 0 auto 10px auto !important;
-}
-
-.roles .vs-popup--title h3:before {
-  content: url(/images/roles.svg?b2727787dabda7f9bf1ca4b797b0491a);
-}
-
-.usuarios .vs-popup--title h3:before {
-  content: url(/images/users.svg?4c5d341aaaabc90224ef51ac51cb2ae0);
-}
-
-.clientes .vs-popup--title h3:before {
-  content: url(/images/client.svg?d4db091664107976d6bbe0f40d320f4d);
-}
-
-/* -------------------------------------------------------------------------- */
-
-/*                                 title forms                                */
-
-/* -------------------------------------------------------------------------- */
-
-.texto-importante {
-  color: rgba(var(--vs-danger), 1) !important;
-  font-weight: 600;
-}
-
-.opacity-75 {
-  opacity: 1 !important;
-}
-
-[dir] .con-vs-popup .vs-popup {
-  border-radius: 0px;
-}
-
-[dir] .vs-button {
-  border-radius: 0;
-}
-
-.con-vs-popup {
-  z-index: 52000 !important;
-}
-
-.vs-dialog-primary .vs-dialog .vs-dialog-header {
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 14px !important;
-  font-weight: 600;
-}
-
-[dir] .vs-dialog-primary .vs-dialog .vs-dialog-header {
-  border-radius: 0;
-  background-color: rgba(var(--vs-primary), 1) !important;
-}
-
-.accion_nombre {
-  color: rgba(var(--vs-primary), 1) !important;
-}
-
-[dir] .con-vs-dialog .vs-dialog {
-  border-radius: 0 !important;
-}
-
-/*default size for small devices*/
-
-.forms-popups-75 .vs-popup {
-  width: 100% !important;
-}
-
-/**medias queries para el popup de captura de datos */
-
-@media (min-width: 576px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
-  }
-}
-
-@media (min-width: 768px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
-  }
-}
-
-@media (min-width: 1200px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
-  }
-}
-
-[dir] .vs-popup--background {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-[dir] .vs__dropdown-toggle {
-  padding: 0 0 4px 0;
-  background: none;
-  border: 1px solid rgba(var(--vs-default_color), 1) !important;
-  border-radius: 4px;
-}
-
-[dir] .vs-input--input {
-  border-radius: 0px !important;
-  border: 1px solid rgba(var(--vs-default_color), 1) !important;
-}
-
-[dir] .vdp-datepicker input {
-  border-radius: 0px !important;
-}
-
-[dir] .vdp-datepicker .vdp-datepicker__calendar {
-  border-radius: 0px !important;
-}
-
-[dir] .vs__dropdown-toggle {
-  border-radius: 0px !important;
-}
-
-[dir] .con-vs-card {
-  border-radius: 0px !important;
-}
-
-.vs-input--placeholder {
-  color: rgba(0, 0, 0, 0.7);
-}
-
-[dir] .vs-con-textarea {
-  border-radius: 0px !important;
-}
-
-.texto-informacion {
-  font-size: 14px;
-  text-transform: uppercase;
-  color: rgba(var(--vs-primary), 1) !important;
-}
-
-[dir] .texto-informacion {
-  padding: 10px 0px 10px 0px;
-}
-
-.vs-table--tbody-table tr {
-  color: rgba(var(--vs-textos_theme), 1) !important;
-}
-
-[dir] .vs-table--tbody-table tr {
-  background-color: #e7ebf0;
-}
-
-.vs-table--thead tr {
-  color: rgba(var(--vs-primary), 1) !important;
-}
-
-[dir] .vs-table--thead tr {
-  border-top: 1px solid rgba(var(--vs-primary), 1) !important;
-  border-bottom: 1px solid rgba(var(--vs-primary), 1) !important;
-  background-color: #fff !important;
-}
-
-/*tarifas card*/
-
-[dir] .card-tarifas .vs-card--header {
-  background-color: rgba(var(--vs-primary), 1) !important;
-}
-
-.card-tarifas .vs-card--header h3 {
-  color: #fff !important;
-  font-size: 14px;
-  text-transform: capitalize;
-  font-weight: 600 !important;
-}
-
-/*fin de tarifas card*/
-
-/*password checker*/
-
-.password-checker .password-checker .vs-dialog-cancel--icon {
-  display: none;
-}
-
-.password-checker .vs-dialog-cancel-button {
-  color: red !important;
-}
-
-/*fin password checker*/
-
-/*ESTILOS DEL COMPONENTE DE VENTAS*/
-
-.venta-details .propiedad_tipo {
-  text-transform: capitalize !important;
-}
-
-/*FIN DE ESTILOS DEL COMPONENTE DE VENTAS*/
-
-/*estislod del login*/
-
-/*[dir] .layout--full-page .bg-img {
-    background-image: url(/images/aeternus/login.jpg) !important;
-    background-color: rgba(248, 247, 216, 0.7);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}*/
-
-/*fin de estilos del login*/
-
-/* estilos de videos tutoriales*/
-
-[dir] .tutorial {
-  padding: 5px 20px;
-  border: 1px solid rgba(var(--vs-primary), 1) !important;
-  margin: 0 auto 0 auto;
-  cursor: pointer;
-}
-
-/*fin de estilos de videos tutoriales*/
-
-/* buttons*/
-
-.vs-card--content {
-  font-size: 1rem !important;
-}
-
-[dir] .firma-digital .con-input-upload {
-  margin: 0 auto 0 auto !important;
-  float: none !important;
-}
-
-[dir] .firma-digital .con-img-upload .img-upload {
-  margin: 0 auto 0 auto !important;
-  float: none !important;
-}
-
-/*fin de buttons*/
-
-[dir] .layout--full-page .bg-img {
-  background: url(/images/aeternus/login.jpg) !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-}
-
-.layer {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999 !important;
-}
-
-[dir] .layer {
-  background-color: rgba(190, 140, 14, 0.3);
-}
-
-[dir=ltr] .layer {
-  left: 0;
-}
-
-[dir=rtl] .layer {
-  right: 0;
-}
-
-.login-form {
-  z-index: 1000 !important;
-}
-
-[dir] .login-form {
-  background-color: rgba(255, 255, 255, 0.8) !important;
-}
-
-.zindex1000 {
-  z-index: 1000 !important;
-}
-
-.login-img {
-  max-width: 295px !important;
-}
-
-.iniciar-sesion {
-  font-size: 25px;
-  line-height: 1.14286;
-  font-weight: 500;
-}
-
-.sistema-descripcion {
-  line-height: 22px;
-}
-
-.sistema-title {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 32px;
-}
-
-[dir] .sistema-title {
-  text-align: center !important;
-}
-
-/*pdfs de los reportes de los modulos*/
-
-/*.pdfs_modulos .vs-popup--header,
-.pdfs_modulos .vs-popup--footer {
-    display: none !important;
-}
-*/
-
-[dir] .pdfs_modulos .vs-popup--header {
-  padding: 2px 0 2px 0 !important;
-}
-
-.pdfs_modulos .vs-popup--header h3 {
-  font-size: 14px !important;
-  font-weight: 500 !important;
-}
-
-.pdfs_modulos .iframe_viewer {
-  min-height: 100vh !important;
-  min-width: 100% !important;
-}
-
-[dir] .pdfs_modulos .iframe_viewer {
-  border: 1px solid #dae1e7 !important;
-}
-
-.pdfs_modulos .vs-card--header {
-  display: none !important;
-}
-
-[dir] .pdfs_modulos .vs-card--header {
-  background-color: rgba(var(--vs-secondary_theme), 1) !important;
-}
-
-.pdfs_modulos {
-  z-index: 52100 !important;
-}
-
-.vs-popup--close {
-  color: #303030 !important;
-  font-size: 32px;
-  font-weight: bold !important;
-}
-
-[dir] .vs-popup--close {
-  background-color: #cecece !important;
-  border-radius: 0px !important;
-  padding: 4px !important;
-}
-
-[dir] .big-forms .vs-popup--close {
-  margin-top: -60px !important;
-}
-
-[dir=ltr] .big-forms .vs-popup--close {
-  margin-right: 12px !important;
-}
-
-[dir=rtl] .big-forms .vs-popup--close {
-  margin-left: 12px !important;
-}
-
-/*FIN pdfs de los reportes de los modulos*/
-
-/**confirmar dialogos */
-
-.confirmar .vs-dialog {
-  max-width: 550px !important;
-  min-height: 350px !important;
-}
-
-.confirmar .password-checker .vs-dialog-cancel--icon {
-  display: none;
-}
-
-.confirmar .vs-dialog-cancel-button {
-  color: #fff !important;
-}
-
-[dir] .confirmar .vs-dialog-cancel-button {
-  background-color: #c1c1c1 !important;
-}
-
-.confirmar .vs-dialog .vs-dialog-header {
-  display: none !important;
-}
-
-.icono:before {
-  content: url(/images/question.svg?0dfe0426e72ced1ced4bf9f580e77ecc);
-}
-
-.password_icono:before {
-  content: url(/images/password.svg?5c95b46463fb727c8dda36e6098154ea);
-}
-
-.confirmar .seguro-mensaje {
-  font-size: 1.8rem;
-  color: #636363 !important;
-  font-weight: 500 !important;
-}
-
-.confirmar .seguro-texto {
-  font-size: 1.2rem;
-  color: #999999 !important;
-}
-
-[dir] .cancelar {
-  background-color: #c1c1c1;
-}
-
-/*confirmar (sin password) checker*/
-
-.confirmarAceptar .icono:before {
-  content: url(/images/accept.svg?93d90fb7a2aeb988213472f8072f8fde);
-}
-
-/*fin confirmar (sin password) checker*/
-
-/**fin de  confirmar dialogos */
-
-/*searcher clientes*/
-
-.searcher_clientes,
-.ver_disponibilidad {
-  z-index: 52001 !important;
-}
-
-.contrasena {
-  z-index: 52100 !important;
-}
-
-[dir] .searcher_clientes .vs-popup--header {
-  background-color: rgba(var(--vs-primary), 1) !important;
-}
-
-[dir] .searcher_clientes .vs-popup--content {
-  padding-top: 0px !important;
-}
-
-.searcher_clientes .vs-popup--header i {
-  font-weight: bold !important;
-}
-
-.searcher_clientes .vs-popup--title h3 {
-  color: #fff !important;
-  text-transform: capitalize !important;
-  font-weight: normal !important;
-  font-size: 1.4em !important;
-}
-
-[dir=ltr] .searcher_clientes .vs-popup--title h3 {
-  margin-left: 10px !important;
-}
-
-[dir=rtl] .searcher_clientes .vs-popup--title h3 {
-  margin-right: 10px !important;
-}
-
-.contrasena .vs-popup--header {
-  display: none !important;
-}
-
-.reportes_show_list .vs-popup {
-  max-width: 90% !important;
-  min-height: 90vh !important;
-}
-
-.reportes_show_list {
-  z-index: 52002 !important;
-}
-
-th .sort-th,
-th .vs-table-text {
-  -webkit-box-pack: center;
-          justify-content: center;
-}
-
-[dir] .vs-table--td {
-  text-align: center !important;
-}
-
-.distribucion {
-  width: 100% !important;
-  border-collapse: separate !important;
-  border-spacing: 3px;
-  height: 70vh !important;
-}
-
-[dir] .distribucion {
-  text-align: center !important;
-}
-
-.distribucion tr td {
-  height: 20px !important;
-  color: #000;
-  font-weight: bold !important;
-}
-
-[dir] .distribucion tr td {
-  border: 1px solid black;
-  padding: 10px;
-}
-
-[dir] .bg-info {
-  background-color: "#0061ff";
-}
-
-[dir] .bg-espacio-muerto {
-  background-color: #c1c1c1 !important;
-}
-
-.bg-espacio-muerto span {
-  display: none !important;
-}
-
-.tabla-descripciones {
-  width: 100% !important;
-}
-
-[dir] .distribucion tr:hover .letra-fila {
-  background-color: #1e1e1e !important;
-}
-
-.tabla-otras-propiedades {
-  height: auto !important;
-  border-collapse: collapse !important;
-  border-spacing: 0px;
-}
-
-[dir] .tabla-otras-propiedades tr:hover td {
-  background-color: rgba(var(--vs-primary), 1) !important;
-}
-
-.tabla-otras-propiedades tr td {
-  height: auto !important;
-}
-
-[dir] .tabla-otras-propiedades tr td {
-  padding: 5px;
-}
-
-.vs-tooltip {
-  z-index: 55002 !important;
-}
-
-/*cancelar ventas del cementerio**/
-
-.cancelar_ventas_cementerio .vs-popup {
-  max-width: 90% !important;
-  min-height: 90vh !important;
-}
-
-.cancelar_ventas_cementerio {
-  z-index: 52002 !important;
-}
-
-/*fin de cancelar ventas del cementerio*/
-
 /*=========================================================================================
   File Name: main.scss
   Description: Main scss file. Imports other scss partials from 'vuexy' folder
@@ -5899,4 +5166,798 @@ button:focus {
 .vjs-fluid {
   padding-top: 41.66666666666667% !important;
 }
+
+/* -------------------------------------------------------------------------- */
+
+/*                                roles estilos                               */
+
+/* -------------------------------------------------------------------------- */
+
+.roles .vs-collapse-item--header {
+  color: #fff !important;
+  font-size: 1em !important;
+  font-weight: 500 !important;
+}
+
+[dir] .roles .vs-collapse-item--header {
+  background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+.roles .vs-collapse-item--header div {
+  text-transform: uppercase !important;
+}
+
+.roles .modulos {
+  font-weight: normal;
+  font-size: 1.2em;
+  /*background-color: #cecece !important;*/
+  color: #303030 !important;
+}
+
+[dir] .roles .modulos {
+  background-color: #f8fafb !important;
+  border: 1px solid #cecece !important;
+}
+
+.roles .secciones {
+  color: #303030 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                               tablas de datos                              */
+
+/* -------------------------------------------------------------------------- */
+
+.header-table h3 {
+  text-transform: capitalize !important;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                                   button                                   */
+
+/* -------------------------------------------------------------------------- */
+
+.texto-btn {
+  top: -5px !important;
+  position: relative !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+[dir=ltr] .texto-btn {
+  margin-left: 5px !important;
+}
+
+[dir=rtl] .texto-btn {
+  margin-right: 5px !important;
+}
+
+.img-btn {
+  display: inline !important;
+  width: 22px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                                   estilos                                  */
+
+/* -------------------------------------------------------------------------- */
+
+[dir] .bg-gray-headers {
+  background-color: #cecece !important;
+}
+
+.dark-text {
+  color: #303030 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                          fin de estilos de botones                         */
+
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+/*                                 title forms                                */
+
+/* -------------------------------------------------------------------------- */
+
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+[dir] ::-webkit-scrollbar {
+  background: transparent;
+}
+
+[dir] ::-webkit-scrollbar-thumb {
+  background: none !important;
+}
+
+.vs-popup--content {
+  max-height: 77vh !important;
+}
+
+[dir] .vs-popup--header {
+  background-color: #fff !important;
+  border-radius: 0;
+  padding: 5px 0 5px 0 !important;
+}
+
+.big-forms .vs-popup--title h3 {
+  width: 50% !important;
+  color: rgba(var(--vs-primary), 1) !important;
+  text-transform: none !important;
+  font-size: 18px !important;
+  font-weight: 550 !important;
+}
+
+[dir] .big-forms .vs-popup--title h3 {
+  text-align: center !important;
+  border-bottom: 2px solid #cecece !important;
+  padding-bottom: 10px !important;
+}
+
+[dir=ltr] .big-forms .vs-popup--title h3 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+[dir=rtl] .big-forms .vs-popup--title h3 {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+.vs-popup--title h3:before {
+  display: block;
+  width: 65px;
+  height: 65px;
+}
+
+[dir] .vs-popup--title h3:before {
+  margin: 0 auto 10px auto !important;
+}
+
+.roles .vs-popup--title h3:before {
+  content: url(/images/roles.svg?b2727787dabda7f9bf1ca4b797b0491a);
+}
+
+.usuarios .vs-popup--title h3:before {
+  content: url(/images/users.svg?4c5d341aaaabc90224ef51ac51cb2ae0);
+}
+
+.clientes .vs-popup--title h3:before {
+  content: url(/images/client.svg?d4db091664107976d6bbe0f40d320f4d);
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                                 title forms                                */
+
+/* -------------------------------------------------------------------------- */
+
+.texto-importante {
+  color: rgba(var(--vs-danger), 1) !important;
+  font-weight: 600;
+}
+
+.opacity-75 {
+  opacity: 1 !important;
+}
+
+[dir] .con-vs-popup .vs-popup {
+  border-radius: 0px;
+}
+
+[dir] .vs-button {
+  border-radius: 0;
+}
+
+.con-vs-popup {
+  z-index: 52000 !important;
+}
+
+.vs-dialog-primary .vs-dialog .vs-dialog-header {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 14px !important;
+  font-weight: 600;
+}
+
+[dir] .vs-dialog-primary .vs-dialog .vs-dialog-header {
+  border-radius: 0;
+  background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+.accion_nombre {
+  color: rgba(var(--vs-primary), 1) !important;
+}
+
+[dir] .con-vs-dialog .vs-dialog {
+  border-radius: 0 !important;
+}
+
+/*default size for small devices*/
+
+.forms-popups-75 .vs-popup {
+  width: 100% !important;
+}
+
+/**medias queries para el popup de captura de datos */
+
+@media (min-width: 576px) {
+  .forms-popups .vs-popup {
+    width: 90% !important;
+  }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .forms-popups .vs-popup {
+    width: 90% !important;
+  }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .forms-popups .vs-popup {
+    width: 90% !important;
+  }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .forms-popups .vs-popup {
+    width: 90% !important;
+  }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
+  }
+}
+
+[dir] .vs-popup--background {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+[dir] .vs__dropdown-toggle {
+  padding: 0 0 4px 0;
+  background: none;
+  border: 1px solid rgba(var(--vs-default_color), 1) !important;
+  border-radius: 4px;
+}
+
+[dir] .vs-input--input, [dir] .flatpickr-input {
+  border-radius: 0px !important;
+  border: 1px solid rgba(var(--vs-default_color), 1) !important;
+}
+
+[dir] .vdp-datepicker input,
+.flatpickr-input {
+  border-radius: 0px !important;
+}
+
+[dir] .vdp-datepicker .vdp-datepicker__calendar {
+  border-radius: 0px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                          estilos flatpick calendar                         */
+
+/* -------------------------------------------------------------------------- */
+
+[dir] .flatpickr-calendar {
+  border-radius: 0px !important;
+}
+
+.flatpickr-calendar .flatpickr-monthDropdown-months {
+  font-size: 18.9px !important;
+  width: 145px !important;
+  height: 25px !important;
+  color: #3c3f40 !important;
+}
+
+[dir] .flatpickr-calendar .flatpickr-monthDropdown-months {
+  border: 0px solid rgba(0, 0, 0, 0.3) !important;
+  border-radius: 0px !important;
+  text-align: start !important;
+}
+
+[dir] .flatpickr-calendar .flatpickr-monthDropdown-months:hover, [dir] .flatpickr-calendar .flatpickr-current-month .numInputWrapper:hover {
+  background-color: rgba(60, 63, 64, 0.05) !important;
+}
+
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.selected:hover,
+.flatpickr-calendar .flatpickr-day:hover,
+.flatpickr-day.today:hover,
+.flatpickr-day.today.selected:hover {
+  color: #fff !important;
+}
+
+[dir] .flatpickr-calendar .flatpickr-day.selected, [dir] .flatpickr-calendar .flatpickr-day.selected:hover, [dir] .flatpickr-calendar .flatpickr-day:hover, [dir] .flatpickr-day.today:hover, [dir] .flatpickr-day.today.selected:hover {
+  background-color: rgba(var(--vs-primary), 1) !important;
+  border: 0px !important;
+}
+
+.flatpickr-day.today {
+  color: #fff !important;
+}
+
+[dir] .flatpickr-day.today {
+  background-color: #f64747 !important;
+  border: 1px solid #f64747;
+}
+
+.flatpickr-next-month:hover svg path,
+.flatpickr-prev-month:hover svg path {
+  fill: rgba(var(--vs-primary), 1) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                       fin estilos calendar flat pick                       */
+
+/* -------------------------------------------------------------------------- */
+
+[dir] .vs__dropdown-toggle {
+  border-radius: 0px !important;
+}
+
+[dir] .con-vs-card {
+  border-radius: 0px !important;
+}
+
+.vs-input--placeholder {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+[dir] .vs-con-textarea {
+  border-radius: 0px !important;
+}
+
+.texto-informacion {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: rgba(var(--vs-primary), 1) !important;
+}
+
+[dir] .texto-informacion {
+  padding: 10px 0px 10px 0px;
+}
+
+.vs-table--tbody-table tr {
+  color: rgba(var(--vs-textos_theme), 1) !important;
+}
+
+[dir] .vs-table--tbody-table tr {
+  background-color: #e7ebf0;
+}
+
+.vs-table--thead tr {
+  color: rgba(var(--vs-primary), 1) !important;
+}
+
+[dir] .vs-table--thead tr {
+  border-top: 1px solid rgba(var(--vs-primary), 1) !important;
+  border-bottom: 1px solid rgba(var(--vs-primary), 1) !important;
+  background-color: #fff !important;
+}
+
+/*tarifas card*/
+
+[dir] .card-tarifas .vs-card--header {
+  background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+.card-tarifas .vs-card--header h3 {
+  color: #fff !important;
+  font-size: 14px;
+  text-transform: capitalize;
+  font-weight: 600 !important;
+}
+
+/*fin de tarifas card*/
+
+/*password checker*/
+
+.password-checker .password-checker .vs-dialog-cancel--icon {
+  display: none;
+}
+
+.password-checker .vs-dialog-cancel-button {
+  color: red !important;
+}
+
+/*fin password checker*/
+
+/*ESTILOS DEL COMPONENTE DE VENTAS*/
+
+.venta-details .propiedad_tipo {
+  text-transform: capitalize !important;
+}
+
+/*FIN DE ESTILOS DEL COMPONENTE DE VENTAS*/
+
+/*estislod del login*/
+
+/*[dir] .layout--full-page .bg-img {
+    background-image: url(/images/aeternus/login.jpg) !important;
+    background-color: rgba(248, 247, 216, 0.7);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}*/
+
+/*fin de estilos del login*/
+
+/* estilos de videos tutoriales*/
+
+[dir] .tutorial {
+  padding: 5px 20px;
+  border: 1px solid rgba(var(--vs-primary), 1) !important;
+  margin: 0 auto 0 auto;
+  cursor: pointer;
+}
+
+/*fin de estilos de videos tutoriales*/
+
+/* buttons*/
+
+.vs-card--content {
+  font-size: 1rem !important;
+}
+
+[dir] .firma-digital .con-input-upload {
+  margin: 0 auto 0 auto !important;
+  float: none !important;
+}
+
+[dir] .firma-digital .con-img-upload .img-upload {
+  margin: 0 auto 0 auto !important;
+  float: none !important;
+}
+
+/*fin de buttons*/
+
+[dir] .layout--full-page .bg-img {
+  background: url(/images/aeternus/login.jpg) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.layer {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999 !important;
+}
+
+[dir] .layer {
+  background-color: rgba(190, 140, 14, 0.3);
+}
+
+[dir=ltr] .layer {
+  left: 0;
+}
+
+[dir=rtl] .layer {
+  right: 0;
+}
+
+.login-form {
+  z-index: 1000 !important;
+}
+
+[dir] .login-form {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.zindex1000 {
+  z-index: 1000 !important;
+}
+
+.login-img {
+  max-width: 295px !important;
+}
+
+.iniciar-sesion {
+  font-size: 25px;
+  line-height: 1.14286;
+  font-weight: 500;
+}
+
+.sistema-descripcion {
+  line-height: 22px;
+}
+
+.sistema-title {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+[dir] .sistema-title {
+  text-align: center !important;
+}
+
+/*pdfs de los reportes de los modulos*/
+
+/*.pdfs_modulos .vs-popup--header,
+.pdfs_modulos .vs-popup--footer {
+    display: none !important;
+}
+*/
+
+[dir] .pdfs_modulos .vs-popup--header {
+  padding: 2px 0 2px 0 !important;
+}
+
+.pdfs_modulos .vs-popup--header h3 {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.pdfs_modulos .iframe_viewer {
+  min-height: 100vh !important;
+  min-width: 100% !important;
+}
+
+[dir] .pdfs_modulos .iframe_viewer {
+  border: 1px solid #dae1e7 !important;
+}
+
+.pdfs_modulos .vs-card--header {
+  display: none !important;
+}
+
+[dir] .pdfs_modulos .vs-card--header {
+  background-color: rgba(var(--vs-secondary_theme), 1) !important;
+}
+
+.pdfs_modulos {
+  z-index: 52100 !important;
+}
+
+.vs-popup--close {
+  color: #303030 !important;
+  font-size: 32px;
+  font-weight: bold !important;
+}
+
+[dir] .vs-popup--close {
+  background-color: #cecece !important;
+  border-radius: 0px !important;
+  padding: 4px !important;
+}
+
+[dir] .big-forms .vs-popup--close {
+  margin-top: -60px !important;
+}
+
+[dir=ltr] .big-forms .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .big-forms .vs-popup--close {
+  margin-left: 12px !important;
+}
+
+/*FIN pdfs de los reportes de los modulos*/
+
+/**confirmar dialogos */
+
+.confirmar .vs-dialog {
+  max-width: 550px !important;
+  min-height: 350px !important;
+}
+
+.confirmar .password-checker .vs-dialog-cancel--icon {
+  display: none;
+}
+
+.confirmar .vs-dialog-cancel-button {
+  color: #fff !important;
+}
+
+[dir] .confirmar .vs-dialog-cancel-button {
+  background-color: #c1c1c1 !important;
+}
+
+.confirmar .vs-dialog .vs-dialog-header {
+  display: none !important;
+}
+
+.icono:before {
+  content: url(/images/question.svg?0dfe0426e72ced1ced4bf9f580e77ecc);
+}
+
+.password_icono:before {
+  content: url(/images/password.svg?5c95b46463fb727c8dda36e6098154ea);
+}
+
+.confirmar .seguro-mensaje {
+  font-size: 1.8rem;
+  color: #636363 !important;
+  font-weight: 500 !important;
+}
+
+.confirmar .seguro-texto {
+  font-size: 1.2rem;
+  color: #999999 !important;
+}
+
+[dir] .cancelar {
+  background-color: #c1c1c1;
+}
+
+/*confirmar (sin password) checker*/
+
+.confirmarAceptar .icono:before {
+  content: url(/images/accept.svg?93d90fb7a2aeb988213472f8072f8fde);
+}
+
+/*fin confirmar (sin password) checker*/
+
+/**fin de  confirmar dialogos */
+
+/*searcher clientes*/
+
+.searcher_clientes,
+.ver_disponibilidad {
+  z-index: 52001 !important;
+}
+
+.contrasena {
+  z-index: 52100 !important;
+}
+
+[dir] .searcher_clientes .vs-popup--header {
+  background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+[dir] .searcher_clientes .vs-popup--content {
+  padding-top: 0px !important;
+}
+
+.searcher_clientes .vs-popup--header i {
+  font-weight: bold !important;
+}
+
+.searcher_clientes .vs-popup--title h3 {
+  color: #fff !important;
+  text-transform: capitalize !important;
+  font-weight: normal !important;
+  font-size: 1.4em !important;
+}
+
+[dir=ltr] .searcher_clientes .vs-popup--title h3 {
+  margin-left: 10px !important;
+}
+
+[dir=rtl] .searcher_clientes .vs-popup--title h3 {
+  margin-right: 10px !important;
+}
+
+.contrasena .vs-popup--header {
+  display: none !important;
+}
+
+.reportes_show_list .vs-popup {
+  max-width: 90% !important;
+  min-height: 90vh !important;
+}
+
+.reportes_show_list {
+  z-index: 52002 !important;
+}
+
+th .sort-th,
+th .vs-table-text {
+  -webkit-box-pack: center;
+          justify-content: center;
+}
+
+[dir] .vs-table--td {
+  text-align: center !important;
+}
+
+.distribucion {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 3px;
+  height: 70vh !important;
+}
+
+[dir] .distribucion {
+  text-align: center !important;
+}
+
+.distribucion tr td {
+  height: 20px !important;
+  color: #000;
+  font-weight: bold !important;
+}
+
+[dir] .distribucion tr td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+[dir] .bg-info {
+  background-color: "#0061ff";
+}
+
+[dir] .bg-espacio-muerto {
+  background-color: #c1c1c1 !important;
+}
+
+.bg-espacio-muerto span {
+  display: none !important;
+}
+
+.tabla-descripciones {
+  width: 100% !important;
+}
+
+[dir] .distribucion tr:hover .letra-fila {
+  background-color: #1e1e1e !important;
+}
+
+.tabla-otras-propiedades {
+  height: auto !important;
+  border-collapse: collapse !important;
+  border-spacing: 0px;
+}
+
+[dir] .tabla-otras-propiedades tr:hover td {
+  background-color: rgba(var(--vs-primary), 1) !important;
+}
+
+.tabla-otras-propiedades tr td {
+  height: auto !important;
+}
+
+[dir] .tabla-otras-propiedades tr td {
+  padding: 5px;
+}
+
+.vs-tooltip {
+  z-index: 55002 !important;
+}
+
+/*cancelar ventas del cementerio**/
+
+.cancelar_ventas_cementerio .vs-popup {
+  max-width: 90% !important;
+  min-height: 90vh !important;
+}
+
+.cancelar_ventas_cementerio {
+  z-index: 52002 !important;
+}
+
+/*fin de cancelar ventas del cementerio*/
 

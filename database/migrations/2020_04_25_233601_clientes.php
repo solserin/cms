@@ -44,7 +44,7 @@ class Clientes extends Migration
             $table->unsignedBigInteger('modifico_id')->nullable();
             $table->foreign('modifico_id')->references('id')->on('usuarios');
             $table->longText('nota')->nullable()->description('algun comentario sobre el cliente');
-            $table->tinyInteger('fallecido_b')->default(1)->description('1, vivo - 0, fallecido');
+            $table->tinyInteger('vivo_b')->default(1)->description('1, vivo - 0, fallecido');
             $table->tinyInteger('status')->default(1)->description('1, activo - 0, baja');
         });
     }

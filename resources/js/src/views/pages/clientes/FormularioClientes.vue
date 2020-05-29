@@ -61,20 +61,19 @@
 
         <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
           <label class="text-sm opacity-75 font-bold">
-            Fecha de Nacimiento
+            Fecha de Nacimiento (Año-Mes-Dia)
             <span class="text-danger text-sm">(*)</span>
           </label>
-          <datepicker
-            :language="spanishDatepicker"
-            :disabled-dates="disabledDates"
+
+          <flat-pickr
             name="fecha_nacimiento"
             data-vv-as=" "
-            format="yyyy-MM-dd"
             v-validate:fecha_nacimiento_validacion_computed.immediate="'required'"
-            placeholder="Fecha de Nacimiento"
+            :config="configdateTimePicker"
             v-model="form.fecha_nac"
-            class="w-full pb-1 pt-1"
-          ></datepicker>
+            placeholder="Seleccione una fecha"
+            class="w-full my-1"
+          />
           <div>
             <span class="text-danger text-sm">{{ errors.first('fecha_nacimiento') }}</span>
           </div>
@@ -446,25 +445,28 @@
   </div>
 </template>
 <script>
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+import "flatpickr/dist/themes/airbnb.css";
+
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
 import clientes from "@services/clientes";
 import vSelect from "vue-select";
-import Datepicker from "vuejs-datepicker";
-import { es } from "vuejs-datepicker/dist/locale";
-import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 
+import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
+import { configdateTimePicker } from "@/VariablesGlobales";
 /**VARIABLES GLOBALES */
 
 export default {
   components: {
     "v-select": vSelect,
     Password,
-    Datepicker,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
+    flatPickr
   },
   props: {
     show: {
@@ -577,13 +579,13 @@ export default {
   },
   data() {
     return {
+      configdateTimePicker: configdateTimePicker,
       title: "",
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
       disabledDates: {
         from: new Date()
       },
-      spanishDatepicker: es,
       operConfirmar: false,
       openConfirmarSinPassword: false,
       callback: Function,

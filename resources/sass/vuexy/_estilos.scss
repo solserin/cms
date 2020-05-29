@@ -243,18 +243,68 @@ html {
     border-radius: 4px;
 }
 
-.vs-input--input {
+.vs-input--input,
+.flatpickr-input {
     border-radius: 0px !important;
     border: 1px solid rgba(var(--vs-default_color), 1) !important;
 }
 
-[dir] .vdp-datepicker input {
+[dir] .vdp-datepicker input,
+.flatpickr-input {
     border-radius: 0px !important;
 }
 
 [dir] .vdp-datepicker .vdp-datepicker__calendar {
     border-radius: 0px !important;
 }
+
+/* -------------------------------------------------------------------------- */
+/*                          estilos flatpick calendar                         */
+/* -------------------------------------------------------------------------- */
+.flatpickr-calendar {
+    border-radius: 0px !important;
+}
+
+.flatpickr-calendar .flatpickr-monthDropdown-months {
+    border: 0px solid rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0px !important;
+    text-align: start !important;
+    font-size: 18.9px !important;
+    width: 145px !important;
+    height: 25px !important;
+    color: #3c3f40 !important;
+}
+
+.flatpickr-calendar .flatpickr-monthDropdown-months:hover,
+.flatpickr-calendar .flatpickr-current-month .numInputWrapper:hover {
+    background-color: rgba(60, 63, 64, 0.05) !important;
+}
+
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.selected:hover,
+.flatpickr-calendar .flatpickr-day:hover,
+.flatpickr-day.today:hover,
+.flatpickr-day.today.selected:hover {
+    color: #fff !important;
+    background-color: rgba(var(--vs-primary), 1) !important;
+    border: 0px !important;
+}
+
+.flatpickr-day.today {
+    color: #fff !important;
+    background-color: rgb(246, 71, 71) !important;
+    border: 1px solid rgb(246, 71, 71);
+}
+
+.flatpickr-next-month:hover,
+.flatpickr-prev-month:hover {
+    svg path {
+        fill: rgba(var(--vs-primary), 1) !important;
+    }
+}
+/* -------------------------------------------------------------------------- */
+/*                       fin estilos calendar flat pick                       */
+/* -------------------------------------------------------------------------- */
 
 [dir] .vs__dropdown-toggle {
     border-radius: 0px !important;
