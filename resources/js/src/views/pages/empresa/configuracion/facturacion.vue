@@ -156,7 +156,7 @@
                   color="success"
                   icon="add_circle_outline"
                   @click="mandarModificar()"
-                >Actualizar Datos</vs-button>
+                >Actualizar Firma Electrónica</vs-button>
               </div>
             </div>
           </div>

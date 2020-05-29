@@ -413,7 +413,7 @@
                   color="success"
                   icon="add_circle_outline"
                   @click="mandarModificar()"
-                >Actualizar Datos</vs-button>
+                >Actualizar Datos de Funeraria</vs-button>
               </div>
             </div>
           </div>

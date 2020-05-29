@@ -285,7 +285,7 @@
                   color="success"
                   icon="add_circle_outline"
                   @click="mandarModificar()"
-                >Actualizar Datos</vs-button>
+                >Actualizar Datos de Cementerio</vs-button>
               </div>
             </div>
           </div>

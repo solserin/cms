@@ -325,7 +325,7 @@
                   color="success"
                   icon="add_circle_outline"
                   @click="mandarModificar()"
-                >Actualizar Datos</vs-button>
+                >Actualizar Datos de Registro Público</vs-button>
               </div>
             </div>
           </div>

@@ -39,7 +39,7 @@ class Permisos
                     $resultado = DB::table('usuarios')
                         ->select('permisos_id')
                         ->join('roles', 'usuarios.roles_id', '=', 'roles.id')
-                        ->join('modulos_roles_permisos', 'modulos_roles_permisos.roles_id', '=', 'roles.id')
+                        ->join('roles_permisos', 'roles_permisos.roles_id', '=', 'roles.id')
                         ->where('usuarios.id', '=', Auth::user()->id)
                         ->where('modulos_id', '=', $modulo)
                         ->where('permisos_id', '=', $permiso)
