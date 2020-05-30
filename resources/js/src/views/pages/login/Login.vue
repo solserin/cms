@@ -114,8 +114,8 @@ export default {
     return {
       //email: "admin@admin.com",
       //password: "password",
-      email: "",
-      password: "",
+      email: "admin@admin.com",
+      password: "password",
       checkbox_remember_me: false
     };
   },

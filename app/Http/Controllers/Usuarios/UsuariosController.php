@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ApiController;
 use GuzzleHttp\Exception\RequestException;
 use App\Http\Controllers\EmpresaController;
+use App\Modulos;
 use GuzzleHttp\Exception\BadResponseException;
 
 class UsuariosController extends ApiController
@@ -311,6 +312,9 @@ class UsuariosController extends ApiController
             //no existe el token y regresamos un codigo de error
             return $this->errorResponse('Usuario no autenticado', 401);
     }
+
+
+
 
 
     public function get_usuarioById(Request $request)

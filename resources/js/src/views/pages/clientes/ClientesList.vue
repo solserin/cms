@@ -1,181 +1,191 @@
+<!--
+IDS DE LOS PERMISOS QUE APLICAN EN ESTE MODULO DE CLIENTES
+registrar clientes 11
+modificar informacion 12
+eliminar clientes 13
+consultar información 14
+consultar estados de cuenta15
+
+para saber si se debe desplegar algun boton o accion se hace llamando la funcion global
+this.$modulo.permiso(this.$route.path,11)
+con la ruta especifica del modulo que se desea consultar y el id del permiso
+
+-->
 <template>
   <div>
-    <vs-tabs alignment="left" position="top" v-model="activeTab">
-      <vs-tab label="CONTROL DE CLIENTES" icon="supervisor_account" class="pb-5"></vs-tab>
-    </vs-tabs>
-    <div class="tab-content mt-1" v-show="activeTab==0">
-      <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
-          <vs-button
-            color="success"
-            size="small"
-            class="w-full ml-auto"
-            @click="formulario('agregar')"
-          >
-            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Registrar Cliente</span>
-          </vs-button>
-        </div>
-      </div>
-      <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
-        <vx-card
-          no-radius
-          title="Filtros de selección"
-          refresh-content-action
-          @refresh="reset"
-          collapse-action
+    <div class="flex flex-wrap">
+      <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
+        <vs-button
+          v-if="this.$modulo.permiso(this.$route.path,11)"
+          color="success"
+          size="small"
+          class="w-full ml-auto"
+          @click="formulario('agregar')"
         >
-          <div class="flex flex-wrap">
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
-              <label class="text-sm opacity-75">Mostrar</label>
-              <v-select
-                :options="mostrarOptions"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="mostrar"
-                class="mb-4 sm:mb-0"
-              />
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
-              <label class="text-sm opacity-75">Estado</label>
-              <v-select
-                :options="estadosOptions"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="estado"
-                class="mb-4 md:mb-0"
-              />
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
-              <label class="text-sm opacity-75">Filtrar Específico</label>
-              <v-select
-                :options="filtrosEspecificos"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="filtroEspecifico"
-                class="mb-4 md:mb-0"
-              />
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
-              <label class="text-sm opacity-75">{{this.filtroEspecifico.label}}</label>
-              <vs-input
-                class="w-full"
-                icon="search"
-                maxlength="75"
-                placeholder="Filtrar por dato específico"
-                v-model="serverOptions.numero_control"
-                v-on:keyup.enter="get_data(1)"
-                v-on:blur="get_data(1,'blur')"
-              />
-            </div>
-          </div>
-
-          <div class="flex flex-wrap">
-            <div class="w-full px-2">
-              <h3 class="text-base font-semibold my-3">
-                <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Cliente
-              </h3>
-            </div>
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
-              <label class="text-sm opacity-75">Nombre del Cliente</label>
-              <vs-input
-                class="w-full"
-                icon="search"
-                placeholder="Filtrar por Nombre del Cliente"
-                v-model="serverOptions.cliente"
-                v-on:keyup.enter="get_data(1)"
-                v-on:blur="get_data(1,'blur')"
-                maxlength="75"
-              />
-            </div>
-          </div>
-        </vx-card>
+          <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
+          <span class="texto-btn">Registrar Cliente</span>
+        </vs-button>
       </div>
-
-      <br />
-      <vs-table
-        :sst="true"
-        @search="handleSearch"
-        @change-page="handleChangePage"
-        @sort="handleSort"
-        v-model="selected"
-        :max-items="serverOptions.per_page.value"
-        :data="clientes"
-        stripe
-        noDataText="0 Resultados"
-      >
-        <template slot="header">
-          <h3 class="pb-5 text-primary">Listado de Clientes Registrados</h3>
-        </template>
-        <template slot="thead">
-          <vs-th>Núm. Cliente</vs-th>
-          <vs-th>Nombre</vs-th>
-          <vs-th>Domicilio</vs-th>
-          <vs-th>Celular</vs-th>
-          <vs-th>Status</vs-th>
-          <vs-th>Acciones</vs-th>
-        </template>
-        <template slot-scope="{data}">
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-            <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{data[indextr].id}}</span>
-            </vs-td>
-            <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
-            <vs-td :data="data[indextr].direccion">{{data[indextr].direccion}}</vs-td>
-            <vs-td :data="data[indextr].celular">
-              <span class="font-medium">{{data[indextr].celular}}</span>
-            </vs-td>
-
-            <vs-td :data="data[indextr].status">
-              <p v-if="data[indextr].status==1" class="text-success font-medium">Activo</p>
-              <p v-else class="text-danger font-medium">Sin Acceso</p>
-            </vs-td>
-            <vs-td :data="data[indextr].id_user">
-              <div class="flex flex-start">
-                <img class="mr-3 hidden" style="width:20px;" src="@assets/images/pdf.svg" alt />
-
-                <vs-button
-                  class="ml-auto"
-                  title="Editar"
-                  size="large"
-                  icon-pack="feather"
-                  icon="icon-edit"
-                  color="dark"
-                  type="flat"
-                  @click="openModificar(data[indextr].id)"
-                ></vs-button>
-                <vs-button
-                  class="mr-auto"
-                  v-if="data[indextr].status==1"
-                  title="Cancelar"
-                  icon-pack="feather"
-                  size="large"
-                  icon="icon-shield-off"
-                  color="danger"
-                  type="flat"
-                  @click="deleteCliente(data[indextr].id,data[indextr].nombre)"
-                ></vs-button>
-                <vs-button
-                  class="mr-auto"
-                  v-else
-                  title="Activar"
-                  icon-pack="feather"
-                  size="large"
-                  icon="icon-shield"
-                  color="success"
-                  type="flat"
-                  @click="altaCliente(data[indextr].id,data[indextr].nombre)"
-                ></vs-button>
-              </div>
-            </vs-td>
-          </vs-tr>
-        </template>
-      </vs-table>
-      <div>
-        <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
-      </div>
-      <pre ref="pre"></pre>
     </div>
+    <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
+      <vx-card
+        no-radius
+        title="Filtros de selección"
+        refresh-content-action
+        @refresh="reset"
+        collapse-action
+      >
+        <div class="flex flex-wrap">
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+            <label class="text-sm opacity-75">Mostrar</label>
+            <v-select
+              :options="mostrarOptions"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="mostrar"
+              class="mb-4 sm:mb-0"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+            <label class="text-sm opacity-75">Estado</label>
+            <v-select
+              :options="estadosOptions"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="estado"
+              class="mb-4 md:mb-0"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+            <label class="text-sm opacity-75">Filtrar Específico</label>
+            <v-select
+              :options="filtrosEspecificos"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="filtroEspecifico"
+              class="mb-4 md:mb-0"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
+            <label class="text-sm opacity-75">{{this.filtroEspecifico.label}}</label>
+            <vs-input
+              class="w-full"
+              icon="search"
+              maxlength="75"
+              placeholder="Filtrar por dato específico"
+              v-model="serverOptions.numero_control"
+              v-on:keyup.enter="get_data(1)"
+              v-on:blur="get_data(1,'blur')"
+            />
+          </div>
+        </div>
+
+        <div class="flex flex-wrap">
+          <div class="w-full px-2">
+            <h3 class="text-base font-semibold my-3">
+              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Cliente
+            </h3>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
+            <label class="text-sm opacity-75">Nombre del Cliente</label>
+            <vs-input
+              class="w-full"
+              icon="search"
+              placeholder="Filtrar por Nombre del Cliente"
+              v-model="serverOptions.cliente"
+              v-on:keyup.enter="get_data(1)"
+              v-on:blur="get_data(1,'blur')"
+              maxlength="75"
+            />
+          </div>
+        </div>
+      </vx-card>
+    </div>
+
+    <br />
+    <vs-table
+      :sst="true"
+      @search="handleSearch"
+      @change-page="handleChangePage"
+      @sort="handleSort"
+      v-model="selected"
+      :max-items="serverOptions.per_page.value"
+      :data="clientes"
+      stripe
+      noDataText="0 Resultados"
+    >
+      <template slot="header">
+        <h3 class="pb-5 text-primary">Listado de Clientes Registrados</h3>
+      </template>
+      <template slot="thead">
+        <vs-th>Núm. Cliente</vs-th>
+        <vs-th>Nombre</vs-th>
+        <vs-th>Domicilio</vs-th>
+        <vs-th>Celular</vs-th>
+        <vs-th>Status</vs-th>
+        <vs-th>Acciones</vs-th>
+      </template>
+      <template slot-scope="{data}">
+        <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+          <vs-td :data="data[indextr].id">
+            <span class="font-semibold">{{data[indextr].id}}</span>
+          </vs-td>
+          <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
+          <vs-td :data="data[indextr].direccion">{{data[indextr].direccion}}</vs-td>
+          <vs-td :data="data[indextr].celular">
+            <span class="font-medium">{{data[indextr].celular}}</span>
+          </vs-td>
+
+          <vs-td :data="data[indextr].status">
+            <p v-if="data[indextr].status==1" class="text-success font-medium">Activo</p>
+            <p v-else class="text-danger font-medium">Sin Acceso</p>
+          </vs-td>
+          <vs-td :data="data[indextr].id_user">
+            <div class="flex flex-start">
+              <img class="mr-3 hidden" style="width:20px;" src="@assets/images/pdf.svg" alt />
+
+              <vs-button
+                v-if="$modulo.permiso($route.path,12)"
+                class="ml-auto"
+                title="Editar"
+                size="large"
+                icon-pack="feather"
+                icon="icon-edit"
+                color="dark"
+                type="flat"
+                @click="openModificar(data[indextr].id)"
+              ></vs-button>
+              <vs-button
+                class="mr-auto"
+                v-if="data[indextr].status==1 && $modulo.permiso($route.path,13)"
+                title="Cancelar"
+                icon-pack="feather"
+                size="large"
+                icon="icon-shield-off"
+                color="danger"
+                type="flat"
+                @click="deleteCliente(data[indextr].id,data[indextr].nombre)"
+              ></vs-button>
+              <vs-button
+                class="mr-auto"
+                v-else-if="$modulo.permiso($route.path,13)"
+                title="Activar"
+                icon-pack="feather"
+                size="large"
+                icon="icon-shield"
+                color="success"
+                type="flat"
+                @click="altaCliente(data[indextr].id,data[indextr].nombre)"
+              ></vs-button>
+            </div>
+          </vs-td>
+        </vs-tr>
+      </template>
+    </vs-table>
+    <div>
+      <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
+    </div>
+    <pre ref="pre"></pre>
 
     <Password
       :show="openStatus"
@@ -212,7 +222,8 @@ import FormularioClientes from "@pages/clientes/FormularioClientes";
 import Password from "@pages/confirmar_password";
 
 /**VARIABLES GLOBALES */
-import { mostrarOptions } from "@/VariablesGlobales";
+import { mostrarOptions, PermisosModulo } from "@/VariablesGlobales";
+
 import vSelect from "vue-select";
 
 export default {
@@ -237,7 +248,7 @@ export default {
     return {
       //variable
       ListaReportes: [],
-
+      PermisosModulo: PermisosModulo,
       openReportesLista: false,
       mostrarOptions: mostrarOptions,
       mostrar: { label: "15", value: "15" },
@@ -283,7 +294,7 @@ export default {
         numero_control: "",
         cliente: ""
       },
-      activeTab: 0,
+
       verPaginado: true,
       total: 0,
       actual: 1,

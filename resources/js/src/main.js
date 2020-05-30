@@ -7,97 +7,94 @@
   Author URL: hhttp://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
 
 // Vuesax Component Framework
-import Vuesax from 'vuesax'
+import Vuesax from "vuesax";
 
-Vue.use(Vuesax)
+Vue.use(Vuesax);
 
 // axios
-import axios from "./axios.js"
-Vue.prototype.$http = axios
+import axios from "./axios.js";
+Vue.prototype.$http = axios;
 
 // API Calls
-import "./http/requests"
+import "./http/requests";
 
 // mock
-import "./fake-db/index.js"
+import "./fake-db/index.js";
 
 // Theme Configurations
-import '../themeConfig.js'
-
-
+import "../themeConfig.js";
 
 // ACL
-import acl from './acl/acl'
+import acl from "./acl/acl";
 
 // Globally Registered Components
-import './globalComponents.js'
+import "./globalComponents.js";
 
 // Vue Router
-import router from './router'
+import router from "./router";
 
 // Vuex Store
-import store from './store/store'
+import store from "./store/store";
 
 // i18n
-import i18n from './i18n/i18n'
+import i18n from "./i18n/i18n";
 
 // Vuesax Admin Filters
-import './filters/filters'
+import "./filters/filters";
 
 // Clipboard
-import VueClipboard from 'vue-clipboard2'
+import VueClipboard from "vue-clipboard2";
 Vue.use(VueClipboard);
 
-
 // Tour
-import VueTour from 'vue-tour'
-Vue.use(VueTour)
-require('vue-tour/dist/vue-tour.css')
-
+import VueTour from "vue-tour";
+Vue.use(VueTour);
+require("vue-tour/dist/vue-tour.css");
 
 // VeeValidate
-import VeeValidate, {
-    Validator
-} from 'vee-validate'
-import es from 'vee-validate/dist/locale/es';
+import VeeValidate, { Validator } from "vee-validate";
+import es from "vee-validate/dist/locale/es";
 Vue.use(VeeValidate);
-Validator.localize('es', es);
+Validator.localize("es", es);
 
 // Google Maps
-import * as VueGoogleMaps from 'vue2-google-maps'
+import * as VueGoogleMaps from "vue2-google-maps";
 Vue.use(VueGoogleMaps, {
     load: {
         // Add your API key here
-        key: 'AIzaSyB4DDathvvwuwlwnUu7F4Sow3oU22y5T1Y',
-        libraries: 'places', // This is required if you use the Auto complete plug-in
-    },
-})
+        key: "AIzaSyB4DDathvvwuwlwnUu7F4Sow3oU22y5T1Y",
+        libraries: "places" // This is required if you use the Auto complete plug-in
+    }
+});
 
 // Vuejs - Vue wrapper for hammerjs
-import {
-    VueHammer
-} from 'vue2-hammer'
-Vue.use(VueHammer)
+import { VueHammer } from "vue2-hammer";
+Vue.use(VueHammer);
 
 // PrismJS
-import 'prismjs'
+import "prismjs";
 // import 'prismjs/themes/prism-tomorrow.css'
 
 // Feather font icon
-require('@assets/css/iconfont.css')
+require("@assets/css/iconfont.css");
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 /**importo el formnateador de numeros a moneda */
-import numeral from 'numeral';
-import numFormat from 'vue-filter-number-format';
+import numeral from "numeral";
+import numFormat from "vue-filter-number-format";
 
-Vue.filter('numFormat', numFormat(numeral));
+Vue.filter("numFormat", numFormat(numeral));
+
+/**con esta funcion valido si el usuario tiene cierto permiso sobre algun modulo, tomand
+ * con parametros la url del modulo y el id del permiso
+ */
+import { modulo } from "@/ModuloPermisos";
+Vue.prototype.$modulo = modulo;
 
 new Vue({
     router,
@@ -105,4 +102,4 @@ new Vue({
     i18n,
     acl,
     render: h => h(App)
-}).$mount('#app')
+}).$mount("#app");

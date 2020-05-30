@@ -81,7 +81,8 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Roles de Usuario",
-                        rule: "editor"
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
                 {
@@ -106,7 +107,8 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Usuarios",
-                        rule: "editor"
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
@@ -131,7 +133,8 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Empresa",
-                        rule: "editor"
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
                 /**FIN DE RUTAS PARA EL MODULO DE EMPRESAS */
@@ -156,7 +159,8 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Proveedores",
-                        rule: "editor"
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
                 /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
@@ -183,7 +187,8 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Cementerio",
-                        rule: "editor"
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
 
@@ -236,7 +241,8 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Clientes",
-                        rule: "editor"
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
 
@@ -263,7 +269,8 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Perfíl",
-                        rule: "editor"
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
 
@@ -411,7 +418,45 @@ router.beforeEach((to, from, next) => {
     /** verificar que este logueado */
     if (to.matched.some(record => record.meta.authRequired)) {
         if (localStorage.getItem("accessToken")) {
-            return next();
+            if (
+                to.path === "/dashboard/analytics" ||
+                to.path === "/pages/profile"
+            ) {
+                return next();
+            } else {
+                /**verificando si el usuario tiene permiso para acceder a esa ruta solicitdad */
+                if (localStorage.getItem("AccessPermissions")) {
+                    var modulos_permisos = JSON.parse(
+                        localStorage.getItem("AccessPermissions")
+                    );
+                    /**verificando que la ruta ala que quiere acceder esta en la lista
+                     * de permisos de el clienre que esta logueado
+                     */
+                    for (
+                        let index = 0;
+                        index < modulos_permisos.length;
+                        index++
+                    ) {
+                        if (modulos_permisos[index].url === to.path) {
+                            next();
+                            return false;
+                        }
+                    }
+
+                    /**no esntro en niguna ruta */
+                    return next("/");
+                } else {
+                    /**se deberia mandar llamar el dispatch del crear user_modulos_permisos en moduleAuthActions */
+                    /**verificando que las urls y los permisos esten siempre disponibles */
+                    if (!localStorage.getItem("AccessPermissions")) {
+                        store
+                            .dispatch("auth/user_modulos_permisos")
+                            .then(() => {
+                                return next("/");
+                            });
+                    }
+                }
+            }
         } else return next("/pages/login");
     } else {
         return next();

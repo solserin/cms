@@ -97,3 +97,7 @@ export const alfabeto = [
     "Y",
     "Z"
 ];
+
+export const PermisosModulo = localStorage.getItem("AccessPermissions")
+    ? JSON.parse(localStorage.getItem("AccessPermissions"))
+    : null;

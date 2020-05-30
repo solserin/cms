@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Usuarios;
 
+use App\User;
 use App\Roles;
+use App\Modulos;
+use App\Secciones;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ApiController;
-use App\Modulos;
-use App\Secciones;
 
 class RolesController extends ApiController
 {
@@ -101,6 +102,30 @@ class RolesController extends ApiController
             ->orderBy('modu.id', 'asc')
             ->get();
         return $this->showAll($modulos);
+    }
+
+    public function get_modulos_urls_permisos(Request $request)
+    {
+        if ($request->user()) {
+            $usuario = User::find($request->user()->id);
+            /**RECIBIMOS COMO PARAMETRO EL TOKEN PARA OBTENER LOS PERMISOS DEL USUARIO*/
+            $resultado = Modulos::select(
+                'url',
+                'modulo',
+                'modulos_id',
+                'permisos_id',
+                'permiso'
+            )
+                ->join('permisos', 'permisos.modulos_id', '=', 'modulos.id')
+                ->join('roles_permisos', 'permisos.id', '=', 'roles_permisos.permisos_id')
+                ->where('modulos.url', '<>', '')
+                ->where('roles_permisos.roles_id', '=', $usuario->roles_id)
+                ->distinct()
+                ->get();
+            return $resultado;
+        } else
+            //no existe el token y regresamos un codigo de error
+            return $this->errorResponse('Usuario no autenticado', 401);
     }
 
 
