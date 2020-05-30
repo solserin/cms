@@ -186,7 +186,7 @@ class ModulosSeeder extends Seeder
                 'status' => 0
             ],
             [ //19
-                'modulo' => 'Ventas Planes',
+                'modulo' => 'Planes a Futuro',
                 'icon' => '',
                 'parent_modulo_id' => 17,
                 'url' => '/funeraria/ventas_planes',

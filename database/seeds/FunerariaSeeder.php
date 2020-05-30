@@ -22,7 +22,7 @@ class FunerariaSeeder extends Seeder
                 'num_ext' => '58',
                 'num_int' => '',
                 'colonia' => 'Adolfo lópez mateos',
-                'cp' => '8140',
+                'cp' => '82140',
                 'ciudad' => 'Mazatlán',
                 'estado' => 'Sinaloa',
                 'zona_horaria' => 'America/Mazatlan',

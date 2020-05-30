@@ -16,7 +16,6 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
     <div class="flex flex-wrap">
       <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
         <vs-button
-          v-if="this.$modulo.permiso(this.$route.path,11)"
           color="success"
           size="small"
           class="w-full ml-auto"
@@ -145,7 +144,6 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               <img class="mr-3 hidden" style="width:20px;" src="@assets/images/pdf.svg" alt />
 
               <vs-button
-                v-if="$modulo.permiso($route.path,12)"
                 class="ml-auto"
                 title="Editar"
                 size="large"
@@ -157,7 +155,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               ></vs-button>
               <vs-button
                 class="mr-auto"
-                v-if="data[indextr].status==1 && $modulo.permiso($route.path,13)"
+                v-if="data[indextr].status==1"
                 title="Cancelar"
                 icon-pack="feather"
                 size="large"
@@ -168,7 +166,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               ></vs-button>
               <vs-button
                 class="mr-auto"
-                v-else-if="$modulo.permiso($route.path,13)"
+                v-else
                 title="Activar"
                 icon-pack="feather"
                 size="large"

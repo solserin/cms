@@ -210,13 +210,13 @@ class RolesController extends ApiController
 
         request()->validate(
             [
-                'rol_modificar' => [
+                'rol' => [
                     Rule::unique('roles', 'rol')->ignore($rol_id),
                 ],
                 'permisos' => 'required'
             ],
             [
-                'rol_modificar.required' => 'Debe seleccionar un rol',
+                'rol.required' => 'Debe seleccionar un rol',
                 'permisos.required' => 'Debe seleccionar 1 permiso al menos.',
                 'unique' => 'Este rol ya existe'
             ]
