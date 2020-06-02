@@ -10,20 +10,19 @@
 // MAIN COLORS - VUESAX THEME COLORS
 let colors = {
     //primary : '#7367F0',
-    //solserin 
+    //solserin
     //primary: '#063278',
     /*aeternus*/
-    primary: '#b18b1e',
-    default_color: '#C1C1C1',
-    info: '#0061ff',
-    success: '#28C76F',
-    danger: '#EA5455',
-    warning: '#FF9F43',
-    dark: '#1E1E1E',
-    secondary_theme: '#b6babd',
-    textos_theme: '#1f1714',
-
-}
+    primary: "#b18b1e",
+    default_color: "#C1C1C1",
+    info: "#0061ff",
+    success: "#28C76F",
+    danger: "#EA5455",
+    warning: "#FF9F43",
+    dark: "#1E1E1E",
+    secondary_theme: "#b6babd",
+    textos_theme: "#1f1714"
+};
 
 // CONFIGS
 const themeConfig = {
@@ -40,18 +39,18 @@ const themeConfig = {
     theme: "light", // options[String]  : "light"(default), "dark", "semi-dark"
 
     // Not required yet - WIP
-    userInfoLocalStorageKey: "userInfo",
+    userInfoLocalStorageKey: "userInfo"
 
     // NOTE: themeTour will be disabled in screens < 1200. Please refer docs for more info.
-}
+};
 
-import Vue from 'vue'
-import Vuesax from 'vuesax'
+import Vue from "vue";
+import Vuesax from "vuesax";
 Vue.use(Vuesax, {
     theme: {
         colors
     },
     rtl: themeConfig.rtl
-})
+});
 
-export default themeConfig
+export default themeConfig;

@@ -81,250 +81,246 @@ class Permisos extends Seeder
                 'permiso' => 'consultar estados de cuenta',
                 'modulos_id' => 5
             ],
-            /**permisos de cementerio financiamientos */
+
+
+            /**permisos de cementerio Financiamientos (se hara dedes la venta de cementerio)*/
             [
-                'permiso' => 'modificar precios',
+                'permiso' => 'Crear planes financiamientos de propiedades',
                 'modulos_id' => 7
             ],
             [
-                'permiso' => 'deshabilitar financiamientos',
+                'permiso' => 'Modificar financiamientos de propiedades',
                 'modulos_id' => 7
             ],
             [
-                'permiso' => 'consultar planes de financiamientos',
+                'permiso' => 'Deshabilitar financiamientos de propiedades',
                 'modulos_id' => 7
             ],
+            [
+                'permiso' => 'Consultar precios de propiedades',
+                'modulos_id' => 7
+            ],
+
+
+
             /**permisos de cementerio venta de terrenos */
             [
                 'permiso' => 'registrar ventas',
-                'modulos_id' => 8
+                'modulos_id' => 7
             ],
             [
                 'permiso' => 'modificar contrato de ventas',
-                'modulos_id' => 8
+                'modulos_id' => 7
             ],
             [
                 'permiso' => 'cancelar contratos',
-                'modulos_id' => 8
+                'modulos_id' => 7
             ],
             [
                 'permiso' => 'consultar contratos',
-                'modulos_id' => 8
+                'modulos_id' => 7
             ],
             /**permisos de cementerio cobro de cuotas */
             [
                 'permiso' => 'crear cobranzas anuales',
-                'modulos_id' => 9
+                'modulos_id' => 8
             ],
             [
                 'permiso' => 'cancelar cobranza anual',
-                'modulos_id' => 9
+                'modulos_id' => 8
             ],
             [
                 'permiso' => 'Actualizar lista de cobranza',
-                'modulos_id' => 9
+                'modulos_id' => 8
             ],
             /**permisos de invnetario proveedores */
             [
                 'permiso' => 'agregar nuevos proveedores',
-                'modulos_id' => 11
+                'modulos_id' => 10
             ],
             [
                 'permiso' => 'modificar datos de proveedor',
-                'modulos_id' => 11
+                'modulos_id' => 10
             ],
             [
                 'permiso' => 'eliminar proveedores',
-                'modulos_id' => 11
+                'modulos_id' => 10
             ],
             [
                 'permiso' => 'consultar datos de proveedor',
-                'modulos_id' => 11
+                'modulos_id' => 10
             ],
             /**permisos de invnetario articulos */
             [
                 'permiso' => 'agregar articulos o servicios',
-                'modulos_id' => 12
+                'modulos_id' => 11
             ],
             [
                 'permiso' => 'Modificar información',
-                'modulos_id' => 12
+                'modulos_id' => 11
             ],
             [
                 'permiso' => 'Deshabilitar artículos o servicio',
-                'modulos_id' => 12
+                'modulos_id' => 11
             ],
             [
                 'permiso' => 'Consultar información de un producto',
-                'modulos_id' => 12
+                'modulos_id' => 11
             ],
             /**permisos de ajuste de inventario */
             [
                 'permiso' => 'Realizar Ajustes de inventario',
-                'modulos_id' => 13
+                'modulos_id' => 12
             ],
             [
                 'permiso' => 'Consultar Ajustes de inventario',
-                'modulos_id' => 13
+                'modulos_id' => 12
             ],
             /**permisos de inventario crompras */
             [
                 'permiso' => 'Capturar compra de mercancía',
-                'modulos_id' => 14
+                'modulos_id' => 13
             ],
             [
                 'permiso' => 'Cancelar compras',
-                'modulos_id' => 14
+                'modulos_id' => 13
             ],
             [
                 'permiso' => 'Consultar detalles de compra',
-                'modulos_id' => 14
+                'modulos_id' => 13
             ],
             /**permisos de inventario devoluciones */
             [
                 'permiso' => 'Hacer devoluciones a proveedor',
-                'modulos_id' => 15
+                'modulos_id' => 14
             ],
             [
                 'permiso' => 'Cancelar devoluciones',
-                'modulos_id' => 15
+                'modulos_id' => 14
             ],
             [
                 'permiso' => 'Consultar devoluciones realizadas',
-                'modulos_id' => 15
+                'modulos_id' => 14
             ],
             /**permisos de inventario salidas */
             [
                 'permiso' => 'Capturar salidas de mercancía del inventario',
-                'modulos_id' => 16
+                'modulos_id' => 15
             ],
             [
                 'permiso' => 'Consultar detalles de salidas',
-                'modulos_id' => 16
+                'modulos_id' => 15
             ],
 
             /**permisos de funeraria Financiamientos*/
             [
                 'permiso' => 'Crear planes funerarios a futuro',
-                'modulos_id' => 18
+                'modulos_id' => 17
             ],
             [
                 'permiso' => 'Modificar Planes funerarios',
-                'modulos_id' => 18
+                'modulos_id' => 17
             ],
             [
                 'permiso' => 'Deshabilitar planes de venta',
-                'modulos_id' => 18
+                'modulos_id' => 17
             ],
             [
                 'permiso' => 'Consultar precios de planes',
-                'modulos_id' => 18
+                'modulos_id' => 17
             ],
 
             /**permisos de funeraria planes a futuro*/
             [
                 'permiso' => 'Registrar ventas de planes a futuro',
-                'modulos_id' => 19
+                'modulos_id' => 17
             ],
             [
                 'permiso' => 'Modificar contratos',
-                'modulos_id' => 19
+                'modulos_id' => 17
             ],
             [
                 'permiso' => 'Cancelar contratos',
-                'modulos_id' => 19
+                'modulos_id' => 17
             ],
             [
                 'permiso' => 'Consultar contratos',
-                'modulos_id' => 19
+                'modulos_id' => 17
             ],
             /**permisos de funeraria servicios funerarios*/
             [
                 'permiso' => 'Atender servicios funerarios',
-                'modulos_id' => 20
+                'modulos_id' => 18
             ],
             [
                 'permiso' => 'Modificar contratos de servicios',
-                'modulos_id' => 20
+                'modulos_id' => 18
             ],
             [
                 'permiso' => 'Cancelar servicios funerarios',
-                'modulos_id' => 20
+                'modulos_id' => 18
             ],
             [
                 'permiso' => 'Consultar contratos',
-                'modulos_id' => 20
+                'modulos_id' => 18
             ],
             /**permisos de funeraria ventas en gral*/
             [
                 'permiso' => 'Realizar Ventas',
-                'modulos_id' => 21
+                'modulos_id' => 19
             ],
             [
                 'permiso' => 'Cancelar Ventas',
-                'modulos_id' => 21
+                'modulos_id' => 19
             ],
             [
                 'permiso' => 'Consultar venta',
-                'modulos_id' => 21
+                'modulos_id' => 19
             ],
             /**permisos de funeraria devolucion de productos*/
             [
                 'permiso' => 'Registrar Devoluciones de productos',
-                'modulos_id' => 22
+                'modulos_id' => 20
             ],
             [
                 'permiso' => 'Consultar devolución de productos',
+                'modulos_id' => 20
+            ],
+            /**permisos de  pagos (cobranza)*/
+            [
+                'permiso' => 'Registrar pagos',
                 'modulos_id' => 22
-            ],
-            /**permisos de  pagos de comisiones*/
-            [
-                'permiso' => 'Registrar pagos de comisiones',
-                'modulos_id' => 24
-            ],
-            [
-                'permiso' => 'Cancelar pagos de comisiones',
-                'modulos_id' => 24
-            ],
-            [
-                'permiso' => 'Consultar recibos',
-                'modulos_id' => 24
-            ],
-
-            /**permisos de finanzas cobranza*/
-            [
-                'permiso' => 'Recibir pagos',
-                'modulos_id' => 26
             ],
             [
                 'permiso' => 'Cancelar pagos',
-                'modulos_id' => 26
+                'modulos_id' => 22
             ],
             [
-                'permiso' => 'Consultar pago',
-                'modulos_id' => 26
+                'permiso' => 'Consultar pagos',
+                'modulos_id' => 22
             ],
-            /**permisos de facturacion*/
+            /**permisos de  facturas (cobranza)*/
             [
-                'permiso' => 'Emitir facturas',
-                'modulos_id' => 27
-            ],
-            [
-                'permiso' => 'Cancelar facturas',
-                'modulos_id' => 27
+                'permiso' => 'Emitir Facturas',
+                'modulos_id' => 23
             ],
             [
-                'permiso' => 'Consultar facturas',
-                'modulos_id' => 27
+                'permiso' => 'Cancelar Facturas',
+                'modulos_id' => 23
             ],
+            [
+                'permiso' => 'Consultar Facturas',
+                'modulos_id' => 23
+            ],
+
             /**permisos de reportes*/
             [
                 'permiso' => 'Ver reporte de usuarios',
-                'modulos_id' => 28
+                'modulos_id' => 24
             ],
             [
                 'permiso' => 'Ver reporte de clientes',
-                'modulos_id' => 28
+                'modulos_id' => 24
             ],
         ];
 

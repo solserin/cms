@@ -88,14 +88,6 @@ class ModulosSeeder extends Seeder
                 'status' => 1
             ],
             [ //7
-                'modulo' => 'Financiamientos',
-                'icon' => '',
-                'parent_modulo_id' => 6,
-                'url' => '/cementerio/financiamientos',
-                'secciones_id' => 2,
-                'status' => 1
-            ],
-            [ //8
                 'modulo' => 'Venta de Terrenos',
                 'icon' => '',
                 'parent_modulo_id' => 6,
@@ -103,7 +95,7 @@ class ModulosSeeder extends Seeder
                 'secciones_id' => 2,
                 'status' => 1
             ],
-            [ //9
+            [ //8
                 'modulo' => 'Cobro de Cuotas',
                 'icon' => '',
                 'parent_modulo_id' => 6,
@@ -111,7 +103,7 @@ class ModulosSeeder extends Seeder
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //10
+            [ //9
                 'modulo' => 'Inventario',
                 'icon' => 'TruckIcon',
                 'parent_modulo_id' => 0,
@@ -119,57 +111,57 @@ class ModulosSeeder extends Seeder
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //11
+            [ //10
                 'modulo' => 'Proveedores',
                 'icon' => '',
-                'parent_modulo_id' => 10,
+                'parent_modulo_id' => 9,
                 'url' => '/inventarios/funeraria/proveedores',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //12
+            [ //11
                 'modulo' => 'Artículos / Servicios',
                 'icon' => '',
-                'parent_modulo_id' => 10,
+                'parent_modulo_id' => 9,
                 'url' => '/inventarios/funeraria/articulos',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //13
+            [ //12
                 'modulo' => 'Ajustes de inventario',
                 'icon' => '',
-                'parent_modulo_id' => 10,
+                'parent_modulo_id' => 9,
                 'url' => '/inventarios/funeraria/ajustes',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //14
+            [ //13
                 'modulo' => 'Compras',
                 'icon' => '',
-                'parent_modulo_id' => 10,
+                'parent_modulo_id' => 9,
                 'url' => '/inventarios/funeraria/compras',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //15
+            [ //14
                 'modulo' => 'Devoluciones',
                 'icon' => '',
-                'parent_modulo_id' => 10,
+                'parent_modulo_id' => 9,
                 'url' => '/inventarios/funeraria/devoluciones',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //16
+            [ //15
                 'modulo' => 'Salidas',
                 'icon' => '',
-                'parent_modulo_id' => 10,
+                'parent_modulo_id' => 9,
                 'url' => '/inventarios/funeraria/salidas',
                 'secciones_id' => 2,
                 'status' => 0
             ],
 
 
-            [ //17
+            [ //16
                 'modulo' => 'Funeraria',
                 'icon' => 'ArchiveIcon',
                 'parent_modulo_id' => 0,
@@ -177,89 +169,66 @@ class ModulosSeeder extends Seeder
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //18
-                'modulo' => 'Financiamientos',
-                'icon' => '',
-                'parent_modulo_id' => 17,
-                'url' => '/funeraria/financiamientos',
-                'secciones_id' => 2,
-                'status' => 0
-            ],
-            [ //19
+
+            [ //17
                 'modulo' => 'Planes a Futuro',
                 'icon' => '',
-                'parent_modulo_id' => 17,
+                'parent_modulo_id' => 16,
                 'url' => '/funeraria/ventas_planes',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //20
-                'modulo' => 'Servicios',
+            [ //18
+                'modulo' => 'Servicios Funerarios',
                 'icon' => '',
-                'parent_modulo_id' => 17,
+                'parent_modulo_id' => 16,
                 'url' => '/funeraria/servicios',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //21
+            [ //19
                 'modulo' => 'Ventas Gral.',
                 'icon' => '',
-                'parent_modulo_id' => 17,
+                'parent_modulo_id' => 16,
                 'url' => '/funeraria/ventas_generales',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //22
+            [ //20
                 'modulo' => 'Devoluciones',
                 'icon' => '',
-                'parent_modulo_id' => 17,
+                'parent_modulo_id' => 16,
                 'url' => '/funeraria/devoluciones',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //23
-                'modulo' => 'Pagos',
-                'icon' => 'FileTextIcon',
-                'parent_modulo_id' => 0,
-                'url' => '',
-                'secciones_id' => 2,
-                'status' => 0
-            ],
-            [ //24
-                'modulo' => 'Comisiones',
-                'icon' => '',
-                'parent_modulo_id' => 23,
-                'url' => '/comisiones/pagos',
-                'secciones_id' => 2,
-                'status' => 0
-            ],
-            [ //25
-                'modulo' => 'Finanzas',
+            [ //21
+                'modulo' => 'Cobranza',
                 'icon' => 'DollarSignIcon',
                 'parent_modulo_id' => 0,
                 'url' => '',
                 'secciones_id' => 2,
-                'status' => 1
+                'status' => 0
             ],
-            [ //26
-                'modulo' => 'Cobranza',
+            [ //22
+                'modulo' => 'Pagos',
                 'icon' => '',
-                'parent_modulo_id' => 25,
-                'url' => '/finanzas/cobranza',
-                'secciones_id' => 2,
-                'status' => 1
-            ],
-            [ //27
-                'modulo' => 'Facturación',
-                'icon' => '',
-                'parent_modulo_id' => 25,
-                'url' => '/finanzas/facturacion',
+                'parent_modulo_id' => 21,
+                'url' => '/cobranza/pagos',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //28
-                'modulo' => 'Reportes',
-                'icon' => 'PaperclipIcon',
+            [ //23
+                'modulo' => 'Facturación',
+                'icon' => '',
+                'parent_modulo_id' => 21,
+                'url' => '/cobranza/facturacion',
+                'secciones_id' => 2,
+                'status' => 0
+            ],
+            [ //24
+                'modulo' => 'Consultas / Reportes',
+                'icon' => 'FolderIcon',
                 'parent_modulo_id' => 0,
                 'url' => '/reportes',
                 'secciones_id' => 3,
