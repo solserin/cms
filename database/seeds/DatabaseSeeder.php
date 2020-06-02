@@ -1,5 +1,6 @@
 <?php
 
+use App\SATImpuestos;
 use App\TipoPagos;
 use App\User;
 use Illuminate\Database\Seeder;
@@ -18,13 +19,22 @@ class DatabaseSeeder extends Seeder
         $this->call(Ajustes::class);
         /**sedders de SAT */
         $this->call(SATRegimenesSeeder::class);
-        //$this->call(SATMonedasSeeder::class);
+        $this->call(SatImpuestosSeeder::class);
+        $this->call(SatMetodosPagoSeeder::class);
+        $this->call(SatUsosCfdiSeeder::class);
+        $this->call(SATMonedasSeeder::class);
         $this->call(formasPagoSeeder::class);
+        $this->call(SatPais::class);
+        $this->call(SatUnidadesSeeder::class);
+        $this->call(SatProductosServicios::class);
+        $this->call(SatTipoComprobanteSeeder::class);
+        $this->call(SatTipoRelacion::class);
         /**sedders de SAT */
 
 
         /**sedders de empresa */
         $this->call(FunerariaSeeder::class);
+        $this->call(LugaresVelacion::class);
         $this->call(CementerioSeeder::class);
         $this->call(FacturacionSeeder::class);
         $this->call(RegistroPublicoSeeder::class);
@@ -48,7 +58,7 @@ class DatabaseSeeder extends Seeder
 
 
         /**seeders para el control de ventas del cementerio y pagos */
-        $this->call(AjustesIntereses::class);
+        $this->call(AjustesPoliticas::class);
         $this->call(ConceptosPagosSeeder::class);
         $this->call(MotivosCancelacionSeeder::class);
         $this->call(TipoPagosSeeder::class);
@@ -60,11 +70,13 @@ class DatabaseSeeder extends Seeder
         $this->call(columnasFilasSeeder::class);
         $this->call(TipoPreciosSeeder::class);
         $this->call(PreciosPropiedadesSeeder::class);
-        $this->call(antiguedadVentasSeeder::class);
+        $this->call(AntiguedadOperacion::class);
         /**pagos */
         //
         //
         /**fin de seeder de cementerio */
+        /**seeders de operaciones pagos */
+        $this->call(MovimientosPagos::class);
 
 
 

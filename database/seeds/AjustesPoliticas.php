@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
-class AjustesIntereses extends Seeder
+class AjustesPoliticas extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,14 +12,18 @@ class AjustesIntereses extends Seeder
      */
     public function run()
     {
-        DB::table('ajustes_intereses')->insert(
+        DB::table('ajustes_politicas')->insert(
             [
                 'tasa_fija_anual' => 12,
                 'dias_antes_vencimiento' => 5,
                 'maximo_dias_retraso' => 120,
                 'porcentaje_pena_convencional_minima' => 60,
                 'minima_partes_cubiertas' => 3,
-                'maximo_pagos_vencidos' => 3
+                'maximo_pagos_vencidos' => 3,
+                'maximo_dias_cancelar_contrato' => 5,
+                'porcentaje_pronto_pago' => 5,
+                'comision_cementerio' => 5,
+                'comision_planes' => 5,
             ]
         );
     }

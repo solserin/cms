@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AntiguedadVentas extends Migration
+class SatPais extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class AntiguedadVentas extends Migration
      */
     public function up()
     {
-        Schema::create('antiguedad_ventas', function (Blueprint $table) {
+        Schema::create('sat_pais', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('antiguedad');
+            $table->string('clave')->nullable();
+            $table->string('pais')->nullable();
         });
     }
 
@@ -26,6 +27,6 @@ class AntiguedadVentas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('antiguedad_ventas');
+        Schema::dropIfExists('sat_pais');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTipoPropiedadesTable extends Migration
+class AntiguedadOperacion extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateTipoPropiedadesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tipo_propiedades', function (Blueprint $table) {
+        Schema::create('antiguedad_operacion', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('tipo');
-            $table->string('descripcion');
-            $table->tinyInteger('capacidad');
+            $table->string('antiguedad');
         });
     }
 
@@ -28,8 +26,6 @@ class CreateTipoPropiedadesTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('tipo_propiedades');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        Schema::dropIfExists('antiguedad_operacion');
     }
 }

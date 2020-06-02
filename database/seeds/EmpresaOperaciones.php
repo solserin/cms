@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EmpresaOperaciones extends Seeder
 {
@@ -12,25 +13,21 @@ class EmpresaOperaciones extends Seeder
     public function run()
     {
         /**
-         * 1- 001- VENTA DE TERRENOS DE USO INMEDIATO
-         * 2- 002- VENTA DE TERRENOS DE USO A FUTURO
-         * 3- 003- SERVICIOS FUNERARIOS DE USO INMEDIATO
-         * 4- 004- SERVICIOS FUNERARIOS DE USO A FUTURO
-         * 5- 005- VENTA DE ARTICULOS FUNERARIOS
-         * 6- 006- VENTA DE CONSUMIBLES
-         * 7- 007- COBRO DE CUOTAS DE MANTENIMIENTO ANUAL
+         * 1- 001- VENTA DE TERRENOS
+         * 2- 002- SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO.
+         * 3- 003- SERVICIOS FUNERARIOS
+         * 4- 004- VENTA DE PLANES FUNERARIOS A FUTURO
+         * 5- 005- SERVICIOS ESPECIALES CON EXTREMIDADES
+         * 6- 006- VENTAS EN GRAL.
          */
 
         /**procesos del cementerio */
-        DB::table('empresa_operaciones')->insert(['referencia_pago' => '001', 'descripcion' => 'VENTA DE TERRENOS DE USO INMEDIATO', 'nombre_corto' => 'TERRENO USO INMEDIATO']);
-        DB::table('empresa_operaciones')->insert(['referencia_pago' => '002', 'descripcion' => 'VENTA DE TERRENOS DE USO A FUTURO', 'nombre_corto' => 'TERRENO A FUTURO']);
-
+        DB::table('empresa_operaciones')->insert(['referencia_pago' => '001', 'descripcion' => 'VENTA DE TERRENOS', 'nombre_corto' => 'TERRENOS']);
+        DB::table('empresa_operaciones')->insert(['referencia_pago' => '002', 'descripcion' => 'SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO', 'nombre_corto' => 'MANTENIMIENTO CEMENTERIO']);
         /**procesos de la funraria */
-        DB::table('empresa_operaciones')->insert(['referencia_pago' => '003', 'descripcion' => 'SERVICIOS FUNERARIOS DE USO INMEDIATO', 'nombre_corto' => 'SERVICIO FUNERARIO INMEDIATO']);
-        DB::table('empresa_operaciones')->insert(['referencia_pago' => '004', 'descripcion' => 'SERVICIOS FUNERARIOS DE USO A FUTURO', 'nombre_corto' => 'SERVICIO FUNERARIOS A FUTURO']);
-        DB::table('empresa_operaciones')->insert(['referencia_pago' => '005', 'descripcion' => 'VENTA DE ARTICULOS FUNERARIOS', 'nombre_corto' => 'VENTA DE ARTICULO FUNERARIO']);
-        DB::table('empresa_operaciones')->insert(['referencia_pago' => '006', 'descripcion' => 'VENTA DE CONSUMIBLES', 'nombre_corto' => 'VENTA DE CONSUMIBLE']);
-        /**procesos del cementerio */
-        DB::table('empresa_operaciones')->insert(['referencia_pago' => '007', 'descripcion' => 'COBRO DE CUOTAS DE MANTENIMIENTO ANUAL', 'nombre_corto' => 'CUOTA DE MANTENIMIENTO ANUAL']);
+        DB::table('empresa_operaciones')->insert(['referencia_pago' => '003', 'descripcion' => 'SERVICIOS FUNERARIOS', 'nombre_corto' => 'SERVICIO FUNERARIO']);
+        DB::table('empresa_operaciones')->insert(['referencia_pago' => '004', 'descripcion' => 'VENTA DE PLANES FUNERARIOS A FUTURO', 'nombre_corto' => 'PLAN FUNERARIO A FUTURO']);
+        DB::table('empresa_operaciones')->insert(['referencia_pago' => '005', 'descripcion' => 'SERVICIOS ESPECIALES CON EXTREMIDADES', 'nombre_corto' => 'SERVICIO ESPECIAL']);
+        DB::table('empresa_operaciones')->insert(['referencia_pago' => '006', 'descripcion' => 'VENTAS EN GRAL.', 'nombre_corto' => 'VENTA GRAL.']);
     }
 }

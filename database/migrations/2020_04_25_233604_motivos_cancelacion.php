@@ -17,6 +17,7 @@ class MotivosCancelacion extends Migration
          * 1- falta de pago
          * 2- a peticion del cliente
          * 3- error de captura
+         * 4- Otro
          */
         Schema::create('motivos_cancelacion', function (Blueprint $table) {
             $table->bigIncrements('id');

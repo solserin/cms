@@ -36,5 +36,20 @@ class UsuariosSeeder extends Seeder
             'roles_id' => 2, //rol de Admin
             'status' => 1
         ]);
+
+        /**insertnado los puestos a los 2 primeros usuarios genrales */
+
+        $puestos = DB::table('puestos')->get();
+
+        foreach ($puestos as $puesto) {
+            DB::table('usuarios_puestos')->insert([
+                'usuarios_id' => 1,
+                'puestos_id' => $puesto->id
+            ]);
+            DB::table('usuarios_puestos')->insert([
+                'usuarios_id' => 2,
+                'puestos_id' => $puesto->id
+            ]);
+        }
     }
 }
