@@ -21,9 +21,6 @@ class AjustesPoliticas extends Seeder
                 'minima_partes_cubiertas' => 3,
                 'maximo_pagos_vencidos' => 3,
                 'maximo_dias_cancelar_contrato' => 5,
-                'porcentaje_pronto_pago' => 5,
-                'comision_cementerio' => 5,
-                'comision_planes' => 5,
             ]
         );
     }

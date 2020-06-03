@@ -79,14 +79,12 @@
       @search="handleSearch"
       @change-page="handleChangePage"
       @sort="handleSort"
-      v-model="selected"
       :max-items="serverOptions.per_page.value"
       :data="users"
-      stripe
       noDataText="0 Resultados"
     >
       <template slot="header">
-        <h3 class="pb-5 text-primary">Listado de Usuarios registrados</h3>
+        <h3>Listado de Usuarios registrados</h3>
       </template>
       <template slot="thead">
         <vs-th>Clave</vs-th>
@@ -107,44 +105,33 @@
             <p v-else>Mujer</p>
           </vs-td>
           <vs-td :data="data[indextr].estado">
-            <p v-if="data[indextr].estado==1" class="text-success font-medium">Activo</p>
-            <p v-else class="text-danger font-medium">Sin Acceso</p>
+            <p v-if="data[indextr].estado==1" class="text-success">Activo</p>
+            <p v-else class="text-danger">Sin Acceso</p>
           </vs-td>
           <vs-td :data="data[indextr].rol">{{data[indextr].rol}}</vs-td>
           <vs-td :data="data[indextr].id_user">
             <div class="flex flex-start">
-              <vs-button
-                class="ml-auto"
-                title="Editar"
-                size="large"
-                icon-pack="feather"
-                icon="icon-edit"
-                color="dark"
-                type="flat"
+              <img
+                class="cursor-pointer img-btn ml-auto mr-3"
+                src="@assets/images/edit.svg"
+                title="Modificar"
                 @click="openModificar(data[indextr].id_user)"
-              ></vs-button>
-              <vs-button
-                class="mr-auto"
+              />
+              <img
                 v-if="data[indextr].estado==1"
-                title="Desactivar"
-                icon-pack="feather"
-                size="large"
-                icon="icon-shield-off"
-                color="danger"
-                type="flat"
+                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                src="@assets/images/switchon.svg"
+                title="Deshabilitar"
                 @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
-              ></vs-button>
-              <vs-button
-                class="mr-auto"
+              />
+
+              <img
                 v-else
-                title="Activar"
-                icon-pack="feather"
-                size="large"
-                icon="icon-shield"
-                color="success"
-                type="flat"
+                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                src="@assets/images/switchoff.svg"
+                title="Habilitar"
                 @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
-              ></vs-button>
+              />
             </div>
           </vs-td>
         </vs-tr>

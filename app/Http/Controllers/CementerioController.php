@@ -1279,6 +1279,24 @@ class CementerioController extends ApiController
         return DB::table('tipo_propiedades')->get();
     }
 
+    public function get_financiamientos()
+    {
+        $resultado = tipoPropiedades::with('precios')->withCount('precios')->get()->toArray();
+
+        foreach ($resultado as $tipo_key => &$tipo) {
+            foreach ($tipo['precios'] as $precio_key => &$precio) {
+                if ($precio['financiamiento'] == 1) {
+                    $precio['tipo_financiamiento'] = "Pago Único";
+                } else {
+                    $precio['tipo_financiamiento'] = "Pago a Meses";
+                }
+            }
+        }
+        return $resultado;
+    }
+
+
+
 
     //retorna los tipos de propiedad
     public function get_propiedades_by_tipo(Request $request)

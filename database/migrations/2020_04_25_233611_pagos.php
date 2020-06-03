@@ -15,8 +15,6 @@ class Pagos extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('pagos_programados_id')->nullable();
-            $table->foreign('pagos_programados_id')->references('id')->on('pagos_programados');
             $table->float('monto_pago');
             $table->float('pago_con_cantidad');
             $table->float('cambio_pago');
@@ -26,6 +24,7 @@ class Pagos extends Migration
             $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('cobrador_id')->nullable();
             $table->foreign('cobrador_id')->references('id')->on('usuarios');
+            $table->date('fecha_cancelacion')->nullable();
             $table->foreign('motivos_cancelacion_id')->references('id')->on('motivos_cancelacion'); //en caso de cancelar la venta
             $table->unsignedBigInteger('motivos_cancelacion_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');

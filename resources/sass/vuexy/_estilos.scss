@@ -49,6 +49,11 @@
     width: 22px !important;
 }
 
+.img-btn-32 {
+    display: inline !important;
+    width: 32px !important;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                   estilos                                  */
 /* -------------------------------------------------------------------------- */
@@ -56,8 +61,16 @@
     background-color: #cecece !important;
 }
 
+.bg-gray-dark {
+    background-color: #303030 !important;
+}
+
 .dark-text {
     color: #303030 !important;
+}
+
+.semidark-text {
+    color: #666666 !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -98,7 +111,7 @@ html {
     border-bottom: 2px solid #cecece !important;
     padding-bottom: 10px !important;
     color: rgba(var(--vs-primary), 1) !important;
-    text-transform: none !important;
+    text-transform: capitalize !important;
     font-size: 18px !important;
     font-weight: 550 !important;
 }
@@ -122,6 +135,9 @@ html {
     content: url("../../../../../resources/assets/images/client.svg");
 }
 
+.planes_venta_form .vs-popup--title h3:before {
+    content: url("../../../../../resources/assets/images/price_list.svg");
+}
 /* -------------------------------------------------------------------------- */
 /*                                 title forms                                */
 /* -------------------------------------------------------------------------- */
@@ -329,26 +345,76 @@ html {
     color: rgba(var(--vs-primary), 1) !important;
 }
 
-.vs-table--tbody-table tr {
-    background-color: #e7ebf0;
-    color: rgba(var(--vs-textos_theme), 1) !important;
+/* -------------------------------------------------------------------------- */
+/*                              estilos de tablas                             */
+/* -------------------------------------------------------------------------- */
+.vs-table--header {
+    padding: 6px 0px 6px 0px !important;
+    text-align: center !important;
+    background-color: #e8e8e8;
+}
+
+.vs-table--thead tr th {
+    padding: 7px 0px 7px 0px !important;
+}
+
+.vs-table--header h3 {
+    color: #666666;
+    font-size: 1.2em;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.vs-table--tbody {
+    border: 0px !important;
+    border-top: 2px solid #fff !important;
+}
+
+.vs-con-table {
+    border-collapse: collapse;
+}
+
+.vs-table--tr:nth-child(even) {
+    background-color: #f2f2f2 !important;
+}
+
+.vs-table--tr:hover {
+    background: rgba(221, 221, 221, 1) !important;
+    color: #303030 !important;
 }
 
 .vs-table--thead tr {
-    border-top: 1px solid rgba(var(--vs-primary), 1) !important;
-    border-bottom: 1px solid rgba(var(--vs-primary), 1) !important;
-    color: rgba(var(--vs-primary), 1) !important;
-    background-color: #fff !important;
+    border: 1px solid #ddd;
+    color: #fff !important;
+    background-color: #666666 !important;
 }
+
+.vs-table--thead tr th {
+    font-size: 1em !important;
+    font-weight: 600 !important;
+}
+.vs-table--thead tr th,
+.vs-table--td {
+    font-weight: 500 !important;
+    border: 1px solid #ddd;
+}
+
+.vs-table--td {
+    padding: 2px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              estilos de tablas                             */
+/* -------------------------------------------------------------------------- */
 
 /*tarifas card*/
 .card-tarifas .vs-card--header {
-    background-color: rgba(var(--vs-primary), 1) !important;
+    background-color: #666666;
 }
 
 .card-tarifas .vs-card--header h3 {
-    color: #fff !important;
-    font-size: 14px;
+    color: #fff;
+    font-size: 1.2em;
     text-transform: capitalize;
     font-weight: 600 !important;
 }
@@ -501,6 +567,11 @@ html {
 
 .big-forms .vs-popup--close {
     margin-top: -60px !important;
+    margin-right: 12px !important;
+}
+
+.normal-forms .vs-popup--close {
+    margin-top: -10px !important;
     margin-right: 12px !important;
 }
 

@@ -5241,6 +5241,11 @@ button:focus {
   width: 22px !important;
 }
 
+.img-btn-32 {
+  display: inline !important;
+  width: 32px !important;
+}
+
 /* -------------------------------------------------------------------------- */
 
 /*                                   estilos                                  */
@@ -5251,8 +5256,16 @@ button:focus {
   background-color: #cecece !important;
 }
 
+[dir] .bg-gray-dark {
+  background-color: #303030 !important;
+}
+
 .dark-text {
   color: #303030 !important;
+}
+
+.semidark-text {
+  color: #666666 !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -5297,7 +5310,7 @@ html {
 .big-forms .vs-popup--title h3 {
   width: 50% !important;
   color: rgba(var(--vs-primary), 1) !important;
-  text-transform: none !important;
+  text-transform: capitalize !important;
   font-size: 18px !important;
   font-weight: 550 !important;
 }
@@ -5338,6 +5351,10 @@ html {
 
 .clientes .vs-popup--title h3:before {
   content: url(/images/client.svg?d4db091664107976d6bbe0f40d320f4d);
+}
+
+.planes_venta_form .vs-popup--title h3:before {
+  content: url(/images/price_list.svg?525761143e61a87a58c572254c6aec3f);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -5546,33 +5563,100 @@ html {
   padding: 10px 0px 10px 0px;
 }
 
-.vs-table--tbody-table tr {
-  color: rgba(var(--vs-textos_theme), 1) !important;
+/* -------------------------------------------------------------------------- */
+
+/*                              estilos de tablas                             */
+
+/* -------------------------------------------------------------------------- */
+
+[dir] .vs-table--header {
+  padding: 6px 0px 6px 0px !important;
+  text-align: center !important;
+  background-color: #e8e8e8;
 }
 
-[dir] .vs-table--tbody-table tr {
-  background-color: #e7ebf0;
+[dir] .vs-table--thead tr th {
+  padding: 7px 0px 7px 0px !important;
+}
+
+.vs-table--header h3 {
+  color: #666666;
+  font-size: 1.2em;
+}
+
+[dir=ltr] .vs-table--header h3 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+[dir=rtl] .vs-table--header h3 {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+[dir] .vs-table--tbody {
+  border: 0px !important;
+  border-top: 2px solid #fff !important;
+}
+
+.vs-con-table {
+  border-collapse: collapse;
+}
+
+[dir] .vs-table--tr:nth-child(even) {
+  background-color: #f2f2f2 !important;
+}
+
+.vs-table--tr:hover {
+  color: #303030 !important;
+}
+
+[dir] .vs-table--tr:hover {
+  background: #dddddd !important;
 }
 
 .vs-table--thead tr {
-  color: rgba(var(--vs-primary), 1) !important;
+  color: #fff !important;
 }
 
 [dir] .vs-table--thead tr {
-  border-top: 1px solid rgba(var(--vs-primary), 1) !important;
-  border-bottom: 1px solid rgba(var(--vs-primary), 1) !important;
-  background-color: #fff !important;
+  border: 1px solid #ddd;
+  background-color: #666666 !important;
 }
+
+.vs-table--thead tr th {
+  font-size: 1em !important;
+  font-weight: 600 !important;
+}
+
+.vs-table--thead tr th,
+.vs-table--td {
+  font-weight: 500 !important;
+}
+
+[dir] .vs-table--thead tr th, [dir] .vs-table--td {
+  border: 1px solid #ddd;
+}
+
+[dir] .vs-table--td {
+  padding: 2px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                              estilos de tablas                             */
+
+/* -------------------------------------------------------------------------- */
 
 /*tarifas card*/
 
 [dir] .card-tarifas .vs-card--header {
-  background-color: rgba(var(--vs-primary), 1) !important;
+  background-color: #666666;
 }
 
 .card-tarifas .vs-card--header h3 {
-  color: #fff !important;
-  font-size: 14px;
+  color: #fff;
+  font-size: 1.2em;
   text-transform: capitalize;
   font-weight: 600 !important;
 }
@@ -5762,6 +5846,18 @@ html {
 }
 
 [dir=rtl] .big-forms .vs-popup--close {
+  margin-left: 12px !important;
+}
+
+[dir] .normal-forms .vs-popup--close {
+  margin-top: -10px !important;
+}
+
+[dir=ltr] .normal-forms .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .normal-forms .vs-popup--close {
   margin-left: 12px !important;
 }
 

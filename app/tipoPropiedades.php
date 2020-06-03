@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class tipoPropiedades extends Model
@@ -16,6 +17,11 @@ class tipoPropiedades extends Model
     //defino los precios que tienen cada tipo de propiedad
     public function precios()
     {
-        return $this->hasMany('App\PreciosPropiedades', 'tipo_propiedades_id', 'id');
+        return $this->hasMany('App\PreciosPropiedades', 'tipo_propiedades_id', 'id')->select(
+            '*',
+            DB::raw(
+                '(NULL) AS tipo_financiamiento'
+            ),
+        )->orderBy('financiamiento', 'asc');
     }
 }

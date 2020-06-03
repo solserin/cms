@@ -170,7 +170,7 @@ const router = new Router({
                     name: "inventario_cementerio_ventas",
                     component: () =>
                         import(
-                            "@/views/pages/inventarios/cementerio/ventas/VentasList.vue"
+                            "@/views/pages/cementerio/ventas/VentasList.vue"
                         ),
                     meta: {
                         breadcrumb: [
@@ -179,10 +179,10 @@ const router = new Router({
                                 url: "/"
                             },
                             {
-                                title: "Inventario del cementerio"
+                                title: "Control del cementerio"
                             },
                             {
-                                title: "Ventas",
+                                title: "Ventas de Terrenos",
                                 active: true
                             }
                         ],

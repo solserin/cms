@@ -107,14 +107,12 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       @search="handleSearch"
       @change-page="handleChangePage"
       @sort="handleSort"
-      v-model="selected"
       :max-items="serverOptions.per_page.value"
       :data="clientes"
-      stripe
       noDataText="0 Resultados"
     >
       <template slot="header">
-        <h3 class="pb-5 text-primary">Listado de Clientes Registrados</h3>
+        <h3>Listado de Clientes Registrados</h3>
       </template>
       <template slot="thead">
         <vs-th>Núm. Cliente</vs-th>
@@ -141,40 +139,27 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </vs-td>
           <vs-td :data="data[indextr].id_user">
             <div class="flex flex-start">
-              <img class="mr-3 hidden" style="width:20px;" src="@assets/images/pdf.svg" alt />
-
-              <vs-button
-                class="ml-auto"
-                title="Editar"
-                size="large"
-                icon-pack="feather"
-                icon="icon-edit"
-                color="dark"
-                type="flat"
+              <img
+                class="cursor-pointer img-btn ml-auto mr-3"
+                src="@assets/images/edit.svg"
+                title="Modificar"
                 @click="openModificar(data[indextr].id)"
-              ></vs-button>
-              <vs-button
-                class="mr-auto"
+              />
+              <img
                 v-if="data[indextr].status==1"
-                title="Cancelar"
-                icon-pack="feather"
-                size="large"
-                icon="icon-shield-off"
-                color="danger"
-                type="flat"
+                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                src="@assets/images/switchon.svg"
+                title="Deshabilitar"
                 @click="deleteCliente(data[indextr].id,data[indextr].nombre)"
-              ></vs-button>
-              <vs-button
-                class="mr-auto"
+              />
+
+              <img
                 v-else
-                title="Activar"
-                icon-pack="feather"
-                size="large"
-                icon="icon-shield"
-                color="success"
-                type="flat"
+                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                src="@assets/images/switchoff.svg"
+                title="Habilitar"
                 @click="altaCliente(data[indextr].id,data[indextr].nombre)"
-              ></vs-button>
+              />
             </div>
           </vs-td>
         </vs-tr>
@@ -363,7 +348,6 @@ export default {
       clientes
         .get_clientes(this.serverOptions)
         .then(res => {
-          //console.log("get_data -> res", res);
           this.clientes = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
@@ -438,7 +422,7 @@ export default {
         .then(res => {
           this.$vs.loading.close();
           this.get_data(this.actual);
-          if (res.data == 1) {
+          if (res.data >= 1) {
             this.$vs.notify({
               title: "Deshabilitar Cliente",
               text: "Se ha deshabilitado al cliente exitosamente.",
@@ -489,7 +473,7 @@ export default {
         .then(res => {
           this.$vs.loading.close();
           this.get_data(this.actual);
-          if (res.data == 1) {
+          if (res.data >= 1) {
             this.$vs.notify({
               title: "Habilitar Cliente",
               text: "Se ha habilitado al cliente exitosamente.",
@@ -512,7 +496,6 @@ export default {
         .catch(err => {
           this.$vs.loading.close();
           if (err.response) {
-            console.log("habilitar_cliente -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({

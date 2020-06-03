@@ -16,8 +16,8 @@ class CreateAjustesTable extends Migration
         //esta tabla me indica si ya esta funcionando la asgincacion automatica de los numeros de convenio y de titulos
         Schema::create('ajustes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->boolean('numero_convenios_sistematizados')->default(false);
-            $table->boolean('numero_titulos_sistematizados')->default(false);
+            $table->tinyInteger('numero_convenios_sistematizados')->default(0);
+            $table->tinyInteger('numero_titulos_sistematizados')->default(0);
         });
     }
 

@@ -96,7 +96,7 @@ class ModulosSeeder extends Seeder
                 'status' => 1
             ],
             [ //8
-                'modulo' => 'Cobro de Cuotas',
+                'modulo' => 'Cuotas de Servicio',
                 'icon' => '',
                 'parent_modulo_id' => 6,
                 'url' => '/cementerio/cuotas',

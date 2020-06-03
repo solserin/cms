@@ -329,7 +329,7 @@ export default {
       generosOptions: generosOptions,
       operConfirmar: false,
       callback: Function,
-      accionNombre: "agregar nuevo usuario",
+      accionNombre: "",
       roles: { label: "Seleccione 1", value: "" },
       rolesOptions: [],
       genero: generosOptions[0],
@@ -436,9 +436,11 @@ export default {
 
             if (this.getTipoformulario == "agregar") {
               /**se manda llamar la funcion de agregar usuario */
+              this.accionNombre = "Registrar Nuevo Usuario";
               this.openConfirmarAceptar = true;
               this.callback = this.saveUsuario;
             } else {
+              this.accionNombre = "Modificar Usuario";
               this.callback = this.updateUsuario;
               /**se manda agregar  la funcion de modificar */
               this.operConfirmar = true;

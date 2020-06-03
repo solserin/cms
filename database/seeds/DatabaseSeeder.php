@@ -61,7 +61,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AjustesPoliticas::class);
         $this->call(ConceptosPagosSeeder::class);
         $this->call(MotivosCancelacionSeeder::class);
-        $this->call(TipoPagosSeeder::class);
         $this->call(EmpresaOperaciones::class);
         /**seeder de cementerio */
         //

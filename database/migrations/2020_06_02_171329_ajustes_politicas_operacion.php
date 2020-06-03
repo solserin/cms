@@ -15,8 +15,6 @@ class AjustesPoliticasOperacion extends Migration
     {
         Schema::create('ajustes_politicas_operacion', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('operaciones_id')->nullable();
-            $table->foreign('operaciones_id')->references('id')->on('operaciones');
             $table->double('tasa_fija_anual');
             $table->integer('dias_antes_vencimiento');
             $table->integer('maximo_dias_retraso');
@@ -24,9 +22,8 @@ class AjustesPoliticasOperacion extends Migration
             $table->integer('minima_partes_cubiertas');
             $table->integer('maximo_pagos_vencidos');
             $table->integer('maximo_dias_cancelar_contrato');
-            $table->integer('porcentaje_pronto_pago');
-            $table->integer('comision_cementerio');
-            $table->integer('comision_planes');
+            $table->unsignedBigInteger('operaciones_id')->nullable();
+            $table->foreign('operaciones_id')->references('id')->on('operaciones');
         });
     }
 

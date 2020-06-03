@@ -29,6 +29,9 @@ class Operaciones extends Migration
             $table->float('impuestos')->nullable();
             $table->float('total')->nullable();
 
+            $table->tinyInteger('descuento_pronto_pago_b')->nullable()->default(0);
+            $table->float('costo_neto_pronto_pago')->nullable();
+
             /**solo para aquellos que aplica, venta de terrenos y venta de planes a futuro */
             $table->string('numero_solicitud', 35)->nullable();
             $table->string('numero_convenio', 35)->nullable();
@@ -75,6 +78,7 @@ class Operaciones extends Migration
             $table->float('costo_neto_financiamiento_normal')->nullable();
             /**status de la operacion */
             /**este se le asigna un valor numerico 1,2,3,0 segun la interpretacion en cada tipo de operacion */
+            $table->float('comision_venta_neto')->nullable();
             $table->tinyInteger('status')->default(0);
         });
     }

@@ -18,6 +18,12 @@ Route::get('get_puestos', 'Usuarios\UsuariosController@get_puestos');
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 
 
+/**rutas de modulo en proceso */
+Route::get('cementerio/get_financiamientos', 'CementerioController@get_financiamientos');
+/**fin de rutas de modulo en proceso */
+
+
+
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
@@ -124,6 +130,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF');
 
     /**rutas del cementerio */
+
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::get('inventarios/cementerio/propiedadesById', 'CementerioController@propiedadesById');

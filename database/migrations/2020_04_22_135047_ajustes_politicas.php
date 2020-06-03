@@ -22,9 +22,6 @@ class AjustesPoliticas extends Migration
             $table->integer('minima_partes_cubiertas');
             $table->integer('maximo_pagos_vencidos');
             $table->integer('maximo_dias_cancelar_contrato');
-            $table->integer('porcentaje_pronto_pago');
-            $table->integer('comision_cementerio');
-            $table->integer('comision_planes');
         });
     }
 

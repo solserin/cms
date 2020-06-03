@@ -64,14 +64,12 @@
       @search="handleSearch"
       @change-page="handleChangePage"
       @sort="handleSort"
-      v-model="selected"
       :max-items="serverOptions.per_page.value"
       :data="roles"
-      stripe
       noDataText="0 Resultados"
     >
       <template slot="header">
-        <h3 class="pb-5 text-primary">Listado de Roles registrados</h3>
+        <h3>Listado de Roles registrados</h3>
       </template>
       <template slot="thead">
         <vs-th>Número de Rol</vs-th>
@@ -93,26 +91,18 @@
 
           <vs-td :data="data[indextr].id_rol">
             <div class="flex flex-center">
-              <vs-button
-                class="ml-auto"
-                title="Editar"
-                size="large"
-                icon-pack="feather"
-                icon="icon-edit"
-                color="dark"
-                type="flat"
+              <img
+                class="cursor-pointer img-btn ml-auto mr-3"
+                src="@assets/images/edit.svg"
+                title="Modificar"
                 @click="openModificar(data[indextr].id_rol)"
-              ></vs-button>
-              <vs-button
-                class="mr-auto"
-                title="Desactivar"
-                icon-pack="feather"
-                size="large"
-                icon="icon-shield-off"
-                color="danger"
-                type="flat"
+              />
+              <img
+                class="cursor-pointer img-btn mr-auto ml-3"
+                src="@assets/images/trash.svg"
+                title="Eliminar Rol"
                 @click="deleteRol(data[indextr].id_rol,data[indextr].rol)"
-              ></vs-button>
+              />
             </div>
           </vs-td>
         </vs-tr>
