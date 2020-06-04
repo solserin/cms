@@ -112,7 +112,7 @@
           </th>
           <th class="w-30">
            <div class="numeros-contrato">
-                            <div class="control bg-gray">
+                            <div class="control bg-gray size-32px">
                                 solicitud de servicio
                             </div>
                             <p class="control-valor">
@@ -120,7 +120,7 @@
                             </p>
 
                             <div style=""></div>
-                            <div class="control bg-gray">
+                            <div class="control bg-gray size-18px">
                                 Número de convenio
                             </div>
                             <p class="control-valor">

@@ -239,6 +239,10 @@
     .line-xs{
       line-height: 1.1em !important;
     }
+
+    .line-xxs{
+      line-height: .7em !important;
+    }
     
     .bold{
       font-weight: 700 !important;
@@ -381,5 +385,29 @@
   .sticky{
     position: sticky !important;
   }
+
+.bg-gray-light{
+background-color:#e8e8e8 !important;
+}
+
+
+.bg-table-header{
+background-color:#666666 !important;
+} 
+
+.color-semidark{
+color:#666666 !important;
+}
+
+.tablas-collapsed{
+ border-collapse: collapse;
+border: 0px !important;
+  border-top: 2px solid #fff !important;
+}
+
+
+.tablas-collapsed tr:nth-child(even){
+    background-color: #f2f2f2 !important;
+}
 
   </style>

@@ -19,7 +19,8 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 
 
 /**rutas de modulo en proceso */
-Route::get('cementerio/get_financiamientos', 'CementerioController@get_financiamientos');
+
+Route::get('cementerio/lista_precios_pdf/{id_tipo?}', 'CementerioController@lista_precios_pdf');
 /**fin de rutas de modulo en proceso */
 
 
@@ -130,6 +131,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF');
 
     /**rutas del cementerio */
+    Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
+    Route::post('cementerio/update_precio_propiedad', 'CementerioController@update_precio_propiedad');
+    Route::post('cementerio/enable_disable', 'CementerioController@enable_disable');
+    Route::get('cementerio/get_financiamientos', 'CementerioController@get_financiamientos');
+    Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
+    Route::get('cementerio/get_precio_by_id', 'CementerioController@get_precio_by_id');
+
 
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');

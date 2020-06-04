@@ -1,9 +1,9 @@
 <template >
   <div class="centerx">
     <vs-popup
-      fullscreen
       :title="HeaderNombre"
-      class="pdfs_modulos bg-grey-light h-screen"
+      class="bg-grey-light forms-popups-100 normal-forms pdfs_modulos"
+      fullscreen
       :active.sync="showChecker"
       ref="formulario"
     >
@@ -15,7 +15,7 @@
           <div class="flex flex-wrap mt-8">
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
               <label class="text-sm opacity-75 font-semibold">
-                <span>Seleccione un Reporte:</span>
+                <span>Formatos Dispnibles:</span>
               </label>
               <v-select
                 :options="reportesDisponible"
@@ -38,7 +38,7 @@
             </div>
             -->
 
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-10">
+            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-6">
               <label class="text-sm opacity-75 font-medium">Enviar por Correo</label>
               <vs-input
                 name="email"
@@ -290,6 +290,7 @@ export default {
         /**el uno indica que se va enviar el email */
 
         .then(res => {
+          console.log("send_pdf -> res", res);
           this.$vs.loading.close();
           if (res.data == 1) {
             this.$vs.notify({

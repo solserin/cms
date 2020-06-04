@@ -19,6 +19,7 @@ class PrecioPropiedades extends Migration
             $table->float('subtotal');
             $table->float('impuestos');
             $table->float('costo_neto');
+            $table->float('costo_neto_financiamiento_normal');
             $table->tinyInteger('descuento_pronto_pago_b');
             $table->float('costo_neto_pronto_pago');
             $table->unsignedBigInteger('tipo_propiedades_id')->unsigned()->nullable();

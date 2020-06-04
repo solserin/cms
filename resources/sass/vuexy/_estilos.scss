@@ -93,6 +93,11 @@ html {
     background: none !important;
 }
 
+.img-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 .vs-popup--content {
     max-height: 77vh !important;
 }
@@ -101,6 +106,39 @@ html {
     background-color: #fff !important;
     border-radius: 0;
     padding: 5px 0 5px 0 !important;
+}
+
+.vs-popup--close {
+    background-color: #cecece !important;
+    color: #303030 !important;
+    font-size: 32px;
+    font-weight: bold !important;
+    border-radius: 0px !important;
+    padding: 4px !important;
+}
+
+.big-forms .vs-popup--close {
+    margin-top: -60px !important;
+    margin-right: 12px !important;
+}
+
+.normal-forms .vs-popup--close {
+    margin-top: 5px !important;
+    margin-right: 12px !important;
+}
+
+.normal-forms .vs-popup--title h3 {
+    margin-top: 10px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    width: 80% !important;
+    border-bottom: 2px solid #cecece !important;
+    padding-bottom: 10px !important;
+    color: #303030 !important;
+    text-transform: capitalize !important;
+    font-size: 18px !important;
+    font-weight: 550 !important;
 }
 
 .big-forms .vs-popup--title h3 {
@@ -138,6 +176,7 @@ html {
 .planes_venta_form .vs-popup--title h3:before {
     content: url("../../../../../resources/assets/images/price_list.svg");
 }
+
 /* -------------------------------------------------------------------------- */
 /*                                 title forms                                */
 /* -------------------------------------------------------------------------- */
@@ -176,12 +215,33 @@ html {
     color: rgba(var(--vs-primary), 1) !important;
 }
 
+.con-vs-dialog {
+    z-index: 62005 !important;
+}
 .con-vs-dialog .vs-dialog {
     border-radius: 0 !important;
 }
 
 /*default size for small devices*/
 .forms-popups-75 {
+    .vs-popup {
+        width: 100% !important;
+    }
+}
+
+.forms-popups-50 {
+    .vs-popup {
+        width: 100% !important;
+    }
+}
+
+.forms-popups-55 {
+    .vs-popup {
+        width: 85% !important;
+    }
+}
+
+.forms-popups-100 {
     .vs-popup {
         width: 100% !important;
     }
@@ -199,6 +259,12 @@ html {
     .forms-popups-75 {
         .vs-popup {
             width: 75% !important;
+        }
+    }
+
+    .forms-popups-50 {
+        .vs-popup {
+            width: 50% !important;
         }
     }
 }
@@ -244,6 +310,12 @@ html {
     .forms-popups-75 {
         .vs-popup {
             width: 75% !important;
+        }
+    }
+
+    .forms-popups-55 {
+        .vs-popup {
+            width: 55% !important;
         }
     }
 }
@@ -532,47 +604,19 @@ html {
     display: none !important;
 }
 */
-.pdfs_modulos .vs-popup--header {
-    padding: 2px 0 2px 0 !important;
-}
 
-.pdfs_modulos .vs-popup--header h3 {
-    font-size: 14px !important;
-    font-weight: 500 !important;
-}
-
-.pdfs_modulos .iframe_viewer {
-    min-height: 100vh !important;
+.iframe_viewer {
+    max-height: 85vh !important;
     min-width: 100% !important;
     border: 1px solid #dae1e7 !important;
 }
 
-.pdfs_modulos .vs-card--header {
-    display: none !important;
-    background-color: rgba(var(--vs-secondary_theme), 1) !important;
+.pdfs_modulos .vs-popup--content {
+    max-height: 85vh !important;
 }
 
 .pdfs_modulos {
     z-index: 52100 !important;
-}
-
-.vs-popup--close {
-    background-color: #cecece !important;
-    color: #303030 !important;
-    font-size: 32px;
-    font-weight: bold !important;
-    border-radius: 0px !important;
-    padding: 4px !important;
-}
-
-.big-forms .vs-popup--close {
-    margin-top: -60px !important;
-    margin-right: 12px !important;
-}
-
-.normal-forms .vs-popup--close {
-    margin-top: -10px !important;
-    margin-right: 12px !important;
 }
 
 /*FIN pdfs de los reportes de los modulos*/

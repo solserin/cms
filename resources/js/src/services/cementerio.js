@@ -7,22 +7,36 @@ let cancel;
 export default {
     cancel: null,
 
+    registrar_precio_propiedad(datos) {
+        let call = "/cementerio/registrar_precio_propiedad";
+        return axios.post(call, datos);
+    },
+
+    update_precio_propiedad(datos) {
+        let call = "/cementerio/update_precio_propiedad";
+        return axios.post(call, datos);
+    },
+
+    /**enable / disable status precio */
+    enable_disable(datos) {
+        let call = "/cementerio/enable_disable";
+        return axios.post(call, datos);
+    },
+
     /**get financiamientos de las propiedades segun su tipo */
     get_financiamientos() {
-        let self = this;
-        return new Promise((resolve, reject) => {
-            axios
-                .get("/cementerio/get_financiamientos")
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    if (axiosSuper.isCancel(error)) {
-                        reject(error.message);
-                    } else {
-                        reject(error);
-                    }
-                });
+        return axios.get("/cementerio/get_financiamientos");
+    },
+    /**obtiene los tipos de propiedades */
+    get_tipo_propiedades() {
+        return axios.get("/cementerio/get_tipo_propiedades");
+    },
+    /**busca un precio por id */
+    get_precio_by_id(id) {
+        return axios.get("/cementerio/get_precio_by_id", {
+            params: {
+                id_precio: id
+            }
         });
     },
 

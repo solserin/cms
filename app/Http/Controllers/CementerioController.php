@@ -23,6 +23,7 @@ use App\PagosProgramadosTerrenos;
 use App\ProgramacionPagosTerrenos;
 use Illuminate\Support\Facades\DB;
 use App\PagosProgramadosPropiedades;
+use App\PreciosPropiedades;
 use Illuminate\Support\Facades\Mail;
 use PhpParser\Node\Stmt\Foreach_;
 
@@ -1286,14 +1287,383 @@ class CementerioController extends ApiController
         foreach ($resultado as $tipo_key => &$tipo) {
             foreach ($tipo['precios'] as $precio_key => &$precio) {
                 if ($precio['financiamiento'] == 1) {
-                    $precio['tipo_financiamiento'] = "Pago Único";
+                    $precio['tipo_financiamiento'] = "Pago Único/Uso Inmediato";
                 } else {
-                    $precio['tipo_financiamiento'] = "Pago a Meses";
+                    $precio['tipo_financiamiento'] = "Pago a " . $precio['financiamiento'] . " Meses/A Futuro";
+                    $precio['tipo_financiamiento_ingles'] = $precio['financiamiento'] . "-Month Payment";
+                }
+                /**sacando los descuentos en caso de que tenga pronto pago */
+                if ($precio['descuento_pronto_pago_b'] == 1) {
+                    $precio['descuento_x_pago'] = ($precio['costo_neto'] - $precio['costo_neto_pronto_pago']) / $precio['financiamiento'];
+                } else {
+                    $precio['descuento_x_pago'] = ' 0';
                 }
             }
         }
         return $resultado;
     }
+
+    /**obtiene todos los tipos de propiedades */
+    public function get_tipo_propiedades()
+    {
+        $resultado = tipoPropiedades::orderBy('id', 'asc')->get();
+        return $resultado;
+    }
+
+
+    /**obtiene un precio por id */
+    public function get_precio_by_id(Request $request)
+    {
+        if (!$request->id_precio) {
+            return $this->errorResponse('Es necesario un id, para continuar', 409);
+        }
+        $resultado = PreciosPropiedades::where('id', $request->id_precio)->get()->first();
+        return $resultado;
+    }
+
+    /**GUARDAR PRECIO DE PROPIEDAD*/
+    public function registrar_precio_propiedad(Request $request)
+    {
+
+        //validaciones directas sin condicionales
+        $validaciones = [
+            'descripcion' => 'required',
+            'descripcion_ingles' => 'required',
+            'contado_b.value' => 'required|integer|min:0|max:1',
+            'financiamiento' => '',
+            'pago_inicial' => 'numeric|min:1|lte:costo_neto',
+            'costo_neto' => 'required|numeric|gte:costo_neto_financiamiento_normal',
+            'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
+            'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
+            'costo_neto_pronto_pago' => '',
+            'tipo_propiedades_id.value' => 'required',
+        ];
+
+
+        $mensaje_financiamiento = '';
+        /**validando si es a contado o credito */
+        if ($request->contado_b['value'] == 1) {
+            //es a contado
+            $validaciones['financiamiento'] = 'required|integer|max:1';
+            $mensaje_financiamiento = ' Este dato debe ser "1" Máximo';
+        } else {
+            /**es a credito */
+            $validaciones['financiamiento'] = 'required|integer|min:2|max:64';
+            $mensaje_financiamiento = ' Este dato debe ser "2" Mínimo y "64" Máximo';
+        }
+
+
+        /**validando si aplica descuento */
+        if ($request->descuento_pronto_pago_b['value'] == 1) {
+            /**si aplica descuento se debe validar que el precio no pase del precio de contado actual */
+            $validaciones['costo_neto_pronto_pago'] = 'required|numeric|gte:costo_neto_financiamiento_normal';
+        } else {
+            /**no aplica descuento */
+            $validaciones['costo_neto_pronto_pago'] = '';
+            /**se manda cero a la query */
+            $request->costo_neto_pronto_pago = $request->costo_neto;
+        }
+
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+
+        $mensajes = [
+            'pago_inicial.min' => 'Este valor debe ser "1.00" Mínimo',
+            'pago_inicial.lte' => 'Este valor debe ser igual o menor al costo neto',
+            'financiamiento.min' =>  $mensaje_financiamiento,
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
+            'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
+            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+
+        /**validar si el precio existe */
+        $precio = PreciosPropiedades::where('tipo_propiedades_id', $request->tipo_propiedades_id['value'])
+            ->where('financiamiento', $request->financiamiento)
+            ->get()
+            ->first();
+        if (!empty($precio)) {
+            /**ya existe el precio */
+            if ($precio->status == 1) {
+                return $this->errorResponse('Ya existe un precio para esta propiedad con este financiamiento', 409);
+            } else {
+                return $this->errorResponse('Ya existe un precio para esta propiedad con este financiamiento, solo debe habilitarlo nuevamente', 409);
+            }
+        }
+
+
+
+        try {
+            DB::beginTransaction();
+            $id_precio = 0;
+            $id_precio = DB::table('precios_propiedades')->insertGetId(
+                [
+                    'pago_inicial' => (float) $request->pago_inicial,
+                    'subtotal' => (float) (($request->costo_neto * (100 - config('globales.iva')) / 100)),
+                    'impuestos' => (float) (($request->costo_neto * config('globales.iva') / 100)),
+                    'costo_neto' => (float) ($request->costo_neto),
+                    'costo_neto_financiamiento_normal' => (float) ($request->costo_neto_financiamiento_normal),
+                    'descuento_pronto_pago_b' => (int) ($request->descuento_pronto_pago_b['value']),
+                    'costo_neto_pronto_pago' => (float) ($request->costo_neto_pronto_pago),
+                    'tipo_propiedades_id' => (int) ($request->tipo_propiedades_id['value']),
+                    'fecha_actualizacion' => now(),
+                    'actualizo_id' => (int) $request->user()->id,
+                    'financiamiento' => (int) ($request->financiamiento),
+                    'contado_b' => (int) ($request->contado_b['value']),
+                    'descripcion' =>  $request->descripcion,
+                    'descripcion_ingles' =>  $request->descripcion_ingles
+                ]
+            );
+
+            /**todo salio bien y se debe de guardar */
+            DB::commit();
+            return $id_precio;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+    /**MODIFICAR PRECIO DE PROPIEDAD*/
+    public function update_precio_propiedad(Request $request)
+    {
+
+        //validaciones directas sin condicionales
+        $validaciones = [
+            'id_precio_modificar' => 'required',
+            'descripcion' => 'required',
+            'descripcion_ingles' => 'required',
+            'contado_b.value' => 'required|integer|min:0|max:1',
+            'financiamiento' => '',
+            'pago_inicial' => 'numeric|min:1|lte:costo_neto',
+            'costo_neto' => 'required|numeric|gte:costo_neto_financiamiento_normal',
+            'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
+            'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
+            'costo_neto_pronto_pago' => '',
+            'tipo_propiedades_id.value' => 'required',
+        ];
+
+
+        $mensaje_financiamiento = '';
+        /**validando si es a contado o credito */
+        if ($request->contado_b['value'] == 1) {
+            //es a contado
+            $validaciones['financiamiento'] = 'required|integer|max:1';
+            $mensaje_financiamiento = ' Este dato debe ser "1" Máximo';
+        } else {
+            /**es a credito */
+            $validaciones['financiamiento'] = 'required|integer|min:2|max:64';
+            $mensaje_financiamiento = ' Este dato debe ser "2" Mínimo y "64" Máximo';
+        }
+
+
+        /**validando si aplica descuento */
+        if ($request->descuento_pronto_pago_b['value'] == 1) {
+            /**si aplica descuento se debe validar que el precio no pase del precio de contado actual */
+            $validaciones['costo_neto_pronto_pago'] = 'required|numeric|gte:costo_neto_financiamiento_normal';
+        } else {
+            /**no aplica descuento */
+            $validaciones['costo_neto_pronto_pago'] = '';
+            /**se manda cero a la query */
+            $request->costo_neto_pronto_pago = $request->costo_neto;
+        }
+
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+
+        $mensajes = [
+            'pago_inicial.min' => 'Este valor debe ser "1.00" Mínimo',
+            'pago_inicial.lte' => 'Este valor debe ser igual o menor al costo neto',
+            'financiamiento.min' =>  $mensaje_financiamiento,
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
+            'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
+            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+
+        /**validar si el precio existe */
+        $precio = PreciosPropiedades::where('tipo_propiedades_id', $request->tipo_propiedades_id['value'])
+            ->where('financiamiento', $request->financiamiento)
+            ->get()
+            ->first();
+        if (!empty($precio)) {
+            /**verificando que el precio no es el mismo para que entre ala siguiente validacion */
+            if ($request->id_precio_modificar != $precio->id) {
+                /**ya existe el precio */
+                if ($precio->status == 1) {
+                    return $this->errorResponse('Ya existe un precio para esta propiedad con este financiamiento', 409);
+                } else {
+                    return $this->errorResponse('Ya existe un precio para esta propiedad con este financiamiento, solo debe habilitarlo nuevamente', 409);
+                }
+            }
+        }
+
+
+
+        try {
+            DB::beginTransaction();
+
+            $res = DB::table('precios_propiedades')->where('id', $request->id_precio_modificar)->update(
+                [
+                    'pago_inicial' => (float) $request->pago_inicial,
+                    'subtotal' => (float) (($request->costo_neto * (100 - config('globales.iva')) / 100)),
+                    'impuestos' => (float) (($request->costo_neto * config('globales.iva') / 100)),
+                    'costo_neto' => (float) ($request->costo_neto),
+                    'costo_neto_financiamiento_normal' => (float) ($request->costo_neto_financiamiento_normal),
+                    'descuento_pronto_pago_b' => (int) ($request->descuento_pronto_pago_b['value']),
+                    'costo_neto_pronto_pago' => (float) ($request->costo_neto_pronto_pago),
+                    'tipo_propiedades_id' => (int) ($request->tipo_propiedades_id['value']),
+                    'fecha_actualizacion' => now(),
+                    'actualizo_id' => (int) $request->user()->id,
+                    'financiamiento' => (int) ($request->financiamiento),
+                    'contado_b' => (int) ($request->contado_b['value']),
+                    'descripcion' =>  $request->descripcion,
+                    'descripcion_ingles' =>  $request->descripcion_ingles
+                ]
+            );
+            /**todo salio bien y se debe de guardar */
+            DB::commit();
+            return  $res > 0 ? $request->id_precio_modificar : 0;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+
+    /**ENABLE DISABLE PRECIO DE PROPIEDAD*/
+    public function enable_disable(Request $request)
+    {
+
+        //validaciones directas sin condicionales
+        $validaciones = [
+            'id_precio' => 'required',
+        ];
+
+
+        $mensajes = [
+            'required' => 'Dese ingresar la clave del precio',
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+        /**validar si el precio existe */
+        $precio = PreciosPropiedades::where('id', $request->id_precio)
+            ->get()
+            ->first();
+        //definiendo status
+        $status = 0;
+        if (!empty($precio)) {
+            $status = !$precio->status;
+        } else {
+            return $this->errorResponse('No se encontró este precio en la base de datos', 409);
+        }
+
+        try {
+            DB::beginTransaction();
+            $res = DB::table('precios_propiedades')->where('id', $request->id_precio)->update(
+                [
+
+                    'status' =>  $status
+                ]
+            );
+            /**todo salio bien y se debe de modificar */
+            DB::commit();
+            return $request->id_precio;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+
+    public function lista_precios_pdf($id_tipo_propiedad = '', Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
+        $datos_request = json_decode($request->request_parent[0], true);
+        $financiamientos = $this->get_financiamientos();
+
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        /*$id_venta = 2;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+¨*/
+        //obtengo la informacion de esa venta
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/cementerios/planes_venta/reportes', ['empresa' => $empresa, 'financiamientos' => $financiamientos, 'id_tipo_propiedad' => $datos_request['id_tipo_propiedad']]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "SOLICITUD TITULAR "  . '.pdf';
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('inventarios.cementerios.planes_venta.footer'),
+        ]);
+
+        $pdf->setOptions([
+            'header-html' => view('inventarios.cementerios.planes_venta.header')
+        ]);
+
+
+        $pdf->setOption('orientation', 'landscape');
+        $pdf->setOption('margin-left', 12.4);
+        $pdf->setOption('margin-right', 12.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 12.4);
+        $pdf->setOption('page-size', 'a4');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                'destinatoario',
+                'SOLICITUD DE PROPIEDAD / CEMENTERIO AETERNUS',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
+
+
 
 
 

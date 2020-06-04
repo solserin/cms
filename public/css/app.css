@@ -5297,6 +5297,20 @@ html {
   background: none !important;
 }
 
+.img-center {
+  display: block;
+}
+
+[dir=ltr] .img-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[dir=rtl] .img-center {
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .vs-popup--content {
   max-height: 77vh !important;
 }
@@ -5305,6 +5319,67 @@ html {
   background-color: #fff !important;
   border-radius: 0;
   padding: 5px 0 5px 0 !important;
+}
+
+.vs-popup--close {
+  color: #303030 !important;
+  font-size: 32px;
+  font-weight: bold !important;
+}
+
+[dir] .vs-popup--close {
+  background-color: #cecece !important;
+  border-radius: 0px !important;
+  padding: 4px !important;
+}
+
+[dir] .big-forms .vs-popup--close {
+  margin-top: -60px !important;
+}
+
+[dir=ltr] .big-forms .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .big-forms .vs-popup--close {
+  margin-left: 12px !important;
+}
+
+[dir] .normal-forms .vs-popup--close {
+  margin-top: 5px !important;
+}
+
+[dir=ltr] .normal-forms .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .normal-forms .vs-popup--close {
+  margin-left: 12px !important;
+}
+
+.normal-forms .vs-popup--title h3 {
+  width: 80% !important;
+  color: #303030 !important;
+  text-transform: capitalize !important;
+  font-size: 18px !important;
+  font-weight: 550 !important;
+}
+
+[dir] .normal-forms .vs-popup--title h3 {
+  margin-top: 10px !important;
+  text-align: center !important;
+  border-bottom: 2px solid #cecece !important;
+  padding-bottom: 10px !important;
+}
+
+[dir=ltr] .normal-forms .vs-popup--title h3 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+[dir=rtl] .normal-forms .vs-popup--title h3 {
+  margin-right: auto !important;
+  margin-left: auto !important;
 }
 
 .big-forms .vs-popup--title h3 {
@@ -5400,6 +5475,10 @@ html {
   color: rgba(var(--vs-primary), 1) !important;
 }
 
+.con-vs-dialog {
+  z-index: 62005 !important;
+}
+
 [dir] .con-vs-dialog .vs-dialog {
   border-radius: 0 !important;
 }
@@ -5407,6 +5486,18 @@ html {
 /*default size for small devices*/
 
 .forms-popups-75 .vs-popup {
+  width: 100% !important;
+}
+
+.forms-popups-50 .vs-popup {
+  width: 100% !important;
+}
+
+.forms-popups-55 .vs-popup {
+  width: 85% !important;
+}
+
+.forms-popups-100 .vs-popup {
   width: 100% !important;
 }
 
@@ -5419,6 +5510,10 @@ html {
 
   .forms-popups-75 .vs-popup {
     width: 75% !important;
+  }
+
+  .forms-popups-50 .vs-popup {
+    width: 50% !important;
   }
 }
 
@@ -5449,6 +5544,10 @@ html {
 
   .forms-popups-75 .vs-popup {
     width: 75% !important;
+  }
+
+  .forms-popups-55 .vs-popup {
+    width: 55% !important;
   }
 }
 
@@ -5795,70 +5894,21 @@ html {
 }
 */
 
-[dir] .pdfs_modulos .vs-popup--header {
-  padding: 2px 0 2px 0 !important;
-}
-
-.pdfs_modulos .vs-popup--header h3 {
-  font-size: 14px !important;
-  font-weight: 500 !important;
-}
-
-.pdfs_modulos .iframe_viewer {
-  min-height: 100vh !important;
+.iframe_viewer {
+  max-height: 85vh !important;
   min-width: 100% !important;
 }
 
-[dir] .pdfs_modulos .iframe_viewer {
+[dir] .iframe_viewer {
   border: 1px solid #dae1e7 !important;
 }
 
-.pdfs_modulos .vs-card--header {
-  display: none !important;
-}
-
-[dir] .pdfs_modulos .vs-card--header {
-  background-color: rgba(var(--vs-secondary_theme), 1) !important;
+.pdfs_modulos .vs-popup--content {
+  max-height: 85vh !important;
 }
 
 .pdfs_modulos {
   z-index: 52100 !important;
-}
-
-.vs-popup--close {
-  color: #303030 !important;
-  font-size: 32px;
-  font-weight: bold !important;
-}
-
-[dir] .vs-popup--close {
-  background-color: #cecece !important;
-  border-radius: 0px !important;
-  padding: 4px !important;
-}
-
-[dir] .big-forms .vs-popup--close {
-  margin-top: -60px !important;
-}
-
-[dir=ltr] .big-forms .vs-popup--close {
-  margin-right: 12px !important;
-}
-
-[dir=rtl] .big-forms .vs-popup--close {
-  margin-left: 12px !important;
-}
-
-[dir] .normal-forms .vs-popup--close {
-  margin-top: -10px !important;
-}
-
-[dir=ltr] .normal-forms .vs-popup--close {
-  margin-right: 12px !important;
-}
-
-[dir=rtl] .normal-forms .vs-popup--close {
-  margin-left: 12px !important;
 }
 
 /*FIN pdfs de los reportes de los modulos*/
