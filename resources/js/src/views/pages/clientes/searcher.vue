@@ -1,18 +1,36 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="searcher_clientes aet-popup"
-      title="búsqueda de Clientes | Filtros de selección"
+      class="searcher_clientes forms-popups-75 normal-forms inline-header-forms"
+      fullscreen
+      title="Catálogo de clientes registrados"
       :active.sync="showVentana"
       ref="buscador_cliente"
     >
+      <div class="flex flex-wrap my-2">
+        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
+          <vs-button
+            color="success"
+            size="small"
+            class="w-full ml-auto"
+            @click="verFormularioClientes=true"
+          >
+            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
+            <span class="texto-btn">Registrar Cliente</span>
+          </vs-button>
+        </div>
+      </div>
       <!--inicio de buscador-->
-      <div class="py-3 px-2">
-        <vx-card no-radius refresh-content-action @refresh="reset">
+      <div class="py-3">
+        <vx-card no-radius title="Filtros de selección">
+          <template slot="header">
+            <img class="cursor-pointer img-btn" src="@assets/images/reload.svg" />
+          </template>
+
           <template slot="no-body">
             <div>
-              <div class="flex flex-wrap">
-                <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
+              <div class="flex flex-wrap px-4 py-4">
+                <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
                   <label class="text-sm opacity-75 font-bold">Nombre</label>
                   <vs-input
                     ref="nombre_cliente"
@@ -31,7 +49,7 @@
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                   <label class="text-sm opacity-75 font-bold">Núm. Cliente</label>
                   <vs-input
                     name="num_cliente"
@@ -49,7 +67,7 @@
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 hidden">
                   <label class="text-sm opacity-75 font-bold">RFC</label>
                   <vs-input
                     name="rfc"
@@ -67,26 +85,9 @@
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Celular</label>
-                  <vs-input
-                    name="celular"
-                    data-vv-as=" "
-                    type="text"
-                    class="w-full pb-1 pt-1"
-                    placeholder="ej. 6691435645"
-                    maxlength="25"
-                    v-model.trim="serverOptions.celular"
-                    v-on:keyup.enter="get_data('celular',1)"
-                    v-on:blur="get_data('celular',1,'blur')"
-                  />
-                  <div>
-                    <span class="text-danger text-sm">{{ errors.first('celular') }}</span>
-                  </div>
-                  <div class="mt-2"></div>
-                </div>
+
                 <div
-                  class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   style="z-index: 52002 !important;"
                 >
                   <label class="text-sm opacity-75 font-bold">
@@ -112,18 +113,17 @@
             </div>
           </template>
         </vx-card>
-        <div class="resultados_clientes mt-5">
+        <div class="resultados_clientes mt-10">
           <vs-table
             :sst="true"
-            @search="handleSearch"
-            @change-page="handleChangePage"
-            @sort="handleSort"
-            v-model="selected"
             :max-items="serverOptions.per_page.value"
             :data="clientes"
             stripe
             noDataText="0 Resultados"
           >
+            <template slot="header">
+              <h3>Lista actualizada de clientes registrados</h3>
+            </template>
             <template slot="thead">
               <vs-th>Núm. Cliente</vs-th>
               <vs-th>Nombre</vs-th>
@@ -147,32 +147,33 @@
                   :data="data[indextr].nacionalidad['id']"
                 >{{data[indextr].nacionalidad['nacionalidad']}}</vs-td>
                 <vs-td :data="data[indextr].id_user">
-                  <vs-button
-                    class="ml-8"
-                    title="Seleccionar"
-                    size="large"
-                    icon-pack="feather"
-                    icon="icon-check-circle"
-                    color="success"
-                    type="flat"
+                  <img
+                    width="25"
+                    class="cursor-pointer"
+                    src="@assets/images/checked.svg"
                     @click="retornarSeleccion(data[indextr].nombre,data[indextr].id)"
-                  ></vs-button>
+                  />
                 </vs-td>
               </vs-tr>
             </template>
           </vs-table>
-          <vs-divider />
           <div>
             <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-3"></vs-pagination>
           </div>
         </div>
       </div>
-
+      <FormularioClientes
+        :tipo="'agregar'"
+        :show="verFormularioClientes"
+        @closeVentana="verFormularioClientes = false"
+        @retornar_id="retorno_id"
+      ></FormularioClientes>
       <!--fin de buscador-->
     </vs-popup>
   </div>
 </template>
 <script>
+import FormularioClientes from "@pages/clientes/FormularioClientes";
 import clientes from "@services/clientes";
 import vSelect from "vue-select";
 import Datepicker from "vuejs-datepicker";
@@ -181,7 +182,8 @@ import { es } from "vuejs-datepicker/dist/locale";
 export default {
   components: {
     "v-select": vSelect,
-    Datepicker
+    Datepicker,
+    FormularioClientes
   },
   props: {
     show: {
@@ -229,6 +231,7 @@ export default {
   },
   data() {
     return {
+      verFormularioClientes: false,
       selected: [],
       nacionalidades: [],
       disabledDates: {
@@ -354,6 +357,9 @@ export default {
       /**retorna los datos seleccionados a la venta que los solicita */
       this.$emit("retornoCliente", { id_cliente: id, nombre: nombre });
       this.$emit("closeBuscador");
+    },
+    retorno_id(dato) {
+      this.get_data("", this.actual);
     }
   },
   created() {

@@ -73,6 +73,12 @@
     color: #666666 !important;
 }
 
+.bg-seccion-forms {
+    background-color: #e8e8e8;
+    color: #303030 !important;
+    font-weight: 600 !important;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                          fin de estilos de botones                         */
 /* -------------------------------------------------------------------------- */
@@ -165,6 +171,38 @@ html {
     margin: 0 auto 10px auto !important;
 }
 
+.inline-header-forms .vs-popup--content {
+    max-height: 86vh !important;
+}
+
+.inline-header-forms .vs-popup--title h3 {
+    margin-top: -5px !important;
+    padding-bottom: 3px !important;
+}
+
+.inline-header-forms .vs-popup--title h3:before {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+}
+
+.inline-header-forms .vs-popup--close {
+    margin-top: -5px !important;
+    margin-right: 12px !important;
+}
+
+.venta-propiedades .vs-popup--title h3:before {
+    vertical-align: middle;
+    padding-right: 10px !important;
+    content: url("../../../../../resources/assets/images/tomb.svg");
+}
+
+.searcher_clientes .vs-popup--title h3:before {
+    vertical-align: middle;
+    padding-right: 10px !important;
+    content: url("../../../../../resources/assets/images/browse-system.svg");
+}
+
 .roles .vs-popup--title h3:before {
     content: url("../../../../../resources/assets/images/roles.svg");
 }
@@ -229,7 +267,7 @@ html {
 /*default size for small devices*/
 .forms-popups-75 {
     .vs-popup {
-        width: 100% !important;
+        width: 75% !important;
     }
 }
 
@@ -269,12 +307,6 @@ html {
     .forms-popups {
         .vs-popup {
             width: 90% !important;
-        }
-    }
-
-    .forms-popups-75 {
-        .vs-popup {
-            width: 75% !important;
         }
     }
 
@@ -357,6 +389,13 @@ html {
     background: none;
     border: 1px solid rgba(var(--vs-default_color), 1) !important;
     border-radius: 4px;
+}
+
+.texto-bold input {
+    text-transform: uppercase !important;
+    color: #303030 !important;
+    font-weight: 600 !important;
+    font-size: 24px !important;
 }
 
 .vs-input--input,
@@ -707,28 +746,13 @@ html {
     z-index: 52001 !important;
 }
 
+.clientes {
+    //1 arriba de searche_clientes
+    z-index: 52002 !important;
+}
+
 .contrasena {
     z-index: 52100 !important;
-}
-
-.searcher_clientes .vs-popup--header {
-    background-color: rgba(var(--vs-primary), 1) !important;
-}
-
-.searcher_clientes .vs-popup--content {
-    padding-top: 0px !important;
-}
-
-.searcher_clientes .vs-popup--header i {
-    font-weight: bold !important;
-}
-
-.searcher_clientes .vs-popup--title h3 {
-    margin-left: 10px !important;
-    color: #fff !important;
-    text-transform: capitalize !important;
-    font-weight: normal !important;
-    font-size: 1.4em !important;
 }
 
 .contrasena .vs-popup--header {

@@ -5268,6 +5268,15 @@ button:focus {
   color: #666666 !important;
 }
 
+.bg-seccion-forms {
+  color: #303030 !important;
+  font-weight: 600 !important;
+}
+
+[dir] .bg-seccion-forms {
+  background-color: #e8e8e8;
+}
+
 /* -------------------------------------------------------------------------- */
 
 /*                          fin de estilos de botones                         */
@@ -5420,6 +5429,59 @@ html {
   margin: 0 auto 10px auto !important;
 }
 
+.inline-header-forms .vs-popup--content {
+  max-height: 86vh !important;
+}
+
+[dir] .inline-header-forms .vs-popup--title h3 {
+  margin-top: -5px !important;
+  padding-bottom: 3px !important;
+}
+
+.inline-header-forms .vs-popup--title h3:before {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+
+[dir] .inline-header-forms .vs-popup--close {
+  margin-top: -5px !important;
+}
+
+[dir=ltr] .inline-header-forms .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .inline-header-forms .vs-popup--close {
+  margin-left: 12px !important;
+}
+
+.venta-propiedades .vs-popup--title h3:before {
+  vertical-align: middle;
+  content: url(/images/tomb.svg?e1ff0d4f602a6999d985e588a863f280);
+}
+
+[dir=ltr] .venta-propiedades .vs-popup--title h3:before {
+  padding-right: 10px !important;
+}
+
+[dir=rtl] .venta-propiedades .vs-popup--title h3:before {
+  padding-left: 10px !important;
+}
+
+.searcher_clientes .vs-popup--title h3:before {
+  vertical-align: middle;
+  content: url(/images/browse-system.svg?f68f7b09f0c6ac5cb04200da02c2cb11);
+}
+
+[dir=ltr] .searcher_clientes .vs-popup--title h3:before {
+  padding-right: 10px !important;
+}
+
+[dir=rtl] .searcher_clientes .vs-popup--title h3:before {
+  padding-left: 10px !important;
+}
+
 .roles .vs-popup--title h3:before {
   content: url(/images/roles.svg?b2727787dabda7f9bf1ca4b797b0491a);
 }
@@ -5490,7 +5552,7 @@ html {
 /*default size for small devices*/
 
 .forms-popups-75 .vs-popup {
-  width: 100% !important;
+  width: 75% !important;
 }
 
 .forms-popups-50 .vs-popup {
@@ -5518,10 +5580,6 @@ html {
 @media (min-width: 576px) {
   .forms-popups .vs-popup {
     width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
   }
 
   .forms-popups-50 .vs-popup {
@@ -5580,6 +5638,13 @@ html {
   background: none;
   border: 1px solid rgba(var(--vs-default_color), 1) !important;
   border-radius: 4px;
+}
+
+.texto-bold input {
+  text-transform: uppercase !important;
+  color: #303030 !important;
+  font-weight: 600 !important;
+  font-size: 24px !important;
 }
 
 [dir] .vs-input--input, [dir] .flatpickr-input {
@@ -5996,35 +6061,12 @@ html {
   z-index: 52001 !important;
 }
 
+.clientes {
+  z-index: 52002 !important;
+}
+
 .contrasena {
   z-index: 52100 !important;
-}
-
-[dir] .searcher_clientes .vs-popup--header {
-  background-color: rgba(var(--vs-primary), 1) !important;
-}
-
-[dir] .searcher_clientes .vs-popup--content {
-  padding-top: 0px !important;
-}
-
-.searcher_clientes .vs-popup--header i {
-  font-weight: bold !important;
-}
-
-.searcher_clientes .vs-popup--title h3 {
-  color: #fff !important;
-  text-transform: capitalize !important;
-  font-weight: normal !important;
-  font-size: 1.4em !important;
-}
-
-[dir=ltr] .searcher_clientes .vs-popup--title h3 {
-  margin-left: 10px !important;
-}
-
-[dir=rtl] .searcher_clientes .vs-popup--title h3 {
-  margin-right: 10px !important;
 }
 
 .contrasena .vs-popup--header {
