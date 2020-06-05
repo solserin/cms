@@ -28,6 +28,9 @@ class tipoPropiedades extends Model
             DB::raw(
                 '(NULL) AS tipo_financiamiento_ingles',
             ),
+            DB::raw(
+                '(NULL) AS pago_mensual',
+            ),
         )->orderBy('financiamiento', 'asc');
     }
 }

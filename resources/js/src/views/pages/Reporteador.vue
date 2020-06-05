@@ -11,11 +11,13 @@
       <div class="flex flex-wrap">
         <div class="w-full sm:w-5/5 md:w-2/5 lg:w-1/5 xl:w-1/5 px-2 mb-8">
           <!--datos de los reportes-->
-          <h1 class="text-base capitalize font-semibold text-black">reportes disponibles</h1>
+          <h1
+            class="text-base capitalize font-semibold text-black"
+          >Formatos Disponibles del Documento</h1>
           <div class="flex flex-wrap mt-8">
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
               <label class="text-sm opacity-75 font-semibold">
-                <span>Formatos Dispnibles:</span>
+                <span>Seleccione 1:</span>
               </label>
               <v-select
                 :options="reportesDisponible"
@@ -37,14 +39,36 @@
               </div>
             </div>
             -->
-
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-6">
+              <label class="text-sm opacity-75 font-medium">Nombre destinatario</label>
+              <vs-input
+                name="destinatario"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="75"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Nombre destinatario"
+                v-model="request_datos.destinatario"
+              />
+              <div>
+                <span class="text-danger text-sm">{{ errors.first('destinatario') }}</span>
+              </div>
+              <div class="mt-2">
+                <span
+                  class="text-danger text-sm"
+                  v-if="this.errores.destinatario"
+                >{{errores.destinatario[0]}}</span>
+              </div>
+            </div>
+            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-3">
               <label class="text-sm opacity-75 font-medium">Enviar por Correo</label>
               <vs-input
                 name="email"
                 data-vv-as=" "
                 data-vv-validate-on="blur"
-                v-validate="'email'"
+                v-validate="'required|email'"
                 maxlength="75"
                 type="email"
                 class="w-full pb-1 pt-1"
@@ -60,13 +84,10 @@
             </div>
 
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-6">
-              <vs-button
-                icon-pack="feather"
-                icon="icon-mail"
-                color="success"
-                class="w-full my-4"
-                @click="acceptAlert()"
-              >Enviar</vs-button>
+              <vs-button size="small" color="success" class="w-full my-4" @click="acceptAlert()">
+                <img class="cursor-pointer img-btn" src="@assets/images/gmail.svg" />
+                <span class="texto-btn">Enviar por Correo</span>
+              </vs-button>
             </div>
           </div>
           <!--fin de datos de los reportes-->
@@ -108,6 +129,8 @@ export default {
           this.cancel();
         };
         this.request_datos.request_parent = [];
+
+        this.request_datos.destinatario = this.Request.destinatario;
         this.request_datos.email_address = this.Request.email;
         this.request_datos.request_parent.push(this.Request);
       }
@@ -165,7 +188,8 @@ export default {
       request_datos: {
         email_address: "",
         email_send: false,
-        request_parent: []
+        request_parent: [],
+        destinatario: ""
       }
     };
   },
@@ -261,7 +285,7 @@ export default {
           if (!result) {
             this.$vs.notify({
               title: "Error",
-              text: "Verifique que capturo un email",
+              text: "Verifique que capturó un email y un destinatario",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
@@ -301,6 +325,8 @@ export default {
               color: "success",
               time: 6000
             });
+            this.request_datos.email_address = "";
+            this.request_datos.destinatario = "";
           } else {
             this.$vs.notify({
               title: "Enviar documento por correo",

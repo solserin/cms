@@ -135,7 +135,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 
           <vs-td :data="data[indextr].status">
             <p v-if="data[indextr].status==1" class="text-success font-medium">Activo</p>
-            <p v-else class="text-danger font-medium">Sin Acceso</p>
+            <p v-else class="text-danger font-medium">Deshabilitado</p>
           </vs-td>
           <vs-td :data="data[indextr].id_user">
             <div class="flex flex-start">

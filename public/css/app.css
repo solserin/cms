@@ -5357,6 +5357,10 @@ html {
   margin-left: 12px !important;
 }
 
+.normal-forms .vs-popup--content {
+  max-height: 87vh !important;
+}
+
 .normal-forms .vs-popup--title h3 {
   width: 80% !important;
   color: #303030 !important;
@@ -5501,6 +5505,14 @@ html {
   width: 100% !important;
 }
 
+.forms-popups-65 .vs-popup {
+  width: 100% !important;
+}
+
+.forms-popups-85 .vs-popup {
+  width: 100% !important;
+}
+
 /**medias queries para el popup de captura de datos */
 
 @media (min-width: 576px) {
@@ -5548,6 +5560,14 @@ html {
 
   .forms-popups-55 .vs-popup {
     width: 55% !important;
+  }
+
+  .forms-popups-65 .vs-popup {
+    width: 65% !important;
+  }
+
+  .forms-popups-85 .vs-popup {
+    width: 85% !important;
   }
 }
 

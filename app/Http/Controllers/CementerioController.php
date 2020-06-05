@@ -17,15 +17,16 @@ use App\AjustesIntereses;
 use App\PagosPropiedades;
 use App\AntiguedadesVenta;
 use App\EmpresaOperaciones;
+use App\PreciosPropiedades;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\PagosProgramadosTerrenos;
+use PhpParser\Node\Stmt\Foreach_;
 use App\ProgramacionPagosTerrenos;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use App\PagosProgramadosPropiedades;
-use App\PreciosPropiedades;
 use Illuminate\Support\Facades\Mail;
-use PhpParser\Node\Stmt\Foreach_;
 
 class CementerioController extends ApiController
 {
@@ -1288,9 +1289,14 @@ class CementerioController extends ApiController
             foreach ($tipo['precios'] as $precio_key => &$precio) {
                 if ($precio['financiamiento'] == 1) {
                     $precio['tipo_financiamiento'] = "Pago Único/Uso Inmediato";
+                    $precio['tipo_financiamiento_ingles'] = "Spot Price";
+                    $precio['pago_mensual']
+                        = 0;
                 } else {
                     $precio['tipo_financiamiento'] = "Pago a " . $precio['financiamiento'] . " Meses/A Futuro";
                     $precio['tipo_financiamiento_ingles'] = $precio['financiamiento'] . "-Month Payment";
+                    $precio['pago_mensual']
+                        = ($precio['costo_neto'] - $precio['pago_inicial']) / $precio['financiamiento'];
                 }
                 /**sacando los descuentos en caso de que tenga pronto pago */
                 if ($precio['descuento_pronto_pago_b'] == 1) {
@@ -1331,7 +1337,7 @@ class CementerioController extends ApiController
             'descripcion_ingles' => 'required',
             'contado_b.value' => 'required|integer|min:0|max:1',
             'financiamiento' => '',
-            'pago_inicial' => 'numeric|min:1|lte:costo_neto',
+            'pago_inicial' => '',
             'costo_neto' => 'required|numeric|gte:costo_neto_financiamiento_normal',
             'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
             'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
@@ -1341,22 +1347,31 @@ class CementerioController extends ApiController
 
 
         $mensaje_financiamiento = '';
+        $mensaje_pago_inicial = '';
         /**validando si es a contado o credito */
         if ($request->contado_b['value'] == 1) {
             //es a contado
             $validaciones['financiamiento'] = 'required|integer|max:1';
             $mensaje_financiamiento = ' Este dato debe ser "1" Máximo';
+
+            /**forzando en pago inicial a ser igual al costo neto de la propiedad */
+            $validaciones['pago_inicial'] = 'required|numeric|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
+            $mensaje_pago_inicial = 'Este valor debe ser igual al costo neto, debido a que es precio de contado';
         } else {
             /**es a credito */
             $validaciones['financiamiento'] = 'required|integer|min:2|max:64';
             $mensaje_financiamiento = ' Este dato debe ser "2" Mínimo y "64" Máximo';
+
+            /**se puede mantener el pago inicial por debajo del costo neto */
+            $validaciones['pago_inicial'] = 'required|numeric|min:1|lte:costo_neto';
+            $mensaje_pago_inicial = 'Este valor debe ser "1.00" Mínimo';
         }
 
 
         /**validando si aplica descuento */
         if ($request->descuento_pronto_pago_b['value'] == 1) {
             /**si aplica descuento se debe validar que el precio no pase del precio de contado actual */
-            $validaciones['costo_neto_pronto_pago'] = 'required|numeric|gte:costo_neto_financiamiento_normal';
+            $validaciones['costo_neto_pronto_pago'] = 'required|numeric|gte:costo_neto_financiamiento_normal|lt:costo_neto';
         } else {
             /**no aplica descuento */
             $validaciones['costo_neto_pronto_pago'] = '';
@@ -1368,14 +1383,16 @@ class CementerioController extends ApiController
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'pago_inicial.min' => 'Este valor debe ser "1.00" Mínimo',
-            'pago_inicial.lte' => 'Este valor debe ser igual o menor al costo neto',
+            'pago_inicial.min' => $mensaje_pago_inicial,
+            'pago_inicial.lte' => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
+            'pago_inicial.max' => 'Este valor debe ser igual al costo neto, debido a que es precio de contado',
             'financiamiento.min' =>  $mensaje_financiamiento,
             'required' => 'Ingrese este dato',
             'numeric' => 'Este dato debe ser un número',
             'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
             'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
-            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado'
+            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
+            'costo_neto_pronto_pago.lt' => 'Este valor debe ser menor al costo neto'
         ];
         request()->validate(
             $validaciones,
@@ -1443,7 +1460,7 @@ class CementerioController extends ApiController
             'descripcion_ingles' => 'required',
             'contado_b.value' => 'required|integer|min:0|max:1',
             'financiamiento' => '',
-            'pago_inicial' => 'numeric|min:1|lte:costo_neto',
+            'pago_inicial' => '',
             'costo_neto' => 'required|numeric|gte:costo_neto_financiamiento_normal',
             'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
             'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
@@ -1453,22 +1470,31 @@ class CementerioController extends ApiController
 
 
         $mensaje_financiamiento = '';
+        $mensaje_pago_inicial = '';
         /**validando si es a contado o credito */
         if ($request->contado_b['value'] == 1) {
             //es a contado
             $validaciones['financiamiento'] = 'required|integer|max:1';
             $mensaje_financiamiento = ' Este dato debe ser "1" Máximo';
+
+            /**forzando en pago inicial a ser igual al costo neto de la propiedad */
+            $validaciones['pago_inicial'] = 'required|numeric|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
+            $mensaje_pago_inicial = 'Este valor debe ser igual al costo neto, debido a que es precio de contado';
         } else {
             /**es a credito */
             $validaciones['financiamiento'] = 'required|integer|min:2|max:64';
             $mensaje_financiamiento = ' Este dato debe ser "2" Mínimo y "64" Máximo';
+
+            /**se puede mantener el pago inicial por debajo del costo neto */
+            $validaciones['pago_inicial'] = 'required|numeric|min:1|lte:costo_neto';
+            $mensaje_pago_inicial = 'Este valor debe ser "1.00" Mínimo';
         }
 
 
         /**validando si aplica descuento */
         if ($request->descuento_pronto_pago_b['value'] == 1) {
             /**si aplica descuento se debe validar que el precio no pase del precio de contado actual */
-            $validaciones['costo_neto_pronto_pago'] = 'required|numeric|gte:costo_neto_financiamiento_normal';
+            $validaciones['costo_neto_pronto_pago'] = 'required|numeric|gte:costo_neto_financiamiento_normal|lt:costo_neto';
         } else {
             /**no aplica descuento */
             $validaciones['costo_neto_pronto_pago'] = '';
@@ -1480,14 +1506,16 @@ class CementerioController extends ApiController
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'pago_inicial.min' => 'Este valor debe ser "1.00" Mínimo',
-            'pago_inicial.lte' => 'Este valor debe ser igual o menor al costo neto',
+            'pago_inicial.min' => $mensaje_pago_inicial,
+            'pago_inicial.lte' => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
+            'pago_inicial.max' => 'Este valor debe ser igual al costo neto, debido a que es precio de contado',
             'financiamiento.min' =>  $mensaje_financiamiento,
             'required' => 'Ingrese este dato',
             'numeric' => 'Este dato debe ser un número',
             'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
             'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
-            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado'
+            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
+            'costo_neto_pronto_pago.lt' => 'Este valor debe ser menor al costo neto'
         ];
         request()->validate(
             $validaciones,
@@ -1597,10 +1625,21 @@ class CementerioController extends ApiController
 
 
 
-    public function lista_precios_pdf($id_tipo_propiedad = '', Request $request)
+    public function lista_precios_pdf($idioma = 'es', Request $request)
     {
+
+        if (!($idioma == 'en' || $idioma == 'es')) {
+            $idioma = 'es';
+        }
+        App::setLocale($idioma);
+
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         $email =  $request->email_send === 'true' ? true : false;
+        if ($email == true) {
+            if (!$request->email_addres || !$request->destinatario) {
+                $this->errorResponse('Es necesario un correo y un destinatario', 409);
+            }
+        }
         $email_to = $request->email_address;
         $datos_request = json_decode($request->request_parent[0], true);
         $financiamientos = $this->get_financiamientos();
@@ -1616,9 +1655,9 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/planes_venta/reportes', ['empresa' => $empresa, 'financiamientos' => $financiamientos, 'id_tipo_propiedad' => $datos_request['id_tipo_propiedad']]);
+        $pdf = PDF::loadView('inventarios/cementerios/planes_venta/reportes', ['empresa' => $empresa, 'financiamientos' => $financiamientos, 'id_tipo_propiedad' => $datos_request['id_tipo_propiedad'], 'idioma' => $idioma]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "SOLICITUD TITULAR "  . '.pdf';
+        $name_pdf = __('cementerio/lista_precios.titulo_reporte')  . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
             'footer-html' => view('inventarios.cementerios.planes_venta.footer'),
@@ -1650,8 +1689,8 @@ class CementerioController extends ApiController
             $email_controller = new EmailController();
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
-                'destinatoario',
-                'SOLICITUD DE PROPIEDAD / CEMENTERIO AETERNUS',
+                $request->destinatario,
+                __('cementerio/lista_precios.titulo_reporte'),
                 $name_pdf,
                 $pdf
             );
@@ -2875,7 +2914,6 @@ class CementerioController extends ApiController
                 'clientes.direccion as cliente_direccion',
                 'clientes.ciudad as cliente_ciudad',
                 'clientes.estado as cliente_estado',
-
                 'clientes.telefono as cliente_telefono',
                 'clientes.celular as cliente_celular',
                 'clientes.telefono_extra as cliente_telefono_extra',

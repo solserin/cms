@@ -20,7 +20,7 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 
 /**rutas de modulo en proceso */
 
-Route::get('cementerio/lista_precios_pdf/{id_tipo?}', 'CementerioController@lista_precios_pdf');
+
 /**fin de rutas de modulo en proceso */
 
 
@@ -30,14 +30,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
 
     /**RUTA PARA OBTENER LOS PUESTOS DISPONIBLEN EN LA EMPRESA */
-
-
     /**RUTA PARA OBTENER LOS PERMISOS DEL USUARIO */
     Route::get('get_permisos', 'Usuarios\UsuariosController@get_permisos');
-
     /**RUTA PARA OBTENER EL PERFIL DEL USUARIO */
     Route::get('get_perfil', 'Usuarios\UsuariosController@get_perfil');
-
     /**RUTA PARA OBTENER LOS DATOS DEL USUARIO */
     Route::get('get_usuarioById', 'Usuarios\UsuariosController@get_usuarioById');
 
@@ -54,43 +50,27 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('activate_usuario', 'Usuarios\UsuariosController@activate_usuario');
     Route::get('usuarios_pdfs', 'Usuarios\UsuariosController@pdfs');
     Route::post('/usuarios/actualizar_perfil', 'Usuarios\UsuariosController@actualizar_perfil');
-
     /**verificar el password del usuario recibe el request del token y el password */
     Route::post('verificar_password', 'Usuarios\UsuariosController@verificar_password');
 
 
     /**RUTAS PARA ROLES */
     Route::get('get_roles', 'Usuarios\RolesController@index');
-
     Route::get('get_roles_lista', 'Usuarios\RolesController@get_roles');
-
-
     Route::get('get_rol_id', 'Usuarios\RolesController@get_rol_id');
-
     Route::get('get_modulos_permisos', 'Usuarios\RolesController@get_modulos_permisos');
     Route::get('get_modulos_urls_permisos', 'Usuarios\RolesController@get_modulos_urls_permisos');
-
-
     Route::get('get_modulos', 'Usuarios\RolesController@get_modulos');
     Route::get('get_rol_permisos', 'Usuarios\RolesController@get_rol_permisos');
     Route::post('add_roles', 'Usuarios\RolesController@add_roles');
     Route::post('update_rol', 'Usuarios\RolesController@update_rol');
     Route::post('delete_rol', 'Usuarios\RolesController@delete_rol');
 
-    //municipios y estados
-    Route::get('estados/', 'EstadosController@getEstados');
-    Route::get('municipios/{estadoId}', 'MunicipiosController@getMunicipios');
-    Route::get('localidades/{municipioId}', 'LocalidadesController@getLocalidades');
 
     //Empresa
     Route::get('empresa/get_datos_empresa', 'EmpresaController@get_datos_empresa');
-
     Route::get('empresa/get_regimenes', 'EmpresaController@get_regimenes');
     Route::post('empresa/modificar_datos', 'EmpresaController@modificar_datos');
-
-
-
-
     Route::get('empresa/funeraria', 'EmpresaController@get');
     Route::post('empresa/funeraria', 'EmpresaController@save');
     Route::post('empresa/registro-publico', 'EmpresaController@saveRegistroPublico');
@@ -108,7 +88,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('empresa/facturacion/validateCER', 'EmpresaController@validateCERFile');
     Route::post('empresa/facturacion/validateKEY', 'EmpresaController@validateKEYFile');
     Route::post('empresa/facturacion', 'EmpresaController@saveFacturacion');
-
     ///SAT
     Route::get('regimenes/', 'SATRegimenesController@getAll');
     Route::get('monedas/', 'SATMonedasController@getAll');
@@ -121,14 +100,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/clientes/get_cliente_id', 'ClientesController@get_cliente_id');
     Route::post('/clientes/baja_cliente', 'ClientesController@baja_cliente');
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
-    //Proveedores
-
-    Route::post('empresa/inventario/proveedores', 'ProveedoresController@create');
-    Route::put('empresa/inventario/proveedores/{id}', 'ProveedoresController@save');
-    Route::get('empresa/inventario/proveedores', 'ProveedoresController@getAll');
-    Route::get('empresa/inventario/proveedores-pdf', 'ProveedoresController@getPDF');
-    Route::get('empresa/inventario/proveedores-active', 'ProveedoresController@getActive');
-    Route::get('empresa/inventario/proveedor-pdf/{id}', 'ProveedoresController@proveedorPDF');
 
     /**rutas del cementerio */
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
@@ -137,6 +108,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_financiamientos', 'CementerioController@get_financiamientos');
     Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_precio_by_id', 'CementerioController@get_precio_by_id');
+    Route::get('cementerio/lista_precios_pdf/{idioma?}', 'CementerioController@lista_precios_pdf');
 
 
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
@@ -159,8 +131,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_ventas', 'CementerioController@get_ventas');
 
 
-
-
     Route::get('inventarios/cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
     Route::get('inventarios/cementerio/get_venta_id/{id_venta?}', 'CementerioController@get_venta_id');
     Route::get('inventarios/cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
@@ -170,28 +140,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/documento_titulo', 'CementerioController@documento_titulo');
 
     /**fin de rutas del cementerio */
-
-    //Routes for LOV
-    Route::get('tipos-productos', 'TiposProductoController@getAll');
-    Route::get('grupos-profeco', 'GruposProfecoController@getAll');
-    Route::get('almacenes', 'AlmacenesController@getAll');
-    Route::get('categorias', 'CategoriasController@getAll');
-    Route::get('categorias/{idCategoria}/familias', 'CategoriasController@getFamilias');
-    Route::get('impuestos', 'SATImpuestosController@getImpuestos');
-    Route::get('retenciones', 'SATImpuestosController@getRetenciones');
-    Route::get('productos-servicios', 'SATProductosServiciosController@getAll');
-    Route::get('unidades', 'UnidadesController@getAll');
-
-    //Articulos
-    Route::post('empresa/inventario/articulos', 'ArticulosController@create');
-    Route::put('empresa/inventario/articulos/{id}', 'ArticulosController@save');
-    Route::get('empresa/inventario/articulos/{id}', 'ArticulosController@getArticulo');
-    Route::get('empresa/inventario/articulos', 'ArticulosController@getAll');
-    Route::get('empresa/inventario/articulos-pdf', 'ArticulosController@getPDF');
-    Route::get('empresa/inventario/articulos-pdf/{id}', 'ArticulosController@articuloPDF');
-
-    Route::get('metodos-pago/', 'MetodosPagoController@getAll');
-    Route::post('compras/', 'ComprasController@save');
 });
 
 
