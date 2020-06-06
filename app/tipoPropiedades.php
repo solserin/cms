@@ -31,6 +31,9 @@ class tipoPropiedades extends Model
             DB::raw(
                 '(NULL) AS pago_mensual',
             ),
+            DB::raw(
+                '(NULL) AS porcentaje_pronto_pago',
+            ),
         )->orderBy('financiamiento', 'asc');
     }
 }

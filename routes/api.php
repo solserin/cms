@@ -19,8 +19,9 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 
 
 /**rutas de modulo en proceso */
-
-
+Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+Route::get('cementerio/get_vendedores', 'CementerioController@get_vendedores');
+Route::post('cementerio/guardar_venta', 'CementerioController@guardar_venta');
 /**fin de rutas de modulo en proceso */
 
 
@@ -112,7 +113,7 @@ Route::middleware(['auth:api'])->group(function () {
 
 
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
-    Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
     Route::get('inventarios/cementerio/propiedadesById', 'CementerioController@propiedadesById');
     Route::get('inventarios/cementerio/get_propiedades_by_tipo', 'CementerioController@get_propiedades_by_tipo');
     Route::get('inventarios/cementerio/get_usuarios_para_vendedores', 'CementerioController@get_usuarios_para_vendedores');
@@ -122,9 +123,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/precios_tarifas', 'CementerioController@precios_tarifas');
     Route::post('inventarios/cementerio/actualizar_precios_tarifas', 'CementerioController@actualizar_precios_tarifas');
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
-    Route::get('inventarios/cementerio/get_vendedores', 'CementerioController@get_vendedores');
+
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
-    Route::post('inventarios/cementerio/guardar_venta', 'CementerioController@guardar_venta');
+
     Route::post('inventarios/cementerio/modificar_venta', 'CementerioController@modificar_venta');
     Route::post('inventarios/cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');

@@ -5167,6 +5167,34 @@ button:focus {
   padding-top: 41.66666666666667% !important;
 }
 
+.mensaje-requerido {
+  color: rgba(var(--vs-danger), 1) !important;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/*                              estilos de select                             */
+
+/* -------------------------------------------------------------------------- */
+
+.large_select .vs__selected {
+  text-transform: uppercase !important;
+  color: #303030 !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+[dir=ltr] .large_select .vs__selected {
+  padding: 5px 0px 5px 5px !important;
+}
+
+[dir=rtl] .large_select .vs__selected {
+  padding: 5px 5px 5px 0px !important;
+}
+
 /* -------------------------------------------------------------------------- */
 
 /*                                roles estilos                               */
@@ -5429,6 +5457,40 @@ html {
   margin: 0 auto 10px auto !important;
 }
 
+.background-header-forms .vs-popup--content {
+  max-height: 86vh !important;
+}
+
+.background-header-forms .vs-popup--title h3 {
+  width: 100% !important;
+}
+
+[dir] .background-header-forms .vs-popup--title h3 {
+  padding: 10px 0px 10px 0px !important;
+  background-color: #e8e8e8 !important;
+  border: none !important;
+}
+
+[dir=ltr] .background-header-forms .vs-popup--title h3 {
+  margin-left: auto !important;
+}
+
+[dir=rtl] .background-header-forms .vs-popup--title h3 {
+  margin-right: auto !important;
+}
+
+[dir] .background-header-forms .vs-popup--close {
+  margin-top: 25px !important;
+}
+
+[dir=ltr] .background-header-forms .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .background-header-forms .vs-popup--close {
+  margin-left: 12px !important;
+}
+
 .inline-header-forms .vs-popup--content {
   max-height: 86vh !important;
 }
@@ -5456,16 +5518,15 @@ html {
   margin-left: 12px !important;
 }
 
-.venta-propiedades .vs-popup--title h3:before {
+.inline-header-forms.vs-popup--title h3:before {
   vertical-align: middle;
-  content: url(/images/tomb.svg?e1ff0d4f602a6999d985e588a863f280);
 }
 
-[dir=ltr] .venta-propiedades .vs-popup--title h3:before {
+[dir=ltr] .inline-header-forms.vs-popup--title h3:before {
   padding-right: 10px !important;
 }
 
-[dir=rtl] .venta-propiedades .vs-popup--title h3:before {
+[dir=rtl] .inline-header-forms.vs-popup--title h3:before {
   padding-left: 10px !important;
 }
 

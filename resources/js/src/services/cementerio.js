@@ -42,31 +42,13 @@ export default {
 
     //obtiene las propieades del cementerio
     get_cementerio() {
-        let call = "/inventarios/cementerio/get_cementerio";
-        return new Promise((resolve, reject) => {
-            axios
-                .get(call)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+        let call = "/cementerio/get_cementerio";
+        return axios.get(call);
     },
     //obtiene los usuarios para cargar los vendedores
     get_vendedores() {
-        let call = "/inventarios/cementerio/get_vendedores";
-        return new Promise((resolve, reject) => {
-            axios
-                .get(call)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+        let call = "/cementerio/get_vendedores";
+        return axios.get(call);
     },
 
     //obtiene las 3 tipos de venta segun la antiguedad
@@ -99,18 +81,9 @@ export default {
         });
     },
 
-    guardarVenta(datos) {
-        let call = "/inventarios/cementerio/guardar_venta";
-        return new Promise((resolve, reject) => {
-            axios
-                .post(call, datos)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+    guardar_venta(datos) {
+        let call = "/cementerio/guardar_venta";
+        return axios.post(call, datos);
     },
 
     modificarVenta(datos) {

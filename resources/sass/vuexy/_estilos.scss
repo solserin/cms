@@ -1,3 +1,21 @@
+.mensaje-requerido {
+    color: rgba(var(--vs-danger), 1) !important;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              estilos de select                             */
+/* -------------------------------------------------------------------------- */
+.large_select .vs__selected {
+    padding: 5px 0px 5px 5px !important;
+    text-transform: uppercase !important;
+    color: #303030 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                roles estilos                               */
 /* -------------------------------------------------------------------------- */
@@ -171,6 +189,23 @@ html {
     margin: 0 auto 10px auto !important;
 }
 
+.background-header-forms .vs-popup--content {
+    max-height: 86vh !important;
+}
+
+.background-header-forms .vs-popup--title h3 {
+    padding: 10px 0px 10px 0px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    background-color: #e8e8e8 !important;
+    border: none !important;
+}
+
+.background-header-forms .vs-popup--close {
+    margin-top: 25px !important;
+    margin-right: 12px !important;
+}
+
 .inline-header-forms .vs-popup--content {
     max-height: 86vh !important;
 }
@@ -191,10 +226,9 @@ html {
     margin-right: 12px !important;
 }
 
-.venta-propiedades .vs-popup--title h3:before {
+.inline-header-forms.vs-popup--title h3:before {
     vertical-align: middle;
     padding-right: 10px !important;
-    content: url("../../../../../resources/assets/images/tomb.svg");
 }
 
 .searcher_clientes .vs-popup--title h3:before {

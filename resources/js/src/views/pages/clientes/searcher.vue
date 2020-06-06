@@ -22,11 +22,7 @@
       </div>
       <!--inicio de buscador-->
       <div class="py-3">
-        <vx-card no-radius title="Filtros de selección">
-          <template slot="header">
-            <img class="cursor-pointer img-btn" src="@assets/images/reload.svg" />
-          </template>
-
+        <vx-card no-radius title="Filtros de selección" refresh-content-action @refresh="reset">
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">

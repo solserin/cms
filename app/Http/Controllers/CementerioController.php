@@ -103,7 +103,7 @@ class CementerioController extends ApiController
             ),
 
         )
-            ->with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->with('ventas.cliente')->orderBy('id', 'asc')->get()->toArray();
+            ->with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get()->toArray();
 
         foreach ($datos as $key => &$dato) {
             if ($dato['tipo_propiedades_id'] == 1) {
@@ -126,12 +126,38 @@ class CementerioController extends ApiController
                 $dato['nombre_area'] = 'Sección de cuadriplex ' . $dato['propiedad_indicador'];
             }
 
+
+
+
+            foreach ($dato['tipo_propiedad']['precios'] as $precio_key => &$precio) {
+
+                if ($precio['financiamiento'] == 1) {
+                    $precio['tipo_financiamiento'] = "Pago Único/Uso Inmediato";
+                    $precio['tipo_financiamiento_ingles'] = "Spot Price";
+                    $precio['pago_mensual']
+                        = 0;
+                } else {
+                    $precio['tipo_financiamiento'] = "Pago a " . $precio['financiamiento'] . " Meses/A Futuro";
+                    $precio['tipo_financiamiento_ingles'] = $precio['financiamiento'] . "-Month Payment";
+                    $precio['pago_mensual']
+                        = ($precio['costo_neto'] - $precio['pago_inicial']) / $precio['financiamiento'];
+                }
+                /**sacando los descuentos en caso de que tenga pronto pago */
+                if ($precio['descuento_pronto_pago_b'] == 1) {
+                    $precio['descuento_x_pago'] = ($precio['costo_neto'] - $precio['costo_neto_pronto_pago']) / $precio['financiamiento'];
+                    $precio['porcentaje_pronto_pago'] = 100 - (($precio['costo_neto_financiamiento_normal'] * 100) / $precio['costo_neto']);
+                } else {
+                    $precio['descuento_x_pago'] = ' 0';
+                    $precio['porcentaje_pronto_pago'] = ' 0';
+                }
+            }
+
             /**agregando fila, lote, y tipo, por separado en valor numrico */
 
-            foreach ($dato['ventas'] as $key_venta => &$venta) {
+            /*foreach ($dato['ventas'] as $key_venta => &$venta) {
                 $venta['fila_raw'] = (intval(explode("-", $venta['ubicacion'])[2]));
                 $venta['lote_raw'] = (intval(explode("-", $venta['ubicacion'])[3]));
-            }
+            }*/
         }
 
 
@@ -142,7 +168,13 @@ class CementerioController extends ApiController
     public function get_vendedores()
     {
         //no super usuarios
-        return User::where('roles_id', '>', 1)->get();
+        /**puesto de venderor id 2 */
+        /**obtiene los usuarios con puesto de vendedor */
+        return User::select('id', 'nombre')
+            ->join('usuarios_puestos', 'usuarios_puestos.usuarios_id', '=', 'usuarios.id')
+            ->where('roles_id', '>', 1)
+            ->where('puestos_id', '=', 2)
+            ->get();
     }
 
     public function get_sat_formas_pago()
@@ -167,9 +199,10 @@ class CementerioController extends ApiController
             //datos de la venta
             'fecha_venta' => 'required|date',
             'ventaAntiguedad.value' => 'required',
-            'empresa_operaciones_id' => 'required',
+
             'filas.value' => 'required',
             'lotes.value' => '', //modificada segun condiciones
+
             'vendedor.value' => 'required',
 
             'num_solicitud' => '',
@@ -181,16 +214,8 @@ class CementerioController extends ApiController
 
             //info del plan de venta y pagos
             'planVenta.value' => 'required',
-            'precio_neto' => 'required|numeric',
-            'descuento' => 'nullable|numeric|lte:planVenta.precio_neto',
-            'precio_neto' => 'numeric|min:0',
-            'enganche_inicial' => 'numeric|min:' . $request->minima_cuota_inicial . '|' . 'max:' . $request->maxima_cuota_inicial,
-            'opcionPagar.value' => 'required',
-            'formaPago.value' => 'required',
-            'banco' => '',
-            'ultimosdigitos' => '',
-            'num_operacion' => '',
-
+            'precio_neto' => '',
+            'pago_inicial' => '',
 
             //fin de datos de la venta
 
@@ -217,6 +242,7 @@ class CementerioController extends ApiController
         if (!empty($ubicacion_enviada)) {
             return $this->errorResponse('La ubicación seleccionada ya ha sido vendida.', 409);
         }
+        return  $ubicacion_enviada;
 
         /**VALIDACIONES CONDICIONADAS*/
         //validando que mande el user el lote en caso de ser terraza
@@ -1301,8 +1327,10 @@ class CementerioController extends ApiController
                 /**sacando los descuentos en caso de que tenga pronto pago */
                 if ($precio['descuento_pronto_pago_b'] == 1) {
                     $precio['descuento_x_pago'] = ($precio['costo_neto'] - $precio['costo_neto_pronto_pago']) / $precio['financiamiento'];
+                    $precio['porcentaje_pronto_pago'] = 100 - (($precio['costo_neto_financiamiento_normal'] * 100) / $precio['costo_neto']);
                 } else {
                     $precio['descuento_x_pago'] = ' 0';
+                    $precio['porcentaje_pronto_pago'] = ' 0';
                 }
             }
         }
@@ -1338,7 +1366,7 @@ class CementerioController extends ApiController
             'contado_b.value' => 'required|integer|min:0|max:1',
             'financiamiento' => '',
             'pago_inicial' => '',
-            'costo_neto' => 'required|numeric|gte:costo_neto_financiamiento_normal',
+            'costo_neto' => 'required|numeric|min:1|gte:costo_neto_financiamiento_normal',
             'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
             'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
             'costo_neto_pronto_pago' => '',
@@ -1390,6 +1418,7 @@ class CementerioController extends ApiController
             'required' => 'Ingrese este dato',
             'numeric' => 'Este dato debe ser un número',
             'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
+            'costo_neto.min' => 'Esta cantidad debe mayor a cero',
             'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
             'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
             'costo_neto_pronto_pago.lt' => 'Este valor debe ser menor al costo neto'
@@ -1461,7 +1490,7 @@ class CementerioController extends ApiController
             'contado_b.value' => 'required|integer|min:0|max:1',
             'financiamiento' => '',
             'pago_inicial' => '',
-            'costo_neto' => 'required|numeric|gte:costo_neto_financiamiento_normal',
+            'costo_neto' => 'required|numeric|min:0|gte:costo_neto_financiamiento_normal',
             'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
             'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
             'costo_neto_pronto_pago' => '',
@@ -1514,6 +1543,7 @@ class CementerioController extends ApiController
             'numeric' => 'Este dato debe ser un número',
             'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
             'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
+            'costo_neto.min' => 'Esta cantidad debe mayor a cero',
             'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
             'costo_neto_pronto_pago.lt' => 'Este valor debe ser menor al costo neto'
         ];
