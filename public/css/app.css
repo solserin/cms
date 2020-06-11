@@ -5305,6 +5305,14 @@ button:focus {
   background-color: #e8e8e8;
 }
 
+.default_color {
+  color: #303030 !important;
+}
+
+[dir] .default_color {
+  background-color: #c1c1c1 !important;
+}
+
 /* -------------------------------------------------------------------------- */
 
 /*                          fin de estilos de botones                         */
@@ -5469,14 +5477,6 @@ html {
   padding: 10px 0px 10px 0px !important;
   background-color: #e8e8e8 !important;
   border: none !important;
-}
-
-[dir=ltr] .background-header-forms .vs-popup--title h3 {
-  margin-left: auto !important;
-}
-
-[dir=rtl] .background-header-forms .vs-popup--title h3 {
-  margin-right: auto !important;
 }
 
 [dir] .background-header-forms .vs-popup--close {
@@ -6088,6 +6088,17 @@ html {
 
 .password_icono:before {
   content: url(/images/password.svg?5c95b46463fb727c8dda36e6098154ea);
+}
+
+.nota_icono:before {
+  display: block;
+  width: 85px;
+  height: 85px;
+  content: url(/images/notes.svg?6080eabe4148cf897ca0e01addafc851);
+}
+
+[dir] .nota_icono:before {
+  margin: 0px auto 0px auto !important;
 }
 
 .confirmar .seguro-mensaje {

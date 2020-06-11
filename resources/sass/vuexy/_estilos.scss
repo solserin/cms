@@ -96,6 +96,10 @@
     color: #303030 !important;
     font-weight: 600 !important;
 }
+.default_color {
+    background-color: #c1c1c1 !important;
+    color: #303030 !important;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                          fin de estilos de botones                         */
@@ -196,7 +200,6 @@ html {
 .background-header-forms .vs-popup--title h3 {
     padding: 10px 0px 10px 0px !important;
     width: 100% !important;
-    margin-left: auto !important;
     background-color: #e8e8e8 !important;
     border: none !important;
 }
@@ -747,6 +750,14 @@ html {
 
 .password_icono:before {
     content: url("../../../../../resources/assets/images/password.svg");
+}
+
+.nota_icono:before {
+    display: block;
+    width: 85px;
+    height: 85px;
+    margin: 0px auto 0px auto !important;
+    content: url("../../../../../resources/assets/images/notes.svg");
 }
 
 .confirmar .seguro-mensaje {

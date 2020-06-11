@@ -22,7 +22,7 @@ class PrecioPropiedades extends Migration
             $table->float('costo_neto_financiamiento_normal');
             $table->tinyInteger('descuento_pronto_pago_b');
             $table->float('costo_neto_pronto_pago');
-            $table->unsignedBigInteger('tipo_propiedades_id')->unsigned()->nullable();
+            $table->unsignedTinyInteger('tipo_propiedades_id')->unsigned()->nullable();
             $table->foreign('tipo_propiedades_id')->references('id')->on('tipo_propiedades');
             $table->dateTime('fecha_actualizacion');
             $table->unsignedBigInteger('actualizo_id')->unsigned()->nullable();

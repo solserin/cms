@@ -17,10 +17,12 @@ class PagosProgramados extends Migration
             $table->bigIncrements('id');
             $table->string('referencia_pago');
             $table->tinyInteger('num_pago');
-            $table->unsignedBigInteger('conceptos_pagos_id')->nullable();
+            $table->unsignedTinyInteger('conceptos_pagos_id')->nullable();
             $table->foreign('conceptos_pagos_id')->references('id')->on('conceptos_pagos');
             $table->date('fecha_programada');
             $table->float('monto_programado');
+            $table->unsignedBigInteger('operaciones_id')->nullable();
+            $table->foreign('operaciones_id')->references('id')->on('operaciones');
             $table->tinyInteger('status')->default(1);
         });
     }

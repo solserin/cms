@@ -31,14 +31,21 @@
             <vs-button
               color="danger"
               class="float-right mr-2"
+              size="small"
               type="border"
               @click="cancel"
-            >(Esc) Cancelar</vs-button>
+            >
+              <img width="25px" class="cursor-pointer" src="@assets/images/cancel.svg" />
+              <span class="texto-btn">(Esc) Cancelar</span>
+            </vs-button>
           </div>
         </div>
         <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
           <div class="mt-2">
-            <vs-button color="success" class="float-left ml-2" @click="acceptAlert">(Ent) Confirmar</vs-button>
+            <vs-button size="small" color="success" class="float-left ml-2" @click="acceptAlert">
+              <img width="25px" class="cursor-pointer" src="@assets/images/checked.svg" />
+              <span class="texto-btn">(Ent) Confirmar</span>
+            </vs-button>
           </div>
         </div>
       </div>

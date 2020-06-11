@@ -82,22 +82,13 @@ export default {
     },
 
     guardar_venta(datos) {
-        let call = "/cementerio/guardar_venta";
+        let call = "/cementerio/control_ventas/agregar";
         return axios.post(call, datos);
     },
 
-    modificarVenta(datos) {
-        let call = "/inventarios/cementerio/modificar_venta";
-        return new Promise((resolve, reject) => {
-            axios
-                .post(call, datos)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+    modificar_venta(datos) {
+        let call = "/cementerio/control_ventas/modificar";
+        return axios.post(call, datos);
     },
 
     cancelar_venta(datos) {
@@ -255,30 +246,28 @@ export default {
     },
     /**get las ventas para el paginado de ventas */
     get_ventas(param) {
-        let self = this;
-        return new Promise((resolve, reject) => {
-            axios
-                .get("/inventarios/cementerio/get_ventas", {
-                    cancelToken: new CancelToken(c => {
-                        self.cancel = c;
-                    }),
-                    params: param
-                })
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    if (axiosSuper.isCancel(error)) {
-                        reject(error.message);
-                    } else {
-                        reject(error);
-                    }
-                });
+        let service = "/cementerio/get_ventas/all/paginated";
+        if (param.filtro_especifico_opcion == 4) {
+            /**es de tipo de id venta */
+            /**se debe de cambiar la url */
+            if (param.numero_control.trim() != "") {
+                service =
+                    "/cementerio/get_ventas/" +
+                    param.numero_control.trim() +
+                    "/paginated";
+            }
+        }
+        return axios.get(service, {
+            cancelToken: new CancelToken(c => {
+                this.cancel = c;
+            }),
+            params: param
         });
     },
 
     //obtiene la venta por id
-    get_venta_id(param) {
-        return axios.get("/inventarios/cementerio/get_venta_id/" + param);
+    consultar_venta_id(param) {
+        let service = "/cementerio/get_ventas/" + param;
+        return axios.get(service);
     }
 };

@@ -18,7 +18,7 @@ class ConceptosPagos extends Migration
         2- abono
         3- liquidacion*/
         Schema::create('conceptos_pagos', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->tinyIncrements('id');
             $table->string('concepto', 50)->nullable();
         });
     }

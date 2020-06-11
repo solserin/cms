@@ -14,7 +14,7 @@ class CreateTipoPropiedadesTable extends Migration
     public function up()
     {
         Schema::create('tipo_propiedades', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->tinyIncrements('id');
             $table->string('tipo');
             $table->string('descripcion');
             $table->tinyInteger('capacidad');

@@ -15,7 +15,8 @@ class Operaciones extends Migration
     {
         Schema::create('operaciones', function (Blueprint $table) {
             $table->bigIncrements('id');
-
+            $table->unsignedBigInteger('clientes_id');
+            $table->foreign('clientes_id')->references('id')->on('clientes');
             /**relacion para la antiguedad de la operacion que aplique */
             $table->unsignedBigInteger('antiguedad_operacion_id');
             $table->foreign('antiguedad_operacion_id')->references('id')->on('antiguedad_operacion');
@@ -39,7 +40,7 @@ class Operaciones extends Migration
             /**titular sustituto */
             $table->string('titular_sustituto')->nullable();
             $table->string('parentesco_titular_sustituto')->nullable();
-            $table->string('telelfono_titular_sustituto')->nullable();
+            $table->string('telefono_titular_sustituto')->nullable();
             /** */
 
 
@@ -79,7 +80,7 @@ class Operaciones extends Migration
             /**status de la operacion */
             /**este se le asigna un valor numerico 1,2,3,0 segun la interpretacion en cada tipo de operacion */
             $table->float('comision_venta_neto')->nullable();
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(1);
         });
     }
 

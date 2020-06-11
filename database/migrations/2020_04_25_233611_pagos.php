@@ -42,6 +42,7 @@ class Pagos extends Migration
             $table->unsignedBigInteger('sat_monedas_id')->nullable();
             $table->foreign('sat_monedas_id')->references('id')->on('sat_monedas');
             $table->mediumText('nota')->nullable();
+            $table->float('tipo_cambio');
             $table->tinyInteger('status')->default(1);
         });
     }
