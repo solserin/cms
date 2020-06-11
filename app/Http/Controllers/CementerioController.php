@@ -358,11 +358,8 @@ class CementerioController extends ApiController
 
         //valido si es de venta antes del sistema
         if ($request->ventaAntiguedad['value'] == 2) {
-
-            return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
             /**venta ya realizada anterior al sistema pero no liquidadada */
             $validaciones['convenio'] = 'required';
-
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
                 ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', 1)->first();
@@ -438,28 +435,38 @@ class CementerioController extends ApiController
             }
         }
 
-
-
         /**haciendo las validaciones necesarias para saber si se puede proceder con la modificacion de los datos */
-
+        $reprogramar_pagos = false;
         if ($tipo_servicio == 'modificar') {
-            if ($datos_venta['pagos_vigentes'] > 0) {
-                /**tiene pagos vigentes, se debe validar lo que no puede modifcar. 
-                 * todo aquello que altere los precios y totales de la venta, pues al tener pagos realizados vigentes se alteria
-                 * el contrato y la programacion de pagos
-                 * solo puede modificar lo que no altere el contrato como cliente,vendedor, cliente
-                 * titular sustituto
-                 * beneficiarios
-                 */
-                /**verificando que no hay modificado nada relativo a precios */
-                if (
-                    $request->fecha_venta != $datos_venta['venta_terreno']['fecha_date_format'] ||
-                    ($request->costo_neto != $datos_venta['total'] ||
-                        $request->descuento != $datos_venta['descuento'] ||
-                        $request->costo_neto_pronto_pago != $datos_venta['costo_neto_pronto_pago'])
-                ) {
-                    return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
+            /**tiene pagos vigentes, se debe validar lo que no puede modifcar. 
+             * todo aquello que altere los precios y totales de la venta, pues al tener pagos realizados vigentes se alteria
+             * el contrato y la programacion de pagos
+             * solo puede modificar lo que no altere el contrato como cliente,vendedor, cliente
+             * titular sustituto
+             * beneficiarios
+             */
+            /**verificando que no hay modificado nada relativo a precios */
+            if (
+                $request->fecha_venta != $datos_venta['venta_terreno']['fecha_date_format'] ||
+                ($request->impuestos != $datos_venta['impuestos'] ||
+                    $request->subtotal != $datos_venta['subtotal'] ||
+                    $request->costo_neto != $datos_venta['total'] ||
+                    $request->pago_incial != count($datos_venta['pagos_programados']) > 0 ? $datos_venta['pagos_programados'][0]['monto_programado'] : 0 ||
+                    $request->descuento != $datos_venta['descuento'] ||
+                    $request->costo_neto_pronto_pago != $datos_venta['costo_neto_pronto_pago'])
+            ) {
+                if ($datos_venta['total'] > 0) {
+                    /**si la venta no fue gratis */
+                    if ($datos_venta['pagos_vigentes'] > 0) {
+                        return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
                 financiamiento, etc. Esto se debe a que existen pagos vigentes relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
+                    } else {
+                        $reprogramar_pagos = true;
+                    }
+                } else {
+                    /**la venta no fue gratis */
+                    return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
+                financiamiento, etc. Esto se debe a que la venta tiene un saldo de $0.00 pesos(está liquidada).', 409);
                 }
             }
         }
@@ -551,7 +558,7 @@ class CementerioController extends ApiController
                     [
                         'clientes_id' => (int) $request->id_cliente,
                         /**venta a futuro solamente */
-                        'numero_solicitud' => ($request->tipo_financiamiento == 2) ? $request->solicitud : null,
+                        'numero_solicitud' => ($request->tipo_financiamiento == 2) ? trim($request->solicitud) : null,
                         /**venta  liquidada solamente */
                         'numero_convenio' => trim($request->convenio),
                         'numero_titulo' => trim($request->titulo),
@@ -570,15 +577,36 @@ class CementerioController extends ApiController
                         'costo_neto_financiamiento_normal' => (float) $request->planVenta['costo_neto_financiamiento_normal'],
                     ]
                 );
+
+
+                /**verificamos si tiene pagos realizados para saber si podemos eliminar los pagos existentes o si solo cancelarlos */
+                if ($reprogramar_pagos == true) {
+                    if ($datos_venta['pagos_realizados'] > 0) {
+                        /**cancelamos los pagos programados vigentes */
+                        DB::table('pagos_programados')->where('operaciones_id', '=', $datos_venta['operacion_id'])->update(
+                            [
+                                'status' => 0,
+                            ]
+                        );
+                    } else {
+                        /**podemos eliminar los pagos programados viegente para rehacerlo */
+                        DB::table('pagos_programados')->where('operaciones_id', '=', $datos_venta['operacion_id'])->delete();
+                    }
+                    /**programacion de pagos */
+                    if ($costo_neto > 0) {
+                        /**si la cantidad que resta a pagar es mayor a cero se manda llamar la programcion de pagos */
+                        $this->programarPagos($request, $datos_venta['operacion_id'], $request->id_venta);
+                    } else {
+                        /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
+                        if (trim($datos_venta['numero_titulo']) == '') {
+                            $this->generarNumeroTitulo($datos_venta['operacion_id']);
+                        }
+                    }
+                }
+                //captura de los beneficiarios
+                $this->guardarBeneficiarios($request, $datos_venta['operacion_id']);
                 /**pendiente hacer modificacion de progrmacion de pagos */
             }
-
-
-
-
-
-
-
 
 
 
@@ -1948,6 +1976,9 @@ class CementerioController extends ApiController
                     '(0) AS num_pagos_programados'
                 ),
                 DB::raw(
+                    '(0) AS num_pagos_programados_vigentes'
+                ),
+                DB::raw(
                     '(0) AS intereses'
                 ),
                 DB::raw(
@@ -2062,7 +2093,7 @@ class CementerioController extends ApiController
             }
 
             $venta['num_pagos_programados'] = count($venta['pagos_programados']);
-
+            $num_pagos_programados_vigentes = 0;
             if ($venta['num_pagos_programados'] > 0) {
                 /**si tiene pagos programados, eso quiere decir que la venta no tuvo 100 de descuento */
                 /**recorriendo arreglo de pagos programados */
@@ -2075,6 +2106,8 @@ class CementerioController extends ApiController
                 /**guardo los dias que lleva vencido el pago vencido mas antiguo */
                 foreach ($venta['pagos_programados']  as $index_programado => &$programado) {
                     if ($programado['status'] == 1) {
+                        $num_pagos_programados_vigentes++;
+                        /**aumento el pago programado vigente */
                         /**haciendo sumatoria de los montos que se han destinado a un pago programado segun el tipo de movimiento */
                         /**montos segun su tipo de movimiento */
                         $abonado_intereses = 0;
@@ -2203,6 +2236,7 @@ class CementerioController extends ApiController
                 } //fin foreach programados
                 $venta['pagos_realizados'] = $pagos_realizados;
                 $venta['pagos_vigentes'] = $pagos_vigentes;
+                $venta['num_pagos_programados_vigentes'] = $num_pagos_programados_vigentes;
                 $venta['pagos_cancelados'] = $pagos_cancelados;
                 $venta['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
                 $venta['pagos_vencidos'] = $vencidos;
