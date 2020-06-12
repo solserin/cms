@@ -293,8 +293,39 @@
     .bg-gray-dark{
       background-color: #BFBFBF !important;
     }
-    
+ 
 
+.pagos_tabla thead tr {
+    border: 1px solid #ddd;
+    color: #fff !important;
+    background-color: #666666 !important;
+}
+
+.pagos_tabla tbody {
+    border: 0px !important;
+    border-top: 2px solid #fff !important;
+}
+
+.pagos_tabla {
+    border-collapse: collapse;
+}
+
+.pagos_tabla tr th,
+.pagos_tabla td {
+    font-weight: 500 !important;
+    border: 1px solid #ddd;
+}
+
+.pagos_tabla tr:nth-child(even) {
+    background-color: #f2f2f2 !important;
+}
+
+
+   
+.bg-header{
+    color: #fff !important;
+    background-color: #666666 !important;
+}
      .bg-black{
       background-color: #000 !important;
     }

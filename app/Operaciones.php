@@ -38,7 +38,6 @@ class Operaciones extends Model
             );
     }
 
-
     /**la venta tiene uno o muchos pagos programados */
     public function pagosProgramados()
     {
@@ -73,6 +72,9 @@ class Operaciones extends Model
                     '(0) AS complementado_cancelacion'
                 ),
                 DB::raw(
+                    '(NULL) AS total_cubierto'
+                ),
+                DB::raw(
                     '(0) AS saldo_neto'
                 ),
                 DB::raw(
@@ -80,6 +82,12 @@ class Operaciones extends Model
                 ),
                 DB::raw(
                     '(0) AS monto_pronto_pago'
+                ),
+                DB::raw(
+                    '(NULL) AS concepto_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_programada_abr'
                 )
             )
             ->orderBy('id', 'asc');

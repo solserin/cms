@@ -2,7 +2,12 @@
   <div>
     <div class="flex flex-wrap">
       <div class="w-full mb-1">
-        <vs-button class="float-right" size="small" color="success" @click="formulario('agregar')">
+        <vs-button
+          class="float-right"
+          size="small"
+          color="success"
+          @click="formulario('agregar')"
+        >
           <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
           <span class="texto-btn">Vender Terreno</span>
         </vs-button>
@@ -10,9 +15,12 @@
           class="float-right mr-12"
           size="small"
           color="primary"
-          @click="openPlanesVenta=true"
+          @click="openPlanesVenta = true"
         >
-          <img class="cursor-pointer img-btn" src="@assets/images/price_list.svg" />
+          <img
+            class="cursor-pointer img-btn"
+            src="@assets/images/price_list.svg"
+          />
           <span class="texto-btn">Planes de Venta</span>
         </vs-button>
       </div>
@@ -26,7 +34,9 @@
         collapse-action
       >
         <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Mostrar</label>
             <v-select
               :options="mostrarOptions"
@@ -36,7 +46,9 @@
               class="mb-4 sm:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Estado</label>
             <v-select
               :options="estadosOptions"
@@ -46,7 +58,9 @@
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
@@ -56,7 +70,9 @@
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+          >
             <label class="text-sm opacity-75">Número de Control</label>
             <vs-input
               class="w-full"
@@ -65,7 +81,7 @@
               placeholder="Filtrar por Número de Control"
               v-model="serverOptions.numero_control"
               v-on:keyup.enter="get_data(1)"
-              v-on:blur="get_data(1,'blur')"
+              v-on:blur="get_data(1, 'blur')"
             />
           </div>
         </div>
@@ -73,10 +89,16 @@
         <div class="flex flex-wrap">
           <div class="w-full px-2">
             <h3 class="text-base font-semibold my-3">
-              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Titular
+              <feather-icon
+                icon="UserIcon"
+                class="mr-2"
+                svgClasses="w-5 h-5"
+              />Filtrar por Nombre del Titular
             </h3>
           </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
+          >
             <label class="text-sm opacity-75">Nombre del Titular</label>
             <vs-input
               class="w-full"
@@ -84,7 +106,7 @@
               placeholder="Filtrar por Nombre del Titular"
               v-model="serverOptions.titular"
               v-on:keyup.enter="get_data(1)"
-              v-on:blur="get_data(1,'blur')"
+              v-on:blur="get_data(1, 'blur')"
               maxlength="75"
             />
           </div>
@@ -113,29 +135,41 @@
         <vs-th>Estatus</vs-th>
         <vs-th>Acciones</vs-th>
       </template>
-      <template slot-scope="{data}">
+      <template slot-scope="{ data }">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
           <vs-td :data="data[indextr].ventas_terrenos_id">
-            <span class="font-semibold">{{data[indextr].ventas_terrenos_id}}</span>
+            <span class="font-semibold">{{
+              data[indextr].ventas_terrenos_id
+            }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
+          <vs-td :data="data[indextr].nombre">{{ data[indextr].nombre }}</vs-td>
           <vs-td
             :data="data[indextr].venta_terreno.tipo_financiamiento_texto"
-          >{{data[indextr].venta_terreno.tipo_financiamiento_texto}}</vs-td>
+            >{{ data[indextr].venta_terreno.tipo_financiamiento_texto }}</vs-td
+          >
           <vs-td :data="data[indextr].numero_solicitud">
-            <span class="font-medium">{{data[indextr].numero_solicitud_texto}}</span>
+            <span class="font-medium">{{
+              data[indextr].numero_solicitud_texto
+            }}</span>
           </vs-td>
           <vs-td :data="data[indextr].numero_convenio">
-            <span class="font-medium">{{data[indextr].numero_convenio}}</span>
+            <span class="font-medium">{{ data[indextr].numero_convenio }}</span>
           </vs-td>
           <vs-td :data="data[indextr].numero_titulo">
-            <span class="font-medium">{{data[indextr].numero_titulo_texto}}</span>
+            <span class="font-medium">{{
+              data[indextr].numero_titulo_texto
+            }}</span>
           </vs-td>
-          <vs-td
-            :data="data[indextr].ubicacion_texto"
-          >{{data[indextr].venta_terreno.ubicacion_texto}}</vs-td>
+          <vs-td :data="data[indextr].ubicacion_texto">{{
+            data[indextr].venta_terreno.ubicacion_texto
+          }}</vs-td>
           <vs-td :data="data[indextr].operacion_status">
-            <p v-if="data[indextr].operacion_status==1" class="text-success font-medium">Activo</p>
+            <p
+              v-if="data[indextr].operacion_status == 1"
+              class="text-success font-medium"
+            >
+              Activo
+            </p>
             <p v-else class="text-danger font-medium">Cancelada</p>
           </vs-td>
 
@@ -145,7 +179,7 @@
                 class="cursor-pointer img-btn ml-auto"
                 src="@assets/images/folder.svg"
                 title="Consultar Documentación"
-                @click="ConsultarVenta(data[indextr].id)"
+                @click="ConsultarVenta(data[indextr].ventas_terrenos_id)"
               />
               <img
                 class="cursor-pointer img-btn ml-6 mr-6"
@@ -155,11 +189,11 @@
               />
               <img
                 width="24"
-                v-if="data[indextr].operacion_status==1"
+                v-if="data[indextr].operacion_status == 1"
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
-                @click="cancelarVenta(data[indextr].id)"
+                @click="cancelarVenta(data[indextr].ventas_terrenos_id)"
               />
               <img
                 width="24"
@@ -167,7 +201,7 @@
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash-open.svg"
                 title="Esta venta ya fue cancelada, puede hacer click aquí para consultar"
-                @click="cancelarVenta(data[indextr].id)"
+                @click="cancelarVenta(data[indextr].ventas_terrenos_id)"
               />
             </div>
           </vs-td>
@@ -177,7 +211,12 @@
     </vs-table>
 
     <div>
-      <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
+      <vs-pagination
+        v-if="verPaginado"
+        :total="this.total"
+        v-model="actual"
+        class="mt-8"
+      ></vs-pagination>
     </div>
 
     <pre ref="pre"></pre>
@@ -205,11 +244,14 @@
 
     <CancelarVenta
       :show="openCancelar"
-      @closeCancelarVenta="openCancelar=false"
+      @closeCancelarVenta="openCancelar = false"
       @ConsultarVenta="ConsultarVenta"
       :id_venta="id_venta"
     ></CancelarVenta>
-    <PlanesVenta :show="openPlanesVenta" @closePlanesCementerio="openPlanesVenta=false"></PlanesVenta>
+    <PlanesVenta
+      :show="openPlanesVenta"
+      @closePlanesCementerio="openPlanesVenta = false"
+    ></PlanesVenta>
   </div>
 </template>
 

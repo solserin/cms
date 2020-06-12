@@ -266,8 +266,8 @@ export default {
     },
 
     //obtiene la venta por id
-    consultar_venta_id(param) {
-        let service = "/cementerio/get_ventas/" + param;
+    consultar_venta_id(id_venta) {
+        let service = "/cementerio/get_ventas/" + id_venta;
         return axios.get(service);
     }
 };

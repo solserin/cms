@@ -11,9 +11,9 @@
       <div class="flex flex-wrap">
         <div class="w-full sm:w-5/5 md:w-2/5 lg:w-1/5 xl:w-1/5 px-2 mb-8">
           <!--datos de los reportes-->
-          <h1
-            class="text-base capitalize font-semibold text-black"
-          >Formatos Disponibles del Documento</h1>
+          <h1 class="text-base capitalize font-semibold text-black">
+            Formatos Disponibles del Documento
+          </h1>
           <div class="flex flex-wrap mt-8">
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
               <label class="text-sm opacity-75 font-semibold">
@@ -39,8 +39,12 @@
               </div>
             </div>
             -->
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-6">
-              <label class="text-sm opacity-75 font-medium">Nombre destinatario</label>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-6"
+            >
+              <label class="text-sm opacity-75 font-medium"
+                >Nombre destinatario</label
+              >
               <vs-input
                 name="destinatario"
                 data-vv-as=" "
@@ -53,17 +57,24 @@
                 v-model="request_datos.destinatario"
               />
               <div>
-                <span class="text-danger text-sm">{{ errors.first('destinatario') }}</span>
+                <span class="text-danger text-sm">{{
+                  errors.first("destinatario")
+                }}</span>
               </div>
               <div class="mt-2">
                 <span
                   class="text-danger text-sm"
                   v-if="this.errores.destinatario"
-                >{{errores.destinatario[0]}}</span>
+                  >{{ errores.destinatario[0] }}</span
+                >
               </div>
             </div>
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-3">
-              <label class="text-sm opacity-75 font-medium">Enviar por Correo</label>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-3"
+            >
+              <label class="text-sm opacity-75 font-medium"
+                >Enviar por Correo</label
+              >
               <vs-input
                 name="email"
                 data-vv-as=" "
@@ -76,16 +87,30 @@
                 v-model="request_datos.email_address"
               />
               <div>
-                <span class="text-danger text-sm">{{ errors.first('email') }}</span>
+                <span class="text-danger text-sm">{{
+                  errors.first("email")
+                }}</span>
               </div>
               <div class="mt-2">
-                <span class="text-danger text-sm" v-if="this.errores.email">{{errores.email[0]}}</span>
+                <span class="text-danger text-sm" v-if="this.errores.email">{{
+                  errores.email[0]
+                }}</span>
               </div>
             </div>
 
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-6">
-              <vs-button size="small" color="success" class="w-full my-4" @click="acceptAlert()">
-                <img class="cursor-pointer img-btn" src="@assets/images/gmail.svg" />
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-6"
+            >
+              <vs-button
+                size="small"
+                color="success"
+                class="w-full my-4"
+                @click="acceptAlert()"
+              >
+                <img
+                  class="cursor-pointer img-btn"
+                  src="@assets/images/gmail.svg"
+                />
                 <span class="texto-btn">Enviar por Correo</span>
               </vs-button>
             </div>
@@ -96,11 +121,16 @@
           <div class="pdf_layout h-screen bg-grey-light">
             <div class="flex inline-block h-screen bg-grey-light">
               <span
-                v-if="pdf_iframe_source==''"
+                v-if="pdf_iframe_source == ''"
                 class="mb-auto mt-auto mr-auto ml-auto bg-blue-200"
-              >Debe seleccionar un reporte para visualizar.</span>
+                >Debe seleccionar un reporte para visualizar.</span
+              >
 
-              <iframe v-else :src="pdf_iframe_source" class="iframe_viewer"></iframe>
+              <iframe
+                v-else
+                :src="pdf_iframe_source"
+                class="iframe_viewer"
+              ></iframe>
             </div>
           </div>
         </div>
@@ -108,7 +138,7 @@
       <ConfirmarAceptar
         :show="openConfirmarAceptar"
         :callback-on-success="callBackConfirmar"
-        @closeVerificar="openConfirmarAceptar=false"
+        @closeVerificar="openConfirmarAceptar = false"
         :accion="'Enviar el documento por correo'"
         :confirmarButton="'Enviar Documento'"
       ></ConfirmarAceptar>
@@ -149,7 +179,9 @@ export default {
     },
     reporteSeleccionado: function(newValue, oldValue) {
       this.request_datos.email_send = false;
-      this.get_pdf();
+      (async () => {
+        await this.get_pdf();
+      })();
     }
   },
   props: {
@@ -232,50 +264,61 @@ export default {
       this.$emit("closeReportes");
     },
 
-    get_pdf() {
+    async get_pdf() {
       this.$vs.loading();
-      pdf
-        .get_pdf(this.reporteSeleccionado.value, this.request_datos)
+      try {
+        let res = await pdf.get_pdf(
+          this.reporteSeleccionado.value,
+          this.request_datos
+        );
 
-        .then(res => {
-          this.$vs.loading.close();
-          const file = new Blob([res.data], { type: "application/pdf" });
-          this.pdf_iframe_source = URL.createObjectURL(file);
-          if (res.data.type != "application/pdf") {
-            this.pdf_iframe_source = "";
+        this.$vs.loading.close();
+        const file = new Blob([res.data], { type: "application/pdf" });
+        this.pdf_iframe_source = URL.createObjectURL(file);
+        if (res.data.type != "application/pdf") {
+          this.pdf_iframe_source = "";
+          this.$vs.notify({
+            title: "Consultar documento",
+            text: "No se encontró este documento",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "4000"
+          });
+        }
+      } catch (err) {
+        this.pdf_iframe_source = "";
+        this.pdf_iframe_source = "";
+        this.$vs.loading.close();
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
             this.$vs.notify({
-              title: "Consultar documento",
-              text: "No se encontró este documento",
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000
+            });
+          } else if (err.response.status == 422) {
+            /**error de validacion */
+            this.errores = JSON.parse(err.response);
+          } else if (err.response.status == 409) {
+            //este error es por alguna condicion que el contrano no cumple para modificar
+            //la propiedad esa ya ha sido vendida
+            this.$vs.notify({
+              title: "Ver Reportes",
+              text: err.response.data.error,
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              position: "bottom-right",
-              time: "4000"
+              time: 30000
             });
           }
-        })
-        .catch(err => {
-          this.pdf_iframe_source = "";
-          this.pdf_iframe_source = "";
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 4000
-              });
-            } else if (err.response.status == 422) {
-              /**error de validacion */
-              this.errores = JSON.parse(err.response);
-            }
-          }
-        });
+        }
+      }
     },
 
     acceptAlert() {
@@ -297,7 +340,9 @@ export default {
             if (this.pdf_iframe_source != "") {
               if (this.request_datos.email_address != "") {
                 this.openConfirmarAceptar = true;
-                this.callBackConfirmar = this.send_pdf;
+                (async () => {
+                  this.callBackConfirmar = await this.send_pdf;
+                })();
               }
             }
           }
@@ -306,58 +351,56 @@ export default {
     },
 
     /**enviar pdf por mail */
-    send_pdf() {
+    async send_pdf() {
       this.request_datos.email_send = true;
       this.$vs.loading();
-      pdf
-        .send_pdf(this.reporteSeleccionado.value, this.request_datos)
-        /**el uno indica que se va enviar el email */
+      try {
+        let res = await pdf.send_pdf(
+          this.reporteSeleccionado.value,
+          this.request_datos
+        );
 
-        .then(res => {
-          console.log("send_pdf -> res", res);
-          this.$vs.loading.close();
-          if (res.data == 1) {
+        this.$vs.loading.close();
+        if (res.data == 1) {
+          this.$vs.notify({
+            title: "Enviar documento por correo",
+            text: "Se ha envaido el correo.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 6000
+          });
+          this.request_datos.email_address = "";
+          this.request_datos.destinatario = "";
+        } else {
+          this.$vs.notify({
+            title: "Enviar documento por correo",
+            text: "Error al enviar el documento, por favor reintente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 6000
+          });
+        }
+      } catch (err) {
+        this.$vs.loading.close();
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
             this.$vs.notify({
-              title: "Enviar documento por correo",
-              text: "Se ha envaido el correo.",
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
               iconPack: "feather",
               icon: "icon-alert-circle",
-              color: "success",
-              time: 6000
+              color: "warning",
+              time: 4000
             });
-            this.request_datos.email_address = "";
-            this.request_datos.destinatario = "";
-          } else {
-            this.$vs.notify({
-              title: "Enviar documento por correo",
-              text: "Error al enviar el documento, por favor reintente.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              time: 6000
-            });
+          } else if (err.response.status == 422) {
+            /**error de validacion */
+            this.errores = err.response.data.error;
           }
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 4000
-              });
-            } else if (err.response.status == 422) {
-              /**error de validacion */
-              this.errores = err.response.data.error;
-            }
-          }
-        });
+        }
+      }
     }
   },
   mounted() {

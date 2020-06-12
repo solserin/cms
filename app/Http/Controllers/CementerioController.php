@@ -1942,6 +1942,7 @@ class CementerioController extends ApiController
 
         $resultado_query = Operaciones::with('pagosProgramados.pagados')
             ->with('venta_terreno.vendedor')
+            ->with('venta_terreno.tipo_propiedad')
             ->with('beneficiarios')
             ->with('AjustesPoliticas')
             ->where('empresa_operaciones_id', '=', 1)
@@ -1971,7 +1972,19 @@ class CementerioController extends ApiController
                 'operaciones.status as operacion_status',
                 'clientes.id as cliente_id',
                 'clientes.nombre',
+                'clientes.direccion',
+                'clientes.ciudad',
+                'clientes.estado',
+                'clientes.telefono',
+                'clientes.celular',
+                'clientes.telefono_extra',
+                'clientes.rfc',
+                'clientes.email',
+                'clientes.fecha_nac',
                 /**fin de datos de  operacion */
+                DB::raw(
+                    '(0) AS tipo_financimiento_texto'
+                ),
                 DB::raw(
                     '(0) AS num_pagos_programados'
                 ),
@@ -1980,6 +1993,9 @@ class CementerioController extends ApiController
                 ),
                 DB::raw(
                     '(0) AS intereses'
+                ),
+                DB::raw(
+                    '(0) AS total_cubierto'
                 ),
                 DB::raw(
                     '(0) AS abonado_capital'
@@ -2092,6 +2108,16 @@ class CementerioController extends ApiController
                 $porcentaje_descuento_pronto_pago = (floatval($venta['costo_neto_pronto_pago']) * 100) / floatval($venta['total']);
             }
 
+            /**tipo de financiamiento texto */
+            if ($venta['financiamiento'] == 1) {
+                $venta['tipo_financimiento_texto'] = 'Uso inmediato/Pago único';
+            } else {
+                $venta['tipo_financimiento_texto'] = 'A futuro/'
+                    . $venta['financiamiento'] . ' Mes(s)';
+            }
+
+
+
             $venta['num_pagos_programados'] = count($venta['pagos_programados']);
             $num_pagos_programados_vigentes = 0;
             if ($venta['num_pagos_programados'] > 0) {
@@ -2105,134 +2131,156 @@ class CementerioController extends ApiController
                 $pagos_realizados = 0;
                 /**guardo los dias que lleva vencido el pago vencido mas antiguo */
                 foreach ($venta['pagos_programados']  as $index_programado => &$programado) {
+                    /**actualizando el concepto del pago */
+                    if ($programado['conceptos_pagos_id'] == 1) {
+                        $programado['concepto_texto'] = 'Enganche';
+                    } elseif ($programado['conceptos_pagos_id'] == 2) {
+                        $programado['concepto_texto'] = 'Abono';
+                    } else {
+                        $programado['concepto_texto'] = 'Pago Único';
+                    }
+
+                    /**actualizando fecha de pago abre con helper de fechas */
+                    $programado['fecha_programada_abr'] = fecha_abr($programado['fecha_programada']);
+
+
+                    //if ($programado['status'] == 1) {
                     if ($programado['status'] == 1) {
                         $num_pagos_programados_vigentes++;
-                        /**aumento el pago programado vigente */
-                        /**haciendo sumatoria de los montos que se han destinado a un pago programado segun el tipo de movimiento */
-                        /**montos segun su tipo de movimiento */
-                        $abonado_intereses = 0;
-                        $abonado_capital = 0;
-                        $descontado_pronto_pago = 0;
-                        $descontado_capital = 0;
-                        $complemento_cancelacion = 0;
-                        $total_cubierto = 0;
-                        $fecha_ultimo_pago = '';
-                        foreach ($programado['pagados']  as $index_pagados => &$pagado) {
-                            if ($pagado['status'] == 1) {
-                                /**si esta activo el pago se toma en cuenta el monto de cada operacion */
-                                /**tomando en cuenta solo pagos que son parent(todos los tipos menos abono a intereses y descuento por pronto pago, estos 2 tipos
-                                 * son los que van incluidos dentro de un parent) */
-                                if ($pagado['movimientos_pagos_id'] != 2 && $pagado['movimientos_pagos_id'] != 3) { //se excluyen aqui los que son de pronto pago y cobro por interes
-                                    /**aqui entrarian en los abonos a capital, descuento al capital y complementos por cancelacion*/
-                                    if ($pagado['movimientos_pagos_id'] == 1) {
-                                        /**si es de tipo 1, abono a copital, por lo regular podria llevar asociados pagos children
-                                         * y se debe de recorrer el foreach para obtener los distintos montos asignados a cada pago programado
-                                         */
-                                        $abonado_capital += $pagado['pagos_cubiertos']['monto'];
-                                        foreach ($programado['pagados']  as $index_children => $children) {
-                                            if ($children['parent_pago_id'] == $pagado['id']) {
-                                                /**aqui ya encontro algun children, ahora se debe de ver a que concepto va destinado ese monto */
-                                                if ($children['movimientos_pagos_id'] == 2) {
-                                                    /**es abono de intereses */
-                                                    $abonado_intereses += $children['pagos_cubiertos']['monto'];
-                                                } else if ($children['movimientos_pagos_id'] == 3) {
-                                                    /**es descuento por pronto pago */
-                                                    $descontado_pronto_pago += $children['pagos_cubiertos']['monto'];
-                                                }
-                                            }
-                                        } //fin foreach children
-                                    } else  if ($pagado['movimientos_pagos_id'] == 4) {
-                                        /**fue descuento al capital */
-                                        $descontado_capital += $pagado['pagos_cubiertos']['monto'];
-                                    } else  if ($pagado['movimientos_pagos_id'] == 5) {
-                                        /**fue complemento por cancelacion */
-                                        $complemento_cancelacion += $pagado['pagos_cubiertos']['monto'];
-                                    }
-                                    /**fecha en que se realizo el ultimo pago */
-                                    $fecha_ultimo_pago = $pagado['fecha_pago'];
-                                }
-
-                                $pagos_vigentes++;
-                            } //fin if pago status=1
-                            else {
-                                if ($pagado['movimientos_pagos_id'] != 2 && $pagado['movimientos_pagos_id'] != 3) { //se excluyen aqui los que son de pronto pago y cobro por interes
-                                    $pagos_cancelados++;
-                                }
-                            }
+                    }
+                    /**aumento el pago programado vigente */
+                    /**haciendo sumatoria de los montos que se han destinado a un pago programado segun el tipo de movimiento */
+                    /**montos segun su tipo de movimiento */
+                    $abonado_intereses = 0;
+                    $abonado_capital = 0;
+                    $descontado_pronto_pago = 0;
+                    $descontado_capital = 0;
+                    $complemento_cancelacion = 0;
+                    $total_cubierto = 0;
+                    $fecha_ultimo_pago = '';
+                    foreach ($programado['pagados']  as $index_pagados => &$pagado) {
+                        if ($pagado['status'] == 1) {
+                            /**si esta activo el pago se toma en cuenta el monto de cada operacion */
+                            /**tomando en cuenta solo pagos que son parent(todos los tipos menos abono a intereses y descuento por pronto pago, estos 2 tipos
+                             * son los que van incluidos dentro de un parent) */
                             if ($pagado['movimientos_pagos_id'] != 2 && $pagado['movimientos_pagos_id'] != 3) { //se excluyen aqui los que son de pronto pago y cobro por interes
-                                $pagos_realizados++;
-                            }
-                        } //fin foreach pagado
-
-                        /** al final del ciclo se actualizan los valores en el pago programado*/
-                        $programado['abonado_capital'] =  $abonado_capital;
-                        $programado['abonado_intereses'] =  $abonado_intereses;
-                        $programado['descontado_pronto_pago'] =  $descontado_pronto_pago;
-                        $programado['descontado_capital'] =  $descontado_capital;
-                        $programado['complementado_cancelacion'] =  $complemento_cancelacion;
-                        $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
-                        $programado['saldo_neto'] = $saldo_pago_programado;
-                        /**verificando el estado del pago programado*/
-                        /**verificando si la fecha sigue vigente o esta vencida */
-                        /**variables para controlar el incremento por intereses */
-                        $dias_retrasados_del_pago = 0;
-                        $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                        $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
-                        $interes_generado = 0;
-
-                        /**fin varables por intereses */
-                        /**verificando que el pago programado tiene un saldo de capital que cobrar para saber si aplica o no intereses */
-                        if ($saldo_pago_programado > 0) {
-                            /**tiene todavia saldo que pagar, se debe verificar si el pago esta vencido para generarle los intereses correspondientes */
-                            if (date('Y-m-d', strtotime($programado['fecha_programada'])) < date('Y-m-d')) {
-                                /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
-                                $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
-                                if ($dias_vencido_primer_pago_vencido == '') {
-                                    $dias_vencido_primer_pago_vencido = $dias_retrasados_del_pago;
+                                /**aqui entrarian en los abonos a capital, descuento al capital y complementos por cancelacion*/
+                                if ($pagado['movimientos_pagos_id'] == 1) {
+                                    /**si es de tipo 1, abono a copital, por lo regular podria llevar asociados pagos children
+                                     * y se debe de recorrer el foreach para obtener los distintos montos asignados a cada pago programado
+                                     */
+                                    $pago_total = $pagado['pagos_cubiertos']['monto'];
+                                    $abonado_capital += $pagado['pagos_cubiertos']['monto'];
+                                    foreach ($programado['pagados']  as $index_children => $children) {
+                                        if ($children['parent_pago_id'] == $pagado['id']) {
+                                            /**aqui ya encontro algun children, ahora se debe de ver a que concepto va destinado ese monto */
+                                            if ($children['movimientos_pagos_id'] == 2) {
+                                                /**es abono de intereses */
+                                                $abonado_intereses += $children['pagos_cubiertos']['monto'];
+                                                $pago_total += $children['pagos_cubiertos']['monto'];
+                                            } else if ($children['movimientos_pagos_id'] == 3) {
+                                                /**es descuento por pronto pago */
+                                                $descontado_pronto_pago += $children['pagos_cubiertos']['monto'];
+                                            }
+                                        }
+                                    } //fin foreach children
+                                    /**actualizando el total del pago, cuando tiene pagos hijos */
+                                    $pagado['pago_total'] = $pago_total;
+                                } else  if ($pagado['movimientos_pagos_id'] == 4) {
+                                    /**fue descuento al capital */
+                                    $descontado_capital += $pagado['pagos_cubiertos']['monto'];
+                                } else  if ($pagado['movimientos_pagos_id'] == 5) {
+                                    /**fue complemento por cancelacion */
+                                    $complemento_cancelacion += $pagado['pagos_cubiertos']['monto'];
                                 }
-                                $programado['fecha_a_pagar'] = date('Y-m-d');
-                                /**
-                                 * Los intereses moratorios se calcularán
-                                 * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
-                                 * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
-                                 * ser hecho y la fecha que el contratante
-                                 * liquide el adeudo.
-                                 **/
-                                $interes_generado = (($saldo_pago_programado * ($venta['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
-                                /**aqui actualizamos el saldo neto del pago con todo e intereses, quitando los intereses que ya se han pagado previamente */
-                                $programado['saldo_neto'] = $saldo_pago_programado + ($interes_generado - $abonado_intereses);
-                                /**la fecha qui es mayor que la fecha programada del pago */
-                                $programado['status_pago'] = 0;
-                                $programado['status_pago_texto'] = 'Vencido';
-                                $vencidos++;
-                                $programado['dias_vencido'] = $dias_retrasados_del_pago;
-                                $programado['intereses'] = $interes_generado;
-                            } else {
-                                /**la fecha aun no vence */
-                                $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-                                $programado['status_pago'] = 1;
-                                $programado['status_pago_texto'] = 'Pendiente';
+                                /**fecha en que se realizo el ultimo pago */
+                                $fecha_ultimo_pago = $pagado['fecha_pago'];
                             }
-                        } else {
-                            $pagos_programados_cubiertos++;
-                            $programado['fecha_a_pagar'] = $pagado['fecha_pago'];
-                            /**el pago programado ya fue cubierto */
-                            $programado['status_pago'] = 2;
-                            $programado['status_pago_texto'] = 'Pagado';
-                        }
-                        /**monto con pronto pago de cada abono */
-                        $programado['monto_pronto_pago'] = ($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100;
 
-                        /**actualizando los totales de montos en la venta */
-                        $venta['intereses'] +=  $interes_generado;
-                        $venta['abonado_capital'] +=  $abonado_capital;
-                        $venta['abonado_intereses'] +=  $abonado_intereses;
-                        $venta['descontado_pronto_pago'] +=  $descontado_pronto_pago;
-                        $venta['descontado_capital'] +=  $descontado_capital;
-                        $venta['complementado_cancelacion'] +=  $complemento_cancelacion;
-                        $venta['saldo_neto'] += $saldo_pago_programado + ($interes_generado - $abonado_intereses);
-                        /**verificado el monto que seria con pronnto pago  */
-                    } //fin foreach if status 1 programado 
+                            $pagos_vigentes++;
+                        } //fin if pago status=1
+                        else {
+                            if ($pagado['movimientos_pagos_id'] != 2 && $pagado['movimientos_pagos_id'] != 3) { //se excluyen aqui los que son de pronto pago y cobro por interes
+                                $pagos_cancelados++;
+                            }
+                        }
+                        if ($pagado['movimientos_pagos_id'] != 2 && $pagado['movimientos_pagos_id'] != 3) { //se excluyen aqui los que son de pronto pago y cobro por interes
+                            $pagos_realizados++;
+                        }
+                    } //fin foreach pagado
+
+                    /** al final del ciclo se actualizan los valores en el pago programado*/
+                    $programado['abonado_capital'] =  $abonado_capital;
+                    $programado['abonado_intereses'] =  $abonado_intereses;
+                    $programado['descontado_pronto_pago'] =  $descontado_pronto_pago;
+                    $programado['descontado_capital'] =  $descontado_capital;
+                    $programado['complementado_cancelacion'] =  $complemento_cancelacion;
+                    $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
+                    $programado['saldo_neto'] = $saldo_pago_programado;
+                    /**verificando el estado del pago programado*/
+                    /**verificando si la fecha sigue vigente o esta vencida */
+                    /**variables para controlar el incremento por intereses */
+                    $dias_retrasados_del_pago = 0;
+                    $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
+                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+                    $interes_generado = 0;
+
+                    /**fin varables por intereses */
+                    /**verificando que el pago programado tiene un saldo de capital que cobrar para saber si aplica o no intereses */
+                    if ($saldo_pago_programado > 0) {
+                        /**tiene todavia saldo que pagar, se debe verificar si el pago esta vencido para generarle los intereses correspondientes */
+                        if (date('Y-m-d', strtotime($programado['fecha_programada'])) < date('Y-m-d')) {
+                            /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
+                            $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
+                            if ($dias_vencido_primer_pago_vencido == '') {
+                                $dias_vencido_primer_pago_vencido = $dias_retrasados_del_pago;
+                            }
+                            $programado['fecha_a_pagar'] = date('Y-m-d');
+                            /**
+                             * Los intereses moratorios se calcularán
+                             * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
+                             * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
+                             * ser hecho y la fecha que el contratante
+                             * liquide el adeudo.
+                             **/
+                            $interes_generado = (($saldo_pago_programado * ($venta['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
+                            /**aqui actualizamos el saldo neto del pago con todo e intereses, quitando los intereses que ya se han pagado previamente */
+                            $programado['saldo_neto'] = $saldo_pago_programado + ($interes_generado - $abonado_intereses);
+                            /**la fecha qui es mayor que la fecha programada del pago */
+                            $programado['status_pago'] = 0;
+                            $programado['status_pago_texto'] = 'Vencido';
+                            $vencidos++;
+                            $programado['dias_vencido'] = $dias_retrasados_del_pago;
+                            $programado['intereses'] = $interes_generado;
+                        } else {
+                            /**la fecha aun no vence */
+                            $programado['fecha_a_pagar'] = $programado['fecha_programada'];
+                            $programado['status_pago'] = 1;
+                            $programado['status_pago_texto'] = 'Pendiente';
+                        }
+                    } else {
+                        $pagos_programados_cubiertos++;
+                        $programado['fecha_a_pagar'] = $pagado['fecha_pago'];
+                        /**el pago programado ya fue cubierto */
+                        $programado['status_pago'] = 2;
+                        $programado['status_pago_texto'] = 'Pagado';
+                    }
+                    /**monto con pronto pago de cada abono */
+                    $programado['monto_pronto_pago'] = ($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100;
+                    $programado['total_cubierto'] = $abonado_capital + $descontado_pronto_pago + $descontado_capital + $complemento_cancelacion;
+
+                    /**actualizando los totales de montos en la venta */
+                    $venta['intereses'] +=  $interes_generado;
+                    $venta['abonado_capital'] +=  $abonado_capital;
+                    $venta['abonado_intereses'] +=  $abonado_intereses;
+                    $venta['descontado_pronto_pago'] +=  $descontado_pronto_pago;
+                    $venta['descontado_capital'] +=  $descontado_capital;
+                    $venta['complementado_cancelacion'] +=  $complemento_cancelacion;
+                    $venta['saldo_neto'] += $saldo_pago_programado + ($interes_generado - $abonado_intereses);
+                    /**calculando el total cubierto de la venta, sin intereses pagados, solo lo que ya esta cubierto */
+                    $venta['total_cubierto'] += $programado['total_cubierto'];
+                    /**verificado el monto que seria con pronnto pago  */
+                    //} //fin foreach if status 1 programado 
                 } //fin foreach programados
                 $venta['pagos_realizados'] = $pagos_realizados;
                 $venta['pagos_vigentes'] = $pagos_vigentes;
@@ -2378,475 +2426,6 @@ class CementerioController extends ApiController
 
 
 
-    /**obtiene la venta por id */
-    public function get_venta_id($venta_id = 0)
-    {
-        $id_venta = $venta_id;
-        $datos =
-            VentasTerrenos::select(
-                'clientes_id',
-                'clientes.nombre as cliente_nombre',
-                'clientes.email as cliente_email',
-                'clientes.direccion as cliente_direccion',
-                'clientes.ciudad as cliente_ciudad',
-                'clientes.estado as cliente_estado',
-                'clientes.telefono as cliente_telefono',
-                'clientes.celular as cliente_celular',
-                'clientes.telefono_extra as cliente_telefono_extra',
-                'clientes.rfc as cliente_rfc',
-                'clientes.fecha_nac as cliente_fecha_nac',
-                'titular_sustituto',
-                'parentesco_titular_sustituto',
-                'telefono_titular_sustituto',
-                'ventas_terrenos.fecha_registro',
-                'ventas_terrenos.status',
-                'ventas_terrenos.id',
-                'numero_solicitud',
-                'numero_convenio',
-                'numero_titulo',
-                'numero_solicitud AS numero_solicitud_raw',
-                'numero_convenio as numero_convenio_raw',
-                'numero_titulo as numero_titulo_raw',
-                'ubicacion as ubicacion_raw',
-                'fecha_venta',
-                'ventas_terrenos.fecha_registro',
-                'total',
-                'subtotal',
-                'descuento',
-                'iva',
-                'ventas_terrenos.status',
-                'antiguedad_ventas_id',
-                'vendedor_id',
-                'empresa_operaciones_id',
-                'ventas_terrenos.fecha_cancelacion',
-                'ventas_terrenos.nota_cancelacion',
-                'ventas_terrenos.cantidad_a_regresar_cancelacion',
-                'ventas_terrenos.cancelo_id',
-                'ventas_terrenos.motivos_cancelacion_id',
-                DB::raw(
-                    '(NULL) AS tipo_propiedad_des'
-                ),
-                DB::raw(
-                    '(NULL) AS tipo_propiedad_capacidad'
-                ),
-                DB::raw(
-                    '(NULL) AS intereses_generados'
-                ),
-                DB::raw(
-                    '(NULL) AS intereses_pagados'
-                ),
-                DB::raw(
-                    '(NULL) AS sub_total_pagado'
-                ),
-                DB::raw(
-                    '(NULL) AS iva_pagado'
-                ),
-                DB::raw(
-                    '(NULL) AS descuento_pagado'
-                ),
-                DB::raw(
-                    '(NULL) AS total_pagado'
-                ),
-                DB::raw(
-                    '(NULL) AS restante_pagar_subtotal'
-                ),
-                DB::raw(
-                    '(NULL) AS saldo_pagar_neto_con_intereses'
-                ),
-                DB::raw(
-                    '(NULL) AS total_pagar_neto_con_intereses'
-                ),
-                DB::raw(
-                    '(0) AS pagos_vencidos'
-                ),
-                DB::raw(
-                    '(0) AS dias_vencidos'
-                ),
-                DB::raw(
-                    '(0) AS numero_pagos_programados'
-                ),
-                DB::raw(
-                    '(0) AS numero_pagos_programados_cubiertos'
-                ),
-                DB::raw(
-                    '(0) AS numero_pagos_vigentes'
-                ),
-
-                DB::raw(
-                    '(NULL) AS tipo_raw'
-                ),
-                DB::raw(
-                    '(NULL) AS id_propiedad_raw'
-                ),
-                DB::raw(
-                    '(NULL) AS fila_raw'
-                ),
-                DB::raw(
-                    '(NULL) AS lote_raw'
-                ),
-                DB::raw(
-                    '(CASE 
-                        WHEN ventas_terrenos.empresa_operaciones_id = "1" THEN "Inmediato"
-                        ELSE "A futuro" 
-                        END) AS uso_venta'
-                ),
-                DB::raw(
-                    '(CASE 
-                        WHEN ventas_terrenos.numero_solicitud <> "" THEN ventas_terrenos.numero_solicitud
-                        ELSE "N/A" 
-                        END) AS numero_solicitud'
-                ),
-                DB::raw(
-                    '(CASE 
-                        WHEN ventas_terrenos.numero_convenio <> "" THEN ventas_terrenos.numero_convenio
-                        ELSE "N/A" 
-                        END) AS numero_convenio'
-                ),
-                DB::raw(
-                    '(CASE 
-                        WHEN ventas_terrenos.numero_titulo <> "" THEN ventas_terrenos.numero_titulo
-                        ELSE "Pendiente" 
-                        END) AS numero_titulo'
-                ),
-                DB::raw(
-                    '"" as ubicacion_texto'
-                ),
-                DB::raw(
-                    '"" as tipo_texto'
-                ),
-                DB::raw(
-                    '"" as fila_texto'
-                ),
-                /**por decir unoplex "a",b , terraza "1", duplex "b" */
-                DB::raw(
-                    '"" as area_nombre'
-                ),
-                DB::raw(
-                    '"" as lote_texto'
-                ),
-                DB::raw(
-                    '(CASE 
-                        WHEN ventas_terrenos.status = 1 THEN "Activa"
-                        ELSE "Cancelada" 
-                        END) AS status_des'
-                ),
-                DB::raw(
-                    '"" as fecha_venta_texto'
-                ),
-            )
-            ->with(array('cancelador' => function ($query) {
-                $query->select('id', 'nombre');
-            }))
-            ->with(array('motivoCancelacion' => function ($query) {
-                $query->select('id', 'motivo');
-            }))
-            ->with(array('programacionPagos.pagosProgramados.conceptoPago'))
-            ->with(array('programacionPagos.pagosProgramados.pagosRealizados.RegistroUsuario' => function ($query) {
-                $query->select('id', 'nombre');
-            }))
-            ->with(array('programacionPagos.pagosProgramados.pagosRealizados.Tipo'))
-            ->with(array('programacionPagos.pagosProgramados.pagosRealizados.Cobrador' => function ($query) {
-                $query->select('id', 'nombre');
-            }))
-            ->with(array('programacionPagos.pagosProgramados.pagosRealizados'))
-            ->with(array('vendedor' => function ($query) {
-                $query->select('id', 'nombre');
-            }))
-            ->with(
-                'beneficiarios'
-            )
-            ->with(
-                'antiguedad'
-            )
-            ->with(
-                'AjustesPoliticas'
-            )
-            ->join('clientes', 'ventas_terrenos.clientes_id', '=', 'clientes.id')
-            ->where('ventas_terrenos.id', $id_venta)
-            ->orderBy('ventas_terrenos.id', 'desc')
-            ->get();
-
-
-        $resultado = $datos[0]->toArray();
-
-
-        /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
-        $datos_cementerio = $this->get_cementerio();
-        /**obtiene la estructura del cementerio para poder crear la ubicacion a cadena */
-        //**se actualiza la propiedad a formato legible para el usuario */
-        $resultado['area_nombre'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['area_nombre'];
-        $resultado['ubicacion_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['ubicacion_texto'];
-        $resultado['lote_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['lote_texto'];
-        $resultado['tipo_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['tipo_texto'];
-        $resultado['fila_texto'] = $this->ubicacion_texto($resultado['ubicacion_raw'], $datos_cementerio)['fila_texto'];
-
-        /**agregando fila, lote, y tipo, por separado en valor numrico */
-        $resultado['tipo_raw'] = (intval(explode("-", $resultado['ubicacion_raw'])[0]));
-        $resultado['id_propiedad_raw'] = (intval(explode("-", $resultado['ubicacion_raw'])[1]));
-        $resultado['fila_raw'] = (intval(explode("-", $resultado['ubicacion_raw'])[2]));
-        $resultado['lote_raw'] = (intval(explode("-", $resultado['ubicacion_raw'])[3]));
-
-
-        /**seleccionado el tipo de propiedad */
-        $tipo_propiedad = tipoPropiedades::where('id', $resultado['tipo_raw'])->first();
-        $resultado['tipo_propiedad_des'] = $tipo_propiedad['tipo'];
-        $resultado['tipo_propiedad_capacidad'] = $tipo_propiedad['capacidad'];
-
-        /**obteniendo el num de pagos realizados y vigentes */
-
-        $sub_total_pagado = 0;
-        $iva_pagado = 0;
-        $descuento_pagado = 0;
-        $total_pagado = 0;
-
-
-        $pagados = 0;
-        $vencidos = 0;
-        $pagos_vigentes = 0;
-        /**calculando el monto de interes que debe la persona */
-        $ajustes_intereses = $resultado['ajustes_intereses'];
-
-        /**fecha del primer pago vencido para scar la diferencia */
-        $fecha_primer_pago_vencido = '';
-
-        $intereses_generados = 0;
-        $intereses_pagados = 0;
-
-
-        /**fecha a tomar en cuenta 
-         * esto se refiere  a que cuando la venta ya fue cancelada, 
-         * el sistema debe considerar como ultima fecha para el calculo de intereses
-         * la fecha de cancelacion, o si la venta esta activa, se debe tomar el dia en curso (fecha actual del sistema)
-         */
-        $ultima_fecha_para_intereses = $resultado['status'] == 1 ? date('Y-m-d') : date('Y-m-d', strtotime($resultado['fecha_cancelacion']));
-
-        foreach ($resultado['programacion_pagos'] as $index => &$programacion) {
-
-            foreach ($programacion['pagos_programados'] as $key => &$programado) {
-                /**fecha_programada con texto */
-                $programado['fecha_programada_texto'] = fecha_abr($programado['fecha_programada']);
-
-                /**definiendo el conceptop del pago */
-                if ($programado['concepto_pago']['id'] == 1) {
-                    /**enganche */
-                    $programado['concepto'] = "Enganche inicial.";
-                } else if ($programado['concepto_pago']['id'] == 2) {
-                    /**abono */
-                    $programado['concepto'] = "Abono Núm." . ($programado['num_pago'] - 1) . " correspondiente al mes de " . mes_year_from_fecha($programado['fecha_programada']) . ".";
-                } else {
-                    /**liquidacion */
-                    $programado['concepto'] = "Pago único de liquidación.";
-                }
-
-                /**valores por default */
-                $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-                $programado['total_a_pagar'] = $programado['total'];
-                $cubierto = 0;
-                $vencido = 0;
-
-                /**manejo de intereses */
-                $dias_retrasados_del_pago = 0;
-                $interes_generado = 0;
-                /**veririca si el pago vencio y no se ha pagado ndd*/
-                if (count($programado['pagos_vigentes']) == 0) {
-
-
-                    if (strtotime($ultima_fecha_para_intereses) > strtotime($programado['fecha_programada'])) {
-                        $vencidos++;
-                        $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                        $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
-                        /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
-                        $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
-                        $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
-                        /**
-                         * Los intereses moratorios se calcularán
-                         * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
-                         * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
-                         * ser hecho y la fecha que el contratante
-                         * liquide el adeudo.
-                         **/
-                        $interes_generado = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
-
-                        /**actualizando los datos de vencimiento, en caso de que hayan vencido */
-
-                        $programado['total_a_pagar'] = doubleVal($programado['total']) + $interes_generado;
-
-                        $programado['intereses_a_pagar'] = $interes_generado;
-
-                        $programado['vencido'] = 1;
-                        /**actualizando los datos de vencimiento, en caso de que hayan vencido */
-                        $programado['dias_vencido'] =  $dias_retrasados_del_pago;
-                        $programado['intereses'] = $interes_generado;
-
-                        if ($fecha_primer_pago_vencido == '') {
-                            $fecha_primer_pago_vencido = $programado['fecha_programada'];
-                        }
-                    }
-                } else {
-                    /**hay pagos realizados */
-                    $monto_pagado_interes = 0;
-                    $fecha_ultimo_pago_realizado = '';
-                    foreach ($programado['pagos_vigentes'] as &$realizado) {
-                        /**creando la fecha del pago a texto */
-                        $realizado['fecha_realizado_texto'] = fecha_abr($realizado['fecha_pago']);
-                        if ($realizado['status'] == 1) {
-                            $pagos_vigentes++;
-                            /***sacando monto pagado a cuenta de intereses */
-                            if ($realizado['tipo_pagos_id'] == 2) {
-                                /**es abono a intereses */
-                                /**me baso en subtotal */
-                                $monto_pagado_interes += (doubleVal($realizado['total']));
-                                $programado['intereses_pagado'] += (doubleVal($realizado['total']));
-                            } else {
-                                /**total cuvierto del pago */
-                                $programado['subtotal_pagado'] += (doubleVal($realizado['subtotal']));
-                                $programado['iva_pagado'] += (doubleVal($realizado['iva']));
-                                $programado['descuento_pagado'] += (doubleVal($realizado['descuento']));
-                                $programado['total_pagado'] += (doubleVal($realizado['total']));
-
-
-                                /**es abono a capital */
-                                $sub_total_pagado += (doubleVal($realizado['subtotal']));
-                                $iva_pagado +=  (doubleVal($realizado['iva']));
-                                $descuento_pagado += (doubleVal($realizado['descuento']));
-                                $total_pagado += (doubleVal($realizado['total']));
-                                $cubierto += (doubleVal($realizado['subtotal']));
-                            }
-
-                            $next = next($realizado);
-                            if (false !== $next) {
-                                $fecha_ultimo_pago_realizado = $realizado['fecha_pago'];
-                                //do something with $current
-                            }
-                        }
-                    }
-                    if ($cubierto >= $programado['subtotal']) {
-                        /**checar si se pago el abono dentro de la fecha limite */
-                        if (strtotime($fecha_ultimo_pago_realizado) <= strtotime($programado['fecha_programada'])) {
-                            /**pago cubierto en fecha y orden */
-                            $programado['intereses_a_pagar'] = 0;
-                            $programado['total_a_pagar'] = 0;
-                            $programado['pagado'] = 1;
-                            $pagados++;
-                            $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-                        } else {
-                            /**checando si el monto de los intereses pagados corresponde a los dias vencidos */
-                            $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                            $fecha_pago_realizado = Carbon::createFromFormat('Y-m-d', $fecha_ultimo_pago_realizado);
-                            /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
-                            $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_pago_realizado);
-                            /**
-                             * Los intereses moratorios se calcularán
-                             * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
-                             * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
-                             * ser hecho y la fecha que el contratante
-                             * liquide el adeudo.
-                             */
-                            $interes_generado = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
-                            if ($interes_generado < $monto_pagado_interes) {
-                                if ($fecha_primer_pago_vencido == '') {
-                                    $fecha_primer_pago_vencido = $programado['fecha_programada'];
-                                }
-                                $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'] + $interes_generado - $programado['intereses_pagado'];
-                                $programado['intereses_a_pagar'] = $interes_generado - $programado['intereses_pagado'];
-                                $vencidos++;
-                                $programado['vencido'] = 1;
-                                /**actualizando los datos de vencimiento, en caso de que hayan vencido */
-                                $programado['dias_vencido'] =  $dias_retrasados_del_pago;
-                                $programado['intereses'] = $interes_generado;
-                                $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
-                            } else {
-                                $programado['fecha_a_pagar'] = $fecha_pago_realizado;
-                                /**pago cubierto en fecha y orden */
-                                $programado['pagado'] = 1;
-                                /**el monto es igual o mayor */
-                                $pagados++;
-                            }
-                        }
-                    } else {
-                        if (strtotime($ultima_fecha_para_intereses) > strtotime($programado['fecha_programada'])) {
-                            $vencidos++;
-                            $programado['fecha_a_pagar'] = $ultima_fecha_para_intereses;
-                            $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                            $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
-                            /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
-                            $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
-                            /**
-                             * Los intereses moratorios se calcularán
-                             * multiplicando el monto de lo que adeude el contratante por la tasa de interés anual,
-                             * dividida entre 365, este resultado se multiplica por el número de días transcurridos entre la fecha de pago que debió
-                             * ser hecho y la fecha que el contratante
-                             * liquide el adeudo.
-                             */
-                            $interes_generado = ((doubleVal($programado['total']) * ($ajustes_intereses['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago;
-
-                            $programado['vencido'] = 1;
-                            /**actualizando los datos de vencimiento, en caso de que hayan vencido */
-                            $programado['dias_vencido'] =  $dias_retrasados_del_pago;
-                            $programado['intereses'] = $interes_generado;
-
-                            $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'] + $interes_generado - $programado['intereses_pagado'];
-                            $programado['intereses_a_pagar'] = $interes_generado - $programado['intereses_pagado'];
-
-                            if ($fecha_primer_pago_vencido == '') {
-                                $fecha_primer_pago_vencido = $programado['fecha_programada'];
-                            }
-                        } else {
-                            /**al no esta vencido el pago solo se actualiza el total a pagar de ese pago programado */
-                            $programado['total_a_pagar'] = $programado['total'] - $programado['total_pagado'];
-                        }
-                    }
-                }
-                $intereses_generados += $interes_generado;
-                $intereses_pagados += $programado['intereses_pagado'];
-
-
-                /**veririficando el status del pago programado */
-                if ($programado['vencido'] == 1) {
-                    $programado['status_texto'] = 'vencido';
-                } else {
-                    if ($programado['total_a_pagar'] > 0) {
-                        $programado['status_texto'] = 'pendiente';
-                    } else {
-                        $programado['status_texto'] = 'pagado';
-                    }
-                }
-            }
-            if ($index == 0) {
-                /**solo se toma en cuenta los valores de las sumas para la programacion actual */
-
-                $resultado['fecha_venta_texto'] = fecha_abr($resultado['fecha_venta']);
-                $resultado['intereses_generados'] =  $intereses_generados;
-                $resultado['intereses_pagados'] =  $intereses_pagados;
-                $resultado['numero_pagos_programados'] = count($resultado['programacion_pagos'][0]['pagos_programados']);
-                $resultado['numero_pagos_programados_cubiertos'] = $pagados;
-                $resultado['numero_pagos_vigentes'] = $pagos_vigentes;
-                $resultado['pagos_vencidos'] = $vencidos;
-                if ($fecha_primer_pago_vencido != '') {
-                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', $ultima_fecha_para_intereses);
-                    $fecha_del_primer_pago_vencido = Carbon::createFromFormat('Y-m-d', $fecha_primer_pago_vencido);
-                    $diferencia_en_dias = $fecha_hoy->diffInDays($fecha_del_primer_pago_vencido);
-                    $resultado['dias_vencidos'] = $diferencia_en_dias;
-                }
-                $resultado['sub_total_pagado'] = $sub_total_pagado;
-                $resultado['iva_pagado'] = $iva_pagado;
-                $resultado['descuento_pagado'] = $descuento_pagado;
-                $resultado['total_pagado'] = $total_pagado;
-                $resultado['restante_pagar_subtotal'] = $resultado['subtotal'] - $sub_total_pagado;
-                //se retorna el resultado
-                $resultado['total_pagar_neto_con_intereses'] =  $resultado['total']  + $resultado['intereses_generados'];
-                $resultado['saldo_pagar_neto_con_intereses'] =  $resultado['total_pagar_neto_con_intereses'] - $resultado['total_pagado'] - $resultado['intereses_pagados'];
-            }
-        }
-        return $resultado;
-    }
-
-
-
-
-
-
-
     public function acuse_cancelacion(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
@@ -2933,28 +2512,33 @@ class CementerioController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*$id_venta = 8;
+        /* $id_venta = 38;
         $email = false;
         $email_to = 'hector@gmail.com';
 */
 
 
         //obtengo la informacion de esa venta
-        $datos_venta = $this->get_venta_id($id_venta);
+        $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+        if (empty($datos_venta)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/titulo/titulo', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('cementerios/titulo/titulo', ['datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "FORMATO DE TITULO " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
+        $name_pdf = "FORMATO DE TITULO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.titulo.footer'),
+            'footer-html' => view('cementerios.titulo.footer'),
         ]);
-        if ($datos_venta['status'] == 0) {
+        if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('inventarios.cementerios.titulo.header')
+                'header-html' => view('cementerios.titulo.header')
             ]);
         }
 
@@ -2983,7 +2567,7 @@ class CementerioController extends ApiController
             $email_controller = new EmailController();
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
-                strtoupper($datos_venta['cliente_nombre']),
+                strtoupper($datos_venta['nombre']),
                 'FORMATO DE TITULO',
                 $name_pdf,
                 $pdf
@@ -2999,47 +2583,49 @@ class CementerioController extends ApiController
     public function referencias_de_pago(Request $request, $id_pago = '', $id_programacion = '')
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        $email =  $request->email_send === 'true' ? true : false;
+        /*$email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
-
+*/
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*$id_venta = 4;
+        $id_venta = 35;
         $email = false;
         $email_to = 'hector@gmail.com';
-        */
 
 
-        //obtengo la informacion de esa venta
-        $datos_venta = $this->get_venta_id($id_venta);
+
+        $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+        if (empty($datos_venta)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/pagos/referencias_de_pago', ['id_programacion' => $id_programacion, 'id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('cementerios/pagos/referencias', ['id_programacion' => $id_programacion, 'id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
+        $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.pagos.footer'),
+            'footer-html' => view('cementerios.pagos.footer'),
         ]);
-        if ($datos_venta['status'] == 0) {
+        if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('inventarios.cementerios.pagos.header')
+                'header-html' => view('cementerios.pagos.header')
             ]);
         }
 
 
 
-
         //$pdf->setOption('grayscale', true);
-        //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 14.4);
-        $pdf->setOption('margin-right', 14.4);
-        $pdf->setOption('margin-top', 13.4);
+        $pdf->setOption('orientation', 'landscape');
+        $pdf->setOption('margin-left', 13.4);
+        $pdf->setOption('margin-right', 13.4);
+        $pdf->setOption('margin-top', 9.4);
         $pdf->setOption('margin-bottom', 13.4);
         $pdf->setOption('page-size', 'A4');
 
@@ -3057,7 +2643,7 @@ class CementerioController extends ApiController
             $email_controller = new EmailController();
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
-                strtoupper($datos_venta['cliente_nombre']),
+                strtoupper($datos_venta['nombre']),
                 'REFERENCIAS DE PAGO CEMENTERIO',
                 $name_pdf,
                 $pdf
@@ -3073,7 +2659,8 @@ class CementerioController extends ApiController
     /**pdf del convenio plan de cementerio */
     public function documento_convenio(Request $request)
     {
-        /*$id_venta = 2;
+        /*
+        $id_venta = 38;
         $email = false;
         $email_to = 'hector@gmail.com';
 */
@@ -3087,8 +2674,13 @@ class CementerioController extends ApiController
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
 
+
         //obtengo la informacion de esa venta
-        $datos_venta = $this->get_venta_id($id_venta);
+        $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+        if (empty($datos_venta)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
 
         /**verificando si el documento aplica para esta solictitud */
         /*if ($datos_venta['numero_convenio_raw'] == null) {
@@ -3098,24 +2690,24 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('cementerios/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "CONVENIO TITULAR " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
+        $name_pdf = "CONVENIO TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.convenio.footer'),
+            'footer-html' => view('cementerios.convenio.footer'),
         ]);
-        if ($datos_venta['status'] == 0) {
+        if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('inventarios.cementerios.convenio.header')
+                'header-html' => view('cementerios.convenio.header')
             ]);
         }
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 23.4);
-        $pdf->setOption('margin-right', 23.4);
-        $pdf->setOption('margin-top', 25.4);
+        $pdf->setOption('margin-left', 20.4);
+        $pdf->setOption('margin-right', 20.4);
+        $pdf->setOption('margin-top', 15.4);
         $pdf->setOption('margin-bottom', 25.4);
         $pdf->setOption('page-size', 'legal');
 
@@ -3133,7 +2725,7 @@ class CementerioController extends ApiController
             $email_controller = new EmailController();
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
-                strtoupper($datos_venta['cliente_nombre']),
+                strtoupper($datos_venta['nombre']),
                 'COPIA DEL CONVENIO / CEMENTERIO AETERNUS',
                 $name_pdf,
                 $pdf
@@ -3160,12 +2752,17 @@ class CementerioController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /* $id_venta = 2;
+        /* $id_venta = 40;
         $email = false;
         $email_to = 'hector@gmail.com';
-*/
+        */
+
         //obtengo la informacion de esa venta
-        $datos_venta = $this->get_venta_id($id_venta);
+        $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+        if (empty($datos_venta)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
 
         /**verificando si el documento aplica para esta solictitud */
         /*if ($datos_venta['numero_solicitud_raw'] == null) {
@@ -3175,16 +2772,18 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+        $pdf = PDF::loadView('cementerios/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
+        $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.solicitud.footer'),
+            'footer-html' => view('cementerios.solicitud.footer'),
         ]);
-        if ($datos_venta['status'] == 0) {
+        if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('inventarios.cementerios.solicitud.header')
+                'header-html' => view('cementerios.solicitud.header')
             ]);
         }
 
@@ -3210,7 +2809,7 @@ class CementerioController extends ApiController
             $email_controller = new EmailController();
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
-                strtoupper($datos_venta['cliente_nombre']),
+                strtoupper($datos_venta['nombre']),
                 'SOLICITUD DE PROPIEDAD / CEMENTERIO AETERNUS',
                 $name_pdf,
                 $pdf
@@ -3236,12 +2835,16 @@ class CementerioController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*$id_venta = 5;
+        /*$id_venta = 35;
         $email = false;
         $email_to = 'hector@gmail.com';
 */
         //obtengo la informacion de esa venta
-        $datos_venta = $this->get_venta_id($id_venta);
+        $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+        if (empty($datos_venta)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
 
         /**verificando si el documento aplica para esta solictitud */
         /*if ($datos_venta['numero_solicitud_raw'] == null) {
@@ -3251,16 +2854,16 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/estado_cuenta/estado_cuenta', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('cementerios/estado_cuenta/estado_cuenta', ['datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
+        $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['nombre']) . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.estado_cuenta.footer'),
+            'footer-html' => view('cementerios.estado_cuenta.footer'),
         ]);
-        if ($datos_venta['status'] == 0) {
+        if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('inventarios.cementerios.estado_cuenta.header')
+                'header-html' => view('cementerios.estado_cuenta.header')
             ]);
         }
 
@@ -3287,7 +2890,7 @@ class CementerioController extends ApiController
             $email_controller = new EmailController();
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
-                strtoupper($datos_venta['cliente_nombre']),
+                strtoupper($datos_venta['nombre']),
                 'ESTADO DE CUENTA / CEMENTERIO AETERNUS',
                 $name_pdf,
                 $pdf

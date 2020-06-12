@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class PagosProgramados extends Model
@@ -10,6 +11,13 @@ class PagosProgramados extends Model
 
     public function pagados()
     {
-        return $this->belongsToMany('App\Pagos', 'pagos_pagos_programados', 'pagos_programados_id', 'pagos_id')->as('pagos_cubiertos')->withPivot('monto', 'movimientos_pagos_id')->orderBy('fecha_pago', 'asc');
+        return $this->belongsToMany('App\Pagos', 'pagos_pagos_programados', 'pagos_programados_id', 'pagos_id')->as('pagos_cubiertos')
+            ->select(
+                '*',
+                DB::raw(
+                    '(0) AS pago_total'
+                ),
+            )
+            ->withPivot('monto', 'movimientos_pagos_id')->orderBy('fecha_pago', 'asc');
     }
 }

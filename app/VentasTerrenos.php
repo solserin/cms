@@ -16,4 +16,16 @@ class VentasTerrenos extends Model
                 'nombre'
             );
     }
+
+
+
+    public function tipo_propiedad()
+    {
+        return $this->belongsTo('App\tipoPropiedades', 'tipo_propiedades_id', 'id')
+            ->select(
+                'id',
+                'tipo',
+                'capacidad'
+            );
+    }
 }

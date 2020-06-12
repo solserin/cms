@@ -221,22 +221,6 @@ export default {
         });
     },
 
-    /**obtengo el blob del pdf */
-    get_pdf(service_end_point) {
-        return new Promise((resolve, reject) => {
-            axios
-                .get(service_end_point, {
-                    responseType: "blob"
-                })
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
-    },
-
     //update perfil personal
     actualizar_perfil(param) {
         return new Promise((resolve, reject) => {

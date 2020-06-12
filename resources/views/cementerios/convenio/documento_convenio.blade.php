@@ -34,7 +34,7 @@
         .datos-header {
             text-align: center !important;
             font-size: .9em;
-            line-height: 0.7em !important;
+            line-height: 1em !important;
             text-transform: uppercase !important;
         }
 
@@ -101,7 +101,7 @@
                                 solicitud de servicio
                             </div>
                             <p class="control-valor">
-                                {{ $datos['numero_solicitud'] }}
+                                {{ $datos['numero_solicitud_texto'] }}
                             </p>
 
                             <div style=""></div>
@@ -119,7 +119,7 @@
     </header>
     <p class="fecha  right">
         {{ $empresa->ciudad }}, {{ $empresa->estado }} a <span
-            class="bg-gray bold uppercase texto-sm  pl-2 pr-1">{{ fecha_only($datos['fecha_venta']) }}</span>.
+            class="bg-gray bold uppercase texto-sm  pl-2 pr-1">{{ fecha_only($datos['venta_terreno']['fecha_venta']) }}</span>.
     </p>
     <div class="contenido parrafo1">
         <p class="texto-base justificar line-base">
@@ -132,7 +132,7 @@
                 C.P {{ $empresa->cp }}</span>, de esta ciudad; a quien en lo sucesivo se le denominara la <span
                 class="bold uppercase texto-sm">"La Empresa"</span>,
             y por la otra parte, por su propio derecho, El (La) C.
-            <span class="uppercase texto-sm bold bg-gray px-1">{{ $datos['cliente_nombre'] }}</span>,
+            <span class="uppercase texto-sm bold bg-gray px-1">{{ $datos['nombre'] }}</span>,
             quien en lo sucesivo se denominara <span class="uppercase texto-sm bold">"El cliente"</span> y será el
             Titular del presente convenio,
             el cual ambas partes se comprometen a firmar, de conformidad con las siguiente declaraciones y
@@ -183,28 +183,30 @@
             <span class="bg-gray px-1 mr-1">
 
 
-                (<span class="uppercase bold texto-sm">{{ calculaedad((String)($datos['cliente_fecha_nac'])) }}</span>)
+                (<span class="uppercase bold texto-sm">{{ calculaedad((String)($datos['fecha_nac'])) }}</span>)
                 años de
                 edad
             </span>
             y su domicilio en: <span class="uppercase bold texto-sm">
-                {{ $datos['cliente_direccion'] }}</span>, Tel. <span class="uppercase bold texto-sm">
-                {{ ($datos['cliente_telefono'])!='' ? ($datos['cliente_telefono']):'"No registrado"' }}</span>,
-            Cel. <span class="uppercase bold texto-sm">{{ ($datos['cliente_celular']) }}</span> y correo
+                {{ $datos['direccion'] }}</span>, Tel. <span class="uppercase bold texto-sm">
+                {{ ($datos['telefono'])!='' ? ($datos['telefono']):'"No registrado"' }}</span>,
+            Cel. <span class="uppercase bold texto-sm">{{ ($datos['celular']) }}</span> y correo
             electrónico <span
-                class="lowercase bold">{{ ($datos['cliente_email'])!='' ? $datos['cliente_email']:'"No registrado"' }}</span>
+                class="lowercase bold">{{ ($datos['email'])!='' ? $datos['email']:'"No registrado"' }}</span>
             para efecto de notificaciones y demás efectos legales de este convenio.
         </p>
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold">IV. </span>
-            Declara “El Cliente” tener el interés y capacidad legal para ceder derechos para actuar en su nombre al titular sustituto de este convenio al C.
+            Declara “El Cliente” tener el interés y capacidad legal para ceder derechos para actuar en su nombre al
+            titular sustituto de este convenio al C.
             <span class="bg-gray px-1 mr-1">
                 <span class="uppercase bold texto-sm">{{ $datos['titular_sustituto'] }}</span>
             </span>
             en su carácter de: <span class="uppercase bold texto-sm">
-                {{ $datos['parentesco_titular_sustituto'] }}</span>, quién se puede contactar al Tel. <span class="uppercase bold texto-sm">
-                {{ ($datos['telefono_titular_sustituto'])!='' ? ($datos['cliente_telefono']):'"No registrado"' }}</span>.
+                {{ $datos['parentesco_titular_sustituto'] }}</span>, quién se puede contactar al Tel. <span
+                class="uppercase bold texto-sm">
+                {{ ($datos['telefono_titular_sustituto'])!='' ? ($datos['telefono_titular_sustituto']):'"No registrado"' }}</span>.
 
         </p>
     </div>
@@ -227,11 +229,11 @@
             dominio de <span class="uppercase bold texto-sm">1</span> Terreno(s) <span class="uppercase bold texto-sm">
             </span>, ubicado en la
             <span class="uppercase bold texto-sm bg-gray px-2">
-                {{ $datos['ubicacion_texto'] }}
+                {{ $datos['venta_terreno']['ubicacion_texto'] }}
             </span>,
             en el <span class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
             con una capacidad de <span
-                class="uppercase bold texto-sm">{{ $datos['tipo_propiedad_des'] }}</span>
+                class="uppercase bold texto-sm">{{ $datos['venta_terreno']['tipo_propiedad']['capacidad'] }}</span>
             gaveta(s).
         </p>
 
@@ -306,17 +308,14 @@
             Mediante la siguiente forma:
         </p>
         <div class="lista pl-11 -mt-1">
-
-            @php
-            /*determino si lleva abonos o es pago unico*/
-            @endphp
-            @if(count($datos['programacion_pagos'][0]['pagos_programados'])==1)
+            @if($datos['num_pagos_programados_vigentes']>0)
+            @if($datos['num_pagos_programados_vigentes']==1)
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
                 <span class="ml-2">
                     Una aportación (Pago Único) de $ <span
-                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['programacion_pagos'][0]['pagos_programados'][0]['total'],2) }}
-                        ({{ NumerosEnLetras::convertir($datos['programacion_pagos'][0]['pagos_programados'][0]['total'],'Pesos m.n',false) }})</span>.
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['monto_programado'],2) }}
+                        ({{ NumerosEnLetras::convertir($datos['pagos_programados'][0]['monto_programado'],'Pesos m.n',false) }})</span>.
                 </span>
             </p>
             @else
@@ -324,8 +323,8 @@
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
                 <span class="ml-2">
                     Una aportación inicial de $ <span
-                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['programacion_pagos'][0]['pagos_programados'][0]['total'],2) }}
-                        ({{ NumerosEnLetras::convertir((($datos['programacion_pagos'][0]['pagos_programados'][0]['total'])),'Pesos m.n',false) }})</span>.
+                        class="bg-gray bold px-2 uppercase texto-sm">{{ number_format($datos['pagos_programados'][0]['monto_programado'],2) }}
+                        ({{ NumerosEnLetras::convertir((($datos['pagos_programados'][0]['monto_programado'])),'Pesos m.n',false) }})</span>.
                 </span>
             </p>
 
@@ -333,34 +332,36 @@
                 <span class="lowercase bold texto-sm -ml-6">b) </span>
                 <span class="ml-2">
                     Y un saldo de $ <span class="bg-gray bold px-2 uppercase texto-sm">
-                        {{ number_format($datos['total']-$datos['programacion_pagos'][0]['pagos_programados'][0]['total'],2) }}
+                        {{ number_format($datos['total']-$datos['pagos_programados'][0]['monto_programado'],2) }}
                         (
-                        {{ NumerosEnLetras::convertir((($datos['total']-$datos['programacion_pagos'][0]['pagos_programados'][0]['total'])),'Pesos m.n',false) }})
-                    </span>. En <span
-                        class="bg-gray bold px-2 uppercase texto-sm">{{ count($datos['programacion_pagos'][0]['pagos_programados'])-1 }}</span>
+                        {{ NumerosEnLetras::convertir((($datos['total']-$datos['pagos_programados'][0]['monto_programado'])),'Pesos m.n',false) }})
+                    </span>. En <span class="bg-gray bold px-2 uppercase texto-sm">{{ $datos['financiamiento'] }}</span>
                     abonos consecutivos.
                 </span>
             </p>
             @endif
+            @endif
         </div>
-         <p class="texto-base justificar line-base">
-        El contratante se obliga a pagar a la agencia funeraria las parcialidades contratadas dentro
-         de los primeros <span class="bold">{{$datos['ajustes_intereses']['dias_antes_vencimiento']}}</span> días hábiles naturales a la fecha de vencimiento mensual que le
-corresponda. 
-        </p>
-
-         <p class="texto-base justificar line-base">
-       Sólo podrán reconocerse los pagos de mensualidades por los recibos firmados y sellados
-por la empresa, cuando se efectúen en cajas de la Agencia Funeraria, o los recibos
-firmados por el Banco Santander (México), S.A. a la cuenta <span class="bold texto-xs">{{$empresa['cuenta']}}</span> a más tardar en
-la fecha límite establecida. Ninguna otra persona está autorizada para recibir pagos y, por
-lo tanto, estos no podrán ser reconocidos por la Agencia Funeraria. 
+        <p class="texto-base justificar line-base">
+            El contratante se obliga a pagar a la agencia funeraria las parcialidades contratadas dentro
+            de los primeros <span class="bold">{{$datos['ajustes_politicas']['dias_antes_vencimiento']}}</span> días
+            hábiles naturales a la fecha de vencimiento mensual que le
+            corresponda.
         </p>
 
         <p class="texto-base justificar line-base">
-       El contratante o Titular Sustituto será quien al requerir los servicios para el usuario que se
-solicitaron, deberá entregar el contrato, recibos de pagos efectuados o en su caso liquidar el
-saldo total que persista hasta la fecha y cualquier otro adeudo del servicio contratado. 
+            Sólo podrán reconocerse los pagos de mensualidades por los recibos firmados y sellados
+            por la empresa, cuando se efectúen en cajas de la Agencia Funeraria, o los recibos
+            firmados por el Banco Santander (México), S.A. a la cuenta <span
+                class="bold texto-xs">{{$empresa['cuenta']}}</span> a más tardar en
+            la fecha límite establecida. Ninguna otra persona está autorizada para recibir pagos y, por
+            lo tanto, estos no podrán ser reconocidos por la Agencia Funeraria.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            El contratante o Titular Sustituto será quien al requerir los servicios para el usuario que se
+            solicitaron, deberá entregar el contrato, recibos de pagos efectuados o en su caso liquidar el
+            saldo total que persista hasta la fecha y cualquier otro adeudo del servicio contratado.
         </p>
 
 
@@ -573,11 +574,13 @@ saldo total que persista hasta la fecha y cualquier otro adeudo del servicio con
             convencional sobre el total del monto de la mensualidad vencida,
             importe que se considerará como aportación
             adicional complementaria al cliente. El contratante se obliga a pagar a la agencia funeraria interés
-moratorio del <span class="bold">{{$datos['ajustes_intereses']['tasa_fija_anual']}}</span>% ({{ NumerosEnLetras::convertir($datos['ajustes_intereses']['tasa_fija_anual'],'',false) }} por ciento) fija anual, la que se calculará y liquidará sobre
-cantidades que adeude el Contratante a la Agencia Funeraria. Los intereses moratorios se
-calcularán multiplicando el monto de lo que adeude el contratante por la tasa de interés
-anual, dividida entre 365, este resultado se multiplica por el número de días transcurridos
-entre la fecha de pago que debió ser hecho y la fecha que el contratante liquide el adeudo.
+            moratorio del <span class="bold">{{$datos['ajustes_politicas']['tasa_fija_anual']}}</span>%
+            ({{ NumerosEnLetras::convertir($datos['ajustes_politicas']['tasa_fija_anual'],'',false) }} por ciento) fija
+            anual, la que se calculará y liquidará sobre
+            cantidades que adeude el Contratante a la Agencia Funeraria. Los intereses moratorios se
+            calcularán multiplicando el monto de lo que adeude el contratante por la tasa de interés
+            anual, dividida entre 365, este resultado se multiplica por el número de días transcurridos
+            entre la fecha de pago que debió ser hecho y la fecha que el contratante liquide el adeudo.
         </p>
 
         <p class="texto-base justificar line-base">
@@ -590,41 +593,51 @@ entre la fecha de pago que debió ser hecho y la fecha que el contratante liquid
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
                 <span class="ml-2">
-                    El incumplimiento del pago de <span class="uppercase bold texto-sm">{{$datos['ajustes_intereses']['maximo_pagos_vencidos']}}</span> de las aportaciones en
+                    El incumplimiento del pago de <span
+                        class="uppercase bold texto-sm">{{$datos['ajustes_politicas']['maximo_pagos_vencidos']}}</span>
+                    de las aportaciones en
                     forma consecutiva
                 </span>
             </p>
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">b) </span>
                 <span class="ml-2">
-                     En caso de que el retraso supere los <span class="bold">{{$datos['ajustes_intereses']['maximo_dias_retraso']}}</span> días, la agencia funeraria podrá elegir entre exigir
-el pago de todas las mensualidades aun no pagadas por el contratante y los intereses
-moratorios acumulados o bien rescindir el contrato y aplicar como pena convencional por
-incumplimiento el <span class="bold">{{$datos['ajustes_intereses']['porcentaje_pena_convencional_minima']}}%</span> del monto pagado por el contratante, debiendo a la Agencia
-Funeraria regresar las cantidades en exceso y que sobren de dicha pena al contratante. En
-caso de que el retraso en el pago sea superior a los <span class="bold">{{$datos['ajustes_intereses']['maximo_dias_retraso']}}</span> días, la Agencia Funeraria podrá
-igualmente rescindir el Contrato y aplicar como pena convencional la totalidad de los
-pagos efectuados por el contratante. 
+                    En caso de que el retraso supere los <span
+                        class="bold">{{$datos['ajustes_politicas']['maximo_dias_retraso']}}</span> días, la agencia
+                    funeraria podrá elegir entre exigir
+                    el pago de todas las mensualidades aun no pagadas por el contratante y los intereses
+                    moratorios acumulados o bien rescindir el contrato y aplicar como pena convencional por
+                    incumplimiento el <span
+                        class="bold">{{$datos['ajustes_politicas']['porcentaje_pena_convencional_minima']}}%</span> del
+                    monto pagado por el contratante, debiendo a la Agencia
+                    Funeraria regresar las cantidades en exceso y que sobren de dicha pena al contratante. En
+                    caso de que el retraso en el pago sea superior a los <span
+                        class="bold">{{$datos['ajustes_politicas']['maximo_dias_retraso']}}</span> días, la Agencia
+                    Funeraria podrá
+                    igualmente rescindir el Contrato y aplicar como pena convencional la totalidad de los
+                    pagos efectuados por el contratante.
                 </span>
             </p>
 
-                <p class="texto-base justificar line-base">
+            <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">c) </span>
                 <span class="ml-2">
-                   En los términos de los dispuestos por el artículo 71 de la Ley Federal de Protección al
-consumidor, cuando el contratante haya pagado más de la tercera parte del precio o
-número total de los pagos convenidos ante la notificación de rescisión que le realice la
-Agencia Funeraria, el contratante podrá optar porque se aplique el mecanismo indicado
-en el párrafo anterior o bien pagar el saldo del contrato más los intereses moratorios
-generados por su incumplimiento. En el primer caso (rescisión con penalidad) solo si el 
-retraso fuera menor a <span class="bold">{{$datos['ajustes_intereses']['maximo_dias_retraso']}}</span> días, la agencia funeraria devolverá al contratante la cantidad
-que corresponda una vez aplicada la penalidad y los intereses moratorios. En el segundo
-caso (pago total de saldo insoluto), la Agencia Funeraria entregará al contratante el recibo
-de finiquito correspondiente solo si este paga la cantidad total adeudada (saldo insoluto
-contratado más los intereses moratorios).
+                    En los términos de los dispuestos por el artículo 71 de la Ley Federal de Protección al
+                    consumidor, cuando el contratante haya pagado más de la tercera parte del precio o
+                    número total de los pagos convenidos ante la notificación de rescisión que le realice la
+                    Agencia Funeraria, el contratante podrá optar porque se aplique el mecanismo indicado
+                    en el párrafo anterior o bien pagar el saldo del contrato más los intereses moratorios
+                    generados por su incumplimiento. En el primer caso (rescisión con penalidad) solo si el
+                    retraso fuera menor a <span
+                        class="bold">{{$datos['ajustes_politicas']['maximo_dias_retraso']}}</span> días, la agencia
+                    funeraria devolverá al contratante la cantidad
+                    que corresponda una vez aplicada la penalidad y los intereses moratorios. En el segundo
+                    caso (pago total de saldo insoluto), la Agencia Funeraria entregará al contratante el recibo
+                    de finiquito correspondiente solo si este paga la cantidad total adeudada (saldo insoluto
+                    contratado más los intereses moratorios).
                 </span>
             </p>
-            
+
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">d) </span>
                 <span class="ml-2">

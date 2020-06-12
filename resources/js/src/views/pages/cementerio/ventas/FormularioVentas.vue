@@ -2023,7 +2023,7 @@ export default {
             color: "success",
             time: 5000
           });
-          //this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.$emit("ver_pdfs_nueva_venta", res.data);
           this.cerrarVentana();
         } else {
           this.$vs.notify({
@@ -2106,7 +2106,7 @@ export default {
             color: "success",
             time: 5000
           });
-          //this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.$emit("ver_pdfs_nueva_venta", res.data);
           this.cerrarVentana();
         } else {
           this.$vs.notify({

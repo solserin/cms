@@ -11,11 +11,19 @@
         <template slot="no-body">
           <div class="pb-5">
             <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-3">
+              <div
+                class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-3"
+              >
                 <h3 class="text-xl">
-                  <feather-icon icon="ThumbsDownIcon" class="mr-2 mb-5" svgClasses="w-5 h-5" />
+                  <feather-icon
+                    icon="ThumbsDownIcon"
+                    class="mr-2 mb-5"
+                    svgClasses="w-5 h-5"
+                  />
                   <span class="font-bold text-primary uppercase">
-                    <span class="uppercase">CANCELACIÓN DE VENTAS DEL CEMENTERIO</span>
+                    <span class="uppercase"
+                      >CANCELACIÓN DE VENTAS DEL CEMENTERIO</span
+                    >
                   </span>
                 </h3>
               </div>
@@ -29,7 +37,9 @@
                   <div class="w-full py-1">
                     <h3 class="text-xl">
                       <span class="font-bold text-black uppercase">
-                        <span class="uppercase">{{datosVenta.cliente_nombre}}</span>
+                        <span class="uppercase">{{
+                          datosVenta.cliente_nombre
+                        }}</span>
                       </span>
                     </h3>
                   </div>
@@ -39,7 +49,9 @@
                   <div class="w-full py-1">
                     <h3 class="text-base">
                       <span class="text-black uppercase">
-                        <span class="uppercase font-bold">{{datosVenta.fecha_venta_texto}}</span>
+                        <span class="uppercase font-bold">{{
+                          datosVenta.fecha_venta_texto
+                        }}</span>
                       </span>
                     </h3>
                   </div>
@@ -50,11 +62,17 @@
                     <h3 class="text-base">
                       <span class="text-black">
                         <span class="font-bold uppercase">solicitud:</span>
-                        <span class="uppercase">{{datosVenta.numero_solicitud}},</span>
+                        <span class="uppercase"
+                          >{{ datosVenta.numero_solicitud }},</span
+                        >
                         <span class="font-bold uppercase">convenio:</span>
-                        <span class="uppercase">{{datosVenta.numero_convenio}},</span>
+                        <span class="uppercase"
+                          >{{ datosVenta.numero_convenio }},</span
+                        >
                         <span class="font-bold uppercase">título:</span>
-                        <span class="uppercase">{{datosVenta.numero_titulo}}</span>
+                        <span class="uppercase">{{
+                          datosVenta.numero_titulo
+                        }}</span>
                       </span>
                     </h3>
                   </div>
@@ -78,9 +96,11 @@
                   <div class="w-full py-1">
                     <h3 class="text-lg">
                       <span class="font-bold text-black uppercase">
-                        <span
-                          class="uppercase"
-                        >$ {{datosVenta.total | numFormat('0,000.00')}} Pesos mxn</span>
+                        <span class="uppercase"
+                          >$
+                          {{ datosVenta.total | numFormat("0,000.00") }} Pesos
+                          mxn</span
+                        >
                       </span>
                     </h3>
                   </div>
@@ -90,17 +110,21 @@
                   <div class="w-full py-1">
                     <h3 class="text-lg">
                       <span class="font-bold text-black uppercase">
-                        <span
-                          class="uppercase"
-                        >$ {{datosVenta.total_pagado | numFormat('0,000.00')}} Pesos mxn</span>
+                        <span class="uppercase"
+                          >$
+                          {{
+                            datosVenta.total_pagado | numFormat("0,000.00")
+                          }}
+                          Pesos mxn</span
+                        >
                       </span>
                     </h3>
                   </div>
 
                   <div class="w-full py-3">
-                    <label
-                      class="text-sm opacity-75 font-bold"
-                    >Ingrese la cantidad a regresar en caso de aplicar:</label>
+                    <label class="text-sm opacity-75 font-bold"
+                      >Ingrese la cantidad a regresar en caso de aplicar:</label
+                    >
                   </div>
                   <div class="w-full">
                     <vs-input
@@ -114,18 +138,23 @@
                       maxlength="7"
                     />
                     <div>
-                      <span class="text-danger text-sm">{{ errors.first('cantidad') }}</span>
+                      <span class="text-danger text-sm">{{
+                        errors.first("cantidad")
+                      }}</span>
                     </div>
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
                         v-if="this.errores.cantidad"
-                      >{{errores.cantidad[0]}}</span>
+                        >{{ errores.cantidad[0] }}</span
+                      >
                     </div>
                   </div>
 
                   <div class="w-full py-3">
-                    <label class="text-sm opacity-75 font-bold">Seleccione un motivo de cancelación:</label>
+                    <label class="text-sm opacity-75 font-bold"
+                      >Seleccione un motivo de cancelación:</label
+                    >
                   </div>
                   <div class="w-full">
                     <v-select
@@ -138,16 +167,21 @@
                       name="plan_venta"
                       data-vv-as=" "
                     >
-                      <div slot="no-options">No Se Ha Seleccionado Ningún Motivo</div>
+                      <div slot="no-options">
+                        No Se Ha Seleccionado Ningún Motivo
+                      </div>
                     </v-select>
                     <div>
-                      <span class="text-danger text-sm">{{ errors.first('motivo') }}</span>
+                      <span class="text-danger text-sm">{{
+                        errors.first("motivo")
+                      }}</span>
                     </div>
                     <div class="mt-2">
                       <span
                         class="text-danger text-sm"
                         v-if="this.errores['motivo.value']"
-                      >{{errores['motivo.value'][0]}}</span>
+                        >{{ errores["motivo.value"][0] }}</span
+                      >
                     </div>
                   </div>
                 </div>
@@ -156,9 +190,10 @@
             <div class="flex flex-wrap mt-8">
               <div class="w-full px-2">
                 <div class="pb-2">
-                  <label
-                    class="text-sm opacity-75 font-bold"
-                  >Agregue un comentario respecto a la cancelación de esta venta:</label>
+                  <label class="text-sm opacity-75 font-bold"
+                    >Agregue un comentario respecto a la cancelación de esta
+                    venta:</label
+                  >
                 </div>
                 <vs-textarea
                   class="pb-1 pt-1"
@@ -170,25 +205,30 @@
               </div>
               <div class="w-full px-2 text-base text-danger pb-5">
                 <span class="font-bold">Ojo:</span>
-                Una vez realizado el proceso de cancelación no habrá manera de volver a habilitar la venta. Es recomendable llevar a cabo este proceso
-                una vez esté seguro de que es necesario.
+                Una vez realizado el proceso de cancelación no habrá manera de
+                volver a habilitar la venta. Es recomendable llevar a cabo este
+                proceso una vez esté seguro de que es necesario.
               </div>
 
-              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5">
+              <div
+                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 my-5"
+              >
                 <vs-button
                   icon-pack="feather"
                   icon="icon-thumbs-down"
                   color="success"
                   class="float-right"
                   @click="acceptAlert()"
-                >Cancelar Venta</vs-button>
+                  >Cancelar Venta</vs-button
+                >
                 <vs-button
                   icon-pack="feather"
                   icon="icon-x"
                   color="danger"
                   class="float-right mr-20"
                   @click="cancelar()"
-                >Cerrar Ventana (Esc)</vs-button>
+                  >Cerrar Ventana (Esc)</vs-button
+                >
               </div>
             </div>
           </div>
@@ -197,7 +237,7 @@
       <Password
         :show="openConfirmar"
         :callback-on-success="callback"
-        @closeVerificar="openConfirmar=false"
+        @closeVerificar="openConfirmar = false"
         :accion="'Cancelar venta de propiedad'"
       ></Password>
     </vs-popup>
@@ -242,7 +282,7 @@ export default {
     },
     id_venta: function(newValue, oldValue) {
       if (newValue > 0) {
-        this.form.venta_id = newValue;
+        /* this.form.venta_id = newValue;
         let self = this;
         if (cementerio.cancel) {
           cementerio.cancel("Operation canceled by the user.");
@@ -270,6 +310,7 @@ export default {
               }
             }
           });
+          */
       } else {
         this.form.venta_id = 0;
       }
