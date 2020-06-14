@@ -23,7 +23,12 @@
           </v-select>
         </div>
         <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12">
-          <vs-button class="float-right mt-6" size="small" color="success" @click="agregar()">
+          <vs-button
+            class="float-right mt-6"
+            size="small"
+            color="success"
+            @click="agregar()"
+          >
             <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
             <span class="texto-btn">Agregar Precios</span>
           </vs-button>
@@ -31,23 +36,35 @@
             class="float-right mr-16 mt-6"
             size="small"
             color="primary"
-            @click="openReporte('Precios x Propiedad (Español)','/cementerio/lista_precios_pdf/es','')"
+            @click="
+              openReporte(
+                'Precios x Propiedad (Español)',
+                '/cementerio/lista_precios_pdf/es',
+                ''
+              )
+            "
           >
-            <img class="cursor-pointer img-btn" src="@assets/images/printer.svg" />
+            <img
+              class="cursor-pointer img-btn"
+              src="@assets/images/printer.svg"
+            />
             <span class="texto-btn">Ver documento</span>
           </vs-button>
         </div>
       </div>
 
-      <div v-if="propiedades.length>0">
+      <div v-if="propiedades.length > 0">
         <div
-          v-for="(propiedad,index) in propiedades"
+          v-for="(propiedad, index) in propiedades"
           :key="index"
-          :class="indexPrecios(index,propiedad.id)"
+          :class="indexPrecios(index, propiedad.id)"
         >
           <vs-table :data="propiedad.precios" noDataText="0 Resultados">
             <template slot="header">
-              <h3>Tipo {{propiedad.tipo}}, capacidad {{propiedad.capacidad}} Persona(s)</h3>
+              <h3>
+                Tipo {{ propiedad.tipo }}, capacidad
+                {{ propiedad.capacidad }} Persona(s)
+              </h3>
             </template>
             <template slot="thead">
               <vs-th>#</vs-th>
@@ -60,28 +77,40 @@
               <vs-th>Descripción</vs-th>
               <vs-th>Acciones</vs-th>
             </template>
-            <template slot-scope="{data}">
-              <vs-tr :data="precio" :key="index_precio" v-for="(precio, index_precio) in data">
+            <template slot-scope="{ data }">
+              <vs-tr
+                :data="precio"
+                :key="index_precio"
+                v-for="(precio, index_precio) in data"
+              >
                 <vs-td :data="data[index_precio].id">
-                  <span class="font-semibold">{{(index_precio+1)}}</span>
+                  <span class="font-semibold">{{ index_precio + 1 }}</span>
                 </vs-td>
-                <vs-td
-                  :data="data[index_precio].pago_inicial"
-                >$ {{precio.pago_inicial | numFormat('0,000.00')}}</vs-td>
-                <vs-td
-                  :data="data[index_precio].costo_neto"
-                >$ {{precio.costo_neto | numFormat('0,000.00')}}</vs-td>
-                <vs-td
-                  :data="data[index_precio].costo_neto"
-                >$ {{precio.costo_neto_pronto_pago | numFormat('0,000.00')}}</vs-td>
-                <vs-td
-                  :data="data[index_precio].pago_mensual"
-                >$ {{precio.pago_mensual | numFormat('0,000.00')}}</vs-td>
-                <vs-td
-                  :data="data[index_precio].costo_neto"
-                >$ {{precio.descuento_x_pago | numFormat('0,000.00')}}</vs-td>
-                <vs-td :data="data[index_precio].tipo_financiamiento">{{precio.tipo_financiamiento}}</vs-td>
-                <vs-td :data="data[index_precio].descripcion">{{precio.descripcion}}</vs-td>
+                <vs-td :data="data[index_precio].pago_inicial"
+                  >$ {{ precio.pago_inicial | numFormat("0,000.00") }}</vs-td
+                >
+                <vs-td :data="data[index_precio].costo_neto"
+                  >$ {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td
+                >
+                <vs-td :data="data[index_precio].costo_neto"
+                  >$
+                  {{
+                    precio.costo_neto_pronto_pago | numFormat("0,000.00")
+                  }}</vs-td
+                >
+                <vs-td :data="data[index_precio].pago_mensual"
+                  >$ {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
+                >
+                <vs-td :data="data[index_precio].costo_neto"
+                  >$
+                  {{ precio.descuento_x_pago | numFormat("0,000.00") }}</vs-td
+                >
+                <vs-td :data="data[index_precio].tipo_financiamiento">{{
+                  precio.tipo_financiamiento
+                }}</vs-td>
+                <vs-td :data="data[index_precio].descripcion">{{
+                  precio.descripcion
+                }}</vs-td>
 
                 <vs-td :data="data[index_precio].status">
                   <img
@@ -91,11 +120,17 @@
                     @click="openModificar(data[index_precio].id)"
                   />
                   <img
-                    v-if="data[index_precio].status==1"
+                    v-if="data[index_precio].status == 1"
                     class="cursor-pointer img-btn-32 mr-auto ml-3"
                     src="@assets/images/switchon.svg"
                     title="Deshabilitar"
-                    @click="enable_disable_precio(data[index_precio].id,data[index_precio].descripcion,'deshabilitar')"
+                    @click="
+                      enable_disable_precio(
+                        data[index_precio].id,
+                        data[index_precio].descripcion,
+                        'deshabilitar'
+                      )
+                    "
                   />
 
                   <img
@@ -103,7 +138,13 @@
                     class="cursor-pointer img-btn-32 mr-auto ml-3"
                     src="@assets/images/switchoff.svg"
                     title="Habilitar"
-                    @click="enable_disable_precio(data[index_precio].id,data[index_precio].descripcion,'habilitar')"
+                    @click="
+                      enable_disable_precio(
+                        data[index_precio].id,
+                        data[index_precio].descripcion,
+                        'habilitar'
+                      )
+                    "
                   />
                 </vs-td>
               </vs-tr>
@@ -116,14 +157,16 @@
       <ConfirmarDanger
         :show="operConfirmar"
         :callback-on-success="callback"
-        @closeVerificar="operConfirmar=false"
-        :accion="'¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'"
+        @closeVerificar="operConfirmar = false"
+        :accion="
+          '¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'
+        "
         :confirmarButton="'Eliminar'"
       ></ConfirmarDanger>
       <Password
         :show="openPassword"
         :callback-on-success="callbackPassword"
-        @closeVerificar="openPassword=false"
+        @closeVerificar="openPassword = false"
         :accion="accionPassword"
       ></Password>
 
@@ -140,7 +183,7 @@
         :show="openReportesLista"
         :listadereportes="ListaReportes"
         :request="request"
-        @closeReportes="openReportesLista=false;"
+        @closeReportes="openReportesLista = false"
       ></Reporteador>
       <!--fin de compornentes-->
     </vs-popup>
@@ -193,6 +236,7 @@ export default {
       openReportesLista: false,
       ListaReportes: [],
       request: {
+        destinatario: "",
         id_tipo_propiedad: "",
         email: ""
       },

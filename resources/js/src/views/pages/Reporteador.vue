@@ -159,7 +159,6 @@ export default {
           this.cancel();
         };
         this.request_datos.request_parent = [];
-
         this.request_datos.destinatario = this.Request.destinatario;
         this.request_datos.email_address = this.Request.email;
         this.request_datos.request_parent.push(this.Request);
@@ -271,7 +270,6 @@ export default {
           this.reporteSeleccionado.value,
           this.request_datos
         );
-
         this.$vs.loading.close();
         const file = new Blob([res.data], { type: "application/pdf" });
         this.pdf_iframe_source = URL.createObjectURL(file);

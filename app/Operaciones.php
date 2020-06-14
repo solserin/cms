@@ -48,6 +48,9 @@ class Operaciones extends Model
                     '(NULL) AS fecha_a_pagar'
                 ),
                 DB::raw(
+                    '(NULL) AS fecha_a_pagar_abr'
+                ),
+                DB::raw(
                     '(0) AS status_pago', //0-vencido-1-pendiente,2-vencido
                 ),
                 DB::raw(
@@ -88,6 +91,10 @@ class Operaciones extends Model
                 ),
                 DB::raw(
                     '(NULL) AS fecha_programada_abr'
+                ),
+
+                DB::raw(
+                    '(NULL) AS fecha_ultimo_pago'
                 )
             )
             ->orderBy('id', 'asc');

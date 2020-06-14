@@ -28,6 +28,8 @@ Route::get('cementerio/documento_convenio', 'CementerioController@documento_conv
 Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
 Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
 Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
+Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
+
 /**fin de rutas de modulo en proceso */
 
 

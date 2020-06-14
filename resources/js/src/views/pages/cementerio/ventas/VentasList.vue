@@ -164,13 +164,18 @@
             data[indextr].venta_terreno.ubicacion_texto
           }}</vs-td>
           <vs-td :data="data[indextr].operacion_status">
-            <p
-              v-if="data[indextr].operacion_status == 1"
-              class="text-success font-medium"
-            >
-              Activo
+            <p v-if="data[indextr].operacion_status == 1" class=" font-medium">
+              {{ data[indextr].status_texto }}
             </p>
-            <p v-else class="text-danger font-medium">Cancelada</p>
+            <p
+              v-else-if="data[indextr].operacion_status == 2"
+              class="font-medium text-success"
+            >
+              {{ data[indextr].status_texto }}
+            </p>
+            <p v-else class="text-danger font-medium">
+              {{ data[indextr].status_texto }}
+            </p>
           </vs-td>
 
           <vs-td :data="data[indextr].id">
@@ -178,7 +183,7 @@
               <img
                 class="cursor-pointer img-btn ml-auto"
                 src="@assets/images/folder.svg"
-                title="Consultar Documentación"
+                title="Expediente"
                 @click="ConsultarVenta(data[indextr].ventas_terrenos_id)"
               />
               <img

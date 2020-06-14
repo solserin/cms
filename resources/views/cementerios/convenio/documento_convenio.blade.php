@@ -718,7 +718,7 @@
             </div>
             <div class="w-50 float-right mt-100">
                 <div class="w-90 mr-auto ml-auto border-top">
-                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm">El (La) C. Hector raul cruz perez</span>
+                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm">El (La) C. {{ $datos['nombre'] }}</span>
                     </div>
                     <span class="uppercase bold texto-sm">"el cliente"</span>
                 </div>

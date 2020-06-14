@@ -59,9 +59,6 @@ class DatabaseSeeder extends Seeder
 
         /**seeders para el control de ventas del cementerio y pagos */
         $this->call(AjustesPoliticas::class);
-        $this->call(ConceptosPagosSeeder::class);
-        $this->call(MotivosCancelacionSeeder::class);
-        $this->call(EmpresaOperaciones::class);
         /**seeder de cementerio */
         //
         $this->call(tiposPropiedadesSeeder::class);
@@ -69,22 +66,11 @@ class DatabaseSeeder extends Seeder
         $this->call(columnasFilasSeeder::class);
         $this->call(TipoPreciosSeeder::class);
         $this->call(PreciosPropiedadesSeeder::class);
-        $this->call(AntiguedadOperacion::class);
         /**pagos */
         //
         //
         /**fin de seeder de cementerio */
         /**seeders de operaciones pagos */
-        $this->call(MovimientosPagos::class);
-
-
-
-
-
-
-
-
-
 
 
         /**pendiente, hechas por andres */

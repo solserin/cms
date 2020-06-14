@@ -1,9 +1,9 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="normal-forms "
+      class="forms-popups normal-forms reportes_lista"
       fullscreen
-      title="Archivo de ventas en cementerio"
+      title="expediente de venta en cementerio"
       :active.sync="showVentana"
       ref="lista_reportes"
     >
@@ -68,12 +68,105 @@
             <vs-th>#</vs-th>
             <vs-th>Referencia</vs-th>
             <vs-th>Fecha Programada</vs-th>
+            <vs-th>Nueva Fecha de Pago</vs-th>
             <vs-th>Monto Pago</vs-th>
             <vs-th>Intereses Generados</vs-th>
             <vs-th>Restante a Pagar</vs-th>
             <vs-th>Concepto</vs-th>
             <vs-th>Estatus</vs-th>
-            <vs-th>Recibo de Pago</vs-th>
+            <vs-th>Pagar Recibo</vs-th>
+          </template>
+          <template>
+            <vs-tr
+              v-show="programados.status == 1"
+              v-for="(programados,
+              index_programado) in datosVenta.pagos_programados"
+              v-bind:key="programados.id"
+              ref="row"
+            >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+              >
+                <span class="font-semibold">{{ programados.num_pago }}</span>
+              </vs-td>
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+                >{{ programados.referencia_pago }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+                >{{ programados.fecha_programada_abr }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+                >{{ programados.fecha_a_pagar_abr }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+                >$
+                {{
+                  programados.monto_programado | numFormat("0,000.00")
+                }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+                >$ {{ programados.intereses | numFormat("0,000.00") }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+                >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+                >{{ programados.concepto_texto }}</vs-td
+              >
+              <vs-td
+                :class="[
+                  programados.status_pago == 0 ? 'text-danger' : '',
+                  programados.status_pago == 2 ? 'text-success font-bold' : ''
+                ]"
+              >
+                <span>{{ programados.status_pago_texto }}</span>
+              </vs-td>
+              <vs-td>
+                <div class="flex flex-start py-1">
+                  <img
+                    width="26"
+                    class="cursor-pointer ml-auto mr-auto"
+                    src="@assets/images/dollar_bill.svg"
+                    title="Pagar Ficha"
+                    @click="pagar()"
+                  />
+                </div>
+              </vs-td>
+              <!-- <template class="expand-user" slot="expand">
+                d
+              </template>
+              -->
+            </vs-tr>
+          </template>
+        </vs-table>
+      </div>
+
+      <div class="w-full pt-8" v-if="datosVenta.operacion_id">
+        <vs-table
+          class="tablas-pagos"
+          :data="datosVenta.pagos_programados"
+          noDataText="0 Resultados"
+        >
+          <template slot="header">
+            <h3>Listado de Abonos Recibidos</h3>
+          </template>
+          <template slot="thead">
+            <vs-th>#</vs-th>
+            <vs-th>Referencia</vs-th>
+            <vs-th>Fecha Programada</vs-th>
+            <vs-th>Monto Pago</vs-th>
+            <vs-th>Intereses Generados</vs-th>
+            <vs-th>Restante a Pagar</vs-th>
+            <vs-th>Concepto</vs-th>
+            <vs-th>Estatus</vs-th>
+            <vs-th>Ver Nota de Pago</vs-th>
           </template>
           <template>
             <vs-tr
@@ -127,29 +220,12 @@
                 <div class="flex flex-start py-1">
                   <img
                     width="26"
-                    class="cursor-pointer ml-auto"
+                    class="cursor-pointer ml-auto mr-auto"
                     src="@assets/images/pdf.svg"
-                    title="Consultar Ficha de Pago"
-                    @click="
-                      openReporte(
-                        'Referencia de Pago # ' + programados.num_pago,
-                        '/inventarios/cementerio/referencias_de_pago/' +
-                          programados.id,
-                        ''
-                      )
-                    "
-                  />
-                  <img
-                    width="26"
-                    class="cursor-pointer ml-6 mr-auto"
-                    src="@assets/images/dollar_bill.svg"
-                    title="Pagar Ficha"
+                    title="Ver Nota de Pago"
                   />
                 </div>
               </vs-td>
-              <template class="expand-user" slot="expand">
-                d
-              </template>
             </vs-tr>
           </template>
         </vs-table>
@@ -162,15 +238,24 @@
         :request="request"
         @closeReportes="openReportesLista = false"
       ></Reporteador>
+
+      <FormularioPagos
+        :tipo="tipoFormularioPagos"
+        :show="verFormularioPagos"
+        @closeVentana="verFormularioPagos = false"
+        @retorno_pagos="verFormularioPagos = false"
+      ></FormularioPagos>
     </vs-popup>
   </div>
 </template>
 <script>
 import Reporteador from "@pages/Reporteador";
 import cementerio from "@services/cementerio";
+import FormularioPagos from "@pages/pagos/FormularioPagos";
 export default {
   components: {
-    Reporteador
+    Reporteador,
+    FormularioPagos
   },
   props: {
     show: {
@@ -232,18 +317,25 @@ export default {
           tipo: "pdf"
         },
         {
-          documento: "Titulo",
+          documento: "Título",
           url: "/cementerio/documento_titulo",
           tipo: "pdf"
         },
+        /*
         {
           documento: "Estado de cuenta",
           url: "/cementerio/documento_estado_de_cuenta_cementerio",
           tipo: "pdf"
         },
+        */
         {
-          documento: "Fichas de pago",
+          documento: "Talonario de Pagos",
           url: "/cementerio/referencias_de_pago",
+          tipo: "pdf"
+        },
+        {
+          documento: "Reglamento de Pago",
+          url: "/cementerio/reglamento_pago",
           tipo: "pdf"
         },
         {
@@ -261,10 +353,16 @@ export default {
         email: "",
         destinatario: ""
       },
-      openReportesLista: false
+      openReportesLista: false,
+      verFormularioPagos: false,
+      tipoFormularioPagos: ""
     };
   },
   methods: {
+    pagar() {
+      this.tipoFormularioPagos = "agregar";
+      this.verFormularioPagos = true;
+    },
     mostrarDocumento(documento) {
       if (documento != "Acuse de cancelación") {
         return true;
@@ -300,9 +398,8 @@ export default {
         let res = await cementerio.consultar_venta_id(this.get_venta_id);
         this.datosVenta = res.data[0];
 
-        if (this.datosVenta.pagos_programados.length > 0) {
-          /**calculando el total de rows */
-
+        /*if (this.datosVenta.pagos_programados.length > 0) {
+          //calculando el total de rows 
           this.funcion_reemplazada = [];
           for (
             let index = 0;
@@ -318,6 +415,7 @@ export default {
             });
           }
         }
+*/
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
@@ -343,7 +441,7 @@ export default {
       if (e.keyCode === 27) {
         if (this.showVentana) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
-          this.cancelar();
+          //this.cancelar();
         }
       }
     });

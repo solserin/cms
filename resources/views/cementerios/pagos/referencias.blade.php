@@ -19,6 +19,11 @@
             border: 2px solid #E5E8E8 !important;
         }
 
+
+        .banco-logo {
+            display: block;
+        }
+
         .logo {
             display: block;
             margin-right: auto;
@@ -76,10 +81,13 @@
         <table class="w-100">
             <thead>
                 <tr>
-                    <th class="w-70">
+                    <th class="w-25">
                         <img class="logo logos -mt-6" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
                     </th>
-                    <th class="w-30">
+                    <th class="w-50">
+
+                    </th>
+                    <th class="w-25">
                         <div class="numeros-contrato">
                             <div class="control bg-header size-13px">
                                 Número de convenio
@@ -95,6 +103,7 @@
                             </p>
                         </div>
                     </th>
+
                 </tr>
             </thead>
         </table>
@@ -143,6 +152,42 @@
 
 
 
+            <table class="w-100 texto-base pagos_tabla center mt-4">
+                <thead>
+                    <tr>
+                        <td class="py-2"><span class="bold">Banco para depósitos</span></td>
+                        <td><span class="bold">Número de cuenta</span></td>
+                        <td><span class="bold">Tranferencias electrónicas</span></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width="20%">
+                            <img class="logo logos ml-auto mr-auto" src="{{asset('images/santander.png')}}" alt="">
+                        </td>
+
+                        <td width="40%">
+                            <span class="letter-spacing-2 size-16px">
+                                {{$empresa->cuenta}}
+                            </span>
+                        </td>
+                        <td width="40%">
+                            <div class="px-1 py-1 uppercase"> <span class="bold size-14px">Clabe: </span> <span
+                                    class="letter-spacing-1">
+                                    {{$empresa->clabe}}
+                                </span>
+                            </div>
+                            <div class="px-1 py-2 uppercase"> <span class="bold size-14px">Beneficiario:</span>
+                                {{$empresa->razon_social}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+
+
             <table class="w-100 texto-base mt-5 pagos_tabla center">
                 <thead>
                     <tr>
@@ -165,7 +210,16 @@
                         <td class="py-2"><span class="bold">{{ $pago['num_pago'] }}</span></td>
                         <td>{{ $pago['referencia_pago'] }}</td>
                         <td>{{ $pago['concepto_texto'] }}</td>
-                        <td>{{ fecha_abr($pago['fecha_programada']) }}</td>
+                        <td>
+                            @if ($pago['status_pago']==0)
+                            {{ fecha_abr($pago['fecha_a_pagar']) }}
+                            @elseif($pago['status_pago']==1)
+                            {{ fecha_abr($pago['fecha_programada']) }}
+                            @else
+                            {{ fecha_abr($pago['fecha_ultimo_pago']) }}
+                            @endif
+
+                        </td>
                         <td>{{ $pago['status_pago_texto'] }}</td>
                         <td>$ {{ number_format($pago['monto_pronto_pago'],2)}}</td>
                         <td>$ {{ number_format($pago['monto_programado'],2)}}</td>
@@ -175,6 +229,14 @@
                     </tr>
                     @endif
                     @endforeach
+                    <tr>
+                        <td class="py-2 right" colspan="5"><span class="bold pr-4">Totales</span></td>
+                        <td>$ {{ number_format($datos['costo_neto_pronto_pago'],2)}}</td>
+                        <td>$ {{ number_format($datos['total'],2)}}</td>
+                        <td>$ {{ number_format($datos['total_cubierto'],2)}}</td>
+                        <td>$ {{ number_format($datos['intereses'],2)}}</td>
+                        <td>$ {{ number_format($datos['saldo_neto'],2)}}</td>
+                    </tr>
                 </tbody>
             </table>
 

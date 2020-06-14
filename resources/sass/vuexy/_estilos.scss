@@ -172,6 +172,9 @@ html {
     font-size: 18px !important;
     font-weight: 550 !important;
 }
+.reportes_lista .vs-popup--title h3 {
+    border-bottom: 0px !important;
+}
 
 .big-forms .vs-popup--title h3 {
     margin-left: auto !important;
@@ -256,6 +259,27 @@ html {
     content: url("../../../../../resources/assets/images/price_list.svg");
 }
 
+.pagos_forms .vs-popup--title h3 {
+    padding-bottom: 0px !important;
+    border-bottom: 0px !important;
+}
+
+.pagos_forms .vs-popup--title h3:before {
+    width: 80px;
+    height: 80px;
+    margin-top: -13px !important;
+    content: url("../../../../../resources/assets/images/cash_register.svg");
+}
+
+.pagos_forms .vs-popup--close {
+    margin-top: -65px !important;
+    margin-right: 12px !important;
+}
+
+.pagos_forms .vs-popup--content {
+    max-height: 85vh !important;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                 title forms                                */
 /* -------------------------------------------------------------------------- */
@@ -302,9 +326,15 @@ html {
 }
 
 /*default size for small devices*/
+.forms-popups-pagos {
+    .vs-popup {
+        width: 100% !important;
+    }
+}
+
 .forms-popups-75 {
     .vs-popup {
-        width: 75% !important;
+        width: 100% !important;
     }
 }
 
@@ -338,15 +368,15 @@ html {
     }
 }
 
+.forms-popups {
+    .vs-popup {
+        width: 100% !important;
+    }
+}
+
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
 @media (min-width: 576px) {
-    .forms-popups {
-        .vs-popup {
-            width: 90% !important;
-        }
-    }
-
     .forms-popups-50 {
         .vs-popup {
             width: 50% !important;
@@ -356,39 +386,17 @@ html {
 
 // Small devices (landscape phones, less than 768px)
 @media (min-width: 768px) {
-    .forms-popups {
-        .vs-popup {
-            width: 90% !important;
-        }
-    }
-
-    .forms-popups-75 {
-        .vs-popup {
-            width: 75% !important;
-        }
-    }
 }
 
 // Medium devices (tablets, less than 992px)
 @media (min-width: 992px) {
-    .forms-popups {
-        .vs-popup {
-            width: 90% !important;
-        }
-    }
-
-    .forms-popups-75 {
-        .vs-popup {
-            width: 75% !important;
-        }
-    }
 }
 
 // Large devices (desktops, less than 1200px)
 @media (min-width: 1200px) {
-    .forms-popups {
+    .forms-popups-pagos {
         .vs-popup {
-            width: 90% !important;
+            width: 1000px !important;
         }
     }
 
@@ -413,6 +421,12 @@ html {
     .forms-popups-85 {
         .vs-popup {
             width: 85% !important;
+        }
+    }
+
+    .forms-popups {
+        .vs-popup {
+            width: 90% !important;
         }
     }
 }
@@ -555,6 +569,7 @@ html {
 }
 
 .vs-table--tr:hover {
+    cursor: pointer;
     background: rgba(221, 221, 221, 1) !important;
     color: #303030 !important;
 }

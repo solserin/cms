@@ -144,14 +144,6 @@ class ModulosSeeder extends Seeder
                 'status' => 0
             ],
             [ //14
-                'modulo' => 'Devoluciones',
-                'icon' => '',
-                'parent_modulo_id' => 9,
-                'url' => '/inventarios/funeraria/devoluciones',
-                'secciones_id' => 2,
-                'status' => 0
-            ],
-            [ //15
                 'modulo' => 'Salidas',
                 'icon' => '',
                 'parent_modulo_id' => 9,
@@ -161,7 +153,7 @@ class ModulosSeeder extends Seeder
             ],
 
 
-            [ //16
+            [ //15
                 'modulo' => 'Funeraria',
                 'icon' => 'ArchiveIcon',
                 'parent_modulo_id' => 0,
@@ -170,39 +162,31 @@ class ModulosSeeder extends Seeder
                 'status' => 0
             ],
 
-            [ //17
+            [ //16
                 'modulo' => 'Planes a Futuro',
                 'icon' => '',
-                'parent_modulo_id' => 16,
+                'parent_modulo_id' => 15,
                 'url' => '/funeraria/ventas_planes',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //18
+            [ //17
                 'modulo' => 'Servicios Funerarios',
                 'icon' => '',
-                'parent_modulo_id' => 16,
+                'parent_modulo_id' => 15,
                 'url' => '/funeraria/servicios',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //19
+            [ //18
                 'modulo' => 'Ventas Gral.',
                 'icon' => '',
-                'parent_modulo_id' => 16,
+                'parent_modulo_id' => 15,
                 'url' => '/funeraria/ventas_generales',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //20
-                'modulo' => 'Devoluciones',
-                'icon' => '',
-                'parent_modulo_id' => 16,
-                'url' => '/funeraria/devoluciones',
-                'secciones_id' => 2,
-                'status' => 0
-            ],
-            [ //21
+            [ //19
                 'modulo' => 'Cobranza',
                 'icon' => 'DollarSignIcon',
                 'parent_modulo_id' => 0,
@@ -210,23 +194,23 @@ class ModulosSeeder extends Seeder
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //22
+            [ //20
                 'modulo' => 'Pagos',
                 'icon' => '',
-                'parent_modulo_id' => 21,
+                'parent_modulo_id' => 19,
                 'url' => '/cobranza/pagos',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //23
+            [ //21
                 'modulo' => 'Facturación',
                 'icon' => '',
-                'parent_modulo_id' => 21,
+                'parent_modulo_id' => 19,
                 'url' => '/cobranza/facturacion',
                 'secciones_id' => 2,
                 'status' => 0
             ],
-            [ //24
+            [ //22
                 'modulo' => 'Consultas / Reportes',
                 'icon' => 'FolderIcon',
                 'parent_modulo_id' => 0,

@@ -16,8 +16,8 @@ class PreciosPropiedadesSeeder extends Seeder
             [
                 'pago_inicial' => 20000,
                 'financiamiento' => 1,
-                'subtotal' => 16800,
-                'impuestos' => 3200,
+                'subtotal' => 17241.37931,
+                'impuestos' => 2758.62069,
                 'costo_neto' => 20000,
                 'costo_neto_financiamiento_normal' => 20000,
                 'descuento_pronto_pago_b' => 0,
@@ -36,10 +36,13 @@ class PreciosPropiedadesSeeder extends Seeder
         //duplex
         DB::table('precios_propiedades')->insert(
             [
-                'pago_inicial' => 26000.00,
+                'pago_inicial' =>
+                26000,
                 'financiamiento' => 1,
-                'subtotal' => 21840,
-                'impuestos' => 4160,
+                'subtotal' =>
+                22413.7931,
+                'impuestos' =>
+                3586.206897,
                 'costo_neto' => 26000,
                 'costo_neto_financiamiento_normal' => 26000,
                 'descuento_pronto_pago_b' => 0,
@@ -57,11 +60,15 @@ class PreciosPropiedadesSeeder extends Seeder
         //nichos
         DB::table('precios_propiedades')->insert(
             [
-                'pago_inicial' => 20000,
+                'pago_inicial' =>
+                26000,
                 'financiamiento' => 1,
-                'subtotal' => 16800,
-                'impuestos' => 3200,
-                'costo_neto' => 20000,
+                'subtotal' =>
+                22413.7931,
+                'impuestos' =>
+                3586.206897,
+                'costo_neto' =>
+                26000,
                 'costo_neto_financiamiento_normal' => 20000,
                 'descuento_pronto_pago_b' => 0,
                 'costo_neto_pronto_pago' => 20000,
@@ -81,8 +88,10 @@ class PreciosPropiedadesSeeder extends Seeder
             [
                 'pago_inicial' => 50000,
                 'financiamiento' => 1,
-                'subtotal' => 42000,
-                'impuestos' => 8000,
+                'subtotal' =>
+                43103.44828,
+                'impuestos' =>
+                6896.551724,
                 'costo_neto' => 50000,
                 'costo_neto_financiamiento_normal' => 50000,
                 'descuento_pronto_pago_b' => 0,
@@ -104,8 +113,10 @@ class PreciosPropiedadesSeeder extends Seeder
             [
                 'pago_inicial' => 30000,
                 'financiamiento' => 1,
-                'subtotal' => 25200,
-                'impuestos' => 4800,
+                'subtotal' =>
+                25862.06897,
+                'impuestos' =>
+                4137.931034,
                 'costo_neto' => 30000,
                 'costo_neto_financiamiento_normal' => 30000,
                 'descuento_pronto_pago_b' => 0,
@@ -124,8 +135,10 @@ class PreciosPropiedadesSeeder extends Seeder
             [
                 'pago_inicial' => 50000,
                 'financiamiento' => 1,
-                'subtotal' => 42000,
-                'impuestos' => 8000,
+                'subtotal' =>
+                43103.44828,
+                'impuestos' =>
+                6896.551724,
                 'costo_neto' => 50000,
                 'costo_neto_financiamiento_normal' => 50000,
                 'descuento_pronto_pago_b' => 0,

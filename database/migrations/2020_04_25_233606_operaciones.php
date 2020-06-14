@@ -18,12 +18,14 @@ class Operaciones extends Migration
             $table->unsignedBigInteger('clientes_id');
             $table->foreign('clientes_id')->references('id')->on('clientes');
             /**relacion para la antiguedad de la operacion que aplique */
-            $table->unsignedBigInteger('antiguedad_operacion_id');
-            $table->foreign('antiguedad_operacion_id')->references('id')->on('antiguedad_operacion');
-
+            /*
+            1- NUEVA VENTA
+            2- A/S SIN LIQUIDAR
+            3- A/S - LIQUIDADA
+            */
+            $table->tinyInteger('antiguedad_operacion_id')->unsigned()->nullable();
             /**datos genericos de la tabla */
-            $table->unsignedBigInteger('empresa_operaciones_id');
-            $table->foreign('empresa_operaciones_id')->references('id')->on('empresa_operaciones');
+            $table->tinyInteger('empresa_operaciones_id')->nullable();
 
             $table->float('subtotal')->nullable();
             $table->float('descuento')->nullable();
@@ -42,12 +44,6 @@ class Operaciones extends Migration
             $table->string('parentesco_titular_sustituto')->nullable();
             $table->string('telefono_titular_sustituto')->nullable();
             /** */
-
-
-
-
-
-
 
             /***aplica solo para servicios funerarios */
             //$table->unsignedBigInteger('servicios_funerarios_id')->unsigned()->nullable();

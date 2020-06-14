@@ -5431,6 +5431,10 @@ html {
   margin-left: auto !important;
 }
 
+[dir] .reportes_lista .vs-popup--title h3 {
+  border-bottom: 0px !important;
+}
+
 .big-forms .vs-popup--title h3 {
   width: 50% !important;
   color: rgba(var(--vs-primary), 1) !important;
@@ -5559,6 +5563,37 @@ html {
   content: url(/images/price_list.svg?525761143e61a87a58c572254c6aec3f);
 }
 
+[dir] .pagos_forms .vs-popup--title h3 {
+  padding-bottom: 0px !important;
+  border-bottom: 0px !important;
+}
+
+.pagos_forms .vs-popup--title h3:before {
+  width: 80px;
+  height: 80px;
+  content: url(/images/cash_register.svg?e2afca55f65136aeafcf6bb0d31e1ad0);
+}
+
+[dir] .pagos_forms .vs-popup--title h3:before {
+  margin-top: -13px !important;
+}
+
+[dir] .pagos_forms .vs-popup--close {
+  margin-top: -65px !important;
+}
+
+[dir=ltr] .pagos_forms .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .pagos_forms .vs-popup--close {
+  margin-left: 12px !important;
+}
+
+.pagos_forms .vs-popup--content {
+  max-height: 85vh !important;
+}
+
 /* -------------------------------------------------------------------------- */
 
 /*                                 title forms                                */
@@ -5612,8 +5647,12 @@ html {
 
 /*default size for small devices*/
 
+.forms-popups-pagos .vs-popup {
+  width: 100% !important;
+}
+
 .forms-popups-75 .vs-popup {
-  width: 75% !important;
+  width: 100% !important;
 }
 
 .forms-popups-50 .vs-popup {
@@ -5636,41 +5675,21 @@ html {
   width: 100% !important;
 }
 
+.forms-popups .vs-popup {
+  width: 100% !important;
+}
+
 /**medias queries para el popup de captura de datos */
 
 @media (min-width: 576px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
-
   .forms-popups-50 .vs-popup {
     width: 50% !important;
   }
 }
 
-@media (min-width: 768px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
-  }
-}
-
 @media (min-width: 1200px) {
-  .forms-popups .vs-popup {
-    width: 90% !important;
+  .forms-popups-pagos .vs-popup {
+    width: 1000px !important;
   }
 
   .forms-popups-75 .vs-popup {
@@ -5687,6 +5706,10 @@ html {
 
   .forms-popups-85 .vs-popup {
     width: 85% !important;
+  }
+
+  .forms-popups .vs-popup {
+    width: 90% !important;
   }
 }
 
@@ -5857,6 +5880,7 @@ html {
 }
 
 [dir] .vs-table--tr:hover {
+  cursor: pointer;
   background: #dddddd !important;
 }
 
