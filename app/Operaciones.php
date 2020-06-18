@@ -18,9 +18,6 @@ class Operaciones extends Model
                     '(NULL) AS tipo_financiamiento_texto'
                 ),
                 DB::raw(
-                    'DATE(fecha_venta) as fecha_date_format',
-                ),
-                DB::raw(
                     '(NULL) AS area_nombre'
                 ),
                 DB::raw(
@@ -44,6 +41,9 @@ class Operaciones extends Model
         return $this->hasMany('App\PagosProgramados', 'operaciones_id', 'operacion_id')
             ->select(
                 '*',
+                DB::raw(
+                    '(NULL) AS fecha_programada_abr'
+                ),
                 DB::raw(
                     '(NULL) AS fecha_a_pagar'
                 ),
@@ -90,11 +90,17 @@ class Operaciones extends Model
                     '(NULL) AS concepto_texto'
                 ),
                 DB::raw(
-                    '(NULL) AS fecha_programada_abr'
+                    '(NULL) AS fecha_ultimo_pago'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_ultimo_pago_abr'
                 ),
 
                 DB::raw(
-                    '(NULL) AS fecha_ultimo_pago'
+                    '(0) AS aplica_pronto_pago_b'
+                ),
+                DB::raw(
+                    '(0) AS descuento_pronto_pago'
                 )
             )
             ->orderBy('id', 'asc');

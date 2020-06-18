@@ -18,7 +18,6 @@ class CreateSatMonedasTable extends Migration
             $table->string('codigo_moneda');
             $table->string('descripcion');
             $table->integer('decimales')->default(0)->nullable();
-            $table->timestamps();
         });
     }
 

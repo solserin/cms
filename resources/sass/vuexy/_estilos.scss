@@ -16,6 +16,17 @@
     font-size: 14px !important;
 }
 
+.large_textarea .vs-textarea {
+    text-transform: uppercase !important;
+    color: #303030 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+.text-primary-forced {
+    color: rgba(var(--vs-primary), 1) !important;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                roles estilos                               */
 /* -------------------------------------------------------------------------- */
@@ -96,9 +107,17 @@
     color: #303030 !important;
     font-weight: 600 !important;
 }
+
 .default_color {
     background-color: #c1c1c1 !important;
     color: #303030 !important;
+}
+.default_color:hover {
+    border-radius: 0px !important;
+    box-shadow: rgba(179, 179, 179, 0.8) 0px 0px 25px -8px !important;
+    -webkit-box-shadow: rgba(179, 179, 179, 0.8) 0px 0px 25px -8px !important;
+    -moz-box-shadow: rgba(179, 179, 179, 0.8) 0px 0px 25px -8px !important;
+    box-shadow: rgba(179, 179, 179, 0.8) 0px 0px 25px -8px !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -396,7 +415,7 @@ html {
 @media (min-width: 1200px) {
     .forms-popups-pagos {
         .vs-popup {
-            width: 1000px !important;
+            width: 90% !important;
         }
     }
 
@@ -440,6 +459,15 @@ html {
     background: none;
     border: 1px solid rgba(var(--vs-default_color), 1) !important;
     border-radius: 4px;
+}
+
+.input-text-right {
+    text-align: end !important;
+    text-align: right;
+}
+
+.td-padding-y {
+    padding: 10px 0px 10px 0px !important;
 }
 
 .texto-bold input {
@@ -572,6 +600,13 @@ html {
     cursor: pointer;
     background: rgba(221, 221, 221, 1) !important;
     color: #303030 !important;
+}
+
+.tr_especial,
+.tr_especial:hover {
+    color: #fff !important;
+    border: 1px solid #ddd;
+    background-color: #666666 !important;
 }
 
 .vs-table--thead tr {
@@ -723,6 +758,9 @@ html {
     display: none !important;
 }
 */
+.forms-popups-pagos .vs-popup--content {
+    max-height: 80vh !important;
+}
 
 .iframe_viewer {
     max-height: 85vh !important;

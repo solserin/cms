@@ -2012,7 +2012,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await cementerio.guardar_venta(this.form);
-        console.log("guardar_venta -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -2039,7 +2038,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("guardar_venta -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -2095,7 +2093,7 @@ export default {
       this.$vs.loading();
       try {
         let res = await cementerio.modificar_venta(this.form);
-        console.log("modificar_venta -> res", res);
+        console.log("modificar_venta -> res.data", res.data);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -2276,6 +2274,7 @@ export default {
           this.seleccionarPlanVenta();
         } else {
           /**logica para traer los datos originales de la venta */
+          let plan_encontrado = false;
           this.planesVenta.forEach(element => {
             if (
               element.value == this.datosVenta.financiamiento &&
@@ -2285,48 +2284,52 @@ export default {
             ) {
               /**en caso de que se encuentre el orignal */
               this.form.planVenta = element;
+              plan_encontrado = true;
               return;
             }
           });
 
-          if (
-            this.form.planVenta.value == "" &&
-            this.form.tipo_financiamiento ==
-              this.datosVenta.venta_terreno.tipo_financiamiento
-          ) {
-            /**no se encontro el plan y se debe de agregar uno como de origen */
-            let planVenta = {
-              label:
-                this.datosVenta.financiamiento == 1
-                  ? "Pago Único/Uso Inmediato (Plan Original)"
-                  : "Pago a " +
-                    this.datosVenta.financiamiento +
-                    " Meses/a Futuro(origen venta)",
-              value: Number(this.datosVenta.financiamiento),
-              subtotal: Number(this.datosVenta.subtotal),
-              impuestos: Number(this.datosVenta.impuestos),
-              costo_neto: Number(this.datosVenta.total),
-              pago_inicial: Number(
-                this.datosVenta.pagos_programados.length > 0
-                  ? this.datosVenta.pagos_programados[0].monto_programado
-                  : 0
-              ),
-              descuento_pronto_pago_b: Number(
-                this.datosVenta.descuento_pronto_pago_b
-              ),
-              costo_neto_pronto_pago: Number(
-                this.datosVenta.costo_neto_pronto_pago
-              ),
-              porcentaje_pronto_pago: 0,
-              costo_neto_financiamiento_normal: Number(
-                this.datosVenta.costo_neto_financiamiento_normal
-              )
-            };
-            this.planesVenta.push(planVenta);
-            this.form.planVenta = planVenta;
-          } else {
-            this.seleccionarPlanVenta();
+          if (plan_encontrado == false) {
+            if (
+              this.form.planVenta.value == "" &&
+              this.form.tipo_financiamiento ==
+                this.datosVenta.venta_terreno.tipo_financiamiento
+            ) {
+              /**no se encontro el plan y se debe de agregar uno como de origen */
+              let planVenta = {
+                label:
+                  this.datosVenta.financiamiento == 1
+                    ? "Pago Único/Uso Inmediato (Plan Original)"
+                    : "Pago a " +
+                      this.datosVenta.financiamiento +
+                      " Meses/a Futuro(origen venta)",
+                value: Number(this.datosVenta.financiamiento),
+                subtotal: Number(this.datosVenta.subtotal),
+                impuestos: Number(this.datosVenta.impuestos),
+                costo_neto: Number(this.datosVenta.total),
+                pago_inicial: Number(
+                  this.datosVenta.pagos_programados.length > 0
+                    ? this.datosVenta.pagos_programados[0].monto_programado
+                    : 0
+                ),
+                descuento_pronto_pago_b: Number(
+                  this.datosVenta.descuento_pronto_pago_b
+                ),
+                costo_neto_pronto_pago: Number(
+                  this.datosVenta.costo_neto_pronto_pago
+                ),
+                porcentaje_pronto_pago: 0,
+                costo_neto_financiamiento_normal: Number(
+                  this.datosVenta.costo_neto_financiamiento_normal
+                )
+              };
+              this.planesVenta.push(planVenta);
+              this.form.planVenta = planVenta;
+            } else {
+              this.seleccionarPlanVenta();
+            }
           }
+
           this.form.descuento = this.datosVenta.descuento;
           /**seleccionando el pago inicial */
           if (this.datosVenta.pagos_programados.length > 0) {
@@ -2519,9 +2522,7 @@ export default {
         }
         //fin seleccionar vendedor
         /**fecha de la venta */
-        var partes_fecha = this.datosVenta.venta_terreno.fecha_date_format.split(
-          "-"
-        );
+        var partes_fecha = this.datosVenta.fecha_operacion.split("-");
         //yyyy-mm-dd
         this.form.fecha_venta = new Date(
           partes_fecha[0],
@@ -2541,7 +2542,7 @@ export default {
         /**beneficairios */
         this.form.beneficiarios = this.datosVenta.beneficiarios;
 
-        this.form.nota = this.datosVenta.venta_terreno.nota;
+        this.form.nota = this.datosVenta.nota;
 
         /**mostrando los datos relacionados al pago */
 

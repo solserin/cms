@@ -9,9 +9,10 @@
     >
       <div class="text-center nota_icono"></div>
       <div class="text-center seguro-mensaje mt-3">Notas</div>
-      <div
-        class="text-center seguro-texto mt-3"
-      >ingrese alguna nota o referencia sobre esta operación para su mayor control.</div>
+      <div class="text-center seguro-texto mt-3">
+        ingrese alguna nota o referencia sobre esta operación para su mayor
+        control.
+      </div>
       <div class="flex flex-wrap mt-2">
         <div class="w-full px-5">
           <vs-textarea
@@ -25,14 +26,20 @@
             v-model.trim="nota_text"
           />
         </div>
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-5">
+        <div
+          class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-5"
+        >
           <vs-button
             class="w-full ml-auto mr-auto"
             @click="acceptAlert()"
             color="primary"
             size="small"
           >
-            <img width="25px" class="cursor-pointer" src="@assets/images/volver.svg" />
+            <img
+              width="25px"
+              class="cursor-pointer"
+              src="@assets/images/volver.svg"
+            />
             <span class="texto-btn">Volver (Esc)</span>
           </vs-button>
         </div>
@@ -97,7 +104,7 @@ export default {
       this.cerrar();
     },
     cerrar() {
-      this.$emit("closeNotas", this.nota);
+      this.$emit("closeNotas", this.nota_text);
     }
   },
   mounted() {

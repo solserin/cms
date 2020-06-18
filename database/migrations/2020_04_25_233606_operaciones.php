@@ -76,6 +76,17 @@ class Operaciones extends Migration
             /**status de la operacion */
             /**este se le asigna un valor numerico 1,2,3,0 segun la interpretacion en cada tipo de operacion */
             $table->float('comision_venta_neto')->nullable();
+
+            $table->dateTime('fecha_operacion');
+            $table->dateTime('fecha_registro');
+            $table->dateTime('fecha_modificacion')->nullable();
+            $table->unsignedBigInteger('modifico_id')->nullable();
+            $table->foreign('modifico_id')->references('id')->on('usuarios');
+
+            /**fin de datos en caso de cancelacion */
+            $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
+            $table->foreign('registro_id')->references('id')->on('usuarios');
+            $table->mediumText('nota')->nullable();
             $table->tinyInteger('status')->default(1);
         });
     }

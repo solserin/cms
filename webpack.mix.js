@@ -1,6 +1,13 @@
 const mix = require("laravel-mix");
 let tailwindcss = require("tailwindcss");
 require("dotenv").config();
+mix.webpackConfig({
+    devServer: {
+        proxy: {
+            "*": "http://app.laravel:80"
+        }
+    }
+});
 
 /*
  |--------------------------------------------------------------------------

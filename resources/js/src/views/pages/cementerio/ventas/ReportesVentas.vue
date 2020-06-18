@@ -91,16 +91,21 @@
               </vs-td>
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >{{ programados.referencia_pago }}</vs-td
               >
+                {{ programados.referencia_pago }}
+              </vs-td>
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
                 >{{ programados.fecha_programada_abr }}</vs-td
               >
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >{{ programados.fecha_a_pagar_abr }}</vs-td
               >
+                <span v-if="programados.saldo_neto > 0">
+                  {{ programados.fecha_a_pagar_abr }}
+                </span>
+                <span v-else>{{ programados.fecha_ultimo_pago_abr }} </span>
+              </vs-td>
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
                 >$
@@ -123,7 +128,7 @@
               <vs-td
                 :class="[
                   programados.status_pago == 0 ? 'text-danger' : '',
-                  programados.status_pago == 2 ? 'text-success font-bold' : ''
+                  programados.status_pago == 2 ? 'text-success' : ''
                 ]"
               >
                 <span>{{ programados.status_pago_texto }}</span>
@@ -131,11 +136,20 @@
               <vs-td>
                 <div class="flex flex-start py-1">
                   <img
+                    v-if="programados.saldo_neto > 0"
                     width="26"
                     class="cursor-pointer ml-auto mr-auto"
                     src="@assets/images/dollar_bill.svg"
                     title="Pagar Ficha"
-                    @click="pagar()"
+                    @click="pagar(programados.referencia_pago)"
+                  />
+                  <img
+                    v-else
+                    width="26"
+                    class="cursor-pointer ml-auto mr-auto"
+                    src="@assets/images/pdf.svg"
+                    title="Pagar Ficha"
+                    @click="pagar(programados.referencia_pago)"
                   />
                 </div>
               </vs-td>
@@ -240,10 +254,10 @@
       ></Reporteador>
 
       <FormularioPagos
-        :tipo="tipoFormularioPagos"
+        :referencia="referencia"
         :show="verFormularioPagos"
         @closeVentana="verFormularioPagos = false"
-        @retorno_pagos="verFormularioPagos = false"
+        @retorno_pagos="retorno_pagos"
       ></FormularioPagos>
     </vs-popup>
   </div>
@@ -305,6 +319,7 @@ export default {
   },
   data() {
     return {
+      referencia: "",
       documentos: [
         {
           documento: "Formato de Solicitud",
@@ -359,8 +374,13 @@ export default {
     };
   },
   methods: {
-    pagar() {
-      this.tipoFormularioPagos = "agregar";
+    retorno_pagos(datos) {
+      (async () => {
+        await this.consultar_venta_id();
+      })();
+    },
+    pagar(referencia) {
+      this.referencia = referencia;
       this.verFormularioPagos = true;
     },
     mostrarDocumento(documento) {

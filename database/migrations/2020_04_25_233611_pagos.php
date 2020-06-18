@@ -38,7 +38,7 @@ class Pagos extends Migration
             $table->unsignedBigInteger('sat_formas_pago_id')->nullable();
             $table->foreign('sat_formas_pago_id')->references('id')->on('sat_formas_pago');
             $table->unsignedTinyInteger('movimientos_pagos_id')->nullable();
-            $table->foreign('movimientos_pagos_id')->references('id')->on('movimientos_pagos');
+            //$table->foreign('movimientos_pagos_id')->references('id')->on('movimientos_pagos');
             $table->unsignedBigInteger('sat_monedas_id')->nullable();
             $table->foreign('sat_monedas_id')->references('id')->on('sat_monedas');
             $table->mediumText('nota')->nullable();
