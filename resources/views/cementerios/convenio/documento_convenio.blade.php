@@ -119,7 +119,7 @@
     </header>
     <p class="fecha  right">
         {{ $empresa->ciudad }}, {{ $empresa->estado }} a <span
-            class="bg-gray bold uppercase texto-sm  pl-2 pr-1">{{ fecha_only($datos['venta_terreno']['fecha_venta']) }}</span>.
+            class="bg-gray bold uppercase texto-sm  pl-2 pr-1">{{ fecha_only($datos['fecha_operacion']) }}</span>.
     </p>
     <div class="contenido parrafo1">
         <p class="texto-base justificar line-base">

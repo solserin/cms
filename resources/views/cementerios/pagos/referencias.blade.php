@@ -143,7 +143,7 @@
                         </td>
                         <td width="15%">
                             <div class="bg-gray px-6px py-1 center uppercase">
-                                {{fecha_abr($datos['venta_terreno']['fecha_venta'])}}
+                                {{fecha_abr($datos['fecha_operacion'])}}
                             </div>
                         </td>
                     </tr>

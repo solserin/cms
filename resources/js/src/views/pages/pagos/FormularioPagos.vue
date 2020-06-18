@@ -1291,13 +1291,13 @@ export default {
     async calcular_adeudo() {
       this.$vs.loading();
       try {
-        this.form.pagos_a_cubrir = [];
-        this.form.datos_operacion = [];
         let res = await pagos.calcular_adeudo({
           fecha_pago: this.form.fecha_pago,
           referencia: this.form.referencia,
           multipago: this.form.multipago
         });
+        this.form.pagos_a_cubrir = [];
+        this.form.datos_operacion = [];
         this.form.datos_operacion = res.data[0];
 
         this.$nextTick(() => {
@@ -1314,12 +1314,6 @@ export default {
                 index_pago++;
               }
             });
-            this.form.abono =
-              this.form.datos_operacion.pagos_programados[0].monto_programado -
-              this.form.datos_operacion.pagos_programados[0].total_cubierto;
-            this.form.intereses = "0";
-            this.form.descuento_pronto_pago = "0";
-            this.form.pago_con_cantidad = "0";
           }
 
           /**checando si se debe de checar el seleccionar todos */
@@ -1469,10 +1463,10 @@ export default {
       this.form.total = "0";
       this.form.descuento_pronto_pago = "0";
       this.form.intereses = "0";
-      this.form.abono = "300";
+      this.form.abono = "0";
       this.form.banco = "";
       this.form.referencia_sobre_pago = "";
-      console.log("se debe de limpiar ventana");
+      this.form.nota = "";
     },
 
     closeChecker() {

@@ -142,7 +142,7 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-55 center">
-                            {{ fecha_no_day($datos['venta_terreno']['fecha_venta']) }}
+                            {{ fecha_no_day($datos['fecha_operacion']) }}
                         </div>
                     </div>
                 </td>
@@ -622,7 +622,7 @@
             ciudad que se me requiera el pago por la cantidad de: $ <span
                 class="bold uppercase">{{number_format($datos['total'],2)}}</span>({{ NumerosEnLetras::convertir($datos['total'],'Pesos MXN',false) }}).
             Este pagaré tendrá vencimiento los días <span
-                class="bold uppercase">{{dia_numero($datos['venta_terreno']['fecha_venta'])}}</span> de cada mes hasta
+                class="bold uppercase">{{dia_numero($datos['fecha_operacion'])}}</span> de cada mes hasta
             cubrir la
             totalidad
             de este documento. El primer pago vencerá el
@@ -645,8 +645,7 @@
             vencimiento no pagado hasta el día de la solución del adeudo. Este causará interés
             moratorio a tasa mensual del <span
                 class="bold uppercase">{{($datos['ajustes_politicas']['tasa_fija_anual']/12)}}%</span> en Mazatlán,
-            Sinaloa <span
-                class="bold lowercase capitalize">{{fecha_no_day($datos['venta_terreno']['fecha_venta'])}}</span>.
+            Sinaloa <span class="bold lowercase capitalize">{{fecha_no_day($datos['fecha_operacion'])}}</span>.
         </p>
         <p class="texto-xs justificar line-base">
             El contratante se obliga a pagar a la agencia funeraria las parcialidades contratadas dentro

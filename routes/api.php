@@ -25,6 +25,8 @@ Route::get('pagos/get_monedas_sat', 'PagosController@get_monedas_sat');
 Route::get('pagos/get_cobradores', 'PagosController@get_cobradores');
 
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+
+
 /**fin de rutas de modulo en proceso */
 
 
@@ -118,12 +120,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_vendedores', 'CementerioController@get_vendedores');
     Route::get('titulos/{operacion_id?}', 'CementerioController@generarNumeroTitulo');
 
+
     Route::get('cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
     Route::get('cementerio/documento_convenio', 'CementerioController@documento_convenio');
     Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
     Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
     Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
+
 
 
 
