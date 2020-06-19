@@ -31,7 +31,7 @@
             v-validate="'required'"
             placeholder="Núm. de referencia del pago"
             v-model.trim="form.referencia"
-            :disabled="getReferencia != '' ? true : false"
+            :disabled="getReferencia != '' ? false : false"
             @keypress.enter="CalcularPago()"
           />
           <div>
@@ -561,7 +561,6 @@
                   }}</span>
                 </div>
               </div>
-
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
@@ -636,9 +635,11 @@
                   }}</span>
                 </div>
                 <div class="mt-2">
-                  <span class="mensaje-requerido" v-if="this.errores.abono">{{
-                    errores.descuento[0]
-                  }}</span>
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.descuento"
+                    >{{ errores.descuento[0] }}</span
+                  >
                 </div>
               </div>
               <div
@@ -790,16 +791,22 @@
         </div>
       </div>
       <div v-else>
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap" v-if="error != ''">
           <div class="w-full px-2">
-            <h3 class="text-center capitalize text-danger">
-              esta referencia ya ha sido liquidada previamente
-            </h3>
             <img
-              width="60"
-              class="img-center py-3 text-lg"
-              src="@assets/images/warning.svg"
+              width="70"
+              class="img-center pt-3"
+              src="@assets/images/disabled.svg"
             />
+            <h3
+              class="text-center text-danger text-lg uppercase py-6 font-bold"
+            >
+              Este pago no puede ser registrado por el siguiente motivo
+            </h3>
+
+            <p class="text-center text-xl pb-5 uppercase">
+              {{ error }}
+            </p>
           </div>
         </div>
       </div>
@@ -909,7 +916,15 @@ export default {
           })();
         }
       } else {
-        console.log("cerrando");
+        this.$validator.pause();
+        this.$nextTick(() => {
+          this.$validator.errors.clear();
+          this.$validator.fields.items.forEach(field => field.reset());
+          this.$validator.fields.items.forEach(field =>
+            this.errors.remove(field)
+          );
+          this.$validator.resume();
+        });
       }
     },
     "form.formaPago": function(newValue, oldValue) {
@@ -1034,6 +1049,7 @@ export default {
   },
   data() {
     return {
+      error: "",
       configdateTimePickerWithTime: configdateTimePickerWithTime,
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
@@ -1074,12 +1090,10 @@ export default {
   },
   methods: {
     async get_cobradores() {
-      this.$vs.loading();
       try {
         this.Cobradores = [];
         this.form.cobrador = {};
         let res = await pagos.get_cobradores();
-        console.log("get_cobradores -> res", res);
         if (typeof res.data.data !== undefined) {
           if (res.data.data.length > 0) {
             res.data.data.forEach(element => {
@@ -1091,10 +1105,7 @@ export default {
             this.form.cobrador = this.Cobradores[0];
           }
         }
-        this.$vs.loading.close();
       } catch (err) {
-        console.log("get_cobradores -> err", err);
-        this.$vs.loading.close();
         /**error al cargar vendedores */
         this.$vs.notify({
           title: "Error",
@@ -1111,7 +1122,6 @@ export default {
     },
     /**get monedas */
     async get_monedas_sat() {
-      this.$vs.loading();
       try {
         this.Monedas = [];
         this.form.moneda = {};
@@ -1128,9 +1138,7 @@ export default {
             this.form.moneda = this.Monedas[0];
           }
         }
-        this.$vs.loading.close();
       } catch (err) {
-        this.$vs.loading.close();
         /**error al cargar vendedores */
         this.$vs.notify({
           title: "Error",
@@ -1147,12 +1155,10 @@ export default {
     },
     /**get formas de pago sat */
     async get_formas_pago_sat() {
-      this.$vs.loading();
       try {
         this.FormasPago = [];
         this.form.formaPago = {};
         let res = await pagos.get_formas_pago_sat();
-
         if (typeof res.data.data !== undefined) {
           if (res.data.data.length > 0) {
             res.data.data.forEach(element => {
@@ -1165,9 +1171,7 @@ export default {
             this.form.formaPago = this.FormasPago[0];
           }
         }
-        this.$vs.loading.close();
       } catch (err) {
-        this.$vs.loading.close();
         /**error al cargar vendedores */
         this.$vs.notify({
           title: "Error",
@@ -1240,17 +1244,16 @@ export default {
 
     async guardar_pago() {
       this.$vs.loading();
+      this.error = "";
+      this.errores = [];
       try {
         let res = await pagos.guardar_pago(this.form);
-        console.log("guardar_pago -> res", res);
         this.$emit("retorno_pagos", res);
+        this.$vs.loading.close();
         this.cerrarVentana();
-        this.$vs.loading.close();
       } catch (err) {
-        this.$vs.loading.close();
         /**error al cargar vendedores */
         if (err.response) {
-          console.log("guardar_pago -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -1262,7 +1265,8 @@ export default {
               time: 4000
             });
           } else if (err.response.status == 422) {
-            //checo si existe cada error
+            //checo si existe cada errores
+            this.errores = [];
             this.errores = err.response.data.error;
             this.$vs.notify({
               title: "Registro de Pagos",
@@ -1273,7 +1277,7 @@ export default {
               time: 5000
             });
           } else if (err.response.status == 409) {
-            /**FORBIDDEN ERROR */
+            this.error = err.response.data.error;
             this.$vs.notify({
               title: "Registro de Pagos",
               text: err.response.data.error,
@@ -1290,6 +1294,9 @@ export default {
 
     async calcular_adeudo() {
       this.$vs.loading();
+      this.error = "";
+      this.form.datos_operacion = [];
+      this.errores = [];
       try {
         let res = await pagos.calcular_adeudo({
           fecha_pago: this.form.fecha_pago,
@@ -1297,9 +1304,7 @@ export default {
           multipago: this.form.multipago
         });
         this.form.pagos_a_cubrir = [];
-        this.form.datos_operacion = [];
         this.form.datos_operacion = res.data[0];
-
         this.$nextTick(() => {
           let index_pago = 0;
           if (this.form.datos_operacion.pagos_programados.length > 0) {
@@ -1337,9 +1342,9 @@ export default {
 
         this.$vs.loading.close();
       } catch (err) {
-        this.$vs.loading.close();
         /**error al cargar vendedores */
         if (err.response) {
+          console.log("calcular_adeudo -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -1352,7 +1357,7 @@ export default {
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
-            this.errores = err.response.data.error;
+            this.errores = err.response.data;
             this.$vs.notify({
               title: "Registro de Pagos",
               text: "Verifique los errores encontrados en los datos.",
@@ -1362,6 +1367,7 @@ export default {
               time: 5000
             });
           } else if (err.response.status == 409) {
+            this.error = err.response.data.error;
             /**FORBIDDEN ERROR */
             this.$vs.notify({
               title: "Registro de Pagos",
@@ -1391,7 +1397,6 @@ export default {
               time: "4000"
             });
           } else {
-            this.errores = [];
             /**obteniendo los datos del pago segun la referencia y fecha */
             (async () => {
               await this.calcular_adeudo();
@@ -1421,9 +1426,8 @@ export default {
               this.errores = [];
               (async () => {
                 this.callBackConfirmarAceptar = await this.guardar_pago;
+                this.openConfirmarAceptar = true;
               })();
-
-              this.openConfirmarAceptar = true;
             } else {
               this.$vs.notify({
                 title: "Registro de Pagos",
@@ -1440,10 +1444,6 @@ export default {
         .catch(() => {});
     },
 
-    cancel() {
-      this.$emit("closeVentana");
-    },
-
     cancelar() {
       this.botonConfirmarSinPassword = "Salir y limpiar";
       this.accionConfirmarSinPassword =
@@ -1458,6 +1458,7 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
+      this.form.datos_operacion = [];
       this.form.referencia = "";
       this.form.multipago = false;
       this.form.total = "0";
@@ -1467,6 +1468,7 @@ export default {
       this.form.banco = "";
       this.form.referencia_sobre_pago = "";
       this.form.nota = "";
+      this.error = "";
     },
 
     closeChecker() {

@@ -534,7 +534,7 @@ class CementerioController extends ApiController
                     $this->programarPagos($request, $id_operacion, $id_venta);
                 } else {
                     /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
-                    $this->generarNumeroTitulo($id_operacion);
+                    $this->generarNumeroTitulo($id_operacion, true);
                 }
                 //captura de los beneficiarios
                 $this->guardarBeneficiarios($request, $id_operacion);
@@ -604,14 +604,14 @@ class CementerioController extends ApiController
                     } else {
                         /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
                         if (trim($datos_venta['numero_titulo']) == '') {
-                            $this->generarNumeroTitulo($datos_venta['operacion_id']);
+                            $this->generarNumeroTitulo($datos_venta['operacion_id'], true);
                         }
                     }
                 }
                 //captura de los beneficiarios
                 $this->guardarBeneficiarios($request, $datos_venta['operacion_id']);
                 /**pendiente hacer modificacion de progrmacion de pagos */
-            }
+            } //fin else de modificar venta de propiedad
 
 
 
@@ -666,61 +666,46 @@ class CementerioController extends ApiController
 
 
     /**generar numero de convenio titulo */
-    public function generarNumeroTitulo($operacion_id = 0)
+    public function generarNumeroTitulo($operacion_id = 0, $liquidado = false)
     {
         if ($operacion_id > 0) {
             /**pasa a generar el numero de titulo*/
 
             /**se debe revisar si esta operacion es apta para crearle un numero de titulo automatico */
-            $operacion_info = Operaciones::with('venta_terreno')
-                ->with('pagosProgramados.pagadosActivos')
-                ->where('operaciones.status', '<>', 0)
+            $operacion_info = Operaciones::where('operaciones.status', '<>', 0)
                 ->where('operaciones.id', '=', $operacion_id)
                 ->first()->toArray();
-
-            if ($operacion_info['antiguedad_operacion_id'] != 3) {
-                $generar = false;
-                /** la venta no fue de las que ya estan pagadas */
-                if ($operacion_info['total'] > 0) {
-                    /**el total es mayor a cero 
-                     * se debe de checar si todos los pagos que se la han hecho ya cubre el 100 del total para crearle el numero de titulo
-                     */
-
-                    /**modifcar para cuando haya pagos */
-                } else {
-                    /**la venta fue 100 gratis por lo que se genera el numero de titulo automaticamente */
-                    $generar = true;
-                }
-
-                if ($generar == true) {
-                    //se debe generar
-                    //500 (quinientos)
-                    //determino si ya esta en funcion la asignacion de numeros de titulos automaticos
-                    $ajustes = Ajustes::first();
-                    $numero_titulo = 0;
-                    if ($ajustes->numero_titulos_sistematizados == true) {
-                        //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
-                        $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_titulo NOT LIKE '%[^0-9]%' THEN numero_titulo END) as int)) AS max_numero_titulo  from operaciones"));
-                        $ultimo_titulo = json_decode(json_encode($result), true)[0]['max_numero_titulo'];
-                        if (intval($ultimo_titulo) > 0) {
-                            $numero_titulo = $ultimo_titulo + 1;
+            if (isset($operacion_info['antiguedad_operacion_id'])) {
+                if ($operacion_info['antiguedad_operacion_id'] != 3) {
+                    /**verificando que la operacion no tenga un titulo ya asigando, si tiene titulo se le deja el original */
+                    if (trim($operacion_info['numero_titulo']) == '') {
+                        //determino si ya esta en funcion la asignacion de numeros de titulos automaticos
+                        $ajustes = Ajustes::first();
+                        $numero_titulo = 0;
+                        if ($ajustes->numero_titulos_sistematizados == true) {
+                            //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
+                            $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_titulo NOT LIKE '%[^0-9]%' THEN numero_titulo END) as int)) AS max_numero_titulo  from operaciones"));
+                            $ultimo_titulo = json_decode(json_encode($result), true)[0]['max_numero_titulo'];
+                            if (intval($ultimo_titulo) > 0) {
+                                $numero_titulo = $ultimo_titulo + 1;
+                            } else {
+                                $numero_titulo = 500;
+                            }
                         } else {
+                            //comenzamos en numero 500 (quinientos) y marcamos numero_titulos_sistematizados como true en la base de datos
+                            $ajustes->numero_titulos_sistematizados = true;
+                            $ajustes->timestamps = false;
+                            $ajustes->save();
                             $numero_titulo = 500;
                         }
-                    } else {
-                        //comenzamos en numero 500 (quinientos) y marcamos numero_titulos_sistematizados como true en la base de datos
-                        $ajustes->numero_titulos_sistematizados = true;
-                        $ajustes->timestamps = false;
-                        $ajustes->save();
-                        $numero_titulo = 500;
+
+
+                        $operacion = Operaciones::find($operacion_id);
+                        //actualizamos la venta con su nuevo numero de titulo
+                        $operacion->numero_titulo = $numero_titulo;
+                        $operacion->timestamps = false;
+                        $operacion->save();
                     }
-
-
-                    $operacion = Operaciones::find($operacion_id);
-                    //actualizamos la venta con su nuevo numero de titulo
-                    $operacion->numero_titulo = $numero_titulo;
-                    $operacion->timestamps = false;
-                    $operacion->save();
                 }
             }
         }
@@ -1734,8 +1719,6 @@ class CementerioController extends ApiController
                     $fecha_ultimo_pago = '';
 
                     foreach ($programado['pagados']  as $index_pagados => &$pagado) {
-
-
                         /**haciendo el arreglo de pagos realizados limpio(no repetidos) */
                         array_push(
                             $arreglo_de_pagos_realizados,
@@ -1760,15 +1743,14 @@ class CementerioController extends ApiController
                             } else  if ($pagado['movimientos_pagos_id'] == 5) {
                                 /**fue complemento por cancelacion */
                                 $complemento_cancelacion += $pagado['pagos_cubiertos']['monto'];
-                            } elseif ($pagado['movimientos_pagos_id'] == 2) {
+                            } else if ($pagado['movimientos_pagos_id'] == 2) {
                                 /**es tipo interes */
                                 if ($pagado['pagos_cubiertos']['pagos_programados_id'] == $programado['id']) {
                                     /**es abono de intereses */
                                     $abonado_intereses += $pagado['pagos_cubiertos']['monto'];
                                     //$pago_total += $pagado['monto'];
                                 }
-                            } elseif ($pagado['movimientos_pagos_id'] == 3) {
-
+                            } else if ($pagado['movimientos_pagos_id'] == 3) {
                                 if ($pagado['pagos_cubiertos']['pagos_programados_id'] == $programado['id']) {
                                     /**es descuento por pronto pago */
                                     $descontado_pronto_pago += $pagado['pagos_cubiertos']['monto'];
@@ -1792,17 +1774,17 @@ class CementerioController extends ApiController
                         }
                     } //fin foreach pagado
 
-
                     /** al final del ciclo se actualizan los valores en el pago programado*/
                     $programado['abonado_capital'] = round($abonado_capital, 2);
                     $programado['abonado_intereses'] =   round($abonado_intereses, 2);
-                    $programado['descontado_pronto_pago'] =   round($descontado_pronto_pago, 2);
+                    $programado['descontado_pronto_pago'] =  round($descontado_pronto_pago, 2);
                     $programado['descontado_capital'] =   round($descontado_capital, 2);
                     $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2);
 
 
 
                     $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
+
                     $programado['saldo_neto'] = round($saldo_pago_programado, 2);
 
                     /**asignando la fecha del pago que liquidado el pago programado */
@@ -1850,7 +1832,7 @@ class CementerioController extends ApiController
                             }
 
                             /**aqui actualizamos el saldo neto del pago con todo e intereses, quitando los intereses que ya se han pagado previamente */
-                            $programado['saldo_neto'] = $saldo_pago_programado + ($interes_generado - $abonado_intereses);
+                            $programado['saldo_neto'] = $saldo_pago_programado + $interes_generado;
                             /**la fecha qui es mayor que la fecha programada del pago */
                             $programado['status_pago'] = 0;
                             $programado['status_pago_texto'] = 'Vencido';
@@ -1870,6 +1852,7 @@ class CementerioController extends ApiController
                         $programado['status_pago'] = 2;
                         $programado['status_pago_texto'] = 'Pagado';
                     }
+
                     /**monto con pronto pago de cada abono */
                     $programado['monto_pronto_pago'] = ($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100;
                     $programado['total_cubierto'] = $abonado_capital + $descontado_pronto_pago + $descontado_capital + $complemento_cancelacion;
@@ -1881,7 +1864,7 @@ class CementerioController extends ApiController
                     $venta['descontado_pronto_pago'] +=  $descontado_pronto_pago;
                     $venta['descontado_capital'] +=  $descontado_capital;
                     $venta['complementado_cancelacion'] +=  $complemento_cancelacion;
-                    $venta['saldo_neto'] += $saldo_pago_programado + ($interes_generado - $abonado_intereses);
+                    $venta['saldo_neto'] += $saldo_pago_programado + $interes_generado;
 
                     /**calculando el total cubierto de la venta, sin intereses pagados, solo lo que ya esta cubierto */
                     $venta['total_cubierto'] += $programado['total_cubierto'];

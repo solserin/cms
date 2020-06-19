@@ -256,7 +256,7 @@
       <FormularioPagos
         :referencia="referencia"
         :show="verFormularioPagos"
-        @closeVentana="verFormularioPagos = false"
+        @closeVentana="closeFormularioPagos"
         @retorno_pagos="retorno_pagos"
       ></FormularioPagos>
     </vs-popup>
@@ -374,6 +374,9 @@ export default {
     };
   },
   methods: {
+    closeFormularioPagos() {
+      this.verFormularioPagos = false;
+    },
     retorno_pagos(datos) {
       (async () => {
         await this.consultar_venta_id();

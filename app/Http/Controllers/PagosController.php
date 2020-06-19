@@ -81,6 +81,7 @@ class PagosController extends ApiController
         if (count($pago_programado)) {
             /**se ha encontrado la referencia y se procede a hacer los respectivos calculos */
             $resultado = Operaciones::select(
+                'ventas_terrenos_id',
                 'operaciones.id as operacion_id',
                 'operaciones.status as operacion_status',
                 'total',
@@ -163,13 +164,15 @@ class PagosController extends ApiController
 
                 /**recorriendo arreglo de pagos programados */
                 foreach ($dato['pagos_programados']  as $index_programado => &$programado) {
+                    /**actualizando fecha de pago abre con helper de fechas */
+                    $programado['fecha_programada_abr'] = fecha_abr($programado['fecha_programada']);
                     //if ($programado['status_pago'] != 2) {
                     /**actualizando el concepto del pago */
                     if ($programado['conceptos_pagos_id'] == 1) {
                         $programado['concepto_texto'] = 'Enganche';
                         /**verificando que el pago de enganche no se trate de hacer con pronto pago*/
                         if (date('Y-m-d', strtotime(substr($request->fecha_pago, 0, 10))) < date('Y-m-d', strtotime($programado['fecha_programada']))) {
-                            return $this->errorResponse('El pago de tipo (Enganche) no aplica para fecha antes de la fecha programada.', 409);
+                            return $this->errorResponse('El pago de tipo (Enganche) no puede ser pagado antes de su fecha programada (' . $programado['fecha_programada_abr'] . ').', 409);
                         }
                     } elseif ($programado['conceptos_pagos_id'] == 2) {
                         $programado['concepto_texto'] = 'Abono';
@@ -177,11 +180,10 @@ class PagosController extends ApiController
                         $programado['concepto_texto'] = 'Pago Único';
                         /**verificando que el pago de enganche no se trate de hacer con pronto pago*/
                         if (date('Y-m-d', strtotime(substr($request->fecha_pago, 0, 10))) < date('Y-m-d', strtotime($programado['fecha_programada']))) {
-                            return $this->errorResponse('El pago de tipo (Pago Único) no aplica para fecha antes de la fecha programada.', 409);
+                            return $this->errorResponse('El pago de tipo (Pago Único) no puede ser pagado antes de su fecha programada (' . $programado['fecha_programada_abr'] . ').', 409);
                         }
                     }
-                    /**actualizando fecha de pago abre con helper de fechas */
-                    $programado['fecha_programada_abr'] = fecha_abr($programado['fecha_programada']);
+
 
 
                     /**aumento el pago programado vigente */
@@ -245,10 +247,10 @@ class PagosController extends ApiController
                     $programado['descontado_capital'] =   round($descontado_capital, 2);
                     $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2);
 
-
                     $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
 
                     $programado['saldo_neto'] = round($saldo_pago_programado, 2);
+
 
                     /**asignando la fecha del pago que liquidado el pago programado */
                     if ($programado['saldo_neto'] <= 0) {
@@ -369,9 +371,9 @@ class PagosController extends ApiController
             'pagos_a_cubrir' => 'required',
             'pagos_a_cubrir.*.referencia_pago' => 'required',
             'pagos_a_cubrir.*.fecha_a_pagar' => 'required|date_format:Y-m-d',
-            'abono' => 'numeric|required|min:0|gt:descuento_pronto_pago',
+            'abono' => 'numeric|required|gt:0|gte:descuento_pronto_pago',
             'intereses' => 'numeric|required|min:0',
-            'descuento_pronto_pago' => 'numeric|required|min:0|lt:abono',
+            'descuento_pronto_pago' => 'numeric|required|min:0|lte:abono',
             'total' => 'numeric|required|min:0',
             'formaPago.value' => 'required',
             'cobrador.value' => 'required',
@@ -413,12 +415,12 @@ class PagosController extends ApiController
             'abono.required' => 'Ingrese la $ cantidad del Abono.',
             'abono.numeric' => 'La $ cantidad del Abono debe ser un número valido.',
             'abono.min' => 'La $ cantidad del Abono debe ser mayor o igual a cero.',
-            'abono.gt' => 'La $ cantidad del Abono debe ser mayor al descuento por pronto pago.',
+            'abono.gt' => 'La $ cantidad del Abono debe ser mayor a cero pesos.',
             'intereses.required' => 'Ingrese la $ cantidad de Intereses.',
             'intereses.numeric' => 'La $ cantidad de Intereses debe ser un número valido.',
             'intereses.min' => 'La $ cantidad de Intereses debe ser mayor o igual a cero.',
             'descuento_pronto_pago.required' => 'Ingrese la $ cantidad de Descuento por Pronto Pago.',
-            'descuento_pronto_pago.lt' => 'El descuento por pronto pago dede ser menor al abono a capital.',
+            'descuento_pronto_pago.lte' => 'El descuento por pronto pago dede ser menor o igual que el abono a capital.',
             'descuento_pronto_pago.numeric' => 'La $ cantidad de Descuento por Pronto Pago debe ser un número valido.',
             'descuento_pronto_pago.min' => 'La $ cantidad de Descuento por Pronto Pago debe ser mayor o igual a cero.',
             'total.required' => 'Ingrese la $ cantidad Total del Pago.',
@@ -493,7 +495,6 @@ class PagosController extends ApiController
 
         try {
             DB::beginTransaction();
-
             try {
                 foreach ($request->pagos_a_cubrir as $index_referencia => $referencia) {
                     $encontrada = false;
@@ -600,7 +601,7 @@ class PagosController extends ApiController
                 } //fin de foreach de pagos a cubrir
             } catch (\Throwable $th) {
                 //throw $th;
-                return $referencias_adeudos;
+                return $this->errorResponse('Ocurrió un error al guardar el pago, por favor reintente.', 409);
             }
             /**al final de distribuir las cantidades es sus respectivos pagos, sedebe verificar que no quedaron montos remanenetes que no se hayan
              * distribuido en sus respectivas referencias
@@ -732,9 +733,30 @@ class PagosController extends ApiController
                 /**fin de los de tipo intereses */
             }
 
-
-            //return $this->errorResponse('todo bien pero sin commit', 409);
             DB::commit();
+
+            /**se deve revisar si la operacion fue liquidada para marcar la venta como liquidada con status 2 */
+            $datos_operacion = $referencias_adeudos[0];
+
+            /**verificando que tipo de operacion_empresa es */
+            if ($datos_operacion['empresa_operaciones_id'] == 1) {
+                /**es tipo de ventas de propiedades */
+                $cementerio_controller = new CementerioController();
+                $datos_venta = $cementerio_controller->get_ventas($request, $datos_operacion['ventas_terrenos_id'], '')[0];
+                if ($datos_venta['saldo_neto'] <= 0) {
+                    /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                    DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
+                        [
+                            /**status de ya liquidada */
+                            'status' => 2,
+                        ]
+                    );
+                    /**generando el numero de titulo de la venta de propiedad */
+                    $cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+                }
+            }
+
+
             return $id_abono_capital;
         } catch (\Throwable $th) {
             DB::rollBack();

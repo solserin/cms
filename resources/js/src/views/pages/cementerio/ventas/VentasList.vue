@@ -325,8 +325,12 @@ export default {
           value: ""
         },
         {
-          label: "Activas",
+          label: "Por Pagar",
           value: "1"
+        },
+        {
+          label: "Pagadas",
+          value: "2"
         },
         {
           label: "Canceladas",
