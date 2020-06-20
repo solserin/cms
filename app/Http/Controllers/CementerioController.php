@@ -458,7 +458,7 @@ class CementerioController extends ApiController
 
                 if ($datos_venta['total'] > 0) {
                     /**si la venta no fue gratis */
-                    if ($datos_venta['pagos_vigentes'] > 0) {
+                    if ($datos_venta['pagos_realizados'] > 0) {
                         return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
                 financiamiento, etc. Esto se debe a que existen pagos vigentes relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
                     } else {
@@ -1477,6 +1477,7 @@ class CementerioController extends ApiController
         $titular = $request->titular;
         $numero_control = $request->numero_control;
         $status = $request->status;
+        $fecha_operacion = $request->fecha_operacion;
 
         $resultado_query = Operaciones::with('pagosProgramados.pagados')
             ->with('venta_terreno.vendedor')
@@ -2174,7 +2175,7 @@ class CementerioController extends ApiController
     }
 
 
-    public function referencias_de_pago(Request $request, $id_pago = '', $id_programacion = '')
+    public function referencias_de_pago(Request $request, $id_pago = '')
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         $email =  $request->email_send === 'true' ? true : false;
@@ -2200,7 +2201,7 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('cementerios/pagos/referencias', ['id_programacion' => $id_programacion, 'id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('cementerios/pagos/referencias', ['id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 

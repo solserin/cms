@@ -373,12 +373,9 @@ export default {
       openStatus: false,
       callback: Function,
       accionNombre: "",
-      datosModifcar: {},
       verAgregar: false,
       verModificar: false,
       id_venta_modificar: 0,
-      selected: [],
-
       /**opciones para filtrar la peticion del server */
       id_venta: 0 /**para consultar los reportesw */
     };

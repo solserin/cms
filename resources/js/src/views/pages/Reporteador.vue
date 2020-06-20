@@ -362,7 +362,7 @@ export default {
         if (res.data == 1) {
           this.$vs.notify({
             title: "Enviar documento por correo",
-            text: "Se ha envaido el correo.",
+            text: "Se ha enviado el correo.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",

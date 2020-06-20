@@ -15,6 +15,7 @@ class Pagos extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->float('total_pago');
             $table->float('monto_pago');
             $table->float('pago_con_cantidad');
             $table->float('cambio_pago');

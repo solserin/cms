@@ -19,10 +19,8 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 
 
 /**rutas de modulo en proceso */
-Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
-Route::get('pagos/get_formas_pago_sat', 'PagosController@get_formas_pago_sat');
-Route::get('pagos/get_monedas_sat', 'PagosController@get_monedas_sat');
-Route::get('pagos/get_cobradores', 'PagosController@get_cobradores');
+Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
+
 
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 
@@ -133,7 +131,14 @@ Route::middleware(['auth:api'])->group(function () {
 
     /**rutas de pagos */
     Route::post('pagos/guardar_pago', 'PagosController@guardar_pago');
+    Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
+    Route::get('pagos/get_formas_pago_sat', 'PagosController@get_formas_pago_sat');
+    Route::get('pagos/get_monedas_sat', 'PagosController@get_monedas_sat');
+    Route::get('pagos/get_cobradores', 'PagosController@get_cobradores');
+    Route::get('pagos/recibo_de_pago/{id_pago?}', 'PagosController@recibo_de_pago');
     /**fin de rutas de pagos */
+
+
 
 
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');

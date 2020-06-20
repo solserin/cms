@@ -23,7 +23,7 @@ class PagosProgramados extends Model
 
 
 
-    public function pagados_calcular_adeudo()
+    public function pagados_para_get_pagos()
     {
         return $this->belongsToMany('App\Pagos', 'pagos_pagos_programados', 'pagos_programados_id', 'pagos_id')->as('pagos_cubiertos')
             ->select(
@@ -33,5 +33,15 @@ class PagosProgramados extends Model
                 ),
             )
             ->withPivot('monto', 'movimientos_pagos_id')->orderBy('fecha_pago', 'asc');
+    }
+
+
+
+    public function operacion_del_pago()
+    {
+        return $this->belongsTo('App\Operaciones', 'operaciones_id', 'id')
+            ->select(
+                '*'
+            );
     }
 }

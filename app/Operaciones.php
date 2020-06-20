@@ -117,4 +117,83 @@ class Operaciones extends Model
     {
         return $this->hasOne('App\AjustesPoliticasOperacion', 'operaciones_id', 'operacion_id');
     }
+
+
+    /**pagos programados para relacion al consultar pagos  desde pagos controller get_pagos*/
+    public function get_pagos_pagos_programados()
+    {
+        return $this->hasMany('App\PagosProgramados', 'operaciones_id', 'id')
+            ->select(
+                '*',
+                DB::raw(
+                    '(NULL) AS fecha_programada_abr'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_a_pagar'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_a_pagar_abr'
+                ),
+                DB::raw(
+                    '(0) AS status_pago', //0-vencido-1-pendiente,2-vencido
+                ),
+                DB::raw(
+                    '(0) AS status_pago_texto', //0-vencido-1-pendiente,2-pagado
+                ),
+                DB::raw(
+                    '(0) AS intereses'
+                ),
+                DB::raw(
+                    '(0) AS abonado_capital'
+                ),
+                DB::raw(
+                    '(0) AS abonado_intereses'
+                ),
+                DB::raw(
+                    '(0) AS descontado_pronto_pago'
+                ),
+                DB::raw(
+                    '(0) AS descontado_capital'
+                ),
+                DB::raw(
+                    '(0) AS complementado_cancelacion'
+                ),
+                DB::raw(
+                    '(NULL) AS total_cubierto'
+                ),
+                DB::raw(
+                    '(0) AS saldo_neto'
+                ),
+                DB::raw(
+                    '(0) AS dias_vencido'
+                ),
+                DB::raw(
+                    '(0) AS monto_pronto_pago'
+                ),
+                DB::raw(
+                    '(NULL) AS concepto_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_ultimo_pago'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_ultimo_pago_abr'
+                ),
+
+                DB::raw(
+                    '(0) AS aplica_pronto_pago_b'
+                ),
+                DB::raw(
+                    '(0) AS descuento_pronto_pago'
+                )
+            )
+            ->orderBy('id', 'asc');
+    }
+
+
+
+    public function cliente()
+    {
+        return $this->belongsTo('App\Clientes', 'clientes_id', 'id');
+    }
 }

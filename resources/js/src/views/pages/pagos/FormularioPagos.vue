@@ -1344,7 +1344,6 @@ export default {
       } catch (err) {
         /**error al cargar vendedores */
         if (err.response) {
-          console.log("calcular_adeudo -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({

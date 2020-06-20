@@ -21,7 +21,7 @@
             <!--mapa del cementerio-->
             <div mt-5>
               <Mapa
-                :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                :disabled="tiene_pagos_realizados || ventaLiquidada"
                 :idAreaInicial="idAreaInicial"
                 @getDatosTipoPropiedad="getDatosTipoPropiedad"
                 @respuestaDeshabilitado="respuestaDeshabilitado"
@@ -70,7 +70,7 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <v-select
-                  :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                  :disabled="tiene_pagos_realizados || ventaLiquidada"
                   :options="filas"
                   :clearable="false"
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -113,7 +113,7 @@
                   class="mb-4 sm:mb-0 pb-1 pt-1"
                   :disabled="
                     this.datosAreas.tipo_propiedades_id != 4 ||
-                      tiene_pagos_vigentes ||
+                      tiene_pagos_realizados ||
                       ventaLiquidada
                   "
                   v-validate:ubicacion_validacion_computed.immediate="
@@ -184,7 +184,7 @@
                     v-model="form.tipo_financiamiento"
                     :vs-value="1"
                     class="mr-4"
-                    :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                    :disabled="tiene_pagos_realizados || ventaLiquidada"
                     >Uso inmediato</vs-radio
                   >
                   <vs-radio
@@ -192,7 +192,7 @@
                     v-model="form.tipo_financiamiento"
                     :vs-value="2"
                     class="mr-4"
-                    :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                    :disabled="tiene_pagos_realizados || ventaLiquidada"
                     >A futuro</vs-radio
                   >
                 </div>
@@ -345,7 +345,7 @@
                 </label>
 
                 <flat-pickr
-                  :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                  :disabled="tiene_pagos_realizados || ventaLiquidada"
                   name="fecha_venta"
                   data-vv-as=" "
                   v-validate:fecha_venta_validacion_computed.immediate="
@@ -1036,7 +1036,7 @@
                   v-validate:plan_de_venta_computed.immediate="'required'"
                   name="plan_venta"
                   data-vv-as=" "
-                  :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                  :disabled="tiene_pagos_realizados || ventaLiquidada"
                 >
                   <div slot="no-options">
                     No Se Ha Seleccionado Ningún Área
@@ -1063,7 +1063,7 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                  :disabled="tiene_pagos_realizados || ventaLiquidada"
                   size="large"
                   name="subtotal"
                   data-vv-as=" "
@@ -1093,7 +1093,7 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                  :disabled="tiene_pagos_realizados || ventaLiquidada"
                   size="large"
                   name="descuento"
                   data-vv-as=" "
@@ -1189,7 +1189,7 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                  :disabled="tiene_pagos_realizados || ventaLiquidada"
                   size="large"
                   name="pago_inicial"
                   data-vv-as=" "
@@ -1226,7 +1226,7 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_vigentes || ventaLiquidada"
+                  :disabled="tiene_pagos_realizados || ventaLiquidada"
                   size="large"
                   name="costo_neto_pronto_pago"
                   data-vv-as=" "
@@ -1675,9 +1675,9 @@ export default {
       } else return false;
     },
     /**checando si ya hay pagos vigentes realizados en la venta, por lo cual no puede cambiar la fecha de la venta */
-    tiene_pagos_vigentes: function() {
+    tiene_pagos_realizados: function() {
       if (this.getTipoformulario == "modificar") {
-        if (this.datosVenta.pagos_vigentes > 0) {
+        if (this.datosVenta.pagos_realizados > 0) {
           return true;
         } else return false;
       } else return false;

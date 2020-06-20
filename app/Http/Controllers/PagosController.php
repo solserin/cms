@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\User;
 use Carbon\Carbon;
 use App\SATMonedas;
@@ -371,7 +372,7 @@ class PagosController extends ApiController
             'pagos_a_cubrir' => 'required',
             'pagos_a_cubrir.*.referencia_pago' => 'required',
             'pagos_a_cubrir.*.fecha_a_pagar' => 'required|date_format:Y-m-d',
-            'abono' => 'numeric|required|gt:0|gte:descuento_pronto_pago',
+            'abono' => 'numeric|required|gt:0|gte:descuento_pronto_pago|gte:intereses',
             'intereses' => 'numeric|required|min:0',
             'descuento_pronto_pago' => 'numeric|required|min:0|lte:abono',
             'total' => 'numeric|required|min:0',
@@ -461,12 +462,6 @@ class PagosController extends ApiController
             return $this->errorResponse('No se pueden registrar pagos con fecha anterior a la fecha de la venta/operación (' . $referencias_adeudos[0]['fecha_operacion_texto'] . ').', 409);
         }
 
-
-
-
-
-
-
         //operacion_id
 
         /**se obtienen los valores actualizados con la fecha y cantidades a cubrir */
@@ -510,6 +505,61 @@ class PagosController extends ApiController
                                 /**el pago ya habia sido saldado, no es habil que venta en la solicitud de pago*/
                                 return $this->errorResponse('Ocurrió un error al guardar el pago, uno de los pagos que desea pagar (' . $referencia['referencia_pago'] . ') ya ha sido cubierto previamente. Por favor cierre su aplicación y vuelva a intentar.', 409);
                             } else {
+                                if ($abono_a_cubrir > 0) {
+                                    /**verificando la cantidad de intereses moratorios */
+                                    if ($intereses_a_cubrir > 0) {
+                                        if ($programado['intereses'] > 0) {
+                                            /**solo si tiene intereses */
+                                            if ($programado['intereses'] >= $intereses_a_cubrir) {
+                                                array_push($array_intereses_cubrir, [
+                                                    'referencia_pago' => $programado['referencia_pago'],
+                                                    'pagos_programados_id' => $programado['id'],
+                                                    'monto' => $intereses_a_cubrir,
+                                                    'movimientos_pagos_d' => 2 //abono a intereses
+                                                ]);
+                                                /**se acaba el intereses_a_cubrir */
+                                                $intereses_a_cubrir = 0;
+                                            } else {
+                                                array_push($array_intereses_cubrir, [
+                                                    'referencia_pago' => $programado['referencia_pago'],
+                                                    'pagos_programados_id' => $programado['id'],
+                                                    'monto' => $programado['intereses'],
+                                                    'movimientos_pagos_d' => 2 //abono a intereses
+                                                ]);
+                                                /**se puede asignar el 100 de intereses programados */
+                                                $intereses_a_cubrir -= $programado['intereses'];
+                                            }
+                                        }
+                                    }
+
+                                    /**verificando la cantidad de descuento por pronto pago */
+                                    if ($descuento_pronto_pago_a_cubrir > 0) {
+                                        if ($programado['descuento_pronto_pago'] > 0) {
+                                            /**solo si tiene descuento_pronto_pago */
+                                            if ($programado['descuento_pronto_pago'] >= $descuento_pronto_pago_a_cubrir) {
+                                                array_push($array_descuento_a_cubrir, [
+                                                    'referencia_pago' => $programado['referencia_pago'],
+                                                    'pagos_programados_id' => $programado['id'],
+                                                    'monto' => $descuento_pronto_pago_a_cubrir,
+                                                    'movimientos_pagos_d' => 3 //descuento por pronto pago
+                                                ]);
+                                                /**se acaba el des$descuento_pronto_pago_a_cubrir */
+                                                $descuento_pronto_pago_a_cubrir = 0;
+                                            } else {
+                                                array_push($array_descuento_a_cubrir, [
+                                                    'referencia_pago' => $programado['referencia_pago'],
+                                                    'pagos_programados_id' => $programado['id'],
+                                                    'monto' => ($programado['descuento_pronto_pago']),
+                                                    'movimientos_pagos_d' => 3 //descuento por pronto pago
+                                                ]);
+                                                /**se puede asignar el 100 de descuento_pronto_pago */
+                                                $descuento_pronto_pago_a_cubrir -= $programado['descuento_pronto_pago'];
+                                            }
+                                        }
+                                    }
+                                }
+
+
                                 /**haciendo los arrays de pagos a distriburir */
                                 /**se puede verificar cantidad a pagar del abono */
                                 if ($abono_a_cubrir > 0) {
@@ -538,57 +588,6 @@ class PagosController extends ApiController
                                         $abono_a_cubrir -= round($monto_con_descuento, 2);
                                     }
                                 }
-                                /**verificando la cantidad de intereses moratorios */
-                                if ($intereses_a_cubrir > 0) {
-                                    if ($programado['intereses'] > 0) {
-                                        /**solo si tiene intereses */
-                                        if ($programado['intereses'] >= $intereses_a_cubrir) {
-                                            array_push($array_intereses_cubrir, [
-                                                'referencia_pago' => $programado['referencia_pago'],
-                                                'pagos_programados_id' => $programado['id'],
-                                                'monto' => $intereses_a_cubrir,
-                                                'movimientos_pagos_d' => 2 //abono a intereses
-                                            ]);
-                                            /**se acaba el intereses_a_cubrir */
-                                            $intereses_a_cubrir = 0;
-                                        } else {
-                                            array_push($array_intereses_cubrir, [
-                                                'referencia_pago' => $programado['referencia_pago'],
-                                                'pagos_programados_id' => $programado['id'],
-                                                'monto' => $programado['intereses'],
-                                                'movimientos_pagos_d' => 2 //abono a intereses
-                                            ]);
-                                            /**se puede asignar el 100 de intereses programados */
-                                            $intereses_a_cubrir -= $programado['intereses'];
-                                        }
-                                    }
-                                }
-
-                                /**verificando la cantidad de descuento por pronto pago */
-                                if ($descuento_pronto_pago_a_cubrir > 0) {
-                                    if ($programado['descuento_pronto_pago'] > 0) {
-                                        /**solo si tiene descuento_pronto_pago */
-                                        if ($programado['descuento_pronto_pago'] >= $descuento_pronto_pago_a_cubrir) {
-                                            array_push($array_descuento_a_cubrir, [
-                                                'referencia_pago' => $programado['referencia_pago'],
-                                                'pagos_programados_id' => $programado['id'],
-                                                'monto' => $descuento_pronto_pago_a_cubrir,
-                                                'movimientos_pagos_d' => 3 //descuento por pronto pago
-                                            ]);
-                                            /**se acaba el des$descuento_pronto_pago_a_cubrir */
-                                            $descuento_pronto_pago_a_cubrir = 0;
-                                        } else {
-                                            array_push($array_descuento_a_cubrir, [
-                                                'referencia_pago' => $programado['referencia_pago'],
-                                                'pagos_programados_id' => $programado['id'],
-                                                'monto' => ($programado['descuento_pronto_pago']),
-                                                'movimientos_pagos_d' => 3 //descuento por pronto pago
-                                            ]);
-                                            /**se puede asignar el 100 de descuento_pronto_pago */
-                                            $descuento_pronto_pago_a_cubrir -= $programado['descuento_pronto_pago'];
-                                        }
-                                    }
-                                }
                                 break;
                             }
                         } //fin if referencia de pago
@@ -607,8 +606,9 @@ class PagosController extends ApiController
              * distribuido en sus respectivas referencias
              */
             if ((round($abono_a_cubrir) != 0 || round($intereses_a_cubrir) != 0 || round($descuento_pronto_pago_a_cubrir) != 0)) {
-                return $this->errorResponse('Hemos encontrado errores en el registro de este pago debido a que las cantidades ingresadas sobrepasan los adeudos actuales de pagos programados. Por favor vuelva a intentar la operación.', 409);
+                return $this->errorResponse('Hemos encontrado errores en el registro de este pago debido a que las cantidades ingresadas no cuadran según la operación que está realizando, por favor verifique que el descuento o interés que desea cobrar están en relación a los pagos que desea pagar. Por favor vuelva a intentar la operación.', 409);
             }
+
 
             //return $array_intereses_cubrir;
 
@@ -631,6 +631,7 @@ class PagosController extends ApiController
             $id_abono_capital = DB::table('pagos')->insertGetId(
                 [
                     'monto_pago' => $monto_pago_parent,
+                    'total_pago' => round($total, 2),
                     /**solo la cantidad primero que va destinada al pago parent*/
                     'pago_con_cantidad' => $pago_con_cantidad,
                     'cambio_pago' => $cambio_pago,
@@ -668,6 +669,7 @@ class PagosController extends ApiController
                 $id_descuento_pronto_pago = DB::table('pagos')->insertGetId(
                     [
                         'monto_pago' => $descuento_pronto_pago,
+                        'total_pago' => round($total, 2),
                         /**solo la cantidad primero que va destinada al pago parent*/
                         'pago_con_cantidad' => 0,
                         'cambio_pago' => 0,
@@ -705,6 +707,7 @@ class PagosController extends ApiController
                 $id_intereses = DB::table('pagos')->insertGetId(
                     [
                         'monto_pago' => $intereses,
+                        'total_pago' => round($total, 2),
                         /**solo la cantidad primero que va destinada al pago parent*/
                         'pago_con_cantidad' => 0,
                         'cambio_pago' => 0,
@@ -761,6 +764,277 @@ class PagosController extends ApiController
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
+        }
+    }
+
+    public function get_pagos(Request $request, $id_pago = 'all', $paginated = false, $ver_sub_pagos = false)
+    {
+        try {
+            /**filtros de este servicio */
+            /**
+             * se podra filtrar por numero de pago
+             * fecha de pago
+             * numero de operacion
+             * filtro de clave unica de servicio(venta_id, servicio funerario id, etc)
+             * nombre del cliente
+             * nombre del cobrador
+             * nombre del registrador
+             * tipo de servicio
+             * status
+             * referencia de pago
+             * tipo movimiento de pago id
+             */
+
+            $resultado_query = Pagos::select(
+                '*',
+                DB::raw(
+                    '(0) AS deuda_cubierta'
+                    /**es la suma de lo abonado a capital mas lo abonado a descuento por pronto pago segun aplique el tipo de pago movimiento */
+                ),
+                DB::raw(
+                    '(NULL) AS movimientos_pagos_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS status_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS motivo_cancelacion_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_pago_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_registro_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_cancelacion_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS pago_con_cantidad_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS monto_pago_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS cambio_pago_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS total_pagado_operacion'
+                    /**solo cuando lleva descuentos */
+                ),
+                DB::raw(
+                    '(NULL) AS intereses_aplicados'
+                ),
+                DB::raw(
+                    '(NULL) AS descuento_pronto_pago_aplicado'
+                ),
+                DB::raw(
+                    '(NULL) AS tipo_operacion_texto'
+                ),
+            )
+                // ->with(['referencias_cubiertas:id,referencia_pago,operaciones_id,monto_programado,fecha_programada,conceptos_pagos_id'])
+                ->whereHas('referencias_cubiertas', function ($q) {
+                    //$q->where('referencia_pago', '=', '00120200101025');
+                })
+                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre')
+                ->whereHas('referencias_cubiertas.operacion_del_pago', function ($q) use ($request) {
+                    if (($request->operacion_id)) {
+
+                        $q->where('id', '=', $request->operacion_id);
+                    }
+                })
+                ->with(['registro', 'sat_moneda', 'cobrador', 'cancelador', 'subpagos.referencias_cubiertas', 'forma_pago'])
+                ->whereHas('forma_pago', function ($q) {
+                    //$q->where('id', '=', 1);
+                })
+                ->where(function ($q) use ($id_pago) {
+                    if (is_numeric(trim($id_pago))) {
+                        $q->where('pagos.id', '=', $id_pago);
+                    }
+                })
+                ->where(function ($q) use ($ver_sub_pagos) {
+                    if (filter_var($ver_sub_pagos, FILTER_VALIDATE_BOOLEAN) == false) {
+                        $q->where('pagos.movimientos_pagos_id', '<>', 2)->where('pagos.movimientos_pagos_id', '<>', 3)->with('parent_pago');
+                    }
+                })
+                //->where('parent_pago_id', '<>', NULL)
+                ->get();
+            $resultado = array();
+            if ($paginated == 'paginated') {
+                /**queire el resultado paginado */
+                $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
+                $resultado = &$resultado_query['data'];
+            } else {
+                $resultado_query = $resultado_query->toArray();
+                $resultado = &$resultado_query;
+            }
+
+            foreach ($resultado as $key_pago => &$pago) {
+                /**modificando el concepto del movimiento dle pago */
+                if ($pago['movimientos_pagos_id'] == 1) {
+                    /*** */
+                    $pago['movimientos_pagos_texto'] = 'Abono al capital de la deuda';
+                } elseif ($pago['movimientos_pagos_id'] == 2) {
+                    /*** */
+                    $pago['movimientos_pagos_texto'] = 'Abono intereses';
+                } elseif ($pago['movimientos_pagos_id'] == 3) {
+                    /*** */
+                    $pago['movimientos_pagos_texto'] = 'Descuento x pronto pago';
+                } elseif ($pago['movimientos_pagos_id'] == 4) {
+                    /*** */
+                    $pago['movimientos_pagos_texto'] = 'Descuento a capital';
+                } elseif ($pago['movimientos_pagos_id'] == 5) {
+                    /*** */
+                    $pago['movimientos_pagos_texto'] = 'Complemento x cancelacion';
+                }
+
+                /**coceptios de subpago */
+                foreach ($pago['subpagos'] as $key_subpago => &$subpago) {
+                    /**modificando el concepto del movimiento dle pago */
+                    if ($subpago['movimientos_pagos_id'] == 1) {
+                        /*** */
+                        $subpago['movimientos_pagos_texto'] = 'Abono al capital de la deuda';
+                    } elseif ($subpago['movimientos_pagos_id'] == 2) {
+                        /*** */
+                        $subpago['movimientos_pagos_texto'] = 'Abono intereses';
+                    } elseif ($subpago['movimientos_pagos_id'] == 3) {
+                        /*** */
+                        $subpago['movimientos_pagos_texto'] = 'Descuento x pronto pago';
+                    } elseif ($subpago['movimientos_pagos_id'] == 4) {
+                        /*** */
+                        $subpago['movimientos_pagos_texto'] = 'Descuento a capital';
+                    } elseif ($subpago['movimientos_pagos_id'] == 5) {
+                        /*** */
+                        $subpago['movimientos_pagos_texto'] = 'Complemento x cancelacion';
+                    }
+
+                    /**buscando segun su tipo de movimiento id, interes o descuento por pronto pago */
+                    if ($subpago['movimientos_pagos_id'] == 2) {
+                        /**intereses */
+                        $pago['intereses_aplicados'] = $subpago['monto_pago'];
+                    } else {
+                        /**es de tipo descuento pronto pago */
+                        $pago['descuento_pronto_pago_aplicado'] = $subpago['monto_pago'];
+                    }
+                }
+
+                /**actualizando el total dle pago abonado de la deuda */
+                if ($pago['movimientos_pagos_id'] == 1) {
+                    $pago['deuda_cubierta'] = $pago['monto_pago'] + $pago['descuento_pronto_pago_aplicado'];
+                }
+                /**fecha del pago */
+                $pago['fecha_pago_texto'] = fecha_abr($pago['fecha_pago']);
+
+                /**verificando que tipo de operacion es */
+                if ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                    /**es tipo de venta de terreno del cementerio */
+                    $pago['tipo_operacion_texto'] = 'VENTA DE TERRENOS';
+                } else if ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                    /**es tipo de SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO. */
+                    $pago['tipo_operacion_texto'] = 'SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO.';
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                    /**es tipo de  SERVICIOS FUNERARIOS */
+                    $pago['tipo_operacion_texto'] = ' SERVICIOS FUNERARIOS';
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                    /**es tipo de VENTA DE PLANES FUNERARIOS A FUTURO */
+                    $pago['tipo_operacion_texto'] = 'VENTA DE PLANES FUNERARIOS A FUTURO';
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                    /**es tipo de SERVICIOS ESPECIALES CON EXTREMIDADES */
+                    $pago['tipo_operacion_texto'] = 'SERVICIOS ESPECIALES CON EXTREMIDADES';
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                    /**es tipo de VENTAS EN GRAL. */
+                    $pago['tipo_operacion_texto'] = 'VENTAS EN GRAL.';
+                }
+            }
+
+            return $resultado_query;
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos solicitados.', 409);
+        }
+    }
+
+
+
+
+    public function recibo_de_pago(Request $request, $id_pago = '')
+    {
+        try {
+
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_pago = $requestVentasList['id_pago'];
+
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+
+            /*$id_pago = 27;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+*/
+            //code...
+            $datos_pago = $this->get_pagos($request, $id_pago, '', false)[0];
+            if (empty($datos_pago)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('pagos/recibo_pago', ['id_pago' => $id_pago, 'datos' => $datos_pago, 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "RECIBO DE PAGO " . strtoupper('poner') . '.pdf';
+
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('pagos.footer'),
+        ]);
+        if ($datos_pago['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('pagos.header')
+            ]);
+        }
+
+
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('orientation', 'landscape');
+        $pdf->setOption('margin-left', 13.4);
+        $pdf->setOption('margin-right', 13.4);
+        $pdf->setOption('margin-top', 9.4);
+        $pdf->setOption('margin-bottom', 13.4);
+        $pdf->setOption('page-size', 'A4');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_pago['nombre']),
+                'RECIBO DE PAGO ',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
         }
     }
 }

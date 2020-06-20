@@ -37,7 +37,9 @@
                     class="cursor-pointer ml-auto mr-auto"
                     src="@assets/images/pdf.svg"
                     title="Consultar Documento"
-                    @click="openReporte(documento.documento, documento.url, '')"
+                    @click="
+                      openReporte(documento.documento, documento.url, '', '')
+                    "
                   />
                   <img
                     width="30"
@@ -45,7 +47,9 @@
                     class="cursor-pointer ml-auto mr-auto"
                     src="@assets/images/excel.svg"
                     title="Consultar Documento"
-                    @click="openReporte(documento.documento, documento.url, '')"
+                    @click="
+                      openReporte(documento.documento, documento.url, '', '')
+                    "
                   />
                 </vs-td>
               </vs-tr>
@@ -163,11 +167,7 @@
       </div>
 
       <div class="w-full pt-8" v-if="datosVenta.operacion_id">
-        <vs-table
-          class="tablas-pagos"
-          :data="datosVenta.pagos_programados"
-          noDataText="0 Resultados"
-        >
+        <vs-table class="tablas-pagos" :data="pagos" noDataText="0 Resultados">
           <template slot="header">
             <h3>Listado de Abonos Recibidos</h3>
           </template>
@@ -184,51 +184,33 @@
           </template>
           <template>
             <vs-tr
-              v-show="programados.status == 1"
-              v-for="(programados,
-              index_programado) in datosVenta.pagos_programados"
-              v-bind:key="programados.id"
+              v-for="(pago, index_pago) in pagos"
+              v-bind:key="pago.id"
               ref="row"
             >
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >
-                <span class="font-semibold">{{ programados.num_pago }}</span>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
               </vs-td>
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >{{ programados.referencia_pago }}</vs-td
-              >
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >{{ programados.fecha_programada_abr }}</vs-td
-              >
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >$
-                {{
-                  programados.monto_programado | numFormat("0,000.00")
-                }}</vs-td
-              >
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >$ {{ programados.intereses | numFormat("0,000.00") }}</vs-td
-              >
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td
-              >
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >{{ programados.concepto_texto }}</vs-td
-              >
-              <vs-td
-                :class="[
-                  programados.status_pago == 0 ? 'text-danger' : '',
-                  programados.status_pago == 2 ? 'text-success font-bold' : ''
-                ]"
-              >
-                <span>{{ programados.status_pago_texto }}</span>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
+              </vs-td>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
+              </vs-td>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
+              </vs-td>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
+              </vs-td>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
+              </vs-td>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
+              </vs-td>
+              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
+                <span class="font-semibold">{{ pago.status }}</span>
               </vs-td>
               <vs-td>
                 <div class="flex flex-start py-1">
@@ -237,6 +219,14 @@
                     class="cursor-pointer ml-auto mr-auto"
                     src="@assets/images/pdf.svg"
                     title="Ver Nota de Pago"
+                    @click="
+                      openReporte(
+                        'reporte de pago',
+                        '/pagos/recibo_de_pago/',
+                        pago.id,
+                        'pago'
+                      )
+                    "
                   />
                 </div>
               </vs-td>
@@ -265,6 +255,7 @@
 <script>
 import Reporteador from "@pages/Reporteador";
 import cementerio from "@services/cementerio";
+import pagos from "@services/pagos";
 import FormularioPagos from "@pages/pagos/FormularioPagos";
 export default {
   components: {
@@ -291,6 +282,9 @@ export default {
         };
         (async () => {
           await this.consultar_venta_id();
+          if (this.operacion_id != "") {
+            await this.consultar_pagos_operacion_id();
+          }
         })();
       } else {
         /**cerrar ventana */
@@ -364,13 +358,16 @@ export default {
       datosVenta: [],
       ListaReportes: [],
       request: {
+        id_pago: "",
         venta_id: "",
         email: "",
         destinatario: ""
       },
       openReportesLista: false,
       verFormularioPagos: false,
-      tipoFormularioPagos: ""
+      tipoFormularioPagos: "",
+      operacion_id: "",
+      pagos: []
     };
   },
   methods: {
@@ -380,6 +377,9 @@ export default {
     retorno_pagos(datos) {
       (async () => {
         await this.consultar_venta_id();
+        if (this.operacion_id != "") {
+          await this.consultar_pagos_operacion_id();
+        }
       })();
     },
     pagar(referencia) {
@@ -401,7 +401,7 @@ export default {
       return;
     },
 
-    openReporte(nombre_reporte = "", link = "", parametro = "") {
+    openReporte(nombre_reporte = "", link = "", parametro = "", tipo = "") {
       this.ListaReportes = [];
       this.ListaReportes.push({
         nombre: nombre_reporte,
@@ -409,7 +409,13 @@ export default {
       });
       //estado de cuenta
       this.request.email = this.datosVenta.email;
-      this.request.venta_id = this.datosVenta.ventas_terrenos_id;
+
+      if (tipo == "pago") {
+        this.request.id_pago = parametro;
+      } else {
+        this.request.venta_id = this.datosVenta.ventas_terrenos_id;
+      }
+
       this.request.destinatario = this.datosVenta.nombre;
       this.openReportesLista = true;
       this.$vs.loading.close();
@@ -418,9 +424,10 @@ export default {
       this.ListaReportes = [];
       this.$vs.loading();
       try {
+        this.operacion_id = "";
         let res = await cementerio.consultar_venta_id(this.get_venta_id);
         this.datosVenta = res.data[0];
-
+        this.operacion_id = this.datosVenta.operacion_id;
         /*if (this.datosVenta.pagos_programados.length > 0) {
           //calculando el total de rows 
           this.funcion_reemplazada = [];
@@ -439,11 +446,35 @@ export default {
           }
         }
 */
+
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
         if (err.response) {
-          console.log("consultar_venta_id -> err.response", err.response);
+          if (err.response.status == 403) {
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000
+            });
+          }
+        }
+      }
+    },
+    async consultar_pagos_operacion_id() {
+      this.$vs.loading();
+      try {
+        this.pagos = [];
+        let datos_request = { operacion_id: this.operacion_id };
+        let res = await pagos.consultar_pagos_operacion_id(datos_request);
+        this.pagos = res.data.data;
+        this.$vs.loading.close();
+      } catch (err) {
+        this.$vs.loading.close();
+        if (err.response) {
           if (err.response.status == 403) {
             this.$vs.notify({
               title: "Permiso denegado",

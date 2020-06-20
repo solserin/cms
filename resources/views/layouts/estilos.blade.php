@@ -294,7 +294,11 @@
       background-color: #BFBFBF !important;
     }
  
-
+.bg-666 {
+    border: 1px solid #ddd;
+    color: #fff !important;
+    background-color: #666666 !important;
+}
 .pagos_tabla thead tr {
     border: 1px solid #ddd;
     color: #fff !important;

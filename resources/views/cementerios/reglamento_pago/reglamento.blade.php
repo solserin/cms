@@ -152,7 +152,7 @@
                 <span class="ml-2">
                     El titular podrá solicitar las fichas de pago con el monto a pagar al personal de
                     <span class="bold uppercase">{{ $empresa->nombre_comercial }}</span>, con dicho documento
-                    (también conocido como talonario de pago) que tendrá cada referencia para poder efectuar
+                    (también conocido como talonario de pago) tendrá cada referencia para poder efectuar
                     su pago correspondiente en los bancos <span class="santander">Santander</span>.
                 </span>
             </p>
@@ -217,7 +217,7 @@
         </h1>
         <div class="lista pl-11 -mt-1">
             “La Empresa” podrá cancelar el convenio, si este incurriera en cualquiera de los
-            supuestos siguiente:
+            supuestos siguientes:
 
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
