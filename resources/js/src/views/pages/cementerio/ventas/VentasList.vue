@@ -34,7 +34,6 @@
         collapse-action
       >
         <div class="flex flex-wrap">
-          y
           <div
             class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
           >
