@@ -224,8 +224,6 @@
       ></vs-pagination>
     </div>
 
-    <pre ref="pre"></pre>
-
     <FormularioVentas
       :id_venta="id_venta_modificar"
       :tipo="tipoFormulario"
@@ -299,7 +297,6 @@ export default {
       })();
     },
     estado: function(newVal, previousVal) {
-      this.get_data(1);
       (async () => {
         await this.get_data(1);
       })();
