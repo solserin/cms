@@ -23,17 +23,17 @@ class tipoPropiedades extends Model
                 '(NULL) AS tipo_financiamiento'
             ),
             DB::raw(
-                '(NULL) AS descuento_x_pago',
+                '(NULL) AS descuento_x_pago'
             ),
             DB::raw(
-                '(NULL) AS tipo_financiamiento_ingles',
+                '(NULL) AS tipo_financiamiento_ingles'
             ),
             DB::raw(
-                '(NULL) AS pago_mensual',
+                '(NULL) AS pago_mensual'
             ),
             DB::raw(
-                '(NULL) AS porcentaje_pronto_pago',
-            ),
+                '(NULL) AS porcentaje_pronto_pago'
+            )
         )->orderBy('financiamiento', 'asc');
     }
 }

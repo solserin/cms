@@ -31,7 +31,7 @@ class Operaciones extends Model
                 ),
                 DB::raw(
                     '(NULL) AS ubicacion_texto'
-                ),
+                )
             );
     }
 
@@ -51,10 +51,10 @@ class Operaciones extends Model
                     '(NULL) AS fecha_a_pagar_abr'
                 ),
                 DB::raw(
-                    '(0) AS status_pago', //0-vencido-1-pendiente,2-vencido
+                    '(0) AS status_pago' //0-vencido-1-pendiente,2-vencido
                 ),
                 DB::raw(
-                    '(0) AS status_pago_texto', //0-vencido-1-pendiente,2-pagado
+                    '(0) AS status_pago_texto' //0-vencido-1-pendiente,2-pagado
                 ),
                 DB::raw(
                     '(0) AS intereses'
@@ -135,10 +135,10 @@ class Operaciones extends Model
                     '(NULL) AS fecha_a_pagar_abr'
                 ),
                 DB::raw(
-                    '(0) AS status_pago', //0-vencido-1-pendiente,2-vencido
+                    '(0) AS status_pago' //0-vencido-1-pendiente,2-vencido
                 ),
                 DB::raw(
-                    '(0) AS status_pago_texto', //0-vencido-1-pendiente,2-pagado
+                    '(0) AS status_pago_texto' //0-vencido-1-pendiente,2-pagado
                 ),
                 DB::raw(
                     '(0) AS intereses'

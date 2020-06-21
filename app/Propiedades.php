@@ -24,13 +24,13 @@ class Propiedades extends Model
     public function ventas()
     {
         return $this->hasMany('App\VentasTerrenos', 'propiedades_id', 'id')->select(
-            '*',
-            DB::raw(
-                '(NULL) AS fila_raw'
-            ),
-            DB::raw(
-                '(NULL) AS lote_raw'
-            ),
-        )->where('status', 1);
+                '*',
+                DB::raw(
+                    '(NULL) AS fila_raw'
+                ),
+                DB::raw(
+                    '(NULL) AS lote_raw'
+                )
+            )->where('status', 1);
     }
 }
