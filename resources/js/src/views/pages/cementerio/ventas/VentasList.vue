@@ -260,7 +260,6 @@
 
 <script>
 //planes de venta
-import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
 import cementerio from "@services/cementerio";
 
 import FormularioVentas from "../ventas/FormularioVentas";
@@ -275,7 +274,7 @@ import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
 import vSelect from "vue-select";
-
+import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
 export default {
   components: {
     "v-select": vSelect,
