@@ -17,10 +17,7 @@
           color="primary"
           @click="openPlanesVenta = true"
         >
-          <img
-            class="cursor-pointer img-btn"
-            src="@assets/images/price_list.svg"
-          />
+          <img class="cursor-pointer img-btn" src="@assets/images/lista.svg" />
           <span class="texto-btn">Planes de Venta</span>
         </vs-button>
       </div>
@@ -34,6 +31,7 @@
         collapse-action
       >
         <div class="flex flex-wrap">
+          y
           <div
             class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
           >
@@ -251,11 +249,10 @@
       @ConsultarVenta="ConsultarVenta"
       :id_venta="id_venta"
     ></CancelarVenta>
-    <!-- <PlanesVenta
+    <PlanesVenta
       :show="openPlanesVenta"
       @closePlanesCementerio="openPlanesVenta = false"
     ></PlanesVenta>
-    -->
   </div>
 </template>
 
@@ -275,14 +272,15 @@ import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
 import vSelect from "vue-select";
-//import PlanesVenta from "../ventas/PlanesVentas";
+import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
 export default {
   components: {
     "v-select": vSelect,
     Password,
     FormularioVentas,
     ReportesVentas,
-    CancelarVenta
+    CancelarVenta,
+    PlanesVenta
   },
   watch: {
     actual: function(newValue, oldValue) {

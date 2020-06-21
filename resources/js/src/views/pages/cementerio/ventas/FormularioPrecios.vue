@@ -9,8 +9,10 @@
     >
       <div class="flex flex-wrap px-2">
         <div class="w-full pb-3">
-          <img width="60" class="img-center" src="@assets/images/price_list.svg" />
-          <h3 class="text-xl text-center">Información del plan de Financiamiento</h3>
+          <img width="60" class="img-center" src="@assets/images/lista.svg" />
+          <h3 class="text-xl text-center">
+            Información del plan de Financiamiento
+          </h3>
         </div>
 
         <vs-divider />
@@ -33,13 +35,14 @@
             v-model="form.descripcion"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('descripcion') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("descripcion")
+            }}</span>
           </div>
           <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.descripcion"
-            >{{errores.descripcion[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.descripcion">{{
+              errores.descripcion[0]
+            }}</span>
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -60,13 +63,16 @@
             v-model="form.descripcion_ingles"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('descripcion_ingles') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("descripcion_ingles")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.descripcion_ingles"
-            >{{errores.descripcion_ingles[0]}}</span>
+              >{{ errores.descripcion_ingles[0] }}</span
+            >
           </div>
         </div>
 
@@ -88,13 +94,16 @@
           </v-select>
 
           <div>
-            <span class="text-danger text-sm">{{ errors.first('contado_b') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("contado_b")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores['contado_b.value']"
-            >{{errores['contado_b.value'][0]}}</span>
+              >{{ errores["contado_b.value"][0] }}</span
+            >
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -115,13 +124,16 @@
             <div slot="no-options">Seleccione una opción</div>
           </v-select>
           <div>
-            <span class="text-danger text-sm">{{ errors.first('tipo_propiedades_id') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("tipo_propiedades_id")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores['tipo_propiedades_id.value']"
-            >{{errores['tipo_propiedades_id.value'][0]}}</span>
+              >{{ errores["tipo_propiedades_id.value"][0] }}</span
+            >
           </div>
         </div>
 
@@ -144,13 +156,16 @@
           />
 
           <div>
-            <span class="text-danger text-sm">{{ errors.first('financiamiento') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("financiamiento")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.financiamiento"
-            >{{errores.financiamiento[0]}}</span>
+              >{{ errores.financiamiento[0] }}</span
+            >
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -171,13 +186,14 @@
             v-model="form.costo_neto"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('costo_neto') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("costo_neto")
+            }}</span>
           </div>
           <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.costo_neto"
-            >{{errores.costo_neto[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.costo_neto">{{
+              errores.costo_neto[0]
+            }}</span>
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -197,13 +213,16 @@
             v-model="form.pago_inicial"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('pago_inicial') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("pago_inicial")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.pago_inicial"
-            >{{errores.pago_inicial[0]}}</span>
+              >{{ errores.pago_inicial[0] }}</span
+            >
           </div>
         </div>
 
@@ -225,13 +244,16 @@
             v-model="form.costo_neto_financiamiento_normal"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('costo_neto_financiamiento_normal') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("costo_neto_financiamiento_normal")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.costo_neto_financiamiento_normal"
-            >{{errores.costo_neto_financiamiento_normal[0]}}</span>
+              >{{ errores.costo_neto_financiamiento_normal[0] }}</span
+            >
           </div>
         </div>
 
@@ -253,13 +275,16 @@
           </v-select>
 
           <div>
-            <span class="text-danger text-sm">{{ errors.first('descuento_pronto_pago_b') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("descuento_pronto_pago_b")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores['descuento_pronto_pago_b.value']"
-            >{{errores['descuento_pronto_pago_b.value'][0]}}</span>
+              >{{ errores["descuento_pronto_pago_b.value"][0] }}</span
+            >
           </div>
         </div>
 
@@ -281,13 +306,16 @@
             :disabled="aplica_descuento"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('costo_neto_pronto_pago') }}</span>
+            <span class="text-danger text-sm">{{
+              errors.first("costo_neto_pronto_pago")
+            }}</span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.costo_neto_pronto_pago"
-            >{{errores.costo_neto_pronto_pago[0]}}</span>
+              >{{ errores.costo_neto_pronto_pago[0] }}</span
+            >
           </div>
         </div>
 
@@ -299,15 +327,29 @@
           <div class="mt-2">
             <p class="text-center">
               <span class="text-danger font-medium">Ojo:</span>
-              Por favor revise la información ingresada, si todo es correcto de click en "Botón de Abajo”.
+              Por favor revise la información ingresada, si todo es correcto de
+              click en "Botón de Abajo”.
             </p>
           </div>
         </div>
       </div>
-      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto">
-        <vs-button class="w-full" @click="acceptAlert()" color="primary" size="small">
-          <img width="25px" class="cursor-pointer" src="@assets/images/save.svg" />
-          <span class="texto-btn" v-if="this.getTipoformulario=='agregar'">Guardar Datos</span>
+      <div
+        class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto"
+      >
+        <vs-button
+          class="w-full"
+          @click="acceptAlert()"
+          color="primary"
+          size="small"
+        >
+          <img
+            width="25px"
+            class="cursor-pointer"
+            src="@assets/images/save.svg"
+          />
+          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
+            >Guardar Datos</span
+          >
           <span class="texto-btn" v-else>Modificar Datos</span>
         </vs-button>
       </div>
@@ -321,7 +363,7 @@
     <ConfirmarDanger
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
-      @closeVerificar="openConfirmarSinPassword=false"
+      @closeVerificar="openConfirmarSinPassword = false"
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
     ></ConfirmarDanger>
@@ -329,7 +371,7 @@
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
-      @closeVerificar="openConfirmarAceptar=false"
+      @closeVerificar="openConfirmarAceptar = false"
       :accion="'He revisado la información y quiero registrar este precio'"
       :confirmarButton="'Registrar Precio'"
     ></ConfirmarAceptar>
