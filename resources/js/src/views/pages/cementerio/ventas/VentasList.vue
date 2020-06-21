@@ -251,10 +251,11 @@
       @ConsultarVenta="ConsultarVenta"
       :id_venta="id_venta"
     ></CancelarVenta>
-    <PlanesVenta
+    <!-- <PlanesVenta
       :show="openPlanesVenta"
       @closePlanesCementerio="openPlanesVenta = false"
     ></PlanesVenta>
+    -->
   </div>
 </template>
 
@@ -274,15 +275,14 @@ import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
 import vSelect from "vue-select";
-import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
+//import PlanesVenta from "../ventas/PlanesVentas";
 export default {
   components: {
     "v-select": vSelect,
     Password,
     FormularioVentas,
     ReportesVentas,
-    CancelarVenta,
-    PlanesVenta
+    CancelarVenta
   },
   watch: {
     actual: function(newValue, oldValue) {
