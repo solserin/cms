@@ -251,6 +251,7 @@
       @ConsultarVenta="ConsultarVenta"
       :id_venta="id_venta"
     ></CancelarVenta>
+
     <PlanesVenta
       :show="openPlanesVenta"
       @closePlanesCementerio="openPlanesVenta = false"
@@ -260,7 +261,7 @@
 
 <script>
 //planes de venta
-import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
+import PlanesVenta from "../ventas/PlanesVentas";
 import cementerio from "@services/cementerio";
 
 import FormularioVentas from "../ventas/FormularioVentas";
