@@ -101,11 +101,9 @@ class CementerioController extends ApiController
             '*',
             DB::raw(
                 '(NULL) AS nombre_area'
-            ),
-
+            )
         )
             ->with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get()->toArray();
-
         foreach ($datos as $key => &$dato) {
             if ($dato['tipo_propiedades_id'] == 1) {
                 /**uniplex */
@@ -1521,10 +1519,10 @@ class CementerioController extends ApiController
                 'clientes.email',
                 'clientes.fecha_nac',
                 DB::raw(
-                    'DATE(fecha_operacion) as fecha_operacion',
+                    'DATE(fecha_operacion) as fecha_operacion'
                 ),
                 DB::raw(
-                    '(NULL) as fecha_operacion_texto',
+                    '(NULL) as fecha_operacion_texto'
                 ),
                 'operaciones.nota',
                 /**fin de datos de  operacion */
