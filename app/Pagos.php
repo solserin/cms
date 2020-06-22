@@ -16,7 +16,7 @@ class Pagos extends Model
                 '*',
                 DB::raw(
                     '(0) AS pago_total'
-                ),
+                )
             )
             ->withPivot('monto', 'movimientos_pagos_id');
     }
