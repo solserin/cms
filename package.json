@@ -26,6 +26,7 @@
         "chart.js": "^2.8.0",
         "core-js": "2.6.5",
         "cross-env": "^5.1",
+        "date-fns": "^2.9.0",
         "echarts": "^4.2.1",
         "file-saver": "2.0.1",
         "instantsearch.css": "^7.3.1",
@@ -33,8 +34,9 @@
         "laravel-mix": "^4.0.7",
         "lodash": "^4.17.13",
         "material-icons": "^0.3.1",
-        "node-sass": "^4.12.0",
+        "node-sass": "^4.14.1",
         "perfect-scrollbar": "^1.4.0",
+        "postcss-rtl": "^1.5.0",
         "prismjs": "^1.16.0",
         "purgecss": "^1.3.0",
         "resolve-url-loader": "^2.3.1",
@@ -78,9 +80,7 @@
         "vuepress": "0.14.11",
         "vuesax": "^3.11.0",
         "vuex": "^3.1.1",
-        "xlsx": "^0.15.0",
-        "postcss-rtl": "^1.5.0",
-        "date-fns": "^2.9.0"
+        "xlsx": "^0.15.0"
     },
     "dependencies": {
         "numeral": "^2.0.6",
