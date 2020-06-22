@@ -16,7 +16,7 @@ class PagosProgramados extends Model
                 '*',
                 DB::raw(
                     '(0) AS pago_total'
-                ),
+                )
             )
             ->withPivot('monto', 'movimientos_pagos_id')->orderBy('fecha_pago', 'asc');
     }
@@ -30,7 +30,7 @@ class PagosProgramados extends Model
                 '*',
                 DB::raw(
                     '(0) AS pago_total'
-                ),
+                )
             )
             ->withPivot('monto', 'movimientos_pagos_id')->orderBy('fecha_pago', 'asc');
     }
