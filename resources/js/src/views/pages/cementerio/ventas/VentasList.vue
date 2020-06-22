@@ -19,7 +19,7 @@
         >
           <img
             class="cursor-pointer img-btn"
-            src="../../../../../../../public/images/app/lista_precios.svg"
+            src="@assets/images/lista_precios.svg"
           />
           <span class="texto-btn">Planes de Venta</span>
         </vs-button>
