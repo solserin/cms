@@ -26,6 +26,7 @@ mix.js("resources/js/app.js", "public/js")
             alias: {
                 "@": path.resolve(__dirname, "resources/js/src"),
                 "@assets": path.resolve(__dirname, "resources/assets"),
+                "@public": path.resolve(__dirname, "public"),
                 "@sass": path.resolve(__dirname, "resources/sass"),
                 "@services": path.resolve(
                     __dirname,
