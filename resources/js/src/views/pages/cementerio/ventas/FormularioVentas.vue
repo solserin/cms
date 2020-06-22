@@ -1317,10 +1317,7 @@
                       class="float-right cursor-pointer"
                       @click="openNotas = true"
                     >
-                      <img
-                        width="26px"
-                        src="@public/images/app/notas_add.svg"
-                      />
+                      <img width="26px" src="@assets/images/notas_add.svg" />
                       <h3 class="float-right ml-3 mt-1 text-base font-medium">
                         Agregar Nota
                       </h3>
