@@ -9,7 +9,11 @@
     >
       <div class="flex flex-wrap px-2">
         <div class="w-full pb-3">
-          <img width="60" class="img-center" src="@assets/images/tags.svg" />
+          <img
+            width="60"
+            class="img-center"
+            src="@assets/images/preciotag.svg"
+          />
           <h3 class="text-xl text-center">
             Información del plan de Financiamiento
           </h3>

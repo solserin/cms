@@ -17,7 +17,10 @@
           color="primary"
           @click="openPlanesVenta = true"
         >
-          <img class="cursor-pointer img-btn" src="@assets/images/tags.svg" />
+          <img
+            class="cursor-pointer img-btn"
+            src="@assets/images/preciotag.svg"
+          />
           <span class="texto-btn">Planes de Venta</span>
         </vs-button>
       </div>

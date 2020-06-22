@@ -639,7 +639,7 @@ class CementerioController extends ApiController
             if ($ajustes->numero_convenios_sistematizados == true) {
                 //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
                 //$numero_convenio = ((int) VentasPropiedades::where('antiguedad_ventas_id', 1)->where('ventas_referencias_id', 2)->max('numero_convenio')) + 1;
-                $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_convenio NOT LIKE '%[^0-9]%' THEN numero_convenio END) as int)) AS max_numero_convenio  from operaciones"));
+                $result = DB::select(DB::raw("SELECT MAX(CAST(numero_convenio AS UNSIGNED) ) AS max_numero_convenio FROM operaciones"));
                 $ultimo_convenio = json_decode(json_encode($result), true)[0]['max_numero_convenio'];
                 $numero_convenio = ((float) $ultimo_convenio) + 1;
                 if ($numero_convenio < 500) {
