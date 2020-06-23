@@ -58,7 +58,7 @@ class PagosController extends ApiController
         $validaciones = [
             'referencia' => 'required',
             'multipago' => 'required',
-            'fecha_pago' => 'required|date_format:Y-m-d H:i',
+            'fecha_pago' => 'required|date_format:Y-m-d H:i'
         ];
 
 
@@ -66,7 +66,7 @@ class PagosController extends ApiController
             'referencia.required' => 'Es necesario ingresar un número de referencia.',
             'multipago.required' => 'Indique la modalidad de pago.',
             'fecha_pago.required' => 'Debe ingresar una fecha de pago.',
-            'fecha_pago.date_format' => 'El formato de la fecha no es correcto(Y-m-d H:i).',
+            'fecha_pago.date_format' => 'El formato de la fecha no es correcto(Y-m-d H:i).'
         ];
         $request->validate(
             $validaciones,
@@ -90,10 +90,10 @@ class PagosController extends ApiController
                 'empresa_operaciones_id',
                 'clientes.nombre',
                 DB::raw(
-                    'DATE(fecha_operacion) as fecha_operacion',
+                    'DATE(fecha_operacion) as fecha_operacion'
                 ),
                 DB::raw(
-                    '(NULL) as fecha_operacion_texto',
+                    '(NULL) as fecha_operacion_texto'
                 ),
                 DB::raw(
                     '(NULL) AS operacion_texto'
@@ -103,7 +103,7 @@ class PagosController extends ApiController
                 ),
                 DB::raw(
                     '(NULL) AS fecha_a_pagar_texto'
-                ),
+                )
             )
                 ->with([
                     'pagosProgramados' => function ($query) use ($request) {
@@ -380,7 +380,7 @@ class PagosController extends ApiController
             'cobrador.value' => 'required',
             'moneda.value' => 'required',
             'pago_con_cantidad' => '',
-            'cambio_pago' => '',
+            'cambio_pago' => ''
         ];
 
 
@@ -427,7 +427,7 @@ class PagosController extends ApiController
             'descuento_pronto_pago.min' => 'La $ cantidad de Descuento por Pronto Pago debe ser mayor o igual a cero.',
             'total.required' => 'Ingrese la $ cantidad Total del Pago.',
             'total.numeric' => 'La $ cantidad Total del Pago debe ser un número valido.',
-            'total.min' => 'La $ cantidad Total del Pago debe ser mayor o igual a cero.',
+            'total.min' => 'La $ cantidad Total del Pago debe ser mayor o igual a cero.'
         ];
         request()->validate(
             $validaciones,
@@ -644,7 +644,7 @@ class PagosController extends ApiController
                     'movimientos_pagos_id' => 1, //abono a capital
                     'nota' => $request->nota,
                     'sat_monedas_id' => $request->moneda['value'],
-                    'tipo_cambio' => 1, //1 pesos,
+                    'tipo_cambio' => 1 //1 pesos,
                 ]
             );
 
@@ -655,7 +655,7 @@ class PagosController extends ApiController
                         'pagos_id' => $id_abono_capital,
                         'monto' => $pago['monto'],
                         'pagos_programados_id' => $pago['pagos_programados_id'],
-                        'movimientos_pagos_id' => 1, //abono a capital
+                        'movimientos_pagos_id' => 1 //abono a capital
                     ]
                 );
             }
@@ -691,7 +691,7 @@ class PagosController extends ApiController
                             'pagos_id' => $id_descuento_pronto_pago,
                             'monto' => $descuento['monto'],
                             'pagos_programados_id' => round($descuento['pagos_programados_id'], 2),
-                            'movimientos_pagos_id' => 3,  //descuento pronto pago
+                            'movimientos_pagos_id' => 3  //descuento pronto pago
                         ]
                     );
                 }
@@ -728,7 +728,7 @@ class PagosController extends ApiController
                             'pagos_id' => $id_intereses,
                             'monto' => $interes['monto'],
                             'pagos_programados_id' => $interes['pagos_programados_id'],
-                            'movimientos_pagos_id' => 2, //abono a intereses
+                            'movimientos_pagos_id' => 2 //abono a intereses
                         ]
                     );
                 }
@@ -750,7 +750,7 @@ class PagosController extends ApiController
                     DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
                         [
                             /**status de ya liquidada */
-                            'status' => 2,
+                            'status' => 2
                         ]
                     );
                     /**generando el numero de titulo de la venta de propiedad */
