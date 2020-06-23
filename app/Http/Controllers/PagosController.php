@@ -831,6 +831,9 @@ class PagosController extends ApiController
                 DB::raw(
                     '(NULL) AS tipo_operacion_texto'
                 ),
+                DB::raw(
+                    '(NULL) AS status_texto'
+                )
             )
                 // ->with(['referencias_cubiertas:id,referencia_pago,operaciones_id,monto_programado,fecha_programada,conceptos_pagos_id'])
                 ->whereHas('referencias_cubiertas', function ($q) {
@@ -839,7 +842,6 @@ class PagosController extends ApiController
                 ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre')
                 ->whereHas('referencias_cubiertas.operacion_del_pago', function ($q) use ($request) {
                     if (($request->operacion_id)) {
-
                         $q->where('id', '=', $request->operacion_id);
                     }
                 })
@@ -870,6 +872,14 @@ class PagosController extends ApiController
             }
 
             foreach ($resultado as $key_pago => &$pago) {
+                /**estatus del pago */
+
+                if ($pago['status'] == 1) {
+                    $pago['status_texto'] = 'Activo';
+                } else {
+                    $pago['status_texto'] = 'Cancelado';
+                }
+
                 /**modificando el concepto del movimiento dle pago */
                 if ($pago['movimientos_pagos_id'] == 1) {
                     /*** */
@@ -915,6 +925,15 @@ class PagosController extends ApiController
                     } else {
                         /**es de tipo descuento pronto pago */
                         $pago['descuento_pronto_pago_aplicado'] = $subpago['monto_pago'];
+                    }
+
+                    /**fecha de pago subpago */
+                    $subpago['fecha_pago_texto'] = fecha_abr($subpago['fecha_pago']);
+
+                    if ($subpago['status'] == 1) {
+                        $subpago['status_texto'] = 'Activo';
+                    } else {
+                        $subpago['status_texto'] = 'Cancelado';
                     }
                 }
 

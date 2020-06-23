@@ -68,6 +68,12 @@ class Pagos extends Model
                 '*',
                 DB::raw(
                     '(NULL) AS movimientos_pagos_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_pago_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS status_texto'
                 )
             );
     }

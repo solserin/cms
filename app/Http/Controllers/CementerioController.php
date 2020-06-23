@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\PagosProgramadosPropiedades;
 use Illuminate\Support\Facades\Mail;
+use GuzzleHttp\Client;
 
 class CementerioController extends ApiController
 {
@@ -2421,23 +2422,32 @@ class CementerioController extends ApiController
     public function documento_estado_de_cuenta_cementerio(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        $email =  $request->email_send === 'true' ? true : false;
+
+        /*$email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
-
+*/
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*$id_venta = 35;
+        $id_venta = 2;
         $email = false;
         $email_to = 'hector@gmail.com';
-*/
+
         //obtengo la informacion de esa venta
         $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
         if (empty($datos_venta)) {
             /**datos no encontrados */
             return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+        $pagos_operacion = [];
+        $client = new \GuzzleHttp\Client();
+        try {
+            $pagos_operacion =
+                json_decode($client->request('GET', env('APP_URL') . 'pagos/get_pagos/all/false/false?operacion_id=' . $datos_venta['operacion_id'])->getBody(), true);
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
         }
 
         /**verificando si el documento aplica para esta solictitud */
@@ -2448,7 +2458,7 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('cementerios/estado_cuenta/estado_cuenta', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $pdf = PDF::loadView('cementerios/estado_cuenta/estado_cuenta', ['pagos_operacion' => $pagos_operacion, 'datos' => $datos_venta, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['nombre']) . '.pdf';
         $pdf->setOptions([
@@ -2463,7 +2473,7 @@ class CementerioController extends ApiController
 
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('orientation', 'landscape');
+        //$pdf->setOption('orientation', 'landscape');
         $pdf->setOption('margin-left', 12.4);
         $pdf->setOption('margin-right', 12.4);
         $pdf->setOption('margin-top', 12.4);
