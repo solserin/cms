@@ -151,7 +151,7 @@
                     v-else
                     width="20"
                     class="cursor-pointer ml-auto mr-auto"
-                    src="@assets/images/forbidden.svg"
+                    src="@assets/images/right.svg"
                     title="ficha cubierta"
                   />
                 </div>
