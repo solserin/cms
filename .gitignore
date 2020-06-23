@@ -3,6 +3,7 @@
 /public/storage
 /public/js
 /public/css
+/public/css/app.css
 /public/build
 /public/mix-manifest.json
 /public/js/chunks

@@ -282,12 +282,6 @@
      font-style: italic;
     }
 
-.collapse{
-border-collapse: collapse;
-}
-.collapse tr, .collapse td {
-  border-bottom: 1px solid #ddd;
-}
 
 
 .bg-white{
@@ -457,5 +451,14 @@ border: 0px !important;
 .tablas-collapsed tr:nth-child(even){
     background-color: #f2f2f2 !important;
 }
+
+
+.collapse{
+border-collapse: collapse;
+}
+.collapse tr, .collapse td {
+  border-bottom: 1px solid #ddd;
+}
+
 
   </style>

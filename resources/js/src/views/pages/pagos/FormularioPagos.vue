@@ -1248,7 +1248,10 @@ export default {
       this.errores = [];
       try {
         let res = await pagos.guardar_pago(this.form);
-        this.$emit("retorno_pagos", res);
+        let retornar = {
+          id_pago: res.data
+        };
+        this.$emit("retorno_pagos", retornar);
         this.$vs.loading.close();
         this.cerrarVentana();
       } catch (err) {
