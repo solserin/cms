@@ -282,6 +282,19 @@
      font-style: italic;
     }
 
+.collapse{
+border-collapse: collapse;
+}
+.collapse tr, .collapse td {
+  border-bottom: 1px solid #ddd;
+}
+
+
+.bg-white{
+      background-color: #fff !important;
+    }
+
+
     .bg-primary{
       background-color: #{{env('MAINCOLOR')}} !important;
     }

@@ -25,6 +25,8 @@ Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosCont
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 
 
+Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
+
 /**fin de rutas de modulo en proceso */
 
 
@@ -122,7 +124,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
     Route::get('cementerio/documento_convenio', 'CementerioController@documento_convenio');
     Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
-    Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
+
     Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
 

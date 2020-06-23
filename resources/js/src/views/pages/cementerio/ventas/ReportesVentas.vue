@@ -173,14 +173,13 @@
           </template>
           <template slot="thead">
             <vs-th>#</vs-th>
-            <vs-th>Referencia</vs-th>
-            <vs-th>Fecha Programada</vs-th>
-            <vs-th>Monto Pago</vs-th>
-            <vs-th>Intereses Generados</vs-th>
-            <vs-th>Restante a Pagar</vs-th>
+            <vs-th>Clave</vs-th>
+            <vs-th>Fecha Pago</vs-th>
+            <vs-th>Total Pago</vs-th>
             <vs-th>Concepto</vs-th>
+            <vs-th>Cobrador</vs-th>
             <vs-th>Estatus</vs-th>
-            <vs-th>Ver Nota de Pago</vs-th>
+            <vs-th>Consultar</vs-th>
           </template>
           <template>
             <vs-tr
@@ -189,28 +188,29 @@
               ref="row"
             >
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
+                <span class="font-semibold">{{ index_pago + 1 }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
+                <span class="font-semibold">{{ pago.id }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
+                <span class="font-semibold">{{ pago.fecha_pago_texto }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
+                <span class="font-semibold"
+                  >$ {{ pago.total_pago | numFormat("0,000.00") }}</span
+                >
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
+                <span class="font-semibold">{{
+                  pago.movimientos_pagos_texto
+                }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
+                <span class="font-semibold">{{ pago.cobrador.nombre }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
-              </vs-td>
-              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status }}</span>
+                <span class="font-semibold">{{ pago.status_texto }}</span>
               </vs-td>
               <vs-td>
                 <div class="flex flex-start py-1">
@@ -330,13 +330,11 @@ export default {
           url: "/cementerio/documento_titulo",
           tipo: "pdf"
         },
-        /*
         {
           documento: "Estado de cuenta",
           url: "/cementerio/documento_estado_de_cuenta_cementerio",
           tipo: "pdf"
         },
-        */
         {
           documento: "Talonario de Pagos",
           url: "/cementerio/referencias_de_pago",
