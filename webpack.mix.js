@@ -39,6 +39,7 @@ mix.js("resources/js/app.js", "public/js")
             }
         }
     })
+    .copy(["resources/assets/css/w3.css"], "public/css/w3.css")
     .sass("resources/sass/app.scss", "public/css")
     .options({
         postCss: [require("autoprefixer"), require("postcss-rtl")]
