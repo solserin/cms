@@ -417,6 +417,7 @@ class PagosController extends ApiController
             'abono.numeric' => 'La $ cantidad del Abono debe ser un número valido.',
             'abono.min' => 'La $ cantidad del Abono debe ser mayor o igual a cero.',
             'abono.gt' => 'La $ cantidad del Abono debe ser mayor a cero pesos.',
+            'abono.gte' => 'La $ cantidad del Abono debe ser mayor o igual a los intereses o descuento.',
             'intereses.required' => 'Ingrese la $ cantidad de Intereses.',
             'intereses.numeric' => 'La $ cantidad de Intereses debe ser un número valido.',
             'intereses.min' => 'La $ cantidad de Intereses debe ser mayor o igual a cero.',
@@ -466,19 +467,18 @@ class PagosController extends ApiController
 
         /**se obtienen los valores actualizados con la fecha y cantidades a cubrir */
         /**cantidades enviadas por el usuario para procesar el pago */
-        $abono =  $request->abono;
-        $intereses = $request->intereses;
-        $descuento_pronto_pago =  $request->descuento_pronto_pago;
-        $total =  $request->total;
-        $pago_con_cantidad =  $request->pago_con_cantidad;
-        $cambio_pago =  $request->cambio_pago;
+        $abono =  round(($request->abono), 2);
+        $intereses = round($request->intereses, 2);
+        $descuento_pronto_pago =  round($request->descuento_pronto_pago, 2);
+        $total = round(floatval($request->total), 2);
+        $pago_con_cantidad = round($request->pago_con_cantidad, 2);
+        $cambio_pago =  round($request->cambio_pago, 2);
         $monto_pago_parent = $abono - $descuento_pronto_pago; //el pago parent ha registrar, el abono menos el descuento
         /**validando los totales */
 
-        if (($abono - $descuento_pronto_pago + $intereses) != $total) {
+        if (round(($abono - $descuento_pronto_pago + $intereses), 2) > $total) {
             return $this->errorResponse('Hemos encontrado errores en la captura de las cantidades a pagar, por favor verifique y vuelva a intentar.', 409);
         }
-
         /**verificando que los pagos a distribuir en las referencias sean correctos para poder hacer las insercciones de pagos y distribucion en referencias */
         $abono_a_cubrir = $monto_pago_parent;
         $intereses_a_cubrir = $intereses;
@@ -487,7 +487,6 @@ class PagosController extends ApiController
         $array_intereses_cubrir = array();
         $array_descuento_a_cubrir = array();
         $array_pagos_programados_id = array();
-
         try {
             DB::beginTransaction();
             try {
@@ -859,6 +858,7 @@ class PagosController extends ApiController
                         $q->where('pagos.movimientos_pagos_id', '<>', 2)->where('pagos.movimientos_pagos_id', '<>', 3)->with('parent_pago');
                     }
                 })
+                ->orderBy('pagos.id', 'desc')
                 //->where('parent_pago_id', '<>', NULL)
                 ->get();
             $resultado = array();

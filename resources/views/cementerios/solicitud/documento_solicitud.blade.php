@@ -411,27 +411,6 @@
                                 $ {{ number_format( $datos['total'],2)}}
                             </td>
                         </tr>
-                        <tr>
-                            <td class="w-45 py-1 left bg-nada">
-                                <span class="bold">total recibido (<span class="texto-xs w-normal capitalize">fecha
-                                        impresión</span>):</span>
-
-                            </td>
-
-                            <td class="w-55 py-1 right bg-gray">
-                                $ {{ number_format( $datos['total_cubierto'],2)}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="w-45 py-1 left bg-nada">
-                                <span class="bold">saldo (<span class="texto-xs w-normal capitalize">incluye
-                                        intereses</span>):</span>
-
-                            </td>
-                            <td class="w-55 py-1 right bg-gray">
-                                $ {{ number_format( $datos['saldo_neto'],2)}}
-                            </td>
-                        </tr>
                     </table>
                 </td>
                 <td class="w-60 px-2 py-2">

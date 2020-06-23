@@ -155,7 +155,7 @@
                     <tr>
                         <td><span class="bold uppercase px-2">Clave Pago</span></td>
                         <td><span class="bold uppercase px-2">Concepto</span></td>
-                        <td class="py-1"><span class="bold uppercase px-2">referencia de pago</span></td>
+                        <td class="py-1"><span class="bold uppercase px-2">ref. pago</span></td>
                         <td class="right"><span class="bold uppercase px-2">$ monto cubierto</span></td>
                     </tr>
                 </thead>
@@ -164,7 +164,7 @@
                     <tr>
                         <td class="py-1 center"><span class="px-2 uppercase">{{ $datos['id'] }}</span>
                         </td>
-                        <td class="py-1"><span class="px-2 uppercase">{{ $datos['movimientos_pagos_texto'] }}</span>
+                        <td class="py-1"><span class="px-2 capitalize">{{ $datos['movimientos_pagos_texto'] }}</span>
                         </td>
                         <td class="py-1"><span class="px-2">{{ $referencia['referencia_pago'] }}</span></td>
                         <td class="py-1 right"><span class="px-2">
@@ -176,9 +176,10 @@
                     @foreach ($referencia_subpago['referencias_cubiertas'] as $subpago)
                     @if ($subpago['referencia_pago']==$referencia['referencia_pago'])
                     <tr>
-                        <td class="py-1 center"><span class="px-2 uppercase">{{ $referencia_subpago['id'] }}</span>
+                        <td class="py-1 center"><span
+                                class="px-2 uppercase">{{ $referencia_subpago['parent_pago_id'] }}>{{ $referencia_subpago['id'] }}</span>
                         </td>
-                        <td class="py-1"><span class="px-2 uppercase pl-6">
+                        <td class="py-1"><span class="px-2 capitalize pl-6">
                                 @if ($referencia_subpago['movimientos_pagos_id']==2)
                                 <img class="w-6" src="{{asset('images/increase.png')}}" alt="">
                                 @else
@@ -314,7 +315,7 @@
             </div>
 
             <p class="texto-sm justificar line-base">
-                Este documento no es válido si no cuenta con el sello del banco o la firma del
+                Este documento no es válido si no cuenta con la firma del
                 personal
                 de
                 <span class="capitalize bold">{{$empresa->nombre_comercial}}</span> que haya registrado el pago.

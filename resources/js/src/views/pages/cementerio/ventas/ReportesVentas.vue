@@ -149,11 +149,10 @@
                   />
                   <img
                     v-else
-                    width="26"
+                    width="20"
                     class="cursor-pointer ml-auto mr-auto"
-                    src="@assets/images/pdf.svg"
-                    title="Pagar Ficha"
-                    @click="pagar(programados.referencia_pago)"
+                    src="@assets/images/forbidden.svg"
+                    title="ficha cubierta"
                   />
                 </div>
               </vs-td>
@@ -172,7 +171,6 @@
             <h3>Listado de Abonos Recibidos</h3>
           </template>
           <template slot="thead">
-            <vs-th>#</vs-th>
             <vs-th>Clave</vs-th>
             <vs-th>Fecha Pago</vs-th>
             <vs-th>Total Pago</vs-th>
@@ -188,29 +186,24 @@
               ref="row"
             >
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ index_pago + 1 }}</span>
+                <span class="">{{ pago.id }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.id }}</span>
+                <span class="">{{ pago.fecha_pago_texto }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.fecha_pago_texto }}</span>
-              </vs-td>
-              <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold"
+                <span class=""
                   >$ {{ pago.total_pago | numFormat("0,000.00") }}</span
                 >
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{
-                  pago.movimientos_pagos_texto
-                }}</span>
+                <span class="">{{ pago.movimientos_pagos_texto }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.cobrador.nombre }}</span>
+                <span class="">{{ pago.cobrador.nombre }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class="font-semibold">{{ pago.status_texto }}</span>
+                <span class="">{{ pago.status_texto }}</span>
               </vs-td>
               <vs-td>
                 <div class="flex flex-start py-1">
@@ -377,6 +370,14 @@ export default {
         await this.consultar_venta_id();
         if (this.operacion_id != "") {
           await this.consultar_pagos_operacion_id();
+          console.log(datos.id_pago);
+          /**llamando el pago recien hecho */
+          this.openReporte(
+            "reporte de pago",
+            "/pagos/recibo_de_pago/",
+            datos.id_pago,
+            "pago"
+          );
         }
       })();
     },
