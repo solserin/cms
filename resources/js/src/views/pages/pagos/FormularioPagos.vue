@@ -31,7 +31,7 @@
             v-validate="'required'"
             placeholder="Núm. de referencia del pago"
             v-model.trim="form.referencia"
-            :disabled="getReferencia != '' ? false : false"
+            :disabled="getReferencia != '' ? true : false"
             @keypress.enter="CalcularPago()"
           />
           <div>

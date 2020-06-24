@@ -435,6 +435,9 @@ class PagosController extends ApiController
         );
 
 
+
+
+
         foreach ($request->pagos_a_cubrir as $index_referencia => $referencia) {
             /**verificando que las fechas enviadas en los pagoa a cubrir y la seleccionada al calcular el adeudo coincidan */
             if (date('Y-m-d', strtotime($referencia['fecha_a_pagar'])) != date('Y-m-d', strtotime($request->fecha_pago))) {
@@ -455,6 +458,17 @@ class PagosController extends ApiController
         } else {
             /**no hay pagoa a cubrir */
             return $this->errorResponse('No se ha encontrado ninguna referencia de pago a cubrir.', 409);
+        }
+
+
+        /**verificando que la operaicon no este cancelada */
+        $datos_operacion = $referencias_adeudos[0];
+        $cementerio_controller = new CementerioController();
+        $datos_venta = $cementerio_controller->get_ventas($request, $datos_operacion['ventas_terrenos_id'], '')[0];
+
+        /**verificnado si la operacion no esta cancelada o pagada */
+        if ($datos_venta['operacion_status'] == 0) {
+            return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
         }
 
 
@@ -1027,7 +1041,7 @@ class PagosController extends ApiController
         //$pdf->setOption('orientation', 'landscape');
         $pdf->setOption('margin-left', 13.4);
         $pdf->setOption('margin-right', 13.4);
-        $pdf->setOption('margin-top', 9.4);
+        $pdf->setOption('margin-top', 13.4);
         $pdf->setOption('margin-bottom', 13.4);
         $pdf->setOption('page-size', 'A4');
 

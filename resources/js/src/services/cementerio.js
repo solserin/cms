@@ -92,17 +92,8 @@ export default {
     },
 
     cancelar_venta(datos) {
-        let call = "/inventarios/cementerio/cancelar_venta";
-        return new Promise((resolve, reject) => {
-            axios
-                .post(call, datos)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+        let call = "/cementerio/cancelar_venta";
+        return axios.post(call, datos);
     },
 
     //obtiene la distribucion del cementerio

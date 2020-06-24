@@ -206,7 +206,7 @@
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash-open.svg"
                 title="Esta venta ya fue cancelada, puede hacer click aquí para consultar"
-                @click="cancelarVenta(data[indextr].ventas_terrenos_id)"
+                @click="ConsultarVenta(data[indextr].ventas_terrenos_id)"
               />
             </div>
           </vs-td>

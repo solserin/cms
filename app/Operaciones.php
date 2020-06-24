@@ -196,4 +196,22 @@ class Operaciones extends Model
     {
         return $this->belongsTo('App\Clientes', 'clientes_id', 'id');
     }
+
+
+
+
+    public function registro()
+    {
+        return $this->hasOne('App\User', 'id', 'registro_id');
+    }
+
+    public function modifico()
+    {
+        return $this->hasOne('App\User', 'id', 'modifico_id');
+    }
+
+    public function cancelador()
+    {
+        return $this->hasOne('App\User', 'id', 'cancelo_id');
+    }
 }

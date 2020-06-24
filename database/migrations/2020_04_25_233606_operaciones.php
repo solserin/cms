@@ -87,6 +87,12 @@ class Operaciones extends Migration
             $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
             $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->mediumText('nota')->nullable();
+            $table->tinyInteger('motivos_cancelacion_id')->nullable();
+            $table->dateTime('fecha_cancelacion')->nullable();
+            $table->float('cantidad_a_regresar_cancelacion')->nullable();
+            $table->unsignedBigInteger('cancelo_id')->nullable();
+            $table->foreign('cancelo_id')->references('id')->on('usuarios');
+            $table->mediumText('nota_cancelacion')->nullable();
             $table->tinyInteger('status')->default(1);
         });
     }

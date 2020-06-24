@@ -39,18 +39,25 @@ class CementerioController extends ApiController
     {
         //return $request->minima_cuota_inicial;
         //validaciones directas sin condicionales
-        $datos_venta = $this->get_venta_id($request->venta_id);
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar este servicio.', 409);
+        }
+        $datos_venta = $this->get_ventas($request, $request->venta_id, '')[0];
+
+        /**unicamente puede regresarse lo que  se ha cubierto de capital */
         $validaciones = [
             'venta_id' => 'required',
             'motivo.value' => 'required',
-            'cantidad' => 'numeric|min:0|' . 'max:' . $datos_venta['total_pagado'],
+            'cantidad' => 'numeric|min:0|' . 'max:' . $datos_venta['abonado_capital'],
         ];
 
 
         $mensajes = [
             'required' => 'Ingrese este dato',
             'numeric' => 'Este dato debe ser un número',
-            'max' => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($datos_venta['total_pagado'], 2),
+            'max' => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($datos_venta['abonado_capital'], 2),
             'min' => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN'
         ];
         request()->validate(
@@ -67,7 +74,7 @@ class CementerioController extends ApiController
 
         /**validar si la propiedad no fue dada de baja ya */
 
-        if ($datos_venta['status'] != 1) {
+        if ($datos_venta['operacion_status'] == 0) {
             return $this->errorResponse('Esta venta ya habia sido dada de baja.', 409);
         }
 
@@ -75,7 +82,7 @@ class CementerioController extends ApiController
         try {
             DB::beginTransaction();
 
-            DB::table('ventas_terrenos')->where('id', $request->venta_id)->update(
+            DB::table('operaciones')->where('ventas_terrenos_id', $request->venta_id)->update(
                 [
                     'motivos_cancelacion_id' => $request['motivo.value'],
                     'fecha_cancelacion' => now(),
@@ -1484,6 +1491,8 @@ class CementerioController extends ApiController
             ->with('venta_terreno.tipo_propiedad')
             ->with('beneficiarios')
             ->with('AjustesPoliticas')
+            ->with('cancelador:id,nombre')
+            ->with('registro:id,nombre')
             ->where('empresa_operaciones_id', '=', 1)
             /**solo ventas de cementerio */
             ->select(
@@ -1521,7 +1530,10 @@ class CementerioController extends ApiController
                 'clientes.email',
                 'clientes.fecha_nac',
                 DB::raw(
-                    'DATE(fecha_operacion) as fecha_operacion'
+                    'DATE(operaciones.fecha_operacion) as fecha_operacion'
+                ),
+                DB::raw(
+                    'DATE(operaciones.fecha_cancelacion) as fecha_cancelacion_operacion'
                 ),
                 DB::raw(
                     '(NULL) as fecha_operacion_texto'
@@ -1596,7 +1608,16 @@ class CementerioController extends ApiController
                 ),
                 DB::raw(
                     '(NULL) AS pagos_realizados_arreglo'
-                )
+                ),
+                'operaciones.registro_id',
+                'operaciones.cancelo_id',
+                'operaciones.modifico_id',
+                'operaciones.nota_cancelacion',
+                'operaciones.motivos_cancelacion_id',
+                'operaciones.cantidad_a_regresar_cancelacion',
+                DB::raw(
+                    '(NULL) AS motivos_cancelacion_texto'
+                ),
             )
             ->where(function ($q) use ($id_venta) {
                 if (trim($id_venta) == 'all' || $id_venta > 0) {
@@ -1650,6 +1671,17 @@ class CementerioController extends ApiController
             /**DEFINIENDO EL STATUS DE LA VENTA*/
             if ($venta['operacion_status'] == 0) {
                 $venta['status_texto'] = 'Cancelada';
+                if ($venta['motivos_cancelacion_id'] == 1) {
+                    /**fue por fal de pago */
+                    $venta['motivos_cancelacion_texto'] = 'falta de pago';
+                } elseif ($venta['motivos_cancelacion_id'] == 2) {
+                    /**fue por peticion de lciente */
+                    $venta['motivos_cancelacion_texto'] = 'a petición del cliente';
+                } elseif ($venta['motivos_cancelacion_id'] == 3) {
+                    /**fue por error de captura */
+                    $venta['motivos_cancelacion_texto'] = 'error de captura';
+                }
+                /**actualizando el motivo de cancelacion */
             } elseif ($venta['operacion_status'] == 1) {
                 $venta['status_texto'] = 'Por Pagar';
             } elseif ($venta['operacion_status'] == 2) {
@@ -1793,13 +1825,22 @@ class CementerioController extends ApiController
                         $programado['fecha_ultimo_pago'] = $fecha_ultimo_pago;
                         $programado['fecha_ultimo_pago_abr'] = fecha_abr($fecha_ultimo_pago);
                     }
-
                     /**verificando el estado del pago programado*/
                     /**verificando si la fecha sigue vigente o esta vencida */
                     /**variables para controlar el incremento por intereses */
                     $dias_retrasados_del_pago = 0;
                     $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
-                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
+
+                    /**aqui verifico que si la operacion esta activa genere los intereses acorde al dia de hoy, si esta cancelada que tomen intereses a partir de la fecha de cancelacion */
+                    $fecha_para_intereses = date('Y-m-d');
+                    if ($venta['operacion_status'] == 0) {
+                        if (trim($venta['fecha_cancelacion_operacion']) != '') {
+                            $fecha_para_intereses = $venta['fecha_cancelacion_operacion'];
+                        }
+                    }
+
+
+                    $fecha_hoy = Carbon::createFromFormat('Y-m-d', $fecha_para_intereses);
 
                     $interes_generado = 0;
                     $programado['fecha_a_pagar_abr'] = fecha_abr($programado['fecha_programada']);
@@ -1809,6 +1850,8 @@ class CementerioController extends ApiController
                         /**tiene todavia saldo que pagar, se debe verificar si el pago esta vencido para generarle los intereses correspondientes */
                         if (date('Y-m-d', strtotime($programado['fecha_programada'])) < date('Y-m-d')) {
                             /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
+
+
                             $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
                             if ($dias_vencido_primer_pago_vencido == '') {
                                 $dias_vencido_primer_pago_vencido = $dias_retrasados_del_pago;
@@ -2023,74 +2066,89 @@ class CementerioController extends ApiController
 
     public function acuse_cancelacion(Request $request)
     {
-        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        $email =  $request->email_send === 'true' ? true : false;
-        $email_to = $request->email_address;
-        $requestVentasList = json_decode($request->request_parent[0], true);
-        $id_venta = $requestVentasList['venta_id'];
+        try {
+            /*
+            $id_venta = 8;
+            $email = false;
+            $email_to = 'hector@gmail.com';
+*/
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_venta = $requestVentasList['venta_id'];
 
-        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
-         * por lo cual puede variar de paramtros degun la ncecesidad
-         */
-        /*$id_venta = 9;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-        */
-
-
-        //obtengo la informacion de esa venta
-        $datos_venta = $this->get_venta_id($id_venta);
-
-        $get_funeraria = new EmpresaController();
-        $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/cementerios/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
-        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
-
-        $pdf->setOptions([
-            'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.acuse_cancelacion.footer'),
-        ]);
-        if ($datos_venta['status'] == 0) {
-            $pdf->setOptions([
-                'header-html' => view('inventarios.cementerios.acuse_cancelacion.header')
-            ]);
-        }
-
-
-
-
-        //$pdf->setOption('grayscale', true);
-        //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 5.4);
-        $pdf->setOption('margin-right', 5.4);
-        $pdf->setOption('margin-top', 5.4);
-        $pdf->setOption('margin-bottom', 10.4);
-        $pdf->setOption('page-size', 'a4');
-
-        if ($email == true) {
-            /**email */
-            /**
-             * parameters lista de la funcion
-             * to destinatario
-             * to_name nombre del destinatario
-             * subject motivo del correo
-             * name_pdf nombre del pdf
-             * pdf archivo pdf a enviar
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
              */
-            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
-            $email_controller = new EmailController();
-            $enviar_email = $email_controller->pdf_email(
-                $email_to,
-                strtoupper($datos_venta['cliente_nombre']),
-                'ACUSE DE CANCELACIÓN',
-                $name_pdf,
-                $pdf
-            );
-            return $enviar_email;
-            /**email fin */
-        } else {
-            return $pdf->inline($name_pdf);
+
+            //obtengo la informacion de esa venta
+            $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+
+            if (!empty($datos_venta)) {
+                if ($datos_venta['operacion_status'] != 0) {
+                    return $this->errorResponse('Error al cargar los datos.', 409);
+                }
+            } else {
+                /**datos vacios */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('cementerios/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['nombre']) . '.pdf';
+
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('cementerios.acuse_cancelacion.footer'),
+            ]);
+            if ($datos_venta['operacion_status'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('cementerios.acuse_cancelacion.header')
+                ]);
+            }
+
+
+
+
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 13.4);
+            $pdf->setOption('margin-right', 13.4);
+            $pdf->setOption('margin-top', 9.4);
+            $pdf->setOption('margin-bottom', 13.4);
+            $pdf->setOption('page-size', 'A4');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_venta['nombre']),
+                    'ACUSE DE CANCELACIÓN',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos.', 409);
         }
     }
 

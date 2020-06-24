@@ -221,7 +221,14 @@
 
                         </td>
                         <td>{{ $pago['status_pago_texto'] }}</td>
-                        <td>$ {{ number_format($pago['monto_pronto_pago'],2)}}</td>
+                        <td>
+                            @if ($pago['conceptos_pagos_id']==1 || $pago['conceptos_pagos_id']==3)
+                            $ {{ number_format($pago['monto_programado'],2)}}
+                            @else
+                            $ {{ number_format($pago['monto_pronto_pago'],2)}}
+                            @endif
+
+                        </td>
                         <td>$ {{ number_format($pago['monto_programado'],2)}}</td>
                         <td>$ {{ number_format($pago['total_cubierto'],2)}}</td>
                         <td>$ {{ number_format($pago['intereses'],2)}}</td>

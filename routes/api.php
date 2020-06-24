@@ -27,6 +27,8 @@ Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioControl
 
 Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
 
+
+Route::get('cementerio/acuse_cancelacion', 'CementerioController@acuse_cancelacion');
 /**fin de rutas de modulo en proceso */
 
 
@@ -156,7 +158,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
 
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
-    Route::post('inventarios/cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
+    Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
 
 
@@ -164,7 +166,7 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 
-    Route::get('inventarios/cementerio/acuse_cancelacion', 'CementerioController@acuse_cancelacion');
+
 
 
 

@@ -229,6 +229,19 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="w-full py-1">
+                                <span class="px-2 uppercase size-12px bold">
+                                    cantidad del movimiento en letra:
+                                </span>
+                                <div class="px-2 pt-1">
+                                    <span class="uppercase">
+                                        ({{ numeros_a_letras($datos['total_pago']) }})
+                                    </span>
+                                </div>
+                            </div>
+
+
+
                         </td>
                         <td class="py-1 capitalize center">
                             <span class="px-2 uppercase size-12px bold">

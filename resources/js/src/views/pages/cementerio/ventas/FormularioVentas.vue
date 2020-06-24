@@ -21,12 +21,15 @@
             <!--mapa del cementerio-->
             <div mt-5>
               <Mapa
-                :disabled="tiene_pagos_realizados || ventaLiquidada"
+                :disabled="
+                  tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                "
                 :idAreaInicial="idAreaInicial"
                 @getDatosTipoPropiedad="getDatosTipoPropiedad"
                 @respuestaDeshabilitado="respuestaDeshabilitado"
               ></Mapa>
             </div>
+            {{ fueCancelada }}
 
             <!--fin del mapa del cementerio-->
           </div>
@@ -70,7 +73,9 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <v-select
-                  :disabled="tiene_pagos_realizados || ventaLiquidada"
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                   :options="filas"
                   :clearable="false"
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -114,7 +119,8 @@
                   :disabled="
                     this.datosAreas.tipo_propiedades_id != 4 ||
                       tiene_pagos_realizados ||
-                      ventaLiquidada
+                      ventaLiquidada ||
+                      fueCancelada
                   "
                   v-validate:ubicacion_validacion_computed.immediate="
                     'required'
@@ -184,7 +190,9 @@
                     v-model="form.tipo_financiamiento"
                     :vs-value="1"
                     class="mr-4"
-                    :disabled="tiene_pagos_realizados || ventaLiquidada"
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
                     >Uso inmediato</vs-radio
                   >
                   <vs-radio
@@ -192,7 +200,9 @@
                     v-model="form.tipo_financiamiento"
                     :vs-value="2"
                     class="mr-4"
-                    :disabled="tiene_pagos_realizados || ventaLiquidada"
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
                     >A futuro</vs-radio
                   >
                 </div>
@@ -230,22 +240,32 @@
                   <div
                     class="w-full sm:w-3/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
                   >
-                    <img
-                      v-if="form.id_cliente == ''"
-                      width="46px"
-                      class="cursor-pointer p-2 mt-2"
-                      src="@assets/images/search.svg"
-                      @click="openBuscador = true"
-                      title="Buscar Cliente"
-                    />
-                    <img
-                      v-else
-                      width="46px"
-                      class="cursor-pointer p-2 mt-2"
-                      src="@assets/images/minus.svg"
-                      @click="quitarCliente()"
-                    />
+                    <div v-if="fueCancelada != true">
+                      <img
+                        v-if="form.id_cliente == ''"
+                        width="46px"
+                        class="cursor-pointer p-2 mt-2"
+                        src="@assets/images/search.svg"
+                        @click="openBuscador = true"
+                        title="Buscar Cliente"
+                      />
+                      <img
+                        v-else
+                        width="46px"
+                        class="cursor-pointer p-2 mt-2"
+                        src="@assets/images/minus.svg"
+                        @click="quitarCliente()"
+                      />
+                    </div>
+                    <div v-else>
+                      <img
+                        width="46px"
+                        class="cursor-pointer p-2 mt-2"
+                        src="@assets/images/minus.svg"
+                      />
+                    </div>
                   </div>
+
                   <div
                     class="w-full sm:w-9/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
                   >
@@ -313,6 +333,7 @@
                       "
                       name="vendedor"
                       data-vv-as=" "
+                      :disabled="fueCancelada"
                     >
                       <div slot="no-options">
                         Seleccione un vendedor
@@ -345,7 +366,9 @@
                 </label>
 
                 <flat-pickr
-                  :disabled="tiene_pagos_realizados || ventaLiquidada"
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                   name="fecha_venta"
                   data-vv-as=" "
                   v-validate:fecha_venta_validacion_computed.immediate="
@@ -388,7 +411,7 @@
                   class="w-full pb-1 pt-1"
                   placeholder=" Núm. Solicitud"
                   v-model="form.solicitud"
-                  :disabled="tipo_venta"
+                  :disabled="tipo_venta || fueCancelada"
                   maxlength="12"
                 />
                 <div>
@@ -419,7 +442,7 @@
                   class="w-full pb-1 pt-1"
                   placeholder="Núm. Convenio"
                   v-model="form.convenio"
-                  :disabled="!capturar_num_convenio"
+                  :disabled="!capturar_num_convenio || fueCancelada"
                   maxlength="16"
                 />
                 <div>
@@ -452,7 +475,8 @@
                   placeholder="Núm. Título"
                   v-model="form.titulo"
                   :disabled="
-                    !(tipo_venta * capturar_num_titulo + capturar_num_titulo)
+                    !(tipo_venta * capturar_num_titulo + capturar_num_titulo) ||
+                      fueCancelada
                   "
                   maxlength="16"
                 />
@@ -498,6 +522,7 @@
               class="w-full pb-1 pt-1"
               placeholder="Nombre del titular sustituto"
               v-model="form.titular_sustituto"
+              :disabled="fueCancelada"
             />
             <div>
               <span class="mensaje-requerido">{{
@@ -528,6 +553,7 @@
               class="w-full pb-1 pt-1"
               placeholder="Ej. Hermano"
               v-model="form.parentesco_titular_sustituto"
+              :disabled="fueCancelada"
             />
             <div>
               <span class="mensaje-requerido">
@@ -558,6 +584,7 @@
               class="w-full pb-1 pt-1"
               placeholder="Ingrese un teléfono"
               v-model="form.telefono_titular_sustituto"
+              :disabled="fueCancelada"
             />
             <div>
               <span class="mensaje-requerido">{{
@@ -697,6 +724,7 @@
               <div
                 class="mt-10 float-right"
                 @click="remover_beneficiario(index)"
+                v-if="!fueCancelada"
               >
                 <img
                   class="cursor-pointer img-btn"
@@ -738,7 +766,11 @@
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-            <div class="mt-8 float-right" @click="agregar_beneficiario()">
+            <div
+              class="mt-8 float-right"
+              @click="agregar_beneficiario()"
+              v-if="!fueCancelada"
+            >
               <span
                 class="text-white font-medium px-2 py-1 bg-success cursor-pointer"
                 >Agregar beneficiario</span
@@ -1036,7 +1068,9 @@
                   v-validate:plan_de_venta_computed.immediate="'required'"
                   name="plan_venta"
                   data-vv-as=" "
-                  :disabled="tiene_pagos_realizados || ventaLiquidada"
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                 >
                   <div slot="no-options">
                     No Se Ha Seleccionado Ningún Área
@@ -1063,7 +1097,9 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_realizados || ventaLiquidada"
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                   size="large"
                   name="subtotal"
                   data-vv-as=" "
@@ -1093,7 +1129,9 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_realizados || ventaLiquidada"
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                   size="large"
                   name="descuento"
                   data-vv-as=" "
@@ -1189,7 +1227,9 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_realizados || ventaLiquidada"
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                   size="large"
                   name="pago_inicial"
                   data-vv-as=" "
@@ -1226,7 +1266,9 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
-                  :disabled="tiene_pagos_realizados || ventaLiquidada"
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                   size="large"
                   name="costo_neto_pronto_pago"
                   data-vv-as=" "
@@ -1316,6 +1358,7 @@
                     <div
                       class="float-right cursor-pointer"
                       @click="openNotas = true"
+                      v-if="!fueCancelada"
                     >
                       <img width="26px" src="@assets/images/notas_add.svg" />
                       <h3 class="float-right ml-3 mt-1 text-base font-medium">
@@ -1326,8 +1369,27 @@
                 </div>
                 <div class="flex flex-wrap mt-4">
                   <vs-button
+                    v-if="!fueCancelada"
                     class="w-full ml-auto mr-auto"
                     @click="acceptAlert()"
+                    color="success"
+                    size="small"
+                  >
+                    <img
+                      width="25px"
+                      class="cursor-pointer"
+                      src="@assets/images/save.svg"
+                    />
+                    <span
+                      class="texto-btn"
+                      v-if="this.getTipoformulario == 'agregar'"
+                      >Guardar Venta</span
+                    >
+                    <span class="texto-btn" v-else>Modificar Venta</span>
+                  </vs-button>
+                  <vs-button
+                    v-else
+                    class="w-full ml-auto mr-auto"
                     color="success"
                     size="small"
                   >
@@ -1686,6 +1748,13 @@ export default {
     tienePagosVencidos: function() {
       if (this.getTipoformulario == "modificar") {
         if (this.datosVenta.pagos_vencidos > 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    fueCancelada: function() {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.operacion_status == 0) {
           return true;
         } else return false;
       } else return false;

@@ -340,7 +340,7 @@ export default {
         },
         {
           documento: "Acuse de cancelación",
-          url: "/inventarios/cementerio/acuse_cancelacion",
+          url: "/cementerio/acuse_cancelacion",
           tipo: "pdf"
         }
       ],

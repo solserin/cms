@@ -345,6 +345,12 @@ html {
 }
 
 /*default size for small devices*/
+.forms-popups-cancelar_cementerio {
+    .vs-popup {
+        width: 100% !important;
+    }
+}
+
 .forms-popups-pagos {
     .vs-popup {
         width: 100% !important;
@@ -413,6 +419,12 @@ html {
 
 // Large devices (desktops, less than 1200px)
 @media (min-width: 1200px) {
+    .forms-popups-cancelar_cementerio {
+        .vs-popup {
+            width: 1000px !important;
+        }
+    }
+
     .forms-popups-pagos {
         .vs-popup {
             width: 90% !important;
