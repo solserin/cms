@@ -1617,7 +1617,7 @@ class CementerioController extends ApiController
                 'operaciones.cantidad_a_regresar_cancelacion',
                 DB::raw(
                     '(NULL) AS motivos_cancelacion_texto'
-                ),
+                )
             )
             ->where(function ($q) use ($id_venta) {
                 if (trim($id_venta) == 'all' || $id_venta > 0) {
