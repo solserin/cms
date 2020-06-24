@@ -138,36 +138,10 @@ const router = new Router({
                     }
                 },
                 /**FIN DE RUTAS PARA EL MODULO DE EMPRESAS */
-                /**RUTAS PARA EL MODULO DE PROVEEDORES */
-                {
-                    path: "/inventarios/funeraria/proveedores",
-                    name: "inventario-proveedores",
-                    component: () =>
-                        import("@/views/pages/proveedores/Proveedores.vue"),
-                    meta: {
-                        breadcrumb: [
-                            {
-                                title: "Home",
-                                url: "/"
-                            },
-                            {
-                                title: "Inventario"
-                            },
-                            {
-                                title: "Proveedores",
-                                active: true
-                            }
-                        ],
-                        pageTitle: "Proveedores",
-                        rule: "editor",
-                        authRequired: true
-                    }
-                },
-                /**FIN DE RUTAS PARA EL MODULO DE USUARIOS */
-                /**RUTAS PARA EL MODULO DE inventarios */
+
                 {
                     path: "/cementerio/ventas",
-                    name: "inventario_cementerio_ventas",
+                    name: "cementerio_ventas",
                     component: () =>
                         import(
                             "@/views/pages/cementerio/ventas/VentasList.vue"
@@ -191,13 +165,12 @@ const router = new Router({
                         authRequired: true
                     }
                 },
-
                 {
-                    path: "/inventarios/funeraria/articulos-servicios",
-                    name: "inventarioFuneraria",
+                    path: "/cobranza/pagos",
+                    name: "cobranza_pagos",
                     component: () =>
                         import(
-                            "@/views/pages/inventarios/articulos/Articulos.vue"
+                            "@/views/pages/cementerio/ventas/VentasList.vue"
                         ),
                     meta: {
                         breadcrumb: [
@@ -206,15 +179,16 @@ const router = new Router({
                                 url: "/"
                             },
                             {
-                                title: "Inventario de la funeraria"
+                                title: "Control del pagos"
                             },
                             {
-                                title: "Inventario",
+                                title: "Módulo de cobranza",
                                 active: true
                             }
                         ],
-                        pageTitle: "Inventario de la funeraria",
-                        rule: "editor"
+                        pageTitle: "Cobranza",
+                        rule: "editor",
+                        authRequired: true
                     }
                 },
                 // =============================================================================

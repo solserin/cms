@@ -206,7 +206,7 @@
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash-open.svg"
                 title="Esta venta ya fue cancelada, puede hacer click aquí para consultar"
-                @click="ConsultarVenta(data[indextr].ventas_terrenos_id)"
+                @click="ConsultarVentaAcuse(data[indextr].ventas_terrenos_id)"
               />
             </div>
           </vs-td>
@@ -240,6 +240,7 @@
     ></Password>
 
     <ReportesVentas
+      :verAcuse="verAcuse"
       :show="openReportes"
       @closeListaReportes="closeListaReportes"
       :id_venta="id_venta"
@@ -304,6 +305,7 @@ export default {
   },
   data() {
     return {
+      verAcuse: false,
       openPlanesVenta: false,
       openCancelar: false,
       openReportes: false,
@@ -459,6 +461,12 @@ export default {
       this.id_venta = id_venta;
       this.openReportes = true;
     },
+    ConsultarVentaAcuse(id_venta) {
+      this.verAcuse = true;
+      this.id_venta = id_venta;
+      this.openReportes = true;
+    },
+
     openModificar(id_venta) {
       this.tipoFormulario = "modificar";
       this.id_venta_modificar = id_venta;
@@ -476,6 +484,7 @@ export default {
 
     closeListaReportes() {
       this.openReportes = false;
+      this.verAcuse = false;
       this.id_venta = 0;
       (async () => {
         await this.get_data(this.actual);

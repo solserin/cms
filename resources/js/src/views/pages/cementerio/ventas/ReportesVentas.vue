@@ -256,6 +256,11 @@ export default {
     FormularioPagos
   },
   props: {
+    verAcuse: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     show: {
       type: Boolean,
       required: true
@@ -278,6 +283,15 @@ export default {
           if (this.operacion_id != "") {
             await this.consultar_pagos_operacion_id();
           }
+          /**checamos si esta ventana fue abierta con el fin de ver el acuse de cancelacion */
+          if (this.getVerAcuse == true) {
+            this.openReporte(
+              "Acuse de cancelación",
+              "/cementerio/acuse_cancelacion",
+              "",
+              ""
+            );
+          }
         })();
       } else {
         /**cerrar ventana */
@@ -298,6 +312,14 @@ export default {
     get_venta_id: {
       get() {
         return this.id_venta;
+      },
+      set(newValue) {
+        return newValue;
+      }
+    },
+    getVerAcuse: {
+      get() {
+        return this.verAcuse;
       },
       set(newValue) {
         return newValue;
@@ -370,7 +392,6 @@ export default {
         await this.consultar_venta_id();
         if (this.operacion_id != "") {
           await this.consultar_pagos_operacion_id();
-          console.log(datos.id_pago);
           /**llamando el pago recien hecho */
           this.openReporte(
             "reporte de pago",
