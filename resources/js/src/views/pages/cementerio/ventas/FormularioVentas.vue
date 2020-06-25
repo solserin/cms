@@ -29,8 +29,6 @@
                 @respuestaDeshabilitado="respuestaDeshabilitado"
               ></Mapa>
             </div>
-            {{ fueCancelada }}
-
             <!--fin del mapa del cementerio-->
           </div>
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
