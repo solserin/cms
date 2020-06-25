@@ -35,7 +35,8 @@ class PagosController extends ApiController
 
     public function get_formas_pago_sat()
     {
-        return $this->showAll(SatFormasPago::get());
+        /**las formas de pago que aplican para el caso de esta empresa */
+        return $this->showAll(SatFormasPago::where('clave', '<>', '99')->where('clave', '<>', '15')->get());
     }
 
     public function get_monedas_sat()
@@ -458,7 +459,14 @@ class PagosController extends ApiController
                 $validaciones['pago_con_cantidad'] = 'numeric|required|min:' . (float) $request->total;
                 $validaciones['cambio_pago'] = 'numeric|required|min:0';
             } else {
-                $request->pago_con_cantidad = (float) $request->total;
+
+                /**verificnado que no tenga contidad con que pago incluido cuando es por remision de deuda*/
+                if ($request->formaPago['value'] != 7) {
+                    $request->pago_con_cantidad = (float) $request->total;
+                } else {
+                    /**no debe de haber valores mayores a cero */
+                    $request->pago_con_cantidad = 0;
+                }
                 $request->cambio_pago = 0;
             }
         } else {
@@ -502,9 +510,6 @@ class PagosController extends ApiController
             $validaciones,
             $mensajes
         );
-
-
-
 
 
         foreach ($request->pagos_a_cubrir as $index_referencia => $referencia) {
@@ -557,6 +562,16 @@ class PagosController extends ApiController
         $pago_con_cantidad = round($request->pago_con_cantidad, 2);
         $cambio_pago =  round($request->cambio_pago, 2);
         $monto_pago_parent = $abono - $descuento_pronto_pago; //el pago parent ha registrar, el abono menos el descuento
+
+        /**verificando que no haya descuento por pronyo pago ni intereses si la forma de pago es remision de deuda */
+        if ($request->formaPago['value'] == 7) {
+            /**remision de deuda, descuento directo al capital */
+            if ($intereses > 0 || $descuento_pronto_pago > 0) {
+                /**no debe de haber valores mayores a cero */
+                return $this->errorResponse('El pago que desea realizar no puede llevar valores de intereses ni descuentos por pronto pago.', 409);
+            }
+        }
+
         /**validando los totales */
 
         if (round(($abono - $descuento_pronto_pago + $intereses), 2) > $total) {
@@ -710,6 +725,13 @@ class PagosController extends ApiController
             }
             $array_pagos_programados_id;
 
+            $id_tipo_movimiento = 1;
+            /**por default es abono a capital  */
+            /**verificando que si es renision de deuda se aplique la clave de movimiento 4 //descuento a capital*/
+            if ($request->formaPago['value'] == 7) {
+                $id_tipo_movimiento = 4;
+            }
+
             $id_abono_capital = DB::table('pagos')->insertGetId(
                 [
                     'monto_pago' => $monto_pago_parent,
@@ -724,7 +746,7 @@ class PagosController extends ApiController
                     'registro_id' => (int) $request->user()->id,
                     'cobrador_id' => $request->cobrador['value'],
                     'sat_formas_pago_id' => $request->formaPago['value'],
-                    'movimientos_pagos_id' => 1, //abono a capital
+                    'movimientos_pagos_id' => $id_tipo_movimiento,
                     'nota' => $request->nota,
                     'sat_monedas_id' => $request->moneda['value'],
                     'tipo_cambio' => 1 //1 pesos,
@@ -738,7 +760,7 @@ class PagosController extends ApiController
                         'pagos_id' => $id_abono_capital,
                         'monto' => $pago['monto'],
                         'pagos_programados_id' => $pago['pagos_programados_id'],
-                        'movimientos_pagos_id' => 1 //abono a capital
+                        'movimientos_pagos_id' => $id_tipo_movimiento
                     ]
                 );
             }

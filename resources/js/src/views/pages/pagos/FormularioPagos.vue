@@ -702,7 +702,10 @@
                   name="pago_con_cantidad"
                   data-vv-as=" "
                   v-validate="
-                    'required|decimal:2|min_value:' + cantidad_a_regresar
+                    'required|decimal:2|min_value:' +
+                      cantidad_a_regresar +
+                      '|max_value:' +
+                      maximo_cantidad_pago
                   "
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
@@ -766,13 +769,22 @@
 
               <div class="w-full px-2">
                 <div class="mt-2">
-                  <p class="text-center pb-8">
+                  <div class="text-center" v-if="form.formaPago.value != 7">
                     <span class="text-danger font-medium text-base">Ojo:</span>
                     Por favor revise la información ingresada, si todo es
                     correcto de click en "Botón de Abajo”.
-                  </p>
+                  </div>
+                  <div v-else>
+                    <img width="25px" src="@assets/images/warning.svg" />
+                    <h3
+                      class="w-11/12 font-medium text-base text-danger py-1 float-right ml-1"
+                    >
+                      Advertencia, la forma de pago seleccionada se tomará como
+                      un descuento.
+                    </h3>
+                  </div>
                   <vs-button
-                    class="w-full mb-5"
+                    class="w-full mb-5 mt-5"
                     @click="acceptAlert()"
                     color="success"
                     size="small"
@@ -978,25 +990,36 @@ export default {
     maximo_interes: function() {
       let maximo = 0;
       if (this.form.pagos_a_cubrir.length > 0) {
-        this.form.pagos_a_cubrir.forEach(element => {
-          if (element.status_pago != 2) {
-            /**diferente de pagado */
-            maximo += element.intereses;
-          }
-        });
+        /**verificando que el la forma de pago no es remision de deuda, en caso de ser remision de deuda(descuento al capital) este deberia ser 0 */
+        if (this.form.formaPago["value"] != 7) {
+          this.form.pagos_a_cubrir.forEach(element => {
+            if (element.status_pago != 2) {
+              /**diferente de pagado */
+              maximo += element.intereses;
+            }
+          });
+        } else {
+          /**es descuento directo al capital */
+          maximo = 0;
+        }
       }
-
       return parseFloat(maximo).toFixed(2);
     },
     maximo_descuento: function() {
       let maximo = 0;
       if (this.form.pagos_a_cubrir.length > 0) {
-        this.form.pagos_a_cubrir.forEach(element => {
-          if (element.status_pago != 2) {
-            /**diferente de pagado */
-            maximo += element.descuento_pronto_pago;
-          }
-        });
+        /**verificando que el la forma de pago no es remision de deuda, en caso de ser remision de deuda(descuento al capital) este deberia ser 0 */
+        if (this.form.formaPago["value"] != 7) {
+          this.form.pagos_a_cubrir.forEach(element => {
+            if (element.status_pago != 2) {
+              /**diferente de pagado */
+              maximo += element.descuento_pronto_pago;
+            }
+          });
+        } else {
+          /**es descuento directo al capital */
+          maximo = 0;
+        }
       }
       return parseFloat(maximo).toFixed(2);
     },
@@ -1011,6 +1034,16 @@ export default {
         });
       }
       return parseFloat(maximo).toFixed(2);
+    },
+
+    maximo_cantidad_pago: function() {
+      /**verificando que el la forma de pago no es remision de deuda, en caso de ser remision de deuda(descuento al capital) este deberia ser 0 */
+      if (this.form.formaPago["value"] == 7) {
+        this.form.pago_con_cantidad = 0;
+        return 0;
+      } else {
+        return this.form.pago_con_cantidad;
+      }
     },
 
     mostrar_datos_operacion: function() {

@@ -78,12 +78,11 @@
         </div>
       </vx-card>
     </div>
-
     <br />
     <vs-table
       :sst="true"
       :max-items="serverOptions.per_page.value"
-      :data="ventas"
+      :data="pagos"
       noDataText="0 Resultados"
     >
       <template slot="header">
@@ -134,7 +133,6 @@
               {{ data[indextr].status_texto }}
             </p>
           </vs-td>
-
           <vs-td :data="data[indextr].id">
             <div class="flex flex-start py-1">
               <img
@@ -168,7 +166,6 @@
         </vs-tr>
       </template>
     </vs-table>
-
     <div>
       <vs-pagination
         v-if="verPaginado"
@@ -177,31 +174,28 @@
         class="mt-8"
       ></vs-pagination>
     </div>
-
     <FormularioPagos
       :show="verFormularioPagos"
       @closeVentana="closeFormularioPagos"
       @retorno_pagos="retorno_pagos"
     ></FormularioPagos>
-
     <Password
       :show="openStatus"
       :callback-on-success="callback"
       @closeVerificar="closeStatus"
       :accion="accionNombre"
     ></Password>
-
     <Reporteador
       :header="'consultar pago'"
-      :show="openReportesLista"
+      :show="openReportesListaLista"
       :listadereportes="ListaReportes"
       :request="request"
-      @closeReportes="openReportesLista = false"
+      @closeReportes="openReportesListaLista = false"
     ></Reporteador>
-
     <CancelarPago
       :show="openCancelar"
       @closeCancelarPago="closeCancelarPago"
+      @retorno_pago="retorno_pago"
       :id_pago="id_pago"
     ></CancelarPago>
   </div>
@@ -215,14 +209,9 @@ import Reporteador from "@pages/Reporteador";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import "flatpickr/dist/themes/airbnb.css";
-
-//planes de venta
-import cementerio from "@services/cementerio";
-
 //componente de password
 import Password from "@pages/confirmar_password";
 
-import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import { mostrarOptions, configdateTimePicker } from "@/VariablesGlobales";
 import vSelect from "vue-select";
@@ -262,7 +251,7 @@ export default {
   data() {
     return {
       verFormularioPagos: false,
-      openReportesLista: false,
+      openReportesListaLista: false,
       ListaReportes: [],
       request: {
         id_pago: "",
@@ -272,19 +261,19 @@ export default {
       id_pago: 0,
       openCancelar: false,
       configdateTimePicker: configdateTimePicker,
-
-      /**modulo */
-
-      verAcuse: false,
-      openPlanesVenta: false,
-
-      openReportes: false,
-      verFormularioVentas: false,
+      serverOptions: {
+        page: "",
+        per_page: "",
+        status: "",
+        numero_control: "",
+        fecha_pago: ""
+      },
+      activeTab: 0,
+      verPaginado: true,
+      total: 0,
+      actual: 1,
+      pagos: [],
       tipoFormulario: "",
-      //variable
-      tipo_propiedades: [],
-      propiedad: { label: "Todos", value: "" },
-
       mostrarOptions: mostrarOptions,
       mostrar: { label: "15", value: "15" },
       estado: { label: "Todos", value: "" },
@@ -302,46 +291,10 @@ export default {
           value: "0"
         }
       ],
-      filtroEspecifico: { label: "Núm. Solicitud", value: "1" },
-      filtrosEspecificos: [
-        {
-          label: "Núm. Solicitud",
-          value: "1"
-        },
-        {
-          label: "Núm. Convenio",
-          value: "2"
-        },
-        {
-          label: "Núm. Título",
-          value: "3"
-        },
-        {
-          label: "Núm. Venta",
-          value: "4"
-        }
-      ],
-      serverOptions: {
-        page: "",
-        per_page: "",
-        status: "",
-        numero_control: "",
-        fecha_pago: ""
-      },
-      activeTab: 0,
-      verPaginado: true,
-      total: 0,
-      actual: 1,
-      ventas: [],
       //fin variables
       openStatus: false,
       callback: Function,
-      accionNombre: "",
-      verAgregar: false,
-      verModificar: false,
-      id_venta_modificar: 0,
-      /**opciones para filtrar la peticion del server */
-      id_venta: 0 /**para consultar los reportesw */
+      accionNombre: ""
     };
   },
   methods: {
@@ -364,7 +317,7 @@ export default {
 
       this.request.destinatario =
         datos.referencias_cubiertas[0].operacion_del_pago.cliente.nombre;
-      this.openReportesLista = true;
+      this.openReportesListaLista = true;
       this.$vs.loading.close();
     },
     closeFormularioPagos() {
@@ -430,8 +383,7 @@ export default {
       try {
         let res = await pagos.get_pagos(this.serverOptions);
         if (res.data.data) {
-          console.log("get_data -> res.data.data", res.data.data);
-          this.ventas = res.data.data;
+          this.pagos = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
         }
@@ -441,7 +393,6 @@ export default {
         this.$vs.loading.close();
         this.ver = true;
         if (err.response) {
-          console.log("get_data -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -456,31 +407,8 @@ export default {
         }
       }
     },
-
-    //eliminar usuario logicamente
-
-    closeModificar() {
-      this.verModificar = false;
-    },
-
     closeStatus() {
       this.openStatus = false;
-    },
-
-    ConsultarVenta(id_venta) {
-      this.id_venta = id_venta;
-      this.openReportes = true;
-    },
-    ConsultarVentaAcuse(id_venta) {
-      this.verAcuse = true;
-      this.id_venta = id_venta;
-      this.openReportes = true;
-    },
-
-    openModificar(id_venta) {
-      this.tipoFormulario = "modificar";
-      this.id_venta_modificar = id_venta;
-      this.verFormularioVentas = true;
     },
 
     cancelarPago(id_pago) {
@@ -493,17 +421,36 @@ export default {
     },
 
     closeListaReportes() {
-      this.openReportes = false;
-      this.verAcuse = false;
-      this.id_venta = 0;
+      this.openReportesLista = false;
+      this.id_pago = 0;
       (async () => {
         await this.get_data(this.actual);
       })();
     },
-    closeCancelarPago() {
+    closeCancelarPago(dato) {
       this.openCancelar = false;
       (async () => {
         await this.get_data(this.actual);
+      })();
+    },
+    retorno_pago(dato) {
+      this.openCancelar = false;
+      (async () => {
+        try {
+          let res = await pagos.get_pago_id(dato);
+          this.openReporte(res.data[0]);
+        } catch (error) {
+          this.$vs.notify({
+            title: "Error",
+            text:
+              "Ha ocurrido un error al tratar de cargar el recibo de pago, por favor recargue la página.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "9000"
+          });
+        }
       })();
     }
   },
