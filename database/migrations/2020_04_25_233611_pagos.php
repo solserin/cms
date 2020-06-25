@@ -25,7 +25,7 @@ class Pagos extends Migration
             $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('cobrador_id')->nullable();
             $table->foreign('cobrador_id')->references('id')->on('usuarios');
-            $table->date('fecha_cancelacion')->nullable();
+            $table->dateTime('fecha_cancelacion')->nullable();
             $table->unsignedBigInteger('motivos_cancelacion_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('cancelo_id')->nullable();

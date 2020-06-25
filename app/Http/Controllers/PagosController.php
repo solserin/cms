@@ -882,7 +882,7 @@ class PagosController extends ApiController
                     '(NULL) AS status_texto'
                 ),
                 DB::raw(
-                    '(NULL) AS motivo_cancelacion_texto'
+                    '(NULL) AS motivos_cancelacion_texto'
                 ),
                 DB::raw(
                     '(NULL) AS fecha_pago_texto'
@@ -974,7 +974,19 @@ class PagosController extends ApiController
                 if ($pago['status'] == 1) {
                     $pago['status_texto'] = 'Activo';
                 } else {
+                    $pago['fecha_cancelacion_texto'] = fecha_abr($pago['fecha_cancelacion']);
                     $pago['status_texto'] = 'Cancelado';
+                    if ($pago['motivos_cancelacion_id'] == 1) {
+                        /**fue por fal de pago */
+                        $pago['motivos_cancelacion_texto'] = 'falta de pago';
+                    } elseif ($pago['motivos_cancelacion_id'] == 2) {
+                        /**fue por peticion de lciente */
+                        $pago['motivos_cancelacion_texto'] = 'a petición del cliente';
+                    } elseif ($pago['motivos_cancelacion_id'] == 3) {
+                        /**fue por error de captura */
+                        $pago['motivos_cancelacion_texto'] = 'error de captura';
+                    }
+                    /**actualizando el motivo de cancelacion */
                 }
 
                 /**modificando el concepto del movimiento dle pago */

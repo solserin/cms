@@ -239,9 +239,6 @@
                                     </span>
                                 </div>
                             </div>
-
-
-
                         </td>
                         <td class="py-1 capitalize center">
                             <span class="px-2 uppercase size-12px bold">
@@ -323,6 +320,15 @@
 
 
         <div class="instrucciones">
+            @if ($datos['status']==0)
+            <br>
+            <span class="uppercase bold size-15px text-danger">detalle de cancelación:</span><br>
+            <span class="bold">Canceló:</span> {{ $datos['cancelador']['nombre'] }}<br>
+            <span class="bold">Motivo:</span> {{ $datos['motivos_cancelacion_texto'] }}<br>
+            <span class="bold">Fecha de Cancelación:</span> {{ $datos['fecha_cancelacion_texto'] }}
+            {{ hora($datos['fecha_cancelacion']) }}<br>
+            <span class="bold">Nota:</span> {{ $datos['nota_cancelacion'] }}<br>
+            @endif
             <div class="mt-3">
                 <span class="bold uppercase">nota importante:</span>
             </div>
