@@ -691,7 +691,7 @@ class CementerioController extends ApiController
                         $numero_titulo = 0;
                         if ($ajustes->numero_titulos_sistematizados == true) {
                             //quiere decir que ya esta funcionando esto y debo elejir el numero de convenio mayor para crear el siguiente
-                            $result = DB::select(DB::raw("select max(cast((CASE WHEN numero_titulo NOT LIKE '%[^0-9]%' THEN numero_titulo END) as int)) AS max_numero_titulo  from operaciones"));
+                            $result = DB::select(DB::raw("SELECT MAX(CAST(numero_titulo AS UNSIGNED) ) AS max_numero_titulo FROM operaciones"));
                             $ultimo_titulo = json_decode(json_encode($result), true)[0]['max_numero_titulo'];
                             if (intval($ultimo_titulo) > 0) {
                                 $numero_titulo = $ultimo_titulo + 1;
