@@ -200,7 +200,7 @@ class ModulosSeeder extends Seeder
                 'parent_modulo_id' => 19,
                 'url' => '/cobranza/pagos',
                 'secciones_id' => 2,
-                'status' => 0
+                'status' => 1
             ],
             [ //21
                 'modulo' => 'Facturación',

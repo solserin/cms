@@ -2,6 +2,17 @@
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap"
         rel="stylesheet">
 <style>
+    thead {
+            display: table-header-group;
+        }
+
+        tfoot {
+            display: table-row-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
   body {
         font-family: 'Open Sans' !important;
         color: #000 !important;
