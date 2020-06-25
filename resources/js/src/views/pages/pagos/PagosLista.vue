@@ -93,6 +93,7 @@
         <vs-th>Tipo Movimiento</vs-th>
         <vs-th>Fecha</vs-th>
         <vs-th>Tipo de Operación</vs-th>
+        <vs-th>Cliente</vs-th>
         <vs-th>$ Monto</vs-th>
         <vs-th>Estatus</vs-th>
         <vs-th>Acciones</vs-th>
@@ -121,6 +122,10 @@
           </vs-td>
           <vs-td :data="data[indextr].tipo_operacion_texto">{{
             data[indextr].tipo_operacion_texto
+          }}</vs-td>
+          <vs-td :data="data[indextr].referencias_cubiertas">{{
+            data[indextr].referencias_cubiertas[0].operacion_del_pago.cliente
+              .nombre
           }}</vs-td>
           <vs-td :data="data[indextr].monto_pago">
             $ {{ data[indextr].monto_pago | numFormat("0,000.00") }}
