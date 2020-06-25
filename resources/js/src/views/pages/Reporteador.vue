@@ -357,7 +357,6 @@ export default {
           this.reporteSeleccionado.value,
           this.request_datos
         );
-
         this.$vs.loading.close();
         if (res.data == 1) {
           this.$vs.notify({

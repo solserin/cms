@@ -15,6 +15,7 @@ use App\Http\Controllers\ApiController;
 use App\Pagos;
 use App\VentasTerrenos;
 use PhpParser\Node\Stmt\TryCatch;
+use GuzzleHttp\Client;
 
 class PagosController extends ApiController
 {
@@ -362,6 +363,74 @@ class PagosController extends ApiController
     }
 
 
+
+    public function cancelar_pago(Request $request)
+    {
+        //return $request;
+        $validaciones = [
+            'pago_id' => 'required',
+            'motivo.value' => 'required',
+
+        ];
+
+        $mensajes = [
+            'required' => 'Ingrese este dato',
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+        $datos_pago = [];
+        $client = new \GuzzleHttp\Client();
+        try {
+            $datos_pago =
+                json_decode($client->request('GET', env('APP_URL') . 'pagos/get_pagos/' . $request->pago_id . '/false/false')->getBody(), true);
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
+        }
+        if (!empty($datos_pago)) {
+            $datos_pago = $datos_pago[0];
+        } else {
+            /**no hay datos */
+            return $this->errorResponse('Error al buscar el movimiento a cancelar.', 409);
+        }
+        /**verificando que el pago a cancelar sea un tipo de pago sin subpagos y que este vigente */
+        if ($datos_pago['parent_pago_id'] > 0) {
+            /**es sub pago */
+            return $this->errorResponse('Este tipo de pagos afectan a otros pagos, debe ingresar la clave del pago que contiene a este pago.', 409);
+        }
+        /**checando que la operacion del movimienrto a cancelar este vigente */
+        if ($datos_pago['referencias_cubiertas'][0]['operacion_del_pago']['status'] == 0) {
+            return $this->errorResponse('Hemos detectado la operación de este movimiento ya fue cancelada. No se puede cancelar este movimiento.', 409);
+        }
+
+        try {
+            DB::beginTransaction();
+            /** cambiando el estatus de la operacion*/
+            DB::table('operaciones')->where('id', $datos_pago['referencias_cubiertas'][0]['operacion_del_pago']['id'])->update(
+                [
+                    'status' => 1
+                ]
+            );
+            /** cambiando el estatus del pago/movimiento*/
+            DB::table('pagos')->where('id', $request->pago_id)->Orwhere('parent_pago_id', $request->pago_id)->update(
+                [
+                    'status' => 0,
+                    'motivos_cancelacion_id' => $request['motivo.value'],
+                    'fecha_cancelacion' => now(),
+                    'cancelo_id' => (int) $request->user()->id,
+                    'nota_cancelacion' => $request->comentario,
+                ]
+            );
+            DB::commit();
+            return  $request->pago_id;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
 
     public function guardar_pago(Request $request)
     {
@@ -783,6 +852,8 @@ class PagosController extends ApiController
     public function get_pagos(Request $request, $id_pago = 'all', $paginated = false, $ver_sub_pagos = false)
     {
         try {
+            $status = $request->status;
+            $fecha_pago = $request->fecha_pago;
             /**filtros de este servicio */
             /**
              * se podra filtrar por numero de pago
@@ -852,13 +923,13 @@ class PagosController extends ApiController
                 ->whereHas('referencias_cubiertas', function ($q) {
                     //$q->where('referencia_pago', '=', '00120200101025');
                 })
-                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre')
+                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre,email')
                 ->whereHas('referencias_cubiertas.operacion_del_pago', function ($q) use ($request) {
                     if (($request->operacion_id)) {
                         $q->where('id', '=', $request->operacion_id);
                     }
                 })
-                ->with(['registro', 'sat_moneda', 'cobrador', 'cancelador', 'subpagos.referencias_cubiertas', 'forma_pago'])
+                ->with(['registro:id,nombre', 'sat_moneda', 'cobrador:id,nombre', 'cancelador:id,nombre', 'subpagos.referencias_cubiertas', 'forma_pago'])
                 ->whereHas('forma_pago', function ($q) {
                     //$q->where('id', '=', 1);
                 })
@@ -867,12 +938,24 @@ class PagosController extends ApiController
                         $q->where('pagos.id', '=', $id_pago);
                     }
                 })
+                ->where(function ($q) use ($fecha_pago) {
+                    if (trim($fecha_pago)) {
+                        $q->where('pagos.fecha_pago', '=', $fecha_pago);
+                    }
+                })
                 ->where(function ($q) use ($ver_sub_pagos) {
                     if (filter_var($ver_sub_pagos, FILTER_VALIDATE_BOOLEAN) == false) {
                         $q->where('pagos.movimientos_pagos_id', '<>', 2)->where('pagos.movimientos_pagos_id', '<>', 3)->with('parent_pago');
                     }
                 })
+                ->where(function ($q) use ($status) {
+                    if (trim($status) != '') {
+                        $q->where('pagos.status', '=', $status);
+                    }
+                })
                 ->orderBy('pagos.id', 'desc')
+                ->orderBy('movimientos_pagos_id', 'asc')
+
                 //->where('parent_pago_id', '<>', NULL)
                 ->get();
             $resultado = array();
@@ -1023,7 +1106,7 @@ class PagosController extends ApiController
         $empresa = $get_funeraria->get_empresa_data();
         $pdf = PDF::loadView('pagos/recibo_pago', ['id_pago' => $id_pago, 'datos' => $datos_pago, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "RECIBO DE PAGO " . strtoupper('poner') . '.pdf';
+        $name_pdf = "RECIBO DE PAGO " . strtoupper($datos_pago['referencias_cubiertas'][0]['operacion_del_pago']['cliente']['nombre']) . '.pdf';
 
         $pdf->setOptions([
             'title' => $name_pdf,
@@ -1059,7 +1142,7 @@ class PagosController extends ApiController
             $email_controller = new EmailController();
             $enviar_email = $email_controller->pdf_email(
                 $email_to,
-                strtoupper($datos_pago['nombre']),
+                strtoupper($datos_pago['referencias_cubiertas'][0]['operacion_del_pago']['cliente']['nombre']),
                 'RECIBO DE PAGO ',
                 $name_pdf,
                 $pdf

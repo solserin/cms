@@ -169,9 +169,7 @@ const router = new Router({
                     path: "/cobranza/pagos",
                     name: "cobranza_pagos",
                     component: () =>
-                        import(
-                            "@/views/pages/cementerio/ventas/VentasList.vue"
-                        ),
+                        import("@/views/pages/pagos/PagosLista.vue"),
                     meta: {
                         breadcrumb: [
                             {

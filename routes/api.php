@@ -140,6 +140,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('pagos/get_monedas_sat', 'PagosController@get_monedas_sat');
     Route::get('pagos/get_cobradores', 'PagosController@get_cobradores');
     Route::get('pagos/recibo_de_pago/{id_pago?}', 'PagosController@recibo_de_pago');
+    Route::post('pagos/cancelar_pago', 'PagosController@cancelar_pago');
     /**fin de rutas de pagos */
 
 

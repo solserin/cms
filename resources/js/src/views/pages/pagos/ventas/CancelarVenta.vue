@@ -29,7 +29,11 @@
           <div
             class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2 text-center mt-16"
           >
-            <img width="400" src="@assets/images/cancelar.png" />
+            <img
+              width="400"
+              class="cursor-pointer"
+              src="@assets/images/cancelar.jpg"
+            />
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2">
             <div class="w-full pt-3 text-center">

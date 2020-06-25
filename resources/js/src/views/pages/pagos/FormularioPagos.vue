@@ -903,17 +903,17 @@ export default {
         /**cargando por defecto la referencia enviada */
         this.form.referencia = this.getReferencia;
 
+        (async () => {
+          await this.get_formas_pago_sat();
+          await this.get_monedas_sat();
+          await this.get_cobradores();
+        })();
+
         if (this.getReferencia != "") {
           /**se envio una referencia por default
            * se debe de llamar el servicio de calcular pago
            */
           this.CalcularPago();
-
-          (async () => {
-            await this.get_formas_pago_sat();
-            await this.get_monedas_sat();
-            await this.get_cobradores();
-          })();
         }
       } else {
         this.$validator.pause();

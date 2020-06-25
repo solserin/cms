@@ -3,28 +3,27 @@
     <vs-popup
       class="forms-popups-cancelar_cementerio normal-forms cancelar_cementerio background-header-forms"
       fullscreen
-      title="Cancelar Venta de Terreno"
+      title="Cancelar Movimientos de Cobranza"
       :active.sync="showVentana"
-      ref="cancelar_venta"
+      ref="cancelar_pago"
     >
       <div class="pb-5">
         <div class="flex flex-wrap">
           <div class="w-full text-center py-1">
             <div class="w-full">
               <span class="text-lg font-medium text-dark">
-                ¿Está seguro de querer cancelar este contrato?
+                ¿Está seguro de querer cancelar este movimiento?
               </span>
             </div>
             <div class="w-full py-2 px-2">
               <span class="text-base">
                 Una vez realizado el proceso de cancelación no habrá manera de
-                volver a habilitar la venta. Es recomendable llevar a cabo este
-                proceso una vez esté seguro de que es necesario.
+                volver a habilitar este movimiento. Es recomendable llevar a
+                cabo este proceso una vez esté seguro de que es necesario.
               </span>
             </div>
           </div>
         </div>
-
         <div class="flex flex-wrap">
           <div
             class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2 text-center mt-16"
@@ -32,67 +31,46 @@
             <img width="400" src="@assets/images/cancelar.png" />
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2">
-            <div class="w-full pt-3 text-center">
-              <span class="font-medium text-dark text-lg">Propiedad:</span>
-              <div class="py-1">
-                <span class="capitalize">
-                  <span class="capitalize" v-if="datosVenta.venta_terreno">{{
-                    datosVenta.venta_terreno.ubicacion_texto
-                  }}</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="w-full pt-3 text-center">
+            <div class="w-full pt-1 text-center">
               <span class="font-medium text-dark text-lg"
-                >Titular de la Propiedad:</span
+                >Operación de Tipo:</span
               >
               <div class="py-1">
-                <span class="capitalize" v-if="datosVenta.nombre">{{
-                  datosVenta.nombre
-                }}</span>
+                <span
+                  class="capitalize"
+                  v-if="datosPago.tipo_operacion_texto"
+                  >{{ datosPago.tipo_operacion_texto }}</span
+                >
               </div>
             </div>
 
             <div class="w-full text-center ">
               <span class="font-medium text-dark text-lg"
-                >Cantidad cubierta de capital hasta la fecha:</span
+                >Movimientos a Cancelar:</span
               >
-              <div class="py-1">
-                <span class="capitalize" v-if="datosVenta">
-                  $
-                  {{ datosVenta.abonado_capital | numFormat("0,000.00") }}
-                  Pesos mxn
-                </span>
-              </div>
-            </div>
-
-            <div class="w-full py-3">
-              <label class=""
-                >Ingrese la cantidad a regresar en caso de aplicar:</label
-              >
-            </div>
-            <div class="w-full">
-              <vs-input
-                size="large"
-                v-model="form.cantidad"
-                v-validate="'required|decimal:2|min_value:0'"
-                name="cantidad"
-                data-vv-as=" "
-                type="text"
-                class="w-full"
-                placeholder=" $ 00.00 Pesos MXN"
-                maxlength="7"
-              />
-              <div>
-                <span class="mensaje-requerido">{{
-                  errors.first("cantidad")
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span class="mensaje-requerido" v-if="this.errores.cantidad">{{
-                  errores.cantidad[0]
-                }}</span>
+              <div class="py-1" v-if="datosPago">
+                <div class="capitalize">
+                  Clave
+                  <span class="font-medium text-black">{{ datosPago.id }}</span
+                  >, {{ datosPago.movimientos_pagos_texto }}, $
+                  <span class="font-medium text-black"
+                    >{{ datosPago.monto_pago | numFormat("0,000.00") }} Pesos
+                    mxn</span
+                  >
+                </div>
+                <div
+                  class="capitalize py-2"
+                  :key="indextr"
+                  v-for="(subpago, indextr) in datosPago.subpagos"
+                >
+                  Clave
+                  <span class="font-medium text-black">{{ subpago.id }}</span
+                  >, {{ subpago.movimientos_pagos_texto }}, $
+                  <span class="font-medium text-black"
+                    >{{ subpago.monto_pago | numFormat("0,000.00") }} Pesos
+                    mxn</span
+                  >
+                </div>
               </div>
             </div>
 
@@ -133,8 +111,8 @@
         <div class="flex flex-wrap px-2">
           <div class="py-5">
             <label class=""
-              >Agregue un comentario respecto a la cancelación de esta
-              venta:</label
+              >Agregue un comentario respecto a la cancelación de este
+              movimiento:</label
             >
           </div>
           <vs-textarea
@@ -160,7 +138,7 @@
                   class="cursor-pointer"
                   src="@assets/images/cancel.svg"
                 />
-                <span class="texto-btn">Cancelar Contrato</span>
+                <span class="texto-btn">Cancelar Movimiento</span>
               </vs-button>
             </div>
           </div>
@@ -187,7 +165,7 @@
 <script>
 import Password from "@pages/confirmar_password";
 import vSelect from "vue-select";
-import cementerio from "@services/cementerio";
+import pagos from "@services/pagos";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 export default {
   components: {
@@ -200,7 +178,7 @@ export default {
       type: Boolean,
       required: true
     },
-    id_venta: {
+    id_pago: {
       type: Number,
       required: true,
       default: 0
@@ -209,7 +187,7 @@ export default {
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
-        this.$refs["cancelar_venta"].$el.querySelector(
+        this.$refs["cancelar_pago"].$el.querySelector(
           ".vs-icon"
         ).onclick = () => {
           this.cancelar();
@@ -219,11 +197,10 @@ export default {
         });
 
         (async () => {
-          this.form.cantidad = "0.00";
           this.$vs.loading();
           try {
-            let res = await cementerio.consultar_venta_id(this.getVentaId);
-            this.datosVenta = res.data[0];
+            let res = await pagos.get_pago_id(this.getPagoId);
+            this.datosPago = res.data[0];
             this.$vs.loading.close();
           } catch (err) {
             this.$vs.loading.close();
@@ -236,7 +213,7 @@ export default {
                   iconPack: "feather",
                   icon: "icon-alert-circle",
                   color: "warning",
-                  time: 4000
+                  time: 8000
                 });
               } else {
                 this.$vs.notify({
@@ -270,9 +247,9 @@ export default {
         return newValue;
       }
     },
-    getVentaId: {
+    getPagoId: {
       get() {
-        return this.id_venta;
+        return this.id_pago;
       },
       set(newValue) {
         return newValue;
@@ -288,12 +265,8 @@ export default {
       callback: Function,
       openConfirmar: false,
       errores: [],
-      datosVenta: [],
+      datosPago: [],
       motivos: [
-        {
-          label: "FALTA DE PAGO",
-          value: 1
-        },
         {
           label: "A PETICIÓN DEL CLIENTE",
           value: 2
@@ -304,12 +277,11 @@ export default {
         }
       ],
       form: {
-        venta_id: "",
+        pago_id: "",
         motivo: {
-          label: "FALTA DE PAGO",
-          value: 1
+          label: "ERROR AL CAPTURAR",
+          value: 3
         },
-        cantidad: "0.00",
         comentario: ""
       }
     };
@@ -327,19 +299,18 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "8000"
             });
             return;
           } else {
             (async () => {
-              this.callback = await this.cancelar_venta;
+              this.callback = await this.cancelar_pago;
               this.openConfirmar = true;
             })();
           }
         })
         .catch(() => {});
     },
-
     cancelar() {
       this.botonConfirmarSinPassword = "Salir y limpiar";
       this.accionConfirmarSinPassword =
@@ -350,48 +321,45 @@ export default {
     cerrarVentana() {
       this.openConfirmarSinPassword = false;
       this.form.comentario = "";
-      this.form.cantidad = 0;
       (this.form.motivo = {
-        label: "FALTA DE PAGO",
-        value: 1
+        label: "ERROR AL CAPTURAR",
+        value: 3
       }),
-        this.$emit("closeCancelarVenta");
+        this.$emit("closeCancelarPago");
       return;
     },
-
-    async cancelar_venta() {
+    async cancelar_pago() {
       this.errores = [];
       this.$vs.loading();
-      this.form.venta_id = this.getVentaId;
+      this.form.pago_id = this.getPagoId;
       try {
-        let res = await cementerio.cancelar_venta(this.form);
-        console.log("cancelar_venta -> res", res);
+        let res = await pagos.cancelar_pago(this.form);
+        console.log("cancelar_pago -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Se ha cancelado la venta correctamente.",
+            title: "Movimientos de Cobranza",
+            text: "Se ha cancelado el movimiento correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
             time: 5000
           });
-          this.$emit("closeCancelarVenta", res.data);
-          this.$emit("ConsultarVenta", res.data);
+          this.$emit("closeCancelarPago", res.data);
         } else {
           this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Error al cancelar la venta, por favor reintente.",
+            title: "Movimientos de Cobranza",
+            text: "Error al cancelar el movimiento, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 8000
           });
         }
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("cancelar_venta -> err.response", err.response);
+          console.log("cancelar_pago -> err.response", err.response);
           //console.log("modificarVenta -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
@@ -401,16 +369,16 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 8000
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
             this.errores = err.response.data.error;
-            if (this.errores.venta_id) {
+            if (this.errores.pago_id) {
               //la propiedad esa ya ha sido vendida
               this.$vs.notify({
-                title: "Seleccione una venta",
-                text: "No se ha seleccionado una venta a cancelar",
+                title: "Movimientos de Cobranza",
+                text: "No se ha seleccionado un movimiento a cancelar",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
@@ -419,7 +387,7 @@ export default {
             }
 
             this.$vs.notify({
-              title: "Cancelar Venta",
+              title: "Movimientos de Cobranza",
               text: "Verifique los errores encontrados en los datos.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -430,7 +398,7 @@ export default {
             //este error es por alguna condicion que el contrano no cumple para modificar
             //la propiedad esa ya ha sido vendida
             this.$vs.notify({
-              title: "Cancelar información de la venta",
+              title: "Movimientos de Cobranza",
               text: err.response.data.error,
               iconPack: "feather",
               icon: "icon-alert-circle",

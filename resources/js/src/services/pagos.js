@@ -40,5 +40,32 @@ export default {
         return axios.get(service, {
             params: param
         });
+    },
+
+    get_pagos(param) {
+        let service = "/pagos/get_pagos/all/paginated/true";
+
+        if (param.numero_control.trim() != "") {
+            service =
+                "/pagos/get_pagos/" +
+                param.numero_control.trim() +
+                "/paginated/true";
+        }
+        console.log("get_pagos -> service", service);
+        return axios.get(service, {
+            cancelToken: new CancelToken(c => {
+                this.cancel = c;
+            }),
+            params: param
+        });
+    },
+    get_pago_id(param) {
+        let service = "/pagos/get_pagos/" + param + "/false/false";
+        return axios.get(service);
+    },
+
+    cancelar_pago(param) {
+        let call = "/pagos/cancelar_pago";
+        return axios.post(call, param);
     }
 };
