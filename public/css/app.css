@@ -6120,7 +6120,7 @@ html {
 }
 
 .iframe_viewer {
-  max-height: 85vh !important;
+  max-height: 100vh !important;
   min-width: 100% !important;
 }
 

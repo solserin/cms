@@ -13,22 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('get_puestos', 'Usuarios\UsuariosController@get_puestos');
+
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 
 
 /**rutas de modulo en proceso */
+/**rutas publicas_ entran sin token */
 Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
-
-
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
-
-
-Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
-
-
-Route::get('cementerio/acuse_cancelacion', 'CementerioController@acuse_cancelacion');
 /**fin de rutas de modulo en proceso */
 
 
@@ -52,6 +45,7 @@ Route::middleware(['auth:api'])->group(function () {
      * //4 permisos (1-Agregar, 2-Editar, 3-Eliminar y 4-Consultar)
      * EL SEGUNDO EL NUMERO DE PERMISO
      */
+    Route::get('get_puestos', 'Usuarios\UsuariosController@get_puestos');
     Route::get('get_usuarios', 'Usuarios\UsuariosController@index');
     Route::post('add_usuario', 'Usuarios\UsuariosController@add_usuario');
     Route::post('update_usuario', 'Usuarios\UsuariosController@update_usuario');
@@ -121,6 +115,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::get('cementerio/get_vendedores', 'CementerioController@get_vendedores');
     Route::get('titulos/{operacion_id?}', 'CementerioController@generarNumeroTitulo');
+    Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
+    Route::get('cementerio/acuse_cancelacion', 'CementerioController@acuse_cancelacion');
 
 
     Route::get('cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
