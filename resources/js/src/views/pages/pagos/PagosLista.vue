@@ -358,7 +358,6 @@ export default {
         nombre: "Recibo de Movimiento",
         url: url
       });
-
       //estado de cuenta
       this.request.email =
         datos.referencias_cubiertas[0].operacion_del_pago.cliente.email;
@@ -371,7 +370,26 @@ export default {
     closeFormularioPagos() {
       this.verFormularioPagos = false;
     },
-    retorno_pagos(datos) {},
+    retorno_pagos(datos) {
+      (async () => {
+        try {
+          let res = await pagos.get_pago_id(datos.id_pago);
+          this.openReporte(res.data[0]);
+        } catch (error) {
+          this.$vs.notify({
+            title: "Error",
+            text:
+              "Ha ocurrido un error al tratar de cargar el recibo de pago, por favor recargue la página.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "9000"
+          });
+        }
+      })();
+      /* recibe un arreglo con id del pago que se acaba de registrar */
+    },
     /**modulo */
     reset(card) {
       card.removeRefreshAnimation(500);
