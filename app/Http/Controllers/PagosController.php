@@ -585,6 +585,13 @@ class PagosController extends ApiController
         $array_intereses_cubrir = array();
         $array_descuento_a_cubrir = array();
         $array_pagos_programados_id = array();
+
+        $id_tipo_movimiento = 1;
+        /**por default es abono a capital  */
+        /**verificando que si es renision de deuda se aplique la clave de movimiento 4 //descuento a capital*/
+        if ($request->formaPago['value'] == 7) {
+            $id_tipo_movimiento = 4;
+        }
         try {
             DB::beginTransaction();
             try {
@@ -654,35 +661,40 @@ class PagosController extends ApiController
                                             }
                                         }
                                     }
-                                }
 
 
-                                /**haciendo los arrays de pagos a distriburir */
-                                /**se puede verificar cantidad a pagar del abono */
-                                if ($abono_a_cubrir > 0) {
-                                    $monto_con_descuento = $programado['monto_programado'];
-                                    if ($descuento_pronto_pago > 0) {
-                                        $monto_con_descuento = $programado['monto_programado'] - $programado['descuento_pronto_pago'];
-                                    }
 
-                                    if ($monto_con_descuento >= $abono_a_cubrir) {
-                                        array_push($array_abonos_cubrir, [
-                                            'referencia_pago' => $programado['referencia_pago'],
-                                            'pagos_programados_id' => $programado['id'],
-                                            'monto' => $abono_a_cubrir, 2,
-                                            'movimientos_pagos_d' => 1 //abono a capital
-                                        ]);
-                                        /**se acaba el abono_a_cubrir */
-                                        $abono_a_cubrir = 0;
-                                    } else {
-                                        /**se puede asignar el 100 del pago programado */
-                                        array_push($array_abonos_cubrir, [
-                                            'referencia_pago' => $programado['referencia_pago'],
-                                            'pagos_programados_id' => $programado['id'],
-                                            'monto' =>  round($monto_con_descuento, 2),
-                                            'movimientos_pagos_d' => 1 //abono a capital
-                                        ]);
-                                        $abono_a_cubrir -= round($monto_con_descuento, 2);
+                                    /**haciendo los arrays de pagos a distriburir */
+                                    /**se puede verificar cantidad a pagar del abono */
+                                    $monto_programado_restante = $programado['monto_programado'] - $programado['total_cubierto'];
+                                    if ($abono_a_cubrir > 0) {
+                                        if ($referencia['referencia_pago'] == '001202006100410') {
+                                            //return $this->errorResponse(($monto_programado_restante) . 'ff' . $abono_a_cubrir, 409);
+                                        }
+                                        $monto_con_descuento = $monto_programado_restante;
+                                        if ($descuento_pronto_pago > 0) {
+                                            $monto_con_descuento = $monto_programado_restante - $programado['descuento_pronto_pago'];
+                                        }
+
+                                        if ($monto_con_descuento >= $abono_a_cubrir) {
+                                            array_push($array_abonos_cubrir, [
+                                                'referencia_pago' => $programado['referencia_pago'],
+                                                'pagos_programados_id' => $programado['id'],
+                                                'monto' => round($abono_a_cubrir, 2),
+                                                'movimientos_pagos_d' => $id_tipo_movimiento
+                                            ]);
+                                            /**se acaba el abono_a_cubrir */
+                                            $abono_a_cubrir = 0;
+                                        } else {
+                                            /**se puede asignar el 100 del pago programado */
+                                            array_push($array_abonos_cubrir, [
+                                                'referencia_pago' => $programado['referencia_pago'],
+                                                'pagos_programados_id' => $programado['id'],
+                                                'monto' =>  round($monto_con_descuento, 2),
+                                                'movimientos_pagos_d' => $id_tipo_movimiento
+                                            ]);
+                                            $abono_a_cubrir -= round($monto_con_descuento, 2);
+                                        }
                                     }
                                 }
                                 break;
@@ -725,12 +737,6 @@ class PagosController extends ApiController
             }
             $array_pagos_programados_id;
 
-            $id_tipo_movimiento = 1;
-            /**por default es abono a capital  */
-            /**verificando que si es renision de deuda se aplique la clave de movimiento 4 //descuento a capital*/
-            if ($request->formaPago['value'] == 7) {
-                $id_tipo_movimiento = 4;
-            }
 
             $id_abono_capital = DB::table('pagos')->insertGetId(
                 [
@@ -839,7 +845,6 @@ class PagosController extends ApiController
                 }
                 /**fin de los de tipo intereses */
             }
-
             DB::commit();
 
             /**se deve revisar si la operacion fue liquidada para marcar la venta como liquidada con status 2 */

@@ -51,7 +51,6 @@ export default {
                 param.numero_control.trim() +
                 "/paginated/true";
         }
-        console.log("get_pagos -> service", service);
         return axios.get(service, {
             cancelToken: new CancelToken(c => {
                 this.cancel = c;

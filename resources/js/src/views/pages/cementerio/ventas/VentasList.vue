@@ -194,7 +194,7 @@
               />
               <img
                 width="24"
-                v-if="data[indextr].operacion_status == 1"
+                v-if="data[indextr].operacion_status >= 1"
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
