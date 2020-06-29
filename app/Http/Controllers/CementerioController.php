@@ -1606,9 +1606,9 @@ class CementerioController extends ApiController
                 DB::raw(
                     '(NULL) AS status_texto'
                 ),
-                DB::raw(
+                /*DB::raw(
                     '(NULL) AS pagos_realizados_arreglo'
-                ),
+                ),*/
                 'operaciones.registro_id',
                 'operaciones.cancelo_id',
                 'operaciones.modifico_id',
@@ -1926,7 +1926,7 @@ class CementerioController extends ApiController
 
                 /**areegloe de todos los pagos limpios(no repetidos) */
 
-                $venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
+                //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
             } else {
                 /**la venta no tiene pagos programados debido a que fue 100% "GRATIS" */
             }
