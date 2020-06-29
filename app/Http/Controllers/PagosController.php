@@ -95,6 +95,9 @@ class PagosController extends ApiController
                     'DATE(fecha_operacion) as fecha_operacion'
                 ),
                 DB::raw(
+                    '(NULL) as status_texto'
+                ),
+                DB::raw(
                     '(NULL) as fecha_operacion_texto'
                 ),
                 DB::raw(
@@ -271,7 +274,7 @@ class PagosController extends ApiController
                     $programado['fecha_a_pagar_abr'] = fecha_abr($programado['fecha_programada']);
                     /**fin varables por intereses */
                     /**verificando que el pago programado tiene un saldo de capital que cobrar para saber si aplica o no intereses */
-                    if ($saldo_pago_programado > 0) {
+                    if ($programado['saldo_neto'] > 0) {
                         $programado['fecha_a_pagar'] = date('Y-m-d', strtotime($request->fecha_pago));
                         $programado['fecha_a_pagar_abr'] = fecha_abr($programado['fecha_a_pagar']);
                         /**tiene todavia saldo que pagar, se debe verificar si el pago esta vencido para generarle los intereses correspondientes */
@@ -534,7 +537,6 @@ class PagosController extends ApiController
             return $this->errorResponse('No se ha encontrado ninguna referencia de pago a cubrir.', 409);
         }
 
-
         /**verificando que la operaicon no este cancelada */
         $datos_operacion = $referencias_adeudos[0];
         $cementerio_controller = new CementerioController();
@@ -634,7 +636,7 @@ class PagosController extends ApiController
                                                 $intereses_a_cubrir -= $programado['intereses'];
                                             }
                                         }
-                                    }
+                                    } //fin if intereses > 0
 
                                     /**verificando la cantidad de descuento por pronto pago */
                                     if ($descuento_pronto_pago_a_cubrir > 0) {
@@ -660,7 +662,7 @@ class PagosController extends ApiController
                                                 $descuento_pronto_pago_a_cubrir -= $programado['descuento_pronto_pago'];
                                             }
                                         }
-                                    }
+                                    } //fin if descuento_pronto_pago_a_cubrir > 0
 
 
 
@@ -668,12 +670,13 @@ class PagosController extends ApiController
                                     /**se puede verificar cantidad a pagar del abono */
                                     $monto_programado_restante = $programado['monto_programado'] - $programado['total_cubierto'];
                                     if ($abono_a_cubrir > 0) {
-                                        if ($referencia['referencia_pago'] == '001202006100410') {
-                                            //return $this->errorResponse(($monto_programado_restante) . 'ff' . $abono_a_cubrir, 409);
-                                        }
                                         $monto_con_descuento = $monto_programado_restante;
                                         if ($descuento_pronto_pago > 0) {
-                                            $monto_con_descuento = $monto_programado_restante - $programado['descuento_pronto_pago'];
+                                            /**verificando si el descuento que se aplicara a este pago es todavia mayor al al descuento de pronto pago programado */
+                                            if ($programado['descuento_pronto_pago'] <= $descuento_pronto_pago) {
+                                                /**el descuento no aplica 100% el programado debido a que el descuento programado sobrepasa lo que el usuario desea descontar */
+                                                $monto_con_descuento = $monto_programado_restante - $programado['descuento_pronto_pago'];
+                                            }
                                         }
 
                                         if ($monto_con_descuento >= $abono_a_cubrir) {
@@ -696,7 +699,7 @@ class PagosController extends ApiController
                                             $abono_a_cubrir -= round($monto_con_descuento, 2);
                                         }
                                     }
-                                }
+                                } //fin if abono a cubrir >0
                                 break;
                             }
                         } //fin if referencia de pago
@@ -714,7 +717,7 @@ class PagosController extends ApiController
             /**al final de distribuir las cantidades es sus respectivos pagos, sedebe verificar que no quedaron montos remanenetes que no se hayan
              * distribuido en sus respectivas referencias
              */
-            if ((round($abono_a_cubrir) != 0 || round($intereses_a_cubrir) != 0 || round($descuento_pronto_pago_a_cubrir) != 0)) {
+            if ((round($abono_a_cubrir, 2) != 0 || round($intereses_a_cubrir, 2) != 0 || round($descuento_pronto_pago_a_cubrir, 2) != 0)) {
                 return $this->errorResponse('Hemos encontrado errores en el registro de este pago debido a que las cantidades ingresadas no cuadran según la operación que está realizando, por favor verifique que el descuento o interés que desea cobrar están en relación a los pagos que desea pagar. Por favor vuelva a intentar la operación.', 409);
             }
 

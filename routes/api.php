@@ -24,7 +24,7 @@ Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosCont
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 /**fin de rutas de modulo en proceso */
 
-
+Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
 
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
@@ -131,7 +131,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     /**rutas de pagos */
     Route::post('pagos/guardar_pago', 'PagosController@guardar_pago');
-    Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
+
     Route::get('pagos/get_formas_pago_sat', 'PagosController@get_formas_pago_sat');
     Route::get('pagos/get_monedas_sat', 'PagosController@get_monedas_sat');
     Route::get('pagos/get_cobradores', 'PagosController@get_cobradores');
