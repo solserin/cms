@@ -25,8 +25,8 @@ class SolicitudCancelacion extends Migration
             $table->unsignedBigInteger('cancelo_id')->unsigned()->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
             $table->mediumText('nota')->nullable();
-            $table->float('monto_devolver');
-            $table->float('total_pago_cuenta');
+            $table->unsignedDecimal('monto_devolver', 8, 2);
+            $table->unsignedDecimal('total_pago_cuenta', 8, 2);
             $table->unsignedBigInteger('motivos_cancelacion_id')->unsigned()->nullable();
             $table->foreign('motivos_cancelacion_id')->references('id')->on('motivos_cancelacion');
 

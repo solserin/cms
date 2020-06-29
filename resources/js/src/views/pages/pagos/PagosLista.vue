@@ -195,7 +195,7 @@
       :show="openReportesListaLista"
       :listadereportes="ListaReportes"
       :request="request"
-      @closeReportes="openReportesListaLista = false"
+      @closeReportes="closeListaReportes"
     ></Reporteador>
     <CancelarPago
       :show="openCancelar"
@@ -426,7 +426,7 @@ export default {
     },
 
     closeListaReportes() {
-      this.openReportesLista = false;
+      this.openReportesListaLista = false;
       this.id_pago = 0;
       (async () => {
         await this.get_data(this.actual);

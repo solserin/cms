@@ -27,13 +27,13 @@ class Operaciones extends Migration
             /**datos genericos de la tabla */
             $table->tinyInteger('empresa_operaciones_id')->nullable();
 
-            $table->float('subtotal')->nullable();
-            $table->float('descuento')->nullable();
-            $table->float('impuestos')->nullable();
-            $table->float('total')->nullable();
+            $table->unsignedDecimal('subtotal', 8, 2)->nullable();
+            $table->unsignedDecimal('descuento', 8, 2)->nullable();
+            $table->unsignedDecimal('impuestos', 8, 2)->nullable();
+            $table->unsignedDecimal('total', 8, 2)->nullable();
 
             $table->tinyInteger('descuento_pronto_pago_b')->nullable()->default(0);
-            $table->float('costo_neto_pronto_pago')->nullable();
+            $table->unsignedDecimal('costo_neto_pronto_pago', 8, 2)->nullable();
 
             /**solo para aquellos que aplica, venta de terrenos y venta de planes a futuro */
             $table->string('numero_solicitud', 35)->nullable();
@@ -72,10 +72,10 @@ class Operaciones extends Migration
             $table->tinyInteger('financiamiento');
             $table->tinyInteger('aplica_devolucion_b');
             /**se guarda el precio neto de la operacion normal al momenot de la operacion solo como futuras referencias */
-            $table->float('costo_neto_financiamiento_normal')->nullable();
+            $table->unsignedDecimal('costo_neto_financiamiento_normal', 8, 2)->nullable();
             /**status de la operacion */
             /**este se le asigna un valor numerico 1,2,3,0 segun la interpretacion en cada tipo de operacion */
-            $table->float('comision_venta_neto')->nullable();
+            $table->unsignedDecimal('comision_venta_neto', 8, 2)->nullable();
 
             $table->dateTime('fecha_operacion');
             $table->dateTime('fecha_registro');
@@ -89,7 +89,7 @@ class Operaciones extends Migration
             $table->mediumText('nota')->nullable();
             $table->tinyInteger('motivos_cancelacion_id')->nullable();
             $table->dateTime('fecha_cancelacion')->nullable();
-            $table->float('cantidad_a_regresar_cancelacion')->nullable();
+            $table->unsignedDecimal('cantidad_a_regresar_cancelacion', 8, 2)->nullable();
             $table->unsignedBigInteger('cancelo_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
             $table->mediumText('nota_cancelacion')->nullable();

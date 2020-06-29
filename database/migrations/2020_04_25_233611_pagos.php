@@ -15,10 +15,10 @@ class Pagos extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->float('total_pago');
-            $table->float('monto_pago');
-            $table->float('pago_con_cantidad');
-            $table->float('cambio_pago');
+            $table->unsignedDecimal('total_pago', 8, 2);
+            $table->unsignedDecimal('monto_pago', 8, 2);
+            $table->unsignedDecimal('pago_con_cantidad', 8, 2);
+            $table->unsignedDecimal('cambio_pago', 8, 2);
             $table->dateTime('fecha_registro')->nullable();
             $table->date('fecha_pago');
             $table->unsignedBigInteger('registro_id')->nullable();
@@ -42,7 +42,7 @@ class Pagos extends Migration
             $table->unsignedBigInteger('sat_monedas_id')->nullable();
             $table->foreign('sat_monedas_id')->references('id')->on('sat_monedas');
             $table->mediumText('nota')->nullable();
-            $table->float('tipo_cambio');
+            $table->unsignedDecimal('tipo_cambio', 8, 2);
             $table->tinyInteger('status')->default(1);
         });
     }

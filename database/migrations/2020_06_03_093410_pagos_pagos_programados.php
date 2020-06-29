@@ -18,7 +18,7 @@ class PagosPagosProgramados extends Migration
             $table->foreign('pagos_id')->references('id')->on('pagos');
             $table->unsignedBigInteger('pagos_programados_id')->unsigned();
             $table->foreign('pagos_programados_id')->references('id')->on('pagos_programados');
-            $table->float('monto');
+            $table->decimal('monto', 8, 2);
             $table->unsignedTinyInteger('movimientos_pagos_id')->nullable();
         });
     }

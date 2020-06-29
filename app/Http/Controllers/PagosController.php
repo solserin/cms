@@ -247,15 +247,15 @@ class PagosController extends ApiController
                     }
 
                     /** al final del ciclo se actualizan los valores en el pago programado*/
-                    $programado['abonado_capital'] = round($abonado_capital, 2);
-                    $programado['abonado_intereses'] =   round($abonado_intereses, 2);
-                    $programado['descontado_pronto_pago'] =   round($descontado_pronto_pago, 2);
-                    $programado['descontado_capital'] =   round($descontado_capital, 2);
-                    $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2);
+                    $programado['abonado_capital'] = round($abonado_capital, 2, PHP_ROUND_HALF_UP);
+                    $programado['abonado_intereses'] =   round($abonado_intereses, 2, PHP_ROUND_HALF_UP);
+                    $programado['descontado_pronto_pago'] =   round($descontado_pronto_pago, 2, PHP_ROUND_HALF_UP);
+                    $programado['descontado_capital'] =   round($descontado_capital, 2, PHP_ROUND_HALF_UP);
+                    $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2, PHP_ROUND_HALF_UP);
 
                     $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
+                    $programado['saldo_neto'] = round($saldo_pago_programado, 2, PHP_ROUND_HALF_UP);
 
-                    $programado['saldo_neto'] = round($saldo_pago_programado, 2);
 
 
                     /**asignando la fecha del pago que liquidado el pago programado */
@@ -293,7 +293,7 @@ class PagosController extends ApiController
                             /**aplicando intereses solo a abonos */
                             $interes_generado = 0;
                             if ($programado['conceptos_pagos_id'] == 2) {
-                                $interes_generado = round(((($programado['monto_programado'] * ($dato['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago), 2);
+                                $interes_generado = round(((($programado['monto_programado'] * ($dato['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago), 2, PHP_ROUND_HALF_UP);
                                 if ($interes_generado > 0) {
                                     if ($interes_generado >= $programado['abonado_intereses']) {
                                         /**esto siginifica que la fecha de pago seria mayor o igual a la fecha en que se hizo el ultimo abono a intereses */
@@ -324,7 +324,7 @@ class PagosController extends ApiController
                                     $programado['aplica_pronto_pago_b'] = 1;
                                     /**calculando monto a a descontar */
                                     //return $programado['descontado_pronto_pago'];
-                                    $programado['descuento_pronto_pago'] = round(((($programado['monto_programado']) - (($porcentaje_descuento_pronto_pago * ($programado['monto_programado'])) / 100))), 2);
+                                    $programado['descuento_pronto_pago'] = round(((($programado['monto_programado']) - (($porcentaje_descuento_pronto_pago * ($programado['monto_programado'])) / 100))), 2, PHP_ROUND_HALF_UP);
                                     if ($programado['descuento_pronto_pago'] > 0) {
                                         if ($programado['descuento_pronto_pago'] >= $programado['descontado_pronto_pago']) {
                                             /**esto siginifica que la fecha de pago seria mayor o igual a la fecha en que se hizo el ultimo descuento a capital */
@@ -345,7 +345,7 @@ class PagosController extends ApiController
                     }
                     /**monto con pronto pago de cada abono */
 
-                    $programado['monto_pronto_pago'] = round((($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100), 2);
+                    $programado['monto_pronto_pago'] = round((($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100), 2, PHP_ROUND_HALF_UP);
                     $programado['total_cubierto'] = $programado['abonado_capital'] +  $programado['descontado_pronto_pago'] + $programado['descontado_capital'] + $programado['complementado_cancelacion'];
 
                     /**verificando el estado de la referencia que se desa consultar */
@@ -557,12 +557,12 @@ class PagosController extends ApiController
 
         /**se obtienen los valores actualizados con la fecha y cantidades a cubrir */
         /**cantidades enviadas por el usuario para procesar el pago */
-        $abono =  round(($request->abono), 2);
-        $intereses = round($request->intereses, 2);
-        $descuento_pronto_pago =  round($request->descuento_pronto_pago, 2);
-        $total = round(floatval($request->total), 2);
-        $pago_con_cantidad = round($request->pago_con_cantidad, 2);
-        $cambio_pago =  round($request->cambio_pago, 2);
+        $abono =  round(($request->abono), 2, PHP_ROUND_HALF_UP);
+        $intereses = round($request->intereses, 2, PHP_ROUND_HALF_UP);
+        $descuento_pronto_pago =  round($request->descuento_pronto_pago, 2, PHP_ROUND_HALF_UP);
+        $total = round($request->total, 2, PHP_ROUND_HALF_UP);
+        $pago_con_cantidad = round($request->pago_con_cantidad, 2, PHP_ROUND_HALF_UP);
+        $cambio_pago =  round($request->cambio_pago, 2, PHP_ROUND_HALF_UP);
         $monto_pago_parent = $abono - $descuento_pronto_pago; //el pago parent ha registrar, el abono menos el descuento
 
         /**verificando que no haya descuento por pronyo pago ni intereses si la forma de pago es remision de deuda */
@@ -576,7 +576,7 @@ class PagosController extends ApiController
 
         /**validando los totales */
 
-        if (round(($abono - $descuento_pronto_pago + $intereses), 2) > $total) {
+        if (round(($abono - $descuento_pronto_pago + $intereses), 2, PHP_ROUND_HALF_UP) > $total) {
             return $this->errorResponse('Hemos encontrado errores en la captura de las cantidades a pagar, por favor verifique y vuelva a intentar.', 409);
         }
         /**verificando que los pagos a distribuir en las referencias sean correctos para poder hacer las insercciones de pagos y distribucion en referencias */
@@ -683,7 +683,7 @@ class PagosController extends ApiController
                                             array_push($array_abonos_cubrir, [
                                                 'referencia_pago' => $programado['referencia_pago'],
                                                 'pagos_programados_id' => $programado['id'],
-                                                'monto' => round($abono_a_cubrir, 2),
+                                                'monto' => round($abono_a_cubrir, 2, PHP_ROUND_HALF_UP),
                                                 'movimientos_pagos_d' => $id_tipo_movimiento
                                             ]);
                                             /**se acaba el abono_a_cubrir */
@@ -693,10 +693,10 @@ class PagosController extends ApiController
                                             array_push($array_abonos_cubrir, [
                                                 'referencia_pago' => $programado['referencia_pago'],
                                                 'pagos_programados_id' => $programado['id'],
-                                                'monto' =>  round($monto_con_descuento, 2),
+                                                'monto' =>  round($monto_con_descuento, 2, PHP_ROUND_HALF_UP),
                                                 'movimientos_pagos_d' => $id_tipo_movimiento
                                             ]);
-                                            $abono_a_cubrir -= round($monto_con_descuento, 2);
+                                            $abono_a_cubrir -= round($monto_con_descuento, 2, PHP_ROUND_HALF_UP);
                                         }
                                     }
                                 } //fin if abono a cubrir >0
@@ -717,7 +717,7 @@ class PagosController extends ApiController
             /**al final de distribuir las cantidades es sus respectivos pagos, sedebe verificar que no quedaron montos remanenetes que no se hayan
              * distribuido en sus respectivas referencias
              */
-            if ((round($abono_a_cubrir, 2) != 0 || round($intereses_a_cubrir, 2) != 0 || round($descuento_pronto_pago_a_cubrir, 2) != 0)) {
+            if ((round($abono_a_cubrir, 2, PHP_ROUND_HALF_UP) != 0 || round($intereses_a_cubrir, 2, PHP_ROUND_HALF_UP) != 0 || round($descuento_pronto_pago_a_cubrir, 2, PHP_ROUND_HALF_UP) != 0)) {
                 return $this->errorResponse('Hemos encontrado errores en el registro de este pago debido a que las cantidades ingresadas no cuadran según la operación que está realizando, por favor verifique que el descuento o interés que desea cobrar están en relación a los pagos que desea pagar. Por favor vuelva a intentar la operación.', 409);
             }
 
@@ -744,7 +744,7 @@ class PagosController extends ApiController
             $id_abono_capital = DB::table('pagos')->insertGetId(
                 [
                     'monto_pago' => $monto_pago_parent,
-                    'total_pago' => round($total, 2),
+                    'total_pago' => round($total, 2, PHP_ROUND_HALF_UP),
                     /**solo la cantidad primero que va destinada al pago parent*/
                     'pago_con_cantidad' => $pago_con_cantidad,
                     'cambio_pago' => $cambio_pago,
@@ -782,7 +782,7 @@ class PagosController extends ApiController
                 $id_descuento_pronto_pago = DB::table('pagos')->insertGetId(
                     [
                         'monto_pago' => $descuento_pronto_pago,
-                        'total_pago' => round($total, 2),
+                        'total_pago' => round($total, 2, PHP_ROUND_HALF_UP),
                         /**solo la cantidad primero que va destinada al pago parent*/
                         'pago_con_cantidad' => 0,
                         'cambio_pago' => 0,
@@ -804,7 +804,7 @@ class PagosController extends ApiController
                         [
                             'pagos_id' => $id_descuento_pronto_pago,
                             'monto' => $descuento['monto'],
-                            'pagos_programados_id' => round($descuento['pagos_programados_id'], 2),
+                            'pagos_programados_id' => round($descuento['pagos_programados_id'], 2, PHP_ROUND_HALF_UP),
                             'movimientos_pagos_id' => 3  //descuento pronto pago
                         ]
                     );
@@ -820,7 +820,7 @@ class PagosController extends ApiController
                 $id_intereses = DB::table('pagos')->insertGetId(
                     [
                         'monto_pago' => $intereses,
-                        'total_pago' => round($total, 2),
+                        'total_pago' => round($total, 2, PHP_ROUND_HALF_UP),
                         /**solo la cantidad primero que va destinada al pago parent*/
                         'pago_con_cantidad' => 0,
                         'cambio_pago' => 0,
@@ -858,7 +858,8 @@ class PagosController extends ApiController
                 /**es tipo de ventas de propiedades */
                 $cementerio_controller = new CementerioController();
                 $datos_venta = $cementerio_controller->get_ventas($request, $datos_operacion['ventas_terrenos_id'], '')[0];
-                if ($datos_venta['saldo_neto'] <= 0) {
+                // return  $this->errorResponse(round($datos_venta['saldo_neto'], 2), 409);
+                if (round($datos_venta['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
                     /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
                     DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
                         [

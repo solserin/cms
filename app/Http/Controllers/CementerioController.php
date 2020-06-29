@@ -207,10 +207,12 @@ class CementerioController extends ApiController
 
 
         /**aqui comienzan a gurdar los datos */
-        $subtotal = (float) $request->subtotal; //sin iva
-        $iva = (float) $request->impuestos; //solo el iva
-        $descuento = (float) $request->descuento;
-        $costo_neto = (float) $request->costo_neto;
+        $subtotal = round($request->subtotal, 2, PHP_ROUND_HALF_UP); //sin iva
+        $iva = round($request->impuestos, 2, PHP_ROUND_HALF_UP); //solo el iva
+        $descuento = round($request->descuento, 2, PHP_ROUND_HALF_UP);
+        $costo_neto = round($request->costo_neto, 2, PHP_ROUND_HALF_UP);
+
+
         /**valdiando que cuadren las cantidades de la venta */
         //validaciones directas sin condicionales
         $validaciones = [
@@ -289,17 +291,17 @@ class CementerioController extends ApiController
         if ($request->planVenta['value'] == 1) {
             /**cuando es a contado */
             /**es un solo pago de inicio */
-            $validaciones['pago_inicial'] = 'numeric|required|min:' . (float) $request->costo_neto . '|max:' . (float) $request->costo_neto;
+            $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
         } else {
             /**cuando es a credito */
-            if ((float) $request->costo_neto > $request->planVenta['pago_inicial']) {
+            if ($request->costo_neto > $request->planVenta['pago_inicial']) {
                 /**minimo el pago inicial y maximo un 70% del costo neto */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . (float) $request->planVenta['pago_inicial'] . '|max:' . (float) ($request->costo_neto) * .7;
+                $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->planVenta['pago_inicial'] . '|max:' . ($request->costo_neto) * .7;
             } else {
                 /**si el descuento es menor al pago inicial se forza al usuario a ingresa como pago inicial minmo un 10% del totoa a pagar y un 70% de maximo 
                  * de pago inicial y el resto liquidarlo con los abonos
                  */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . (float) ($request->costo_neto * .1) . '|max:' . (float) ($request->costo_neto * .7);
+                $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
             }
         }
 
@@ -455,12 +457,12 @@ class CementerioController extends ApiController
 
             if (
                 $request->fecha_venta != $datos_venta['fecha_operacion'] ||
-                (round($request->impuestos, 2) != round($datos_venta['impuestos'], 2) ||
-                    round($request->subtotal, 2) != round($datos_venta['subtotal'], 2) ||
-                    round($request->costo_neto, 2) != round($datos_venta['total'], 2) ||
-                    $request->pago_inicial != count($datos_venta['pagos_programados']) > 0 ? round($datos_venta['pagos_programados'][0]['monto_programado'], 2) : 0 ||
-                    round($request->descuento, 2) != round($datos_venta['descuento'], 2) ||
-                    round($request->costo_neto_pronto_pago, 2) != round($datos_venta['costo_neto_pronto_pago'], 2))
+                (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
+                    round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
+                    round($request->costo_neto, 2, PHP_ROUND_HALF_UP) != round($datos_venta['total'], 2, PHP_ROUND_HALF_UP) ||
+                    $request->pago_inicial != count($datos_venta['pagos_programados']) > 0 ? round($datos_venta['pagos_programados'][0]['monto_programado'], 2, PHP_ROUND_HALF_UP) : 0 ||
+                    round($request->descuento, 2, PHP_ROUND_HALF_UP) != round($datos_venta['descuento'], 2, PHP_ROUND_HALF_UP) ||
+                    round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP) != round($datos_venta['costo_neto_pronto_pago'], 2, PHP_ROUND_HALF_UP))
             ) {
 
                 if ($datos_venta['total'] > 0) {
@@ -516,7 +518,7 @@ class CementerioController extends ApiController
                         'impuestos' => $iva,
                         'total' => $costo_neto,
                         'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
-                        'costo_neto_pronto_pago' => (float) $request->costo_neto_pronto_pago,
+                        'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto' => $request->titular_sustituto,
@@ -524,7 +526,7 @@ class CementerioController extends ApiController
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
                         'financiamiento' => $request->planVenta['value'],
                         'aplica_devolucion_b' => 0,
-                        'costo_neto_financiamiento_normal' => (float) $request->planVenta['costo_neto_financiamiento_normal'],
+                        'costo_neto_financiamiento_normal' => round($request->planVenta['costo_neto_financiamiento_normal'], 2, PHP_ROUND_HALF_UP),
                         'comision_venta_neto' => 0,
                         'fecha_registro' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
@@ -574,14 +576,14 @@ class CementerioController extends ApiController
                         'impuestos' => $iva,
                         'total' => $costo_neto,
                         'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
-                        'costo_neto_pronto_pago' => (float) $request->costo_neto_pronto_pago,
+                        'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto' => $request->titular_sustituto,
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
                         'financiamiento' => $request->planVenta['value'],
-                        'costo_neto_financiamiento_normal' => (float) $request->planVenta['costo_neto_financiamiento_normal'],
+                        'costo_neto_financiamiento_normal' => $request->planVenta['costo_neto_financiamiento_normal'],
                         'status' => $costo_neto > 0 ? 1 : '2',
                         'fecha_modificacion' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
@@ -767,12 +769,12 @@ class CementerioController extends ApiController
     public function programarPagos(Request $request, $operacion_id = 0, $id_venta = 0)
     {
         /**aqui comienzan a gurdar los datos */
-        $subtotal = (float) $request->subtotal; //sin iva
-        $iva = (float) $request->impuestos; //solo el iva
-        $descuento = (float) $request->descuento;
-        $costo_neto = (float) $request->costo_neto;
-        $pago_inicial = (float) $request->pago_inicial;
-
+        $subtotal = round($request->subtotal, 2, PHP_ROUND_HALF_UP); //sin iva
+        $iva = round($request->impuestos, 2, PHP_ROUND_HALF_UP); //solo el iva
+        $descuento = round($request->descuento, 2, PHP_ROUND_HALF_UP);
+        $costo_neto = round($request->costo_neto, 2, PHP_ROUND_HALF_UP);
+        $pago_inicial = round($request->pago_inicial, 2, PHP_ROUND_HALF_UP);
+        $total_a_pagar = round($request->total_pagar, 2, PHP_ROUND_HALF_UP);
 
 
 
@@ -819,7 +821,7 @@ class CementerioController extends ApiController
              * segun el porcentaje del pago
              */
 
-            $resto_a_mensualidades = (float) $request->total_pagar - (float) $request->pago_inicial;
+            $resto_a_mensualidades = $total_a_pagar -  $pago_inicial;
 
             //enganche inicial mandado mas lo descontado para sacar impuestos completos
 
@@ -844,7 +846,7 @@ class CementerioController extends ApiController
             //a futuro y a meses
             for ($i = 1; $i <= ((int) $request->planVenta['value']); $i++) {
                 $numero_pago_para_referencia = '';
-                if ($i < 10) {
+                if ($i < 9) {
                     //se debe asignar un cero (0) para crear la referencia correcta
                     $numero_pago_para_referencia = '0' . ($i + 1);
                 } else {
@@ -857,7 +859,7 @@ class CementerioController extends ApiController
                         'referencia_pago' => '001' . date('Ymd', strtotime($request->fecha_venta)) . $numero_pago_para_referencia . $id_venta, //se crea una referencia para saber a que pago pertenece
                         'fecha_programada' => $fecha, //fecha de la venta
                         'conceptos_pagos_id' => 2, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
-                        'monto_programado' => ($costo_neto - $pago_inicial) / $request->planVenta['value'],
+                        'monto_programado' => round(($costo_neto - $pago_inicial) / $request->planVenta['value'], 2, PHP_ROUND_HALF_UP),
                         'operaciones_id' => $operacion_id,
                         'status' => 1
                     ]
@@ -1694,7 +1696,7 @@ class CementerioController extends ApiController
 
             /**aqui se saca el porcentaje para ver cuanto seria el descuento por pago en cada pronto pago */
             $porcentaje_descuento_pronto_pago = 0;
-            if (floatval($venta['total']) > 0) {
+            if (round(floatval($venta['total']), 2, PHP_ROUND_HALF_UP) > 0) {
                 $porcentaje_descuento_pronto_pago = (floatval($venta['costo_neto_pronto_pago']) * 100) / floatval($venta['total']);
             }
 
@@ -1794,7 +1796,6 @@ class CementerioController extends ApiController
                             /**fecha en que se realizo el ultimo pago */
                             $fecha_ultimo_pago = $pagado['fecha_pago'];
                             // }
-
                             $pagos_vigentes++;
                         } //fin if pago status=1
                         else {
@@ -1808,18 +1809,17 @@ class CementerioController extends ApiController
                     } //fin foreach pagado
 
                     /** al final del ciclo se actualizan los valores en el pago programado*/
-                    $programado['abonado_capital'] = round($abonado_capital, 2);
-                    $programado['abonado_intereses'] =   round($abonado_intereses, 2);
-                    $programado['descontado_pronto_pago'] =  round($descontado_pronto_pago, 2);
-                    $programado['descontado_capital'] =   round($descontado_capital, 2);
-                    $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2);
+                    $programado['abonado_capital'] = round($abonado_capital, 2, PHP_ROUND_HALF_UP);
+                    $programado['abonado_intereses'] =   round($abonado_intereses, 2, PHP_ROUND_HALF_UP);
+                    $programado['descontado_pronto_pago'] =  round($descontado_pronto_pago, 2, PHP_ROUND_HALF_UP);
+                    $programado['descontado_capital'] =   round($descontado_capital, 2, PHP_ROUND_HALF_UP);
+                    $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2, PHP_ROUND_HALF_UP);
 
 
 
                     $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
 
-                    $programado['saldo_neto'] = round($saldo_pago_programado, 2);
-
+                    $programado['saldo_neto'] = round($saldo_pago_programado, 2, PHP_ROUND_HALF_UP);
                     /**asignando la fecha del pago que liquidado el pago programado */
                     if ($programado['saldo_neto'] <= 0) {
                         $programado['fecha_ultimo_pago'] = $fecha_ultimo_pago;
@@ -1846,7 +1846,7 @@ class CementerioController extends ApiController
                     $programado['fecha_a_pagar_abr'] = fecha_abr($programado['fecha_programada']);
                     /**fin varables por intereses */
                     /**verificando que el pago programado tiene un saldo de capital que cobrar para saber si aplica o no intereses */
-                    if (round($saldo_pago_programado, 2) > 0) {
+                    if (round($saldo_pago_programado, 2, PHP_ROUND_HALF_UP) > 0) {
                         /**tiene todavia saldo que pagar, se debe verificar si el pago esta vencido para generarle los intereses correspondientes */
                         if (date('Y-m-d', strtotime($programado['fecha_programada'])) < date('Y-m-d')) {
                             /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
@@ -1868,7 +1868,7 @@ class CementerioController extends ApiController
                             /**aplicando intereses solo a abonos */
                             $interes_generado = 0;
                             if ($programado['conceptos_pagos_id'] == 2) {
-                                $interes_generado = round(((($programado['monto_programado'] * ($venta['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago), 2);
+                                $interes_generado = round(((($programado['monto_programado'] * ($venta['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago), 2, PHP_ROUND_HALF_UP);
                                 if ($interes_generado > 0) {
                                     /**esto siginifica que la fecha de pago seria mayor o igual a la fecha en que se hizo el ultimo abono a intereses */
                                     $interes_generado -= $programado['abonado_intereses'];
@@ -1876,7 +1876,7 @@ class CementerioController extends ApiController
                             }
 
                             /**aqui actualizamos el saldo neto del pago con todo e intereses, quitando los intereses que ya se han pagado previamente */
-                            $programado['saldo_neto'] = $saldo_pago_programado + $interes_generado;
+                            $programado['saldo_neto'] = round($saldo_pago_programado + $interes_generado, 2, PHP_ROUND_HALF_UP);
                             /**la fecha qui es mayor que la fecha programada del pago */
                             $programado['status_pago'] = 0;
                             $programado['status_pago_texto'] = 'Vencido';
@@ -1898,7 +1898,7 @@ class CementerioController extends ApiController
                     }
 
                     /**monto con pronto pago de cada abono */
-                    $programado['monto_pronto_pago'] = ($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100;
+                    $programado['monto_pronto_pago'] = round(($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100, 2, PHP_ROUND_HALF_UP);
                     $programado['total_cubierto'] = $abonado_capital + $descontado_pronto_pago + $descontado_capital + $complemento_cancelacion;
 
                     /**actualizando los totales de montos en la venta */
@@ -1909,6 +1909,7 @@ class CementerioController extends ApiController
                     $venta['descontado_capital'] +=  $descontado_capital;
                     $venta['complementado_cancelacion'] +=  $complemento_cancelacion;
                     $venta['saldo_neto'] += $saldo_pago_programado + $interes_generado;
+
 
                     /**calculando el total cubierto de la venta, sin intereses pagados, solo lo que ya esta cubierto */
                     $venta['total_cubierto'] += $programado['total_cubierto'];
@@ -1938,13 +1939,14 @@ class CementerioController extends ApiController
                 $venta['venta_terreno']['tipo_financiamiento_texto'] = 'A Futuro';
             }
 
+
+
             /**actualiznado ubicacion */
             $venta['venta_terreno']['ubicacion_texto'] = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'];
             $venta['venta_terreno']['area_nombre'] = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['area_nombre'];
             $venta['venta_terreno']['tipo_texto'] = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['tipo_texto'];
             $venta['venta_terreno']['fila_texto'] = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['fila_texto'];
             $venta['venta_terreno']['lote_texto'] = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['lote_texto'];
-
             /**agregando fila, lote, y tipo, por separado en valor numrico */
             $venta['venta_terreno']['fila_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[2]));
             $venta['venta_terreno']['lote_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[3]));
