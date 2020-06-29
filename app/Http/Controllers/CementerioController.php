@@ -563,6 +563,7 @@ class CementerioController extends ApiController
                         'tipo_financiamiento' => $request->tipo_financiamiento
                     ]
                 );
+
                 DB::table('operaciones')->where('id', '=', $datos_venta['operacion_id'])->update(
                     [
                         'clientes_id' => (int) $request->id_cliente,
@@ -584,7 +585,7 @@ class CementerioController extends ApiController
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
                         'financiamiento' => $request->planVenta['value'],
                         'costo_neto_financiamiento_normal' => $request->planVenta['costo_neto_financiamiento_normal'],
-                        'status' => $costo_neto > 0 ? 1 : '2',
+                        'status' => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
                         'fecha_modificacion' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
                         'modifico_id' => (int) $request->user()->id,
