@@ -941,7 +941,7 @@
                             this.form.planVenta.value)
                             | numFormat("0,000.00")
                         }}
-                        Pesos
+                        Pesos Aprox.
                       </span>
                     </span>
                     <span v-else class="text-danger"

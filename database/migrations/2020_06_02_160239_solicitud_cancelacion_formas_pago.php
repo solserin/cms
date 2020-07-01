@@ -18,7 +18,7 @@ class SolicitudCancelacionFormasPago extends Migration
             $table->foreign('solicitud_cancelacion_id')->references('id')->on('solicitud_cancelacion');
             $table->unsignedBigInteger('sat_formas_pago_id')->unsigned()->nullable();
             $table->foreign('sat_formas_pago_id')->references('id')->on('sat_formas_pago');
-            $table->unsignedDecimal('monto', 8, 2);
+            $table->unsignedDecimal('monto', 10, 2);
         });
     }
 

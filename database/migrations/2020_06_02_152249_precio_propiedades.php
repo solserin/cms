@@ -15,13 +15,13 @@ class PrecioPropiedades extends Migration
     {
         Schema::create('precios_propiedades', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedDecimal('pago_inicial', 8, 2);
-            $table->unsignedDecimal('subtotal', 8, 2);
-            $table->unsignedDecimal('impuestos', 8, 2);
-            $table->unsignedDecimal('costo_neto', 8, 2);
-            $table->unsignedDecimal('costo_neto_financiamiento_normal', 8, 2);
+            $table->unsignedDecimal('pago_inicial', 10, 2);
+            $table->unsignedDecimal('subtotal', 10, 2);
+            $table->unsignedDecimal('impuestos', 10, 2);
+            $table->unsignedDecimal('costo_neto', 10, 2);
+            $table->unsignedDecimal('costo_neto_financiamiento_normal', 10, 2);
             $table->tinyInteger('descuento_pronto_pago_b');
-            $table->unsignedDecimal('costo_neto_pronto_pago', 8, 2);
+            $table->unsignedDecimal('costo_neto_pronto_pago', 10, 2);
             $table->unsignedTinyInteger('tipo_propiedades_id')->unsigned()->nullable();
             $table->foreign('tipo_propiedades_id')->references('id')->on('tipo_propiedades');
             $table->dateTime('fecha_actualizacion');

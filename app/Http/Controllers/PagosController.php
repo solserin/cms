@@ -47,7 +47,6 @@ class PagosController extends ApiController
 
     public function calcular_adeudo($referencia, $fecha = '', $multipago = 'false')
     {
-
         $request = new \Illuminate\Http\Request();
 
         $request->replace([
@@ -163,8 +162,8 @@ class PagosController extends ApiController
 
                 /**aqui se saca el porcentaje para ver cuanto seria el descuento por pago en cada pronto pago */
                 $porcentaje_descuento_pronto_pago = 0;
-                if (floatval($dato['total']) > 0) {
-                    $porcentaje_descuento_pronto_pago = (floatval($dato['costo_neto_pronto_pago']) * 100) / floatval($dato['total']);
+                if ($dato['total'] > 0) {
+                    $porcentaje_descuento_pronto_pago = ($dato['costo_neto_pronto_pago']) * 100 / $dato['total'];
                 }
 
 
@@ -293,7 +292,7 @@ class PagosController extends ApiController
                             /**aplicando intereses solo a abonos */
                             $interes_generado = 0;
                             if ($programado['conceptos_pagos_id'] == 2) {
-                                $interes_generado = round(((($programado['monto_programado'] * ($dato['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago), 2, PHP_ROUND_HALF_UP);
+                                $interes_generado = round(((($programado['monto_programado'] * ($dato['ajustes_politicas']['tasa_fija_anual'] / 12)) / 365) * $dias_retrasados_del_pago), 0, PHP_ROUND_HALF_UP);
                                 if ($interes_generado > 0) {
                                     if ($interes_generado >= $programado['abonado_intereses']) {
                                         /**esto siginifica que la fecha de pago seria mayor o igual a la fecha en que se hizo el ultimo abono a intereses */
@@ -324,7 +323,7 @@ class PagosController extends ApiController
                                     $programado['aplica_pronto_pago_b'] = 1;
                                     /**calculando monto a a descontar */
                                     //return $programado['descontado_pronto_pago'];
-                                    $programado['descuento_pronto_pago'] = round(((($programado['monto_programado']) - (($porcentaje_descuento_pronto_pago * ($programado['monto_programado'])) / 100))), 2, PHP_ROUND_HALF_UP);
+                                    $programado['descuento_pronto_pago'] = round(((($programado['monto_programado']) - (($porcentaje_descuento_pronto_pago * ($programado['monto_programado'])) / 100))), 0, PHP_ROUND_HALF_DOWN);
                                     if ($programado['descuento_pronto_pago'] > 0) {
                                         if ($programado['descuento_pronto_pago'] >= $programado['descontado_pronto_pago']) {
                                             /**esto siginifica que la fecha de pago seria mayor o igual a la fecha en que se hizo el ultimo descuento a capital */
@@ -459,13 +458,13 @@ class PagosController extends ApiController
 
         if (isset($request->formaPago['value'])) {
             if ($request->formaPago['value'] == 1) {
-                $validaciones['pago_con_cantidad'] = 'numeric|required|min:' . (float) $request->total;
+                $validaciones['pago_con_cantidad'] = 'numeric|required|min:' . $request->total;
                 $validaciones['cambio_pago'] = 'numeric|required|min:0';
             } else {
 
                 /**verificnado que no tenga contidad con que pago incluido cuando es por remision de deuda*/
                 if ($request->formaPago['value'] != 7) {
-                    $request->pago_con_cantidad = (float) $request->total;
+                    $request->pago_con_cantidad = $request->total;
                 } else {
                     /**no debe de haber valores mayores a cero */
                     $request->pago_con_cantidad = 0;

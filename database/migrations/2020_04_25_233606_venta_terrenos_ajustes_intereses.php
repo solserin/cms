@@ -17,10 +17,10 @@ class VentaTerrenosAjustesIntereses extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('ventas_terrenos_id')->nullable();
             $table->foreign('ventas_terrenos_id')->references('id')->on('ventas_terrenos');
-            $table->unsignedDecimal('tasa_fija_anual', 8, 2)->default(12);
+            $table->unsignedDecimal('tasa_fija_anual', 10, 2)->default(12);
             $table->integer('dias_antes_vencimiento')->default(5);
             $table->integer('maximo_dias_retraso')->default(120);
-            $table->unsignedDecimal('porcentaje_pena_convencional_minima', 8, 2)->default(60);
+            $table->unsignedDecimal('porcentaje_pena_convencional_minima', 10, 2)->default(60);
             $table->integer('minima_partes_cubiertas')->default(3);
             $table->integer('maximo_pagos_vencidos')->default(3);
         });
