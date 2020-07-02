@@ -15,14 +15,20 @@
                 class="mx-auto login-img"
               />
               <div class="flex flex-wrap">
-                <div class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 mr-auto ml-auto">
-                  <h1 class="text-textos_theme sistema-title uppercase">SIIGA | Aeternus Funerales</h1>
+                <div
+                  class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 mr-auto ml-auto"
+                >
+                  <h1 class="text-textos_theme sistema-title uppercase">
+                    SIIGA | Aeternus Funerales
+                  </h1>
                   <h2
                     class="mt-3 text-lg text-textos_theme font-light text-center sistema-descripcion"
-                  >Sistema Integral de Información y Gerencia Administrativa</h2>
-                  <p
-                    class="mt-3 text-sm text-textos_theme text-center"
-                  >©2020 Todos los Derechos Reservados</p>
+                  >
+                    Sistema Integral de Información y Gerencia Administrativa
+                  </h2>
+                  <p class="mt-3 text-sm text-textos_theme text-center">
+                    ©2020 Todos los Derechos Reservados
+                  </p>
                 </div>
               </div>
             </div>
@@ -36,7 +42,9 @@
                     <div class="justify-center items-center md:mt-40">
                       <h4 class="iniciar-sesion my-5">Inicia sesión</h4>
                       <div class="w-full my-2">
-                        <label class="text-sm opacity-75">Correo electrónico</label>
+                        <label class="text-sm opacity-75"
+                          >Correo electrónico</label
+                        >
                         <vs-input
                           v-validate="'required|email|min:3'"
                           name="email"
@@ -47,8 +55,11 @@
                           placeholder="Correo electrónico"
                           v-model="email"
                           class="w-full pb-1 pt-1"
+                          ref="email"
                         />
-                        <span class="text-danger text-sm">{{ errors.first('email') }}</span>
+                        <span class="text-danger text-sm">{{
+                          errors.first("email")
+                        }}</span>
                       </div>
                       <div class="w-full">
                         <label class="text-sm opacity-75">Contraseña</label>
@@ -65,32 +76,51 @@
                           class="w-full pb-1 pt-1"
                           v-on:keyup.enter="loginJWT"
                         />
-                        <span class="text-danger text-sm">{{ errors.first('password') }}</span>
+                        <span class="text-danger text-sm">{{
+                          errors.first("password")
+                        }}</span>
                       </div>
 
                       <div
                         class="flex flex-wrap justify-between my-5 text-sm text-black"
-                      >Esta página está protegida y sujeta a las Políticas de privacidad y a las Condiciones de la empresa. Acceso solo a personal autorizado.</div>
+                      >
+                        Esta página está protegida y sujeta a las Políticas de
+                        privacidad y a las Condiciones de la empresa. Acceso
+                        solo a personal autorizado.
+                      </div>
 
                       <!-- <div class="flex flex-wrap justify-between my-5">
                 <vs-checkbox v-model="checkbox_remember_me" class="mb-3 hidden">Recordarme</vs-checkbox>
               </div>
                       -->
                       <div class="flex flex-wrap justify-between">
-                        <vs-button class="w-full font-medium" @click="loginJWT">Inicia sesión</vs-button>
+                        <vs-button class="w-full font-medium" @click="loginJWT"
+                          >Inicia sesión</vs-button
+                        >
                       </div>
 
                       <div class="flex flex-wrap justify-between pt-8">
                         <router-link
                           to="/pages/forgot-password"
                           class="text-textos_theme"
-                        >¿Olvidaste tu contraseña?</router-link>
+                          >¿Olvidaste tu contraseña?</router-link
+                        >
                       </div>
 
                       <div class="flex flex-wrap justify-between py-10">
-                        <a href="#" target="_blank" class="tutorial text-base hidden">
-                          <feather-icon icon="PlayIcon" class="mr-2" svgClasses="w-5 h-5" />
-                          <span class="mt-2 text-black">Ver guía de usuario "Inicio de Sesión"</span>
+                        <a
+                          href="#"
+                          target="_blank"
+                          class="tutorial text-base hidden"
+                        >
+                          <feather-icon
+                            icon="PlayIcon"
+                            class="mr-2"
+                            svgClasses="w-5 h-5"
+                          />
+                          <span class="mt-2 text-black"
+                            >Ver guía de usuario "Inicio de Sesión"</span
+                          >
                         </a>
                       </div>
                     </div>
@@ -104,8 +134,6 @@
     </div>
   </div>
 </template>
-
-
 <script>
 import { mapGetters } from "vuex";
 import store from "../../../store/store";
@@ -114,8 +142,8 @@ export default {
     return {
       //email: "admin@admin.com",
       //password: "password",
-      email: "admin@admin.com",
-      password: "password",
+      email: "",
+      password: "",
       checkbox_remember_me: false
     };
   },
@@ -176,6 +204,11 @@ export default {
           });
         });
     }
+  },
+  created() {
+    this.$nextTick(() =>
+      this.$refs["email"].$el.querySelector("input").focus()
+    );
   }
 };
 </script>

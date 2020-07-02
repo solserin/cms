@@ -214,6 +214,7 @@ class CementerioController extends ApiController
         /**valdiando que cuadren las cantidades de la venta */
         //validaciones directas sin condicionales
         $validaciones = [
+            'salarios_minimos' => 'integer|required|min:1|max:150',
             //datos de la propiedad
             'id_venta' => '',
             /**solo para modificaciones */
@@ -496,7 +497,8 @@ class CementerioController extends ApiController
                         'tipo_propiedades_id' => $request->tipo_propiedades_id,
                         'vendedor_id' => (int) $request->vendedor['value'],
                         'considerar_mantenimiento_b' => 1,
-                        'tipo_financiamiento' => $request->tipo_financiamiento
+                        'tipo_financiamiento' => $request->tipo_financiamiento,
+                        'salarios_minimos' => $request->salarios_minimos
                     ]
                 );
 
@@ -558,7 +560,8 @@ class CementerioController extends ApiController
                         'propiedades_id' => $request->propiedades_id,
                         'tipo_propiedades_id' => $request->tipo_propiedades_id,
                         'vendedor_id' => (int) $request->vendedor['value'],
-                        'tipo_financiamiento' => $request->tipo_financiamiento
+                        'tipo_financiamiento' => $request->tipo_financiamiento,
+                        'salarios_minimos' => $request->salarios_minimos
                     ]
                 );
                 DB::table('operaciones')->where('id', '=', $datos_venta['operacion_id'])->update(

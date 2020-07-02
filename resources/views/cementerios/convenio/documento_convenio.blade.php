@@ -403,8 +403,8 @@
                 {{ mes($empresa->cementerio->mes_maximo_pago) }}</span> de cada año, una cuota por
             concepto de mantenimiento del parque funerario. El monto de dicho cargo será el equivalente a <span
                 class="uppercase bold texto-sm">
-                {{ $empresa->cementerio->numero_salarios }}
-                ({{ NumerosEnLetras::convertir($empresa->cementerio->numero_salarios,'',false) }})
+                {{ $datos['venta_terreno']['salarios_minimos'] }}
+                ({{ NumerosEnLetras::convertir($datos['venta_terreno']['salarios_minimos'],'',false) }})
             </span>
             salarios mínimos del distrito Federal (CDMX), vigentes al día <span class="uppercase bold texto-sm">15
                 (QUINCE)</span> del mes de enero de cada año.
