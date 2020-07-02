@@ -1717,7 +1717,7 @@ class CementerioController extends ApiController
 
             /**aqui se saca el porcentaje para ver cuanto seria el descuento por pago en cada pronto pago */
             $porcentaje_descuento_pronto_pago = 0;
-            if (round($venta['total'], 2, PHP_ROUND_HALF_UP) > 0) {
+            if ($venta['total'] > 0) {
                 $porcentaje_descuento_pronto_pago = ($venta['costo_neto_pronto_pago'] * 100) / ($venta['total']);
             }
 
