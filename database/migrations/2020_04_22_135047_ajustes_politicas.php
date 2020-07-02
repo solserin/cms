@@ -15,13 +15,13 @@ class AjustesPoliticas extends Migration
     {
         Schema::create('ajustes_politicas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedDecimal('tasa_fija_anual', 10, 2);
-            $table->integer('dias_antes_vencimiento');
-            $table->integer('maximo_dias_retraso');
-            $table->unsignedDecimal('porcentaje_pena_convencional_minima', 10, 2);
-            $table->integer('minima_partes_cubiertas');
-            $table->integer('maximo_pagos_vencidos');
-            $table->integer('maximo_dias_cancelar_contrato');
+            $table->tinyInteger('tasa_fija_anual');
+            $table->tinyInteger('dias_antes_vencimiento');
+            $table->tinyInteger('maximo_dias_retraso');
+            $table->decimal('porcentaje_pena_convencional_minima', 8, 2);
+            $table->tinyInteger('minima_partes_cubiertas');
+            $table->tinyInteger('maximo_pagos_vencidos');
+            $table->tinyInteger('maximo_dias_cancelar_contrato');
         });
     }
 

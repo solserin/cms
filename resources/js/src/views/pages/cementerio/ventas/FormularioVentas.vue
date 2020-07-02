@@ -489,6 +489,7 @@
                   }}</span>
                 </div>
               </div>
+
               <vs-divider />
             </div>
           </div>
@@ -1022,12 +1023,23 @@
                   <h3
                     class="mt-2 text-base px-2 py-1 bg-seccion-forms"
                     style="line-height: 1.6em;"
+                    hidden
                   >
                     Se recomienda revisar la Información capturada antes de
                     mandar
                     <span class="text-danger">Guardar la venta</span>, si ya
                     revisó que todo está correcto puede proceder.
                   </h3>
+
+                  <h3
+                    class="mt-2 text-base px-2 py-1 bg-seccion-forms mb-1"
+                    style="line-height: 1.6em;"
+                  >
+                    Nota/Comentario:
+                  </h3>
+                  <span class="px-2">
+                    {{ form.nota }}
+                  </span>
                 </div>
 
                 <vs-divider />
@@ -1050,9 +1062,7 @@
             </div>
             <div class="flex flex-wrap">
               <!--precios-->
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
+              <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   <span>Plan de Venta</span>
                   <span class="texto-importante">(*)</span>
@@ -1074,7 +1084,6 @@
                     No Se Ha Seleccionado Ningún Área
                   </div>
                 </v-select>
-
                 <div>
                   <span class="mensaje-requerido">{{
                     errors.first("plan_venta")
@@ -1085,6 +1094,36 @@
                     class="mensaje-requerido"
                     v-if="this.errores['planVenta.value']"
                     >{{ errores["planVenta.value"][0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Salarios Mínimos x Mantenimiento
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  size="large"
+                  v-validate="'required|integer|min_value:1|max_value:150'"
+                  name="salarios_minimos"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Ingrese el número de salarios"
+                  v-model="form.salarios_minimos"
+                  maxlength="3"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("salarios_minimos")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.salarios_minimos"
+                    >{{ errores.salarios_minimos[0] }}</span
                   >
                 </div>
               </div>
@@ -1956,6 +1995,7 @@ export default {
       datosVenta: [],
       //fin var con mapa
       form: {
+        salarios_minimos: "12",
         id_venta: "",
         /**datos del cliente seleccionado */
         cliente: "seleccione 1 cliente",

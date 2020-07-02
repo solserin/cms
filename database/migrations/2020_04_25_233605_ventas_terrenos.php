@@ -29,6 +29,7 @@ class VentasTerrenos extends Migration
             $table->unsignedBigInteger('vendedor_id')->unsigned()->nullable();
             $table->foreign('vendedor_id')->references('id')->on('usuarios'); //quien hizo la venta
             $table->tinyInteger('considerar_mantenimiento_b')->default(1);
+            $table->tinyInteger('salarios_minimos');
             $table->mediumText('nota_mantenimiento')->nullable();
             $table->tinyInteger('tipo_financiamiento')->nullable(); //1 contado(uso inmeadiatoo) 2-credito uso a futuro
         });
