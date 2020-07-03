@@ -262,7 +262,7 @@
 
 <script>
 //planes de venta
-import cementerio from "@services/cementerio";
+import planes from "@services/planes";
 
 import FormularioVentas from "../ventas/FormularioVentas";
 
@@ -276,7 +276,7 @@ import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
 import vSelect from "vue-select";
-import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
+import PlanesVenta from "@pages/funeraria/ventas/PlanesVentas";
 export default {
   components: {
     "v-select": vSelect,
@@ -409,8 +409,8 @@ export default {
         }
       }
       let self = this;
-      if (cementerio.cancel) {
-        cementerio.cancel("Operation canceled by the user.");
+      if (planes.cancel) {
+        planes.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
@@ -420,7 +420,7 @@ export default {
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
 
       try {
-        let res = await cementerio.get_ventas(this.serverOptions);
+        let res = await planes.get_ventas(this.serverOptions);
         if (res.data.data) {
           this.ventas = res.data.data;
           this.total = res.data.last_page;

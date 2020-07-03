@@ -8,10 +8,15 @@
       ref="contra"
     >
       <div class="text-center password_icono"></div>
-      <div class="text-center seguro-mensaje mt-3">Confirmar con Contraseña</div>
+      <div class="text-center seguro-mensaje mt-3">
+        Confirmar con Contraseña
+      </div>
       <div class="text-center seguro-texto mt-3">
         Para poder
-        <span class="font-semibold text-primary">{{accionNombre}}</span>, es necesario que verifique su identidad mediante contraseña. Esto reduce el riesgo de que usuarios no autorizados realicen operaciones sin su autorización.
+        <span class="font-semibold text-primary">{{ accionNombre }}</span
+        >, es necesario que verifique su identidad mediante contraseña. Esto
+        reduce el riesgo de que usuarios no autorizados realicen operaciones sin
+        su autorización.
       </div>
       <div class="flex flex-wrap mt-2">
         <div class="w-full px-5">
@@ -35,15 +40,28 @@
               type="border"
               @click="cancel"
             >
-              <img width="25px" class="cursor-pointer" src="@assets/images/cancel.svg" />
+              <img
+                width="25px"
+                class="cursor-pointer"
+                src="@assets/images/cancel.svg"
+              />
               <span class="texto-btn">(Esc) Cancelar</span>
             </vs-button>
           </div>
         </div>
         <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
           <div class="mt-2">
-            <vs-button size="small" color="success" class="float-left ml-2" @click="acceptAlert">
-              <img width="25px" class="cursor-pointer" src="@assets/images/checked.svg" />
+            <vs-button
+              size="small"
+              color="success"
+              class="float-left ml-2"
+              @click="acceptAlert"
+            >
+              <img
+                width="25px"
+                class="cursor-pointer"
+                src="@assets/images/checked.svg"
+              />
               <span class="texto-btn">(Ent) Confirmar</span>
             </vs-button>
           </div>

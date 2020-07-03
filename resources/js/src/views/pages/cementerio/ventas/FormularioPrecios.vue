@@ -23,7 +23,7 @@
         <!--datos del titular-->
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
           <label class="text-sm opacity-75 font-bold">
-            Descrición/Nombre del Plan
+            Descripción/Nombre del Plan
             <span class="text-danger text-sm">(*)</span>
           </label>
           <vs-input
@@ -51,7 +51,7 @@
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
           <label class="text-sm opacity-75 font-bold">
-            Descrición/Nombre del Plan(Inglés)
+            Descripción/Nombre del Plan(Inglés)
             <span class="text-danger text-sm">(*)</span>
           </label>
           <vs-input

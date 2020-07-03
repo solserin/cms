@@ -3,9 +3,9 @@
     <vs-popup
       class="forms-popups big-forms planes_venta_form"
       fullscreen
-      title="listado de precios para propiedades en cementerio"
+      title="listado de planes funerarios"
       :active.sync="showVentana"
-      ref="planes_cementerio"
+      ref="planes_planes"
     >
       <div class="flex flex-wrap pb-12 pt-2">
         <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12">
@@ -30,7 +30,7 @@
             @click="agregar()"
           >
             <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Agregar Precios</span>
+            <span class="texto-btn">Crear Planes</span>
           </vs-button>
           <vs-button
             class="float-right mr-16 mt-6"
@@ -39,7 +39,7 @@
             @click="
               openReporte(
                 'Precios x Propiedad (Español)',
-                '/cementerio/lista_precios_pdf/es',
+                '/planes/lista_precios_pdf/es',
                 ''
               )
             "
@@ -170,13 +170,22 @@
         :accion="accionPassword"
       ></Password>
 
-      <FormularioPrecios
+      <!--<FormularioPrecios
         :id_precio="id_precio_modificar"
         :tipo="tipoFormulario"
         :show="verFormularioPrecios"
         @closeVentana="verFormularioPrecios = false"
         @retornar_id="retorno_id"
       ></FormularioPrecios>
+      -->
+
+      <FormularioPlanes
+        :id_precio="id_precio_modificar"
+        :tipo="tipoFormulario"
+        :show="verFormularioPrecios"
+        @closeVentana="verFormularioPrecios = false"
+        @retornar_id="retorno_id"
+      ></FormularioPlanes>
 
       <Reporteador
         :header="'Consultar precios x propiedad'"
@@ -193,8 +202,9 @@
 import Reporteador from "@pages/Reporteador";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 import Password from "@pages/confirmar_password";
-import cementerio from "@services/cementerio";
-import FormularioPrecios from "@pages/cementerio/ventas/FormularioPrecios";
+import planes from "@services/planes";
+import FormularioPrecios from "@pages/funeraria/ventas/FormularioPrecios";
+import FormularioPlanes from "@pages/funeraria/ventas/FormularioPlanes";
 import vSelect from "vue-select";
 export default {
   props: {
@@ -206,7 +216,7 @@ export default {
   watch: {
     show: function(newValue, oldValue) {
       if (newValue == true) {
-        this.$refs["planes_cementerio"].$el.querySelector(
+        this.$refs["planes_planes"].$el.querySelector(
           ".vs-icon"
         ).onclick = () => {
           this.cancelar();
@@ -228,7 +238,8 @@ export default {
     Password,
     "v-select": vSelect,
     FormularioPrecios,
-    Reporteador
+    Reporteador,
+    FormularioPlanes
   },
   data() {
     return {
@@ -273,11 +284,11 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Precios x Propiedad (Español)",
-        url: "/cementerio/lista_precios_pdf/esf"
+        url: "/planes/lista_precios_pdf/esf"
       });
       this.ListaReportes.push({
         nombre: "Precios x Propiedad (Inglés)",
-        url: "/cementerio/lista_precios_pdf/en"
+        url: "/planes/lista_precios_pdf/en"
       });
       //estado de cuenta
       this.request.email = "";
@@ -310,7 +321,7 @@ export default {
     async get_financiamientos() {
       try {
         this.$vs.loading();
-        let res = await cementerio.get_financiamientos();
+        let res = await planes.get_financiamientos();
 
         this.propiedades = res.data;
         /**llenando los tipos de propiedad para el select */
@@ -364,7 +375,7 @@ export default {
       let datos = {
         id_precio: this.id_precio_modificar
       };
-      cementerio
+      planes
         .enable_disable(datos)
         .then(res => {
           this.$vs.loading.close();

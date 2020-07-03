@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class SeccionConceptos extends Migration
+class PlanConceptosOriginal extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class SeccionConceptos extends Migration
      */
     public function up()
     {
-        Schema::create('seccion_conceptos', function (Blueprint $table) {
+        Schema::create('plan_conceptos_original', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->tinyInteger('seccion_id')->unsigned();
+            $table->unsignedBigInteger('ventas_planes_id')->unsigned()->nullable();
+            $table->foreign('ventas_planes_id')->references('id')->on('ventas_planes');
             $table->string('concepto');
             $table->string('concepto_ingles');
-            $table->unsignedBigInteger('secciones_planes_id')->unsigned()->nullable();
-            $table->foreign('secciones_planes_id')->references('id')->on('secciones_planes');
         });
     }
 
@@ -29,6 +30,6 @@ class SeccionConceptos extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seccion_conceptos');
+        Schema::dropIfExists('plan_conceptos_original');
     }
 }

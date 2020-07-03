@@ -16,8 +16,11 @@
     font-size: 14px !important;
 }
 
+.plan_venta .vs__selected {
+    text-transform: capitalize !important;
+}
+
 .large_textarea .vs-textarea {
-    text-transform: uppercase !important;
     color: #303030 !important;
     font-weight: 600 !important;
     font-size: 14px !important;
