@@ -393,7 +393,9 @@ export default {
         .enable_disable_planes(datos)
         .then(res => {
           this.$vs.loading.close();
-          this.get_planes();
+          (async () => {
+            await this.get_planes();
+          })();
           if (res.data >= 1) {
             this.$vs.notify({
               title: "Cambiar estatus del plan funerario",

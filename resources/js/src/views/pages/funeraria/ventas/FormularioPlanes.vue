@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="precios_financiamientos forms-popups-85 normal-forms"
+      class="precios_financiamientos forms-popups normal-forms"
       fullscreen
       close="cancelar"
       :title="title"
@@ -127,13 +127,13 @@
                         <span class="lowercase">{{ alfabeto[indextr] }})</span>
                       </div>
                     </vs-td>
-                    <vs-td class="w-6/12">
+                    <vs-td class="w-7/12">
                       <div class="capitalize">
                         {{ tr.concepto }}
                         <span class="text-sm">({{ tr.concepto_ingles }})</span>
                       </div>
                     </vs-td>
-                    <vs-td class="w-3/12">
+                    <vs-td class="w-2/12">
                       <div class="capitalize">{{ tr.aplicar }}</div>
                     </vs-td>
                     <vs-td class="w-2/12">
@@ -893,7 +893,7 @@ export default {
               color: "success",
               time: 5000
             });
-            this.$emit("retornar_id", res.data);
+            this.$emit("retornar", res.data);
             this.cerrarVentana();
           } else {
             this.$vs.notify({
