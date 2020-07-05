@@ -32,7 +32,7 @@
             name="descripcion"
             data-vv-as=" "
             v-validate.disable="'required'"
-            maxlength="85"
+            maxlength="200"
             type="text"
             class="w-full pb-1 pt-1"
             placeholder="Ej. Servicio de cremación"
@@ -59,7 +59,7 @@
             name="descripcion_ingles"
             data-vv-as=" "
             v-validate.disable="'required'"
-            maxlength="85"
+            maxlength="200"
             type="text"
             class="w-full pb-1 pt-1"
             placeholder="Ej. Cremation Service"
@@ -102,7 +102,6 @@
                 >
               </div>
             </div>
-
             <div class="w-full" v-if="verLista">
               <vs-table
                 :data="datos"
@@ -168,6 +167,7 @@
                   <h3>Servicios y Artículos que Incluye el Paquete</h3>
                 </template>
                 <template slot="thead">
+                  <vs-th>#</vs-th>
                   <vs-th>Artículo/Servicio</vs-th>
                   <vs-th>Aplicar en</vs-th>
                   <vs-th>Acciones</vs-th>
@@ -201,7 +201,7 @@
                 name="concepto"
                 data-vv-as=" "
                 v-validate.disable="'required'"
-                maxlength="85"
+                maxlength="200"
                 type="text"
                 class="w-full pb-1 pt-1"
                 placeholder="Ej. Una urna básica"
@@ -227,7 +227,7 @@
                 name="concepto_ingles"
                 data-vv-as=" "
                 v-validate.disable="'required'"
-                maxlength="85"
+                maxlength="200"
                 type="text"
                 class="w-full pb-1 pt-1"
                 placeholder="Ej. Basic urn"
@@ -299,7 +299,12 @@
                 color="success"
                 size="small"
               >
-                <span class="font-medium text-base">Agregar a la Lista</span>
+                <span class="font-medium text-base" v-if="!verModificar"
+                  >Agregar a la Lista</span
+                >
+                <span class="font-medium text-base" v-else
+                  >Modificar Servicio</span
+                >
               </vs-button>
             </div>
 
@@ -311,7 +316,7 @@
               </label>
               <vs-textarea
                 height="120px"
-                maxlength="350"
+                maxlength="400"
                 size="large"
                 ref="nota"
                 type="text"
@@ -328,7 +333,7 @@
               </label>
               <vs-textarea
                 height="120px"
-                maxlength="350"
+                maxlength="400"
                 size="large"
                 ref="nota"
                 type="text"
@@ -391,8 +396,10 @@
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
-      :accion="'He revisado la información y quiero registrar este precio'"
-      :confirmarButton="'Registrar Precio'"
+      :accion="
+        'He revisado la información y quiero registrar este plan funerario'
+      "
+      :confirmarButton="'Registrar Plan Funerario'"
     ></ConfirmarAceptar>
   </div>
 </template>
@@ -424,7 +431,7 @@ export default {
       type: String,
       required: true
     },
-    id_precio: {
+    id_plan: {
       type: Number,
       required: false,
       default: 0
@@ -441,16 +448,17 @@ export default {
         this.$nextTick(() =>
           this.$refs["descripcion"].$el.querySelector("input").focus()
         );
-
+        /**agregando por default una seccion y un concepto */
+        this.form.seccion = {
+          value: "incluye",
+          label: "plan funerario"
+        };
         (async () => {
           if (this.getTipoformulario == "modificar") {
             this.title = "Modificar Plan Funerario";
+            /**cargar los datos para modificar */
+            await this.get_planes_id();
           } else {
-            /**agregando por default una seccion y un concepto */
-            this.form.seccion = {
-              value: "incluye",
-              label: "plan funerario"
-            };
             this.title = "Registrar Plan Funerario";
           }
         })();
@@ -474,9 +482,9 @@ export default {
         return newValue;
       }
     },
-    get_precio_id: {
+    get_plan_id: {
       get() {
-        return this.id_precio;
+        return this.id_plan;
       },
       set(newValue) {
         return newValue;
@@ -499,7 +507,6 @@ export default {
                   index_concepto: index_concepto
                 });
               });
-
               mostrar = true;
             }
           }
@@ -573,9 +580,10 @@ export default {
         nota_ingles: "",
         concepto: "",
         concepto_ingles: "",
+        id_plan_modificar: 0,
         /**variables del modulo */
         /**en caso de modificar */
-        id_precio_modificar: 0,
+
         /**datos */
         contado_b: {},
         financiamiento: "",
@@ -588,7 +596,7 @@ export default {
       },
       errores: [],
       /**variables del modulo */
-      datosPrecio: [],
+      datosPlan: [],
       title: "",
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
@@ -598,7 +606,7 @@ export default {
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
-      accionNombre: "Modificar Precio",
+      accionNombre: "Modificar Plan Funerario",
       financiamientos: [
         {
           value: "1",
@@ -628,7 +636,7 @@ export default {
       this.index_concepto = datos.index_concepto;
       this.botonConfirmarSinPassword = "eliminar";
       this.accionConfirmarSinPassword =
-        "¿Desea remover este Artículo/Servicio? Los datos quedarán eliminados del sistema?";
+        "¿Desea remover este Artículo/Servicio? Los datos quedarán eliminados del sistema";
       this.callBackConfirmar = this.remover_concepto_callback;
       this.openConfirmarSinPassword = true;
     },
@@ -734,50 +742,25 @@ export default {
         })
         .catch(() => {});
     },
-    /**funciones del modulo */
 
     /**trae la info del precio */
-    async get_precio_by_id() {
+    async get_planes_id() {
       this.$vs.loading();
       try {
-        let res = await planes.get_precio_by_id(this.get_precio_id);
-        this.datosPrecio = res.data;
-        this.form.descripcion = this.datosPrecio.descripcion;
-        this.form.descripcion_ingles = this.datosPrecio.descripcion_ingles;
+        let res = await planes.get_planes(this.get_plan_id);
+        this.datosPlan = res.data[0];
         //actualizo los datos en el formulario
-        this.financiamientos.forEach(element => {
-          if (element.value == this.datosPrecio.contado_b) {
-            this.form.contado_b = element;
-            this.form.financiamiento = this.datosPrecio.financiamiento;
-            return;
-          }
-        });
-        this.tipos_propiedad.forEach(element => {
-          if (element.value == this.datosPrecio.tipo_propiedades_id) {
-            this.form.tipo_propiedades_id = element;
-            return;
-          }
-        });
-        this.form.costo_neto = this.datosPrecio.costo_neto;
-        this.form.pago_inicial = this.datosPrecio.pago_inicial;
-        this.form.costo_neto_financiamiento_normal = this.datosPrecio.costo_neto_financiamiento_normal;
-
-        this.descuento.forEach(element => {
-          if (element.value == this.datosPrecio.descuento_pronto_pago_b) {
-            this.form.descuento_pronto_pago_b = element;
-            return;
-          }
-        });
-        this.form.costo_neto_pronto_pago =
-          this.datosPrecio.descuento_pronto_pago_b == 1
-            ? this.datosPrecio.costo_neto_pronto_pago
-            : "";
-
+        this.id_plan_modificar = this.datosPlan.id;
+        this.form.descripcion = this.datosPlan.plan;
+        this.form.descripcion_ingles = this.datosPlan.plan_ingles;
+        this.form.nota = this.datosPlan.nota;
+        this.form.nota_ingles = this.datosPlan.nota_ingles;
+        this.form.conceptos = this.datosPlan.secciones[0];
         this.$vs.loading.close();
       } catch (error) {
         this.$vs.loading.close();
         this.$vs.notify({
-          title: "Modificar Precios",
+          title: "Modificar Plan",
           text: "Ocurrió un error al traer la informacion, reintente.",
           iconPack: "feather",
           icon: "icon-alert-circle",
@@ -788,6 +771,8 @@ export default {
         this.cerrarVentana();
       }
     },
+    /**funciones del modulo */
+
     acceptAlert() {
       this.$validator
         .validateAll()
@@ -809,8 +794,8 @@ export default {
               this.openConfirmarAceptar = true;
             } else {
               /**modificar, se valida con password */
-              this.form.id_precio_modificar = this.get_precio_id;
-              this.callback = this.update_precio_propiedad;
+              this.form.id_plan_modificar = this.get_plan_id;
+              this.callback = this.update_plan;
               this.operConfirmar = true;
             }
           }
@@ -825,11 +810,12 @@ export default {
       planes
         .registrar_plan(this.form)
         .then(res => {
+          console.log("registrar_plan -> res", res);
           if (res.data >= 1) {
             //success
             this.$vs.notify({
               title: "Registro de Planes Funerarios",
-              text: "Se ha guardado el precio correctamente.",
+              text: "Se ha guardado el plan funerario correctamente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
@@ -851,6 +837,7 @@ export default {
         })
         .catch(err => {
           if (err.response) {
+            console.log("registrar_plan -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -865,7 +852,6 @@ export default {
             } else if (err.response.status == 422) {
               //checo si existe cada error
               this.errores = err.response.data.error;
-              console.log("registrar_plan ->  this.errores ", this.errores);
               this.$vs.notify({
                 title: "Registro de Planes Funerarios",
                 text: "Verifique los errores encontrados en los datos.",
@@ -874,7 +860,6 @@ export default {
                 color: "danger",
                 time: 5000
               });
-              //console.log(err.response);
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -891,18 +876,18 @@ export default {
         });
     },
 
-    update_precio_propiedad() {
+    update_plan() {
       //aqui mando modoificar los datos
       this.errores = [];
       this.$vs.loading();
       planes
-        .update_precio_propiedad(this.form)
+        .update_plan(this.form)
         .then(res => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
-              title: "Modificación de Precios",
-              text: "Se modificó el precio correctamente.",
+              title: "Modificación de Planes",
+              text: "Se modificó el plan funerario correctamente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
@@ -912,8 +897,9 @@ export default {
             this.cerrarVentana();
           } else {
             this.$vs.notify({
-              title: "Modificación de Precios",
-              text: "Error al guardar el plan funerario, por favor reintente.",
+              title: "Modificación de Planes",
+              text:
+                "Error al modificar el plan funerario, por favor reintente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
@@ -924,10 +910,6 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            console.log(
-              "update_precio_propiedad -> err.response",
-              err.response
-            );
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -943,7 +925,7 @@ export default {
               //checo si existe cada error
               this.errores = err.response.data.error;
               this.$vs.notify({
-                title: "Modificación de Precios",
+                title: "Modificación de Planes",
                 text: "Verifique los errores encontrados en los datos.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
@@ -953,7 +935,7 @@ export default {
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
-                title: "Modificación de Precios",
+                title: "Modificación de Planes",
                 text: err.response.data.error,
                 iconPack: "feather",
                 icon: "icon-alert-circle",
@@ -984,11 +966,10 @@ export default {
     //regresa los datos a su estado inicial
     limpiarVentana() {
       /**en caso de modificar */
-      this.form.id_precio_modificar = 0;
+      this.form.id_plan_modificar = 0;
       /**datos */
       this.form.descripcion = "";
       this.form.descripcion_ingles = "";
-
       this.cancelarModificacion();
       this.form.conceptos = [
         {

@@ -10,16 +10,16 @@
       <div class="flex flex-wrap pb-12 pt-2">
         <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12">
           <label class="text-sm opacity-75 font-bold">
-            <span class="uppercase">Filtrar por tipo de propiedad:</span>
+            <span class="uppercase">Filtrar por plan Funerario:</span>
           </label>
           <v-select
-            :options="propiedades_tipos"
+            :options="tipo_planes"
             :clearable="false"
             :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="propiedad_tipo"
+            v-model="plan_tipo"
             class="pb-1 pt-1"
           >
-            <div slot="no-options">Seleccione un Tipo de Propiedad</div>
+            <div slot="no-options">Seleccione un Plan Funerario</div>
           </v-select>
         </div>
         <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12">
@@ -27,7 +27,7 @@
             class="float-right mt-6"
             size="small"
             color="success"
-            @click="agregar()"
+            @click="agregarPlan()"
           >
             <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
             <span class="texto-btn">Crear Planes</span>
@@ -52,19 +52,71 @@
           </vs-button>
         </div>
       </div>
-
-      <div v-if="propiedades.length > 0">
+      <div v-if="planes.length > 0">
         <div
-          v-for="(propiedad, index) in propiedades"
+          v-for="(plan, index) in planes"
           :key="index"
-          :class="indexPrecios(index, propiedad.id)"
+          :class="[indexPrecios(index, plan.id), 'w-full']"
         >
-          <vs-table :data="propiedad.precios" noDataText="0 Resultados">
+          <vs-table :data="plan.precios" noDataText="0 Resultados">
             <template slot="header">
-              <h3>
-                Tipo {{ propiedad.tipo }}, capacidad
-                {{ propiedad.capacidad }} Persona(s)
-              </h3>
+              <table class="w-full">
+                <thead>
+                  <tr>
+                    <td
+                      class="text-left w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12"
+                    >
+                      <span class="text-sm uppercase font-bold">
+                        Plan Funerario
+                      </span>
+                    </td>
+                    <td class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12">
+                      <span class="text-sm uppercase font-bold">
+                        Acciones
+                      </span>
+                    </td>
+                  </tr>
+                </thead>
+                <tbody class="bg-white">
+                  <tr class="border-solid border-2 border-gray-600">
+                    <td class="text-left">
+                      <span class="text-base font-medium uppercase">
+                        {{ plan.plan }}
+                      </span>
+                    </td>
+                    <td>
+                      <img
+                        class="cursor-pointer img-btn ml-auto mr-3 mb-2"
+                        src="@assets/images/edit.svg"
+                        title="Modificar"
+                        @click="openModificarPlan(plan.id)"
+                      />
+                      <img
+                        v-if="plan.status == 1"
+                        class="cursor-pointer img-btn-32 mr-auto ml-3"
+                        src="@assets/images/switchon.svg"
+                        title="Deshabilitar"
+                        @click="
+                          enable_disable_plan(
+                            plan.id,
+                            plan.plan,
+                            'deshabilitar'
+                          )
+                        "
+                      />
+                      <img
+                        v-else
+                        class="cursor-pointer img-btn-32 mr-auto ml-3"
+                        src="@assets/images/switchoff.svg"
+                        title="Habilitar"
+                        @click="
+                          enable_disable_plan(plan.id, plan.plan, 'habilitar')
+                        "
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </template>
             <template slot="thead">
               <vs-th>#</vs-th>
@@ -83,16 +135,14 @@
                 :key="index_precio"
                 v-for="(precio, index_precio) in data"
               >
-                <vs-td :data="data[index_precio].id">
+                <vs-td>
                   <span class="font-semibold">{{ index_precio + 1 }}</span>
                 </vs-td>
-                <vs-td :data="data[index_precio].pago_inicial"
+                <vs-td
                   >$ {{ precio.pago_inicial | numFormat("0,000.00") }}</vs-td
                 >
-                <vs-td :data="data[index_precio].costo_neto"
-                  >$ {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td
-                >
-                <vs-td :data="data[index_precio].costo_neto"
+                <vs-td>$ {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td>
+                <vs-td
                   >$
                   {{
                     precio.costo_neto_pronto_pago | numFormat("0,000.00")
@@ -101,18 +151,14 @@
                 <vs-td :data="data[index_precio].pago_mensual"
                   >$ {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
                 >
-                <vs-td :data="data[index_precio].costo_neto"
+                <vs-td
                   >$
                   {{ precio.descuento_x_pago | numFormat("0,000.00") }}</vs-td
                 >
-                <vs-td :data="data[index_precio].tipo_financiamiento">{{
-                  precio.tipo_financiamiento
-                }}</vs-td>
-                <vs-td :data="data[index_precio].descripcion">{{
-                  precio.descripcion
-                }}</vs-td>
+                <vs-td>{{ precio.tipo_financiamiento }}</vs-td>
+                <vs-td>{{ precio.descripcion }}</vs-td>
 
-                <vs-td :data="data[index_precio].status">
+                <vs-td>
                   <img
                     class="cursor-pointer img-btn ml-auto mr-3 mb-1"
                     src="@assets/images/edit.svg"
@@ -180,11 +226,11 @@
       -->
 
       <FormularioPlanes
-        :id_precio="id_precio_modificar"
-        :tipo="tipoFormulario"
-        :show="verFormularioPrecios"
-        @closeVentana="verFormularioPrecios = false"
-        @retornar_id="retorno_id"
+        :id_plan="id_plan_modificar"
+        :tipo="tipoFormularioPlan"
+        :show="verFormularioPlan"
+        @closeVentana="verFormularioPlan = false"
+        @retornar="retorno_plan"
       ></FormularioPlanes>
 
       <Reporteador
@@ -223,8 +269,7 @@ export default {
         };
 
         (async () => {
-          /**manda traer los financiamientps */
-          await this.get_financiamientos();
+          await this.get_planes();
         })();
       } else {
         /**cerrar ventana */
@@ -243,6 +288,12 @@ export default {
   },
   data() {
     return {
+      plan_tipo: {},
+      tipo_planes: [],
+      tipoFormularioPlan: "",
+      verFormularioPlan: false,
+      id_plan_modificar: 0,
+      /**variables del modulo */
       /**reporteador */
       openReportesLista: false,
       ListaReportes: [],
@@ -253,8 +304,8 @@ export default {
       },
       /**reportrador */
       selected: [],
-      propiedades: [],
-      propiedades_tipos: [],
+      planes: [],
+      planes_tipos: [],
       propiedad_tipo: {},
       verFormularioPrecios: false,
       tipoFormulario: "",
@@ -279,6 +330,123 @@ export default {
     }
   },
   methods: {
+    async get_planes() {
+      try {
+        this.$vs.loading();
+        let res = await planes.get_planes("");
+        this.planes = res.data;
+        /**llenando los tipos de propiedad para el select */
+        this.tipo_planes = [];
+        this.tipo_planes.push({
+          label: "Todos los Planes",
+          value: ""
+        });
+        res.data.forEach(element => {
+          this.tipo_planes.push({
+            label: element.plan.charAt(0).toUpperCase() + element.plan.slice(1),
+            value: element.id
+          });
+          //la primero opcion
+          this.plan_tipo = this.tipo_planes[0];
+        });
+        this.$vs.loading.close();
+      } catch (err) {
+        this.$vs.loading.close();
+        this.ver = true;
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000
+            });
+          }
+        }
+      }
+    },
+    agregarPlan() {
+      this.tipoFormularioPlan = "agregar";
+      this.verFormularioPlan = true;
+    },
+    openModificarPlan(id_plan) {
+      this.tipoFormularioPlan = "modificar";
+      this.id_plan_modificar = id_plan;
+      this.verFormularioPlan = true;
+    },
+
+    enable_disable_plan(id_plan, plan, accion) {
+      this.accionPassword = accion + " plan " + plan;
+      this.id_plan_modificar = id_plan;
+      this.openPassword = true;
+      this.callbackPassword = this.enable_disable_planes;
+    },
+    enable_disable_planes() {
+      this.$vs.loading();
+      let datos = {
+        id_plan: this.id_plan_modificar
+      };
+      planes
+        .enable_disable_planes(datos)
+        .then(res => {
+          this.$vs.loading.close();
+          this.get_planes();
+          if (res.data >= 1) {
+            this.$vs.notify({
+              title: "Cambiar estatus del plan funerario",
+              text: "Se ha actualizado el estatus exitosamente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "success",
+              time: 4000
+            });
+          } else {
+            this.$vs.notify({
+              title: "Cambiar estatus del plan funerario",
+              text: "No se realizaron cambios.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "primary",
+              time: 4000
+            });
+          }
+        })
+        .catch(err => {
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000
+              });
+            } else if (err.response.status == 422) {
+              /**error de validacion */
+              this.errores = err.response.data.error;
+            } else if (err.response.status == 409) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Cambiar estatus del precio",
+                text: err.response.data.error,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 8000
+              });
+            }
+          }
+        });
+    },
+    /**funciones del modulo */
+
     openReporte(nombre_reporte = "", link = "", parametro = "") {
       this.ListaReportes = [];
       /**agrego los reportes de manera manual */
@@ -305,9 +473,9 @@ export default {
       this.tipoFormulario = "agregar";
       this.verFormularioPrecios = true;
     },
-    indexPrecios(index, propiedad_id) {
-      if (this.propiedad_tipo.value != "") {
-        if (propiedad_id != this.propiedad_tipo.value) {
+    indexPrecios(index, plan_id) {
+      if (this.plan_tipo.value != "") {
+        if (plan_id != this.plan_tipo.value) {
           return "hidden";
         }
       } else {
@@ -322,21 +490,20 @@ export default {
       try {
         this.$vs.loading();
         let res = await planes.get_financiamientos();
-
-        this.propiedades = res.data;
+        this.planes = res.data;
         /**llenando los tipos de propiedad para el select */
-        this.propiedades_tipos = [];
-        this.propiedades_tipos.push({
+        this.planes_tipos = [];
+        this.planes_tipos.push({
           label: "Todas las Propiedades",
           value: ""
         });
-        this.propiedades.forEach(element => {
-          this.propiedades_tipos.push({
+        this.planes.forEach(element => {
+          this.planes_tipos.push({
             label: "Tipo " + element.tipo,
             value: element.id
           });
           //la primero opcion
-          this.propiedad_tipo = this.propiedades_tipos[0];
+          this.propiedad_tipo = this.planes_tipos[0];
         });
         this.$vs.loading.close();
       } catch (err) {
@@ -361,8 +528,10 @@ export default {
       this.$emit("closePlanesCementerio");
       return;
     },
-    retorno_id(dato) {
-      this.get_financiamientos();
+    retorno_plan(dato) {
+      (async () => {
+        await this.get_planes();
+      })();
     },
     enable_disable_precio(id_precio, precio, accion) {
       this.accionPassword = accion + " precio " + precio;

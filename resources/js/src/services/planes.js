@@ -8,9 +8,22 @@ export default {
     cancel: null,
 
     registrar_plan(datos) {
-        let call = "/funeraria/registrar_plan";
+        let call = "/funeraria/control_planes/agregar";
         return axios.post(call, datos);
     },
+    update_plan(datos) {
+        let call = "/funeraria/control_planes/modificar";
+        return axios.post(call, datos);
+    },
+    get_planes(plan_id) {
+        return axios.get("/funeraria/get_planes/" + plan_id);
+    },
+    enable_disable_planes(datos) {
+        let call = "/funeraria/enable_disable_planes";
+        return axios.post(call, datos);
+    },
+
+    /**servicios del formulario */
 
     registrar_precio_propiedad(datos) {
         let call = "/cementerio/registrar_precio_propiedad";
@@ -37,13 +50,6 @@ export default {
         return axios.get("/cementerio/get_tipo_propiedades");
     },
     /**busca un precio por id */
-    get_precio_by_id(id) {
-        return axios.get("/cementerio/get_precio_by_id", {
-            params: {
-                id_precio: id
-            }
-        });
-    },
 
     //obtiene las propieades del cementerio
     get_cementerio() {

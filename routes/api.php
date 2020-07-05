@@ -22,6 +22,9 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 /**rutas publicas_ entran sin token */
 Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+
+
+Route::get('funeraria/get_planes/{id_plan?}', 'FunerariaController@get_planes');
 /**fin de rutas de modulo en proceso */
 
 
@@ -126,8 +129,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
 
     /**rutas de funeraria ventas planes */
-    Route::post('funeraria/registrar_plan', 'FunerariaController@registrar_plan');
-
+    Route::post('funeraria/control_planes/{tipo_servicio?}', 'FunerariaController@control_planes');
+    Route::post('funeraria/enable_disable_planes', 'FunerariaController@enable_disable_planes');
 
 
 
