@@ -774,7 +774,6 @@ export default {
       planes
         .registrar_plan(this.form)
         .then(res => {
-          console.log("registrar_plan -> res", res);
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -785,7 +784,7 @@ export default {
               color: "success",
               time: 5000
             });
-            this.$emit("retornar_id", res.data);
+            this.$emit("retornar", res.data);
             this.cerrarVentana();
           } else {
             this.$vs.notify({
@@ -801,7 +800,6 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            console.log("registrar_plan -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({

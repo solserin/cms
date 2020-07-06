@@ -23,23 +23,28 @@ export default {
         return axios.post(call, datos);
     },
 
-    /**servicios del formulario */
-
-    registrar_precio_propiedad(datos) {
-        let call = "/cementerio/registrar_precio_propiedad";
+    get_precio_by_id(id) {
+        return axios.get("/funeraria/get_precio_by_id", {
+            params: {
+                id_precio: id
+            }
+        });
+    },
+    registrar_precio(datos) {
+        let call = "/funeraria/registrar_precio";
         return axios.post(call, datos);
     },
 
-    update_precio_propiedad(datos) {
-        let call = "/cementerio/update_precio_propiedad";
+    update_precio(datos) {
+        let call = "/funeraria/update_precio";
         return axios.post(call, datos);
     },
-
     /**enable / disable status precio */
     enable_disable(datos) {
-        let call = "/cementerio/enable_disable";
+        let call = "/funeraria/enable_disable";
         return axios.post(call, datos);
     },
+    /**servicios del formulario */
 
     /**get financiamientos de las propiedades segun su tipo */
     get_financiamientos() {

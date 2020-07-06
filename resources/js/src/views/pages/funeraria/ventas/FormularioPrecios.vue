@@ -30,8 +30,7 @@
             ref="descripcion"
             name="descripcion"
             data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
+            v-validate.disable="'required'"
             maxlength="85"
             type="text"
             class="w-full pb-1 pt-1"
@@ -58,8 +57,7 @@
             ref="descripcion_ingles"
             name="descripcion_ingles"
             data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
+            v-validate.disable="'required'"
             maxlength="85"
             type="text"
             class="w-full pb-1 pt-1"
@@ -112,14 +110,14 @@
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
           <label class="text-sm opacity-75 font-bold">
-            <span>Tipo de Propiedad</span>
+            <span>Plan Funerario</span>
             <span class="text-danger text-sm">(*)</span>
           </label>
           <v-select
-            :options="tipos_propiedad"
+            :options="tipo_planes"
             :clearable="false"
             :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.tipo_propiedades_id"
+            v-model="form.tipo_plan"
             v-validate:tipo_propiedad_computed.immediate="'required'"
             class="pb-1 pt-1"
             name="tipo_propiedades_id"
@@ -149,8 +147,7 @@
           <vs-input
             name="financiamiento"
             data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required|integer'"
+            v-validate.disable="'required|integer'"
             maxlength="2"
             type="text"
             class="w-full pb-1 pt-1"
@@ -181,8 +178,7 @@
             ref="costo_neto"
             name="costo_neto"
             data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
+            v-validate.disable="'required'"
             maxlength="85"
             type="text"
             class="w-full pb-1 pt-1"
@@ -208,8 +204,7 @@
           <vs-input
             name="pago_inicial"
             data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required|numeric'"
+            v-validate.disable="'required|numeric'"
             maxlength="6"
             type="text"
             class="w-full pb-1 pt-1"
@@ -239,8 +234,7 @@
             ref="costo_neto_financiamiento_normal"
             name="costo_neto_financiamiento_normal"
             data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
+            v-validate.disable="'required'"
             maxlength="6"
             type="text"
             class="w-full pb-1 pt-1"
@@ -300,8 +294,7 @@
           <vs-input
             name="costo_neto_pronto_pago"
             data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'numeric'"
+            v-validate.disable="'numeric'"
             maxlength="6"
             type="text"
             class="w-full pb-1 pt-1"
@@ -385,7 +378,7 @@
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
-import cementerio from "@services/cementerio";
+import planes from "@services/planes";
 import vSelect from "vue-select";
 
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
@@ -437,7 +430,7 @@ export default {
         (async () => {
           /**de manera asincrona para evitar errores en popular los selects */
           /**cargando los tipos de propeidades */
-          await this.get_tipo_propiedades();
+          await this.get_planes();
           if (this.getTipoformulario == "modificar") {
             this.title = "Modificar Financiamiento";
             this.get_precio_by_id();
@@ -447,6 +440,8 @@ export default {
           }
         })();
       }
+
+      this.limpiarValidation();
     },
     "form.contado_b": function(newValue, oldValue) {
       if (newValue.value == 1) {
@@ -485,7 +480,7 @@ export default {
       }
     },
     tipo_propiedad_computed: function() {
-      return this.form.tipo_propiedades_id.value;
+      return this.form.tipo_plan.value;
     },
     es_contado: function() {
       if (this.form.contado_b.value == 1) {
@@ -504,6 +499,9 @@ export default {
   },
   data() {
     return {
+      planes: [],
+      tipo_planes: [],
+      /**variables del formulario */
       datosPrecio: [],
       title: "",
       accionConfirmarSinPassword: "",
@@ -549,40 +547,55 @@ export default {
         costo_neto_financiamiento_normal: "",
         descuento_pronto_pago_b: {},
         costo_neto_pronto_pago: "",
-        tipo_propiedades_id: { value: "", label: "Seleccione 1" }
+        tipo_plan: { value: "", label: "Seleccione 1" }
       },
       errores: []
     };
   },
   methods: {
-    async get_tipo_propiedades() {
-      this.$vs.loading();
+    async get_planes() {
       try {
-        let res = await cementerio.get_tipo_propiedades();
+        this.$vs.loading();
+        let res = await planes.get_planes("");
+        this.planes = res.data;
         /**llenando los tipos de propiedad para el select */
-        this.tipos_propiedad = [];
-        this.tipos_propiedad.push({
-          value: "",
-          label: "Seleccione 1"
+        this.tipo_planes = [];
+        this.tipo_planes.push({
+          label: "Todos los Planes",
+          value: ""
         });
         res.data.forEach(element => {
-          this.tipos_propiedad.push({
-            label: "Tipo " + element.tipo,
+          this.tipo_planes.push({
+            label: element.plan.charAt(0).toUpperCase() + element.plan.slice(1),
             value: element.id
           });
           //la primero opcion
-          this.form.tipo_propiedades_id = this.tipos_propiedad[0];
+          this.plan_tipo = this.tipo_planes[0];
         });
         this.$vs.loading.close();
-      } catch (error) {
+      } catch (err) {
         this.$vs.loading.close();
+        this.ver = true;
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000
+            });
+          }
+        }
       }
     },
     /**trae la info del precio */
     async get_precio_by_id() {
       this.$vs.loading();
       try {
-        let res = await cementerio.get_precio_by_id(this.get_precio_id);
+        let res = await planes.get_precio_by_id(this.get_precio_id);
         this.datosPrecio = res.data;
         this.form.descripcion = this.datosPrecio.descripcion;
         this.form.descripcion_ingles = this.datosPrecio.descripcion_ingles;
@@ -594,15 +607,17 @@ export default {
             return;
           }
         });
-        this.tipos_propiedad.forEach(element => {
-          if (element.value == this.datosPrecio.tipo_propiedades_id) {
-            this.form.tipo_propiedades_id = element;
+        this.tipo_planes.forEach(element => {
+          if (element.value == this.datosPrecio.planes_funerarios_id) {
+            this.form.tipo_plan = element;
             return;
           }
         });
-        this.form.costo_neto = this.datosPrecio.costo_neto;
-        this.form.pago_inicial = this.datosPrecio.pago_inicial;
-        this.form.costo_neto_financiamiento_normal = this.datosPrecio.costo_neto_financiamiento_normal;
+        this.form.costo_neto = parseFloat(this.datosPrecio.costo_neto);
+        this.form.pago_inicial = parseFloat(this.datosPrecio.pago_inicial);
+        this.form.costo_neto_financiamiento_normal = parseFloat(
+          this.datosPrecio.costo_neto_financiamiento_normal
+        );
 
         this.descuento.forEach(element => {
           if (element.value == this.datosPrecio.descuento_pronto_pago_b) {
@@ -612,7 +627,7 @@ export default {
         });
         this.form.costo_neto_pronto_pago =
           this.datosPrecio.descuento_pronto_pago_b == 1
-            ? this.datosPrecio.costo_neto_pronto_pago
+            ? parseFloat(this.datosPrecio.costo_neto_pronto_pago)
             : "";
 
         this.$vs.loading.close();
@@ -647,12 +662,12 @@ export default {
           } else {
             this.errores = [];
             if (this.getTipoformulario == "agregar") {
-              this.callBackConfirmarAceptar = this.registrar_precio_propiedad;
+              this.callBackConfirmarAceptar = this.registrar_precio;
               this.openConfirmarAceptar = true;
             } else {
               /**modificar, se valida con password */
               this.form.id_precio_modificar = this.get_precio_id;
-              this.callback = this.update_precio_propiedad;
+              this.callback = this.update_precio;
               this.operConfirmar = true;
             }
           }
@@ -660,12 +675,12 @@ export default {
         .catch(() => {});
     },
 
-    registrar_precio_propiedad() {
+    registrar_precio() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
-      cementerio
-        .registrar_precio_propiedad(this.form)
+      planes
+        .registrar_precio(this.form)
         .then(res => {
           if (res.data >= 1) {
             //success
@@ -715,7 +730,6 @@ export default {
                 color: "danger",
                 time: 5000
               });
-              //console.log(err.response);
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -732,12 +746,12 @@ export default {
         });
     },
 
-    update_precio_propiedad() {
+    update_precio() {
       //aqui mando modoificar los datos
       this.errores = [];
       this.$vs.loading();
-      cementerio
-        .update_precio_propiedad(this.form)
+      planes
+        .update_precio(this.form)
         .then(res => {
           if (res.data >= 1) {
             //success
@@ -765,10 +779,6 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            console.log(
-              "update_precio_propiedad -> err.response",
-              err.response
-            );
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -836,8 +846,19 @@ export default {
       this.form.costo_neto_financiamiento_normal = "";
       this.form.descuento_pronto_pago_b = {};
       this.form.costo_neto_pronto_pago = "";
-      this.form.tipo_propiedades_id = { value: "", label: "Seleccione 1" };
+      this.form.tipo_plan = { value: "", label: "Seleccione 1" };
       this.errores = [];
+    },
+    limpiarValidation() {
+      this.$validator.pause();
+      this.$nextTick(() => {
+        this.$validator.errors.clear();
+        this.$validator.fields.items.forEach(field => field.reset());
+        this.$validator.fields.items.forEach(field =>
+          this.errors.remove(field)
+        );
+        this.$validator.resume();
+      });
     },
 
     closeChecker() {

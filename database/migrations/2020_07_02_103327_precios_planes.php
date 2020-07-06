@@ -20,15 +20,17 @@ class PreciosPlanes extends Migration
             $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
             $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->dateTime('fecha_registro');
-            $table->unsignedBigInteger('modifico_id')->unsigned()->nullable();
-            $table->foreign('modifico_id')->references('id')->on('usuarios');
-            $table->dateTime('fecha_modificacion')->nullable();
+            $table->unsignedBigInteger('actualizo_id')->unsigned()->nullable();
+            $table->foreign('actualizo_id')->references('id')->on('usuarios');
+            $table->tinyInteger('financiamiento'); //indica con un valor entero el numeero de pagos qe creara esta operacion 1 para de contado y mayor a 1 para meses
+            $table->dateTime('fecha_actualizacion')->nullable();
             $table->string('descripcion');
             $table->string('descripcion_ingles');
             $table->unsignedDecimal('pago_inicial', 10, 2);
             $table->unsignedDecimal('subtotal', 10, 2);
             $table->unsignedDecimal('impuestos', 10, 2);
             $table->unsignedDecimal('costo_neto', 10, 2);
+            $table->tinyInteger('contado_b');
             $table->unsignedDecimal('costo_neto_financiamiento_normal', 10, 2);
             $table->tinyInteger('descuento_pronto_pago_b');
             $table->unsignedDecimal('costo_neto_pronto_pago', 10, 2);

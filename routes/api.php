@@ -131,9 +131,10 @@ Route::middleware(['auth:api'])->group(function () {
     /**rutas de funeraria ventas planes */
     Route::post('funeraria/control_planes/{tipo_servicio?}', 'FunerariaController@control_planes');
     Route::post('funeraria/enable_disable_planes', 'FunerariaController@enable_disable_planes');
-
-
-
+    Route::post('funeraria/registrar_precio', 'FunerariaController@registrar_precio');
+    Route::get('funeraria/get_precio_by_id', 'FunerariaController@get_precio_by_id');
+    Route::post('funeraria/update_precio', 'FunerariaController@update_precio');
+    Route::post('funeraria/enable_disable', 'FunerariaController@enable_disable');
     /**rutas de pagos */
     Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
     Route::post('pagos/guardar_pago', 'PagosController@guardar_pago');

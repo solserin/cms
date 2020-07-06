@@ -8,7 +8,7 @@
       ref="planes_planes"
     >
       <div class="flex flex-wrap pb-12 pt-2">
-        <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12">
+        <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12">
           <label class="text-sm opacity-75 font-bold">
             <span class="uppercase">Filtrar por plan Funerario:</span>
           </label>
@@ -22,15 +22,27 @@
             <div slot="no-options">Seleccione un Plan Funerario</div>
           </v-select>
         </div>
-        <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12">
+        <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12">
           <vs-button
             class="float-right mt-6"
             size="small"
             color="success"
+            @click="agregarPrecios()"
+          >
+            <img
+              class="cursor-pointer img-btn"
+              src="@assets/images/precios.svg"
+            />
+            <span class="texto-btn">Agregar Precios </span>
+          </vs-button>
+          <vs-button
+            class="float-right mt-6 mr-16"
+            size="small"
+            color="primary"
             @click="agregarPlan()"
           >
             <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Crear Planes</span>
+            <span class="texto-btn">Crear Planes Funerarios</span>
           </vs-button>
           <vs-button
             class="float-right mr-16 mt-6"
@@ -216,14 +228,13 @@
         :accion="accionPassword"
       ></Password>
 
-      <!--<FormularioPrecios
+      <FormularioPrecios
         :id_precio="id_precio_modificar"
         :tipo="tipoFormulario"
         :show="verFormularioPrecios"
         @closeVentana="verFormularioPrecios = false"
-        @retornar_id="retorno_id"
+        @retornar_id="retorno_plan"
       ></FormularioPrecios>
-      -->
 
       <FormularioPlanes
         :id_plan="id_plan_modificar"
@@ -302,6 +313,8 @@ export default {
         id_tipo_propiedad: "",
         email: ""
       },
+
+      tipoFormularioPrecio: "",
       /**reportrador */
       selected: [],
       planes: [],
@@ -377,7 +390,6 @@ export default {
       this.id_plan_modificar = id_plan;
       this.verFormularioPlan = true;
     },
-
     enable_disable_plan(id_plan, plan, accion) {
       this.accionPassword = accion + " plan " + plan;
       this.id_plan_modificar = id_plan;
@@ -446,6 +458,11 @@ export default {
             }
           }
         });
+    },
+
+    agregarPrecios() {
+      this.tipoFormulario = "agregar";
+      this.verFormularioPrecios = true;
     },
     /**funciones del modulo */
 
@@ -550,7 +567,9 @@ export default {
         .enable_disable(datos)
         .then(res => {
           this.$vs.loading.close();
-          this.get_financiamientos();
+          (async () => {
+            await this.get_planes();
+          })();
           if (res.data >= 1) {
             this.$vs.notify({
               title: "Cambiar estatus del precio",

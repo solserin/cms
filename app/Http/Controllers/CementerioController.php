@@ -1094,6 +1094,7 @@ class CementerioController extends ApiController
                     'costo_neto_pronto_pago' => (float) ($request->costo_neto_pronto_pago),
                     'tipo_propiedades_id' => (int) ($request->tipo_propiedades_id['value']),
                     'fecha_actualizacion' => now(),
+                    'fecha_actualizacion' => now(),
                     'actualizo_id' => (int) $request->user()->id,
                     'financiamiento' => (int) ($request->financiamiento),
                     'contado_b' => (int) ($request->contado_b['value']),
@@ -1202,6 +1203,9 @@ class CementerioController extends ApiController
                 } else {
                     return $this->errorResponse('Ya existe un precio para esta propiedad con este financiamiento, solo debe habilitarlo nuevamente', 409);
                 }
+            } else {
+                /**checando si el mismo esta desactivado */
+                return $this->errorResponse('Este precio se encuentra desactivado y no puede modificarse.', 409);
             }
         }
 

@@ -17,6 +17,7 @@ class PlanesFunerarios extends Model
 
     public function precios()
     {
-        return $this->hasMany('App\PreciosPlanes', 'planes_funerarios_id', 'id')->orderBy('id', 'asc');
+        return $this->hasMany('App\PreciosPlanes', 'planes_funerarios_id', 'id')
+            ->orderBy('id', 'asc');
     }
 }
