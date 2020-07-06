@@ -720,7 +720,7 @@ export default {
         this.form.descripcion_ingles = this.datosPlan.plan_ingles;
         this.form.nota = this.datosPlan.nota;
         this.form.nota_ingles = this.datosPlan.nota_ingles;
-        this.form.conceptos = this.datosPlan.secciones[0];
+        this.form.conceptos = this.datosPlan.secciones;
         this.$vs.loading.close();
       } catch (error) {
         this.$vs.loading.close();

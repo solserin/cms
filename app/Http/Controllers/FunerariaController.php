@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\PlanesFunerarios;
+use PDF;
 use App\PreciosPlanes;
+use App\PlanesFunerarios;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Foreach_;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 
 class FunerariaController extends ApiController
 {
@@ -214,7 +216,6 @@ class FunerariaController extends ApiController
                 'nota' => $plan['nota'],
                 'nota_ingles' => $plan['nota_ingles'],
                 'status' => $plan['status'],
-                'secciones' => [],
                 'precios' => $plan['precios']
             ];
             $secciones = array();
@@ -289,7 +290,7 @@ class FunerariaController extends ApiController
                 }
             }
             /**push al array padre */
-            array_push($plan_funerario['secciones'], $secciones);
+            $plan_funerario['secciones'] = $secciones;
             array_push($data, $plan_funerario);
         }
         return $data;
@@ -526,7 +527,7 @@ class FunerariaController extends ApiController
                 }
             } else {
                 /**checando si el mismo esta desactivado */
-                return $this->errorResponse('Este precio se encuentra desactivado y no puede modificarse', 409);
+                return $this->errorResponse('Este precio se encuentra desactivado y no puede modificarse.', 409);
             }
         }
 
@@ -603,6 +604,90 @@ class FunerariaController extends ApiController
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
+        }
+    }
+
+
+
+
+    public function pdf_plan_funerario(Request $request, $idioma = 'es')
+    {
+        if (!($idioma == 'en' || $idioma == 'es')) {
+            $idioma = 'es';
+        }
+        App::setLocale($idioma);
+
+        /* $id_plan = 1;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+*/
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        $email =  $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_plan = $requestVentasList['id_plan'];
+
+
+        //obtengo la informacion de esa venta
+        $datos_plan = $this->get_planes($id_plan)[0];
+        if (empty($datos_plan)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+
+        /**verificando si el documento aplica para esta solictitud */
+        /*if ($datos_venta['numero_convenio_raw'] == null) {
+            return 0;
+        }*/
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('funeraria/plan_funerario/plan_funerario', ['datos' => $datos_plan, 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = strtoupper($datos_plan['plan']) . '.pdf';
+
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('funeraria.plan_funerario.footer'),
+        ]);
+        if ($datos_plan['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('funeraria.plan_funerario.header')
+            ]);
+        }
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 20.4);
+        $pdf->setOption('margin-right', 20.4);
+        $pdf->setOption('margin-top', 10.4);
+        $pdf->setOption('margin-bottom', 25.4);
+        $pdf->setOption('page-size', 'A4');
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                $request->destinatario,
+                $datos_plan['plan'],
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
         }
     }
 }

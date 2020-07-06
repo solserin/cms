@@ -192,6 +192,11 @@
    .justificar{
       text-align: justify !important;
     }
+.img-center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
     .center{
       text-align: center !important;
     }
@@ -215,7 +220,9 @@
       text-transform: lowercase;
     }
     /*transform**/
-
+ .texto-lg{
+      font-size: 1.2em !important;
+    }
      .texto-base{
       font-size: 1em !important;
     }

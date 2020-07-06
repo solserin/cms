@@ -36,7 +36,7 @@
             <span class="texto-btn">Agregar Precios </span>
           </vs-button>
           <vs-button
-            class="float-right mt-6 mr-16"
+            class="float-right mt-6 mr-8"
             size="small"
             color="primary"
             @click="agregarPlan()"
@@ -45,7 +45,7 @@
             <span class="texto-btn">Crear Planes Funerarios</span>
           </vs-button>
           <vs-button
-            class="float-right mr-16 mt-6"
+            class="float-right mr-8 mt-6"
             size="small"
             color="primary"
             @click="
@@ -60,7 +60,7 @@
               class="cursor-pointer img-btn"
               src="@assets/images/printer.svg"
             />
-            <span class="texto-btn">Ver documento</span>
+            <span class="texto-btn">Ver Precios x Plan</span>
           </vs-button>
         </div>
       </div>
@@ -98,7 +98,7 @@
                     </td>
                     <td>
                       <img
-                        class="cursor-pointer img-btn ml-auto mr-3 mb-2"
+                        class="cursor-pointer img-btn ml-auto  mb-2"
                         src="@assets/images/edit.svg"
                         title="Modificar"
                         @click="openModificarPlan(plan.id)"
@@ -123,6 +123,20 @@
                         title="Habilitar"
                         @click="
                           enable_disable_plan(plan.id, plan.plan, 'habilitar')
+                        "
+                      />
+
+                      <img
+                        width="25"
+                        class="cursor-pointer mr-auto ml-4 mb-1"
+                        src="@assets/images/printer.svg"
+                        title="Imprimir Plan Funerario"
+                        @click="
+                          openReportePlan(
+                            'Precios x Plan (Español)',
+                            '/funeraria/pdf_plan_funerario',
+                            plan.id
+                          )
                         "
                       />
                     </td>
@@ -172,14 +186,14 @@
 
                 <vs-td>
                   <img
-                    class="cursor-pointer img-btn ml-auto mr-3 mb-1"
+                    class="cursor-pointer img-btn ml-auto mb-1"
                     src="@assets/images/edit.svg"
                     title="Modificar"
                     @click="openModificar(data[index_precio].id)"
                   />
                   <img
                     v-if="data[index_precio].status == 1"
-                    class="cursor-pointer img-btn-32 mr-auto ml-3"
+                    class="cursor-pointer img-btn-32  ml-3"
                     src="@assets/images/switchon.svg"
                     title="Deshabilitar"
                     @click="
@@ -465,7 +479,23 @@ export default {
       this.verFormularioPrecios = true;
     },
     /**funciones del modulo */
-
+    openReportePlan(nombre_reporte = "", link = "", parametro = "") {
+      this.ListaReportes = [];
+      /**agrego los reportes de manera manual */
+      this.ListaReportes.push({
+        nombre: "Precios x Plan (Español)",
+        url: "/funeraria/pdf_plan_funerario/es"
+      });
+      this.ListaReportes.push({
+        nombre: "Precios x Plan (Inglés)",
+        url: "/funeraria/pdf_plan_funerario/en"
+      });
+      //estado de cuenta
+      this.request.email = "";
+      this.request.id_plan = parametro;
+      this.openReportesLista = true;
+      this.$vs.loading.close();
+    },
     openReporte(nombre_reporte = "", link = "", parametro = "") {
       this.ListaReportes = [];
       /**agrego los reportes de manera manual */
