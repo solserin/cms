@@ -409,9 +409,7 @@ import ConfirmarDanger from "@pages/ConfirmarDanger";
 import Password from "@pages/confirmar_password";
 import planes from "@services/planes";
 import vSelect from "vue-select";
-
 import { alfabeto } from "@/VariablesGlobales";
-
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 /**VARIABLES GLOBALES */
 
@@ -580,19 +578,8 @@ export default {
         nota_ingles: "",
         concepto: "",
         concepto_ingles: "",
-        id_plan_modificar: 0,
+        id_plan_modificar: 0
         /**variables del modulo */
-        /**en caso de modificar */
-
-        /**datos */
-        contado_b: {},
-        financiamiento: "",
-        pago_inicial: "",
-        costo_neto: "",
-        costo_neto_financiamiento_normal: "",
-        descuento_pronto_pago_b: {},
-        costo_neto_pronto_pago: "",
-        tipo_propiedades_id: { value: "", label: "Seleccione 1" }
       },
       errores: [],
       /**variables del modulo */
@@ -606,28 +593,7 @@ export default {
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
-      accionNombre: "Modificar Plan Funerario",
-      financiamientos: [
-        {
-          value: "1",
-          label: "Pago de Contado/Uso Inmediato"
-        },
-        {
-          value: "0",
-          label: "Pago a Meses/Uso a Futuro"
-        }
-      ],
-      descuento: [
-        {
-          value: "1",
-          label: "Si"
-        },
-        {
-          value: "0",
-          label: "No"
-        }
-      ],
-      tipos_propiedad: []
+      accionNombre: "Modificar Plan Funerario"
     };
   },
   methods: {
@@ -742,7 +708,6 @@ export default {
         })
         .catch(() => {});
     },
-
     /**trae la info del precio */
     async get_planes_id() {
       this.$vs.loading();
@@ -771,8 +736,6 @@ export default {
         this.cerrarVentana();
       }
     },
-    /**funciones del modulo */
-
     acceptAlert() {
       this.$validator
         .validateAll()
@@ -802,6 +765,7 @@ export default {
         })
         .catch(() => {});
     },
+    /**funciones del modulo */
 
     registrar_plan() {
       //aqui mando guardar los datos
@@ -993,7 +957,6 @@ export default {
       this.form.nota_ingles = "";
       this.errores = [];
     },
-
     closeChecker() {
       this.operConfirmar = false;
     }
