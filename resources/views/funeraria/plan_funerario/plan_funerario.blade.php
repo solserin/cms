@@ -182,7 +182,9 @@
     }//end foreach
     ?>
 
-
+    <?php
+                    if(count($datos['precios'])>0) {
+                ?>
     <h1 class="size-20px uppercase bold pt-2 left">
         @if (App::isLocale('es'))
         Precios:
@@ -234,6 +236,9 @@
             </tbody>
         </table>
     </div>
+    <?php
+                    }//end if precios count > 0
+                    ?>
 
 
 
