@@ -60,7 +60,7 @@
               class="cursor-pointer img-btn"
               src="@assets/images/printer.svg"
             />
-            <span class="texto-btn">Ver Precios x Plan</span>
+            <span class="texto-btn">Todos los Planes</span>
           </vs-button>
         </div>
       </div>
