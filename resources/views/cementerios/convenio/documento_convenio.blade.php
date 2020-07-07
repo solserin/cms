@@ -675,7 +675,8 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima quinta.- </span>
             En los casos estipulados den la cláusula anterior, y siempre y cuando no haya sido utilizado el lote materia
-            de este convenio, “La Empresa” en avisar a “El Cliente” que ha incurrido en las cláusulas de recisión de
+            de este convenio, “La Empresa” quedará facultada para hacer uso de dicho lote, estando la empresa obligada
+            en avisar a “El Cliente” que ha incurrido en las cláusulas de recisión de
             este convenio. En caso de que el lote en cuestión se encuentre utilizado, queda facultada “La Empresa” para
             exhumar los restos humanos conforme a las aportaciones a las disposiciones legales correspondientes.
         </p>
@@ -706,18 +707,18 @@
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima novena.- </span>
+            Para ofrecer servicios de inhumación en cripta el cuerpo deberá ser debidamente embalsamado en la funeraria
+            que le está ofreciendo el servicio.
+        </p>
+
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Trigésima.- </span>
             Para la interpretación, cumplimiento cualquier controversia con motivo del presente convenio, las partes se
             someten a la jurisdicción y competencia de los tribunales del fuero común de <span
                 class="uppercase bold texto-sm">{{ $empresa->registro_publico['ciudad_np'] }}</span>,
             <span class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>
             y renunciar
             desde luego a cualquier otro fuero que por la razón de su domicilio podría convenir.
-        </p>
-
-        <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Trigésima.- </span>
-            Para ofrecer servicios de inhumación en cripta el cuerpo deberá ser debidamente embalsamado en la funeraria
-            que le está ofreciendo el servicio.
         </p>
 
         <div class="w-100 center mt-40">
