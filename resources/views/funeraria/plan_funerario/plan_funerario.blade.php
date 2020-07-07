@@ -195,21 +195,21 @@
     <div class="contenido">
         <table class="w-100 center pagos_tabla">
             <thead>
-                <tr class="bg-table-header text-white w-normal uppercase">
+                <tr class="bg-table-header text-white w-normal">
                     <th>
-                        <span class="bold">Mensualidades</span>
+                        <span class="bold uppercase texto-sm">{{ __('funeraria/pdf_plan.financiamiento') }} ($)</span>
                     </th>
                     <th>
-                        <span class="bold"> Precio ($)</span>
+                        <span class="bold uppercase texto-sm">{{ __('funeraria/pdf_plan.costo_neto') }} ($)</span>
                     </th>
                     <th>
-                        <span class="bold">Enganche ($)</span>
+                        <span class="bold uppercase texto-sm">{{ __('funeraria/pdf_plan.enganche') }} ($)</span>
                     </th>
                     <th>
-                        <span class="bold">Saldo Restante ($)</span>
+                        <span class="bold uppercase texto-sm">{{ __('funeraria/pdf_plan.saldo_restante') }} ($)</span>
                     </th>
                     <th>
-                        <span class="bold">Abono Mensual ($)</span>
+                        <span class="bold uppercase texto-sm">{{ __('funeraria/pdf_plan.abono_mensual') }} ($)</span>
                     </th>
                 </tr>
             </thead>
