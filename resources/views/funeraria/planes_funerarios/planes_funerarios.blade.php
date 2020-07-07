@@ -94,6 +94,8 @@
     </h2>
     <?php
     foreach ($datos as $plan_id => $plan) {
+        if($plan['status']==1){
+        
         if(count($plan['precios'])>0) {
     ?>
     <h3 class="size-15px uppercase bold center">
@@ -148,6 +150,7 @@
         </table>
     </div>
     <?php
+    }//end if status==1
         }
         }//end foreach
         ?>
