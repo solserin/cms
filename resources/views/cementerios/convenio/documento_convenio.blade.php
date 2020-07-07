@@ -406,7 +406,10 @@
                 ({{ NumerosEnLetras::convertir($datos['venta_terreno']['salarios_minimos'],'',false) }})
             </span>
             salarios mínimos del distrito Federal (CDMX), vigentes al día <span class="uppercase bold texto-sm">15
-                (QUINCE)</span> del mes de enero de cada año.
+                (QUINCE)</span> del mes de enero de cada año. La empresa no se hará responsable del mantenimiento del
+            lote del terreno mencionado en la cláusula primera, si el
+            cliente no se encuentra al corriente con el pago de la cuota por concepto de mantenimiento del parque
+            funerario
         </p>
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Decima primera.- </span>
@@ -435,12 +438,18 @@
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">b) </span>
                 <span class="ml-2">
+                    El título de propiedad
+                </span>
+            </p>
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">c) </span>
+                <span class="ml-2">
                     El certificado de defunción de la persona que recibirá el servicio amparado por el convenio en
                     cuestión
                 </span>
             </p>
             <p class="texto-base justificar line-base">
-                <span class="lowercase bold texto-sm -ml-6">c) </span>
+                <span class="lowercase bold texto-sm -ml-6">d) </span>
                 <span class="ml-2">
                     Cualquier otra documentación que sea necesaria para efectuar los trámites correspondientes y/o
                     conseguir los permisos necesarios para la realización de dicho servicio.
@@ -454,7 +463,7 @@
                 class="uppercase bold texto-sm">"{{ $empresa->cementerio->cementerio }}"</span>, el cual
             acepta y se obliga a respetar y a hacer respetar, así como se compromete a cumplir todas las disposiciones
             legales que en el se establezcan o que en el futuro se adopten por parte de las autoridades competentes.
-            Copia de dicho reglamento se les entrega a “El Cliente” es este acto.
+            Copia de dicho reglamento se les entrega a “El Cliente” en este acto.
         </p>
 
         <p class="texto-base justificar line-base">
@@ -519,7 +528,7 @@
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Decima séptima.- </span>
-            “El Cliente” tendrá la facultad de ceder los derechos de uso de teste convenio, mediante su renuncia a la
+            “El Cliente” tendrá la facultad de ceder los derechos de uso de este convenio, mediante su renuncia a la
             membresía de “La Empresa”, lo cual podrá hacer mediante la entrega de un escrito a “La Empresa” con acuse de
             recibo, siempre y cuando este al corriente de sus pagos. En dicho escrito deberá especificar el nombre de la
             persona que recibirá los derechos del convenio.
@@ -529,14 +538,16 @@
             <span class="uppercase bold texto-sm underline pr-2">Decima octava.- </span>
             Para la cesión de los derechos de uso de este convenio, “El Cliente” deberá pagar en las instalaciones de
             “La Empresa” un cargo por concepto de la realización de dicho trámite. El importe del mismo será el que
-            conste en lista de precios de “La Empresa” al momento de realizar la cesión antes mencionada. El adquiere de
+            conste en lista de precios de “La Empresa” al momento de realizar la cesión antes mencionada. El adquiriente
+            de
             los derechos de uso de un convenio transferido, estará obligado a cubrir las aportaciones pendientes de
             pagar en los planes establecidos en el convenio transferido.
         </p>
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Decima novena.- </span>
-            En caso de realizar la cesión de derechos de este convenio, fuera necesario cubrir algún tipo de cuota,
+            En caso de que al realizar la cesión de derechos de este convenio, fuera necesario cubrir algún tipo de
+            cuota,
             derecho, impuesto, etc. A entidades ajenas a “La Empresa”, tales como la secretaria de salud, Gobierno
             Municipal, etc., “El Cliente” será responsable de pago de las mismas.
         </p>
@@ -545,7 +556,7 @@
             <span class="uppercase bold texto-sm underline pr-2">Vigésima.- </span>
             “El Cliente” podrá designar un titular sustituto, el cual debe estar plenamente facultado para decidir sobre
             la utilización de los servicios funerarios motivo de este convenio, cuando el cliente este imposibilitado
-            para hacerlo. Asimismo, podrá modificad esta designación en cualquier momento, obligándose en ambos casos a
+            para hacerlo. Asimismo, podrá modificar esta designación en cualquier momento, obligándose en ambos casos a
             hacer a notificación por escrito con acuse de recibo, tanto “La Empresa” como el titular sustituto, en un
             plazo de <span class="uppercase bold texto-sm">quince días</span> naturales después de efectuada dicha
             designación o modificación, anexando el escrito de
@@ -554,7 +565,8 @@
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima primera.- </span>
-            El importe de los gatos, derecho y/o erogaciones efectuados por “La Empresa” por cuenta de “El Cliente”, por
+            El importe de los gastos, derecho y/o erogaciones efectuados por “La Empresa” por cuenta de “El Cliente”,
+            por
             los conceptos adicionales a los ofrecidos por este convenio, deberán ser cubiertos en las oficinas de “La
             Empresa” a más tardar dos horas antes de que se realice el servicio de inhumación.
         </p>
@@ -585,7 +597,7 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima cuarta.- </span>
             Queda establecido que “La Empresa” podrá cancelar el convenio, si este incurriera en cualquiera de los
-            supuestos siguiente:
+            supuestos siguientes:
         </p>
 
         <div class="lista pl-11 -mt-1">
@@ -689,7 +701,7 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima octava.- </span>
             Toda documentación adicional que se firme por ambas partes en relación y con motivo de este convenio,
-            constituirá un anexo del mismo, y, por lo tanto, formara parte integral del presente convenio.
+            constituirá un anexo del mismo, y, por lo tanto, formará parte integral del presente convenio.
         </p>
 
         <p class="texto-base justificar line-base">
