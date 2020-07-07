@@ -166,6 +166,30 @@ const router = new Router({
                     }
                 },
                 {
+                    path: "/funeraria/ventas_planes",
+                    name: "ventas_planes",
+                    component: () =>
+                        import("@/views/pages/funeraria/ventas/VentasList.vue"),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Control de Planes Funerarios"
+                            },
+                            {
+                                title: "Ventas",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Funeraria",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
+                {
                     path: "/cobranza/pagos",
                     name: "cobranza_pagos",
                     component: () =>

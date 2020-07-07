@@ -48,7 +48,7 @@
               class="cursor-pointer img-btn"
               src="@assets/images/printer.svg"
             />
-            <span class="texto-btn">Ver documento</span>
+            <span class="texto-btn">Ver Precios x Propiedad</span>
           </vs-button>
         </div>
       </div>
