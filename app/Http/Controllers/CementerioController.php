@@ -2191,8 +2191,7 @@ class CementerioController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /*
-        $id_venta = 1;
+        /* $id_venta = 1;
         $email = false;
         $email_to = 'hector@gmail.com';
 */
@@ -2227,8 +2226,8 @@ class CementerioController extends ApiController
 
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 10.4);
-        $pdf->setOption('margin-right', 10.4);
+        $pdf->setOption('margin-left', 14.4);
+        $pdf->setOption('margin-right', 14.4);
         $pdf->setOption('margin-top', 24.4);
         $pdf->setOption('margin-bottom', 24.4);
         $pdf->setOption('page-size', 'A4');
