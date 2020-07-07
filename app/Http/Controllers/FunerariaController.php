@@ -382,9 +382,9 @@ class FunerariaController extends ApiController
         if (!empty($precio)) {
             /**ya existe el precio */
             if ($precio->status == 1) {
-                return $this->errorResponse('Ya existe un precio para con este financiamiento', 409);
+                return $this->errorResponse('Ya existe un precio con este financiamiento', 409);
             } else {
-                return $this->errorResponse('Ya existe un precio para con este financiamiento, solo debe habilitarlo nuevamente', 409);
+                return $this->errorResponse('Ya existe un precio con este financiamiento, solo debe habilitarlo nuevamente', 409);
             }
         }
 
@@ -527,7 +527,9 @@ class FunerariaController extends ApiController
                 }
             } else {
                 /**checando si el mismo esta desactivado */
-                return $this->errorResponse('Este precio se encuentra desactivado y no puede modificarse.', 409);
+                if ($precio->status != 1) {
+                    return $this->errorResponse('Este precio se encuentra desactivado y no puede modificarse.', 409);
+                }
             }
         }
 
