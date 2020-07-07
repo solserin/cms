@@ -167,7 +167,42 @@
         <p class="parrafo1">
             ** {{ __('funeraria/pdf_plan.parrafo4') }}
         </p>
+        <!--agregando la parte de publicidad-->
+        <div class="w-100 pb-3">
+            <div class="w-40 float-left">
+                <img width="50" src="{{ base_path('resources/assets/images/callus.png') }}"
+                    class="img-block ml-auto mr-5">
+            </div>
+            <div class="w-60 float-right">
+                <p class="size-20px capitalize bold mt-1">
+                    {{ __('funeraria/pdf_plan.comunicate') }}
+                </p>
+            </div>
+        </div>
     </div>
+
+    <div class="w-100 pt-8">
+        <h1 class="bold size-23px">
+            {{ $empresa->telefono }} ó {{ $empresa->telefono }}
+        </h1>
+        <p class="capitalize center mt-4 size-18px">
+            {{ $empresa->calle }} No. {{ $empresa->num_ext }}, Col. {{ $empresa->colonia }}
+        </p>
+    </div>
+    @if ($empresa->facebook!='')
+    <div class="w-100 pb-3">
+        <div class="w-40 float-left">
+            <img width="60" src="{{ base_path('resources/assets/images/facebook.png') }}" class="img-block ml-auto">
+        </div>
+        <div class="w-60 float-right">
+            <p class="size-18px capitalize bold mt-3 ml-2">
+                {{ $empresa->facebook }}
+            </p>
+        </div>
+    </div>
+    @endif
+
+
 </body>
 
 </html>

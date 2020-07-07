@@ -192,6 +192,9 @@
    .justificar{
       text-align: justify !important;
     }
+.img-block{
+    display: block;
+}
 .img-center{
     display: block;
     margin-left: auto;

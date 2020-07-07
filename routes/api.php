@@ -22,11 +22,6 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 /**rutas publicas_ entran sin token */
 Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
-
-
-Route::get('funeraria/get_planes/{id_plan?}', 'FunerariaController@get_planes');
-Route::get('funeraria/pdf_plan_funerario/{idioma?}', 'FunerariaController@pdf_plan_funerario');
-Route::get('funeraria/planes_funerarios/{idioma?}', 'FunerariaController@planes_funerarios');
 /**fin de rutas de modulo en proceso */
 
 
@@ -137,6 +132,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('funeraria/get_precio_by_id', 'FunerariaController@get_precio_by_id');
     Route::post('funeraria/update_precio', 'FunerariaController@update_precio');
     Route::post('funeraria/enable_disable', 'FunerariaController@enable_disable');
+    Route::get('funeraria/get_planes/{id_plan?}', 'FunerariaController@get_planes');
+    Route::get('funeraria/pdf_plan_funerario/{idioma?}', 'FunerariaController@pdf_plan_funerario');
+    Route::get('funeraria/planes_funerarios/{idioma?}', 'FunerariaController@planes_funerarios');
     /**rutas de pagos */
     Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
     Route::post('pagos/guardar_pago', 'PagosController@guardar_pago');

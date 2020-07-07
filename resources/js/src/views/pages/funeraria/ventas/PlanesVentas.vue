@@ -50,8 +50,8 @@
             color="primary"
             @click="
               openReporte(
-                'Precios x Propiedad (Español)',
-                '/planes/lista_precios_pdf/es',
+                'Todos los Planes (Español)',
+                '/funeraria/planes_funerarios',
                 ''
               )
             "
@@ -500,12 +500,12 @@ export default {
       this.ListaReportes = [];
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
-        nombre: "Precios x Propiedad (Español)",
-        url: "/planes/lista_precios_pdf/esf"
+        nombre: "Todos los Planes (Español)",
+        url: "/funeraria/planes_funerarios/es"
       });
       this.ListaReportes.push({
-        nombre: "Precios x Propiedad (Inglés)",
-        url: "/planes/lista_precios_pdf/en"
+        nombre: "Precios x os Planes (Inglés)",
+        url: "/funeraria/planes_funerarios/en"
       });
       //estado de cuenta
       this.request.email = "";
