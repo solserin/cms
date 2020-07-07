@@ -97,34 +97,34 @@
 
     <table class="w-100 mt-10">
         <tr>
-            <td width="40%" class="right">
-                <img src="{{ public_path(env('LOGOJPG')) }}" class="w-80 mr-8">
+            <td width="50%" class="right">
+                <img src="{{ url('/images/logopng.png') }}" class="w-100 mr-8 mb-15">
             </td>
-            <td width="60%">
-                <h1 class="left text-primary">
+            <td width="50%">
+                <h1 class="left text-primary line-small">
                     {{ $empresa->razon_social }}
                 </h1>
-                <p class="datos-header left bold size-15px capitalize">
+                <p class="datos-header left  size-16px capitalize line-small">
                     r.f.c. {{ $empresa->rfc }}
                 </p>
-                <p class="datos-header left bold size-15px capitalize">
+                <p class="datos-header left  size-16px capitalize line-small">
                     {{ $empresa->calle }} Núm. Ext {{ $empresa->num_ext }}
                 </p>
-                <p class="datos-header left bold size-15px capitalize">
+                <p class="datos-header left  size-16px capitalize line-small">
                     Col. {{ $empresa->colonia }}. cp. {{ $empresa->cp }}.
                     {{ $empresa->ciudad }}
                     {{ $empresa->estado }}
                 </p>
-                <p class="datos-header left bold size-15px capitalize">
+                <p class="datos-header left  size-16px capitalize line-small">
                     Tel. {{ $empresa->telefono }}, fax {{ $empresa->fax }}
                 </p>
-                <h1 class="left text-primary size-20px mt-4">
+                <h1 class="left text-primary size-20px mt-4 line-small">
                     {{ $empresa->cementerio['cementerio']}}
                 </h1>
-                <p class="datos-header left bold size-15px capitalize">
+                <p class="datos-header left  size-16px capitalize line-small">
                     {{ $empresa->cementerio['calle'] }} Núm. Ext {{ $empresa->cementerio['num_ext'] }}
                 </p>
-                <p class="datos-header left bold size-15px capitalize">
+                <p class="datos-header left  size-16px capitalize line-small">
                     {{ $empresa->cementerio['ciudad'] }}
                     {{ $empresa->cementerio['estado'] }}
                 </p>

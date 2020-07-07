@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 
-
+Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
 /**rutas de modulo en proceso */
 /**rutas publicas_ entran sin token */
 Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
@@ -121,7 +121,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
     Route::get('cementerio/documento_convenio', 'CementerioController@documento_convenio');
-    Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
+
 
     Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');

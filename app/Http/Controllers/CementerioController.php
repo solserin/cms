@@ -2183,18 +2183,18 @@ class CementerioController extends ApiController
     public function documento_titulo(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        $email =  $request->email_send === 'true' ? true : false;
+        /*$email =  $request->email_send === 'true' ? true : false;
         $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_venta = $requestVentasList['venta_id'];
-
+*/
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        /* $id_venta = 38;
+        $id_venta = 1;
         $email = false;
         $email_to = 'hector@gmail.com';
-*/
+
 
 
         //obtengo la informacion de esa venta
@@ -2226,8 +2226,8 @@ class CementerioController extends ApiController
 
         //$pdf->setOption('grayscale', true);
         //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 24.4);
-        $pdf->setOption('margin-right', 24.4);
+        $pdf->setOption('margin-left', 10.4);
+        $pdf->setOption('margin-right', 10.4);
         $pdf->setOption('margin-top', 24.4);
         $pdf->setOption('margin-bottom', 24.4);
         $pdf->setOption('page-size', 'A4');
