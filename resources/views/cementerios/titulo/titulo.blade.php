@@ -21,7 +21,6 @@
             max-width: 100% !important;
         }
 
-
         h1 {
             font-size: 1em;
             line-height: .8em !important;
@@ -62,21 +61,23 @@
             margin: 0 !important;
         }
 
+        body {
+            background-repeat: no-repeat !important;
+            background-position-x: 250px !important;
+            background-size: cover !important;
+        }
 
         /*fin de parrafos*/
     </style>
 </head>
 
-<body>
+<body style="background-image:url('{{ url('/images/watermark.jpg') }}')">
     @include('layouts.estilos')
     <header id="header">
+
         <section>
             <table class="w-100">
                 <tr>
-                    <!--<td style="width:23%;">
-                        <img src="{{ public_path(env('LOGOJPG')) }}" alt="" class="logo">
-                    </td>
-                -->
                     <td width="70%">
                     </td>
                     <td width="30%">
