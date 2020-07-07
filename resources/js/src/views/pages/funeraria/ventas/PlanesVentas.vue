@@ -504,7 +504,7 @@ export default {
         url: "/funeraria/planes_funerarios/es"
       });
       this.ListaReportes.push({
-        nombre: "Precios x os Planes (Inglés)",
+        nombre: "Todos los Planes (Inglés)",
         url: "/funeraria/planes_funerarios/en"
       });
       //estado de cuenta
