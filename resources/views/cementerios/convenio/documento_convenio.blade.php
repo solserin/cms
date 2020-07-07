@@ -280,8 +280,7 @@
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">e) </span>
                 <span class="ml-2">
-                    Conservar y mantener el parque funerario, incluyendo todos sus jardines y tomas de agua, mediante la
-                    aportación de un fondo especial establecido para dicho fin.
+                    Conservar y mantener el parque funerario.
                 </span>
             </p>
         </div>
@@ -672,9 +671,9 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima sexta.- </span>
             “El Cliente” tendrá el derecho de rescindir este convenio dentro de los <span
-                class="uppercase bold texto-sm">5 días</span> hábiles siguientes a su
+                class="uppercase bold texto-sm">10 días</span> hábiles siguientes a su
             firma, sin menoscabo de las aportaciones realizadas, comprometiéndose “La Empresa” a devolver íntegramente
-            de las mismas en un plazo no mayor a los <span class="uppercase bold texto-sm">5 dias</span> hábiles
+            de las mismas en un plazo no mayor a los <span class="uppercase bold texto-sm">10 días</span> hábiles
             siguientes a la fecha en que le sea notificada
             por escrito con acuse de recibo dicha cancelación.
         </p>
