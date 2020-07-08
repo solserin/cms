@@ -46,7 +46,7 @@ class FunerariaController extends ApiController
         /**verificando si es tipo modificar para validar que venga el id a modificar */
         $datos_plan = array();
         if ($tipo_servicio == 'modificar') {
-            $datos_plan = $this->get_planes($request->id_plan_modificar, '')[0];
+            $datos_plan = $this->get_planes(false, $request->id_plan_modificar)[0];
             if (empty($datos_plan)) {
                 /**no se encontro los datos */
                 return $this->errorResponse('No se encontró la información del plan solicitada', 409);
@@ -175,8 +175,10 @@ class FunerariaController extends ApiController
 
 
     /**obtiene todos los planes registrados */
-    public function get_planes($id_plan = '')
+    public function get_planes($solo_a_futuro = false, $id_plan = 0)
     {
+        $solo_a_futuro = $solo_a_futuro == 'true' ? 1 : 0;
+
         $resultado = PlanesFunerarios::with('conceptos')->with('precios')->orderBy('planes_funerarios.id', 'desc')
             ->where(function ($q) use ($id_plan) {
                 if (trim($id_plan) != '' && $id_plan > 0) {
@@ -188,17 +190,17 @@ class FunerariaController extends ApiController
         $data = array();
         foreach ($resultado as $key_plan => &$plan) {
             /**actualiznado precios textos */
+            $agregar = false;
             foreach ($plan['precios'] as $key_precio => &$precio) {
                 if ($precio['financiamiento'] == 1) {
                     $precio['tipo_financiamiento'] = "Pago Único/Uso Inmediato";
                     $precio['tipo_financiamiento_ingles'] = "Spot Price";
-                    $precio['pago_mensual']
-                        = 0;
+                    $precio['pago_mensual'] = 0;
                 } else {
+                    $agregar = true;
                     $precio['tipo_financiamiento'] = "Pago a " . $precio['financiamiento'] . " Meses/A Futuro";
                     $precio['tipo_financiamiento_ingles'] = $precio['financiamiento'] . "-Month Payment";
-                    $precio['pago_mensual']
-                        = ($precio['costo_neto'] - $precio['pago_inicial']) / $precio['financiamiento'];
+                    $precio['pago_mensual'] = ($precio['costo_neto'] - $precio['pago_inicial']) / $precio['financiamiento'];
                 }
                 /**sacando los descuentos en caso de que tenga pronto pago */
                 if ($precio['descuento_pronto_pago_b'] == 1) {
@@ -209,6 +211,11 @@ class FunerariaController extends ApiController
                     $precio['porcentaje_pronto_pago'] = ' 0';
                 }
             }
+
+            if ($solo_a_futuro == 0) {
+                $agregar = true;
+            }
+
             $plan_funerario = [
                 'id' => $plan['id'],
                 'plan' => $plan['plan'],
@@ -291,7 +298,11 @@ class FunerariaController extends ApiController
             }
             /**push al array padre */
             $plan_funerario['secciones'] = $secciones;
-            array_push($data, $plan_funerario);
+
+
+            if ($agregar == true) {
+                array_push($data, $plan_funerario);
+            }
         }
         return $data;
     }
@@ -634,7 +645,7 @@ class FunerariaController extends ApiController
 
 
         //obtengo la informacion de esa venta
-        $datos_plan = $this->get_planes($id_plan)[0];
+        $datos_plan = $this->get_planes(false, $id_plan)[0];
         if (empty($datos_plan)) {
             /**datos no encontrados */
             return $this->errorResponse('Error al cargar los datos.', 409);
@@ -716,7 +727,7 @@ class FunerariaController extends ApiController
 
 
         //obtengo la informacion de esa venta
-        $planes = $this->get_planes('');
+        $planes = $this->get_planes(false, '');
         if (empty($planes)) {
             /**datos no encontrados */
             return $this->errorResponse('Error al cargar los datos.', 409);

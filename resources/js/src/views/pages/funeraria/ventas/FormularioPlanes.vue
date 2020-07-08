@@ -712,7 +712,7 @@ export default {
     async get_planes_id() {
       this.$vs.loading();
       try {
-        let res = await planes.get_planes(this.get_plan_id);
+        let res = await planes.get_planes(false, this.get_plan_id);
         this.datosPlan = res.data[0];
         //actualizo los datos en el formulario
         this.id_plan_modificar = this.datosPlan.id;

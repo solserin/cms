@@ -6,8 +6,8 @@
       close="cancelar"
       :title="
         getTipoformulario == 'modificar'
-          ? 'Modificar Venta de Propiedades del Cementerio'
-          : 'Registrar Venta de Propiedades del Cementerio'
+          ? 'Modificar Venta de Plan Funerario a Futuro'
+          : 'Registrar Venta de Plan Funerario a Futuro'
       "
       :active.sync="showVentana"
       ref="formulario"
@@ -15,29 +15,79 @@
       <!--inicio venta-->
       <div class="venta-details">
         <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5"
-          >
-            <!--mapa del cementerio-->
-            <div mt-5>
-              <Mapa
-                :disabled="
-                  tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                "
-                :idAreaInicial="idAreaInicial"
-                @getDatosTipoPropiedad="getDatosTipoPropiedad"
-                @respuestaDeshabilitado="respuestaDeshabilitado"
-              ></Mapa>
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <!--contenido del plan funerario-->
+            <div class="float-left px-2">
+              <img width="36px" src="@assets/images/list_planes.svg" />
+              <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+                Contenido del Plan Funerario
+              </h3>
             </div>
-            <!--fin del mapa del cementerio-->
+            <div class="w-full mt-16" v-if="verLista">
+              <vs-table
+                class="w-full"
+                :data="datos"
+                noDataText="No se han agregado Artículos ni Servicios"
+              >
+                <template slot="header">
+                  <h3>Servicios y Artículos que Incluye el Paquete</h3>
+                </template>
+                <template slot="thead">
+                  <vs-th>#</vs-th>
+                  <vs-th>Artículo/Servicio</vs-th>
+                  <vs-th>Aplicar en</vs-th>
+                </template>
+                <template slot-scope="{ data }">
+                  <vs-tr
+                    :data="tr"
+                    :key="indextr"
+                    v-for="(tr, indextr) in data"
+                  >
+                    <vs-td class="w-1/12">
+                      <div class="capitalize">
+                        <span class="lowercase">{{ alfabeto[indextr] }})</span>
+                      </div>
+                    </vs-td>
+                    <vs-td class="w-7/12">
+                      <div class="capitalize">
+                        {{ tr.concepto }}
+                        <span class="text-sm hidden"
+                          >({{ tr.concepto_ingles }})</span
+                        >
+                      </div>
+                    </vs-td>
+                    <vs-td class="w-2/12">
+                      <div class="capitalize">{{ tr.aplicar }}</div>
+                    </vs-td>
+                    <template class="expand-user" slot="expand"></template>
+                  </vs-tr>
+                </template>
+              </vs-table>
+            </div>
+            <div class="w-full mt-16" v-else>
+              <vs-table
+                :data="[]"
+                noDataText="No se han agregado Artículos ni Servicios"
+              >
+                <template slot="header">
+                  <h3>Servicios y Artículos que Incluye el Paquete</h3>
+                </template>
+                <template slot="thead">
+                  <vs-th>#</vs-th>
+                  <vs-th>Artículo/Servicio</vs-th>
+                  <vs-th>Aplicar en</vs-th>
+                </template>
+              </vs-table>
+            </div>
+            <!--fin de contenido del plan funerario-->
           </div>
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
             <div class="float-left pb-5 px-2">
-              <img width="36px" src="@assets/images/location.svg" />
+              <img width="36px" src="@assets/images/corpse.svg" />
               <h3
-                class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms"
+                class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
               >
-                Información de la ubicación y tipo de venta
+                Información del tipo de venta
               </h3>
             </div>
 
@@ -52,7 +102,7 @@
                   v-if="this.datosAreas.tipo_propiedades_id"
                 >
                   <h3 class="mt-2 text-xl px-2 py-1 bg-primary text-white">
-                    Área del cementerio seleccionada
+                    Área del planes seleccionada
                     <span class="uppercase"
                       >"{{ this.datosAreas.nombre_area }}"</span
                     >
@@ -61,30 +111,24 @@
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
-                  <span v-if="this.datosAreas.tipo_propiedades_id">
-                    <span v-if="this.datosAreas.tipo_propiedades_id == 4"
-                      >Fila</span
-                    >
-                    <span v-else>Ubicación</span>
-                  </span>
-                  <span v-else>Seleccione un Área</span>
+                  <span>Seleccione un Plan Funerario</span>
                   <span class="texto-importante">(*)</span>
                 </label>
                 <v-select
                   :disabled="
                     tiene_pagos_realizados || ventaLiquidada || fueCancelada
                   "
-                  :options="filas"
+                  :options="planes_funerarios"
                   :clearable="false"
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.filas"
+                  v-model="form.plan_funerario"
                   class="mb-4 sm:mb-0 pb-1 pt-1"
                   v-validate:fila_validacion_computed.immediate="'required'"
                   name="fila_validacion"
                   data-vv-as=" "
                 >
                   <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Área
+                    No Se Ha Seleccionado Ningún Plan
                   </div>
                 </v-select>
                 <div>
@@ -100,52 +144,6 @@
                   >
                 </div>
               </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span v-if="this.datosAreas.tipo_propiedades_id == 4"
-                    >Ubicación</span
-                  >
-                  <span v-else>No Aplica</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="lotes"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.lotes"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  :disabled="
-                    this.datosAreas.tipo_propiedades_id != 4 ||
-                      tiene_pagos_realizados ||
-                      ventaLiquidada ||
-                      fueCancelada
-                  "
-                  v-validate:ubicacion_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="ubicacion_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    Seleccione 1 Área
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">
-                    {{ errors.first("ubicacion_validacion") }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['lotes.value']"
-                    >{{ errores["lotes.value"][0] }}</span
-                  >
-                </div>
-              </div>
-            </div>
-            <vs-divider />
-            <div class="flex flex-wrap mt-1">
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   <span>Tipo de Venta</span>
@@ -180,31 +178,8 @@
                   </span>
                 </div>
               </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm font-bold">Tipo de Financiamiento</label>
-                <div class="mt-3">
-                  <vs-radio
-                    vs-name="tipoFinanciamiento"
-                    v-model="form.tipo_financiamiento"
-                    :vs-value="1"
-                    class="mr-4"
-                    :disabled="
-                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                    "
-                    >Uso inmediato</vs-radio
-                  >
-                  <vs-radio
-                    vs-name="tipoFinanciamiento"
-                    v-model="form.tipo_financiamiento"
-                    :vs-value="2"
-                    class="mr-4"
-                    :disabled="
-                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                    "
-                    >A futuro</vs-radio
-                  >
-                </div>
-              </div>
+            </div>
+            <div class="flex flex-wrap mt-1">
               <div class="w-full px-2 mt-2">
                 <p class="text-xs">
                   <span class="text-danger font-medium">Ojo:</span>
@@ -876,7 +851,7 @@
                       </span>
                     </span>
                     <span v-else class="text-danger"
-                      >Seleccione un Área del Cementerio</span
+                      >Seleccione un Área del planes</span
                     >
                   </div>
                 </div>
@@ -896,22 +871,6 @@
                     <span v-else class="text-danger"
                       >Seleccione un Vendedor</span
                     >
-                  </div>
-                </div>
-                <vs-divider />
-                <div class="flex flex-wrap">
-                  <div
-                    class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
-                  >
-                    <span class="text-gray-100 font-bold">Tipo Venta</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span v-if="this.form.tipo_financiamiento == 1"
-                      >Uso inmediato</span
-                    >
-                    <span v-else>A futuro</span>
                   </div>
                 </div>
                 <vs-divider />
@@ -1062,7 +1021,9 @@
             </div>
             <div class="flex flex-wrap">
               <!--precios-->
-              <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2">
+              <div
+                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+              >
                 <label class="text-sm opacity-75 font-bold">
                   <span>Plan de Venta</span>
                   <span class="texto-importante">(*)</span>
@@ -1094,36 +1055,6 @@
                     class="mensaje-requerido"
                     v-if="this.errores['planVenta.value']"
                     >{{ errores["planVenta.value"][0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Salarios Mínimos x Mantenimiento
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  size="large"
-                  v-validate="'required|integer|min_value:1|max_value:150'"
-                  name="salarios_minimos"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese el número de salarios"
-                  v-model="form.salarios_minimos"
-                  maxlength="3"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("salarios_minimos")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.salarios_minimos"
-                    >{{ errores.salarios_minimos[0] }}</span
                   >
                 </div>
               </div>
@@ -1489,13 +1420,11 @@
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import "flatpickr/dist/themes/airbnb.css";
-
-import Mapa from "../Mapa";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
 import Notas from "@pages/notas";
-import cementerio from "@services/cementerio";
+import planes from "@services/planes";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
@@ -1509,7 +1438,6 @@ export default {
     "v-select": vSelect,
     flatPickr,
     Password,
-    Mapa,
     ConfirmarDanger,
     ConfirmarAceptar,
     ClientesBuscador,
@@ -1541,6 +1469,7 @@ export default {
           this.cancelar();
         };
         (async () => {
+          await this.get_planes_funerarios();
           await this.get_vendedores();
           if (this.getTipoformulario == "agregar") {
             this.idAreaInicial = 29;
@@ -1697,6 +1626,34 @@ export default {
     //fin de watchs con mapa
   },
   computed: {
+    verLista: function() {
+      if (this.form.plan_funerario.value != "") {
+        let mostrar = false;
+        this.datos = [];
+        this.form.plan_funerario.secciones.forEach((element, index_seccion) => {
+          if (element.conceptos) {
+            if (element.conceptos.length > 0) {
+              element.conceptos.forEach((concepto, index_concepto) => {
+                this.datos.push({
+                  concepto: concepto.concepto,
+                  concepto_ingles: concepto.concepto_ingles,
+                  aplicar: concepto.aplicar_en
+                });
+              });
+              mostrar = true;
+            }
+          }
+        });
+        if (mostrar == true) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    },
+    /**dle modulo */
     /**sacando los valores para aplicar los descuentos respectivos */
     iva_computed: function() {
       let iva = (
@@ -1942,6 +1899,9 @@ export default {
   },
   data() {
     return {
+      planes_funerarios: [],
+      datos: [],
+      /**variables dle modulo */
       openNotas: false,
       configdateTimePicker: configdateTimePicker,
       verDisponibilidad: false,
@@ -1995,6 +1955,11 @@ export default {
       datosVenta: [],
       //fin var con mapa
       form: {
+        plan_funerario: {
+          label: "Seleccione 1",
+          value: ""
+        },
+        /**varaibles del modulo */
         salarios_minimos: "12",
         id_venta: "",
         /**datos del cliente seleccionado */
@@ -2118,7 +2083,7 @@ export default {
       this.errores = [];
       this.$vs.loading();
       try {
-        let res = await cementerio.guardar_venta(this.form);
+        let res = await planes.guardar_venta(this.form);
         console.log("guardar_venta -> res", res);
         if (res.data >= 1) {
           //success
@@ -2201,7 +2166,7 @@ export default {
       this.errores = [];
       this.$vs.loading();
       try {
-        let res = await cementerio.modificar_venta(this.form);
+        let res = await planes.modificar_venta(this.form);
         console.log("modificar_venta -> res.data", res.data);
         if (res.data >= 1) {
           //success
@@ -2271,10 +2236,42 @@ export default {
     cancel() {
       this.$emit("closeVentana");
     },
+    async get_planes_funerarios() {
+      try {
+        let res = await planes.get_planes(true, "");
+        console.log("get_planes_funerarios -> res", res);
+        //le agrego todos los usuarios vendedores
+        this.planes_funerarios = [];
+        this.planes_funerarios.push({ label: "Seleccione 1", value: "" });
+        if (this.getTipoformulario == "agregar") {
+          this.form.plan_funerario = this.planes_funerarios[0];
+        }
+        res.data.forEach(element => {
+          this.planes_funerarios.push({
+            label: element.plan,
+            value: element.id,
+            secciones: element.secciones
+          });
+        });
+      } catch (error) {
+        /**error al cargar vendedores */
+        this.$vs.notify({
+          title: "Error",
+          text:
+            "Ha ocurrido un error al tratar de cargar el catálogo de vendedores, por favor reintente.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "9000"
+        });
+        this.cerrarVentana();
+      }
+    },
     //get vendedores
     async get_vendedores() {
       try {
-        let res = await cementerio.get_vendedores();
+        let res = await planes.get_vendedores();
         //le agrego todos los usuarios vendedores
         this.vendedores = [];
         this.vendedores.push({ label: "Seleccione 1", value: "" });
@@ -2459,7 +2456,7 @@ export default {
         this.$vs.notify({
           title: "Planes de Venta",
           text:
-            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de Cementerio > Venta de Terrenos'",
+            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de planes > Venta de Terrenos'",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -2594,7 +2591,7 @@ export default {
     async consultar_venta_id() {
       try {
         this.$vs.loading();
-        let res = await cementerio.consultar_venta_id(this.form.id_venta);
+        let res = await planes.consultar_venta_id(this.form.id_venta);
         this.datosVenta = res.data[0];
 
         /**actualizo el tipo_financimiamiento para que cargue los planes */
@@ -2676,7 +2673,7 @@ export default {
     respuestaDeshabilitado() {
       if (this.tienePagosVencidos) {
         this.$vs.notify({
-          title: "Seleccionar Área del Cementerio",
+          title: "Seleccionar Área del planes",
           text:
             "No está permitido cambiar la ubicación de la propiedad mientras no esté al corriente con los pagos establecidos.",
           iconPack: "feather",
@@ -2687,7 +2684,7 @@ export default {
         });
       } else if (this.ventaLiquidada) {
         this.$vs.notify({
-          title: "Seleccionar Área del Cementerio",
+          title: "Seleccionar Área del planes",
           text:
             "No está permitido cambiar la ubicación de la propiedad una vez ya liquidado el total de la cuenta.",
           iconPack: "feather",

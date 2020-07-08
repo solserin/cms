@@ -9,7 +9,7 @@
           @click="formulario('agregar')"
         >
           <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Vender Terreno</span>
+          <span class="texto-btn">Vender Plan Funerario a Futuro</span>
         </vs-button>
         <vs-button
           class="float-right mr-12"

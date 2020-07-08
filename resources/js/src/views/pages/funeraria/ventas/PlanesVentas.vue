@@ -360,7 +360,7 @@ export default {
     async get_planes() {
       try {
         this.$vs.loading();
-        let res = await planes.get_planes("");
+        let res = await planes.get_planes(false, "");
         this.planes = res.data;
         /**llenando los tipos de propiedad para el select */
         this.tipo_planes = [];
