@@ -15,6 +15,7 @@ class VentasPlanes extends Migration
     {
         Schema::create('ventas_planes', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->tinyInteger('tipo_financiamiento')->nullable(); //1 contado(uso inmeadiatoo) 2-credito uso a futuro
             $table->unsignedBigInteger('vendedor_id')->unsigned()->nullable();
             $table->foreign('vendedor_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('planes_funerarios_id')->unsigned()->nullable();

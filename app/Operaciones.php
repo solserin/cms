@@ -214,4 +214,16 @@ class Operaciones extends Model
     {
         return $this->hasOne('App\User', 'id', 'cancelo_id');
     }
+
+    /**relacion con venta de planes funerarios */
+    public function venta_plan()
+    {
+        return $this->belongsTo('App\VentasPlanes', 'ventas_planes_id', 'id')
+            ->select(
+                '*',
+                DB::raw(
+                    '(NULL) AS tipo_financiamiento_texto'
+                )
+            );
+    }
 }
