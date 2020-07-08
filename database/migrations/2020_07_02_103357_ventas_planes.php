@@ -15,8 +15,6 @@ class VentasPlanes extends Migration
     {
         Schema::create('ventas_planes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->dateTime('fecha_registro');
-            $table->mediumText('nota')->nullable();
             $table->unsignedBigInteger('vendedor_id')->unsigned()->nullable();
             $table->foreign('vendedor_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('planes_funerarios_id')->unsigned()->nullable();

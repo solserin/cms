@@ -532,7 +532,7 @@ class CementerioController extends ApiController
                 /**programacion de pagos */
                 if ($costo_neto > 0) {
                     /**si la cantidad que resta a pagar es mayor a cero se manda llamar la programcion de pagos */
-                    $this->programarPagos($request, $id_operacion, $id_venta);
+                    $this->programarPagos($request, $id_operacion, $id_venta, '001');
                 } else {
                     /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
                     $this->generarNumeroTitulo($id_operacion, true);
@@ -603,7 +603,7 @@ class CementerioController extends ApiController
                     /**programacion de pagos */
                     if ($costo_neto > 0) {
                         /**si la cantidad que resta a pagar es mayor a cero se manda llamar la programcion de pagos */
-                        $this->programarPagos($request, $datos_venta['operacion_id'], $request->id_venta);
+                        $this->programarPagos($request, $datos_venta['operacion_id'], $request->id_venta, '001');
                     } else {
                         /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
                         if (trim($datos_venta['numero_titulo']) == '') {
@@ -760,7 +760,7 @@ class CementerioController extends ApiController
 
 
     //guarda los beneficiarios de la venta de una propiedad
-    public function programarPagos(Request $request, $operacion_id = 0, $id_venta = 0)
+    public function programarPagos(Request $request, $operacion_id = 0, $id_venta = 0, $referencia_pago_clave = '')
     {
         /**aqui comienzan a gurdar los datos */
         /* $subtotal = round($request->subtotal, 2, PHP_ROUND_HALF_UP); //sin iva
@@ -807,7 +807,7 @@ class CementerioController extends ApiController
             $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
                 [
                     'num_pago' => 1, //numero 1, pues es unico
-                    'referencia_pago' => '001' . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
+                    'referencia_pago' => $referencia_pago_clave . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
                     'fecha_programada' => $fecha_maxima, //fecha de la venta
                     'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
                     'monto_programado' => $costo_neto,
@@ -835,7 +835,7 @@ class CementerioController extends ApiController
             $id_pago_programado_enganche = DB::table('pagos_programados')->insertGetId(
                 [
                     'num_pago' => 1, //numero 1, pues es unico
-                    'referencia_pago' => '001' . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
+                    'referencia_pago' => $referencia_pago_clave . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
                     'fecha_programada' => $fecha_maxima, //fecha de la venta
                     'conceptos_pagos_id' => 1, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
                     'monto_programado' => $pago_inicial,
@@ -880,7 +880,7 @@ class CementerioController extends ApiController
                 $id_pago_programado = DB::table('pagos_programados')->insertGetId(
                     [
                         'num_pago' => ($i + 1), //numero 1, pues es unico
-                        'referencia_pago' => '001' . date('Ymd', strtotime($request->fecha_venta)) . $numero_pago_para_referencia . $id_venta, //se crea una referencia para saber a que pago pertenece
+                        'referencia_pago' => $referencia_pago_clave . date('Ymd', strtotime($request->fecha_venta)) . $numero_pago_para_referencia . $id_venta, //se crea una referencia para saber a que pago pertenece
                         'fecha_programada' => $fecha, //fecha de la venta
                         'conceptos_pagos_id' => 2, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
                         'monto_programado' => $monto_abono,

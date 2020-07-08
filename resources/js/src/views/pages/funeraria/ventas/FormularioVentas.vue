@@ -1713,8 +1713,10 @@ export default {
       datosVenta: [],
       //fin var con mapa
       form: {
+        tipo_financiamiento: 2 /**directamente solo a futuro */,
         plan_funerario: {
           label: "Seleccione 1",
+          plan_ingles: "",
           value: "",
           secciones: [],
           precios: []
@@ -1977,6 +1979,7 @@ export default {
         this.planes_funerarios = [];
         this.planes_funerarios.push({
           label: "Seleccione 1",
+          plan_ingles: "",
           value: "",
           secciones: [],
           precios: []
@@ -1987,6 +1990,7 @@ export default {
         res.data.forEach(element => {
           this.planes_funerarios.push({
             label: element.plan,
+            plan_ingles: element.plan_ingles,
             value: element.id,
             secciones: element.secciones,
             precios: element.precios
@@ -2182,6 +2186,7 @@ export default {
     limpiarVentana() {
       this.form.plan_funerario = {
         label: "Seleccione 1",
+        plan_ingles: "",
         value: "",
         secciones: [],
         precios: []

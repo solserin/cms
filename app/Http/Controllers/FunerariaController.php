@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\Clientes;
+use App\VentasPlanes;
 use App\PreciosPlanes;
 use App\PlanesFunerarios;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use App\Http\Controllers\CementerioController;
 
 class FunerariaController extends ApiController
 {
@@ -312,7 +315,6 @@ class FunerariaController extends ApiController
     /**GUARDAR PRECIO*/
     public function registrar_precio(Request $request)
     {
-
         //validaciones directas sin condicionales
         $validaciones = [
             'descripcion' => 'required',
@@ -779,5 +781,441 @@ class FunerariaController extends ApiController
         } else {
             return $pdf->inline($name_pdf);
         }
+    }
+
+
+    /**GUARDAR LA VENTA */
+    public function control_ventas(Request $request, $tipo_servicio = '')
+    {
+        if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
+            return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
+        }
+
+        /**procede la peticion */
+
+        /**aqui comienzan a gurdar los datos */
+        $subtotal = $request->subtotal; //sin iva
+        $iva = $request->impuestos; //solo el iva
+        $descuento = $request->descuento;
+        $costo_neto = $request->costo_neto;
+
+
+        /**valdiando que cuadren las cantidades de la venta */
+        //validaciones directas sin condicionales
+        $validaciones = [
+            //datos de la propiedad
+            'id_venta' => '',
+            /**solo para modificaciones */
+            //datos de la venta
+            'plan_funerario.value' => 'required',
+            'plan_funerario.label' => 'required',
+            /**plan en español */
+            'plan_funerario.plan_ingles' => 'required',
+            'plan_funerario.secciones.*.conceptos.*.seccion' => 'required',
+            'plan_funerario.secciones.*.conceptos.*.concepto' => 'required',
+            'plan_funerario.secciones.*.conceptos.*.concepto_ingles' => 'required',
+
+            'ventaAntiguedad.value' => 'required',
+            'id_cliente' => 'required',
+            'vendedor.value' => 'required',
+            'fecha_venta' => 'required|date',
+            'tipo_financiamiento' => 'required',
+            /**viene directo del frontend con el valor 2 que es solo a futuro */
+            'solicitud' => '',
+            'convenio' => '',
+            'titulo' => '',
+            /**titular_sustituto */
+            'titular_sustituto' => 'required',
+            'parentesco_titular_sustituto' => 'required',
+            'telefono_titular_sustituto' => 'required',
+            /**beneficiarios */
+            'beneficiarios.*.nombre' => [
+                'required',
+            ],
+            'beneficiarios.*.parentesco' => [
+                'required',
+            ],
+            'beneficiarios.*.telefono' => [
+                'required',
+            ],
+            //info del plan de venta y pagos
+            'planVenta.value' => 'numeric|required',
+            'subtotal' => 'numeric|required|min:1',
+            'descuento' => 'required|numeric|min:0|max:' . $request->subtotal,
+            'impuestos' => 'numeric|required|min:0',
+            'costo_neto' => 'numeric|required|min:0',
+            'costo_neto_pronto_pago' => 'required|min:1|lte:' . $costo_neto,
+            'pago_inicial' => ''
+        ];
+
+        /**verificando si es tipo modificar para validar que venga el id a modificar */
+        $datos_venta = array();
+        if ($tipo_servicio == 'modificar') {
+            $datos_venta = $this->get_ventas($request, $request->id_venta, '')[0];
+            if (empty($datos_venta)) {
+                /**no se encontro los datos */
+                return $this->errorResponse('No se encontró la información de la venta solicitada', 409);
+            } else if ($datos_venta['operacion_status'] == 0) {
+                return $this->errorResponse('Esta venta ya fue cancelada, no puede modificarse', 409);
+            } else {
+                /**puede proceder con las valiaciones necesarias para */
+            }
+        }
+
+        /**si pasan estas condicones podemos continuar */
+        /**solo en caso de modificaciones */
+
+        /**validando el pago inicial */
+        if ($request->planVenta['value'] == 1) {
+            /**cuando es a contado */
+            /**es un solo pago de inicio */
+            $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
+        } else {
+            /**cuando es a credito */
+            if ($request->costo_neto > $request->planVenta['pago_inicial']) {
+                /**minimo el pago inicial y maximo un 70% del costo neto */
+                $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->planVenta['pago_inicial'] . '|max:' . ($request->costo_neto) * .7;
+            } else {
+                /**si el descuento es menor al pago inicial se forza al usuario a ingresa como pago inicial minmo un 10% del totoa a pagar y un 70% de maximo 
+                 * de pago inicial y el resto liquidarlo con los abonos
+                 */
+                $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
+            }
+        }
+
+        /**VALIDACIONES CONDICIONADAS*/
+
+        //validnado en caso de que sea de uso inmediato y de venta antes del sistema.
+        if ($request->ventaAntiguedad['value'] == 3) {
+            //venta de uso inmediato
+            $validaciones['titulo'] = 'required';
+            /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
+            $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
+                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+            if (!empty($titulo)) {
+                if ($tipo_servicio == 'modificar') {
+                    if ($titulo->id != $request->id_venta)
+                        return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
+                } else {
+
+                    return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
+                }
+            }
+        }
+
+        //validnado en caso de que sea de uso futuro
+        if ($request->tipo_financiamiento == 2) {
+            //venta de uso inmediato
+            $validaciones['solicitud'] = 'required';
+
+            /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+            $solicitud = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
+                ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', 1)->first();
+            if (!empty($solicitud)) {
+                if ($tipo_servicio == 'modificar') {
+                    if ($solicitud->id != $request->id_venta)
+                        return $this->errorResponse('El número de solicitud ingresado ya ha sido registrado.', 409);
+                } else {
+                    return $this->errorResponse('El número de solicitud ingresado ya ha sido registrado.', 409);
+                }
+            }
+        }
+
+
+        //valido si es de venta antes del sistema
+        if ($request->ventaAntiguedad['value'] == 2) {
+            /**venta ya realizada anterior al sistema pero no liquidadada */
+            $validaciones['convenio'] = 'required';
+            /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+            $convenio = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
+                ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', 1)->first();
+            if (!empty($convenio)) {
+                if ($tipo_servicio == 'modificar') {
+                    if ($convenio->id != $request->id_venta)
+                        return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                } else {
+                    return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                }
+            }
+        } else if ($request->ventaAntiguedad['value'] == 3) {
+            /**venta ya liquidada antes del sistema */
+            $validaciones['convenio'] = 'required';
+            $validaciones['titulo'] = 'required';
+
+            /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
+            $convenio = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
+                ->where('numero_convenio', $request->convenio)->where('operaciones.status', 1)->first();
+            if (!empty($convenio)) {
+                if ($tipo_servicio == 'modificar') {
+                    if ($convenio->id != $request->id_venta)
+                        return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                } else {
+                    return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                }
+            }
+            /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
+            $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
+                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+            if (!empty($titulo)) {
+                if ($tipo_servicio == 'modificar') {
+                    if ($titulo->id != $request->id_venta)
+                        return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
+                } else {
+                    return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
+                }
+            }
+        }
+
+
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+
+        $mensajes = [
+            'id_venta.required' => 'Ingrese un la clave única de la venta para continuar',
+            'max' => 'verifique la cantidad',
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'ubicacion.unique' => 'Este terreno ya fue vendido',
+            'solicitud.unique' => 'Esta solicitud ya fue registrada en otra venta',
+            'convenio.unique' => 'Este convenio ya fue registrado en otra venta',
+            'titulo.unique' => 'Este título ya fue registrado en otra venta',
+            'num_operacion.unique' => 'Este número de operación ya fue capturado',
+            //beneficiarios
+            '*.nombre.required' => 'ingrese este dato',
+            '*.parentesco.required' => 'ingrese este dato',
+            '*.telefono.required' => 'ingrese este dato',
+            'lte' => 'verifique la cantidad',
+            'unique.num_operacion' => 'Este número de operación ya fue registrado.',
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+        if ($tipo_servicio == 'agregar') {
+            /**revisar si el cliente esta vigente para proceder con la venta */
+            $cliente = Clientes::where('id', (int) $request->id_cliente)->first();
+            if ($cliente->status != 1) {
+                /**no esta activo y la venta no puede proceder */
+                return $this->errorResponse('Este cliente no se encuentra activo en la base de datos.', 409);
+            }
+        }
+
+        /**haciendo las validaciones necesarias para saber si se puede proceder con la modificacion de los datos */
+        $reprogramar_pagos = false;
+        if ($tipo_servicio == 'modificar') {
+            /**tiene pagos vigentes, se debe validar lo que no puede modifcar. 
+             * todo aquello que altere los precios y totales de la venta, pues al tener pagos realizados vigentes se alteria
+             * el contrato y la programacion de pagos
+             * solo puede modificar lo que no altere el contrato como cliente,vendedor, cliente
+             * titular sustituto
+             * beneficiarios
+             */
+            /**verificando que no hay modificado nada relativo a precios */
+
+            if (
+                $request->fecha_venta != $datos_venta['fecha_operacion'] ||
+                (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
+                    round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
+                    round($request->costo_neto, 2, PHP_ROUND_HALF_UP) != round($datos_venta['total'], 2, PHP_ROUND_HALF_UP) ||
+                    $request->pago_inicial != count($datos_venta['pagos_programados']) > 0 ? round($datos_venta['pagos_programados'][0]['monto_programado'], 2, PHP_ROUND_HALF_UP) : 0 ||
+                    round($request->descuento, 2, PHP_ROUND_HALF_UP) != round($datos_venta['descuento'], 2, PHP_ROUND_HALF_UP) ||
+                    round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP) != round($datos_venta['costo_neto_pronto_pago'], 2, PHP_ROUND_HALF_UP))
+            ) {
+
+                if ($datos_venta['total'] > 0) {
+                    /**si la venta no fue gratis */
+                    if ($datos_venta['pagos_realizados'] > 0) {
+                        return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
+                financiamiento, etc. Esto se debe a que existen pagos vigentes relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
+                    } else {
+                        $reprogramar_pagos = true;
+                    }
+                } else {
+                    /**la venta no fue gratis */
+                    return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
+                financiamiento, etc. Esto se debe a que la venta tiene un saldo de $0.00 pesos(está liquidada).', 409);
+                }
+            }
+        }
+
+
+        /**mando llamar las funciones que ya estan en el controlado de cementerio */
+        $CementerioController = new CementerioController();
+
+
+        try {
+            DB::beginTransaction();
+            if ($tipo_servicio == 'agregar') {
+                //venta de uso inmediato y de control sistematizado
+                //captura de la venta
+                $id_venta = DB::table('ventas_planes')->insertGetId(
+                    [
+                        'vendedor_id' => (int) $request->vendedor['value'],
+                        'planes_funerarios_id' => $request->plan_funerario['value'],
+                        'nombre_original' => $request->plan_funerario['label'],
+                        'nombre_original_ingles' => $request->plan_funerario['plan_ingles']
+                    ]
+                );
+
+                /**guardando los conceptos del plan */
+                foreach ($request->plan_funerario['secciones'] as $key_seccion => $seccion) {
+                    foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
+                        $seccion = 1;
+                        if ($concepto['seccion'] == 'incluye') {
+                            $seccion = 1;
+                        } elseif ($concepto['seccion'] == 'inhumacion') {
+                            $seccion = 2;
+                        } elseif ($concepto['seccion'] == 'cremacion') {
+                            $seccion = 3;
+                        } elseif ($concepto['seccion'] == 'velacion') {
+                            $seccion = 4;
+                        } else {
+                            /**error no existe el concepto */
+                            return $this->errorResponse('Los conceptos no siguen el formato correcto.', 409);
+                        }
+                        DB::table('plan_conceptos_original')->insert(
+                            [
+                                'seccion_id' => $seccion,
+                                'ventas_planes_id' => $id_venta,
+                                'concepto' => $concepto['concepto'],
+                                'concepto_ingles' => $concepto['concepto_ingles']
+                            ]
+                        );
+                    }
+                }
+
+
+                /**a partir de la venta se crea la operaicon */
+                $id_operacion = DB::table('operaciones')->insertGetId(
+                    [
+                        'clientes_id' => (int) $request->id_cliente,
+                        'ventas_planes_id' => $id_venta,
+                        /**venta a futuro solamente */
+                        'numero_solicitud' => ($request->tipo_financiamiento == 2) ? $request->solicitud : null,
+                        /**venta  liquidada solamente */
+                        'numero_convenio' =>  $CementerioController->generarNumeroConvenio($request),
+                        'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
+                        'empresa_operaciones_id' => 4, //venta de planes a futuro
+                        'subtotal' => $subtotal,
+                        'descuento' => $descuento,
+                        'impuestos' => $iva,
+                        'total' => $costo_neto,
+                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
+                        'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
+                        /** titular_sustituto */
+                        'titular_sustituto' => $request->titular_sustituto,
+                        'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
+                        'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
+                        'financiamiento' => $request->planVenta['value'],
+                        'aplica_devolucion_b' => 0,
+                        'costo_neto_financiamiento_normal' => round($request->planVenta['costo_neto_financiamiento_normal'], 2, PHP_ROUND_HALF_UP),
+                        'comision_venta_neto' => 0,
+                        'fecha_registro' => now(),
+                        'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                        'registro_id' => (int) $request->user()->id,
+                        'nota' => $request->nota,
+                        'status' => $costo_neto > 0 ? 1 : '2',
+                    ]
+                );
+                /**guardando los datos de la tasa para intereses */
+                $CementerioController->guardarAjustesPoliticas($request, $id_operacion);
+                /**programacion de pagos */
+                if ($costo_neto > 0) {
+                    /**si la cantidad que resta a pagar es mayor a cero se manda llamar la programcion de pagos */
+                    $CementerioController->programarPagos($request, $id_operacion, $id_venta, '004');
+                } else {
+                    /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
+                    $CementerioController->generarNumeroTitulo($id_operacion, true);
+                }
+                //captura de los beneficiarios
+                $CementerioController->guardarBeneficiarios($request, $id_operacion);
+                /**guardar venta parte final */
+                /**captura de pagos */
+                /**fin de captura de pagos */
+            }
+            /**fin if servicio tipo agregar */
+            else {
+                /**es modificar */
+                DB::table('ventas_planes')->where('id', '=', $request->id_venta)->update(
+                    [
+                        'ubicacion' => $request->ubicacion,
+                        'propiedades_id' => $request->propiedades_id,
+                        'tipo_propiedades_id' => $request->tipo_propiedades_id,
+                        'vendedor_id' => (int) $request->vendedor['value'],
+                        'tipo_financiamiento' => $request->tipo_financiamiento,
+                        'salarios_minimos' => $request->salarios_minimos
+                    ]
+                );
+
+                DB::table('operaciones')->where('id', '=', $datos_venta['operacion_id'])->update(
+                    [
+                        'clientes_id' => (int) $request->id_cliente,
+                        /**venta a futuro solamente */
+                        'numero_solicitud' => ($request->tipo_financiamiento == 2) ? trim($request->solicitud) : null,
+                        /**venta  liquidada solamente */
+                        'numero_convenio' => trim($request->convenio),
+                        'numero_titulo' => trim($request->titulo),
+                        'subtotal' => $subtotal,
+                        'descuento' => $descuento,
+                        'impuestos' => $iva,
+                        'total' => $costo_neto,
+                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
+                        'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
+                        /** titular_sustituto */
+                        'titular_sustituto' => $request->titular_sustituto,
+                        'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
+                        'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
+                        'financiamiento' => $request->planVenta['value'],
+                        'costo_neto_financiamiento_normal' => $request->planVenta['costo_neto_financiamiento_normal'],
+                        'status' => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
+                        'fecha_modificacion' => now(),
+                        'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                        'modifico_id' => (int) $request->user()->id,
+                        'nota' => $request->nota,
+                    ]
+                );
+
+                /**verificamos si tiene pagos realizados para saber si podemos eliminar los pagos existentes o si solo cancelarlos */
+                if ($reprogramar_pagos == true) {
+                    if ($datos_venta['pagos_realizados'] > 0) {
+                        /**cancelamos los pagos programados vigentes */
+                        DB::table('pagos_programados')->where('operaciones_id', '=', $datos_venta['operacion_id'])->update(
+                            [
+                                'status' => 0,
+                            ]
+                        );
+                    } else {
+                        /**podemos eliminar los pagos programados viegente para rehacerlo */
+                        DB::table('pagos_programados')->where('operaciones_id', '=', $datos_venta['operacion_id'])->delete();
+                    }
+                    /**programacion de pagos */
+                    if ($costo_neto > 0) {
+                        /**si la cantidad que resta a pagar es mayor a cero se manda llamar la programcion de pagos */
+                        $this->programarPagos($request, $datos_venta['operacion_id'], $request->id_venta);
+                    } else {
+                        /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
+                        if (trim($datos_venta['numero_titulo']) == '') {
+                            $this->generarNumeroTitulo($datos_venta['operacion_id'], true);
+                        }
+                    }
+                }
+                //captura de los beneficiarios
+                $this->guardarBeneficiarios($request, $datos_venta['operacion_id']);
+                /**pendiente hacer modificacion de progrmacion de pagos */
+            } //fin else de modificar venta de propiedad
+
+            DB::commit();
+            return
+                $tipo_servicio == 'agregar' ? $id_venta : $request->id_venta;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+        /**FIN DE VENTA A USO INMEDIATO */
+        /**********FIN DE CASOS DE VENTA 1 - NUEVA VENTA "SISTEMATIZADA" */
     }
 }
