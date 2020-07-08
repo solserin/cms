@@ -29,7 +29,6 @@ Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaControl
 
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
-    Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
 
     /**RUTA PARA OBTENER LOS PUESTOS DISPONIBLEN EN LA EMPRESA */
@@ -106,6 +105,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
 
     /**rutas del cementerio */
+    Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
     Route::post('cementerio/update_precio_propiedad', 'CementerioController@update_precio_propiedad');
     Route::post('cementerio/enable_disable', 'CementerioController@enable_disable');
@@ -118,16 +118,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('titulos/{operacion_id?}', 'CementerioController@generarNumeroTitulo');
     Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
     Route::get('cementerio/acuse_cancelacion', 'CementerioController@acuse_cancelacion');
-
-
     Route::get('cementerio/documento_solicitud', 'CementerioController@documento_solicitud');
     Route::get('cementerio/documento_convenio', 'CementerioController@documento_convenio');
     Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
-
     Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
 
     /**rutas de funeraria ventas planes */
+    Route::post('funeraria/control_ventas/{tipo_servicio}', 'FunerariaController@control_ventas'); //agregar,modificar
     Route::post('funeraria/control_planes/{tipo_servicio?}', 'FunerariaController@control_planes');
     Route::post('funeraria/enable_disable_planes', 'FunerariaController@enable_disable_planes');
     Route::post('funeraria/registrar_precio', 'FunerariaController@registrar_precio');

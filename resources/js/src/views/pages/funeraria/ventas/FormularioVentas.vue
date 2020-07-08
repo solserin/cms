@@ -94,21 +94,7 @@
             <div class="w-full px-2">
               <vs-divider />
             </div>
-
             <div class="flex flex-wrap mt-1">
-              <div class="w-full pb-4">
-                <div
-                  class="flex flex-wrap mt-1"
-                  v-if="this.datosAreas.tipo_propiedades_id"
-                >
-                  <h3 class="mt-2 text-xl px-2 py-1 bg-primary text-white">
-                    Área del planes seleccionada
-                    <span class="uppercase"
-                      >"{{ this.datosAreas.nombre_area }}"</span
-                    >
-                  </h3>
-                </div>
-              </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   <span>Seleccione un Plan Funerario</span>
@@ -123,7 +109,9 @@
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
                   v-model="form.plan_funerario"
                   class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:fila_validacion_computed.immediate="'required'"
+                  v-validate:plan_funerario_validacion_computed.immediate="
+                    'required'
+                  "
                   name="fila_validacion"
                   data-vv-as=" "
                 >
@@ -384,7 +372,7 @@
                   class="w-full pb-1 pt-1"
                   placeholder=" Núm. Solicitud"
                   v-model="form.solicitud"
-                  :disabled="tipo_venta || fueCancelada"
+                  :disabled="fueCancelada"
                   maxlength="12"
                 />
                 <div>
@@ -448,8 +436,7 @@
                   placeholder="Núm. Título"
                   v-model="form.titulo"
                   :disabled="
-                    !(tipo_venta * capturar_num_titulo + capturar_num_titulo) ||
-                      fueCancelada
+                    !(capturar_num_titulo + capturar_num_titulo) || fueCancelada
                   "
                   maxlength="16"
                 />
@@ -799,62 +786,7 @@
                     }}</span>
                   </div>
                 </div>
-                <vs-divider />
-                <div class="flex flex-wrap">
-                  <div
-                    class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
-                  >
-                    <span class="text-gray-100 font-bold">Ubicación</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span v-if="this.datosAreas.id">
-                      <span
-                        v-if="
-                          this.datosAreas.tipo_propiedades_id == 1 ||
-                            this.datosAreas.tipo_propiedades_id == 2 ||
-                            this.datosAreas.tipo_propiedades_id == 3 ||
-                            this.datosAreas.tipo_propiedades_id == 5 ||
-                            this.datosAreas.tipo_propiedades_id == 6
-                        "
-                      >
-                        <span v-if="this.form.filas.value != ''">
-                          Propiedad
-                          {{
-                            this.datosAreas["tipo_propiedad"].tipo +
-                              " Ubicación " +
-                              this.form.filas.label
-                          }}
-                        </span>
-                        <span v-else class="text-danger"
-                          >Seleccione una ubicación</span
-                        >
-                      </span>
-                      <span v-else>
-                        <span
-                          v-if="
-                            this.form.filas.value != '' &&
-                              this.form.lotes.value != ''
-                          "
-                        >
-                          Propiedad
-                          {{
-                            this.datosAreas["nombre_area"] +
-                              " Ubicación " +
-                              this.form.lotes.label
-                          }}
-                        </span>
-                        <span v-else class="text-danger"
-                          >Seleccione una ubicación</span
-                        >
-                      </span>
-                    </span>
-                    <span v-else class="text-danger"
-                      >Seleccione un Área del planes</span
-                    >
-                  </div>
-                </div>
+
                 <vs-divider />
                 <div class="flex flex-wrap">
                   <div
@@ -978,7 +910,7 @@
                   </div>
                 </div>
                 <vs-divider />
-                <div class="w-full">
+                <div class="w-full pb-24">
                   <h3
                     class="mt-2 text-base px-2 py-1 bg-seccion-forms"
                     style="line-height: 1.6em;"
@@ -1042,7 +974,7 @@
                   "
                 >
                   <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Área
+                    No Se Ha Seleccionado Ningún Plan de Venta
                   </div>
                 </v-select>
                 <div>
@@ -1310,7 +1242,13 @@
                   <div
                     class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
                   >
-                    <div class="float-left" v-if="costo_neto_computed == 0">
+                    <div
+                      class="float-left"
+                      v-if="
+                        costo_neto_computed == 0 &&
+                          this.form.planVenta.value != ''
+                      "
+                    >
                       <img width="26px" src="@assets/images/warning.svg" />
                       <h3
                         class="float-right ml-3 text-base text-danger font-medium mt-1"
@@ -1472,8 +1410,7 @@ export default {
           await this.get_planes_funerarios();
           await this.get_vendedores();
           if (this.getTipoformulario == "agregar") {
-            this.idAreaInicial = 29;
-            this.form.tipo_financiamiento = 1;
+            /**acciones cuando el formulario es de agregar */
           } else {
             /**pasando el valor de la venta id */
             this.form.id_venta = this.get_venta_id;
@@ -1482,148 +1419,21 @@ export default {
           }
         })();
       } else {
-        this.idAreaInicial = 0;
-        /**forzando el cambio de area para que se actualice al reabrir la ventana */
-        /*if (this.idAreaInicial > 2) {
-          this.idAreaInicial -= 1;
-        } else {
-          this.idAreaInicial += 1;
-        }*/
+        /**acciones al cerrar el formulario */
       }
     },
-
-    //aqui obtengo los datos necesarios para poder saber cuantas filas tiene una propiedad
-    "form.filas": function(newValue, oldValue) {
-      if (newValue.value != "") {
-        if (this.datosAreas.tipo_propiedades_id == 4) {
-          this.lotes = [];
-          this.lotes.push({ label: "Seleccione 1", value: "" });
-          this.datosAreas["filas_columnas"].forEach(element => {
-            //aqui obtengo los datos para poder llamar la funcion que me traera los
-            //valores necesarios para poder cargar los lotes que existen segun cada fila
-            if (element.fila == this.form.filas.value) {
-              //aqui tengo los valores para saber en que columna empieza y acaba cada fila
-              for (let index = 1; index <= this.datosAreas.columnas; index++) {
-                //aqui se debe crear unicamente los lotes que estan en cada fila segun la terraza
-                if (
-                  index >= element.empieza_columna &&
-                  index <= element.fin_columna
-                ) {
-                  this.lotes.push({
-                    label:
-                      "Fila " +
-                      this.alfabeto[this.form.filas.value - 1] +
-                      " - Lote " +
-                      index,
-                    value: index
-                  });
-                }
-              }
-              //la primero opcion
-              this.form.lotes = this.lotes[1];
-              return;
-            }
-          });
-          /**revisnado si es form modificar para actualizar el lote seleccionado */
-          //la primero opcion
-          this.form.lotes = this.lotes[1];
-          if (this.getTipoformulario == "modificar") {
-            /**cuando el form es para modificar */
-            /**buscando la fila que le corresponde segun la propiedad */
-            if (this.datosVenta) {
-              this.lotes.forEach(element => {
-                if (element.value == this.datosVenta.venta_terreno.lote_raw) {
-                  this.form.lotes = element;
-                  return;
-                }
-              });
-            }
-          }
-        } else {
-          this.lotes = [];
-          this.lotes.push({ label: "Seleccione 1", value: "" });
-          this.form.lotes = { label: "Seleccione 1", value: "" };
-        }
-      } else {
-        this.lotes = [];
-        this.lotes.push({ label: "Seleccione 1", value: "" });
-        this.form.lotes = { label: "Seleccione 1", value: "" };
-      }
-    },
-    //watchs con mapa
-    datosAreas: function(newValue, oldValue) {
-      //creo las posibles opciones para filas y modulos
-      if (newValue != []) {
-        //actualizo el id del tipo de propiedad
-        this.form.propiedades_id = this.datosAreas.tipo_propiedades_id;
-        //creo uniplex, duplex, triplex y cuadruplex sin nicho
-        this.filas = [];
-        this.filas.push({ label: "Seleccione 1", value: "" });
-        this.form.filas = this.filas[0];
-        if (this.datosAreas.tipo_propiedades_id != 4) {
-          this.lotes = [];
-          this.lotes.push({ label: "Seleccione 1", value: "" });
-          this.form.lotes = { label: "Seleccione 1", value: "" };
-          //al encontrar el numero de filas que les corresponden segun la propiedad creo las filas para que la seleccione el usuario
-          let indicador_propiedad = "";
-          if (
-            this.datosAreas.tipo_propiedades_id != 4 ||
-            this.datosAreas.tipo_propiedades_id == 3
-          ) {
-            indicador_propiedad = "Módulo ";
-          } else if (this.datosAreas.tipo_propiedades_id == 3) {
-            indicador_propiedad = "Fila ";
-          }
-          for (let index = 1; index <= this.datosAreas.filas; index++) {
-            this.filas.push({
-              label: indicador_propiedad + " - " + index,
-              value: index
-            });
-          }
-        } else {
-          //filas para las terrazas
-          for (let index = 1; index <= this.datosAreas.filas; index++) {
-            this.filas.push({
-              label: "Fila - " + this.alfabeto[index - 1],
-              value: index
-            });
-          }
-        }
-        //la primero opcion
-        this.form.filas = this.filas[1];
-        if (this.getTipoformulario == "modificar") {
-          /**cuando el form es para modificar */
-          /**buscando la fila que le corresponde segun la propiedad */
-          if (this.datosVenta) {
-            this.filas.forEach(element => {
-              if (element.value == this.datosVenta.venta_terreno.fila_raw) {
-                this.form.filas = element;
-                return;
-              }
-            });
-          }
-        }
-        //cargo los precios
-        if (this.form.tipo_financiamiento != "") {
-          this.cargarPlanes();
-        }
-      }
-    },
-    "form.tipo_financiamiento": function(newValue, oldValue) {
-      if (newValue != "") {
-        this.cargarPlanes();
-      }
-    },
-
     "form.planVenta": function(newValue, oldValue) {
       if (newValue.value != "") {
         /**el plan cambio a un plan especifico */
         this.form.subtotal = newValue.subtotal;
         this.form.costo_neto_pronto_pago = newValue.costo_neto_pronto_pago;
       }
+    },
+    /**watch para cargado de planes de venta */
+    "form.plan_funerario": function(newValue, oldValue) {
+      /**cargando planes */
+      this.cargarPlanes();
     }
-
-    //fin de watchs con mapa
   },
   computed: {
     verLista: function() {
@@ -1785,17 +1595,6 @@ export default {
         return newValue;
       }
     },
-    tipo_venta: function() {
-      //definiendo el tipo de uso, si es true es venta de uso inmediato si es false es venta de uso futuro
-      if (this.form.tipo_financiamiento == 1) {
-        //uso inmediato
-        return true;
-      } else {
-        //a futuro
-        return false;
-      }
-    },
-
     capturar_num_convenio: function() {
       if (this.form.ventaAntiguedad.value > 1) {
         return true;
@@ -1824,16 +1623,8 @@ export default {
     plan_de_venta_computed: function() {
       return this.form.planVenta.value;
     },
-    fila_validacion_computed: function() {
-      return this.form.filas.value;
-    },
-    ubicacion_validacion_computed: function() {
-      if (this.form.propiedades_id == 4) {
-        //terrazas
-        return this.form.lotes.value;
-      } else {
-        return true;
-      }
+    plan_funerario_validacion_computed: function() {
+      return this.form.plan_funerario.value;
     },
 
     antiguedad_validacion_computed: function() {
@@ -1865,37 +1656,9 @@ export default {
       if (this.form.ventaAntiguedad.value == 3) {
         return this.form.titulo;
       } else return true;
-    },
+    }
 
     //fin de validaciones calculadas
-    //crear ubicacion
-    crear_ubicacion_computed: function() {
-      if (this.datosAreas.tipo_propiedades_id == 4) {
-        //ubicacion para cuadriplex de terrazas
-        //id del tipo de propiedad - id de la propiedad - num fila - num columna
-        return (
-          this.datosAreas.tipo_propiedades_id +
-          "-" +
-          this.datosAreas.id +
-          "-" +
-          this.form.filas.value +
-          "-" +
-          this.form.lotes.value
-        );
-      } else {
-        //id del tipo de propiedad - id de la propiedad - num fila - 1
-        return (
-          this.datosAreas.tipo_propiedades_id +
-          "-" +
-          this.datosAreas.id +
-          "-" +
-          this.form.filas.value +
-          "-" +
-          1
-        );
-      }
-    }
-    //fin de crear ubicacion
   },
   data() {
     return {
@@ -1906,7 +1669,6 @@ export default {
       configdateTimePicker: configdateTimePicker,
       verDisponibilidad: false,
       openBuscador: false,
-      idAreaInicial: 1,
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
       alfabeto: alfabeto,
@@ -1931,8 +1693,6 @@ export default {
           value: 3
         }
       ],
-      filas: [],
-      lotes: [],
       vendedores: [],
       //variables con mapa
       planesVenta: [
@@ -1949,15 +1709,15 @@ export default {
           costo_neto_financiamiento_normal: ""
         }
       ],
-      /**datos del area seleccionada */
-      datosAreas: [],
       /**para modificar, se traen los datos aqui */
       datosVenta: [],
       //fin var con mapa
       form: {
         plan_funerario: {
           label: "Seleccione 1",
-          value: ""
+          value: "",
+          secciones: [],
+          precios: []
         },
         /**varaibles del modulo */
         salarios_minimos: "12",
@@ -1965,11 +1725,6 @@ export default {
         /**datos del cliente seleccionado */
         cliente: "seleccione 1 cliente",
         id_cliente: "",
-        //ubicacion
-        tipo_propiedades_id: 0,
-        propiedades_id: 0,
-        ubicacion: "",
-        //fin de ubicacion
         fecha_venta: "",
         /**titular substituto */
         titular_sustituto: "",
@@ -1979,16 +1734,6 @@ export default {
         solicitud: "",
         convenio: "",
         titulo: "",
-        tipo_financiamiento: "",
-        filas: {
-          label: "Seleccione 1",
-          value: ""
-        },
-        lotes: {
-          label: "Seleccione 1",
-          value: ""
-        },
-
         /**datos origen */
         //variables con mapa
         planVenta: {
@@ -2032,12 +1777,6 @@ export default {
       this.form.nota = nota;
       this.openNotas = false;
     },
-    //obtengo los datos del area seleccionada desde el mapa  "child"
-    getDatosTipoPropiedad(datos) {
-      //actualizo los datos que se ocupan para manejar las ubicaciones de las propiedades
-      this.datosAreas = datos;
-      this.form.propiedades_id = this.datosAreas.tipo_propiedades_id;
-    },
     acceptAlert() {
       this.$validator
         .validateAll()
@@ -2056,11 +1795,6 @@ export default {
           } else {
             /**aqui se hace la validacion en los totales de la venta */
             //se confirma la cntraseña
-            //una vez todo validado, actualizo los ultimos datos de ubicacion
-            this.form.propiedades_id = this.datosAreas.id;
-            this.form.tipo_propiedades_id = this.datosAreas.tipo_propiedades_id;
-            this.form.ubicacion = this.crear_ubicacion_computed;
-
             /**actualizando los valores de total de venta */
             //fin de actualizar datos de ubicacion
             (async () => {
@@ -2239,10 +1973,14 @@ export default {
     async get_planes_funerarios() {
       try {
         let res = await planes.get_planes(true, "");
-        console.log("get_planes_funerarios -> res", res);
         //le agrego todos los usuarios vendedores
         this.planes_funerarios = [];
-        this.planes_funerarios.push({ label: "Seleccione 1", value: "" });
+        this.planes_funerarios.push({
+          label: "Seleccione 1",
+          value: "",
+          secciones: [],
+          precios: []
+        });
         if (this.getTipoformulario == "agregar") {
           this.form.plan_funerario = this.planes_funerarios[0];
         }
@@ -2250,7 +1988,8 @@ export default {
           this.planes_funerarios.push({
             label: element.plan,
             value: element.id,
-            secciones: element.secciones
+            secciones: element.secciones,
+            precios: element.precios
           });
         });
       } catch (error) {
@@ -2299,7 +2038,6 @@ export default {
         this.cerrarVentana();
       }
     },
-
     cargarPlanes() {
       this.form.planVenta = this.planesVenta[0];
       this.planesVenta = [];
@@ -2315,65 +2053,31 @@ export default {
         porcentaje_pronto_pago: "",
         costo_neto_financiamiento_normal: ""
       });
-      if (this.datosAreas.id) {
-        this.datosAreas["tipo_propiedad"].precios.forEach(element => {
+      if (this.verLista == true) {
+        this.form.plan_funerario.precios.forEach(element => {
           if (element.status == 1) {
-            /**cargando solo los activos */
-            //verifico si la compra es a futuro o de uso inmediato
-            if (this.form.tipo_financiamiento == 1) {
-              if (element.financiamiento == 1) {
-                //es una venta de uso inmediato y no puede haber opciones de meses
-                //precio de contado a 0 meses 1 solo pago
-                this.planesVenta.push({
-                  label: element.tipo_financiamiento,
-                  value: Number(element.financiamiento),
-                  subtotal: Number(element.subtotal),
-                  impuestos: Number(element.impuestos),
-                  costo_neto: Number(element.costo_neto),
-                  pago_inicial: Number(element.pago_inicial),
-                  descuento_pronto_pago_b: Number(
-                    element.descuento_pronto_pago_b
-                  ),
-                  costo_neto_pronto_pago: Number(
-                    element.costo_neto_pronto_pago
-                  ),
-                  porcentaje_pronto_pago: Number(
-                    element.porcentaje_pronto_pago
-                  ),
-                  costo_neto_financiamiento_normal: Number(
-                    element.costo_neto_financiamiento_normal
-                  )
-                });
-              }
-            } else {
-              //la venta es a futuro y puede seleccionar todas los siguientes planes de venta
-              //precios de pagos a meses
-              if (element.financiamiento > 1) {
-                this.planesVenta.push({
-                  label: element.tipo_financiamiento,
-                  value: Number(element.financiamiento),
-                  subtotal: Number(element.subtotal),
-                  impuestos: Number(element.impuestos),
-                  costo_neto: Number(element.costo_neto),
-                  pago_inicial: Number(element.pago_inicial),
-                  descuento_pronto_pago_b: Number(
-                    element.descuento_pronto_pago_b
-                  ),
-                  costo_neto_pronto_pago: Number(
-                    element.costo_neto_pronto_pago
-                  ),
-                  porcentaje_pronto_pago: Number(
-                    element.porcentaje_pronto_pago
-                  ),
-                  costo_neto_financiamiento_normal: Number(
-                    element.costo_neto_financiamiento_normal
-                  )
-                });
-              }
+            //la venta es a futuro y puede seleccionar todas los siguientes planes de venta
+            //precios de pagos a meses
+            if (element.financiamiento > 1) {
+              this.planesVenta.push({
+                label: element.tipo_financiamiento,
+                value: Number(element.financiamiento),
+                subtotal: Number(element.subtotal),
+                impuestos: Number(element.impuestos),
+                costo_neto: Number(element.costo_neto),
+                pago_inicial: Number(element.pago_inicial),
+                descuento_pronto_pago_b: Number(
+                  element.descuento_pronto_pago_b
+                ),
+                costo_neto_pronto_pago: Number(element.costo_neto_pronto_pago),
+                porcentaje_pronto_pago: Number(element.porcentaje_pronto_pago),
+                costo_neto_financiamiento_normal: Number(
+                  element.costo_neto_financiamiento_normal
+                )
+              });
             }
           }
         });
-
         //selecciono el primero precio automaticamente
         if (this.getTipoformulario == "agregar") {
           /**tipo de formulario agregar */
@@ -2394,13 +2098,8 @@ export default {
               return;
             }
           });
-
           if (plan_encontrado == false) {
-            if (
-              this.form.planVenta.value == "" &&
-              this.form.tipo_financiamiento ==
-                this.datosVenta.venta_terreno.tipo_financiamiento
-            ) {
+            if (this.form.planVenta.value == "") {
               /**no se encontro el plan y se debe de agregar uno como de origen */
               let planVenta = {
                 label:
@@ -2456,7 +2155,7 @@ export default {
         this.$vs.notify({
           title: "Planes de Venta",
           text:
-            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de planes > Venta de Terrenos'",
+            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de planes > Funeraria > Planes a Futuro > Planes de Venta'",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -2481,28 +2180,32 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
+      this.form.plan_funerario = {
+        label: "Seleccione 1",
+        value: "",
+        secciones: [],
+        precios: []
+      };
       this.form.ventaAntiguedad = this.ventasAntiguedad[0];
-      //area de la terraza
-      this.form.lotes = this.lotes[0];
-      this.form.tipo_financiamiento = "";
       this.form.solicitud = "";
       this.form.convenio = "";
       this.form.titulo = "";
+      this.form.cliente = "";
+      this.form.id_cliente = "";
+      this.form.vendedor = { label: "Seleccione 1", value: "" };
+      this.form.fecha_venta = "";
+
       this.form.titular_sustituto = "";
       this.form.parentesco_titular_sustituto = "";
       this.form.telefono_titular_sustituto = "";
-      this.form.cliente = "";
-      this.form.id_cliente = "";
       this.form.beneficiarios = [];
       this.form.planVenta = this.planesVenta[0];
-      this.form.fecha_venta = "";
-      this.form.vendedor = { label: "Seleccione 1", value: "" };
+
       this.form.descuento = 0;
       this.form.subtotal = 0;
       this.form.impuestos = 0;
       this.form.costo_neto_pronto_pago = 0;
       this.form.pago_inicial = 0;
-      this.idAreaInicial = 0;
       this.form.nota = "";
     },
 
@@ -2593,10 +2296,6 @@ export default {
         this.$vs.loading();
         let res = await planes.consultar_venta_id(this.form.id_venta);
         this.datosVenta = res.data[0];
-
-        /**actualizo el tipo_financimiamiento para que cargue los planes */
-        this.form.tipo_financiamiento = this.datosVenta.venta_terreno.tipo_financiamiento;
-        this.idAreaInicial = this.datosVenta.venta_terreno.propiedades_id;
         /**se comienza a llenar la informacion de los datos */
         this.ventasAntiguedad.forEach(element => {
           if (element.value == this.datosVenta.antiguedad_operacion_id) {
