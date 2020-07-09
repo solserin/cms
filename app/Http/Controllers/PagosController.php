@@ -884,7 +884,8 @@ class PagosController extends ApiController
                         ]
                     );
                     /**generando el numero de titulo de la venta de propiedad */
-                    $cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+                    /**deshabilitando numero de titulo */
+                    //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
                 }
             }
 

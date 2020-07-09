@@ -319,7 +319,7 @@
               <!--Fin de vendedor-->
 
               <div
-                class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-4"
+                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 pt-4"
               >
                 <label class="text-sm opacity-75 font-bold">
                   Fecha de la Venta (Año-Mes-Dia)
@@ -388,7 +388,9 @@
                   >
                 </div>
               </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <div
+                class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-4"
+              >
                 <label class="text-sm opacity-75 font-bold">
                   Núm. Convenio
                   <span class="texto-importante">(*)</span>
@@ -420,7 +422,7 @@
                 </div>
               </div>
 
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <!-- <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   Núm. Título
                   <span class="texto-importante">(*)</span>
@@ -451,7 +453,7 @@
                   }}</span>
                 </div>
               </div>
-
+-->
               <vs-divider />
             </div>
           </div>

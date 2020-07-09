@@ -886,12 +886,12 @@ class FunerariaController extends ApiController
         }
 
         /**VALIDACIONES CONDICIONADAS*/
-
+        /**deshabilitnado numero de titulo */
         //validnado en caso de que sea de uso inmediato y de venta antes del sistema.
-        if ($request->ventaAntiguedad['value'] == 3) {
+        /* if ($request->ventaAntiguedad['value'] == 3) {
             //venta de uso inmediato
             $validaciones['titulo'] = 'required';
-            /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
+            //validando de manera manual si el titulo enviado ya esta registrado y esto activa 
             $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
                 ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
             if (!empty($titulo)) {
@@ -904,7 +904,7 @@ class FunerariaController extends ApiController
                 }
             }
         }
-
+*/
         //validnado en caso de que sea de uso futuro
         if ($request->tipo_financiamiento == 2) {
             //venta de uso inmediato
@@ -942,7 +942,7 @@ class FunerariaController extends ApiController
         } else if ($request->ventaAntiguedad['value'] == 3) {
             /**venta ya liquidada antes del sistema */
             $validaciones['convenio'] = 'required';
-            $validaciones['titulo'] = 'required';
+            //$validaciones['titulo'] = 'required';
 
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
@@ -956,7 +956,8 @@ class FunerariaController extends ApiController
                 }
             }
             /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
-            $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
+            /**deshabilitnado numero de titulo */
+            /* $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
                 ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
             if (!empty($titulo)) {
                 if ($tipo_servicio == 'modificar') {
@@ -965,7 +966,7 @@ class FunerariaController extends ApiController
                 } else {
                     return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
                 }
-            }
+            }*/
         }
 
 
@@ -1101,7 +1102,7 @@ class FunerariaController extends ApiController
                         'numero_solicitud' => ($request->tipo_financiamiento == 2) ? $request->solicitud : null,
                         /**venta  liquidada solamente */
                         'numero_convenio' =>  $CementerioController->generarNumeroConvenio($request),
-                        'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
+                        //'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
                         'empresa_operaciones_id' => 4, //venta de planes a futuro
                         'subtotal' => $subtotal,
                         'descuento' => $descuento,
@@ -1133,7 +1134,7 @@ class FunerariaController extends ApiController
                     $CementerioController->programarPagos($request, $id_operacion, $id_venta, '004');
                 } else {
                     /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
-                    $CementerioController->generarNumeroTitulo($id_operacion, true);
+                    //$CementerioController->generarNumeroTitulo($id_operacion, true);
                 }
                 //captura de los beneficiarios
                 $CementerioController->guardarBeneficiarios($request, $id_operacion);
@@ -1204,7 +1205,7 @@ class FunerariaController extends ApiController
                     } else {
                         /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
                         if (trim($datos_venta['numero_titulo']) == '') {
-                            $this->generarNumeroTitulo($datos_venta['operacion_id'], true);
+                            //$this->generarNumeroTitulo($datos_venta['operacion_id'], true);
                         }
                     }
                 }
@@ -2113,76 +2114,80 @@ class FunerariaController extends ApiController
     /**pdf del convenio plan de cementerio */
     public function reglamento_pago(Request $request)
     {
-        $id_venta = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
-         * por lo cual puede variar de paramtros degun la ncecesidad
-         */
-        $email =  $request->email_send === 'true' ? true : false;
-        $email_to = $request->email_address;
-        $requestVentasList = json_decode($request->request_parent[0], true);
-        $id_venta = $requestVentasList['venta_id'];
+        try {
+            $id_venta = 1;
+            $email = false;
+            $email_to = 'hector@gmail.com';
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_venta = $requestVentasList['venta_id'];
 
-        //obtengo la informacion de esa venta
-        $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
-        if (empty($datos_venta)) {
-            /**datos no encontrados */
-            return $this->errorResponse('Error al cargar los datos.', 409);
-        }
+            //obtengo la informacion de esa venta
+            $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+            if (empty($datos_venta)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
 
-        /**verificando si el documento aplica para esta solictitud */
-        /*if ($datos_venta['numero_convenio_raw'] == null) {
+            /**verificando si el documento aplica para esta solictitud */
+            /*if ($datos_venta['numero_convenio_raw'] == null) {
             return 0;
         }*/
 
 
-        $get_funeraria = new EmpresaController();
-        $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa]);
-        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "REGLAMENTO DE PAGO " . strtoupper($datos_venta['nombre']) . '.pdf';
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "REGLAMENTO DE PAGO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
-        $pdf->setOptions([
-            'title' => $name_pdf,
-            'footer-html' => view('funeraria.reglamento_pago.footer'),
-        ]);
-        if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('funeraria.reglamento_pago.header')
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.reglamento_pago.footer'),
             ]);
-        }
-        //$pdf->setOption('grayscale', true);
-        //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 20.4);
-        $pdf->setOption('margin-right', 20.4);
-        $pdf->setOption('margin-top', 10.4);
-        $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
-        if ($email == true) {
-            /**email */
-            /**
-             * parameters lista de la funcion
-             * to destinatario
-             * to_name nombre del destinatario
-             * subject motivo del correo
-             * name_pdf nombre del pdf
-             * pdf archivo pdf a enviar
-             */
-            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
-            $email_controller = new EmailController();
-            $enviar_email = $email_controller->pdf_email(
-                $email_to,
-                strtoupper($datos_venta['nombre']),
-                'REGLAMENTO DE PAGO / FUNERARIA AETERNUS',
-                $name_pdf,
-                $pdf
-            );
-            return $enviar_email;
-            /**email fin */
-        } else {
-            return $pdf->inline($name_pdf);
+            if ($datos_venta['operacion_status'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.reglamento_pago.header')
+                ]);
+            }
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 20.4);
+            $pdf->setOption('margin-right', 20.4);
+            $pdf->setOption('margin-top', 10.4);
+            $pdf->setOption('margin-bottom', 25.4);
+            $pdf->setOption('page-size', 'A4');
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_venta['nombre']),
+                    'REGLAMENTO DE PAGO / FUNERARIA AETERNUS',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos.', 409);
         }
     }
 }
