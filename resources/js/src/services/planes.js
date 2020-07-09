@@ -76,13 +76,13 @@ export default {
 
     /**get las ventas para el paginado de ventas */
     get_ventas(param) {
-        let service = "/cementerio/get_ventas/all/paginated";
+        let service = "/funeraria/get_ventas/all/paginated";
         if (param.filtro_especifico_opcion == 4) {
             /**es de tipo de id venta */
             /**se debe de cambiar la url */
             if (param.numero_control.trim() != "") {
                 service =
-                    "/cementerio/get_ventas/" +
+                    "/funeraria/get_ventas/" +
                     param.numero_control.trim() +
                     "/paginated";
             }
@@ -97,7 +97,7 @@ export default {
 
     //obtiene la venta por id
     consultar_venta_id(id_venta) {
-        let service = "/cementerio/get_ventas/" + id_venta;
+        let service = "/funeraria/get_ventas/" + id_venta;
         return axios.get(service);
     }
 };

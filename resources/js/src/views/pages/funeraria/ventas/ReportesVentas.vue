@@ -3,7 +3,7 @@
     <vs-popup
       class="forms-popups normal-forms reportes_lista"
       fullscreen
-      title="expediente de venta en cementerio"
+      title="expediente de venta en planes"
       :active.sync="showVentana"
       ref="lista_reportes"
     >
@@ -247,7 +247,7 @@
 </template>
 <script>
 import Reporteador from "@pages/Reporteador";
-import cementerio from "@services/cementerio";
+import planes from "@services/planes";
 import pagos from "@services/pagos";
 import FormularioPagos from "@pages/pagos/FormularioPagos";
 export default {
@@ -287,7 +287,7 @@ export default {
           if (this.getVerAcuse == true) {
             this.openReporte(
               "Acuse de cancelación",
-              "/cementerio/acuse_cancelacion",
+              "/planes/acuse_cancelacion",
               "",
               ""
             );
@@ -332,37 +332,37 @@ export default {
       documentos: [
         {
           documento: "Formato de Solicitud",
-          url: "/cementerio/documento_solicitud",
+          url: "/planes/documento_solicitud",
           tipo: "pdf"
         },
         {
           documento: "Convenio",
-          url: "/cementerio/documento_convenio",
+          url: "/planes/documento_convenio",
           tipo: "pdf"
         },
         {
           documento: "Título",
-          url: "/cementerio/documento_titulo",
+          url: "/planes/documento_titulo",
           tipo: "pdf"
         },
         {
           documento: "Estado de cuenta",
-          url: "/cementerio/documento_estado_de_cuenta_cementerio",
+          url: "/planes/documento_estado_de_cuenta_planes",
           tipo: "pdf"
         },
         {
           documento: "Talonario de Pagos",
-          url: "/cementerio/referencias_de_pago",
+          url: "/planes/referencias_de_pago",
           tipo: "pdf"
         },
         {
           documento: "Reglamento de Pago",
-          url: "/cementerio/reglamento_pago",
+          url: "/planes/reglamento_pago",
           tipo: "pdf"
         },
         {
           documento: "Acuse de cancelación",
-          url: "/cementerio/acuse_cancelacion",
+          url: "/planes/acuse_cancelacion",
           tipo: "pdf"
         }
       ],
@@ -445,7 +445,7 @@ export default {
       this.$vs.loading();
       try {
         this.operacion_id = "";
-        let res = await cementerio.consultar_venta_id(this.get_venta_id);
+        let res = await planes.consultar_venta_id(this.get_venta_id);
         this.datosVenta = res.data[0];
         this.operacion_id = this.datosVenta.operacion_id;
         /*if (this.datosVenta.pagos_programados.length > 0) {

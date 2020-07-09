@@ -136,7 +136,14 @@
                                     <span class="bold">Tipo de Operación:</span>
                                     {{ $datos['tipo_operacion_texto'] }}<br>
                                     <span class="bold">Clave Operación:</span>
-                                    {{ $datos['referencias_cubiertas'][0]['operacion_del_pago']['id'] }}<br>
+                                    @if($datos['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id']==1)
+                                    <!--es de terrenos--->
+                                    {{ $datos['referencias_cubiertas'][0]['operacion_del_pago']['ventas_terrenos_id'] }}<br>
+                                    @elseif($datos['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id']==4)
+                                    <!--es de planes a futuro--->
+                                    {{ $datos['referencias_cubiertas'][0]['operacion_del_pago']['ventas_planes_id'] }}<br>
+                                    @endif
+
                                 </td>
                             </tr>
                         </table>

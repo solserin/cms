@@ -83,6 +83,7 @@ class PagosController extends ApiController
         if (count($pago_programado)) {
             /**se ha encontrado la referencia y se procede a hacer los respectivos calculos */
             $resultado = Operaciones::select(
+                'ventas_planes_id',
                 'ventas_terrenos_id',
                 'operaciones.id as operacion_id',
                 'operaciones.status as operacion_status',
@@ -435,10 +436,11 @@ class PagosController extends ApiController
         }
     }
 
-    public function guardar_pago(Request $request)
+    public function guardar_pago(Request $request, $tipo_operacion = '')
     {
         //return $request;
         $validaciones = [
+            'empresa_operaciones_id' => 'required',
             'multipago' => 'required',
             'fecha_pago' => 'required|date_format:Y-m-d H:i',
             'pagos_a_cubrir' => 'required',
@@ -851,13 +853,28 @@ class PagosController extends ApiController
 
             /**se deve revisar si la operacion fue liquidada para marcar la venta como liquidada con status 2 */
             $datos_operacion = $referencias_adeudos[0];
-
+            $cementerio_controller = new CementerioController();
             /**verificando que tipo de operacion_empresa es */
             if ($datos_operacion['empresa_operaciones_id'] == 1) {
                 /**es tipo de ventas de propiedades */
-                $cementerio_controller = new CementerioController();
                 $datos_venta = $cementerio_controller->get_ventas($request, $datos_operacion['ventas_terrenos_id'], '')[0];
                 // return  $this->errorResponse(round($datos_venta['saldo_neto'], 2), 409);
+                if (round($datos_venta['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
+                    /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                    DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
+                        [
+                            /**status de ya liquidada */
+                            'status' => 2
+                        ]
+                    );
+                    /**generando el numero de titulo de la venta de propiedad */
+                    $cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+                }
+            } else  if ($datos_operacion['empresa_operaciones_id'] == 4) {
+                /**venta de planes a futuro */
+                $funeraria_controller = new FunerariaController();
+                $datos_venta = $funeraria_controller->get_ventas($request, $datos_operacion['ventas_planes_id'], '')[0];
+
                 if (round($datos_venta['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
                     /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
                     DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
@@ -953,7 +970,7 @@ class PagosController extends ApiController
                 ->whereHas('referencias_cubiertas', function ($q) {
                     //$q->where('referencia_pago', '=', '00120200101025');
                 })
-                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre,email')
+                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status,ventas_terrenos_id,ventas_planes_id', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre,email')
                 ->whereHas('referencias_cubiertas.operacion_del_pago', function ($q) use ($request) {
                     if (($request->operacion_id)) {
                         $q->where('id', '=', $request->operacion_id);
@@ -1087,19 +1104,19 @@ class PagosController extends ApiController
                 if ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
                     /**es tipo de venta de terreno del cementerio */
                     $pago['tipo_operacion_texto'] = 'VENTA DE TERRENOS';
-                } else if ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                } else if ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 2) {
                     /**es tipo de SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO. */
                     $pago['tipo_operacion_texto'] = 'SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO.';
-                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 3) {
                     /**es tipo de  SERVICIOS FUNERARIOS */
                     $pago['tipo_operacion_texto'] = ' SERVICIOS FUNERARIOS';
-                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 4) {
                     /**es tipo de VENTA DE PLANES FUNERARIOS A FUTURO */
-                    $pago['tipo_operacion_texto'] = 'VENTA DE PLANES FUNERARIOS A FUTURO';
-                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                    $pago['tipo_operacion_texto'] = 'VENTA DE PLAN FUNERARIO A FUTURO';
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 5) {
                     /**es tipo de SERVICIOS ESPECIALES CON EXTREMIDADES */
                     $pago['tipo_operacion_texto'] = 'SERVICIOS ESPECIALES CON EXTREMIDADES';
-                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 1) {
+                } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 6) {
                     /**es tipo de VENTAS EN GRAL. */
                     $pago['tipo_operacion_texto'] = 'VENTAS EN GRAL.';
                 }

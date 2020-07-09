@@ -1098,6 +1098,7 @@ export default {
       Monedas: [],
       Cobradores: [],
       form: {
+        empresa_operaciones_id: "",
         cobrador: {},
         banco: "",
         referencia_sobre_pago: "",
@@ -1339,6 +1340,7 @@ export default {
           referencia: this.form.referencia,
           multipago: this.form.multipago
         });
+        this.form.empresa_operaciones_id = res.data[0].empresa_operaciones_id;
         this.form.pagos_a_cubrir = [];
         this.form.datos_operacion = res.data[0];
         this.$nextTick(() => {

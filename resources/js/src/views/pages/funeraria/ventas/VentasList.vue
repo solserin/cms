@@ -131,22 +131,21 @@
         <vs-th>Solicitud</vs-th>
         <vs-th>Convenio</vs-th>
         <vs-th>Título</vs-th>
-        <vs-th>Ubicacion</vs-th>
+        <vs-th>Plan Funerario</vs-th>
         <vs-th>Estatus</vs-th>
         <vs-th>Acciones</vs-th>
       </template>
       <template slot-scope="{ data }">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-          <vs-td :data="data[indextr].ventas_terrenos_id">
+          <vs-td :data="data[indextr].ventas_planes_id">
             <span class="font-semibold">{{
-              data[indextr].ventas_terrenos_id
+              data[indextr].ventas_planes_id
             }}</span>
           </vs-td>
           <vs-td :data="data[indextr].nombre">{{ data[indextr].nombre }}</vs-td>
-          <vs-td
-            :data="data[indextr].venta_terreno.tipo_financiamiento_texto"
-            >{{ data[indextr].venta_terreno.tipo_financiamiento_texto }}</vs-td
-          >
+          <vs-td :data="data[indextr].venta_plan.tipo_financiamiento_texto">{{
+            data[indextr].venta_plan.tipo_financiamiento_texto
+          }}</vs-td>
           <vs-td :data="data[indextr].numero_solicitud">
             <span class="font-medium">{{
               data[indextr].numero_solicitud_texto
@@ -160,9 +159,11 @@
               data[indextr].numero_titulo_texto
             }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].ubicacion_texto">{{
-            data[indextr].venta_terreno.ubicacion_texto
-          }}</vs-td>
+          <vs-td :data="data[indextr].venta_plan.nombre_original">
+            <span class="capitalize">
+              {{ data[indextr].venta_plan.nombre_original }}
+            </span>
+          </vs-td>
           <vs-td :data="data[indextr].operacion_status">
             <p v-if="data[indextr].operacion_status == 1" class=" font-medium">
               {{ data[indextr].status_texto }}
@@ -184,13 +185,13 @@
                 class="cursor-pointer img-btn ml-auto"
                 src="@assets/images/folder.svg"
                 title="Expediente"
-                @click="ConsultarVenta(data[indextr].ventas_terrenos_id)"
+                @click="ConsultarVenta(data[indextr].ventas_planes_id)"
               />
               <img
                 class="cursor-pointer img-btn ml-6 mr-6"
                 src="@assets/images/edit.svg"
                 title="Modificar Contrato"
-                @click="openModificar(data[indextr].ventas_terrenos_id)"
+                @click="openModificar(data[indextr].ventas_planes_id)"
               />
               <img
                 width="24"
@@ -198,7 +199,7 @@
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
-                @click="cancelarVenta(data[indextr].ventas_terrenos_id)"
+                @click="cancelarVenta(data[indextr].ventas_planes_id)"
               />
               <img
                 width="24"
@@ -206,7 +207,7 @@
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash-open.svg"
                 title="Esta venta ya fue cancelada, puede hacer click aquí para consultar"
-                @click="ConsultarVentaAcuse(data[indextr].ventas_terrenos_id)"
+                @click="ConsultarVentaAcuse(data[indextr].ventas_planes_id)"
               />
             </div>
           </vs-td>
@@ -421,6 +422,7 @@ export default {
 
       try {
         let res = await planes.get_ventas(this.serverOptions);
+        console.log("get_data -> res", res);
         if (res.data.data) {
           this.ventas = res.data.data;
           this.total = res.data.last_page;

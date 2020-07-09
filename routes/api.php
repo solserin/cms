@@ -21,6 +21,7 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 /**rutas de modulo en proceso */
 /**rutas publicas_ entran sin token */
 Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
+Route::get('pagos/recibo_de_pago/{id_pago?}', 'PagosController@recibo_de_pago');
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 
 Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
@@ -143,7 +144,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('pagos/get_formas_pago_sat', 'PagosController@get_formas_pago_sat');
     Route::get('pagos/get_monedas_sat', 'PagosController@get_monedas_sat');
     Route::get('pagos/get_cobradores', 'PagosController@get_cobradores');
-    Route::get('pagos/recibo_de_pago/{id_pago?}', 'PagosController@recibo_de_pago');
+
     Route::post('pagos/cancelar_pago', 'PagosController@cancelar_pago');
     /**fin de rutas de pagos */
 
