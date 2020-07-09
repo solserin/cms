@@ -25,8 +25,8 @@ Route::get('pagos/recibo_de_pago/{id_pago?}', 'PagosController@recibo_de_pago');
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 
 Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
-
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
+Route::get('funeraria/documento_solicitud', 'FunerariaController@documento_solicitud');
 /**fin de rutas de modulo en proceso */
 
 
