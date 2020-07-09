@@ -1717,6 +1717,8 @@ export default {
         plan_funerario: {
           label: "Seleccione 1",
           plan_ingles: "",
+          nota: "",
+          nota_ingles: "",
           value: "",
           secciones: [],
           precios: []
@@ -1978,6 +1980,8 @@ export default {
         this.planes_funerarios.push({
           label: "Seleccione 1",
           plan_ingles: "",
+          nota: "",
+          nota_ingles: "",
           value: "",
           secciones: [],
           precios: []
@@ -1989,6 +1993,8 @@ export default {
           this.planes_funerarios.push({
             label: element.plan,
             plan_ingles: element.plan_ingles,
+            nota: element.nota,
+            nota_ingles: element.nota_ingles,
             value: element.id,
             secciones: element.secciones,
             precios: element.precios
@@ -2185,6 +2191,8 @@ export default {
       this.form.plan_funerario = {
         label: "Seleccione 1",
         plan_ingles: "",
+        nota: "",
+        nota_ingles: "",
         value: "",
         secciones: [],
         precios: []

@@ -28,6 +28,7 @@ Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaControlle
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
 Route::get('funeraria/documento_solicitud', 'FunerariaController@documento_solicitud');
 Route::get('funeraria/documento_convenio', 'FunerariaController@documento_convenio');
+Route::get('funeraria/documento_finiquitado', 'FunerariaController@documento_finiquitado');
 /**fin de rutas de modulo en proceso */
 
 

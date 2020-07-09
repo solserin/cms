@@ -22,6 +22,8 @@ class VentasPlanes extends Migration
             $table->foreign('planes_funerarios_id')->references('id')->on('usuarios');
             $table->string('nombre_original');
             $table->string('nombre_original_ingles');
+            $table->string('nota_original');
+            $table->string('nota_original_ingles');
         });
     }
 

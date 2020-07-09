@@ -58,6 +58,8 @@ class PlanFunerarioEjemplo extends Seeder
             $id_plan = DB::table('planes_funerarios')->insertGetId([
                 'plan' => 'servicio de cremación',
                 'plan_ingles' =>  'cremation service',
+                'nota' => 'no incluye otros tramites y/o permisos necesarios para la realizacion de dicho servicio.',
+                'nota_ingles' =>  'it does not include other procedures and / or permits necessary for the performance of said service.',
                 'fecha_registro' => now(),
                 'registro_id' => 1,
                 'fecha_modificacion' => now()

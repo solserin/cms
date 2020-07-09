@@ -341,8 +341,8 @@ export default {
           tipo: "pdf"
         },
         {
-          documento: "Título",
-          url: "/funeraria/documento_titulo",
+          documento: "Constancia de Finiquito",
+          url: "/funeraria/documento_finiquitado",
           tipo: "pdf"
         },
         {
