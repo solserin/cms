@@ -14,4 +14,9 @@ class VentasPlanes extends Model
                 'nombre'
             );
     }
+
+    public function conceptos_originales()
+    {
+        return $this->hasMany('App\PlanConceptosOriginal', 'ventas_planes_id', 'id')->orderBy('seccion_id', 'asc');
+    }
 }

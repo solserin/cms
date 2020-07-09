@@ -332,37 +332,37 @@ export default {
       documentos: [
         {
           documento: "Formato de Solicitud",
-          url: "/planes/documento_solicitud",
+          url: "/funeraria/documento_solicitud",
           tipo: "pdf"
         },
         {
           documento: "Convenio",
-          url: "/planes/documento_convenio",
+          url: "/funeraria/documento_convenio",
           tipo: "pdf"
         },
         {
           documento: "Título",
-          url: "/planes/documento_titulo",
+          url: "/funeraria/documento_titulo",
           tipo: "pdf"
         },
         {
           documento: "Estado de cuenta",
-          url: "/planes/documento_estado_de_cuenta_planes",
+          url: "/funeraria/documento_estado_de_cuenta_planes",
           tipo: "pdf"
         },
         {
           documento: "Talonario de Pagos",
-          url: "/planes/referencias_de_pago",
+          url: "/funeraria/referencias_de_pago",
           tipo: "pdf"
         },
         {
           documento: "Reglamento de Pago",
-          url: "/planes/reglamento_pago",
+          url: "/funeraria/reglamento_pago",
           tipo: "pdf"
         },
         {
           documento: "Acuse de cancelación",
-          url: "/planes/acuse_cancelacion",
+          url: "/funeraria/acuse_cancelacion",
           tipo: "pdf"
         }
       ],
@@ -433,7 +433,7 @@ export default {
       if (tipo == "pago") {
         this.request.id_pago = parametro;
       } else {
-        this.request.venta_id = this.datosVenta.ventas_terrenos_id;
+        this.request.venta_id = this.datosVenta.ventas_planes_id;
       }
 
       this.request.destinatario = this.datosVenta.nombre;
