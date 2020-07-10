@@ -70,7 +70,7 @@ export default {
     },
 
     cancelar_venta(datos) {
-        let call = "/cementerio/cancelar_venta";
+        let call = "/funeraria/cancelar_venta";
         return axios.post(call, datos);
     },
 

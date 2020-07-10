@@ -32,6 +32,7 @@ Route::get('funeraria/documento_finiquitado', 'FunerariaController@documento_fin
 Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
 Route::get('funeraria/referencias_de_pago', 'FunerariaController@referencias_de_pago');
 Route::get('funeraria/reglamento_pago', 'FunerariaController@reglamento_pago');
+Route::get('funeraria/acuse_cancelacion', 'FunerariaController@acuse_cancelacion');
 /**fin de rutas de modulo en proceso */
 
 
@@ -140,9 +141,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('funeraria/get_precio_by_id', 'FunerariaController@get_precio_by_id');
     Route::post('funeraria/update_precio', 'FunerariaController@update_precio');
     Route::post('funeraria/enable_disable', 'FunerariaController@enable_disable');
-
     Route::get('funeraria/pdf_plan_funerario/{idioma?}', 'FunerariaController@pdf_plan_funerario');
     Route::get('funeraria/planes_funerarios/{idioma?}', 'FunerariaController@planes_funerarios');
+    Route::post('funeraria/cancelar_venta', 'FunerariaController@cancelar_venta');
+
     /**rutas de pagos */
     Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
     Route::post('pagos/guardar_pago', 'PagosController@guardar_pago');

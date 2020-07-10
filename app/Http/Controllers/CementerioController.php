@@ -2117,12 +2117,7 @@ class CementerioController extends ApiController
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
 
-            if (!empty($datos_venta)) {
-                if ($datos_venta['operacion_status'] != 0) {
-                    return $this->errorResponse('Error al cargar los datos.', 409);
-                }
-            } else {
-                /**datos vacios */
+            if (empty($datos_venta)) {
                 return $this->errorResponse('Error al cargar los datos.', 409);
             }
 
@@ -2138,7 +2133,7 @@ class CementerioController extends ApiController
                 'title' => $name_pdf,
                 'footer-html' => view('cementerios.acuse_cancelacion.footer'),
             ]);
-            if ($datos_venta['operacion_status'] == 0) {
+            if ($datos_venta['operacion_status'] != 0) {
                 $pdf->setOptions([
                     'header-html' => view('cementerios.acuse_cancelacion.header')
                 ]);

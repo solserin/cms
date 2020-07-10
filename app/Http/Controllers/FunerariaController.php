@@ -2325,4 +2325,150 @@ class FunerariaController extends ApiController
             return $this->errorResponse('Error al cargar los datos.', 409);
         }
     }
+
+    public function acuse_cancelacion(Request $request)
+    {
+        try {
+            /*
+            $id_venta = 4;
+            $email = false;
+            $email_to = 'hector@gmail.com';
+            */
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_venta = $requestVentasList['venta_id'];
+
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            //obtengo la informacion de esa venta
+            $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+
+            if (empty($datos_venta)) {
+                /**datos vacios */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('funeraria/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['nombre']) . '.pdf';
+
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.acuse_cancelacion.footer'),
+            ]);
+            if ($datos_venta['operacion_status'] != 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.acuse_cancelacion.header')
+                ]);
+            }
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 13.4);
+            $pdf->setOption('margin-right', 13.4);
+            $pdf->setOption('margin-top', 9.4);
+            $pdf->setOption('margin-bottom', 13.4);
+            $pdf->setOption('page-size', 'A4');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_venta['nombre']),
+                    'ACUSE DE CANCELACIÓN',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+    }
+
+
+    /**CANCELAR LA VENTA */
+    public function cancelar_venta(Request $request)
+    {
+        //return $request->minima_cuota_inicial;
+        //validaciones directas sin condicionales
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar este servicio.', 409);
+        }
+        $datos_venta = $this->get_ventas($request, $request->venta_id, '')[0];
+
+        /**unicamente puede regresarse lo que  se ha cubierto de capital */
+        $validaciones = [
+            'venta_id' => 'required',
+            'motivo.value' => 'required',
+            'cantidad' => 'numeric|min:0|' . 'max:' . $datos_venta['abonado_capital'],
+        ];
+
+
+        $mensajes = [
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'max' => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($datos_venta['abonado_capital'], 2),
+            'min' => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        /**validar si la propiedad tiene gente sepultada */
+        /**pendiente
+         * pendiente
+         * pendiente
+         * pendiente
+         */
+
+        /**validar si la propiedad no fue dada de baja ya */
+
+        if ($datos_venta['operacion_status'] == 0) {
+            return $this->errorResponse('Esta venta ya habia sido dada de baja.', 409);
+        }
+
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('operaciones')->where('ventas_planes_id', $request->venta_id)->update(
+                [
+                    'motivos_cancelacion_id' => $request['motivo.value'],
+                    'fecha_cancelacion' => now(),
+                    'cantidad_a_regresar_cancelacion' => (float) $request->cantidad,
+                    'cancelo_id' => (int) $request->user()->id,
+                    'nota_cancelacion' => $request->comentario,
+                    'status' => 0
+                ]
+            );
+            DB::commit();
+            return $request->venta_id;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
 }

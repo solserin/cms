@@ -89,7 +89,7 @@
                                 clave de venta
                             </div>
                             <p class="control-valor">
-                                {{ $datos['venta_terreno']['id'] }}
+                                {{ $datos['venta_plan']['id'] }}
                                 <div class="control bg-header size-13px">
                                     Fecha de Cancelación
                                 </div>
@@ -111,7 +111,7 @@
                             <tr>
                                 <td class="w-100 left">
                                     <span class="uppercase bold size-15px letter-spacing-1">Acuse de Cancelación de
-                                        Venta de Terreno:</span><br><br>
+                                        Venta de Plan Funeario:</span><br><br>
                                     <span class="bold uppercase">Registró acuse:</span> <span
                                         class="uppercase">{{ $datos['cancelador']['nombre'] }}</span><br>
                                     <span class="bold uppercase">Cliente:</span> {{ $datos['nombre'] }}<br>
@@ -126,13 +126,60 @@
             <p class="texto-base justificar line-base">
                 Por medio de la presente, <span class="capitalize bold">{{$empresa->nombre_comercial}}</span> notifica
                 la cancelación del contrato con número de convenio: <span
-                    class="capitalize bold">{{$datos['numero_convenio']}}</span> por concepto de venta de
-                terreno con las siguientes características: tipo propiedad <span
-                    class="capitalize bold">{{$datos['venta_terreno']['tipo_texto']}}</span>, ubicación <span
-                    class="capitalize bold">{{$datos['venta_terreno']['ubicacion_texto']}}</span> y capacidad de (<span
-                    class="capitalize bold">{{$datos['venta_terreno']['tipo_propiedad']['capacidad']}}</span>)
-                Gaveta(s).
+                    class="capitalize bold">{{$datos['numero_convenio']}}</span> por concepto de plan funerario a futuro
+                con las
+                siguientes características: plan funerario (<span
+                    class="capitalize bold">{{$datos['venta_plan']['nombre_original']}}</span>).
             </p>
+            @if(count($datos['venta_plan']['conceptos_originales'])>0)
+            <?php
+                     $seccion='';
+                     for ($id_seccion=1; $id_seccion < 5; $id_seccion++) { 
+                        if($id_seccion==1){
+                            $seccion="incluye";
+                        }elseif($id_seccion==2){
+                            $seccion="en caso de inhumación";
+                        }elseif($id_seccion==3){
+                            $seccion="en caso de cremación";
+                        }elseif($id_seccion==4){
+                            $seccion="en caso de velación";
+                        }
+                $mostrar=false;
+                    foreach ($datos['venta_plan']['conceptos_originales'] as $index => $concepto) {
+                       if($concepto['seccion_id']==$id_seccion){
+                           $mostrar=true;
+                       break;
+                       }
+                    }//en foreach
+                
+                    if($mostrar==true){
+                ?>
+            <p class="texto-sm justificar line-base uppercase bold">
+                {{ $seccion }}
+            </p>
+            <div class="lista pl-11 -mt-1">
+                @foreach($datos['venta_plan']['conceptos_originales'] as $index=>$concepto)
+                @if ($concepto['seccion_id']==$id_seccion)
+                <p class="texto-base justificar line-base">
+                    <span class="lowercase bold texto-sm -ml-6">{{ letra_alfabeto($index) }}) </span>
+                    <span class="ml-2">
+                        {{ $concepto['concepto'] }}
+                    </span>
+                </p>
+                @endif
+
+                @endforeach
+            </div>
+            <?php
+                    }//end if mostrar
+                     }//en for
+                     ?>
+
+            @else
+            <p class="texto-base justificar line-base center uppercase bg-gray bold">
+                no se han capturado servicios/artículos para este convenio.
+            </p>
+            @endif
 
             <p class="texto-base justificar line-base">
                 Evento producido por el siguiente motivo: <span

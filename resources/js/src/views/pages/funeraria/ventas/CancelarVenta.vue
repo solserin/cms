@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-cancelar_cementerio normal-forms cancelar_cementerio background-header-forms"
+      class="forms-popups-cancelar_planes normal-forms cancelar_planes background-header-forms"
       fullscreen
       title="Cancelar Venta de Terreno"
       :active.sync="showVentana"
@@ -33,11 +33,13 @@
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2">
             <div class="w-full pt-3 text-center">
-              <span class="font-medium text-dark text-lg">Propiedad:</span>
+              <span class="font-medium text-dark text-lg"
+                >Tipo de Plan Funerario:</span
+              >
               <div class="py-1">
                 <span class="capitalize">
-                  <span class="capitalize" v-if="datosVenta.venta_terreno">{{
-                    datosVenta.venta_terreno.ubicacion_texto
+                  <span class="capitalize" v-if="datosVenta.venta_plan">{{
+                    datosVenta.venta_plan.nombre_original
                   }}</span>
                 </span>
               </div>
@@ -45,7 +47,7 @@
 
             <div class="w-full pt-3 text-center">
               <span class="font-medium text-dark text-lg"
-                >Titular de la Propiedad:</span
+                >Titular del Plan Funerario:</span
               >
               <div class="py-1">
                 <span class="capitalize" v-if="datosVenta.nombre">{{
@@ -187,7 +189,7 @@
 <script>
 import Password from "@pages/confirmar_password";
 import vSelect from "vue-select";
-import cementerio from "@services/cementerio";
+import planes from "@services/planes";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 export default {
   components: {
@@ -222,7 +224,7 @@ export default {
           this.form.cantidad = "0.00";
           this.$vs.loading();
           try {
-            let res = await cementerio.consultar_venta_id(this.getVentaId);
+            let res = await planes.consultar_venta_id(this.getVentaId);
             this.datosVenta = res.data[0];
             this.$vs.loading.close();
           } catch (err) {
@@ -364,7 +366,7 @@ export default {
       this.$vs.loading();
       this.form.venta_id = this.getVentaId;
       try {
-        let res = await cementerio.cancelar_venta(this.form);
+        let res = await planes.cancelar_venta(this.form);
         console.log("cancelar_venta -> res", res);
         if (res.data >= 1) {
           //success
