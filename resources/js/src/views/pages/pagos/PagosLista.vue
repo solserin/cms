@@ -323,7 +323,6 @@ export default {
       this.request.destinatario =
         datos.referencias_cubiertas[0].operacion_del_pago.cliente.nombre;
       this.openReportesListaLista = true;
-      this.$vs.loading.close();
     },
     closeFormularioPagos() {
       this.verFormularioPagos = false;
@@ -331,9 +330,12 @@ export default {
     retorno_pagos(datos) {
       (async () => {
         try {
+          this.$vs.loading();
           let res = await pagos.get_pago_id(datos.id_pago);
           this.openReporte(res.data[0]);
+          this.$vs.loading.close();
         } catch (error) {
+          this.$vs.loading.close();
           this.$vs.notify({
             title: "Error",
             text:
@@ -439,12 +441,16 @@ export default {
       })();
     },
     retorno_pago(dato) {
+      this.$vs.loading();
       this.openCancelar = false;
+
       (async () => {
         try {
           let res = await pagos.get_pago_id(dato);
           this.openReporte(res.data[0]);
+          this.$vs.loading.close();
         } catch (error) {
+          this.$vs.loading.close();
           this.$vs.notify({
             title: "Error",
             text:

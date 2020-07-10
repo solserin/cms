@@ -451,7 +451,7 @@ class CementerioController extends ApiController
                 (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->costo_neto, 2, PHP_ROUND_HALF_UP) != round($datos_venta['total'], 2, PHP_ROUND_HALF_UP) ||
-                    $request->pago_inicial != count($datos_venta['pagos_programados']) > 0 ? round($datos_venta['pagos_programados'][0]['monto_programado'], 2, PHP_ROUND_HALF_UP) : 0 ||
+                    ((float) $request->pago_inicial) != (count($datos_venta['pagos_programados']) > 0 ? ((float) $datos_venta['pagos_programados'][0]['monto_programado']) : 0) ||
                     round($request->descuento, 2, PHP_ROUND_HALF_UP) != round($datos_venta['descuento'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP) != round($datos_venta['costo_neto_pronto_pago'], 2, PHP_ROUND_HALF_UP))
             ) {
@@ -460,7 +460,7 @@ class CementerioController extends ApiController
                     /**si la venta no fue gratis */
                     if ($datos_venta['pagos_realizados'] > 0) {
                         return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
-                financiamiento, etc. Esto se debe a que existen pagos vigentes relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
+                financiamiento, etc. Esto se debe a que existen pagos relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
                     } else {
                         $reprogramar_pagos = true;
                     }

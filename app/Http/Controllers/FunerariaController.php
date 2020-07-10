@@ -810,7 +810,7 @@ class FunerariaController extends ApiController
             /**solo para modificaciones */
             //datos de la venta
             'plan_funerario.value' => 'required',
-            'plan_funerario.label' => 'required',
+            'plan_funerario.plan' => 'required',
             /**plan en español */
             'plan_funerario.plan_ingles' => 'required',
             'plan_funerario.secciones.*.conceptos.*.seccion' => 'required',
@@ -1016,22 +1016,55 @@ class FunerariaController extends ApiController
              * beneficiarios
              */
             /**verificando que no hay modificado nada relativo a precios */
-
+            /**verificando si cambio algo relativo al plan funerario */
+            $plan_original = [
+                'plan' => $datos_venta['venta_plan']['nombre_original'],
+                'plan_ingles' => $datos_venta['venta_plan']['nombre_original_ingles'],
+                'nota' => $datos_venta['venta_plan']['nota_original'],
+                'nota_ingles' => $datos_venta['venta_plan']['nota_original_ingles'],
+                'value' => $datos_venta['venta_plan']['planes_funerarios_id'],
+                'secciones' => $datos_venta['venta_plan']['secciones_original']
+            ];
+            /**checando si cambio algo del nombre del plan de venta */
+            $es_igual = true;
+            if (
+                $plan_original['plan'] != $request->plan_funerario['plan'] ||
+                $plan_original['plan_ingles'] != $request->plan_funerario['plan_ingles'] ||
+                $plan_original['nota'] != $request->plan_funerario['nota']
+                || $plan_original['nota_ingles'] != $request->plan_funerario['nota_ingles']
+            ) {
+                $es_igual = false;
+            }
+            if ($es_igual == true) {
+                foreach ($request->plan_funerario['secciones'] as $key_seccion => $seccion) {
+                    if (count($datos_venta['venta_plan']['secciones_original'][$key_seccion]['conceptos']) == count($seccion['conceptos'])) {
+                        foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
+                            if ($concepto['concepto'] != $datos_venta['venta_plan']['secciones_original'][$key_seccion]['conceptos'][$key_concepto]['concepto']) {
+                                $es_igual = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        $es_igual = false;
+                        break;
+                    }
+                }
+            }
             if (
                 $request->fecha_venta != $datos_venta['fecha_operacion'] ||
                 (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->costo_neto, 2, PHP_ROUND_HALF_UP) != round($datos_venta['total'], 2, PHP_ROUND_HALF_UP) ||
-                    $request->pago_inicial != count($datos_venta['pagos_programados']) > 0 ? round($datos_venta['pagos_programados'][0]['monto_programado'], 2, PHP_ROUND_HALF_UP) : 0 ||
+                    ((float) $request->pago_inicial) != (count($datos_venta['pagos_programados']) > 0 ? ((float) $datos_venta['pagos_programados'][0]['monto_programado']) : 0) ||
                     round($request->descuento, 2, PHP_ROUND_HALF_UP) != round($datos_venta['descuento'], 2, PHP_ROUND_HALF_UP) ||
-                    round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP) != round($datos_venta['costo_neto_pronto_pago'], 2, PHP_ROUND_HALF_UP))
+                    round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP) != round($datos_venta['costo_neto_pronto_pago'], 2, PHP_ROUND_HALF_UP)) ||
+                !$es_igual
             ) {
-
                 if ($datos_venta['total'] > 0) {
                     /**si la venta no fue gratis */
                     if ($datos_venta['pagos_realizados'] > 0) {
-                        return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
-                financiamiento, etc. Esto se debe a que existen pagos vigentes relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
+                        return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, tipo de venta, tipo de plan funerario, tipo de 
+                financiamiento, etc. Esto se debe a que existen pagos relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
                     } else {
                         $reprogramar_pagos = true;
                     }
@@ -1058,7 +1091,7 @@ class FunerariaController extends ApiController
                         'tipo_financiamiento' => $request->tipo_financiamiento,
                         'vendedor_id' => (int) $request->vendedor['value'],
                         'planes_funerarios_id' => $request->plan_funerario['value'],
-                        'nombre_original' => $request->plan_funerario['label'],
+                        'nombre_original' => $request->plan_funerario['plan'],
                         'nombre_original_ingles' => $request->plan_funerario['plan_ingles'],
                         'nota_original' => $request->plan_funerario['nota'],
                         'nota_original_ingles' => $request->plan_funerario['nota_ingles']
@@ -1147,14 +1180,44 @@ class FunerariaController extends ApiController
                 /**es modificar */
                 DB::table('ventas_planes')->where('id', '=', $request->id_venta)->update(
                     [
-                        'ubicacion' => $request->ubicacion,
-                        'propiedades_id' => $request->propiedades_id,
-                        'tipo_propiedades_id' => $request->tipo_propiedades_id,
-                        'vendedor_id' => (int) $request->vendedor['value'],
                         'tipo_financiamiento' => $request->tipo_financiamiento,
-                        'salarios_minimos' => $request->salarios_minimos
+                        'vendedor_id' => (int) $request->vendedor['value'],
+                        'planes_funerarios_id' => $request->plan_funerario['value'],
+                        'nombre_original' => $request->plan_funerario['plan'],
+                        'nombre_original_ingles' => $request->plan_funerario['plan_ingles'],
+                        'nota_original' => $request->plan_funerario['nota'],
+                        'nota_original_ingles' => $request->plan_funerario['nota_ingles']
                     ]
                 );
+
+                DB::table('plan_conceptos_original')->where('ventas_planes_id', $request->id_venta)->delete();
+                /**guardando los conceptos del plan */
+                foreach ($request->plan_funerario['secciones'] as $key_seccion => $seccion) {
+                    foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
+                        $seccion = 1;
+                        if ($concepto['seccion'] == 'incluye') {
+                            $seccion = 1;
+                        } elseif ($concepto['seccion'] == 'inhumacion') {
+                            $seccion = 2;
+                        } elseif ($concepto['seccion'] == 'cremacion') {
+                            $seccion = 3;
+                        } elseif ($concepto['seccion'] == 'velacion') {
+                            $seccion = 4;
+                        } else {
+                            /**error no existe el concepto */
+                            return $this->errorResponse('Los conceptos no siguen el formato correcto.', 409);
+                        }
+                        DB::table('plan_conceptos_original')->insert(
+                            [
+                                'seccion_id' => $seccion,
+                                'ventas_planes_id' => $request->id_venta,
+                                'concepto' => $concepto['concepto'],
+                                'concepto_ingles' => $concepto['concepto_ingles']
+                            ]
+                        );
+                    }
+                }
+
 
                 DB::table('operaciones')->where('id', '=', $datos_venta['operacion_id'])->update(
                     [
@@ -1163,7 +1226,7 @@ class FunerariaController extends ApiController
                         'numero_solicitud' => ($request->tipo_financiamiento == 2) ? trim($request->solicitud) : null,
                         /**venta  liquidada solamente */
                         'numero_convenio' => trim($request->convenio),
-                        'numero_titulo' => trim($request->titulo),
+                        //'numero_titulo' => trim($request->titulo),
                         'subtotal' => $subtotal,
                         'descuento' => $descuento,
                         'impuestos' => $iva,
@@ -1201,7 +1264,7 @@ class FunerariaController extends ApiController
                     /**programacion de pagos */
                     if ($costo_neto > 0) {
                         /**si la cantidad que resta a pagar es mayor a cero se manda llamar la programcion de pagos */
-                        $this->programarPagos($request, $datos_venta['operacion_id'], $request->id_venta);
+                        $CementerioController->programarPagos($request, $datos_venta['operacion_id'], $request->id_venta, '004');
                     } else {
                         /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
                         if (trim($datos_venta['numero_titulo']) == '') {
@@ -1210,7 +1273,7 @@ class FunerariaController extends ApiController
                     }
                 }
                 //captura de los beneficiarios
-                $this->guardarBeneficiarios($request, $datos_venta['operacion_id']);
+                $CementerioController->guardarBeneficiarios($request, $datos_venta['operacion_id']);
                 /**pendiente hacer modificacion de progrmacion de pagos */
             } //fin else de modificar venta de propiedad
 

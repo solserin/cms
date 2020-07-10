@@ -270,7 +270,6 @@ export default {
           this.reporteSeleccionado.value,
           this.request_datos
         );
-        this.$vs.loading.close();
         const file = new Blob([res.data], { type: "application/pdf" });
         this.pdf_iframe_source = URL.createObjectURL(file);
         if (res.data.type != "application/pdf") {
@@ -285,6 +284,7 @@ export default {
             time: "4000"
           });
         }
+        this.$vs.loading.close();
       } catch (err) {
         this.pdf_iframe_source = "";
         this.pdf_iframe_source = "";

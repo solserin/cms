@@ -149,7 +149,7 @@
         :show="openConfirmar"
         :callback-on-success="callback"
         @closeVerificar="openConfirmar = false"
-        :accion="'Cancelar venta de propiedad'"
+        :accion="'Cancelar Movimiento de Cobranza'"
       ></Password>
 
       <ConfirmarDanger

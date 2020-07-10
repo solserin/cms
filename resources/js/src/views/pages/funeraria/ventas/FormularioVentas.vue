@@ -1401,6 +1401,7 @@ export default {
   },
   watch: {
     show: function(newValue, oldValue) {
+      this.limpiarValidation();
       if (newValue == true) {
         this.$nextTick(() =>
           this.$refs["cliente_ref"].$el.querySelector("input").focus()
@@ -1719,6 +1720,7 @@ export default {
         tipo_financiamiento: 2 /**directamente solo a futuro */,
         plan_funerario: {
           label: "Seleccione 1",
+          plan: "",
           plan_ingles: "",
           nota: "",
           nota_ingles: "",
@@ -1864,18 +1866,7 @@ export default {
           } else if (err.response.status == 422) {
             //checo si existe cada error
             this.errores = err.response.data.error;
-            if (this.errores.ubicacion) {
-              //la propiedad esa ya ha sido vendida
-              this.$vs.notify({
-                title: "Seleccionar Terreno",
-                text: "Este terreno ya ha sido vendido previamente.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "danger",
-                time: 5000
-              });
-            }
-
+            console.log("guardar_venta ->  this.errores", this.errores);
             this.$vs.notify({
               title: "Guardar Venta",
               text: "Verifique los errores encontrados en los datos.",
@@ -1982,6 +1973,7 @@ export default {
         this.planes_funerarios = [];
         this.planes_funerarios.push({
           label: "Seleccione 1",
+          plan: "",
           plan_ingles: "",
           nota: "",
           nota_ingles: "",
@@ -1989,12 +1981,10 @@ export default {
           secciones: [],
           precios: []
         });
-        if (this.getTipoformulario == "agregar") {
-          this.form.plan_funerario = this.planes_funerarios[0];
-        }
         res.data.forEach(element => {
           this.planes_funerarios.push({
             label: element.plan,
+            plan: element.plan,
             plan_ingles: element.plan_ingles,
             nota: element.nota,
             nota_ingles: element.nota_ingles,
@@ -2003,6 +1993,15 @@ export default {
             precios: element.precios
           });
         });
+        if (this.getTipoformulario == "agregar") {
+          if (this.planes_funerarios.length > 1) {
+            /**selecciona el primer plan que venga en el arreglo */
+            this.form.plan_funerario = this.planes_funerarios[1];
+          } else {
+            /**selecciona el "Seleccione 1" */
+            this.form.plan_funerario = this.planes_funerarios[0];
+          }
+        }
       } catch (error) {
         /**error al cargar vendedores */
         this.$vs.notify({
@@ -2097,50 +2096,60 @@ export default {
           /**logica para traer los datos originales de la venta */
           let plan_encontrado = false;
           this.planesVenta.forEach(element => {
-            if (
-              element.value == this.datosVenta.financiamiento &&
-              element.costo_neto == this.datosVenta.total &&
-              element.costo_neto_pronto_pago ==
-                this.datosVenta.costo_neto_pronto_pago
-            ) {
-              /**en caso de que se encuentre el orignal */
-              this.form.planVenta = element;
-              plan_encontrado = true;
-              return;
+            if (element.value != "") {
+              if (
+                element.value == this.datosVenta.financiamiento &&
+                element.costo_neto == this.datosVenta.total &&
+                element.costo_neto_pronto_pago ==
+                  this.datosVenta.costo_neto_pronto_pago
+              ) {
+                /**en caso de que se encuentre el original */
+                this.form.planVenta = element;
+                plan_encontrado = true;
+                return;
+              }
             }
           });
           if (plan_encontrado == false) {
-            if (this.form.planVenta.value == "") {
-              /**no se encontro el plan y se debe de agregar uno como de origen */
-              let planVenta = {
-                label:
-                  this.datosVenta.financiamiento == 1
-                    ? "Pago Único/Uso Inmediato (Plan Original)"
-                    : "Pago a " +
-                      this.datosVenta.financiamiento +
-                      " Meses/a Futuro(origen venta)",
-                value: Number(this.datosVenta.financiamiento),
-                subtotal: Number(this.datosVenta.subtotal),
-                impuestos: Number(this.datosVenta.impuestos),
-                costo_neto: Number(this.datosVenta.total),
-                pago_inicial: Number(
-                  this.datosVenta.pagos_programados.length > 0
-                    ? this.datosVenta.pagos_programados[0].monto_programado
-                    : 0
-                ),
-                descuento_pronto_pago_b: Number(
-                  this.datosVenta.descuento_pronto_pago_b
-                ),
-                costo_neto_pronto_pago: Number(
-                  this.datosVenta.costo_neto_pronto_pago
-                ),
-                porcentaje_pronto_pago: 0,
-                costo_neto_financiamiento_normal: Number(
-                  this.datosVenta.costo_neto_financiamiento_normal
-                )
-              };
-              this.planesVenta.push(planVenta);
-              this.form.planVenta = planVenta;
+            /**pregurnando si el plan de venta no es el original */
+            if (
+              this.form.plan_funerario.label ==
+              this.form.plan_funerario.plan + "(Original de Venta)"
+            ) {
+              if (this.form.planVenta.value == "") {
+                /**no se encontro el plan y se debe de agregar uno como de origen */
+                let planVenta = {
+                  label:
+                    this.datosVenta.financiamiento == 1
+                      ? "Pago Único/Uso Inmediato (Plan Original)"
+                      : "Pago a " +
+                        this.datosVenta.financiamiento +
+                        " Meses/a Futuro(origen venta)",
+                  value: Number(this.datosVenta.financiamiento),
+                  subtotal: Number(this.datosVenta.subtotal),
+                  impuestos: Number(this.datosVenta.impuestos),
+                  costo_neto: Number(this.datosVenta.total),
+                  pago_inicial: Number(
+                    this.datosVenta.pagos_programados.length > 0
+                      ? this.datosVenta.pagos_programados[0].monto_programado
+                      : 0
+                  ),
+                  descuento_pronto_pago_b: Number(
+                    this.datosVenta.descuento_pronto_pago_b
+                  ),
+                  costo_neto_pronto_pago: Number(
+                    this.datosVenta.costo_neto_pronto_pago
+                  ),
+                  porcentaje_pronto_pago: 0,
+                  costo_neto_financiamiento_normal: Number(
+                    this.datosVenta.costo_neto_financiamiento_normal
+                  )
+                };
+                this.planesVenta.push(planVenta);
+                this.form.planVenta = planVenta;
+              } else {
+                this.seleccionarPlanVenta();
+              }
             } else {
               this.seleccionarPlanVenta();
             }
@@ -2166,7 +2175,7 @@ export default {
         this.$vs.notify({
           title: "Planes de Venta",
           text:
-            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de planes > Funeraria > Planes a Futuro > Planes de Venta'",
+            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de Funeraria > Planes a Futuro > Planes de Venta'",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -2193,6 +2202,7 @@ export default {
     limpiarVentana() {
       this.form.plan_funerario = {
         label: "Seleccione 1",
+        plan: "",
         plan_ingles: "",
         nota: "",
         nota_ingles: "",
@@ -2314,20 +2324,25 @@ export default {
         /**verificar si el plan funerario se ha mantenido igual que cuando se vendio */
         /**aqui se se recorrer el array de planes funerarios con la informacion original del plan */
         let plan_original = {
-          label: this.datosVenta.venta_plan.nombre_original,
+          plan: this.datosVenta.venta_plan.nombre_original,
           plan_ingles: this.datosVenta.venta_plan.nombre_original_ingles,
           nota: this.datosVenta.venta_plan.nota_original,
           nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
           value: this.datosVenta.venta_plan.planes_funerarios_id,
           secciones: this.datosVenta.venta_plan.secciones_original
         };
+        /**guarda los precios en caso de que no se encuentre el plan original y se deba agregar precios por separado */
+        let precios_plan = [];
         let es_igual = true;
-
         this.planes_funerarios.forEach((element, index_element) => {
           if (index_element > 0) {
+            /**capturando los precios del plan  de la venta original*/
+            if (element.value == plan_original.value) {
+              precios_plan = element.precios;
+            }
             if (
               element.value == plan_original.value &&
-              element.label == plan_original.label &&
+              element.plan == plan_original.plan &&
               element.plan_ingles == plan_original.plan_ingles &&
               element.nota == plan_original.nota &&
               element.nota_ingles == plan_original.nota_ingles
@@ -2368,14 +2383,11 @@ export default {
                   }
                 }
               });
-
               /**si se encontro */
               if (es_igual == true) {
                 console.log("si esta");
                 this.form.plan_funerario = element;
                 return;
-              } else {
-                console.log("no se encontro conceptos");
               }
               return;
             } else {
@@ -2385,6 +2397,25 @@ export default {
           }
         });
 
+        if (es_igual == false) {
+          plan_original = {
+            label:
+              this.datosVenta.venta_plan.nombre_original +
+              "(Original de Venta)",
+            plan: this.datosVenta.venta_plan.nombre_original,
+            plan_ingles: this.datosVenta.venta_plan.nombre_original_ingles,
+            nota: this.datosVenta.venta_plan.nota_original,
+            nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
+            value: this.datosVenta.venta_plan.planes_funerarios_id,
+            secciones: this.datosVenta.venta_plan.secciones_original,
+            precios: precios_plan
+          };
+          this.planes_funerarios.push(plan_original);
+          this.form.plan_funerario = plan_original;
+          console.log("consultar_venta_id -> plan_original", plan_original);
+          /**si no esta, se agrega el concepto original*/
+          console.log("no esta");
+        }
         /**cargando la antiguedad de la venta */
         this.ventasAntiguedad.forEach(element => {
           if (element.value == this.datosVenta.antiguedad_operacion_id) {
@@ -2475,6 +2506,17 @@ export default {
           time: "10000"
         });
       }
+    },
+    limpiarValidation() {
+      this.$validator.pause();
+      this.$nextTick(() => {
+        this.$validator.errors.clear();
+        this.$validator.fields.items.forEach(field => field.reset());
+        this.$validator.fields.items.forEach(field =>
+          this.errors.remove(field)
+        );
+        this.$validator.resume();
+      });
     }
   },
   created() {}
