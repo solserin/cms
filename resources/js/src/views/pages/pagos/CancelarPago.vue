@@ -334,6 +334,7 @@ export default {
       this.form.pago_id = this.getPagoId;
       try {
         let res = await pagos.cancelar_pago(this.form);
+        this.$vs.loading.close();
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -344,7 +345,6 @@ export default {
             color: "success",
             time: 5000
           });
-          this.cerrarVentana();
           this.$emit("retorno_pago", res.data);
         } else {
           this.$vs.notify({
@@ -356,7 +356,6 @@ export default {
             time: 8000
           });
         }
-        this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
           if (err.response.status == 403) {

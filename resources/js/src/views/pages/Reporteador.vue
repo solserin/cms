@@ -262,7 +262,6 @@ export default {
     cancel() {
       this.$emit("closeReportes");
     },
-
     async get_pdf() {
       this.$vs.loading();
       try {

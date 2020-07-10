@@ -441,9 +441,8 @@ export default {
       })();
     },
     retorno_pago(dato) {
-      this.$vs.loading();
       this.openCancelar = false;
-
+      this.$vs.loading();
       (async () => {
         try {
           let res = await pagos.get_pago_id(dato);

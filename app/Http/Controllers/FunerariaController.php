@@ -1076,11 +1076,8 @@ class FunerariaController extends ApiController
             }
         }
 
-
         /**mando llamar las funciones que ya estan en el controlado de cementerio */
         $CementerioController = new CementerioController();
-
-
         try {
             DB::beginTransaction();
             if ($tipo_servicio == 'agregar') {

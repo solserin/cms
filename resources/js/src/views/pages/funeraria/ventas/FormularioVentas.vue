@@ -1866,7 +1866,6 @@ export default {
           } else if (err.response.status == 422) {
             //checo si existe cada error
             this.errores = err.response.data.error;
-            console.log("guardar_venta ->  this.errores", this.errores);
             this.$vs.notify({
               title: "Guardar Venta",
               text: "Verifique los errores encontrados en los datos.",
@@ -1897,7 +1896,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await planes.modificar_venta(this.form);
-        console.log("modificar_venta -> res.data", res.data);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -1924,7 +1922,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("modificar_venta -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -2385,7 +2382,6 @@ export default {
               });
               /**si se encontro */
               if (es_igual == true) {
-                console.log("si esta");
                 this.form.plan_funerario = element;
                 return;
               }
@@ -2412,9 +2408,7 @@ export default {
           };
           this.planes_funerarios.push(plan_original);
           this.form.plan_funerario = plan_original;
-          console.log("consultar_venta_id -> plan_original", plan_original);
           /**si no esta, se agrega el concepto original*/
-          console.log("no esta");
         }
         /**cargando la antiguedad de la venta */
         this.ventasAntiguedad.forEach(element => {
