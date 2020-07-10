@@ -1239,6 +1239,7 @@ class FunerariaController extends ApiController
         $resultado_query = Operaciones::with('pagosProgramados.pagados')
             ->with('venta_plan.vendedor')
             ->with('venta_plan.conceptos_originales')
+            ->with('venta_plan.conceptos_originales')
             ->with('beneficiarios')
             ->with('AjustesPoliticas')
             ->with('cancelador:id,nombre')
@@ -1682,6 +1683,80 @@ class FunerariaController extends ApiController
             } else {
                 $venta['venta_plan']['tipo_financiamiento_texto'] = 'A Futuro';
             }
+
+            /**agregando los conceptos originales del plan */
+            $secciones = [
+                [
+                    'seccion' => 'incluye',
+                    'seccion_ingles' => 'include',
+                    'conceptos' => []
+                ],
+                [
+                    'seccion' => 'inhumacion',
+                    'seccion_ingles' => 'inhumation',
+                    'conceptos' => []
+                ],
+                [
+                    'seccion' => 'cremacion',
+                    'seccion_ingles' => 'cremation',
+                    'conceptos' => []
+                ],
+                [
+                    'seccion' => 'velacion',
+                    'seccion_ingles' => 'wakefulness',
+                    'conceptos' => []
+                ]
+            ];
+            foreach ($venta['venta_plan']['conceptos_originales'] as $key_seccion => $seccion) {
+                /**agregando los conceptos segun su seccion */
+                if ($seccion['seccion_id'] == 1) {
+                    /**incluye */
+                    array_push(
+                        $secciones[0]['conceptos'],
+                        [
+                            'concepto' => $seccion['concepto'],
+                            'concepto_ingles' => $seccion['concepto_ingles'],
+                            'aplicar_en' => 'plan funerario',
+                            'seccion' => 'incluye'
+                        ]
+                    );
+                } elseif ($seccion['seccion_id'] == 2) {
+                    /**inhumacion */
+                    array_push(
+                        $secciones[1]['conceptos'],
+                        [
+                            'concepto' => $seccion['concepto'],
+                            'concepto_ingles' => $seccion['concepto_ingles'],
+                            'aplicar_en' => 'caso de inhumación',
+                            'seccion' => 'inhumacion'
+                        ]
+                    );
+                } elseif ($seccion['seccion_id'] == 3) {
+                    /**cremacion */
+                    array_push(
+                        $secciones[2]['conceptos'],
+                        [
+                            'concepto' => $seccion['concepto'],
+                            'concepto_ingles' => $seccion['concepto_ingles'],
+                            'aplicar_en' => 'caso de cremación',
+                            'seccion' => 'cremacion'
+                        ]
+                    );
+                } elseif ($seccion['seccion_id'] == 4) {
+                    /**velacion */
+                    array_push(
+                        $secciones[3]['conceptos'],
+                        [
+                            'concepto' => $seccion['concepto'],
+                            'concepto_ingles' => $seccion['concepto_ingles'],
+                            'aplicar_en' => 'caso de velación',
+                            'seccion' => 'velacion'
+                        ]
+                    );
+                }
+            }
+            /**push al array padre */
+            $venta['venta_plan']['secciones_original'] = $secciones;
         } //fin foreach venta
 
         return $resultado_query;

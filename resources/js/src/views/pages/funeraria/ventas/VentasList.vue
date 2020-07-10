@@ -122,7 +122,7 @@
       noDataText="0 Resultados"
     >
       <template slot="header">
-        <h3>Listado de Ventas Realizadas del Cementerio</h3>
+        <h3>Listado de Ventas de Planes Funerarios a Futuro</h3>
       </template>
       <template slot="thead">
         <vs-th>Núm. Venta</vs-th>
@@ -130,7 +130,6 @@
         <vs-th>Uso Venta</vs-th>
         <vs-th>Solicitud</vs-th>
         <vs-th>Convenio</vs-th>
-        <vs-th>Título</vs-th>
         <vs-th>Plan Funerario</vs-th>
         <vs-th>Estatus</vs-th>
         <vs-th>Acciones</vs-th>
@@ -153,11 +152,6 @@
           </vs-td>
           <vs-td :data="data[indextr].numero_convenio">
             <span class="font-medium">{{ data[indextr].numero_convenio }}</span>
-          </vs-td>
-          <vs-td :data="data[indextr].numero_titulo">
-            <span class="font-medium">{{
-              data[indextr].numero_titulo_texto
-            }}</span>
           </vs-td>
           <vs-td :data="data[indextr].venta_plan.nombre_original">
             <span class="capitalize">
@@ -348,12 +342,8 @@ export default {
           value: "2"
         },
         {
-          label: "Núm. Título",
-          value: "3"
-        },
-        {
           label: "Núm. Venta",
-          value: "4"
+          value: "3"
         }
       ],
       serverOptions: {
@@ -422,7 +412,6 @@ export default {
 
       try {
         let res = await planes.get_ventas(this.serverOptions);
-        console.log("get_data -> res", res);
         if (res.data.data) {
           this.ventas = res.data.data;
           this.total = res.data.last_page;

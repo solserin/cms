@@ -65,7 +65,7 @@ export default {
     /**servicios del formulario */
 
     modificar_venta(datos) {
-        let call = "/cementerio/control_ventas/modificar";
+        let call = "/funeraria/control_ventas/modificar";
         return axios.post(call, datos);
     },
 
@@ -77,7 +77,7 @@ export default {
     /**get las ventas para el paginado de ventas */
     get_ventas(param) {
         let service = "/funeraria/get_ventas/all/paginated";
-        if (param.filtro_especifico_opcion == 4) {
+        if (param.filtro_especifico_opcion == 3) {
             /**es de tipo de id venta */
             /**se debe de cambiar la url */
             if (param.numero_control.trim() != "") {

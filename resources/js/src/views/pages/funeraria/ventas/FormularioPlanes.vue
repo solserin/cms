@@ -674,23 +674,44 @@ export default {
           } else {
             /**verificando si la acion es modificar o agregar */
             if (this.index_seccion !== "" && this.index_concepto !== "") {
-              this.form.conceptos[this.index_seccion].conceptos.splice(
-                this.index_concepto,
-                1
-              );
+              /**verificnando si cambio de secion el concepto
+               * si no cambio, solo se actualiza, si cambio se debe de remover para agregar nuevamente
+               */
+              if (
+                this.form.seccion.value !=
+                this.form.conceptos[this.index_seccion].conceptos[
+                  this.index_concepto
+                ].seccion
+              ) {
+                /**cambio la seccion y se debe de quitar el item para reinsertarse */
+                this.form.conceptos[this.index_seccion].conceptos.splice(
+                  this.index_concepto,
+                  1
+                );
+                /**se agrega el concepto al arreglo */
+                this.form.conceptos.forEach(element => {
+                  if (element.seccion == this.form.seccion.value) {
+                    element.conceptos.push({
+                      concepto: this.form.concepto,
+                      concepto_ingles: this.form.concepto_ingles,
+                      aplicar_en: this.form.seccion.label,
+                      seccion: this.form.seccion.value
+                    });
+                  }
+                });
+              } else {
+                /**solo se actualiza */
+                this.form.conceptos[this.index_seccion].conceptos[
+                  this.index_concepto
+                ].concepto = this.form.concepto;
+                this.form.conceptos[this.index_seccion].conceptos[
+                  this.index_concepto
+                ].concepto_ingles = this.form.concepto_ingles;
+              }
+
               /**es modificar */
             }
-            /**se agrega el concepto al arreglo */
-            this.form.conceptos.forEach(element => {
-              if (element.seccion == this.form.seccion.value) {
-                element.conceptos.push({
-                  concepto: this.form.concepto,
-                  concepto_ingles: this.form.concepto_ingles,
-                  aplicar_en: this.form.seccion.label,
-                  seccion: this.form.seccion.value
-                });
-              }
-            });
+
             /**reseteando el concepto */
             this.form.seccion = {
               value: "incluye",

@@ -112,7 +112,7 @@
                   v-validate:plan_funerario_validacion_computed.immediate="
                     'required'
                   "
-                  name="fila_validacion"
+                  name="plan_validacion"
                   data-vv-as=" "
                 >
                   <div slot="no-options">
@@ -121,14 +121,14 @@
                 </v-select>
                 <div>
                   <span class="mensaje-requerido">{{
-                    errors.first("fila_validacion")
+                    errors.first("plan_validacion")
                   }}</span>
                 </div>
                 <div class="mt-2">
                   <span
                     class="mensaje-requerido"
-                    v-if="this.errores['filas.value']"
-                    >{{ errores["filas.value"][0] }}</span
+                    v-if="this.errores['plan_funerario.value']"
+                    >{{ errores["plan_funerario.value"][0] }}</span
                   >
                 </div>
               </div>
@@ -1414,6 +1414,7 @@ export default {
           if (this.getTipoformulario == "agregar") {
             /**acciones cuando el formulario es de agregar */
           } else {
+            /**es modificar */
             /**pasando el valor de la venta id */
             this.form.id_venta = this.get_venta_id;
             /**se cargan los datos al formulario */
@@ -2310,28 +2311,101 @@ export default {
         let res = await planes.consultar_venta_id(this.form.id_venta);
         this.datosVenta = res.data[0];
         /**se comienza a llenar la informacion de los datos */
+        /**verificar si el plan funerario se ha mantenido igual que cuando se vendio */
+        /**aqui se se recorrer el array de planes funerarios con la informacion original del plan */
+        let plan_original = {
+          label: this.datosVenta.venta_plan.nombre_original,
+          plan_ingles: this.datosVenta.venta_plan.nombre_original_ingles,
+          nota: this.datosVenta.venta_plan.nota_original,
+          nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
+          value: this.datosVenta.venta_plan.planes_funerarios_id,
+          secciones: this.datosVenta.venta_plan.secciones_original
+        };
+        let es_igual = true;
+
+        this.planes_funerarios.forEach((element, index_element) => {
+          if (index_element > 0) {
+            if (
+              element.value == plan_original.value &&
+              element.label == plan_original.label &&
+              element.plan_ingles == plan_original.plan_ingles &&
+              element.nota == plan_original.nota &&
+              element.nota_ingles == plan_original.nota_ingles
+            ) {
+              /**el plan se mantiente tal y como se vendio
+               * se procede a ver si los conceptos se mantienen de igual manera
+               */
+              element.secciones.forEach(function callback(
+                seccion,
+                index_seccion
+              ) {
+                if (es_igual == true) {
+                  if (
+                    !(
+                      plan_original.secciones[index_seccion].conceptos.length ==
+                      seccion.conceptos.length
+                    )
+                  ) {
+                    /**no es igual */
+                    es_igual = false;
+                  }
+                  if (es_igual == true) {
+                    /**verificando si cambio algun concepto */
+                    seccion.conceptos.forEach(function callback(
+                      concepto,
+                      index_concepto
+                    ) {
+                      if (
+                        concepto.concepto !=
+                        plan_original.secciones[index_seccion].conceptos[
+                          index_concepto
+                        ].concepto
+                      ) {
+                        es_igual = false;
+                        return;
+                      }
+                    });
+                  }
+                }
+              });
+
+              /**si se encontro */
+              if (es_igual == true) {
+                console.log("si esta");
+                this.form.plan_funerario = element;
+                return;
+              } else {
+                console.log("no se encontro conceptos");
+              }
+              return;
+            } else {
+              /**no esta */
+              es_igual = false;
+            }
+          }
+        });
+
+        /**cargando la antiguedad de la venta */
         this.ventasAntiguedad.forEach(element => {
           if (element.value == this.datosVenta.antiguedad_operacion_id) {
             this.form.ventaAntiguedad = element;
             return;
           }
         });
-
         this.form.id_cliente = this.datosVenta.cliente_id;
         this.form.cliente = this.datosVenta.nombre;
-
         /**verificando si existe el vendedor o si no para crearlo, podria no existir en caso de que haya sido cancelado */
         this.vendedores.forEach(element => {
-          if (element.value == this.datosVenta.venta_terreno.vendedor.id) {
+          if (element.value == this.datosVenta.venta_plan.vendedor.id) {
             this.form.vendedor = element;
           }
         });
         if (this.form.vendedor.value == "") {
           let vendedor = {
-            value: this.datosVenta.venta_terreno.vendedor.id,
+            value: this.datosVenta.venta_plan.vendedor.id,
             label:
               "(" +
-              this.datosVenta.venta_terreno.vendedor.nombre +
+              this.datosVenta.venta_plan.vendedor.nombre +
               ", vendedor de origen)"
           };
           this.vendedores.push(vendedor);
@@ -2350,20 +2424,15 @@ export default {
         /**numeros de control */
         this.form.solicitud = this.datosVenta.numero_solicitud;
         this.form.convenio = this.datosVenta.numero_convenio;
-        this.form.titulo = this.datosVenta.numero_titulo;
-
+        //this.form.titulo = this.datosVenta.numero_titulo;
         /**datos del titular sustituto */
         this.form.titular_sustituto = this.datosVenta.titular_sustituto;
         this.form.parentesco_titular_sustituto = this.datosVenta.parentesco_titular_sustituto;
         this.form.telefono_titular_sustituto = this.datosVenta.telefono_titular_sustituto;
-
         /**beneficairios */
         this.form.beneficiarios = this.datosVenta.beneficiarios;
-
         this.form.nota = this.datosVenta.nota;
-
         /**mostrando los datos relacionados al pago */
-
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
