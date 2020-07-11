@@ -44,14 +44,14 @@ const router = new Router({
                 // =============================================================================
                 {
                     path: "/",
-                    redirect: "/dashboard/analytics",
+                    redirect: "/home",
                     meta: {
                         authRequired: true
                     }
                 },
                 {
-                    path: "/dashboard/analytics",
-                    name: "dashboard-analytics",
+                    path: "/home",
+                    name: "home",
                     component: () => import("./views/HomeInfo.vue"),
                     meta: {
                         rule: "editor",
@@ -414,10 +414,7 @@ router.beforeEach((to, from, next) => {
     /** verificar que este logueado */
     if (to.matched.some(record => record.meta.authRequired)) {
         if (localStorage.getItem("accessToken")) {
-            if (
-                to.path === "/dashboard/analytics" ||
-                to.path === "/pages/profile"
-            ) {
+            if (to.path === "/home" || to.path === "/pages/profile") {
                 return next();
             } else {
                 /**verificando si el usuario tiene permiso para acceder a esa ruta solicitdad */

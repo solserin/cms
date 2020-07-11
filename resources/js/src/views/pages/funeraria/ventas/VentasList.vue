@@ -250,7 +250,7 @@
 
     <PlanesVenta
       :show="openPlanesVenta"
-      @closePlanesCementerio="openPlanesVenta = false"
+      @closePlanesFuneraria="openPlanesVenta = false"
     ></PlanesVenta>
   </div>
 </template>

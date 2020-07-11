@@ -287,7 +287,7 @@ export default {
           if (this.getVerAcuse == true) {
             this.openReporte(
               "Acuse de cancelación",
-              "/planes/acuse_cancelacion",
+              "/funeraria/acuse_cancelacion",
               "",
               ""
             );

@@ -574,7 +574,7 @@ export default {
       }
     },
     cancelar() {
-      this.$emit("closePlanesCementerio");
+      this.$emit("closePlanesFuneraria");
       return;
     },
     retorno_plan(dato) {

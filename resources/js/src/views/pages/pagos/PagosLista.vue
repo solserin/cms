@@ -146,7 +146,7 @@
                   tr.status == 1 ? 'ml-auto mr-2' : 'ml-auto mr-auto'
                 ]"
                 src="@assets/images/pdf.svg"
-                title="Expediente"
+                title="Ver Recibo"
                 @click="openReporte(data[indextr])"
               />
 

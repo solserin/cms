@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-cancelar_planes normal-forms cancelar_planes background-header-forms"
+      class="forms-popups-cancelar_cementerio normal-forms cancelar_planes background-header-forms"
       fullscreen
       title="Cancelar Venta de Terreno"
       :active.sync="showVentana"
