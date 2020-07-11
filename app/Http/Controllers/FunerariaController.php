@@ -2099,13 +2099,25 @@ class FunerariaController extends ApiController
             $pagos_operacion = [];
             $client = new \GuzzleHttp\Client();
             try {
+                /**TRAYENDO EL TOKEN PARA CONSUMIR EL SERVICE */
+                $response = $client->request('POST', config('services.passport.login_endpoint'), [
+                    'form_params' => [
+                        'grant_type' => 'client_credentials',
+                        'client_id' => config('services.passport.client_backend_id'),
+                        'client_secret' => config('services.passport.client_backend_secret')
+                    ]
+                ]);
+                $token = json_decode((string) $response->getBody(), true)['access_token'];
+                if ($token == '') {
+                    return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', 409);
+                }
                 $pagos_operacion =
                     json_decode($client->request(
                         'GET',
-                        env('APP_URL') . 'pagos/get_pagos/all/false/false?operacion_id=' . $datos_venta['operacion_id'],
+                        env('APP_URL') . 'pagos/get_pagos_backend/all/false/false?operacion_id=' . $datos_venta['operacion_id'],
                         [
                             'headers' => [
-                                'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzIzMTZmOGVmZDk3ZDdjZTllMzZkNmVhNGMwNGQwYjYwN2VhNDc2YmE4NzVjMmI3NDNlMjU2Y2RiNzc0Nzk5YmVhNTEwMDY4YjRiYThkNDAiLCJpYXQiOjE1OTQ0MjIyMzMsIm5iZiI6MTU5NDQyMjIzMywiZXhwIjoxNjI1OTU4MjMzLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.VCP-5eA2b2O_K-z2p4FVxowR-iKALJlS_TAtGjY0QaAxMgANge9c1A4sWoJWVsDHzGxfTBxnTOUyKrDi7ykk8hGJYhDKxt_24D7TfZBJ8XkNovOU3IYgLVoCV5TiEIWj-VFj6D1vYZFcD8dZvkUZsBOvjif9G13DxBTq1pJ-q4rLK9-Nphp4yGdcUlngWExznWa17O9XCxsp5PF1p6hRAdCFaYBXyIATT4jFz1OCbGBfHdzOfseVSov5touBjoaMvYAw3XB088CwU6-ub_Pe02_U-PeUUYZsU7XvGm963e6z_SYiP1RoMtCI25myGCHzj0WyxDH6C1Fzn-_Vl8lQ2Z2RaJy_dXgUAtEa4F_TUZbtkUUGGk4T1bWuAwYTValtqVMsoWBjiWJKUnLnTu26zI4qx8r5MIGOE4pK0Tsot6YPi1twSMaSGzSc9GBlMl4PW-smQ1xyHLFEjttHyKU0VohdNfoQFQTfCw4zBlVZmR5nCXTvu2nwJuQYCJvpbuXUi5MyVtQTpSak220q_VTHzlBLHoaP9Kgzd8F4m6_L0nBlgNV6JmAt3_3Ai-tO63JIPqeXr-TySFxJyEeiDEZ8YvW7k_8tpmoeamJ_YYvx60EMl-wKucBLVjD-jHpZ-KcIuhNMS5B2Ey9w8WQttyulNVYHdgfZL3RK4_p8TIWAQTg',
+                                'Authorization' => 'Bearer ' . $token,
                             ],
                         ]
                     )->getBody(), true);

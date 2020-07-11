@@ -16,23 +16,25 @@ use Illuminate\Http\Request;
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
-
-
 /**rutas de modulo en proceso */
+
+
 /**rutas publicas_ entran sin token */
-
-Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
-Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
-Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
 /**fin de rutas de modulo en proceso */
+Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
 
-
+/**servicios accedidos desde el backend */
+Route::middleware(['client'])->group(function () {
+    Route::get('pagos/get_pagos_backend/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
+});
+/**fin de servicios accedidos desde el backend */
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
-
+    Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
+    Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+    Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
-
     /**RUTA PARA OBTENER LOS PUESTOS DISPONIBLEN EN LA EMPRESA */
     /**RUTA PARA OBTENER LOS PERMISOS DEL USUARIO */
     Route::get('get_permisos', 'Usuarios\UsuariosController@get_permisos');
@@ -140,7 +142,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('funeraria/documento_solicitud', 'FunerariaController@documento_solicitud');
     Route::get('funeraria/documento_convenio', 'FunerariaController@documento_convenio');
     Route::get('funeraria/documento_finiquitado', 'FunerariaController@documento_finiquitado');
-    Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
+
     Route::get('funeraria/referencias_de_pago', 'FunerariaController@referencias_de_pago');
     Route::get('funeraria/reglamento_pago', 'FunerariaController@reglamento_pago');
     Route::get('funeraria/acuse_cancelacion', 'FunerariaController@acuse_cancelacion');

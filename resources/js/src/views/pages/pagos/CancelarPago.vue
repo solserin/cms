@@ -228,7 +228,6 @@ export default {
                 });
               }
             }
-
             this.cerrarVentana();
           }
         })();
@@ -320,12 +319,8 @@ export default {
     },
     cerrarVentana() {
       this.openConfirmarSinPassword = false;
-      this.form.comentario = "";
-      (this.form.motivo = {
-        label: "ERROR AL CAPTURAR",
-        value: 3
-      }),
-        this.$emit("closeCancelarPago");
+      this.limpiarVentana();
+      this.$emit("closeCancelarPago");
       return;
     },
     async cancelar_pago() {
@@ -345,6 +340,7 @@ export default {
             color: "success",
             time: 5000
           });
+          this.limpiarVentana();
           this.$emit("retorno_pago", res.data);
         } else {
           this.$vs.notify({
@@ -406,6 +402,13 @@ export default {
         }
         this.$vs.loading.close();
       }
+    },
+    limpiarVentana() {
+      this.form.comentario = "";
+      this.form.motivo = {
+        label: "ERROR AL CAPTURAR",
+        value: 3
+      };
     }
   },
   created() {},

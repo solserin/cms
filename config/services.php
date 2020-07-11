@@ -34,8 +34,9 @@ return [
         'login_endpoint' => env('PASSPORT_LOGIN_ENDPOINT'),
         'client_id' => env('PASSPORT_CLIENT_ID'),
         'client_secret' => env('PASSPORT_CLIENT_SECRET'),
+        'client_backend_id' => env('BACKEND_CLIENT_ID'),
+        'client_backend_secret' => env('BACKEND_CLIENT_SECRET'),
     ],
-
     'mailsistema' => [
         'address' => env('MAIL_SENDER'),
         'name' => env('MAIL_SENDER_NAME'),

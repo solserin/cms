@@ -2512,17 +2512,13 @@ class CementerioController extends ApiController
             $email = false;
             $email_to = 'hector@gmail.com';
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-
             $email =  $request->email_send === 'true' ? true : false;
             $email_to = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
             $id_venta = $requestVentasList['venta_id'];
-
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
-
-
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
             if (empty($datos_venta)) {
@@ -2532,8 +2528,29 @@ class CementerioController extends ApiController
             $pagos_operacion = [];
             $client = new \GuzzleHttp\Client();
             try {
+
+                /**TRAYENDO EL TOKEN PARA CONSUMIR EL SERVICE */
+                $response = $client->request('POST', config('services.passport.login_endpoint'), [
+                    'form_params' => [
+                        'grant_type' => 'client_credentials',
+                        'client_id' => config('services.passport.client_backend_id'),
+                        'client_secret' => config('services.passport.client_backend_secret')
+                    ]
+                ]);
+                $token = json_decode((string) $response->getBody(), true)['access_token'];
+                if ($token == '') {
+                    return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', 409);
+                }
                 $pagos_operacion =
-                    json_decode($client->request('GET', env('APP_URL') . 'pagos/get_pagos/all/false/false?operacion_id=' . $datos_venta['operacion_id'])->getBody(), true);
+                    json_decode($client->request(
+                        'GET',
+                        env('APP_URL') . 'pagos/get_pagos_backend/all/false/false?operacion_id=' . $datos_venta['operacion_id'],
+                        [
+                            'headers' => [
+                                'Authorization' => 'Bearer ' . $token,
+                            ],
+                        ]
+                    )->getBody(), true);
             } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                 return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
             }

@@ -384,16 +384,7 @@ class PagosController extends ApiController
             $validaciones,
             $mensajes
         );
-
-
-        $datos_pago = [];
-        $client = new \GuzzleHttp\Client();
-        try {
-            $datos_pago =
-                json_decode($client->request('GET', env('APP_URL') . 'pagos/get_pagos/' . $request->pago_id . '/false/false')->getBody(), true);
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-            return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
-        }
+        $datos_pago = $this->get_pagos($request, $request->pago_id, false, false);
         if (!empty($datos_pago)) {
             $datos_pago = $datos_pago[0];
         } else {
@@ -405,9 +396,16 @@ class PagosController extends ApiController
             /**es sub pago */
             return $this->errorResponse('Este tipo de pagos afectan a otros pagos, debe ingresar la clave del pago que contiene a este pago.', 409);
         }
+
+        if ($datos_pago['status'] == 0) {
+            /**este pago ya ha sid cancelado antes */
+            return $this->errorResponse('Este movimimiento ya ha sido cancelado previamente.', 409);
+        }
+
+
         /**checando que la operacion del movimienrto a cancelar este vigente */
         if ($datos_pago['referencias_cubiertas'][0]['operacion_del_pago']['status'] == 0) {
-            return $this->errorResponse('Hemos detectado la operación de este movimiento ya fue cancelada. No se puede cancelar este movimiento.', 409);
+            return $this->errorResponse('Hemos detectado que la operación de este movimiento ya fue cancelada. No se puede cancelar este movimiento.', 409);
         }
 
         try {
@@ -540,8 +538,43 @@ class PagosController extends ApiController
 
         /**verificando que la operaicon no este cancelada */
         $datos_operacion = $referencias_adeudos[0];
+
         $cementerio_controller = new CementerioController();
-        $datos_venta = $cementerio_controller->get_ventas($request, $datos_operacion['ventas_terrenos_id'], '')[0];
+        /**verificando que tipo de operacion_empresa es */
+        if ($datos_operacion['empresa_operaciones_id'] == 1) {
+            /**es tipo de ventas de propiedades */
+            $datos_venta = $cementerio_controller->get_ventas($request, $datos_operacion['ventas_terrenos_id'], '')[0];
+            // return  $this->errorResponse(round($datos_venta['saldo_neto'], 2), 409);
+            if (round($datos_venta['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
+                /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
+                    [
+                        /**status de ya liquidada */
+                        'status' => 2
+                    ]
+                );
+                /**generando el numero de titulo de la venta de propiedad */
+                $cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+            }
+        } else  if ($datos_operacion['empresa_operaciones_id'] == 4) {
+            /**venta de planes a futuro */
+            $funeraria_controller = new FunerariaController();
+            $datos_venta = $funeraria_controller->get_ventas($request, $datos_operacion['ventas_planes_id'], '')[0];
+
+            if (round($datos_venta['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
+                /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
+                    [
+                        /**status de ya liquidada */
+                        'status' => 2
+                    ]
+                );
+                /**generando el numero de titulo de la venta de propiedad */
+                /**deshabilitando numero de titulo */
+                //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+            }
+        }
+
 
         /**verificnado si la operacion no esta cancelada o pagada */
         if ($datos_venta['operacion_status'] == 0) {

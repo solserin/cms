@@ -407,13 +407,23 @@ export default {
       this.verFormularioPagos = true;
     },
     mostrarDocumento(documento) {
-      if (documento != "Acuse de cancelación") {
+      if (
+        documento != "Acuse de cancelación" &&
+        documento != "Constancia de Finiquito"
+      ) {
         return true;
       } else {
-        /**chenado si esta cancelada la venta para mostrar este archivo de acuse de cancelacion */
-        if (this.datosVenta.operacion_status == 0) {
-          return true;
-        } else return false;
+        if (documento == "Acuse de cancelación") {
+          /**chenado si esta cancelada la venta para mostrar este archivo de acuse de cancelacion */
+          if (this.datosVenta.operacion_status == 0) {
+            return true;
+          } else return false;
+        } else if (documento == "Constancia de Finiquito") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosVenta.saldo_neto <= 0) {
+            return true;
+          } else return false;
+        }
       }
     },
     cancelar() {
