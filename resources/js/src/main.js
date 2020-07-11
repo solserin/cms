@@ -83,7 +83,19 @@ import "prismjs";
 require("@assets/css/iconfont.css");
 
 Vue.config.productionTip = false;
+Vue.config.devtools = false;
+Vue.config.errorHandler = function(err, vm, info) {
+    //console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+    if (info == "v-on handler") {
+        /**para manejar este tipo de errores comunes solo actualizo el navegador */
+        window.location.reload(true);
+    }
+};
 
+Vue.config.warnHandler = function(msg, vm, trace) {
+    /**que no muestre warnings */
+    //console.log(`Warn: ${msg}\nTrace: ${trace}`);
+};
 /**importo el formnateador de numeros a moneda */
 import numeral from "numeral";
 import numFormat from "vue-filter-number-format";
