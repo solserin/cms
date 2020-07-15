@@ -10,42 +10,17 @@ export default {
     /***servicios del modulo de proveedores */
 
     /**obitne la infomacion del paginado */
-    get_clientes(param) {
-        let self = this;
-        return new Promise((resolve, reject) => {
-            axios
-                .get("/clientes/get_clientes", {
-                    cancelToken: new CancelToken(c => {
-                        self.cancel = c;
-                    }),
-                    params: param
-                })
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    if (axiosSuper.isCancel(error)) {
-                        reject(error.message);
-                    } else {
-                        reject(error);
-                    }
-                });
+    get_proveedores(param) {
+        return axios.get("/proveedores/get_proveedores/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
         });
     },
 
-    //obtiene las nacionalidades de los clientes
-    get_nacionalidades() {
-        let call = "/clientes/get_nacionalidades";
-        return new Promise((resolve, reject) => {
-            axios
-                .get(call)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+    get_proveedor_by_id(param) {
+        return axios.get("/proveedores/get_proveedores/" + param);
     },
 
     /**get datos del cliente por id */
@@ -67,61 +42,24 @@ export default {
         });
     },
 
-    guardar_cliente(datos) {
-        let call = "/clientes/guardar_cliente";
-        return new Promise((resolve, reject) => {
-            axios
-                .post(call, datos)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+    guardar_proveedor(datos) {
+        let call = "/proveedores/guardar_proveedor";
+        return axios.post(call, datos);
     },
     /**modificacion de clientes */
-    modificar_cliente(datos) {
-        let call = "/clientes/modificar_cliente";
-        return new Promise((resolve, reject) => {
-            axios
-                .post(call, datos)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+    modificar_proveedor(datos) {
+        let call = "/proveedores/modificar_proveedor";
+        return axios.post(call, datos);
+    },
+
+    delete_proveedor(datos) {
+        let call = "/proveedores/delete_proveedor";
+        return axios.post(call, datos);
     },
 
     /**modificacion de clientes | baja logica */
-    delete_cliente(datos) {
-        let call = "/clientes/baja_cliente";
-        return new Promise((resolve, reject) => {
-            axios
-                .post(call, datos)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
-    },
-
-    /**modificacion de clientes | baja logica */
-    alta_cliente(datos) {
-        let call = "/clientes/alta_cliente";
-        return new Promise((resolve, reject) => {
-            axios
-                .post(call, datos)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+    alta_proveedor(datos) {
+        let call = "/proveedores/alta_proveedor";
+        return axios.post(call, datos);
     }
 };

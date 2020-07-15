@@ -1,8 +1,8 @@
 <!--
 IDS DE LOS PERMISOS QUE APLICAN EN ESTE MODULO DE CLIENTES
-registrar clientes 11
+registrar proveedores 11
 modificar informacion 12
-eliminar clientes 13
+eliminar proveedores 13
 consultar información 14
 consultar estados de cuenta15
 
@@ -14,7 +14,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 <template>
   <div>
     <div class="flex flex-wrap">
-      <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
+      <div
+        class="w-full sm:w-12/12 ml-auto md:w-4/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+      >
         <vs-button
           color="success"
           size="small"
@@ -22,7 +24,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           @click="formulario('agregar')"
         >
           <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Registrar Cliente</span>
+          <span class="texto-btn">Registrar Proveedor</span>
         </vs-button>
       </div>
     </div>
@@ -35,7 +37,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         collapse-action
       >
         <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Mostrar</label>
             <v-select
               :options="mostrarOptions"
@@ -45,7 +49,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 sm:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Estado</label>
             <v-select
               :options="estadosOptions"
@@ -55,7 +61,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
@@ -65,8 +73,12 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
-            <label class="text-sm opacity-75">{{this.filtroEspecifico.label}}</label>
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+          >
+            <label class="text-sm opacity-75">{{
+              this.filtroEspecifico.label
+            }}</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -74,7 +86,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               placeholder="Filtrar por dato específico"
               v-model="serverOptions.numero_control"
               v-on:keyup.enter="get_data(1)"
-              v-on:blur="get_data(1,'blur')"
+              v-on:blur="get_data(1, 'blur')"
             />
           </div>
         </div>
@@ -82,18 +94,24 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         <div class="flex flex-wrap">
           <div class="w-full px-2">
             <h3 class="text-base font-semibold my-3">
-              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Cliente
+              <feather-icon
+                icon="UserIcon"
+                class="mr-2"
+                svgClasses="w-5 h-5"
+              />Filtrar por Nombre del Proveedor
             </h3>
           </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
-            <label class="text-sm opacity-75">Nombre del Cliente</label>
+          <div
+            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
+          >
+            <label class="text-sm opacity-75">Nombre del Proveedor</label>
             <vs-input
               class="w-full"
               icon="search"
-              placeholder="Filtrar por Nombre del Cliente"
-              v-model="serverOptions.cliente"
+              placeholder="Filtrar por Nombre del Proveedor"
+              v-model="serverOptions.nombre_comercial"
               v-on:keyup.enter="get_data(1)"
-              v-on:blur="get_data(1,'blur')"
+              v-on:blur="get_data(1, 'blur')"
               maxlength="75"
             />
           </div>
@@ -108,34 +126,50 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       @change-page="handleChangePage"
       @sort="handleSort"
       :max-items="serverOptions.per_page.value"
-      :data="clientes"
+      :data="proveedores"
       noDataText="0 Resultados"
     >
       <template slot="header">
-        <h3>Listado de Clientes Registrados</h3>
+        <h3>Listado de Proveedores Registrados</h3>
       </template>
       <template slot="thead">
-        <vs-th>Núm. Cliente</vs-th>
-        <vs-th>Nombre</vs-th>
+        <vs-th>Núm. Proveedor</vs-th>
+        <vs-th>Proveedor</vs-th>
+        <vs-th>Contacto</vs-th>
         <vs-th>Domicilio</vs-th>
-        <vs-th>Celular</vs-th>
+        <vs-th>Teléfono</vs-th>
         <vs-th>Status</vs-th>
         <vs-th>Acciones</vs-th>
       </template>
-      <template slot-scope="{data}">
+      <template slot-scope="{ data }">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
           <vs-td :data="data[indextr].id">
-            <span class="font-semibold">{{data[indextr].id}}</span>
+            <span class="font-semibold">{{ data[indextr].id }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
-          <vs-td :data="data[indextr].direccion">{{data[indextr].direccion}}</vs-td>
-          <vs-td :data="data[indextr].celular">
-            <span class="font-medium">{{data[indextr].celular}}</span>
+          <vs-td :data="data[indextr].nombre_comercial">
+            <span class="uppercase">
+              {{ data[indextr].nombre_comercial }}
+            </span>
+          </vs-td>
+          <vs-td :data="data[indextr].nombre_contacto">
+            <span class="uppercase">
+              {{ data[indextr].nombre_contacto }}
+            </span>
+          </vs-td>
+          <vs-td :data="data[indextr].direccion">
+            <span class="uppercase">
+              {{ data[indextr].direccion }}
+            </span>
+          </vs-td>
+          <vs-td :data="data[indextr].telefono">
+            <span class="">{{ data[indextr].telefono }}</span>
           </vs-td>
 
           <vs-td :data="data[indextr].status">
-            <p v-if="data[indextr].status==1" class="text-success font-medium">Activo</p>
-            <p v-else class="text-danger font-medium">Deshabilitado</p>
+            <p v-if="data[indextr].status == 1" class="text-success ">
+              Activo
+            </p>
+            <p v-else class="text-danger ">Deshabilitado</p>
           </vs-td>
           <vs-td :data="data[indextr].id_user">
             <div class="flex flex-start">
@@ -146,11 +180,16 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                 @click="openModificar(data[indextr].id)"
               />
               <img
-                v-if="data[indextr].status==1"
+                v-if="data[indextr].status == 1"
                 class="cursor-pointer img-btn-32 mr-auto ml-3"
                 src="@assets/images/switchon.svg"
                 title="Deshabilitar"
-                @click="deleteCliente(data[indextr].id,data[indextr].nombre)"
+                @click="
+                  deleteProveedor(
+                    data[indextr].id,
+                    data[indextr].nombre_comercial
+                  )
+                "
               />
 
               <img
@@ -158,7 +197,12 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                 class="cursor-pointer img-btn-32 mr-auto ml-3"
                 src="@assets/images/switchoff.svg"
                 title="Habilitar"
-                @click="altaCliente(data[indextr].id,data[indextr].nombre)"
+                @click="
+                  altaProveedor(
+                    data[indextr].id,
+                    data[indextr].nombre_comercial
+                  )
+                "
               />
             </div>
           </vs-td>
@@ -166,7 +210,12 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       </template>
     </vs-table>
     <div>
-      <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
+      <vs-pagination
+        v-if="verPaginado"
+        :total="this.total"
+        v-model="actual"
+        class="mt-8"
+      ></vs-pagination>
     </div>
     <pre ref="pre"></pre>
 
@@ -181,15 +230,15 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       :show="openReportesLista"
       :listadereportes="ListaReportes"
       :request="request"
-      @closeReportes="openReportesLista=false;"
+      @closeReportes="openReportesLista = false"
     ></Reporteador>
-    <FormularioClientes
-      :id_cliente="id_cliente_modificar"
+    <FormularioProveedores
+      :id_proveedor="id_proveedor_modificar"
       :tipo="tipoFormulario"
-      :show="verFormularioClientes"
-      @closeVentana="verFormularioClientes = false"
+      :show="verFormularioProveedores"
+      @closeVentana="verFormularioProveedores = false"
       @retornar_id="retorno_id"
-    ></FormularioClientes>
+    ></FormularioProveedores>
   </div>
 </template>
 
@@ -197,9 +246,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 //planes de venta
 import Reporteador from "@pages/Reporteador";
 
-import clientes from "@services/clientes";
+import proveedores from "@services/proveedores";
 
-import FormularioClientes from "@pages/clientes/FormularioClientes";
+import FormularioProveedores from "@pages/proveedores/FormularioProveedores";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -213,7 +262,7 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    FormularioClientes,
+    FormularioProveedores,
     Reporteador
   },
   watch: {
@@ -250,23 +299,15 @@ export default {
           value: "0"
         }
       ],
-      filtroEspecifico: { label: "Núm. Cliente", value: "1" },
+      filtroEspecifico: { label: "Núm. Proveedor", value: "1" },
       filtrosEspecificos: [
         {
-          label: "Núm. Cliente",
+          label: "Núm. Proveedor",
           value: "1"
         },
         {
-          label: "Núm. RFC",
+          label: "Núm. Teléfono",
           value: "2"
-        },
-        {
-          label: "Núm. Celular",
-          value: "3"
-        },
-        {
-          label: "Email",
-          value: "4"
         }
       ],
       serverOptions: {
@@ -275,27 +316,24 @@ export default {
         status: "",
         filtro_especifico_opcion: "",
         numero_control: "",
-        cliente: ""
+        nombre_comercial: ""
       },
-
       verPaginado: true,
       total: 0,
       actual: 1,
-      clientes: [],
+      proveedores: [],
       //fin variables
       openStatus: false,
       callback: Function,
       accionNombre: "",
       datosModifcar: {},
       tipoFormulario: "",
-      verFormularioClientes: false,
+      verFormularioProveedores: false,
       verModificar: false,
-      id_cliente_modificar: 0,
-      selected: [],
-      users: [],
+      id_proveedor_modificar: 0,
       /**opciones para filtrar la peticion del server */
       /**user id para bajas y altas */
-      cliente_id: "",
+      proveedor_id: "",
       request: {
         venta_id: "",
         email: ""
@@ -306,21 +344,21 @@ export default {
     reset(card) {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = {
-        label: "Núm. Cliente",
+        label: "Núm. Proveedor",
         value: "1"
       };
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
       this.estado = { label: "Todos", value: "" };
-      this.serverOptions.cliente = "";
+      this.serverOptions.nombre_comercial = "";
       this.get_data(this.actual);
     },
 
     get_data(page, evento = "") {
       if (evento == "blur") {
         if (
-          this.serverOptions.cliente != "" ||
-          this.serverOptions.cliente == ""
+          this.serverOptions.nombre_comercial != "" ||
+          this.serverOptions.nombre_comercial == ""
         ) {
           //la funcion no avanza
 
@@ -336,8 +374,8 @@ export default {
         }
       }
       let self = this;
-      if (clientes.cancel) {
-        clientes.cancel("Operation canceled by the user.");
+      if (proveedores.cancel) {
+        proveedores.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
@@ -345,10 +383,10 @@ export default {
       this.serverOptions.per_page = this.mostrar.value;
       this.serverOptions.status = this.estado.value;
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
-      clientes
-        .get_clientes(this.serverOptions)
+      proveedores
+        .get_proveedores(this.serverOptions)
         .then(res => {
-          this.clientes = res.data.data;
+          this.proveedores = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
@@ -389,130 +427,128 @@ export default {
 
     formulario(tipo) {
       this.tipoFormulario = tipo;
-      this.verFormularioClientes = true;
+      this.verFormularioProveedores = true;
     },
-    openModificar(id_cliente) {
+    openModificar(proveedor_id) {
       this.tipoFormulario = "modificar";
-      this.id_cliente_modificar = id_cliente;
-      this.verFormularioClientes = true;
+      this.id_proveedor_modificar = proveedor_id;
+      this.verFormularioProveedores = true;
     },
     retorno_id(dato) {
       this.get_data(this.actual);
     },
-    deleteCliente(id_cliente, nombre) {
-      this.accionNombre = "deshabilitar cliente " + nombre;
-      this.cliente_id = id_cliente;
+    deleteProveedor(proveedor_id, nombre) {
+      this.accionNombre = "deshabilitar proveedor " + nombre;
+      this.proveedor_id = proveedor_id;
       this.openStatus = true;
-      this.callback = this.delete_cliente;
+      (async () => {
+        this.callback = await this.delete_proveedor;
+      })();
     },
 
-    altaCliente(id_cliente, nombre) {
-      this.accionNombre = "Habilitar cliente " + nombre;
-      this.cliente_id = id_cliente;
+    altaProveedor(proveedor_id, nombre) {
+      this.accionNombre = "Habilitar proveedor " + nombre;
+      this.proveedor_id = proveedor_id;
       this.openStatus = true;
-      this.callback = this.habilitar_cliente;
+      (async () => {
+        this.callback = await this.habilitar_proveedor;
+      })();
     },
-    delete_cliente() {
+    async delete_proveedor() {
       this.$vs.loading();
       let datos = {
-        cliente_id: this.cliente_id
+        proveedor_id: this.proveedor_id
       };
-      clientes
-        .delete_cliente(datos)
-        .then(res => {
-          this.$vs.loading.close();
-          this.get_data(this.actual);
-          if (res.data >= 1) {
+      try {
+        let res = await proveedores.delete_proveedor(datos);
+        this.$vs.loading.close();
+        this.get_data(this.actual);
+        if (res.data >= 1) {
+          this.$vs.notify({
+            title: "Deshabilitar Proveedor",
+            text: "Se ha deshabilitado al proveedor exitosamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000
+          });
+        } else {
+          this.$vs.notify({
+            title: "Deshabilitar Proveedor",
+            text: "No se realizaron cambios.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "warning",
+            time: 5000
+          });
+        }
+      } catch (error) {
+        this.$vs.loading.close();
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
             this.$vs.notify({
-              title: "Deshabilitar Cliente",
-              text: "Se ha deshabilitado al cliente exitosamente.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "success",
-              time: 5000
-            });
-          } else {
-            this.$vs.notify({
-              title: "Deshabilitar Cliente",
-              text: "No se realizaron cambios.",
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 5000
+              time: 8000
             });
+          } else if (err.response.status == 422) {
+            /**error de validacion */
+            this.errores = err.response.data.error;
           }
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 8000
-              });
-            } else if (err.response.status == 422) {
-              /**error de validacion */
-              this.errores = err.response.data.error;
-            }
-          }
-        });
+        }
+      }
     },
-    habilitar_cliente() {
+    async habilitar_proveedor() {
       this.$vs.loading();
       let datos = {
-        cliente_id: this.cliente_id
+        proveedor_id: this.proveedor_id
       };
-      clientes
-        .alta_cliente(datos)
-        .then(res => {
-          this.$vs.loading.close();
-          this.get_data(this.actual);
-          if (res.data >= 1) {
+      try {
+        let res = await proveedores.alta_proveedor(datos);
+        this.$vs.loading.close();
+        this.get_data(this.actual);
+        if (res.data >= 1) {
+          this.$vs.notify({
+            title: "Habilitar Proveedor",
+            text: "Se ha habilitado al cliente exitosamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000
+          });
+        } else {
+          this.$vs.notify({
+            title: "Habilitar Proveedor",
+            text: "No se realizaron cambios.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "warning",
+            time: 5000
+          });
+        }
+      } catch (error) {
+        this.$vs.loading.close();
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
             this.$vs.notify({
-              title: "Habilitar Cliente",
-              text: "Se ha habilitado al cliente exitosamente.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "success",
-              time: 5000
-            });
-          } else {
-            this.$vs.notify({
-              title: "Habilitar Cliente",
-              text: "No se realizaron cambios.",
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 5000
+              time: 8000
             });
+          } else if (err.response.status == 422) {
+            /**error de validacion */
+            this.errores = err.response.data.error;
           }
-        })
-        .catch(err => {
-          this.$vs.loading.close();
-          if (err.response) {
-            if (err.response.status == 403) {
-              /**FORBIDDEN ERROR */
-              this.$vs.notify({
-                title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
-                iconPack: "feather",
-                icon: "icon-alert-circle",
-                color: "warning",
-                time: 8000
-              });
-            } else if (err.response.status == 422) {
-              /**error de validacion */
-              this.errores = err.response.data.error;
-            }
-          }
-        });
+        }
+      }
     }
   },
   created() {

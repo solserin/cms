@@ -24,6 +24,8 @@ Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaControl
 /**fin de rutas de modulo en proceso */
 Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
 
+Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
+
 /**servicios accedidos desde el backend */
 Route::middleware(['client'])->group(function () {
     Route::get('pagos/get_pagos_backend/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
@@ -156,6 +158,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('pagos/cancelar_pago', 'PagosController@cancelar_pago');
     /**fin de rutas de pagos */
 
+    /**proveedores */
+    Route::post('/proveedores/guardar_proveedor', 'ProveedoresController@guardar_proveedor');
+    Route::post('/proveedores/modificar_proveedor', 'ProveedoresController@modificar_proveedor');
+    Route::post('/proveedores/delete_proveedor', 'ProveedoresController@delete_proveedor');
+    Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
 
 
 
