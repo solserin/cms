@@ -246,7 +246,7 @@ const router = new Router({
                     path: "/inventarios/funeraria/proveedores",
                     name: "catalogo_proveedores",
                     component: () =>
-                        import("@/views/pages/proveedores/ClientesList.vue"),
+                        import("@/views/pages/proveedores/ProveedoresList.vue"),
                     meta: {
                         breadcrumb: [
                             {
