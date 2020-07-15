@@ -242,6 +242,31 @@ const router = new Router({
                     }
                 },
 
+                {
+                    path: "/inventarios/funeraria/proveedores",
+                    name: "catalogo_proveedores",
+                    component: () =>
+                        import("@/views/pages/proveedores/ClientesList.vue"),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Catálogos"
+                            },
+                            {
+                                title: "Control de proveedores",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Proveedores",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
+
                 // =============================================================================
                 // Pages Routes
                 // =============================================================================
