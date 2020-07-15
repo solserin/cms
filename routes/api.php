@@ -160,7 +160,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     /**proveedores */
     Route::post('/proveedores/guardar_proveedor', 'ProveedoresController@guardar_proveedor');
-    Route::post('/proveedores/modificar_proveedor', 'ProveedoresController@modificar_proveedor');
+    Route::post('/proveedores/modificar_proveedor', 'ProveedoresController@modificar_proveedor')->middleware('permiso:10,28');
     Route::post('/proveedores/delete_proveedor', 'ProveedoresController@delete_proveedor');
     Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
 

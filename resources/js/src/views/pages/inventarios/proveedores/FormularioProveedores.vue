@@ -441,7 +441,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 12000
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -452,7 +452,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 12000
             });
             //console.log(err.response);
           }
@@ -478,17 +478,17 @@ export default {
             time: 5000
           });
           this.$emit("retornar_id", res.data);
-          this.cerrarVentana();
         } else {
           this.$vs.notify({
             title: "Modificación de Proveedores",
-            text: "Error al guardar el proveedor, por favor reintente.",
+            text: "No se han realizado cambios, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
-            color: "danger",
+            color: "warning",
             time: 4000
           });
         }
+        this.cerrarVentana();
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
