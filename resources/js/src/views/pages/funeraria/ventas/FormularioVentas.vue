@@ -1965,6 +1965,7 @@ export default {
     },
     async get_planes_funerarios() {
       try {
+        this.$vs.loading();
         let res = await planes.get_planes(true, "");
         //le agrego todos los usuarios vendedores
         this.planes_funerarios = [];
@@ -1999,6 +2000,7 @@ export default {
             this.form.plan_funerario = this.planes_funerarios[0];
           }
         }
+        this.$vs.loading.close();
       } catch (error) {
         /**error al cargar vendedores */
         this.$vs.notify({
@@ -2011,6 +2013,7 @@ export default {
           position: "bottom-right",
           time: "9000"
         });
+        this.$vs.loading.close();
         this.cerrarVentana();
       }
     },
