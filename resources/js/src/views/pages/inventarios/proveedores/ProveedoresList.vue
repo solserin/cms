@@ -248,7 +248,7 @@ import Reporteador from "@pages/Reporteador";
 
 import proveedores from "@services/proveedores";
 
-import FormularioProveedores from "@pages/proveedores/FormularioProveedores";
+import FormularioProveedores from "@pages/inventarios/proveedores/FormularioProveedores";
 
 //componente de password
 import Password from "@pages/confirmar_password";
