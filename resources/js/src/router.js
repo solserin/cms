@@ -268,6 +268,32 @@ const router = new Router({
                         authRequired: true
                     }
                 },
+                {
+                    path: "/inventarios/funeraria/articulos",
+                    name: "catalogo_articulos",
+                    component: () =>
+                        import(
+                            "@/views/pages/inventarios/articulos/ArticulosList.vue"
+                        ),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Catálogos"
+                            },
+                            {
+                                title: "Control de artículos y servicios",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Artículos / Servicios",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
 
                 // =============================================================================
                 // Pages Routes
