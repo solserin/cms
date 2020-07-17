@@ -410,7 +410,6 @@
                   placeholder=" Núm. Solicitud"
                   v-model="form.solicitud"
                   :disabled="tipo_venta || fueCancelada"
-                  maxlength="12"
                 />
                 <div>
                   <span class="mensaje-requerido">{{
@@ -441,7 +440,6 @@
                   placeholder="Núm. Convenio"
                   v-model="form.convenio"
                   :disabled="!capturar_num_convenio || fueCancelada"
-                  maxlength="16"
                 />
                 <div>
                   <span class="mensaje-requerido">{{
@@ -476,7 +474,6 @@
                     !(tipo_venta * capturar_num_titulo + capturar_num_titulo) ||
                       fueCancelada
                   "
-                  maxlength="16"
                 />
                 <div>
                   <span class="mensaje-requerido">{{
@@ -1276,7 +1273,7 @@
                       '|max_value:' +
                       this.valor_maximo_pago_inicial
                   "
-                  maxlength="7"
+                  maxlength="10"
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
                   v-model="form.pago_inicial"
@@ -1315,7 +1312,7 @@
                       '|max_value:' +
                       form.costo_neto
                   "
-                  maxlength="7"
+                  maxlength="10"
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
                   v-model="form.costo_neto_pronto_pago"
