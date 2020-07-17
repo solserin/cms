@@ -25,6 +25,7 @@ class Articulos extends Migration
             $table->integer('maximo');
             $table->string('localizacion')->nullable();
             $table->tinyInteger('caduca_b');
+            $table->tinyInteger('grava_iva_b');
             $table->unsignedBigInteger('categorias_id')->unsigned()->nullable();
             $table->foreign('categorias_id')->references('id')->on('categorias');
             $table->unsignedBigInteger('sat_unidades_compra')->unsigned()->nullable();
