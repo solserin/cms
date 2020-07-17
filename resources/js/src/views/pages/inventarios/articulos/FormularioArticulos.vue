@@ -1,25 +1,421 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-55 precios_financiamientos normal-forms"
+      class="precios_financiamientos normal-forms"
+      fullscreen
       close="cancelar"
       :title="title"
       :active.sync="showVentana"
       ref="formulario"
     >
       <div class="flex flex-wrap px-2">
-        <div class="w-full pb-3">
-          <img
-            width="60"
-            class="img-center"
-            src="@assets/images/delivery.svg"
-          />
-          <h3 class="text-xl text-center">
-            Información del Proveedor
-          </h3>
+        <!--articulo-->
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <!--contenido del plan funerario-->
+          <div class="float-left px-2">
+            <img width="36px" src="@assets/images/image.svg" />
+            <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+              Seleccionar imagen del artículo o servicio
+            </h3>
+          </div>
+          <div class="w-full mt-16" v-if="verLista">ver imagen</div>
+          <div class="w-full mt-16" v-else>
+            no
+          </div>
+          <!--fin de contenido del plan funerario-->
         </div>
 
-        <vs-divider />
+        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <div class="float-left pb-5 px-2">
+            <img width="36px" src="@assets/images/stock.svg" />
+            <h3
+              class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+            >
+              Información del artículo o servicio
+            </h3>
+          </div>
+
+          <div class="w-full px-2">
+            <vs-divider />
+          </div>
+          <div class="flex flex-wrap mt-1">
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <label class="text-sm opacity-75 font-bold">
+                <span>Tipo de Artículo a Inventariar</span>
+                <span class="texto-importante">(*)</span>
+              </label>
+              <v-select
+                :options="tipo_articulos"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="form.tipo_articulo"
+                class="mb-4 sm:mb-0 pb-1 pt-1"
+                v-validate:plan_funerario_validacion_computed.immediate="
+                  'required'
+                "
+                name="plan_validacion"
+                data-vv-as=" "
+              >
+                <div slot="no-options">Seleccione 1</div>
+              </v-select>
+              <div>
+                <span class="mensaje-requerido">{{
+                  errors.first("plan_validacion")
+                }}</span>
+              </div>
+              <div class="mt-2">
+                <span
+                  class="mensaje-requerido"
+                  v-if="this.errores['plan_funerario.value']"
+                  >{{ errores["plan_funerario.value"][0] }}</span
+                >
+              </div>
+            </div>
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <label class="text-sm opacity-75 font-bold">
+                <span>Código de barras</span>
+                <span class="texto-importante">(*)</span>
+              </label>
+              <vs-input
+                readonly
+                v-validate="'required'"
+                name="id_cliente"
+                data-vv-as=" "
+                type="text"
+                class="w-full py-1 cursor-pointer texto-bold"
+                placeholder="Ingrese el código de barras del artículo"
+                v-model="form.cliente"
+                maxlength="50"
+                ref="cliente_ref"
+              />
+              <div>
+                <span class="mensaje-requerido">{{
+                  errors.first("id_cliente")
+                }}</span>
+              </div>
+              <div class="mt-2">
+                <span
+                  class="mensaje-requerido"
+                  v-if="this.errores.id_cliente"
+                  >{{ errores.id_cliente[0] }}</span
+                >
+              </div>
+            </div>
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <label class="text-sm opacity-75 font-bold">
+                <span>Departamentos</span>
+                <span class="texto-importante">(*)</span>
+              </label>
+              <v-select
+                :options="departamentos"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="form.departamento"
+                class="mb-4 sm:mb-0 pb-1 pt-1"
+                v-validate:plan_funerario_validacion_computed.immediate="
+                  'required'
+                "
+                name="plan_validacion"
+                data-vv-as=" "
+              >
+                <div slot="no-options">Seleccione 1</div>
+              </v-select>
+              <div>
+                <span class="mensaje-requerido">{{
+                  errors.first("plan_validacion")
+                }}</span>
+              </div>
+              <div class="mt-2">
+                <span
+                  class="mensaje-requerido"
+                  v-if="this.errores['plan_funerario.value']"
+                  >{{ errores["plan_funerario.value"][0] }}</span
+                >
+              </div>
+            </div>
+            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <label class="text-sm opacity-75 font-bold">
+                <span>Categorías</span>
+                <span class="texto-importante">(*)</span>
+              </label>
+              <v-select
+                :options="categorias"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="form.categoria"
+                class="mb-4 sm:mb-0 pb-1 pt-1"
+                v-validate:antiguedad_validacion_computed.immediate="'required'"
+                name="antiguedad_validacion"
+                data-vv-as=" "
+              >
+                <div slot="no-options">Seleccione 1</div>
+              </v-select>
+              <div>
+                <span class="mensaje-requerido">
+                  {{ errors.first("antiguedad_validacion") }}
+                </span>
+              </div>
+              <div class="mt-2">
+                <span
+                  class="mensaje-requerido"
+                  v-if="this.errores['ventaAntiguedad.value']"
+                >
+                  {{ errores["ventaAntiguedad.value"][0] }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap mt-1">
+            <div class="w-full px-2 mt-2">
+              <p class="text-xs">
+                <span class="text-danger font-medium">Ojo:</span>
+                Debe seleccionar la modalidad de la venta que se esté
+                registrando en caso de que haya sido realizada fuera del control
+                del sistema, ya que ese tipo de ventas cuenta con un control
+                especial de números de órden.
+              </p>
+            </div>
+          </div>
+          <vs-divider />
+          <div class="flex flex-wrap mt-1">
+            <div class="float-left pb-3 px-2">
+              <img width="36px" src="@assets/images/order.svg" />
+              <h3
+                class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
+              >
+                Información del cliente y control de venta
+              </h3>
+            </div>
+
+            <!--nombre del cliente-->
+            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+              <div class="flex flex-wrap">
+                <div class="w-full px-2">
+                  <label class="text-sm opacity-75 font-bold">
+                    Seleccione un Cliente
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                </div>
+                <div
+                  class="w-full sm:w-3/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
+                >
+                  <div v-if="fueCancelada != true">
+                    <img
+                      v-if="form.id_cliente == ''"
+                      width="46px"
+                      class="cursor-pointer p-2 mt-2"
+                      src="@assets/images/search.svg"
+                      @click="openBuscador = true"
+                      title="Buscar Cliente"
+                    />
+                    <img
+                      v-else
+                      width="46px"
+                      class="cursor-pointer p-2 mt-2"
+                      src="@assets/images/minus.svg"
+                      @click="quitarCliente()"
+                    />
+                  </div>
+                  <div v-else>
+                    <img
+                      width="46px"
+                      class="cursor-pointer p-2 mt-2"
+                      src="@assets/images/minus.svg"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-9/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
+                >
+                  <vs-input
+                    size="large"
+                    readonly
+                    v-validate="'required'"
+                    name="id_cliente"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full py-1 cursor-pointer texto-bold"
+                    placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR LA VENTA."
+                    v-model="form.cliente"
+                    maxlength="100"
+                    ref="cliente_ref"
+                  />
+                  <div>
+                    <span class="mensaje-requerido">{{
+                      errors.first("id_cliente")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="mensaje-requerido"
+                      v-if="this.errores.id_cliente"
+                      >{{ errores.id_cliente[0] }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--fin nombre del cliente-->
+            <!--vendedor-->
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 pt-2"
+            >
+              <div class="flex flex-wrap">
+                <div class="w-full px-2">
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Seleccione 1 vendedor:</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                </div>
+                <div
+                  class="w-full sm:w-3/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
+                >
+                  <img
+                    width="46px"
+                    class="p-2 mt-2"
+                    src="@assets/images/businessman.svg"
+                    title="Seleccione 1 Vendedor"
+                  />
+                </div>
+                <div class="w-full sm:w-9/12 md:w-11/12 lg:w-11/12 xl:w-11/12">
+                  <v-select
+                    :options="vendedores"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.vendedor"
+                    class="pb-1 pt-1 large_select"
+                    v-validate:vendedor_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="vendedor"
+                    data-vv-as=" "
+                    :disabled="fueCancelada"
+                  >
+                    <div slot="no-options">
+                      Seleccione un vendedor
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="mensaje-requerido">{{
+                      errors.first("vendedor")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="mensaje-requerido"
+                      v-if="this.errores['vendedor.value']"
+                    >
+                      {{ errores["vendedor.value"][0] }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Fin de vendedor-->
+
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 pt-4"
+            >
+              <label class="text-sm opacity-75 font-bold">
+                Fecha de la Venta (Año-Mes-Dia)
+                <span class="texto-importante">(*)</span>
+              </label>
+
+              <flat-pickr
+                :disabled="
+                  tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                "
+                name="fecha_venta"
+                data-vv-as=" "
+                v-validate:fecha_venta_validacion_computed.immediate="
+                  'required'
+                "
+                :config="configdateTimePicker"
+                v-model="form.fecha_venta"
+                placeholder="Fecha de la Venta"
+                class="w-full my-1"
+              />
+
+              <div>
+                <span class="mensaje-requerido">{{
+                  errors.first("fecha_venta")
+                }}</span>
+              </div>
+              <div class="mt-2">
+                <span
+                  class="mensaje-requerido"
+                  v-if="this.errores.fecha_venta"
+                  >{{ errores.fecha_venta[0] }}</span
+                >
+              </div>
+            </div>
+
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-4"
+            >
+              <label class="text-sm opacity-75 font-bold">
+                Núm. Solicitud
+                <span class="texto-importante">(*)</span>
+              </label>
+              <vs-input
+                v-validate:solicitud_validacion_computed.immediate="'required'"
+                name="solicitud"
+                data-vv-as=" "
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder=" Núm. Solicitud"
+                v-model="form.solicitud"
+                :disabled="fueCancelada"
+                maxlength="12"
+              />
+              <div>
+                <span class="mensaje-requerido">{{
+                  errors.first("solicitud")
+                }}</span>
+              </div>
+              <div class="mt-2">
+                <span class="mensaje-requerido" v-if="this.errores.solicitud">{{
+                  errores.solicitud[0]
+                }}</span>
+              </div>
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-4"
+            >
+              <label class="text-sm opacity-75 font-bold">
+                Núm. Convenio
+                <span class="texto-importante">(*)</span>
+              </label>
+              <vs-input
+                v-validate:num_convenio_validacion_computed.immediate="
+                  'required'
+                "
+                name="num_convenio"
+                data-vv-as=" "
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Núm. Convenio"
+                v-model="form.convenio"
+                :disabled="!capturar_num_convenio || fueCancelada"
+                maxlength="16"
+              />
+              <div>
+                <span class="mensaje-requerido">{{
+                  errors.first("num_convenio")
+                }}</span>
+              </div>
+              <div class="mt-2">
+                <span class="mensaje-requerido" v-if="this.errores.convenio">{{
+                  errores.convenio[0]
+                }}</span>
+              </div>
+            </div>
+            <vs-divider />
+          </div>
+        </div>
+        <!--fin articulo-->
+
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
           <label class="text-sm opacity-75 font-bold">
             Nombre Comercial / Empresa
@@ -236,6 +632,7 @@
   </div>
 </template>
 <script>
+import vSelect from "vue-select";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -246,6 +643,7 @@ import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 
 export default {
   components: {
+    "v-select": vSelect,
     Password,
     ConfirmarDanger,
     ConfirmarAceptar
@@ -277,13 +675,13 @@ export default {
           this.$refs["nombre_comercial"].$el.querySelector("input").focus()
         );
         if (this.getTipoformulario == "modificar") {
-          this.title = "Modificar Datos del Proveedor";
+          this.title = "Modificar Artículo/Servicio del Inventario";
           /**se cargan los datos al formulario */
           (async () => {
             await this.get_proveedor_by_id(this.get_proveedor_id);
           })();
         } else {
-          this.title = "Registrar Nuevo Proveedor";
+          this.title = "Registrar Nuevo Artículo/Servicio al Inventario";
         }
       }
     }
@@ -326,7 +724,49 @@ export default {
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
       accionNombre: "Modificar Proveedor",
+      /**form */
+
+      tipo_articulos: [
+        {
+          value: "1",
+          label: "Artículo"
+        },
+        {
+          value: "2",
+          label: "Servicio"
+        },
+        {
+          value: "3",
+          label: "Equipo Rentable"
+        }
+      ],
+
+      departamentos: [
+        {
+          value: "",
+          label: "Seleccione 1"
+        }
+      ],
+      categorias: [
+        {
+          value: "",
+          label: "Seleccione 1"
+        }
+      ],
       form: {
+        tipo_articulo: {
+          value: "1",
+          label: "Artículo"
+        },
+        departamento: {
+          value: "",
+          label: "Seleccione 1"
+        },
+        categoria: {
+          value: "",
+          label: "Seleccione 1"
+        },
+        /**form */
         /**en caso de modificar */
         id_proveedor_modificar: 0,
         nombre_comercial: "",
