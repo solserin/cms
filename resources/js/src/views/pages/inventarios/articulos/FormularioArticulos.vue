@@ -16,9 +16,9 @@
             <div class="w-full">
               <div class="float-left px-2">
                 <img width="36px" src="@assets/images/image.svg" />
-                <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
-                  Seleccionar imagen del artículo o servicio
-                </h3>
+                <h3
+                  class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
+                >Seleccionar imagen del artículo o servicio</h3>
               </div>
             </div>
             <div class="w-full">
@@ -49,6 +49,7 @@
               </div>
 
               <div
+                v-if="verQuitarImagen"
                 :class="[
                   'w-full sm:w-12/12 px-2 mr-auto ml-auto',
                   verModificar
@@ -56,15 +57,8 @@
                     : ' md:w-5/12 lg:w-5/12 xl:w-5/12'
                 ]"
               >
-                <vs-button
-                  class="w-full"
-                  color="primary"
-                  size="small"
-                  @click="quitar"
-                >
-                  <span class="font-medium text-base"
-                    >Dejar imagen anterior</span
-                  >
+                <vs-button class="w-full" color="primary" size="small" @click="quitar">
+                  <span class="font-medium text-base">Dejar imagen anterior</span>
                 </vs-button>
               </div>
             </div>
@@ -78,9 +72,7 @@
             <img width="36px" src="@assets/images/stock.svg" />
             <h3
               class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-            >
-              Información del artículo o servicio
-            </h3>
+            >Información del artículo o servicio</h3>
           </div>
 
           <div class="w-full px-2">
@@ -105,16 +97,17 @@
                 v-model.trim="form.descripcion"
               />
               <div>
-                <span class="text-danger text-sm">{{
+                <span class="text-danger text-sm">
+                  {{
                   errors.first("descripcion")
-                }}</span>
+                  }}
+                </span>
               </div>
               <div class="mt-2">
                 <span
                   class="text-danger text-sm"
                   v-if="this.errores.descripcion"
-                  >{{ errores.descripcion[0] }}</span
-                >
+                >{{ errores.descripcion[0] }}</span>
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -135,16 +128,17 @@
                 v-model.trim="form.descripcion_ingles"
               />
               <div>
-                <span class="text-danger text-sm">{{
+                <span class="text-danger text-sm">
+                  {{
                   errors.first("descripcion_ingles")
-                }}</span>
+                  }}
+                </span>
               </div>
               <div class="mt-2">
                 <span
                   class="text-danger text-sm"
                   v-if="this.errores.descripcion_ingles"
-                  >{{ errores.descripcion_ingles[0] }}</span
-                >
+                >{{ errores.descripcion_ingles[0] }}</span>
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -167,16 +161,17 @@
                 <div slot="no-options">Seleccione 1</div>
               </v-select>
               <div>
-                <span class="mensaje-requerido">{{
+                <span class="mensaje-requerido">
+                  {{
                   errors.first("tipo_articulo")
-                }}</span>
+                  }}
+                </span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores['tipo_articulo.value']"
-                  >{{ errores["tipo_articulo.value"][0] }}</span
-                >
+                >{{ errores["tipo_articulo.value"][0] }}</span>
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -197,16 +192,17 @@
                 ref="codigo_barras"
               />
               <div>
-                <span class="mensaje-requerido">{{
+                <span class="mensaje-requerido">
+                  {{
                   errors.first("codigo_barras")
-                }}</span>
+                  }}
+                </span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores.codigo_barras"
-                  >{{ errores.codigo_barras[0] }}</span
-                >
+                >{{ errores.codigo_barras[0] }}</span>
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -229,16 +225,17 @@
                 <div slot="no-options">Seleccione 1</div>
               </v-select>
               <div>
-                <span class="mensaje-requerido">{{
+                <span class="mensaje-requerido">
+                  {{
                   errors.first("plan_validacion")
-                }}</span>
+                  }}
+                </span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores['plan_funerario.value']"
-                  >{{ errores["plan_funerario.value"][0] }}</span
-                >
+                >{{ errores["plan_funerario.value"][0] }}</span>
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -259,17 +256,13 @@
                 <div slot="no-options">Seleccione 1</div>
               </v-select>
               <div>
-                <span class="mensaje-requerido">
-                  {{ errors.first("categoria") }}
-                </span>
+                <span class="mensaje-requerido">{{ errors.first("categoria") }}</span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores['categoria.value']"
-                >
-                  {{ errores["categoria.value"][0] }}
-                </span>
+                >{{ errores["categoria.value"][0] }}</span>
               </div>
             </div>
           </div>
@@ -282,9 +275,7 @@
               <img width="36px" src="@assets/images/measuring.svg" />
               <h3
                 class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-              >
-                Unidades de medida del artículo o servicio
-              </h3>
+              >Unidades de medida del artículo o servicio</h3>
             </div>
           </div>
 
@@ -294,7 +285,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="unidades_compra"
+              :options="unidades"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="form.unidad_compra"
@@ -308,17 +299,13 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="mensaje-requerido">
-                {{ errors.first("unidad_compra_validacion") }}
-              </span>
+              <span class="mensaje-requerido">{{ errors.first("unidad_compra_validacion") }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['unidad_compra.value']"
-              >
-                {{ errores["unidad_compra.value"][0] }}
-              </span>
+              >{{ errores["unidad_compra.value"][0] }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
@@ -327,7 +314,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="unidades_venta"
+              :options="unidades"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="form.unidad_venta"
@@ -339,17 +326,13 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="mensaje-requerido">
-                {{ errors.first("unidad_venta") }}
-              </span>
+              <span class="mensaje-requerido">{{ errors.first("unidad_venta") }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['unidad_venta.value']"
-              >
-                {{ errores["unidad_venta.value"][0] }}
-              </span>
+              >{{ errores["unidad_venta.value"][0] }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -368,14 +351,18 @@
               maxlength="12"
             />
             <div>
-              <span class="mensaje-requerido">{{
+              <span class="mensaje-requerido">
+                {{
                 errors.first("factor")
-              }}</span>
+                }}
+              </span>
             </div>
             <div class="mt-2">
-              <span class="mensaje-requerido" v-if="this.errores.factor">{{
+              <span class="mensaje-requerido" v-if="this.errores.factor">
+                {{
                 errores.factor[0]
-              }}</span>
+                }}
+              </span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -394,16 +381,17 @@
               maxlength="5"
             />
             <div>
-              <span class="mensaje-requerido">{{
+              <span class="mensaje-requerido">
+                {{
                 errors.first("minimo_inventario")
-              }}</span>
+                }}
+              </span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores.minimo_inventario"
-                >{{ errores.minimo_inventario[0] }}</span
-              >
+              >{{ errores.minimo_inventario[0] }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -422,16 +410,17 @@
               maxlength="12"
             />
             <div>
-              <span class="mensaje-requerido">{{
+              <span class="mensaje-requerido">
+                {{
                 errors.first("maximo_inventario")
-              }}</span>
+                }}
+              </span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores.maximo_inventario"
-                >{{ errores.maximo_inventario[0] }}</span
-              >
+              >{{ errores.maximo_inventario[0] }}</span>
             </div>
           </div>
 
@@ -453,17 +442,13 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="mensaje-requerido">
-                {{ errors.first("antiguedad_validacion") }}
-              </span>
+              <span class="mensaje-requerido">{{ errors.first("antiguedad_validacion") }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['unidad_sat.value']"
-              >
-                {{ errores["unidad_sat.value"][0] }}
-              </span>
+              >{{ errores["unidad_sat.value"][0] }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
@@ -483,17 +468,13 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="mensaje-requerido">
-                {{ errors.first("opcion_iva") }}
-              </span>
+              <span class="mensaje-requerido">{{ errors.first("opcion_iva") }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['opcion_iva.value']"
-              >
-                {{ errores["opcion_iva.value"][0] }}
-              </span>
+              >{{ errores["opcion_iva.value"][0] }}</span>
             </div>
           </div>
 
@@ -514,17 +495,13 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="mensaje-requerido">
-                {{ errors.first("opcion_caducidad") }}
-              </span>
+              <span class="mensaje-requerido">{{ errors.first("opcion_caducidad") }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['opcion_caducidad.value']"
-              >
-                {{ errores["opcion_caducidad.value"][0] }}
-              </span>
+              >{{ errores["opcion_caducidad.value"][0] }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -543,16 +520,17 @@
               maxlength="12"
             />
             <div>
-              <span class="mensaje-requerido">{{
+              <span class="mensaje-requerido">
+                {{
                 errors.first("costo_compra")
-              }}</span>
+                }}
+              </span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores.costo_compra"
-                >{{ errores.costo_compra[0] }}</span
-              >
+              >{{ errores.costo_compra[0] }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -571,14 +549,18 @@
               maxlength="16"
             />
             <div>
-              <span class="mensaje-requerido">{{
+              <span class="mensaje-requerido">
+                {{
                 errors.first("costo_venta")
-              }}</span>
+                }}
+              </span>
             </div>
             <div class="mt-2">
-              <span class="mensaje-requerido" v-if="this.errores.costo_venta">{{
+              <span class="mensaje-requerido" v-if="this.errores.costo_venta">
+                {{
                 errores.costo_venta[0]
-              }}</span>
+                }}
+              </span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
@@ -609,19 +591,10 @@
           </div>
         </div>
       </div>
-      <div
-        class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto"
-      >
+      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto">
         <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img
-            width="25px"
-            class="cursor-pointer"
-            size="small"
-            src="@assets/images/save.svg"
-          />
-          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
-            >Guardar Datos</span
-          >
+          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
+          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'">Guardar Datos</span>
           <span class="texto-btn" v-else>Modificar Datos</span>
         </vs-button>
       </div>
@@ -657,7 +630,7 @@ import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
 import proveedores from "@services/proveedores";
-
+import inventario from "@services/inventario";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 /**VARIABLES GLOBALES */
 
@@ -695,15 +668,19 @@ export default {
         this.$nextTick(() =>
           this.$refs["nombre_comercial"].$el.querySelector("input").focus()
         );
-        if (this.getTipoformulario == "modificar") {
-          this.title = "Modificar Artículo/Servicio del Inventario";
-          /**se cargan los datos al formulario */
-          (async () => {
+
+        (async () => {
+          await this.get_unidades();
+          await this.get_sat_unidades();
+          if (this.getTipoformulario == "modificar") {
+            this.title = "Modificar Artículo/Servicio del Inventario";
+            /**se cargan los datos al formulario */
+
             await this.get_proveedor_by_id(this.get_proveedor_id);
-          })();
-        } else {
-          this.title = "Registrar Nuevo Artículo/Servicio al Inventario";
-        }
+          } else {
+            this.title = "Registrar Nuevo Artículo/Servicio al Inventario";
+          }
+        })();
       }
     }
   },
@@ -749,6 +726,18 @@ export default {
     },
     unidad_sat_validacion_computed: function() {
       return this.form.unidad_sat.value;
+    },
+    verQuitarImagen: function() {
+      if (this.getTipoformulario == "agregar") {
+        if (
+          this.form.imagen != "" &&
+          this.form.imagen != this.imagen_anterior
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
   },
   data() {
@@ -793,13 +782,7 @@ export default {
           label: "Seleccione 1"
         }
       ],
-      unidades_compra: [
-        {
-          value: "",
-          label: "Seleccione 1"
-        }
-      ],
-      unidades_venta: [
+      unidades: [
         {
           value: "",
           label: "Seleccione 1"
@@ -872,6 +855,68 @@ export default {
     };
   },
   methods: {
+    async get_unidades() {
+      try {
+        let res = await inventario.get_unidades();
+        //le agrego todos las unidades
+        this.unidades = [];
+        this.unidades.push({ label: "Seleccione 1", value: "" });
+        if (this.getTipoformulario == "agregar") {
+          this.form.unidad_compra = this.unidades[0];
+        }
+        res.data.forEach(element => {
+          this.unidades.push({
+            label: element.unidad + "(" + element.clave + ")",
+            value: element.id
+          });
+        });
+      } catch (error) {
+        /**error al cargar */
+        this.$vs.notify({
+          title: "Error",
+          text:
+            "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "9000"
+        });
+        this.cerrarVentana();
+      }
+    },
+
+    async get_sat_unidades() {
+      try {
+        let res = await inventario.get_sat_unidades();
+        //le agrego todos las unidades
+        this.unidades_sat = [];
+        this.unidades_sat.push({ label: "Seleccione 1", value: "" });
+        if (this.getTipoformulario == "agregar") {
+          this.form.unidad_sat = this.unidades_sat[0];
+        }
+        res.data.forEach(element => {
+          this.unidades_sat.push({
+            label: element.descripcion + "(" + element.clave + ")",
+            value: element.id
+          });
+        });
+      } catch (error) {
+        /**error al cargar */
+        this.$vs.notify({
+          title: "Error",
+          text:
+            "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "9000"
+        });
+        this.cerrarVentana();
+      }
+    },
+
     quitar() {
       if (this.getTipoformulario == "agregar") {
         this.form.imagen = this.imagen_anterior;

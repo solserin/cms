@@ -26,6 +26,12 @@ Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@d
 
 Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
 
+/**inventario */
+Route::get('inventario/get_tipo_articulos', 'InventarioController@get_tipo_articulos');
+Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
+Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
+Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
+
 /**servicios accedidos desde el backend */
 Route::middleware(['client'])->group(function () {
     Route::get('pagos/get_pagos_backend/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
