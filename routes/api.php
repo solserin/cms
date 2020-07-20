@@ -32,6 +32,7 @@ Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
 Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
 Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
 
+
 /**servicios accedidos desde el backend */
 Route::middleware(['client'])->group(function () {
     Route::get('pagos/get_pagos_backend/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
@@ -170,6 +171,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/proveedores/delete_proveedor', 'ProveedoresController@delete_proveedor');
     Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
 
+
+    /**invnetario */
+    Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
 
 
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');

@@ -28,7 +28,7 @@
                 name="fileToUpload"
                 id="fileToUpload"
                 class="hidden"
-                accept="image/jpeg"
+                accept="image/*"
                 @change="display"
               />
               <div
@@ -179,17 +179,18 @@
                 <span>Código de barras</span>
                 <span class="texto-importante">(*)</span>
               </label>
+
               <vs-input
-                readonly
-                v-validate="'required'"
+                v-validate:requiere_codigo_barras.disabled="'required'"
                 name="codigo_barras"
                 data-vv-as=" "
                 type="text"
-                class="w-full py-1 cursor-pointer texto-bold"
+                class="w-full py-1 cursor-pointer"
                 placeholder="Ej. 495394038130"
                 v-model="form.codigo_barras"
-                maxlength="50"
+                maxlength="25"
                 ref="codigo_barras"
+                :disabled="!requiere_codigo_barras"
               />
               <div>
                 <span class="mensaje-requerido">
@@ -279,99 +280,41 @@
             </div>
           </div>
 
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+          <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
             <label class="text-sm opacity-75 font-bold">
-              <span>Unidad de Compra</span>
+              <span>Unidad de Servicio o Producto SAT</span>
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="unidades"
+              :options="unidades_sat"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.unidad_compra"
+              v-model="form.unidad_sat"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              v-validate:unidad_compra_validacion_computed.immediate="
-                'required'
-              "
-              name="unidad_compra_validacion"
+              v-validate:unidad_sat_validacion_computed.immediate="'required'"
+              name="antiguedad_validacion"
               data-vv-as=" "
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="mensaje-requerido">{{ errors.first("unidad_compra_validacion") }}</span>
+              <span class="mensaje-requerido">{{ errors.first("antiguedad_validacion") }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
-                v-if="this.errores['unidad_compra.value']"
-              >{{ errores["unidad_compra.value"][0] }}</span>
+                v-if="this.errores['unidad_sat.value']"
+              >{{ errores["unidad_sat.value"][0] }}</span>
             </div>
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              <span>Unidad de Venta</span>
-              <span class="texto-importante">(*)</span>
-            </label>
-            <v-select
-              :options="unidades"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.unidad_venta"
-              class="mb-4 sm:mb-0 pb-1 pt-1"
-              v-validate:unidad_venta_validacion_computed.immediate="'required'"
-              name="unidad_venta"
-              data-vv-as=" "
-            >
-              <div slot="no-options">Seleccione 1</div>
-            </v-select>
-            <div>
-              <span class="mensaje-requerido">{{ errors.first("unidad_venta") }}</span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="mensaje-requerido"
-                v-if="this.errores['unidad_venta.value']"
-              >{{ errores["unidad_venta.value"][0] }}</span>
-            </div>
-          </div>
-          <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              Cantidad Factor
-              <span class="texto-importante">(*)</span>
-            </label>
-            <vs-input
-              v-validate.disabled="'required'"
-              name="factor"
-              data-vv-as=" "
-              type="text"
-              class="w-full pb-1 pt-1"
-              placeholder="Ej. 1"
-              v-model="form.factor"
-              maxlength="12"
-            />
-            <div>
-              <span class="mensaje-requerido">
-                {{
-                errors.first("factor")
-                }}
-              </span>
-            </div>
-            <div class="mt-2">
-              <span class="mensaje-requerido" v-if="this.errores.factor">
-                {{
-                errores.factor[0]
-                }}
-              </span>
-            </div>
-          </div>
+
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               Mínimo Inventario
               <span class="texto-importante">(*)</span>
             </label>
             <vs-input
-              v-validate.disabled="'required'"
+              v-validate.disabled="'required|min_value:1|integer'"
               name="minimo_inventario"
               data-vv-as=" "
               type="text"
@@ -400,7 +343,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <vs-input
-              v-validate.disabled="'required'"
+              v-validate.disabled="'required|integer|min_value:'+this.form.minimo_inventario"
               name="maximo_inventario"
               data-vv-as=" "
               type="text"
@@ -424,33 +367,6 @@
             </div>
           </div>
 
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              <span>Unidad de Servicio o Producto SAT</span>
-              <span class="texto-importante">(*)</span>
-            </label>
-            <v-select
-              :options="unidades_sat"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.unidad_sat"
-              class="mb-4 sm:mb-0 pb-1 pt-1"
-              v-validate:unidad_sat_validacion_computed.immediate="'required'"
-              name="antiguedad_validacion"
-              data-vv-as=" "
-            >
-              <div slot="no-options">Seleccione 1</div>
-            </v-select>
-            <div>
-              <span class="mensaje-requerido">{{ errors.first("antiguedad_validacion") }}</span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="mensaje-requerido"
-                v-if="this.errores['unidad_sat.value']"
-              >{{ errores["unidad_sat.value"][0] }}</span>
-            </div>
-          </div>
           <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               <span>Grava IVA</span>
@@ -491,6 +407,7 @@
               class="mb-4 sm:mb-0 pb-1 pt-1"
               name="opcion_caducidad"
               data-vv-as=" "
+              :disabled="(this.form.tipo_articulo.value!=1?true:false)"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
@@ -510,7 +427,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <vs-input
-              v-validate.disabled="'required|decimal:2'"
+              v-validate.disabled="'required|decimal:2|min_value:1'"
               name="costo_compra"
               data-vv-as=" "
               type="text"
@@ -539,7 +456,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <vs-input
-              v-validate.disabled="'required|decimal:2'"
+              v-validate.disabled="'required|decimal:2|min_value:'+this.form.costo_compra"
               name="costo_venta"
               data-vv-as=" "
               type="text"
@@ -670,17 +587,48 @@ export default {
         );
 
         (async () => {
-          await this.get_unidades();
           await this.get_sat_unidades();
+          await this.get_categorias();
           if (this.getTipoformulario == "modificar") {
             this.title = "Modificar Artículo/Servicio del Inventario";
             /**se cargan los datos al formulario */
 
             await this.get_proveedor_by_id(this.get_proveedor_id);
           } else {
+            this.form.opcion_caducidad = this.opciones_sino[1];
             this.title = "Registrar Nuevo Artículo/Servicio al Inventario";
           }
         })();
+      }
+    },
+    "form.departamento": function(newValue, oldValue) {
+      if (newValue.value != "") {
+        if (newValue.categorias) {
+          this.categorias = [];
+          this.categorias.push({
+            value: "",
+            label: "Seleccione 1"
+          });
+          newValue.categorias.forEach(element => {
+            this.categorias.push({
+              value: element.id,
+              label: element.categoria
+            });
+          });
+
+          if (this.categorias.length > 1) {
+            this.form.categoria = this.categorias[1];
+          } else {
+            this.form.categoria = this.categorias[0];
+          }
+        }
+      }
+    },
+    "form.tipo_articulo": function(newValue, oldValue) {
+      if (newValue.value != "") {
+        if (newValue.value != 1) {
+          this.form.opcion_caducidad = { value: 0, label: "NO" };
+        }
       }
     }
   },
@@ -738,6 +686,13 @@ export default {
           return false;
         }
       }
+    },
+    requiere_codigo_barras: function() {
+      if (this.form.tipo_articulo.value != 2) {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   data() {
@@ -754,7 +709,7 @@ export default {
       callBackConfirmarAceptar: Function,
       accionNombre: "Modificar Proveedor",
       /**form */
-
+      datos_departamentos: [],
       tipo_articulos: [
         {
           value: "1",
@@ -773,16 +728,11 @@ export default {
       departamentos: [
         {
           value: "",
-          label: "Seleccione 1"
+          label: "Seleccione 1",
+          categorias: []
         }
       ],
       categorias: [
-        {
-          value: "",
-          label: "Seleccione 1"
-        }
-      ],
-      unidades: [
         {
           value: "",
           label: "Seleccione 1"
@@ -796,11 +746,11 @@ export default {
       ],
       opciones_sino: [
         {
-          value: "1",
+          value: 1,
           label: "SI"
         },
         {
-          value: "0",
+          value: 0,
           label: "NO"
         }
       ],
@@ -812,17 +762,10 @@ export default {
         },
         departamento: {
           value: "",
-          label: "Seleccione 1"
+          label: "Seleccione 1",
+          categorias: []
         },
         categoria: {
-          value: "",
-          label: "Seleccione 1"
-        },
-        unidad_compra: {
-          value: "",
-          label: "Seleccione 1"
-        },
-        unidad_venta: {
           value: "",
           label: "Seleccione 1"
         },
@@ -835,7 +778,7 @@ export default {
           label: "SI"
         },
         opcion_caducidad: {
-          value: "1",
+          value: 1,
           label: "SI"
         },
         descripcion: "",
@@ -844,8 +787,8 @@ export default {
         factor: 1,
         minimo_inventario: 1,
         maximo_inventario: 1,
-        costo_compra: 0,
-        costo_venta: 0,
+        costo_compra: "",
+        costo_venta: "",
         nota: "",
         /**form */
         /**en caso de modificar */
@@ -855,33 +798,46 @@ export default {
     };
   },
   methods: {
-    async get_unidades() {
+    async get_categorias() {
+      this.$vs.loading();
       try {
-        let res = await inventario.get_unidades();
-        //le agrego todos las unidades
-        this.unidades = [];
-        this.unidades.push({ label: "Seleccione 1", value: "" });
-        if (this.getTipoformulario == "agregar") {
-          this.form.unidad_compra = this.unidades[0];
-        }
+        let res = await inventario.get_categorias();
+        this.departamentos = [];
+        this.departamentos.push({
+          label: "Seleccione 1",
+          value: "",
+          categorias: []
+        });
+
         res.data.forEach(element => {
-          this.unidades.push({
-            label: element.unidad + "(" + element.clave + ")",
-            value: element.id
+          this.departamentos.push({
+            label: element.departamento,
+            value: element.id,
+            categorias: element.categorias
           });
         });
+
+        if (this.getTipoformulario == "agregar") {
+          if (res.data.length > 0) {
+            this.form.departamento = this.departamentos[1];
+          } else {
+            this.form.departamento = this.departamentos[0];
+          }
+        }
+        this.$vs.loading.close();
       } catch (error) {
         /**error al cargar */
         this.$vs.notify({
           title: "Error",
           text:
-            "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
+            "Ha ocurrido un error al tratar de cargar las cateogrías, por favor reintente.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
           time: "9000"
         });
+        this.$vs.loading.close();
         this.cerrarVentana();
       }
     },
@@ -892,15 +848,19 @@ export default {
         //le agrego todos las unidades
         this.unidades_sat = [];
         this.unidades_sat.push({ label: "Seleccione 1", value: "" });
-        if (this.getTipoformulario == "agregar") {
-          this.form.unidad_sat = this.unidades_sat[0];
-        }
         res.data.forEach(element => {
           this.unidades_sat.push({
             label: element.descripcion + "(" + element.clave + ")",
             value: element.id
           });
         });
+        if (this.getTipoformulario == "agregar") {
+          if (this.unidades_sat.length > 1) {
+            this.form.unidad_sat = this.unidades_sat[1];
+          } else {
+            this.form.unidad_sat = this.unidades_sat[0];
+          }
+        }
       } catch (error) {
         /**error al cargar */
         this.$vs.notify({
@@ -1007,7 +967,7 @@ export default {
             this.errores = [];
             (async () => {
               if (this.getTipoformulario == "agregar") {
-                this.callBackConfirmarAceptar = await this.guardar_proveedor;
+                this.callBackConfirmarAceptar = await this.guardar_articulo;
                 this.openConfirmarAceptar = true;
               } else {
                 /**modificar, se valida con password */
@@ -1020,17 +980,17 @@ export default {
         })
         .catch(() => {});
     },
-    async guardar_proveedor() {
+    async guardar_articulo() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
       try {
-        let res = await proveedores.guardar_proveedor(this.form);
+        let res = await inventario.guardar_articulo(this.form);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Registro de Proveedores",
-            text: "Se ha guardado el proveedor correctamente.",
+            title: "Registro de Artículos",
+            text: "Se ha guardado el artículo correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
@@ -1040,8 +1000,8 @@ export default {
           this.cerrarVentana();
         } else {
           this.$vs.notify({
-            title: "Registro de Proveedores",
-            text: "Error al guardar el proveedor, por favor reintente.",
+            title: "Registro de Artículos",
+            text: "Error al guardar el artículo, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
@@ -1065,14 +1025,23 @@ export default {
             //checo si existe cada error
             this.errores = err.response.data.error;
             this.$vs.notify({
-              title: "Registro de Proveedores",
+              title: "Registro de Artículos",
               text: "Verifique los errores encontrados en los datos.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
               time: 12000
             });
-            //console.log(err.response);
+          } else if (err.response.status == 409) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Registro de Artículos",
+              text: err.response.data.error,
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 15000
+            });
           }
         }
         this.$vs.loading.close();
@@ -1131,7 +1100,6 @@ export default {
               color: "danger",
               time: 5000
             });
-            //console.log(err.response);
           }
         }
         this.$vs.loading.close();
@@ -1154,13 +1122,43 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
-      this.form.nombre_comercial = "";
-      this.form.razon_social = "";
-      this.form.direccion = "";
-      this.form.nombre_contacto = "";
-      this.form.telefono = "";
-      this.form.email = "";
+      this.form.imagen = "";
+      this.form.tipo_articulo = {
+        value: "1",
+        label: "Artículo"
+      };
+      this.form.departamento = {
+        value: "",
+        label: "Seleccione 1",
+        categorias: []
+      };
+      this.form.categoria = {
+        value: "",
+        label: "Seleccione 1"
+      };
+      this.form.unidad_sat = {
+        value: "",
+        label: "Seleccione 1"
+      };
+      this.form.opcion_iva = {
+        value: "1",
+        label: "SI"
+      };
+      this.form.opcion_caducidad = {
+        value: 0,
+        label: "NO"
+      };
+      this.form.descripcion = "";
+      this.form.descripcion_ingles = "";
+      this.form.codigo_barras = "";
+      this.form.factor = 1;
+      this.form.minimo_inventario = 1;
+      this.form.maximo_inventario = 1;
+      this.form.costo_compra = "";
+      this.form.costo_venta = "";
       this.form.nota = "";
+      /**en caso de modificar */
+      this.form.id_articulo_modificar = 0;
     },
     limpiarValidation() {
       this.$validator.pause();

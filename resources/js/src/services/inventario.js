@@ -22,5 +22,10 @@ export default {
 
     get_sat_unidades() {
         return axios.get("/inventario/get_sat_unidades/");
-    }
+    },
+
+    guardar_articulo(param) {
+        let call = "/inventario/control_articulos/agregar";
+        return axios.post(call, param);
+    },
 };
