@@ -24,7 +24,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           @click="formulario('agregar')"
         >
           <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Registrar Proveedor</span>
+          <span class="texto-btn">Registrar Artículo</span>
         </vs-button>
       </div>
     </div>
@@ -98,18 +98,18 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                 icon="UserIcon"
                 class="mr-2"
                 svgClasses="w-5 h-5"
-              />Filtrar por Nombre del Proveedor
+              />Filtrar por Nombre del Artículo o Servicio
             </h3>
           </div>
           <div
             class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
           >
-            <label class="text-sm opacity-75">Nombre del Proveedor</label>
+            <label class="text-sm opacity-75">Nombre del Artículo</label>
             <vs-input
               class="w-full"
               icon="search"
-              placeholder="Filtrar por Nombre del Proveedor"
-              v-model="serverOptions.nombre_comercial"
+              placeholder="Filtrar por Nombre del Artículo o Servicio"
+              v-model="serverOptions.articulo"
               v-on:keyup.enter="get_data(1)"
               v-on:blur="get_data(1, 'blur')"
               maxlength="75"
@@ -126,18 +126,21 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       @change-page="handleChangePage"
       @sort="handleSort"
       :max-items="serverOptions.per_page.value"
-      :data="proveedores"
+      :data="articulos"
       noDataText="0 Resultados"
     >
       <template slot="header">
-        <h3>Listado de Proveedores Registrados</h3>
+        <h3>Listado de Artículos y Servicios Registrados</h3>
       </template>
       <template slot="thead">
-        <vs-th>Núm. Proveedor</vs-th>
-        <vs-th>Proveedor</vs-th>
-        <vs-th>Contacto</vs-th>
-        <vs-th>Domicilio</vs-th>
-        <vs-th>Teléfono</vs-th>
+        <vs-th>Núm. Artículo</vs-th>
+        <vs-th>Código Barras</vs-th>
+        <vs-th>Descripción</vs-th>
+        <vs-th>Tipo Artículo</vs-th>
+        <vs-th>Caduca</vs-th>
+        <vs-th>($) Precio Compra</vs-th>
+        <vs-th>($) Precio Venta</vs-th>
+        <vs-th>Existencias</vs-th>
         <vs-th>Status</vs-th>
         <vs-th>Acciones</vs-th>
       </template>
@@ -146,23 +149,38 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           <vs-td :data="data[indextr].id">
             <span class="font-semibold">{{ data[indextr].id }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].nombre_comercial">
+          <vs-td :data="data[indextr].codigo_barras">
+            <span class="font-semibold">{{ data[indextr].codigo_barras }}</span>
+          </vs-td>
+          <vs-td :data="data[indextr].descripcion">
             <span class="uppercase">
-              {{ data[indextr].nombre_comercial }}
+              {{ data[indextr].descripcion }}
             </span>
           </vs-td>
-          <vs-td :data="data[indextr].nombre_contacto">
+          <vs-td :data="data[indextr].tipo_articulo.tipo">
             <span class="uppercase">
-              {{ data[indextr].nombre_contacto }}
+              {{ data[indextr].tipo_articulo.tipo }}
             </span>
           </vs-td>
-          <vs-td :data="data[indextr].direccion">
+          <vs-td :data="data[indextr].caduca_texto">
             <span class="uppercase">
-              {{ data[indextr].direccion }}
+              {{ data[indextr].caduca_texto }}
             </span>
           </vs-td>
-          <vs-td :data="data[indextr].telefono">
-            <span class="">{{ data[indextr].telefono }}</span>
+          <vs-td :data="data[indextr].precio_compra">
+            <span class="uppercase">
+              $ {{ data[indextr].precio_compra | numFormat("0,000.00") }}
+            </span>
+          </vs-td>
+          <vs-td :data="data[indextr].precio_venta">
+            <span class="uppercase">
+              $ {{ data[indextr].precio_venta | numFormat("0,000.00") }}
+            </span>
+          </vs-td>
+          <vs-td :data="data[indextr].caduca_texto">
+            <span class="uppercase">
+              {{ data[indextr].caduca_texto }}
+            </span>
           </vs-td>
 
           <vs-td :data="data[indextr].status">
@@ -185,10 +203,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                 src="@assets/images/switchon.svg"
                 title="Deshabilitar"
                 @click="
-                  deleteProveedor(
-                    data[indextr].id,
-                    data[indextr].nombre_comercial
-                  )
+                  deleteArticulo(data[indextr].id, data[indextr].descripcion)
                 "
               />
 
@@ -198,10 +213,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                 src="@assets/images/switchoff.svg"
                 title="Habilitar"
                 @click="
-                  altaProveedor(
-                    data[indextr].id,
-                    data[indextr].nombre_comercial
-                  )
+                  altaArticulo(data[indextr].id, data[indextr].descripcion)
                 "
               />
             </div>
@@ -233,10 +245,10 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       @closeReportes="openReportesLista = false"
     ></Reporteador>
     <FormularioArticulos
-      :id_proveedor="id_proveedor_modificar"
+      :id_articulo="id_articulo_modificar"
       :tipo="tipoFormulario"
-      :show="verFormularioProveedores"
-      @closeVentana="verFormularioProveedores = false"
+      :show="verFormularioArticulos"
+      @closeVentana="verFormularioArticulos = false"
       @retornar_id="retorno_id"
     ></FormularioArticulos>
   </div>
@@ -246,7 +258,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 //planes de venta
 import Reporteador from "@pages/Reporteador";
 
-import proveedores from "@services/proveedores";
+import inventario from "@services/inventario";
 
 import FormularioArticulos from "@pages/inventarios/articulos/FormularioArticulos";
 
@@ -284,7 +296,7 @@ export default {
       openReportesLista: false,
       mostrarOptions: mostrarOptions,
       mostrar: { label: "15", value: "15" },
-      estado: { label: "Todas", value: "" },
+      estado: { label: "Todos", value: "" },
       estadosOptions: [
         {
           label: "Todos",
@@ -299,14 +311,14 @@ export default {
           value: "0"
         }
       ],
-      filtroEspecifico: { label: "Núm. Proveedor", value: "1" },
+      filtroEspecifico: { label: "Núm. Artículo", value: "1" },
       filtrosEspecificos: [
         {
-          label: "Núm. Proveedor",
+          label: "Núm. Artículo",
           value: "1"
         },
         {
-          label: "Núm. Teléfono",
+          label: "Código de Barras",
           value: "2"
         }
       ],
@@ -316,24 +328,24 @@ export default {
         status: "",
         filtro_especifico_opcion: "",
         numero_control: "",
-        nombre_comercial: ""
+        articulo: ""
       },
       verPaginado: true,
       total: 0,
       actual: 1,
-      proveedores: [],
+      articulos: [],
       //fin variables
       openStatus: false,
       callback: Function,
       accionNombre: "",
       datosModifcar: {},
       tipoFormulario: "",
-      verFormularioProveedores: false,
+      verFormularioArticulos: false,
       verModificar: false,
-      id_proveedor_modificar: 0,
+      id_articulo_modificar: 0,
       /**opciones para filtrar la peticion del server */
       /**user id para bajas y altas */
-      proveedor_id: "",
+      articulo_id: "",
       request: {
         venta_id: "",
         email: ""
@@ -344,21 +356,21 @@ export default {
     reset(card) {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = {
-        label: "Núm. Proveedor",
+        label: "Núm. Artículo",
         value: "1"
       };
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
       this.estado = { label: "Todos", value: "" };
-      this.serverOptions.nombre_comercial = "";
+      this.serverOptions.articulo = "";
       this.get_data(this.actual);
     },
 
     get_data(page, evento = "") {
       if (evento == "blur") {
         if (
-          this.serverOptions.nombre_comercial != "" ||
-          this.serverOptions.nombre_comercial == ""
+          this.serverOptions.articulo != "" ||
+          this.serverOptions.articulo == ""
         ) {
           //la funcion no avanza
 
@@ -374,8 +386,8 @@ export default {
         }
       }
       let self = this;
-      if (proveedores.cancel) {
-        proveedores.cancel("Operation canceled by the user.");
+      if (inventario.cancel) {
+        inventario.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
@@ -383,10 +395,11 @@ export default {
       this.serverOptions.per_page = this.mostrar.value;
       this.serverOptions.status = this.estado.value;
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
-      proveedores
-        .get_proveedores(this.serverOptions)
+      inventario
+        .get_inventario(this.serverOptions)
         .then(res => {
-          this.proveedores = res.data.data;
+          console.log("get_data -> res", res);
+          this.articulos = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
@@ -396,6 +409,7 @@ export default {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
+            console.log("get_data -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -427,46 +441,46 @@ export default {
 
     formulario(tipo) {
       this.tipoFormulario = tipo;
-      this.verFormularioProveedores = true;
+      this.verFormularioArticulos = true;
     },
-    openModificar(proveedor_id) {
+    openModificar(articulo_id) {
       this.tipoFormulario = "modificar";
-      this.id_proveedor_modificar = proveedor_id;
-      this.verFormularioProveedores = true;
+      this.id_articulo_modificar = articulo_id;
+      this.verFormularioArticulos = true;
     },
     retorno_id(dato) {
       this.get_data(this.actual);
     },
-    deleteProveedor(proveedor_id, nombre) {
-      this.accionNombre = "deshabilitar proveedor " + nombre;
-      this.proveedor_id = proveedor_id;
+    deleteArticulo(articulo_id, nombre) {
+      this.accionNombre = "Deshabilitar Artículo " + nombre;
+      this.articulo_id = articulo_id;
       this.openStatus = true;
       (async () => {
-        this.callback = await this.delete_proveedor;
+        this.callback = await this.delete_articulo;
       })();
     },
 
-    altaProveedor(proveedor_id, nombre) {
-      this.accionNombre = "Habilitar proveedor " + nombre;
-      this.proveedor_id = proveedor_id;
+    altaArticulo(articulo_id, nombre) {
+      this.accionNombre = "Habilitar Artículo " + nombre;
+      this.articulo_id = articulo_id;
       this.openStatus = true;
       (async () => {
-        this.callback = await this.habilitar_proveedor;
+        this.callback = await this.habilitar_articulo;
       })();
     },
-    async delete_proveedor() {
+    async delete_articulo() {
       this.$vs.loading();
       let datos = {
-        proveedor_id: this.proveedor_id
+        articulo_id: this.articulo_id
       };
       try {
-        let res = await proveedores.delete_proveedor(datos);
+        let res = await inventario.delete_articulo(datos);
         this.$vs.loading.close();
         this.get_data(this.actual);
         if (res.data >= 1) {
           this.$vs.notify({
-            title: "Deshabilitar Proveedor",
-            text: "Se ha deshabilitado al proveedor exitosamente.",
+            title: "Deshabilitar Artículo",
+            text: "Se ha deshabilitado el artículo exitosamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
@@ -474,7 +488,7 @@ export default {
           });
         } else {
           this.$vs.notify({
-            title: "Deshabilitar Proveedor",
+            title: "Deshabilitar Artículo",
             text: "No se realizaron cambios.",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -482,7 +496,7 @@ export default {
             time: 5000
           });
         }
-      } catch (error) {
+      } catch (err) {
         this.$vs.loading.close();
         if (err.response) {
           if (err.response.status == 403) {
@@ -498,23 +512,33 @@ export default {
           } else if (err.response.status == 422) {
             /**error de validacion */
             this.errores = err.response.data.error;
+          } else if (err.response.status == 409) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Control de Artículos",
+              text: err.response.data.error,
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 15000
+            });
           }
         }
       }
     },
-    async habilitar_proveedor() {
+    async habilitar_articulo() {
       this.$vs.loading();
       let datos = {
-        proveedor_id: this.proveedor_id
+        articulo_id: this.articulo_id
       };
       try {
-        let res = await proveedores.alta_proveedor(datos);
+        let res = await inventario.enable_disable(datos);
         this.$vs.loading.close();
         this.get_data(this.actual);
         if (res.data >= 1) {
           this.$vs.notify({
-            title: "Habilitar Proveedor",
-            text: "Se ha habilitado al cliente exitosamente.",
+            title: "Habilitar Artículo",
+            text: "Se ha habilitado el artículo exitosamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
@@ -522,7 +546,7 @@ export default {
           });
         } else {
           this.$vs.notify({
-            title: "Habilitar Proveedor",
+            title: "Habilitar Artículo",
             text: "No se realizaron cambios.",
             iconPack: "feather",
             icon: "icon-alert-circle",

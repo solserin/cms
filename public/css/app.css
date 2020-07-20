@@ -5169,6 +5169,16 @@ button:focus {
   padding-top: 41.66666666666667% !important;
 }
 
+.img-articulo {
+  display: block;
+  max-width: 230px;
+  max-height: auto !important;
+  min-width: 230px;
+  min-height: auto !important;
+  width: auto;
+  height: auto;
+}
+
 .mensaje-requerido {
   color: rgba(var(--vs-danger), 1) !important;
   color: #fff;

@@ -17,25 +17,25 @@ class Departamentos extends Seeder
             [
                 'departamento' => 'Artículos Funerarios',
                 'categorias' => [
-                    'ataudes', 'urnas'
+                    'Ataudes', 'Urnas'
                 ]
             ],
             [
                 'departamento' => 'Servicios Funerarios',
                 'categorias' => [
-                    'servicios funerarios'
+                    'Servicios funerarios'
                 ]
             ],
             [
                 'departamento' => 'Equipo y Material de Velación',
                 'categorias' => [
-                    'equipo de velación'
+                    'Equipo de velación'
                 ]
             ],
             [
                 'departamento' => 'Productos de Cafetería',
                 'categorias' => [
-                    'cafetería'
+                    'Cafetería'
                 ]
             ]
         ];

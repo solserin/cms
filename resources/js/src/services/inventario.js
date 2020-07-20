@@ -11,7 +11,6 @@ export default {
         return axios.get("/inventario/get_tipo_articulos/");
     },
 
-
     get_categorias() {
         return axios.get("/inventario/get_categorias/");
     },
@@ -28,4 +27,36 @@ export default {
         let call = "/inventario/control_articulos/agregar";
         return axios.post(call, param);
     },
+
+    modificar_articulo(param) {
+        let call = "/inventario/control_articulos/modificar";
+        return axios.post(call, param);
+    },
+
+    get_inventario(param) {
+        return axios.get("/inventario/get_inventario/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
+    get_articulo_by_id(param) {
+        return axios.get("/inventario/get_inventario/" + param, {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
+    enable_disable(param) {
+        let call = "/inventario/enable_disable/enable";
+        return axios.post(call, param);
+    },
+    delete_articulo(param) {
+        let call = "/inventario/enable_disable/disable";
+        return axios.post(call, param);
+    }
 };
