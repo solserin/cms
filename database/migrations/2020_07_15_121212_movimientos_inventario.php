@@ -33,6 +33,8 @@ class MovimientosInventario extends Migration
             $table->foreign('tipo_movimientos_id')->references('id')->on('tipo_movimientos');
             $table->unsignedBigInteger('proveedores_id')->unsigned()->nullable();
             $table->foreign('proveedores_id')->references('id')->on('proveedores');
+            $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
+            $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->tinyInteger('status')->default(1);
         });
     }
