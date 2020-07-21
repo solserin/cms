@@ -175,6 +175,7 @@ Route::middleware(['auth:api'])->group(function () {
     /**invnetario */
     Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
     Route::post('inventario/enable_disable/{tipo}', 'InventarioController@enable_disable');
+    Route::post('inventario/ajustar_inventario', 'InventarioController@ajustar_inventario');
 
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
 

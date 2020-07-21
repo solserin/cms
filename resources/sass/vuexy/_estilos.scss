@@ -49,6 +49,7 @@
     font-size: 1em !important;
     font-weight: 500 !important;
 }
+
 .roles .vs-collapse-item--header div {
     text-transform: uppercase !important;
 }
@@ -125,6 +126,7 @@
     background-color: #c1c1c1 !important;
     color: #303030 !important;
 }
+
 .default_color:hover {
     border-radius: 0px !important;
     box-shadow: rgba(179, 179, 179, 0.8) 0px 0px 25px -8px !important;
@@ -178,6 +180,7 @@
     margin-left: auto;
     margin-right: auto;
 }
+
 .vs-popup--content {
     max-height: 77vh !important;
 }
@@ -224,6 +227,7 @@
     font-size: 18px !important;
     font-weight: 550 !important;
 }
+
 .reportes_lista .vs-popup--title h3 {
     border-bottom: 0px !important;
 }
@@ -373,6 +377,7 @@
 .con-vs-dialog {
     z-index: 62005 !important;
 }
+
 .con-vs-dialog .vs-dialog {
     border-radius: 0 !important;
 }
@@ -449,12 +454,10 @@
 }
 
 // Small devices (landscape phones, less than 768px)
-@media (min-width: 768px) {
-}
+@media (min-width: 768px) {}
 
 // Medium devices (tablets, less than 992px)
-@media (min-width: 992px) {
-}
+@media (min-width: 992px) {}
 
 // Large devices (desktops, less than 1200px)
 @media (min-width: 1200px) {
@@ -587,6 +590,7 @@
         fill: rgba(var(--vs-primary), 1) !important;
     }
 }
+
 /* -------------------------------------------------------------------------- */
 /*                       fin estilos calendar flat pick                       */
 /* -------------------------------------------------------------------------- */
@@ -670,6 +674,7 @@
     font-size: 1em !important;
     font-weight: 600 !important;
 }
+
 .vs-table--thead tr th,
 .vs-table--td {
     font-weight: 500 !important;
@@ -862,6 +867,18 @@
     height: 85px;
     margin: 0px auto 0px auto !important;
     content: url("../../../../../resources/assets/images/notes.svg");
+}
+
+.cantidad input {
+    text-align: center !important;
+}
+
+.cantidad_icono:before {
+    display: block;
+    width: 85px;
+    height: 85px;
+    margin: 0px auto 0px auto !important;
+    content: url("../../../../../resources/assets/images/box.svg");
 }
 
 .confirmar .seguro-mensaje {

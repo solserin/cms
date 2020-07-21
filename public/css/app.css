@@ -6216,6 +6216,21 @@ button:focus {
   margin: 0px auto 0px auto !important;
 }
 
+[dir] .cantidad input {
+  text-align: center !important;
+}
+
+.cantidad_icono:before {
+  display: block;
+  width: 85px;
+  height: 85px;
+  content: url(/images/box.svg?bf7e4509b42d22024146d7a77992890a);
+}
+
+[dir] .cantidad_icono:before {
+  margin: 0px auto 0px auto !important;
+}
+
 .confirmar .seguro-mensaje {
   font-size: 1.8rem;
   color: #636363 !important;

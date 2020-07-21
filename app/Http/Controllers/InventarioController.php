@@ -34,7 +34,69 @@ class InventarioController extends ApiController
         return SATProductosServicios::whereNotIn('clave', ['84111506', '42262102'])->get();
     }
 
+    public function ajustar_inventario(Request $request)
+    {
+        if (trim($request->tipoAjuste['value']) == '') {
+            return $this->errorResponse('Error, debe especificar que tipo de ajuste que está solicitando.', 409);
+        }
+        //validaciones
+        $validaciones = [
+            'tipoAjuste.value' => 'required',
+            'ajuste.*.id' => [
+                'required'
+            ],
+            'ajuste.*.caduca_b' => [
+                'required'
+            ],
+            'ajuste.*.fecha_caducidad' => [
+                ''
+            ],
+            'ajuste.*.lote' => [
+                ''
+            ],
+            'ajuste.*.existencia_fisica' => [
+                'required'
+            ]
+        ];
 
+        if ($request->tipoAjuste['value'] == 1) {
+            /**es un ajuste de no inventariados */
+            foreach ($request->ajuste as $key => $articulo) {
+                if ($articulo['caduca_b'] == 1) {
+                    $validaciones['ajuste.' . $key . '.fecha_caducidad'] = 'required|date_format:Y-m-d';
+                }
+            }
+        }
+
+        /**FIN DE VALIDACIONES*/
+        $mensajes = [
+            'required' => 'Ingrese la clave del ajuste',
+            'ajuste.id.required' => 'ingrese el id del artículo',
+            'ajuste.existencia_fisica.required' => 'ingrese la existencia física',
+            'ajuste.caduca_b.required' => 'indique si al artículo caduca',
+            'ajuste.fecha_caducidad.required' => 'indique la fecha de caducidad',
+            'ajuste.fecha_caducidad.date_format' => 'indique la fecha de caducidad(Y-m-d)',
+        ];
+
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+        if ($request->tipoAjuste['value'] == 1) {
+            /**se crea un lote y despues se agregan al inventario */
+            foreach ($request->ajuste as $key => $articulo) {
+                if ($articulo['caduca_b'] == 1) {
+                    $validaciones['ajuste.' . $key . '.fecha_caducidad'] = 'required|date_format:Y-m-d';
+                }
+            }
+        }
+
+
+
+        return $this->errorResponse('E.', 409);
+    }
 
     public function control_articulos(Request $request, $tipo_servicio = '')
     {

@@ -67,5 +67,12 @@ export default {
     delete_articulo(param) {
         let call = "/inventario/enable_disable/disable";
         return axios.post(call, param);
+    },
+
+    ajustar_inventario(param) {
+        let call = "/inventario/ajustar_inventario";
+        return axios.post(call, param);
     }
+
+
 };
