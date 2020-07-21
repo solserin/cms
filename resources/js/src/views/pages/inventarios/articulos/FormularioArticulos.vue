@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-pagos normal-forms venta-propiedades background-header-forms"
+      class="forms-popups-pagos normal-forms venta-propiedades background-header-forms articulos"
       fullscreen
       close="cancelar"
       :title="title"
@@ -381,7 +381,7 @@
             </div>
           </div>
 
-          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+          <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               <span>Grava IVA</span>
               <span class="texto-importante">(*)</span>
@@ -411,7 +411,10 @@
             </div>
           </div>
 
-          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+          <div
+            hidden
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+          >
             <label class="text-sm opacity-75 font-bold">
               <span>Manejar Caducidades</span>
               <span class="texto-importante">(*)</span>
@@ -562,8 +565,8 @@
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
-      :accion="'He revisado la información y quiero registrar a este proveedor'"
-      :confirmarButton="'Guardar Proveedor'"
+      :accion="'He revisado la información y quiero registrar a este artículo'"
+      :confirmarButton="'Guardar Artículo'"
     ></ConfirmarAceptar>
   </div>
 </template>
@@ -572,7 +575,6 @@ import vSelect from "vue-select";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
-import proveedores from "@services/proveedores";
 import inventario from "@services/inventario";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 /**VARIABLES GLOBALES */

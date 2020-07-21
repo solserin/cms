@@ -42,6 +42,15 @@ export default {
         });
     },
 
+    get_inventariable(param) {
+        return axios.get("/inventario/get_inventario/all/paginated/0/0/0/1", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
     get_articulo_by_id(param) {
         return axios.get("/inventario/get_inventario/" + param, {
             cancelToken: new CancelToken(c => {

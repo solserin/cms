@@ -31,7 +31,7 @@ Route::get('inventario/get_tipo_articulos', 'InventarioController@get_tipo_artic
 Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
 Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
 Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
-Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}', 'InventarioController@get_articulos');
+Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
 
 /**servicios accedidos desde el backend */
 Route::middleware(['client'])->group(function () {

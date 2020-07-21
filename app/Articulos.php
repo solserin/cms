@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Articulos extends Model
@@ -27,5 +28,10 @@ class Articulos extends Model
     public function tipo_articulo()
     {
         return $this->belongsTo('App\TipoArticulos', 'tipo_articulos_id', 'id');
+    }
+
+    public function inventario()
+    {
+        return $this->hasMany('App\Inventario', 'articulos_id', 'id')->select('*')->where('existencia', '>', 0);
     }
 }

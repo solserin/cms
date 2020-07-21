@@ -185,14 +185,14 @@ class InventarioController extends ApiController
 
 
 
-    public function get_articulos(Request $request, $id_articulo = 'all', $paginated = '', $id_departamento = 0, $id_categoria = 0)
+    public function get_articulos(Request $request, $id_articulo = 'all', $paginated = '', $id_departamento = 0, $id_categoria = 0, $tipo_articulo = 0, $solo_inventariable = 0)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
         $articulo = $request->articulo;
         $numero_control = $request->numero_control;
         $status = $request->status;
-
-
+        $id_articulo_request = $request->id_articulo;
+        $codigo_barras_request = $request->codigo_barras;
         $resultado_query = Articulos::select(
             '*',
             DB::raw(
@@ -202,11 +202,13 @@ class InventarioController extends ApiController
                 '(NULL) AS caduca_texto'
             )
         )
+            ->with('categoria')
             ->whereHas('categoria', function ($query) use ($id_categoria) {
                 if (trim($id_categoria) != '' && $id_categoria > 0) {
                     $query->where('id', $id_categoria);
                 }
             })
+            ->with('categoria.departamento')
             ->whereHas('categoria.departamento', function ($query) use ($id_departamento) {
                 if (trim($id_departamento) != '' && $id_departamento > 0) {
                     $query->where('id', $id_departamento);
@@ -234,6 +236,24 @@ class InventarioController extends ApiController
                     }
                 }
             })
+            ->where(function ($q) use ($id_articulo_request) {
+                if (trim($id_articulo_request) == 'all' || $id_articulo_request > 0) {
+                    if (trim($id_articulo_request) == 'all') {
+                        $q->where('articulos.id', '>', $id_articulo_request);
+                    } else if ($id_articulo_request > 0) {
+                        $q->where('articulos.id', '=', $id_articulo_request);
+                    }
+                }
+            })
+            ->where(function ($q) use ($codigo_barras_request) {
+                if (trim($codigo_barras_request) == 'all' || $codigo_barras_request > 0) {
+                    if (trim($codigo_barras_request) == 'all') {
+                        $q->where('articulos.codigo_barras', '>', $codigo_barras_request);
+                    } else if ($codigo_barras_request > 0) {
+                        $q->where('articulos.codigo_barras', '=', $codigo_barras_request);
+                    }
+                }
+            })
             ->where(function ($q) use ($status) {
                 if (trim($status) != '') {
                     $q->where('articulos.status', '=', $status);
@@ -241,6 +261,17 @@ class InventarioController extends ApiController
             })
             ->where('descripcion', 'like', '%' . $articulo . '%')
             ->with('tipo_articulo')
+            ->with('inventario')
+            ->whereHas('tipo_articulo', function ($query) use ($tipo_articulo) {
+                if ((trim($tipo_articulo) != '' && $tipo_articulo > 0)) {
+                    $query->where('id', $tipo_articulo);
+                }
+            })
+            ->whereHas('tipo_articulo', function ($query) use ($solo_inventariable) {
+                if ((trim($solo_inventariable) != '' && $solo_inventariable > 0)) {
+                    $query->where('id', '<>', 2);
+                }
+            })
             ->with('unidad_compra:id,clave,unidad')
             ->with('unidad_venta:id,clave,unidad')
             ->orderBy('articulos.id', 'desc')

@@ -294,6 +294,32 @@ const router = new Router({
                         authRequired: true
                     }
                 },
+                {
+                    path: "/inventarios/funeraria/ajustes",
+                    name: "ajuste_inventario",
+                    component: () =>
+                        import(
+                            "@/views/pages/inventarios/ajustes/AjustesList.vue"
+                        ),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Catálogos"
+                            },
+                            {
+                                title: "Ajustes de inventario",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Ajustar Inventario",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
 
                 // =============================================================================
                 // Pages Routes

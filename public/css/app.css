@@ -6248,7 +6248,8 @@ button:focus {
   z-index: 52001 !important;
 }
 
-.clientes {
+.clientes,
+.articulos {
   z-index: 52002 !important;
 }
 
