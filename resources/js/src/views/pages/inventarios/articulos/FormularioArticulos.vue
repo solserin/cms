@@ -717,11 +717,12 @@ export default {
         {
           value: "2",
           label: "Servicio"
-        },
+        }
+        /*
         {
           value: "3",
           label: "Equipo Rentable"
-        }
+        }*/
       ],
 
       departamentos: [
