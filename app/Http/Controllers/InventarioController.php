@@ -433,6 +433,7 @@ class InventarioController extends ApiController
     /**ENABLE DISABLE PRECIO DE PROPIEDAD*/
     public function enable_disable(Request $request, $tipo_servicio = '')
     {
+
         if (!(trim($tipo_servicio) == 'enable' || trim($tipo_servicio) == 'disable')) {
             return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
         }
@@ -451,23 +452,30 @@ class InventarioController extends ApiController
             $mensajes
         );
 
-
         try {
             DB::beginTransaction();
             if (trim($tipo_servicio) == 'enable') {
                 $res = DB::table('articulos')->where('id', $request->articulo_id)->update(
                     [
-
                         'status' =>  1
                     ]
                 );
             } else {
-                $res = DB::table('articulos')->where('id', $request->articulo_id)->update(
-                    [
-
-                        'status' =>  0
-                    ]
-                );
+                /**verificando si existe inventario */
+                $inventario = $this->get_articulos($request, $request->articulo_id, '', 0, 0, 0, 0);
+                if (count($inventario) > 0) {
+                    if ($inventario[0]['existencia'] <= 0) {
+                        $res = DB::table('articulos')->where('id', $request->articulo_id)->update(
+                            [
+                                'status' =>  0
+                            ]
+                        );
+                    } else {
+                        return $this->errorResponse('Este artículo cuenta con existencias, no se puede deshabilitar.', 409);
+                    }
+                } else {
+                    return $this->errorResponse('Este artículo cuenta con existencias, no se puede deshabilitar.', 409);
+                }
             }
 
             /**todo salio bien y se debe de modificar */

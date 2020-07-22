@@ -14,7 +14,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 <template>
   <div>
     <div class="flex flex-wrap">
-      <div class="w-full sm:w-12/12 ml-auto md:w-4/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+      <div
+        class="w-full sm:w-12/12 ml-auto md:w-4/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+      >
         <vs-button
           color="success"
           size="small"
@@ -35,7 +37,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         collapse-action
       >
         <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Mostrar</label>
             <v-select
               :options="mostrarOptions"
@@ -45,7 +49,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 sm:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Estado</label>
             <v-select
               :options="estadosOptions"
@@ -55,7 +61,9 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
@@ -65,11 +73,11 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+          >
             <label class="text-sm opacity-75">
-              {{
-              this.filtroEspecifico.label
-              }}
+              {{ this.filtroEspecifico.label }}
             </label>
             <vs-input
               class="w-full"
@@ -86,10 +94,16 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         <div class="flex flex-wrap">
           <div class="w-full px-2">
             <h3 class="text-base font-semibold my-3">
-              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Artículo o Servicio
+              <feather-icon
+                icon="UserIcon"
+                class="mr-2"
+                svgClasses="w-5 h-5"
+              />Filtrar por Nombre del Artículo o Servicio
             </h3>
           </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
+          >
             <label class="text-sm opacity-75">Nombre del Artículo</label>
             <vs-input
               class="w-full"
@@ -142,16 +156,22 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
             <span class="uppercase">{{ data[indextr].descripcion }}</span>
           </vs-td>
           <vs-td :data="data[indextr].tipo_articulo.tipo">
-            <span class="uppercase">{{ data[indextr].tipo_articulo.tipo }}</span>
+            <span class="uppercase">{{
+              data[indextr].tipo_articulo.tipo
+            }}</span>
           </vs-td>
           <vs-td :data="data[indextr].caduca_texto">
             <span class="uppercase">{{ data[indextr].caduca_texto }}</span>
           </vs-td>
           <vs-td :data="data[indextr].precio_compra">
-            <span class="uppercase">$ {{ data[indextr].precio_compra | numFormat("0,000.00") }}</span>
+            <span class="uppercase"
+              >$ {{ data[indextr].precio_compra | numFormat("0,000.00") }}</span
+            >
           </vs-td>
           <vs-td :data="data[indextr].precio_venta">
-            <span class="uppercase">$ {{ data[indextr].precio_venta | numFormat("0,000.00") }}</span>
+            <span class="uppercase"
+              >$ {{ data[indextr].precio_venta | numFormat("0,000.00") }}</span
+            >
           </vs-td>
           <vs-td :data="data[indextr].existencia">
             <span class="uppercase">{{ data[indextr].existencia }}</span>
@@ -194,7 +214,12 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       </template>
     </vs-table>
     <div>
-      <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
+      <vs-pagination
+        v-if="verPaginado"
+        :total="this.total"
+        v-model="actual"
+        class="mt-8"
+      ></vs-pagination>
     </div>
     <pre ref="pre"></pre>
 
@@ -365,7 +390,6 @@ export default {
       inventario
         .get_inventario(this.serverOptions)
         .then(res => {
-          console.log("get_data -> res", res);
           this.articulos = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
@@ -376,7 +400,6 @@ export default {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
-            console.log("get_data -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -442,6 +465,7 @@ export default {
       };
       try {
         let res = await inventario.delete_articulo(datos);
+        console.log("delete_articulo -> res", res);
         this.$vs.loading.close();
         this.get_data(this.actual);
         if (res.data >= 1) {
@@ -466,6 +490,7 @@ export default {
       } catch (err) {
         this.$vs.loading.close();
         if (err.response) {
+          console.log("delete_articulo -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
