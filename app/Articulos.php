@@ -32,6 +32,6 @@ class Articulos extends Model
 
     public function inventario()
     {
-        return $this->hasMany('App\Inventario', 'articulos_id', 'id')->select('*')->where('existencia', '>', 0);
+        return $this->hasMany('App\Inventario', 'articulos_id', 'id')->select('*')->where('existencia', '>', 0)->orderBy('lotes_id', 'asc');
     }
 }

@@ -59,7 +59,7 @@
               <vs-th>Núm. Lote</vs-th>
               <vs-th>Existencia Sistema</vs-th>
               <vs-th>Existencia Física</vs-th>
-              <vs-th>Fecha Caducidad</vs-th>
+              <vs-th hidden>Fecha Caducidad</vs-th>
               <vs-th>Acciones</vs-th>
             </template>
             <template slot-scope="{ data }">
@@ -97,7 +97,7 @@
                     </span>
                   </div>
                 </vs-td>
-                <vs-td :data="data[indextr].fecha_caducidad">
+                <vs-td hidden :data="data[indextr].fecha_caducidad">
                   <span v-if="data[indextr].caduca_b==1">
                     <flat-pickr
                       :name="'fecha_venta'+indextr"

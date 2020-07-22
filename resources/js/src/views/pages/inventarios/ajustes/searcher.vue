@@ -8,9 +8,7 @@
       ref="buscador_articulo"
     >
       <div class="flex flex-wrap my-2">
-        <div
-          class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
-        >
+        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
           <vs-button
             color="success"
             size="small"
@@ -24,21 +22,12 @@
       </div>
       <!--inicio de buscador-->
       <div class="py-3">
-        <vx-card
-          no-radius
-          title="Filtros de selección"
-          refresh-content-action
-          @refresh="reset"
-        >
+        <vx-card no-radius title="Filtros de selección" refresh-content-action @refresh="reset">
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
-                <div
-                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Núm. articulo</label
-                  >
+                <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
+                  <label class="text-sm opacity-75 font-bold">Núm. articulo</label>
                   <vs-input
                     name="num_articulo"
                     data-vv-as=" "
@@ -51,18 +40,16 @@
                     v-on:blur="get_data('id_articulo', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{
+                    <span class="text-danger text-sm">
+                      {{
                       errors.first("num_articulo")
-                    }}</span>
+                      }}
+                    </span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div
-                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Código de Barras</label
-                  >
+                <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
+                  <label class="text-sm opacity-75 font-bold">Código de Barras</label>
                   <vs-input
                     name="codigo_barras"
                     data-vv-as=" "
@@ -75,18 +62,16 @@
                     v-on:blur="get_data('codigo_barras', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{
+                    <span class="text-danger text-sm">
+                      {{
                       errors.first("codigo_barras")
-                    }}</span>
+                      }}
+                    </span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div
-                  class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Nombre del Artículo</label
-                  >
+                <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
+                  <label class="text-sm opacity-75 font-bold">Nombre del Artículo</label>
                   <vs-input
                     ref="nombre_articulo"
                     name="nombre_articulo"
@@ -100,9 +85,11 @@
                     v-on:blur="get_data('articulo', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{
+                    <span class="text-danger text-sm">
+                      {{
                       errors.first("nombre_articulo")
-                    }}</span>
+                      }}
+                    </span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
@@ -110,7 +97,6 @@
             </div>
           </template>
         </vx-card>
-        {{ serverOptions.per_page }}
         <div class="resultados_articulos mt-10">
           <vs-table
             :sst="true"
@@ -126,7 +112,7 @@
               <vs-th>Núm. Artículo</vs-th>
               <vs-th>Código Barras</vs-th>
               <vs-th>Descripción</vs-th>
-              <vs-th>Caduca</vs-th>
+              <vs-th hidden>Caduca</vs-th>
               <vs-th>($) Precio Venta</vs-th>
               <vs-th>Existencias</vs-th>
               <vs-th>Acciones</vs-th>
@@ -137,29 +123,23 @@
                   <span class="font-semibold">{{ data[indextr].id }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].codigo_barras">
-                  <span class="font-semibold">{{
+                  <span class="font-semibold">
+                    {{
                     data[indextr].codigo_barras
-                  }}</span>
+                    }}
+                  </span>
                 </vs-td>
                 <vs-td :data="data[indextr].descripcion">
-                  <span class="uppercase">
-                    {{ data[indextr].descripcion }}
-                  </span>
+                  <span class="uppercase">{{ data[indextr].descripcion }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].caduca_texto">
-                  <span class="uppercase">
-                    {{ data[indextr].caduca_texto }}
-                  </span>
+                <vs-td hidden :data="data[indextr].caduca_texto">
+                  <span class="uppercase">{{ data[indextr].caduca_texto }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].precio_venta">
-                  <span class="uppercase">
-                    $ {{ data[indextr].precio_venta | numFormat("0,000.00") }}
-                  </span>
+                  <span class="uppercase">$ {{ data[indextr].precio_venta | numFormat("0,000.00") }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].caduca_texto">
-                  <span class="uppercase">
-                    {{ data[indextr].caduca_texto }}
-                  </span>
+                <vs-td :data="data[indextr].existencia">
+                  <span class="uppercase">{{ data[indextr].existencia }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].id">
                   <div class="flex flex-start">
@@ -175,12 +155,7 @@
             </template>
           </vs-table>
           <div>
-            <vs-pagination
-              v-if="verPaginado"
-              :total="this.total"
-              v-model="actual"
-              class="mt-3"
-            ></vs-pagination>
+            <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-3"></vs-pagination>
           </div>
         </div>
       </div>

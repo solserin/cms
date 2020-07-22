@@ -180,9 +180,11 @@ class InventarioController extends ApiController
             $validaciones['id_articulo_modificar'] = 'required';
         }
         $opcion_caducidad = $request->opcion_caducidad['value'];
-        if ($request->tipo_articulo['value'] == 1) {
+        if ($request->tipo_articulo['value'] != 2) {
+            if (trim($request->codigo_barras) == '') {
+                return $this->errorResponse('Ingrese un código de barras.', 409);
+            }
             /**codigo de barras requerido */
-            $validaciones['codigo_barras'] = 'required';
             /**revisando si existe el codigo de berras */
             $articulo = Articulos::where('codigo_barras', $request->codigo_barras)->first();
             if (!empty($articulo)) {
@@ -309,6 +311,9 @@ class InventarioController extends ApiController
             ),
             DB::raw(
                 '(NULL) AS caduca_texto'
+            ),
+            DB::raw(
+                '(NULL) AS existencia'
             )
         )
             ->with('categoria')
@@ -412,6 +417,13 @@ class InventarioController extends ApiController
             if ($articulo['tipo_articulos_id'] == 2) {
                 $articulo['codigo_barras'] = 'N/A';
             }
+
+            /**sumando existencia */
+            $existencia = 0;
+            foreach ($articulo['inventario'] as $key_inventario => &$inventario) {
+                $existencia += $inventario['existencia'];
+            }
+            $articulo['existencia'] = $existencia;
         }
         return $resultado_query;
     }
