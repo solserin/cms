@@ -261,6 +261,28 @@ class InventarioController extends ApiController
             }
             /**fin if servicio tipo agregar */
             else {
+
+                $r = new \Illuminate\Http\Request();
+                $r->replace(['sample' => 'sample']);
+                $inventario = $this->get_articulos($r, $request->id_articulo_modificar, '', 0, 0, 0, 0);
+                if (count($inventario) > 0) {
+                    if (count($inventario[0]['inventario']) > 0) {
+                        /**checa si cambio algun dato sensible
+                         * tipo_articulo
+                         * caduca
+                         */
+                        if ($opcion_caducidad != $inventario[0]['caduca_b']) {
+                            return $this->errorResponse('No se debe cambiar la opción caducidad, pues ya existe inventario de este artículo.', 409);
+                        }
+
+                        if ($request->tipo_articulo['value'] != $inventario[0]['tipo_articulos_id']) {
+                            return $this->errorResponse('No se debe cambiar el tipo de artículo, pues ya existe inventario de este artículo.', 409);
+                        }
+                    }
+                } else {
+                    return $this->errorResponse('Este artículo no fue encontrado en la Base de Datos.', 409);
+                }
+
                 /**verificar que no cambie el tipo de caducidad si ya fue vendido algo de ese producto */
                 /**es modificar */
                 DB::table('articulos')->where('id', '=', $request->id_articulo_modificar)->update(
@@ -466,7 +488,9 @@ class InventarioController extends ApiController
                 );
             } else {
                 /**verificando si existe inventario */
-                $inventario = $this->get_articulos($request, $request->articulo_id, '', 0, 0, 0, 0);
+                $r = new \Illuminate\Http\Request();
+                $r->replace(['sample' => 'sample']);
+                $inventario = $this->get_articulos($r, $request->articulo_id, '', 0, 0, 0, 0);
                 if (count($inventario) > 0) {
                     if ($inventario[0]['existencia'] <= 0 || $inventario[0]['existencia'] == 'N/A') {
                         $res = DB::table('articulos')->where('id', $request->articulo_id)->update(

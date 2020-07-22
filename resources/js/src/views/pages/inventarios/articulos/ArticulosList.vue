@@ -465,7 +465,6 @@ export default {
       };
       try {
         let res = await inventario.delete_articulo(datos);
-        console.log("delete_articulo -> res", res);
         this.$vs.loading.close();
         this.get_data(this.actual);
         if (res.data >= 1) {
@@ -490,7 +489,6 @@ export default {
       } catch (err) {
         this.$vs.loading.close();
         if (err.response) {
-          console.log("delete_articulo -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({

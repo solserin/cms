@@ -16,9 +16,9 @@
             <div class="w-full">
               <div class="float-left px-2">
                 <img width="36px" src="@assets/images/image.svg" />
-                <h3
-                  class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
-                >Seleccionar imagen del artículo o servicio</h3>
+                <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+                  Seleccionar imagen del artículo o servicio
+                </h3>
               </div>
             </div>
             <div class="w-full">
@@ -57,8 +57,15 @@
                     : ' md:w-5/12 lg:w-5/12 xl:w-5/12'
                 ]"
               >
-                <vs-button class="w-full" color="primary" size="small" @click="quitar">
-                  <span class="font-medium text-base">Dejar imagen anterior</span>
+                <vs-button
+                  class="w-full"
+                  color="primary"
+                  size="small"
+                  @click="quitar"
+                >
+                  <span class="font-medium text-base"
+                    >Dejar imagen anterior</span
+                  >
                 </vs-button>
               </div>
             </div>
@@ -72,7 +79,9 @@
             <img width="36px" src="@assets/images/stock.svg" />
             <h3
               class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-            >Información del artículo o servicio</h3>
+            >
+              Información del artículo o servicio
+            </h3>
           </div>
 
           <div class="w-full px-2">
@@ -97,13 +106,16 @@
                 v-model.trim="form.descripcion"
               />
               <div>
-                <span class="text-danger text-sm">{{ errors.first("descripcion") }}</span>
+                <span class="text-danger text-sm">{{
+                  errors.first("descripcion")
+                }}</span>
               </div>
               <div class="mt-2">
                 <span
                   class="text-danger text-sm"
                   v-if="this.errores.descripcion"
-                >{{ errores.descripcion[0] }}</span>
+                  >{{ errores.descripcion[0] }}</span
+                >
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -124,13 +136,16 @@
                 v-model.trim="form.descripcion_ingles"
               />
               <div>
-                <span class="text-danger text-sm">{{ errors.first("descripcion_ingles") }}</span>
+                <span class="text-danger text-sm">{{
+                  errors.first("descripcion_ingles")
+                }}</span>
               </div>
               <div class="mt-2">
                 <span
                   class="text-danger text-sm"
                   v-if="this.errores.descripcion_ingles"
-                >{{ errores.descripcion_ingles[0] }}</span>
+                  >{{ errores.descripcion_ingles[0] }}</span
+                >
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -153,13 +168,16 @@
                 <div slot="no-options">Seleccione 1</div>
               </v-select>
               <div>
-                <span class="mensaje-requerido">{{ errors.first("tipo_articulo") }}</span>
+                <span class="mensaje-requerido">{{
+                  errors.first("tipo_articulo")
+                }}</span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores['tipo_articulo.value']"
-                >{{ errores["tipo_articulo.value"][0] }}</span>
+                  >{{ errores["tipo_articulo.value"][0] }}</span
+                >
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -181,13 +199,16 @@
                 :disabled="!requiere_codigo_barras"
               />
               <div>
-                <span class="mensaje-requerido">{{ errors.first("codigo_barras") }}</span>
+                <span class="mensaje-requerido">{{
+                  errors.first("codigo_barras")
+                }}</span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores.codigo_barras"
-                >{{ errores.codigo_barras[0] }}</span>
+                  >{{ errores.codigo_barras[0] }}</span
+                >
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -210,13 +231,16 @@
                 <div slot="no-options">Seleccione 1</div>
               </v-select>
               <div>
-                <span class="mensaje-requerido">{{ errors.first("plan_validacion") }}</span>
+                <span class="mensaje-requerido">{{
+                  errors.first("plan_validacion")
+                }}</span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores['plan_funerario.value']"
-                >{{ errores["plan_funerario.value"][0] }}</span>
+                  >{{ errores["plan_funerario.value"][0] }}</span
+                >
               </div>
             </div>
             <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -238,16 +262,15 @@
               </v-select>
               <div>
                 <span class="mensaje-requerido">
-                  {{
-                  errors.first("categoria")
-                  }}
+                  {{ errors.first("categoria") }}
                 </span>
               </div>
               <div class="mt-2">
                 <span
                   class="mensaje-requerido"
                   v-if="this.errores['categoria.value']"
-                >{{ errores["categoria.value"][0] }}</span>
+                  >{{ errores["categoria.value"][0] }}</span
+                >
               </div>
             </div>
           </div>
@@ -260,7 +283,9 @@
               <img width="36px" src="@assets/images/measuring.svg" />
               <h3
                 class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-              >Unidades de medida del artículo o servicio</h3>
+              >
+                Unidades de medida del artículo o servicio
+              </h3>
             </div>
           </div>
 
@@ -283,16 +308,15 @@
             </v-select>
             <div>
               <span class="mensaje-requerido">
-                {{
-                errors.first("antiguedad_validacion")
-                }}
+                {{ errors.first("antiguedad_validacion") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['unidad_sat.value']"
-              >{{ errores["unidad_sat.value"][0] }}</span>
+                >{{ errores["unidad_sat.value"][0] }}</span
+              >
             </div>
           </div>
 
@@ -313,13 +337,16 @@
               :disabled="this.form.tipo_articulo.value == 2"
             />
             <div>
-              <span class="mensaje-requerido">{{ errors.first("minimo_inventario") }}</span>
+              <span class="mensaje-requerido">{{
+                errors.first("minimo_inventario")
+              }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores.minimo_inventario"
-              >{{ errores.minimo_inventario[0] }}</span>
+                >{{ errores.minimo_inventario[0] }}</span
+              >
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -341,13 +368,16 @@
               :disabled="this.form.tipo_articulo.value == 2"
             />
             <div>
-              <span class="mensaje-requerido">{{ errors.first("maximo_inventario") }}</span>
+              <span class="mensaje-requerido">{{
+                errors.first("maximo_inventario")
+              }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores.maximo_inventario"
-              >{{ errores.maximo_inventario[0] }}</span>
+                >{{ errores.maximo_inventario[0] }}</span
+              >
             </div>
           </div>
 
@@ -369,20 +399,22 @@
             </v-select>
             <div>
               <span class="mensaje-requerido">
-                {{
-                errors.first("opcion_iva")
-                }}
+                {{ errors.first("opcion_iva") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['opcion_iva.value']"
-              >{{ errores["opcion_iva.value"][0] }}</span>
+                >{{ errores["opcion_iva.value"][0] }}</span
+              >
             </div>
           </div>
 
-          <div hidden class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+          <div
+            hidden
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+          >
             <label class="text-sm opacity-75 font-bold">
               <span>Manejar Caducidades</span>
               <span class="texto-importante">(*)</span>
@@ -401,16 +433,15 @@
             </v-select>
             <div>
               <span class="mensaje-requerido">
-                {{
-                errors.first("opcion_caducidad")
-                }}
+                {{ errors.first("opcion_caducidad") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores['opcion_caducidad.value']"
-              >{{ errores["opcion_caducidad.value"][0] }}</span>
+                >{{ errores["opcion_caducidad.value"][0] }}</span
+              >
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -429,13 +460,16 @@
               maxlength="12"
             />
             <div>
-              <span class="mensaje-requerido">{{ errors.first("costo_compra") }}</span>
+              <span class="mensaje-requerido">{{
+                errors.first("costo_compra")
+              }}</span>
             </div>
             <div class="mt-2">
               <span
                 class="mensaje-requerido"
                 v-if="this.errores.costo_compra"
-              >{{ errores.costo_compra[0] }}</span>
+                >{{ errores.costo_compra[0] }}</span
+              >
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
@@ -456,13 +490,14 @@
               maxlength="16"
             />
             <div>
-              <span class="mensaje-requerido">{{ errors.first("costo_venta") }}</span>
+              <span class="mensaje-requerido">{{
+                errors.first("costo_venta")
+              }}</span>
             </div>
             <div class="mt-2">
-              <span
-                class="mensaje-requerido"
-                v-if="this.errores.costo_venta"
-              >{{ errores.costo_venta[0] }}</span>
+              <span class="mensaje-requerido" v-if="this.errores.costo_venta">{{
+                errores.costo_venta[0]
+              }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
@@ -493,10 +528,19 @@
           </div>
         </div>
       </div>
-      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto">
+      <div
+        class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto"
+      >
         <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
-          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'">Guardar Datos</span>
+          <img
+            width="25px"
+            class="cursor-pointer"
+            size="small"
+            src="@assets/images/save.svg"
+          />
+          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
+            >Guardar Datos</span
+          >
           <span class="texto-btn" v-else>Modificar Datos</span>
         </vs-button>
       </div>
