@@ -418,12 +418,16 @@ class InventarioController extends ApiController
                 $articulo['codigo_barras'] = 'N/A';
             }
 
-            /**sumando existencia */
-            $existencia = 0;
-            foreach ($articulo['inventario'] as $key_inventario => &$inventario) {
-                $existencia += $inventario['existencia'];
+            if ($articulo['tipo_articulos_id'] != 2) {
+                /**sumando existencia */
+                $existencia = 0;
+                foreach ($articulo['inventario'] as $key_inventario => &$inventario) {
+                    $existencia += $inventario['existencia'];
+                }
+                $articulo['existencia'] = $existencia;
+            } else {
+                $articulo['existencia'] = 'N/A';
             }
-            $articulo['existencia'] = $existencia;
         }
         return $resultado_query;
     }
@@ -464,7 +468,7 @@ class InventarioController extends ApiController
                 /**verificando si existe inventario */
                 $inventario = $this->get_articulos($request, $request->articulo_id, '', 0, 0, 0, 0);
                 if (count($inventario) > 0) {
-                    if ($inventario[0]['existencia'] <= 0) {
+                    if ($inventario[0]['existencia'] <= 0 || $inventario[0]['existencia'] == 'N/A') {
                         $res = DB::table('articulos')->where('id', $request->articulo_id)->update(
                             [
                                 'status' =>  0
