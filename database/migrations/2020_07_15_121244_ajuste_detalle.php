@@ -14,7 +14,7 @@ class AjusteDetalle extends Migration
     public function up()
     {
         Schema::create('ajuste_detalle', function (Blueprint $table) {
-            $table->dateTime('fecha_caducidad')->nullable();
+            $table->date('fecha_caducidad')->nullable();
             $table->integer('existencia_sistema');
             $table->integer('existencia_fisica');
             $table->unsignedBigInteger('movimientos_inventario_id')->unsigned()->nullable();

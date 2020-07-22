@@ -39,9 +39,9 @@
                 <label class="text-base opacity-75 font-medium">Nota:</label>
                 <vs-input
                   class="w-full mt-1"
-                  icon="search"
-                  maxlength="75"
+                  maxlength="250"
                   placeholder="Nota sobre el ajuste"
+                  v-model.trim="form.nota"
                 />
               </div>
             </div>
@@ -276,6 +276,7 @@ export default {
       ],
       articulo: [],
       form: {
+        nota: "",
         ajuste: [],
         tipoAjuste: { label: "Lote no Inventariado", value: "1" }
       },
@@ -311,6 +312,7 @@ export default {
         this.form.ajuste.push({
           id: datos.id,
           caduca_b: datos.caduca_b,
+          precio_compra: datos.precio_compra,
           caduca_texto: datos.caduca_texto,
           codigo_barras: datos.codigo_barras,
           descripcion: datos.descripcion,
@@ -362,7 +364,7 @@ export default {
             color: "success",
             time: 5000
           });
-          //this.$emit("retornar_id", res.data);
+          this.$emit("retornar_id", res.data);
           this.cerrarVentana();
         } else {
           this.$vs.notify({
@@ -431,7 +433,9 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
-      console.log("limpiar aqui");
+      this.form.nota = "";
+      this.form.ajuste = [];
+      this.form.tipoAjuste = { label: "Lote no Inventariado", value: "1" };
     },
     limpiarValidation() {
       this.$validator.pause();

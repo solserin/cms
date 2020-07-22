@@ -15,7 +15,7 @@ class Inventario extends Migration
     {
         Schema::create('inventario', function (Blueprint $table) {
             $table->unsignedDecimal('precio_compra_neto', 10, 2);
-            $table->dateTime('fecha_caducidad')->nullable();
+            $table->date('fecha_caducidad')->nullable();
             $table->unsignedBigInteger('lotes_id')->unsigned()->nullable();
             $table->foreign('lotes_id')->references('id')->on('movimientos_inventario');
             $table->unsignedBigInteger('articulos_id')->unsigned()->nullable();

@@ -56,6 +56,9 @@ class InventarioController extends ApiController
             ],
             'ajuste.*.existencia_fisica' => [
                 'required'
+            ],
+            'ajuste.*.existencia_sistema' => [
+                'required'
             ]
         ];
 
@@ -73,6 +76,7 @@ class InventarioController extends ApiController
             'required' => 'Ingrese la clave del ajuste',
             'ajuste.id.required' => 'ingrese el id del artículo',
             'ajuste.existencia_fisica.required' => 'ingrese la existencia física',
+            'ajuste.existencia_sistema.required' => 'ingrese la existencia en el sistema',
             'ajuste.caduca_b.required' => 'indique si al artículo caduca',
             'ajuste.fecha_caducidad.required' => 'indique la fecha de caducidad',
             'ajuste.fecha_caducidad.date_format' => 'indique la fecha de caducidad(Y-m-d)',
@@ -83,19 +87,62 @@ class InventarioController extends ApiController
             $mensajes
         );
 
-
-        if ($request->tipoAjuste['value'] == 1) {
-            /**se crea un lote y despues se agregan al inventario */
-            foreach ($request->ajuste as $key => $articulo) {
-                if ($articulo['caduca_b'] == 1) {
-                    $validaciones['ajuste.' . $key . '.fecha_caducidad'] = 'required|date_format:Y-m-d';
+        try {
+            DB::beginTransaction();
+            $id_movimiento = 0;
+            if ($request->tipoAjuste['value'] == 1) {
+                /**se crea un lote y despues se agregan al inventario */
+                $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
+                    [
+                        'nota' => $request->nota,
+                        'fecha_registro' => now(),
+                        'registro_id' => (int) $request->user()->id,
+                        'tipo_movimientos_id' => 2,
+                        'subtotal' => 0,
+                        'descuento' => 0,
+                        'impuestos' => 0,
+                        'total' => 0
+                        /**entrada de lostes por ajuste */
+                    ]
+                );
+                /**crea el detalle del ajuste */
+                foreach ($request->ajuste as $key => $articulo) {
+                    if ($articulo['existencia_fisica'] < 1) {
+                        return $this->errorResponse('Ingrese todos los valores a inventariar.', 409);
+                    }
+                    DB::table('ajuste_detalle')->insert(
+                        [
+                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : NULL,
+                            'existencia_sistema' => $articulo['existencia_sistema'],
+                            'existencia_fisica' => $articulo['existencia_fisica'],
+                            'movimientos_inventario_id' => $id_movimiento,
+                            'lotes_id' => $id_movimiento,
+                            'articulos_id' => $articulo['id'],
+                            /**entrada de lostes por ajuste */
+                        ]
+                    );
+                }
+                /**actualizando el inventario */
+                foreach ($request->ajuste as $key => $articulo) {
+                    DB::table('inventario')->insert(
+                        [
+                            'lotes_id' => $id_movimiento,
+                            'precio_compra_neto' => $articulo['precio_compra'],
+                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : NULL,
+                            'existencia' => $articulo['existencia_fisica'],
+                            'articulos_id' => $articulo['id'],
+                        ]
+                    );
                 }
             }
+            //return $this->errorResponse('E.', 409);
+            DB::commit();
+            return $id_movimiento;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            //return $this->errorResponse('Error al guardar ajuste, reinicie la página e intente nuevamente.', 409);
+            return $th;
         }
-
-
-
-        return $this->errorResponse('E.', 409);
     }
 
     public function control_articulos(Request $request, $tipo_servicio = '')
@@ -132,7 +179,7 @@ class InventarioController extends ApiController
         if ($tipo_servicio == 'modificar') {
             $validaciones['id_articulo_modificar'] = 'required';
         }
-        $opcion_caducidad = 1;
+        $opcion_caducidad = $request->opcion_caducidad['value'];
         if ($request->tipo_articulo['value'] == 1) {
             /**codigo de barras requerido */
             $validaciones['codigo_barras'] = 'required';
