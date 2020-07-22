@@ -17,6 +17,9 @@
         font-family: 'Open Sans' !important;
         color: #000 !important;
   }
+.hidden{
+ visibility: hidden;
+}
   @for ($i = 0; $i <= 100; $i++)   
         .px-{{$i}}{
           padding-right:{{($i/3)}}em !important;

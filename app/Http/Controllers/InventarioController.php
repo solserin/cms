@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Articulos;
 use App\Categorias;
 use App\SatUnidades;
@@ -336,6 +337,15 @@ class InventarioController extends ApiController
             ),
             DB::raw(
                 '(NULL) AS existencia'
+            ),
+            DB::raw(
+                '(NULL) AS estatus_texto'
+            ),
+            DB::raw(
+                '(NULL) AS estatus_inventario_b'
+            ),
+            DB::raw(
+                '(NULL) AS estatus_inventario_texto'
             )
         )
             ->with('categoria')
@@ -424,6 +434,12 @@ class InventarioController extends ApiController
         }
 
         foreach ($resultado as $key_articulo => &$articulo) {
+            if ($articulo['status'] == 1) {
+                $articulo['estatus_texto'] = 'Activo';
+            } else {
+                $articulo['estatus_texto'] = 'Deshabilitado';
+            }
+
             /**actualizando iva texto y caduca texto */
             if ($articulo['grava_iva_b'] == 1) {
                 $articulo['grava_iva_texto'] = 'si';
@@ -447,9 +463,29 @@ class InventarioController extends ApiController
                     $existencia += $inventario['existencia'];
                 }
                 $articulo['existencia'] = $existencia;
+
+
+                if ($existencia < $articulo['minimo']) {
+                    $articulo['estatus_inventario_b'] = '0';
+                    $articulo['estatus_inventario_texto'] = 'Desabastecido';
+                } elseif ($existencia <= $articulo['maximo']) {
+                    $articulo['estatus_inventario_b'] = '1';
+                    $articulo['estatus_inventario_texto'] = 'Abastecido';
+                } else {
+                    $articulo['estatus_inventario_b'] = '2';
+                    $articulo['estatus_inventario_texto'] = 'Sobrestock';
+                }
             } else {
                 $articulo['existencia'] = 'N/A';
+
+
+                $articulo['estatus_inventario_b'] = '1';
+                $articulo['estatus_inventario_texto'] = 'N/A';
             }
+
+
+
+            /**veirifanco los estatus del inventario */
         }
         return $resultado_query;
     }
@@ -512,6 +548,78 @@ class InventarioController extends ApiController
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
+        }
+    }
+
+
+
+
+    public function get_inventario_pdf(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /* $email =  $request->email_send === 'true' ? true : false;
+        if ($email == true) {
+            if (!$request->email_addres || !$request->destinatario) {
+                $this->errorResponse('Es necesario un correo y un destinatario', 409);
+            }
+        }
+        $email_to = $request->email_address;
+        $datos_request = json_decode($request->request_parent[0], true);
+        */
+        $r = new \Illuminate\Http\Request();
+        $r->replace(['sample' => 'sample']);
+        $inventario = $this->get_articulos($r, 'all', '', 0, 0, 0, 0);
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        $email = false;
+        $email_to = 'hector@gmail.com';
+
+        //obtengo la informacion de esa venta
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/inventario_completo/inventario', ['empresa' => $empresa, 'inventario' => $inventario]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = __('inventarios/inventario_completo.inventario')  . '.pdf';
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('inventarios.inventario_completo.footer'),
+        ]);
+
+        $pdf->setOptions([
+            'header-html' => view('inventarios.inventario_completo.header')
+        ]);
+
+        $pdf->setOption('orientation', 'landscape');
+        $pdf->setOption('margin-left', 12.4);
+        $pdf->setOption('margin-right', 12.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 12.4);
+        $pdf->setOption('page-size', 'a4');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                $request->destinatario,
+                __('inventarios/inventario_completo.inventario'),
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
         }
     }
 }
