@@ -429,10 +429,9 @@ class InventarioController extends ApiController
                     $detalle['resultado_ajuste'] = 2;
                     $detalle['resultado_ajuste_texto'] = 'Reingreso de Mercancías';
                 }
+                /**diferencia real del cambio */
+                $detalle['diferencia'] = abs($detalle['existencia_sistema'] - $detalle['existencia_fisica']);
             }
-
-            /**diferencia real del cambio */
-            $detalle['diferencia'] = abs($detalle['existencia_sistema'] - $detalle['existencia_fisica']);
         }
 
         return $resultado_query;
