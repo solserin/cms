@@ -635,8 +635,6 @@ class InventarioController extends ApiController
     }
 
 
-
-
     public function get_inventario_pdf(Request $request)
     {
         try {
@@ -657,8 +655,8 @@ class InventarioController extends ApiController
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email_to = 'hector@gmail.com';
+            */
             //obtengo la informacion de esa venta
             $get_funeraria = new EmpresaController();
             $empresa = $get_funeraria->get_empresa_data();
@@ -673,14 +671,12 @@ class InventarioController extends ApiController
             $pdf->setOptions([
                 'header-html' => view('inventarios.inventario_completo.header')
             ]);
-
             $pdf->setOption('orientation', 'landscape');
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 12.4);
             $pdf->setOption('page-size', 'a4');
-
             if ($email == true) {
                 /**email */
                 /**
@@ -729,9 +725,9 @@ class InventarioController extends ApiController
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$email = false;
-        $id_ajuste = 10;
-        $email_to = 'hector@gmail.com';
-*/
+            $id_ajuste = 10;
+            $email_to = 'hector@gmail.com';
+            */
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
             $ajuste = $this->get_ajustes($r, $id_ajuste, '');
@@ -745,18 +741,15 @@ class InventarioController extends ApiController
                 'title' => $name_pdf,
                 'footer-html' => view('inventarios.ajustes.footer'),
             ]);
-
             $pdf->setOptions([
                 'header-html' => view('inventarios.ajustes.header')
             ]);
-
             $pdf->setOption('orientation', 'landscape');
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 12.4);
             $pdf->setOption('page-size', 'a4');
-
             if ($email == true) {
                 /**email */
                 /**
