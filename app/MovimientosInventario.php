@@ -26,6 +26,9 @@ class MovimientosInventario extends Model
                 ),
                 DB::raw(
                     '(NULL) AS resultado_ajuste_texto'
+                ),
+                DB::raw(
+                    '(0) AS diferencia'
                 )
             )
             ->orderBy('articulos_id', 'asc');

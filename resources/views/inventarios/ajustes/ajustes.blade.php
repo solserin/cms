@@ -114,6 +114,9 @@
                     Existencia Física
                 </th>
                 <th>
+                    Diferencia
+                </th>
+                <th>
                     Resultado
                 </th>
             </tr>
@@ -127,6 +130,7 @@
                 <td>{{ $detalle['lotes_id'] }}</td>
                 <td>{{ $detalle['existencia_sistema'] }}</td>
                 <td>{{ $detalle['existencia_fisica'] }}</td>
+                <td>{{ $detalle['diferencia'] }}</td>
                 <td>{{ $detalle['resultado_ajuste_texto'] }}</td>
             </tr>
             @endforeach

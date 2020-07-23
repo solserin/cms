@@ -66,14 +66,14 @@ class InventarioController extends ApiController
             ]
         ];
 
-        if ($request->tipoAjuste['value'] == 1) {
-            /**es un ajuste de no inventariados */
-            foreach ($request->ajuste as $key => $articulo) {
-                if ($articulo['caduca_b'] == 1) {
-                    $validaciones['ajuste.' . $key . '.fecha_caducidad'] = 'required|date_format:Y-m-d';
-                }
+        //if ($request->tipoAjuste['value'] == 1) {
+        /**es un ajuste de no inventariados */
+        foreach ($request->ajuste as $key => $articulo) {
+            if ($articulo['caduca_b'] == 1) {
+                $validaciones['ajuste.' . $key . '.fecha_caducidad'] = 'required|date_format:Y-m-d';
             }
         }
+        //}
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
@@ -85,12 +85,10 @@ class InventarioController extends ApiController
             'ajuste.fecha_caducidad.required' => 'indique la fecha de caducidad',
             'ajuste.fecha_caducidad.date_format' => 'indique la fecha de caducidad(Y-m-d)',
         ];
-
         request()->validate(
             $validaciones,
             $mensajes
         );
-
         try {
             DB::beginTransaction();
             $id_movimiento = 0;
@@ -138,6 +136,43 @@ class InventarioController extends ApiController
                         ]
                     );
                 }
+            } else {
+                /**es un ajuste de inventario del invnetario actual */
+                $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
+                    [
+                        'nota' => $request->nota,
+                        'fecha_registro' => now(),
+                        'registro_id' => (int) $request->user()->id,
+                        'tipo_movimientos_id' => 1,
+                        'subtotal' => 0,
+                        'descuento' => 0,
+                        'impuestos' => 0,
+                        'total' => 0
+                        /**entrada de lostes por ajuste */
+                    ]
+                );
+                /**crea el detalle del ajuste */
+                foreach ($request->ajuste as $key => $articulo) {
+                    DB::table('ajuste_detalle')->insert(
+                        [
+                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : NULL,
+                            'existencia_sistema' => $articulo['existencia_sistema'],
+                            'existencia_fisica' => $articulo['existencia_fisica'],
+                            'movimientos_inventario_id' => $id_movimiento,
+                            'lotes_id' => $articulo['lote'],
+                            'articulos_id' => $articulo['id']
+                            /**entrada de lostes por ajuste */
+                        ]
+                    );
+                }
+                /**actualizando el inventario */
+                foreach ($request->ajuste as $key => $articulo) {
+                    DB::table('inventario')->where('lotes_id', $articulo['lote'])->where('articulos_id', $articulo['id'])->update(
+                        [
+                            'existencia' => $articulo['existencia_fisica']
+                        ]
+                    );
+                }
             }
             //return $this->errorResponse('E.', 409);
             DB::commit();
@@ -151,8 +186,6 @@ class InventarioController extends ApiController
 
     public function control_articulos(Request $request, $tipo_servicio = '')
     {
-
-
         if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
             return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
         }
@@ -384,7 +417,7 @@ class InventarioController extends ApiController
                 if ($detalle['existencia_sistema'] == $detalle['existencia_fisica']) {
                     $detalle['resultado_ajuste'] = 1;
                     $detalle['resultado_ajuste_texto'] = 'Sin Cambios';
-                } elseif ($detalle['existencia_sistema'] < $detalle['existencia_fisica']) {
+                } elseif ($detalle['existencia_sistema'] > $detalle['existencia_fisica']) {
                     if ($ajuste['tipo_movimientos_id'] == 1) {
                         $detalle['resultado_ajuste'] = 0;
                         $detalle['resultado_ajuste_texto'] = 'Extravío de Mercancías';
@@ -397,6 +430,9 @@ class InventarioController extends ApiController
                     $detalle['resultado_ajuste_texto'] = 'Reingreso de Mercancías';
                 }
             }
+
+            /**diferencia real del cambio */
+            $detalle['diferencia'] = abs($detalle['existencia_sistema'] - $detalle['existencia_fisica']);
         }
 
         return $resultado_query;

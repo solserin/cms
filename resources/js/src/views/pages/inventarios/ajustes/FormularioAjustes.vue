@@ -9,14 +9,19 @@
       ref="formulario"
     >
       <div class="flex flex-wrap">
-        <div class="w-full sm:w-1/6 ml-auto md:w-1/6 lg:w-1/6 xl:w-1/6 px-2 mb-1">
+        <div
+          class="w-full sm:w-1/6 ml-auto md:w-1/6 lg:w-1/6 xl:w-1/6 px-2 mb-1"
+        >
           <vs-button
             color="success"
             size="small"
             class="w-full ml-auto"
             @click="openBuscador = true"
           >
-            <img class="cursor-pointer img-btn" src="@assets/images/searcharticulo.svg" />
+            <img
+              class="cursor-pointer img-btn"
+              src="@assets/images/searcharticulo.svg"
+            />
             <span class="texto-btn">Buscar Articulos</span>
           </vs-button>
         </div>
@@ -25,17 +30,37 @@
         <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
           <vx-card no-radius title="Filtros de selección">
             <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
-                <label class="text-base opacity-75 font-medium">Datos del Ajuste</label>
+              <div class="w-full text-right">
+                <vs-button
+                  v-if="form.ajuste.length > 0"
+                  class=""
+                  @click="quitarTodos"
+                  color="danger"
+                  size="small"
+                >
+                  <span class="font-medium text-base"
+                    >Quitar todos los Artículos</span
+                  >
+                </vs-button>
+              </div>
+              <div
+                class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+              >
+                <label class="text-base opacity-75 font-medium"
+                  >Datos del Ajuste</label
+                >
                 <v-select
                   :options="tipoAjustes"
                   :clearable="false"
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
                   v-model="form.tipoAjuste"
                   class="mb-4 md:mb-0 mt-1"
+                  :disabled="this.form.ajuste.length > 0"
                 />
               </div>
-              <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 mb-4 px-2">
+              <div
+                class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 mb-4 px-2"
+              >
                 <label class="text-base opacity-75 font-medium">Nota:</label>
                 <vs-input
                   class="w-full mt-1"
@@ -47,7 +72,9 @@
             </div>
           </vx-card>
         </div>
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-5">
+        <div
+          class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-5"
+        >
           <vs-table :data="form.ajuste" noDataText="0 Resultados">
             <template slot="header">
               <h3>Lista de Artículos a Inventariar</h3>
@@ -68,7 +95,9 @@
                   <span class="font-semibold">{{ data[indextr].id }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].codigo_barras">
-                  <span class="font-semibold">{{ data[indextr].codigo_barras }}</span>
+                  <span class="font-semibold">{{
+                    data[indextr].codigo_barras
+                  }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].descripcion">
                   <span class="uppercase">{{ data[indextr].descripcion }}</span>
@@ -77,30 +106,30 @@
                   <span class="uppercase">{{ data[indextr].lote }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].existencia_sistema">
-                  <span class="uppercase">{{ data[indextr].existencia_sistema }}</span>
+                  <span class="uppercase">{{
+                    data[indextr].existencia_sistema
+                  }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].existencia_fisica">
                   <vs-input
-                    :name="'existencia_fisica'+indextr"
+                    :name="'existencia_fisica' + indextr"
                     data-vv-as=" "
                     data-vv-validate-on="blur"
-                    v-validate="'required|integer|min_value:1'"
+                    v-validate="'required|integer|min_value:' + min_existencia"
                     class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad"
                     maxlength="4"
                     v-model="form.ajuste[indextr].existencia_fisica"
                   />
                   <div>
                     <span class="text-danger text-xs">
-                      {{
-                      errors.first('existencia_fisica'+indextr)
-                      }}
+                      {{ errors.first("existencia_fisica" + indextr) }}
                     </span>
                   </div>
                 </vs-td>
                 <vs-td hidden :data="data[indextr].fecha_caducidad">
-                  <span v-if="data[indextr].caduca_b==1">
+                  <span v-if="data[indextr].caduca_b == 1">
                     <flat-pickr
-                      :name="'fecha_venta'+indextr"
+                      :name="'fecha_venta' + indextr"
                       data-vv-as=" "
                       v-validate="'required'"
                       :config="configdateTimePickerFechasCaducidad"
@@ -110,14 +139,14 @@
                     />
                     <div>
                       <span class="text-danger text-xs">
-                        {{
-                        errors.first("fecha_venta"+indextr)
-                        }}
+                        {{ errors.first("fecha_venta" + indextr) }}
                       </span>
                     </div>
                   </span>
 
-                  <span v-else class="uppercase">{{ data[indextr].fecha_caducidad }}</span>
+                  <span v-else class="uppercase">{{
+                    data[indextr].fecha_caducidad
+                  }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].id">
                   <div class="flex flex-start">
@@ -125,9 +154,7 @@
                       class="cursor-pointer img-btn mr-auto ml-auto"
                       src="@assets/images/cancel.svg"
                       title="Remover"
-                      @click="
-                  deleteArticulo(data[indextr],indextr)
-                "
+                      @click="deleteArticulo(data[indextr], indextr)"
                     />
                   </div>
                 </vs-td>
@@ -141,15 +168,22 @@
           <div class="mt-2">
             <p class="text-center">
               <span class="text-danger font-medium">Ojo:</span>
-              Por favor revise la información ingresada, si todo es
-              correcto de click en "Botón de Abajo”.
+              Por favor revise la información ingresada, si todo es correcto de
+              click en "Botón de Abajo”.
             </p>
           </div>
         </div>
       </div>
-      <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto">
+      <div
+        class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto"
+      >
         <vs-button class="w-full" @click="acceptAlert()" color="success">
-          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/box.svg" />
+          <img
+            width="25px"
+            class="cursor-pointer"
+            size="small"
+            src="@assets/images/box.svg"
+          />
           <span class="texto-btn">Ajustar Inventario</span>
         </vs-button>
       </div>
@@ -211,16 +245,16 @@ export default {
     ConfirmarDanger,
     ConfirmarAceptar,
     ArticulosBuscador,
-    Cantidad
+    Cantidad,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       this.limpiarValidation();
       if (newValue == true) {
         this.imagen_anterior = require("@assets/images/no-image-icon.png");
@@ -235,7 +269,7 @@ export default {
           this.title = "Realizar Ajuste del Inventario";
         })();
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -244,8 +278,13 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
+    min_existencia: function () {
+      if (this.form.tipoAjuste.value == 1) {
+        return 1;
+      } else return 0;
+    },
   },
   data() {
     return {
@@ -267,28 +306,36 @@ export default {
       tipoAjustes: [
         {
           value: "1",
-          label: "Lote no Inventariado"
+          label: "Lote no Inventariado",
         },
         {
           label: "Inventario Actual",
-          value: "2"
-        }
+          value: "2",
+        },
       ],
       articulo: [],
       form: {
         nota: "",
         ajuste: [],
-        tipoAjuste: { label: "Lote no Inventariado", value: "1" }
+        tipoAjuste: { label: "Lote no Inventariado", value: "1" },
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
+    quitarTodos() {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword = "¿Desea remover todos los Artículos?";
+      this.callBackConfirmar = this.quitar_todos;
+      this.openConfirmarSinPassword = true;
+    },
+    quitar_todos() {
+      this.form.ajuste = [];
+    },
     deleteArticulo(datos, indextr) {
       this.index_articulo = indextr;
       this.botonConfirmarSinPassword = "eliminar";
-      this.accionConfirmarSinPassword =
-        "¿Desea remover este Artículo/Servicio?";
+      this.accionConfirmarSinPassword = "¿Desea remover este Artículo?";
       this.callBackConfirmar = this.remover_concepto_callback;
       this.openConfirmarSinPassword = true;
     },
@@ -296,11 +343,9 @@ export default {
     remover_concepto_callback() {
       this.form.ajuste.splice(this.index_articulo, 1);
     },
-
     cantidad(datos) {
       this.articulo = datos;
       this.openCantidad = true;
-      console.log("cantidad -> datos", datos);
     },
     articuloSeleccionado(datos) {
       /**aqui se agrega el articulo seleccionado */
@@ -308,7 +353,7 @@ export default {
       if (this.form.tipoAjuste.value == 1) {
         /**es un ajuste de articulos fuera de inventario */
         /**es caducable */
-        let caducidad = datos.caduca_b == 1 ? "" : "N/A";
+        let caducidad = datos.caduca_b == 1 ? datos.fecha_caducidad : "N/A";
         this.form.ajuste.push({
           id: datos.id,
           caduca_b: datos.caduca_b,
@@ -319,14 +364,47 @@ export default {
           fecha_caducidad: caducidad,
           lote: "N/A",
           existencia_sistema: 0,
-          existencia_fisica: 1
+          existencia_fisica: 1,
+        });
+      } else {
+        /**es un ajuste del inventario actual
+         * se debe de agregar todos los productos de cada lote que tiene activo el inventario
+         */
+        let caducidad = datos.caduca_b == 1 ? datos.fecha_caducidad : "N/A";
+        datos.inventario.forEach((element) => {
+          /**verificand que no este en el ajuste a mandar el concepto seleccionado */
+          let esta = 0;
+          this.form.ajuste.forEach((ajuste) => {
+            if (
+              ajuste.id == element.articulos_id &&
+              ajuste.fecha_caducidad == element.fecha_caducidad &&
+              ajuste.lote == element.lotes_id
+            ) {
+              esta = 1;
+              return;
+            }
+          });
+          if (!esta) {
+            this.form.ajuste.push({
+              id: datos.id,
+              caduca_b: datos.caduca_b,
+              precio_compra: element.precio_compra_neto,
+              caduca_texto: datos.caduca_texto,
+              codigo_barras: datos.codigo_barras,
+              descripcion: datos.descripcion,
+              fecha_caducidad: element.fecha_caducidad,
+              lote: element.lotes_id,
+              existencia_sistema: element.existencia,
+              existencia_fisica: element.existencia,
+            });
+          }
         });
       }
     },
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Guardar Artículo",
@@ -335,7 +413,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             this.errores = [];
@@ -362,7 +440,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("retornar_id", res.data);
           this.cerrarVentana();
@@ -373,7 +451,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
         }
         this.$vs.loading.close();
@@ -388,7 +466,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 12000
+              time: 12000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -399,7 +477,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 12000
+              time: 12000,
             });
           } else if (err.response.status == 409) {
             /**FORBIDDEN ERROR */
@@ -409,7 +487,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 15000
+              time: 15000,
             });
           }
         }
@@ -441,8 +519,8 @@ export default {
       this.$validator.pause();
       this.$nextTick(() => {
         this.$validator.errors.clear();
-        this.$validator.fields.items.forEach(field => field.reset());
-        this.$validator.fields.items.forEach(field =>
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
           this.errors.remove(field)
         );
         this.$validator.resume();
@@ -450,8 +528,8 @@ export default {
     },
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

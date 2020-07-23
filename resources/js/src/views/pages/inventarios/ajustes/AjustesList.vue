@@ -97,6 +97,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       </template>
       <template slot="thead">
         <vs-th>Núm. Ajuste</vs-th>
+        <vs-th>Tipo de Ajuste</vs-th>
         <vs-th>Fecha del Ajuste</vs-th>
         <vs-th>Realizado Por</vs-th>
         <vs-th>Ver Detalle</vs-th>
@@ -105,6 +106,11 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
           <vs-td :data="data[indextr].id">
             <span class="font-semibold">{{ data[indextr].id }}</span>
+          </vs-td>
+          <vs-td :data="data[indextr].tipo_ajuste_texto">
+            <span class="font-semibold">{{
+              data[indextr].tipo_ajuste_texto
+            }}</span>
           </vs-td>
           <vs-td :data="data[indextr].fecha_registro_texto">
             <span class="font-semibold">{{
