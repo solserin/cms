@@ -117,7 +117,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
             </span>
           </vs-td>
 
-          <vs-td :data="data[indextr].id_user">
+          <vs-td :data="data[indextr].id">
             <div class="flex flex-start">
               <img
                 class="cursor-pointer img-btn ml-auto mr-auto"
@@ -182,18 +182,18 @@ export default {
     "v-select": vSelect,
     Password,
     FormularioAjustes,
-    Reporteador
+    Reporteador,
   },
   watch: {
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       this.get_data(this.actual);
     },
-    mostrar: function(newValue, oldValue) {
+    mostrar: function (newValue, oldValue) {
       this.get_data(1);
     },
-    estado: function(newVal, previousVal) {
+    estado: function (newVal, previousVal) {
       this.get_data(1);
-    }
+    },
   },
   data() {
     return {
@@ -207,29 +207,29 @@ export default {
       estadosOptions: [
         {
           label: "Todos",
-          value: ""
+          value: "",
         },
         {
           label: "Activos",
-          value: "1"
+          value: "1",
         },
         {
           label: "Cancelados",
-          value: "0"
-        }
+          value: "0",
+        },
       ],
       filtroEspecifico: { label: "Núm. Ajuste", value: "1" },
       filtrosEspecificos: [
         {
           label: "Núm. Ajuste",
-          value: "1"
-        }
+          value: "1",
+        },
       ],
       serverOptions: {
         page: "",
         per_page: "",
         filtro_especifico_opcion: "",
-        numero_control: ""
+        numero_control: "",
       },
       verPaginado: true,
       total: 0,
@@ -245,18 +245,18 @@ export default {
       /**user id para bajas y altas */
       ajuste_id: "",
       request: {
-        ajuste_id: "",
-        email: ""
-      }
+        id_ajuste: "",
+        email: "",
+      },
     };
   },
   methods: {
-    openReporte(parametro = "") {
+    openReporte(parametro) {
       this.ListaReportes = [];
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Detalle del ajuste de inventario",
-        url: "/inventario/get_ajuste_pdf"
+        url: "/inventario/get_ajuste_pdf",
       });
       //estado de cuenta
       this.request.email = "";
@@ -268,7 +268,7 @@ export default {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = {
         label: "Núm. Ajuste",
-        value: "1"
+        value: "1",
       };
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
@@ -296,7 +296,7 @@ export default {
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
       inventario
         .get_ajustes(this.serverOptions)
-        .then(res => {
+        .then((res) => {
           console.log("get_data -> res", res);
           this.ajustes = res.data.data;
           this.total = res.data.last_page;
@@ -304,7 +304,7 @@ export default {
           this.verPaginado = true;
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
@@ -318,7 +318,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             }
           }
@@ -370,7 +370,7 @@ export default {
     async delete_articulo() {
       this.$vs.loading();
       let datos = {
-        ajuste_id: this.ajuste_id
+        ajuste_id: this.ajuste_id,
       };
       try {
         let res = await inventario.delete_articulo(datos);
@@ -383,7 +383,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
         } else {
           this.$vs.notify({
@@ -392,7 +392,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 5000
+            time: 5000,
           });
         }
       } catch (err) {
@@ -406,7 +406,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 8000
+              time: 8000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
@@ -419,7 +419,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 15000
+              time: 15000,
             });
           }
         }
@@ -428,7 +428,7 @@ export default {
     async habilitar_articulo() {
       this.$vs.loading();
       let datos = {
-        ajuste_id: this.ajuste_id
+        ajuste_id: this.ajuste_id,
       };
       try {
         let res = await inventario.enable_disable(datos);
@@ -441,7 +441,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
         } else {
           this.$vs.notify({
@@ -450,7 +450,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 5000
+            time: 5000,
           });
         }
       } catch (error) {
@@ -464,7 +464,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 8000
+              time: 8000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
@@ -472,10 +472,10 @@ export default {
           }
         }
       }
-    }
+    },
   },
   created() {
     this.get_data(this.actual);
-  }
+  },
 };
 </script>

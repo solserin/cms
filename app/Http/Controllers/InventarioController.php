@@ -347,6 +347,15 @@ class InventarioController extends ApiController
                     }
                 }
             })
+            ->where(function ($q) use ($id_ajuste) {
+                if (trim($id_ajuste) == 'all' || $id_ajuste > 0) {
+                    if (trim($id_ajuste) == 'all') {
+                        $q->where('movimientos_inventario.id', '>', $id_ajuste);
+                    } else if ($id_ajuste > 0) {
+                        $q->where('movimientos_inventario.id', '=', $id_ajuste);
+                    }
+                }
+            })
             ->whereIn('tipo_movimientos_id', [1, 2])
             ->orderBy('movimientos_inventario.id', 'desc')
             ->get();
@@ -630,143 +639,150 @@ class InventarioController extends ApiController
 
     public function get_inventario_pdf(Request $request)
     {
-        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        $email =  $request->email_send === 'true' ? true : false;
-        if ($email == true) {
-            if (!$request->email_addres || !$request->destinatario) {
-                $this->errorResponse('Es necesario un correo y un destinatario', 409);
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            if ($email == true) {
+                if (!$request->email_addres || !$request->destinatario) {
+                    $this->errorResponse('Es necesario un correo y un destinatario', 409);
+                }
             }
-        }
-        $email_to = $request->email_address;
-        $datos_request = json_decode($request->request_parent[0], true);
+            $email_to = $request->email_address;
+            $datos_request = json_decode($request->request_parent[0], true);
 
-        $r = new \Illuminate\Http\Request();
-        $r->replace(['sample' => 'sample']);
-        $inventario = $this->get_articulos($r, 'all', '', 0, 0, 0, 0);
-        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
-         * por lo cual puede variar de paramtros degun la ncecesidad
-         */
-        /*$email = false;
+            $r = new \Illuminate\Http\Request();
+            $r->replace(['sample' => 'sample']);
+            $inventario = $this->get_articulos($r, 'all', '', 0, 0, 0, 0);
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            /*$email = false;
         $email_to = 'hector@gmail.com';
 */
-        //obtengo la informacion de esa venta
-        $get_funeraria = new EmpresaController();
-        $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/inventario_completo/inventario', ['empresa' => $empresa, 'inventario' => $inventario]);
-        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = 'Reporte de Inventario Registrado.pdf';
-        $pdf->setOptions([
-            'title' => $name_pdf,
-            'footer-html' => view('inventarios.inventario_completo.footer'),
-        ]);
+            //obtengo la informacion de esa venta
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('inventarios/inventario_completo/inventario', ['empresa' => $empresa, 'inventario' => $inventario]);
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = 'Reporte de Inventario Registrado.pdf';
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('inventarios.inventario_completo.footer'),
+            ]);
 
-        $pdf->setOptions([
-            'header-html' => view('inventarios.inventario_completo.header')
-        ]);
+            $pdf->setOptions([
+                'header-html' => view('inventarios.inventario_completo.header')
+            ]);
 
-        $pdf->setOption('orientation', 'landscape');
-        $pdf->setOption('margin-left', 12.4);
-        $pdf->setOption('margin-right', 12.4);
-        $pdf->setOption('margin-top', 12.4);
-        $pdf->setOption('margin-bottom', 12.4);
-        $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('orientation', 'landscape');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 12.4);
+            $pdf->setOption('page-size', 'a4');
 
-        if ($email == true) {
-            /**email */
-            /**
-             * parameters lista de la funcion
-             * to destinatario
-             * to_name nombre del destinatario
-             * subject motivo del correo
-             * name_pdf nombre del pdf
-             * pdf archivo pdf a enviar
-             */
-            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
-            $email_controller = new EmailController();
-            $enviar_email = $email_controller->pdf_email(
-                $email_to,
-                $request->destinatario,
-                'Reporte de Inventario Registrado',
-                $name_pdf,
-                $pdf
-            );
-            return $enviar_email;
-            /**email fin */
-        } else {
-            return $pdf->inline($name_pdf);
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    $request->destinatario,
+                    'Reporte de Inventario Registrado',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos.', 409);
         }
     }
 
 
     public function get_ajuste_pdf(Request $request)
     {
-        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        /*$email =  $request->email_send === 'true' ? true : false;
-        if ($email == true) {
-            if (!$request->email_addres || !$request->destinatario) {
-                $this->errorResponse('Es necesario un correo y un destinatario', 409);
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            if ($email == true) {
+                if (!$request->email_addres || !$request->destinatario) {
+                    $this->errorResponse('Es necesario un correo y un destinatario', 409);
+                }
             }
-        }
-        $email_to = $request->email_address;
-         $email_to = $request->id_ajuste;
-        $datos_request = json_decode($request->request_parent[0], true);
-*/
+            $email_to = $request->email_address;
+            $datos_request = json_decode($request->request_parent[0], true);
+            $id_ajuste = $datos_request['id_ajuste'];
 
-        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
-         * por lo cual puede variar de paramtros degun la ncecesidad
-         */
-        $email = false;
-        $id_ajuste = 2;
-        $email_to = 'hector@gmail.com';
-
-        $r = new \Illuminate\Http\Request();
-        $r->replace(['sample' => 'sample']);
-        $ajuste = $this->get_ajustes($r, $id_ajuste, '');
-        //obtengo la informacion de esa venta
-        $get_funeraria = new EmpresaController();
-        $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('inventarios/ajustes/ajustes', ['empresa' => $empresa, 'ajustes' => $ajuste]);
-        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = 'Reporte de Ajuste de Inventario.pdf';
-        $pdf->setOptions([
-            'title' => $name_pdf,
-            'footer-html' => view('inventarios.ajustes.footer'),
-        ]);
-
-        $pdf->setOptions([
-            'header-html' => view('inventarios.ajustes.header')
-        ]);
-
-        $pdf->setOption('orientation', 'landscape');
-        $pdf->setOption('margin-left', 12.4);
-        $pdf->setOption('margin-right', 12.4);
-        $pdf->setOption('margin-top', 12.4);
-        $pdf->setOption('margin-bottom', 12.4);
-        $pdf->setOption('page-size', 'a4');
-
-        if ($email == true) {
-            /**email */
-            /**
-             * parameters lista de la funcion
-             * to destinatario
-             * to_name nombre del destinatario
-             * subject motivo del correo
-             * name_pdf nombre del pdf
-             * pdf archivo pdf a enviar
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
              */
-            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
-            $email_controller = new EmailController();
-            $enviar_email = $email_controller->pdf_email(
-                $email_to,
-                $request->destinatario,
-                'Reporte de Ajuste de Inventario',
-                $name_pdf,
-                $pdf
-            );
-            return $enviar_email;
-            /**email fin */
-        } else {
-            return $pdf->inline($name_pdf);
+            /*$email = false;
+        $id_ajuste = 10;
+        $email_to = 'hector@gmail.com';
+*/
+            $r = new \Illuminate\Http\Request();
+            $r->replace(['sample' => 'sample']);
+            $ajuste = $this->get_ajustes($r, $id_ajuste, '');
+            //obtengo la informacion de esa venta
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('inventarios/ajustes/ajustes', ['empresa' => $empresa, 'ajustes' => $ajuste]);
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = 'Reporte de Ajuste de Inventario.pdf';
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('inventarios.ajustes.footer'),
+            ]);
+
+            $pdf->setOptions([
+                'header-html' => view('inventarios.ajustes.header')
+            ]);
+
+            $pdf->setOption('orientation', 'landscape');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 12.4);
+            $pdf->setOption('page-size', 'a4');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    $request->destinatario,
+                    'Reporte de Ajuste de Inventario',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos.', 409);
         }
     }
 }
