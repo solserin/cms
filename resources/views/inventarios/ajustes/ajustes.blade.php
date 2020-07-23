@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap"
+        rel="stylesheet">
+    <title>Reportes</title>
+    <style>
+        .logos {
+            min-width: 200px;
+            max-width: 200px;
+        }
+
+        .banco {
+            border: 2px solid #E5E8E8 !important;
+        }
+
+        .logo {
+            display: block;
+            margin-right: auto;
+        }
+
+        .santander {
+            color: #D31413 !important;
+        }
+
+        .digito {
+            padding: 3px 7px 3px 7px;
+            border: 1px solid #dae1e7;
+            font-size: 1em;
+            line-height: 1.5em;
+        }
+
+        .barcode div {
+            min-height: 40px !important;
+        }
+
+        .bg-total {
+            background-color: #FE0000;
+            color: #fff;
+        }
+
+
+        .numeros-contrato {
+            width: 100% !important;
+        }
+
+        .numeros-contrato .control {
+            text-align: center;
+            text-transform: uppercase !important;
+            font-size: .8em;
+            line-height: 1.9em !important;
+            font-weight: 600 !important;
+        }
+
+        .control-valor {
+            text-align: center;
+            font-size: .9em;
+            line-height: .3em !important;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    @include('layouts.estilos')
+    <table class="w-100">
+        <thead>
+            <tr>
+                <th class="w-10">
+                    <img class="logo logos -mt-6" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
+                </th>
+                <th class="w-80">
+                    <div class="center uppercase -mt-3">
+                        <p class="line-xxs size-20px">{{ $empresa->nombre_comercial }}</p>
+                        <p class="line-xxs size-20px">Inventario General de Artículos y Servicios</p>
+                        <p class="line-xxs size-12px">
+                            {{fechahora_completa()}}
+                        </p>
+                    </div>
+                </th>
+                <th class="w-10">
+                </th>
+            </tr>
+        </thead>
+    </table>
+    @foreach ($ajustes as $ajuste)
+    <div class="propiedad mt-8 center uppercase bg-gray-light py-1 semibold size-16px color-semidark">
+        Detalle de artículos afectados, Ajuste Clave - {{ $ajuste['id'] }}, Tipo: {{ $ajuste['tipo_ajuste_texto'] }}
+    </div>
+    <table class="w-100 pagos_tabla center mt-5">
+        <thead>
+            <tr class="bg-table-header text-white w-normal capitalize ">
+                <th>
+                    Id
+                </th>
+                <th>
+                    Cód. Barras
+                </th>
+                <th>
+                    Descripción
+                </th>
+                <th>
+                    Lote
+                </th>
+                <th>
+                    Existencia Sistema
+                </th>
+                <th>
+                    Existencia Física
+                </th>
+                <th>
+                    Resultado
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($ajuste['detalles'] as $detalle)
+            <tr>
+                <td class="py-1">{{ $detalle['articulos_id'] }}</td>
+                <td>{{ $detalle['articulos']['codigo_barras'] }}</td>
+                <td>{{ $detalle['articulos']['descripcion'] }}</td>
+                <td>{{ $detalle['lotes_id'] }}</td>
+                <td>{{ $detalle['existencia_sistema'] }}</td>
+                <td>{{ $detalle['existencia_fisica'] }}</td>
+                <td>{{ $detalle['resultado_ajuste_texto'] }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @endforeach
+
+</body>
+
+</html>

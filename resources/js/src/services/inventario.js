@@ -42,6 +42,15 @@ export default {
         });
     },
 
+    get_ajustes(param) {
+        return axios.get("/inventario/get_ajustes/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
     get_inventariable(param) {
         return axios.get("/inventario/get_inventario/all/paginated/0/0/0/1", {
             cancelToken: new CancelToken(c => {
@@ -73,6 +82,4 @@ export default {
         let call = "/inventario/ajustar_inventario";
         return axios.post(call, param);
     }
-
-
 };

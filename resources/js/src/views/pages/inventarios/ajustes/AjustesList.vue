@@ -89,7 +89,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       @change-page="handleChangePage"
       @sort="handleSort"
       :max-items="serverOptions.per_page.value"
-      :data="articulos"
+      :data="ajustes"
       noDataText="0 Resultados"
     >
       <template slot="header">
@@ -99,19 +99,21 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         <vs-th>Núm. Ajuste</vs-th>
         <vs-th>Fecha del Ajuste</vs-th>
         <vs-th>Realizado Por</vs-th>
-        <vs-th>Acciones</vs-th>
+        <vs-th>Ver Detalle</vs-th>
       </template>
       <template slot-scope="{ data }">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
           <vs-td :data="data[indextr].id">
             <span class="font-semibold">{{ data[indextr].id }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].codigo_barras">
-            <span class="font-semibold">{{ data[indextr].codigo_barras }}</span>
+          <vs-td :data="data[indextr].fecha_registro_texto">
+            <span class="font-semibold">{{
+              data[indextr].fecha_registro_texto
+            }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].descripcion">
+          <vs-td :data="data[indextr].registro.nombre">
             <span class="uppercase">
-              {{ data[indextr].descripcion }}
+              {{ data[indextr].registro.nombre }}
             </span>
           </vs-td>
 
@@ -121,7 +123,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                 class="cursor-pointer img-btn ml-auto mr-auto"
                 src="@assets/images/pdf.svg"
                 title="Modificar"
-                @click="openModificar(data[indextr].id)"
+                @click="openReporte(data[indextr].id)"
               />
             </div>
           </vs-td>
@@ -196,7 +198,6 @@ export default {
   data() {
     return {
       //variable
-
       ListaReportes: [],
       PermisosModulo: PermisosModulo,
       openReportesLista: false,
@@ -227,34 +228,42 @@ export default {
       serverOptions: {
         page: "",
         per_page: "",
-        status: "",
         filtro_especifico_opcion: "",
-        numero_control: "",
-        articulo: ""
+        numero_control: ""
       },
       verPaginado: true,
       total: 0,
       actual: 1,
-      articulos: [],
+      ajustes: [],
       //fin variables
       openStatus: false,
       callback: Function,
       accionNombre: "",
-      datosModifcar: {},
-      tipoFormulario: "",
       verFormularioAjustes: false,
       verModificar: false,
-      id_articulo_modificar: 0,
       /**opciones para filtrar la peticion del server */
       /**user id para bajas y altas */
-      articulo_id: "",
+      ajuste_id: "",
       request: {
-        venta_id: "",
+        ajuste_id: "",
         email: ""
       }
     };
   },
   methods: {
+    openReporte(parametro = "") {
+      this.ListaReportes = [];
+      /**agrego los reportes de manera manual */
+      this.ListaReportes.push({
+        nombre: "Detalle del ajuste de inventario",
+        url: "/inventario/get_ajuste_pdf"
+      });
+      //estado de cuenta
+      this.request.email = "";
+      this.request.id_ajuste = parametro;
+      this.openReportesLista = true;
+      this.$vs.loading.close();
+    },
     reset(card) {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = {
@@ -263,27 +272,16 @@ export default {
       };
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
-      this.estado = { label: "Todos", value: "" };
-      this.serverOptions.articulo = "";
       this.get_data(this.actual);
     },
 
     get_data(page, evento = "") {
       if (evento == "blur") {
         if (
-          this.serverOptions.articulo != "" ||
-          this.serverOptions.articulo == ""
-        ) {
-          //la funcion no avanza
-
-          return false;
-        }
-        if (
           this.serverOptions.numero_control == "" ||
           this.serverOptions.numero_control != ""
         ) {
           //la funcion no avanza
-
           return false;
         }
       }
@@ -295,13 +293,12 @@ export default {
       this.verPaginado = false;
       this.serverOptions.page = page;
       this.serverOptions.per_page = this.mostrar.value;
-      this.serverOptions.status = this.estado.value;
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
       inventario
-        .get_inventario(this.serverOptions)
+        .get_ajustes(this.serverOptions)
         .then(res => {
           console.log("get_data -> res", res);
-          this.articulos = res.data.data;
+          this.ajustes = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
@@ -345,26 +342,26 @@ export default {
       this.tipoFormulario = tipo;
       this.verFormularioAjustes = true;
     },
-    openModificar(articulo_id) {
+    openModificar(ajuste_id) {
       this.tipoFormulario = "modificar";
-      this.id_articulo_modificar = articulo_id;
+      this.id_articulo_modificar = ajuste_id;
       this.verFormularioAjustes = true;
     },
     retorno_id(dato) {
       this.get_data(this.actual);
     },
-    deleteArticulo(articulo_id, nombre) {
+    deleteArticulo(ajuste_id, nombre) {
       this.accionNombre = "Deshabilitar Artículo " + nombre;
-      this.articulo_id = articulo_id;
+      this.ajuste_id = ajuste_id;
       this.openStatus = true;
       (async () => {
         this.callback = await this.delete_articulo;
       })();
     },
 
-    altaArticulo(articulo_id, nombre) {
+    altaArticulo(ajuste_id, nombre) {
       this.accionNombre = "Habilitar Artículo " + nombre;
-      this.articulo_id = articulo_id;
+      this.ajuste_id = ajuste_id;
       this.openStatus = true;
       (async () => {
         this.callback = await this.habilitar_articulo;
@@ -373,7 +370,7 @@ export default {
     async delete_articulo() {
       this.$vs.loading();
       let datos = {
-        articulo_id: this.articulo_id
+        ajuste_id: this.ajuste_id
       };
       try {
         let res = await inventario.delete_articulo(datos);
@@ -431,7 +428,7 @@ export default {
     async habilitar_articulo() {
       this.$vs.loading();
       let datos = {
-        articulo_id: this.articulo_id
+        ajuste_id: this.ajuste_id
       };
       try {
         let res = await inventario.enable_disable(datos);
