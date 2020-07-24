@@ -370,7 +370,7 @@ class InventarioController extends ApiController
             ),
             DB::raw(
                 '(NULL) AS tipo_ajuste_texto'
-            ),
+            )
         )
             ->with('registro:id,nombre')
             ->with('detalles.articulos:id,descripcion,codigo_barras')
