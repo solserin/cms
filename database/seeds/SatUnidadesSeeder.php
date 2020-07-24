@@ -12,8 +12,8 @@ class SatUnidadesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('sat_unidades')->insert(['clave' => 'E48', 'unidad' => 'Unidad de servicio', 'descripcion' => 'Unidad de conteo que define el número de unidades de servicio (unidad de servicio: definido período / propiedad / centro / utilidad de alimentación).']);
         DB::table('sat_unidades')->insert(['clave' => 'H87', 'unidad' => 'Pieza', 'descripcion' => 'Unidad de conteo que define el número de piezas (pieza: un solo artículo, artículo o ejemplar).']);
+        DB::table('sat_unidades')->insert(['clave' => 'E48', 'unidad' => 'Unidad de servicio', 'descripcion' => 'Unidad de conteo que define el número de unidades de servicio (unidad de servicio: definido período / propiedad / centro / utilidad de alimentación).']);
         DB::table('sat_unidades')->insert(['clave' => 'XPK', 'unidad' => 'Paquete', 'descripcion' => 'Unidad de empaque estándar.']);
         DB::table('sat_unidades')->insert(['clave' => 'DAY', 'unidad' => 'Día', 'descripcion' => 'Se denomina día (del latín dies) al lapso que tarda la Tierra desde que el Sol está en el punto más alto sobre el horizonte hasta que vuelve a estarlo.']);
         DB::table('sat_unidades')->insert(['clave' => 'HUR', 'unidad' => 'Hora', 'descripcion' => 'Es una unidad de tiempo que se corresponde con la vigésimo-cuarta parte de un día solar medio.']);
