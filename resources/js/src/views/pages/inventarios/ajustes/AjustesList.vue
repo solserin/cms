@@ -14,20 +14,28 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 <template>
   <div>
     <div class="flex flex-wrap">
-      <div
-        class="w-full sm:w-12/12 ml-auto md:w-4/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-      >
+      <div class="w-full mb-1">
         <vs-button
-          color="success"
+          class="float-right"
           size="small"
-          class="w-full ml-auto"
+          color="success"
           @click="formulario('agregar')"
         >
           <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
           <span class="texto-btn">Ajustar Inventario</span>
         </vs-button>
+        <vs-button
+          class="float-right mr-12"
+          size="small"
+          color="primary"
+          @click="openReporteLotes()"
+        >
+          <img class="cursor-pointer img-btn" src="@assets/images/boxes.svg" />
+          <span class="texto-btn">Ver Lotes del Inventario</span>
+        </vs-button>
       </div>
     </div>
+
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
       <vx-card
         no-radius
@@ -257,6 +265,18 @@ export default {
     };
   },
   methods: {
+    openReporteLotes(nombre_reporte = "", link = "", parametro = "") {
+      this.ListaReportes = [];
+      /**agrego los reportes de manera manual */
+      this.ListaReportes.push({
+        nombre: "Lotes del Inventario",
+        url: "/inventario/get_inventario_conteo_pdf",
+      });
+      //estado de cuenta
+      this.request.email = "";
+      this.openReportesLista = true;
+      this.$vs.loading.close();
+    },
     openReporte(parametro) {
       this.ListaReportes = [];
       /**agrego los reportes de manera manual */

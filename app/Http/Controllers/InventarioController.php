@@ -813,4 +813,75 @@ class InventarioController extends ApiController
             return $this->errorResponse('Error al cargar los datos.', 409);
         }
     }
+
+
+    public function get_inventario_conteo_pdf(Request $request)
+    {
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            if ($email == true) {
+                if (!$request->email_addres || !$request->destinatario) {
+                    $this->errorResponse('Es necesario un correo y un destinatario', 409);
+                }
+            }
+            $email_to = $request->email_address;
+            $datos_request = json_decode($request->request_parent[0], true);
+
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            /*$email = false;
+        $email_to = 'hector@gmail.com';
+*/
+            $r = new \Illuminate\Http\Request();
+            $r->replace(['sample' => 'sample']);
+            $articulos = $this->get_articulos($r, 'all', '', 0, 0, 0, 1);
+            //obtengo la informacion de esa venta
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('inventarios/ajuste_cantidades/ajustes', ['empresa' => $empresa, 'articulos' => $articulos]);
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = 'Reporte de Inventario Por Lotes.pdf';
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('inventarios.ajuste_cantidades.footer'),
+            ]);
+            $pdf->setOptions([
+                'header-html' => view('inventarios.ajuste_cantidades.header')
+            ]);
+            //$pdf->setOption('orientation', 'landscape');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 12.4);
+            $pdf->setOption('page-size', 'a4');
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    $request->destinatario,
+                    'Reporte de Inventario Por Lotes',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+    }
 }

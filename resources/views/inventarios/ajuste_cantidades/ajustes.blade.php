@@ -77,7 +77,7 @@
                 <th class="w-80">
                     <div class="center uppercase -mt-3">
                         <p class="line-xxs size-20px">{{ $empresa->nombre_comercial }}</p>
-                        <p class="line-xxs size-20px">Inventario General de Artículos y Servicios</p>
+                        <p class="line-xxs size-20px">Inventario General Ordenado por Lotes</p>
                         <p class="line-xxs size-12px">
                             {{fechahora_completa()}}
                         </p>
@@ -88,65 +88,74 @@
             </tr>
         </thead>
     </table>
-    @foreach ($ajustes as $ajuste)
-    <div class="propiedad mt-8 center uppercase bg-gray-light py-1 semibold size-16px color-semidark">
-        Detalle de artículos afectados, Ajuste Clave - {{ $ajuste['id'] }}, Tipo: {{ $ajuste['tipo_ajuste_texto'] }}
-        <p>
-            Realizado por: {{ $ajuste['registro']['nombre'] }}
-        </p>
-    </div>
-    <table class="w-100 pagos_tabla center mt-5">
+    @foreach ($articulos as $articulo)
+    <table class="w-100 center mt-5 bg-gray-light">
         <thead>
-            <tr class="bg-table-header text-white w-normal capitalize ">
+            <tr class="w-normal capitalize ">
                 <th>
-                    Id
+                    Id. Artículo
                 </th>
                 <th>
-                    Cód. Barras
+                    Código de Barras
                 </th>
                 <th>
                     Descripción
                 </th>
                 <th>
-                    Lote
+                    Categoría
                 </th>
                 <th>
                     Existencia Sistema
                 </th>
-                <th>
-                    Existencia Física
-                </th>
-                <th>
-                    Diferencia
-                </th>
-                <th>
-                    Resultado
-                </th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($ajuste['detalles'] as $detalle)
             <tr>
-                <td class="py-1">{{ $detalle['articulos_id'] }}</td>
-                <td>{{ $detalle['articulos']['codigo_barras'] }}</td>
-                <td>{{ $detalle['articulos']['descripcion'] }}</td>
-                <td>{{ $detalle['lotes_id'] }}</td>
-                <td>{{ $detalle['existencia_sistema'] }}</td>
-                <td>{{ $detalle['existencia_fisica'] }}</td>
-                <td>{{ $detalle['diferencia'] }}</td>
-                <td>
-                    @if ($detalle['resultado_ajuste']!=0)
-                    {{ $detalle['resultado_ajuste_texto'] }}
-                    @else
-                    <span class="text-danger">
-                        {{ $detalle['resultado_ajuste_texto'] }}
-                    </span>
-                    @endif
-                </td>
+                <td>{{ $articulo['id'] }}</td>
+                <td>{{ $articulo['codigo_barras'] }}</td>
+                <td>{{ $articulo['descripcion'] }}</td>
+                <td>{{ $articulo['categoria']['categoria'] }}</td>
+                <td>{{ $articulo['existencia'] }}</td>
             </tr>
-            @endforeach
         </tbody>
     </table>
+    <div class="w-50 float-right">
+        <div class="pb-20">
+            <p class="pl-2 bold">Observación:</p>
+        </div>
+    </div>
+    <div class="w-50 float-left py-3">
+        <table class="w-100 pagos_tabla center">
+            <thead>
+                <tr class="w-normal capitalize ">
+                    <th>
+                        Número de Lote
+                    </th>
+                    <th>
+                        Existencia Sistema
+                    </th>
+                    <th>
+                        Existencia Física
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($articulo['inventario'] as $inventario)
+                <tr>
+                    <td class="py-1">{{ $inventario['lotes_id'] }}</td>
+                    <td class="py-1">{{ $inventario['existencia'] }}</td>
+                    <td class="py-1"></td>
+                </tr>
+                @endforeach
+                <tr>
+                    <td class="py-1">Fuera de Lote</td>
+                    <td class="py-1">0</td>
+                    <td class="py-1"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     @endforeach
 
 </body>
