@@ -165,7 +165,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       :show="openReportesLista"
       :listadereportes="ListaReportes"
       :request="request"
-      @closeReportes="openReportesLista = false"
+      @closeReportes="closeReportes"
     ></Reporteador>
     <FormularioAjustes
       :show="verFormularioAjustes"
@@ -323,7 +323,6 @@ export default {
       inventario
         .get_ajustes(this.serverOptions)
         .then((res) => {
-          console.log("get_data -> res", res);
           this.ajustes = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
@@ -334,7 +333,6 @@ export default {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
-            console.log("get_data -> err.response", err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -374,7 +372,11 @@ export default {
       this.verFormularioAjustes = true;
     },
     retorno_id(dato) {
-      this.get_data(this.actual);
+      this.openReporte(dato);
+    },
+    closeReportes() {
+      this.openReportesLista = false;
+      this.get_data(1);
     },
     deleteArticulo(ajuste_id, nombre) {
       this.accionNombre = "Deshabilitar Artículo " + nombre;
