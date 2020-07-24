@@ -120,6 +120,7 @@ class InventarioController extends ApiController
                             'movimientos_inventario_id' => $id_movimiento,
                             'lotes_id' => $id_movimiento,
                             'articulos_id' => $articulo['id'],
+                            'nota' => $articulo['nota']
                             /**entrada de lostes por ajuste */
                         ]
                     );
@@ -160,7 +161,8 @@ class InventarioController extends ApiController
                             'existencia_fisica' => $articulo['existencia_fisica'],
                             'movimientos_inventario_id' => $id_movimiento,
                             'lotes_id' => $articulo['lote'],
-                            'articulos_id' => $articulo['id']
+                            'articulos_id' => $articulo['id'],
+                            'nota' => $articulo['nota']
                             /**entrada de lostes por ajuste */
                         ]
                     );
@@ -420,14 +422,14 @@ class InventarioController extends ApiController
                 } elseif ($detalle['existencia_sistema'] > $detalle['existencia_fisica']) {
                     if ($ajuste['tipo_movimientos_id'] == 1) {
                         $detalle['resultado_ajuste'] = 0;
-                        $detalle['resultado_ajuste_texto'] = 'Extravío de Mercancías';
+                        $detalle['resultado_ajuste_texto'] = 'Salida de Mercancías';
                     } else {
                         $detalle['resultado_ajuste'] = 1;
-                        $detalle['resultado_ajuste_texto'] = 'Ingreso de Mercancía no Inventariada';
+                        $detalle['resultado_ajuste_texto'] = 'Ingreso de Mercancía';
                     }
                 } else {
                     $detalle['resultado_ajuste'] = 2;
-                    $detalle['resultado_ajuste_texto'] = 'Reingreso de Mercancías';
+                    $detalle['resultado_ajuste_texto'] = 'Ingreso de Mercancía';
                 }
                 /**diferencia real del cambio */
                 $detalle['diferencia'] = abs($detalle['existencia_sistema'] - $detalle['existencia_fisica']);

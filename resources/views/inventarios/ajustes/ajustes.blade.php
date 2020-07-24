@@ -122,6 +122,9 @@
                 <th>
                     Resultado
                 </th>
+                <th>
+                    Nota
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -143,6 +146,7 @@
                     </span>
                     @endif
                 </td>
+                <td>{{ $detalle['nota'] }}</td>
             </tr>
             @endforeach
         </tbody>

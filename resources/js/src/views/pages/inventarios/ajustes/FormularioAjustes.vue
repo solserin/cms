@@ -87,6 +87,7 @@
               <vs-th>Existencia Sistema</vs-th>
               <vs-th>Existencia Física</vs-th>
               <vs-th hidden>Fecha Caducidad</vs-th>
+              <vs-th>Nota/Observación</vs-th>
               <vs-th>Acciones</vs-th>
             </template>
             <template slot-scope="{ data }">
@@ -147,6 +148,14 @@
                   <span v-else class="uppercase">{{
                     data[indextr].fecha_caducidad
                   }}</span>
+                </vs-td>
+                <vs-td :data="data[indextr].nota">
+                  <vs-input
+                    :name="'nota' + indextr"
+                    class="w-full sm:w-11/12 md:w-11/12 lg:w-11/12 xl:w-11/12 mr-auto ml-auto mt-1 cantidad"
+                    maxlength="150"
+                    v-model="form.ajuste[indextr].nota"
+                  />
                 </vs-td>
                 <vs-td :data="data[indextr].id">
                   <div class="flex flex-start">
@@ -365,6 +374,7 @@ export default {
           lote: "N/A",
           existencia_sistema: 0,
           existencia_fisica: 1,
+          nota: "",
         });
       } else {
         /**es un ajuste del inventario actual
@@ -396,6 +406,7 @@ export default {
               lote: element.lotes_id,
               existencia_sistema: element.existencia,
               existencia_fisica: element.existencia,
+              nota: "",
             });
           }
         });
@@ -416,11 +427,44 @@ export default {
               time: "4000",
             });
           } else {
-            this.errores = [];
-            (async () => {
-              this.callback = await this.ajustar_inventario;
-              this.operConfirmar = true;
-            })();
+            if (this.form.ajuste.length == 0) {
+              this.$vs.notify({
+                title: "Guardar Artículo",
+                text: "Verifique que ha capturado al menos un Artículo",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                position: "bottom-right",
+                time: "4000",
+              });
+            } else {
+              /**verificando que al menos cambio el valor de un articulo que desea ajustar */
+              let cambio = false;
+              this.form.ajuste.forEach((element) => {
+                if (element.existencia_sistema != element.existencia_fisica) {
+                  cambio = true;
+                  return;
+                }
+              });
+              if (cambio == false) {
+                this.$vs.notify({
+                  title: "Guardar Artículo",
+                  text:
+                    "No hay diferencias en los articulos que ha seleccionado",
+                  iconPack: "feather",
+                  icon: "icon-alert-circle",
+                  color: "danger",
+                  position: "bottom-right",
+                  time: "4000",
+                });
+              } else {
+                this.errores = [];
+                (async () => {
+                  this.callback = await this.ajustar_inventario;
+                  this.operConfirmar = true;
+                })();
+              }
+            }
           }
         })
         .catch(() => {});
@@ -431,7 +475,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await inventario.ajustar_inventario(this.form);
-        console.log("ajustar_inventario -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -457,7 +500,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("ajustar_inventario -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({

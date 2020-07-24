@@ -23,6 +23,7 @@ class AjusteDetalle extends Migration
             $table->foreign('lotes_id')->references('id')->on('movimientos_inventario');
             $table->unsignedBigInteger('articulos_id')->unsigned()->nullable();
             $table->foreign('articulos_id')->references('id')->on('articulos');
+            $table->string('nota')->nullable();
         });
     }
 
