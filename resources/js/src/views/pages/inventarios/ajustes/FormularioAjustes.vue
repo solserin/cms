@@ -191,7 +191,7 @@
             width="25px"
             class="cursor-pointer"
             size="small"
-            src="@assets/images/box.svg"
+            src="@assets/images/boxes.svg"
           />
           <span class="texto-btn">Ajustar Inventario</span>
         </vs-button>
