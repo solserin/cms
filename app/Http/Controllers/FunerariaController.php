@@ -67,8 +67,8 @@ class FunerariaController extends ApiController
                     [
                         'plan' => $request->descripcion,
                         'plan_ingles' => $request->descripcion_ingles,
-                        'nota' => $request->nota,
-                        'nota_ingles' => $request->nota_ingles,
+                        'nota' => $request->nota != '' ? $request->nota : '',
+                        'nota_ingles' => $request->nota_ingles != '' ? $request->nota_ingles : '',
                         'registro_id' => (int) $request->user()->id,
                         'modifico_id' => (int) $request->user()->id,
                         'fecha_registro' => now(),
@@ -96,8 +96,8 @@ class FunerariaController extends ApiController
                     [
                         'plan' => $request->descripcion,
                         'plan_ingles' => $request->descripcion_ingles,
-                        'nota' => $request->nota,
-                        'nota_ingles' => $request->nota_ingles,
+                        'nota' => $request->nota != '' ? $request->nota : '',
+                        'nota_ingles' => $request->nota_ingles != '' ? $request->nota_ingles : '',
                         'modifico_id' => (int) $request->user()->id,
                         'fecha_modificacion' => now()
                     ]
