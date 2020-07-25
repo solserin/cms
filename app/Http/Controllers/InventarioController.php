@@ -365,6 +365,7 @@ class InventarioController extends ApiController
             'registro_id',
             'fecha_registro',
             'tipo_movimientos_id',
+            'nota',
             DB::raw(
                 '(NULL) AS fecha_registro_texto'
             ),
