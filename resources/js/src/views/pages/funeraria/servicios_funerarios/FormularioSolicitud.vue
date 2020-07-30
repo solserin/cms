@@ -273,7 +273,7 @@
                   placeholder="Teléfono del Informante"
                   v-model="form.telefono_informante"
                   :disabled="fueCancelada"
-                  maxlength="12"
+                  maxlength="15"
                 />
                 <div>
                   <span class="text-danger">{{
