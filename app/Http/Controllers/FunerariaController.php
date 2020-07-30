@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\User;
 use App\Clientes;
 use Carbon\Carbon;
 use App\Operaciones;
@@ -2485,6 +2486,127 @@ class FunerariaController extends ApiController
             );
             DB::commit();
             return $request->venta_id;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+    public function get_personal_recoger()
+    {
+        //no super usuarios
+        /**puesto de venderor id 4 */
+        /**obtiene los usuarios con puesto de servicios operativos */
+        return User::select('id', 'nombre')
+            ->join('usuarios_puestos', 'usuarios_puestos.usuarios_id', '=', 'usuarios.id')
+            ->where('roles_id', '>', 1)
+            ->where('puestos_id', '=', 4)
+            ->where('usuarios.status', '>', 0)
+            ->get();
+    }
+
+
+    public function guardar_solicitud(Request $request, $tipo_servicio = '')
+    {
+
+        if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
+            return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
+        }
+
+        //validaciones directas sin condicionales
+        $validaciones = [
+            'llamada_b' => 'required',
+            'nombre_afectado' => 'required',
+            'fecha_solicitud' => 'required',
+            'causa_muerte' => 'required',
+            'muerte_natural_b.value' => 'required',
+            'contagioso_b.value' => 'required',
+            'nombre_informante' => 'required',
+            'telefono_informante' => 'required',
+            'parentesco_informante' => 'required',
+            'recogio.value' => 'required',
+            'nota_solicitud' => 'required',
+            'id_solicitud' => ''
+        ];
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+        $mensajes = [
+            'required' => 'Ingrese este dato'
+        ];
+
+
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        /**verificando si es tipo modificar para validar que venga el id a modificar */
+        $datos_plan = array();
+        if ($tipo_servicio == 'modificar') {
+            $datos_plan = $this->get_planes(false, $request->id_plan_modificar)[0];
+            if (empty($datos_plan)) {
+                /**no se encontro los datos */
+                return $this->errorResponse('No se encontró la información del plan solicitada', 409);
+            } else if ($datos_plan['status'] == 0) {
+                return $this->errorResponse('Esta plan ya fue cancelado, no puede modificarse', 409);
+            }
+        }
+        $id_return = 0;
+        try {
+            DB::beginTransaction();
+            if ($tipo_servicio == 'agregar') {
+                $id_servicio = DB::table('servicios_funerarios')->insertGetId(
+                    [
+                        'tipo_solicitud_id' => 1,
+                        'llamada_b' => $request->llamada_b,
+                        'nombre_afectado' => $request->nombre_afectado,
+                        'fechahora_solicitud' => $request->fecha_solicitud,
+                        'causa_muerte' => $request->causa_muerte,
+                        'muerte_natural_b' => $request->muerte_natural_b['value'],
+                        'contagioso_b' => $request->contagioso_b['value'],
+                        'nombre_informante' => $request->nombre_informante,
+                        'telefono_informante' => $request->telefono_informante,
+                        'parentesco_informante' => $request->parentesco_informante,
+                        'ubicacion_recoger' => $request->ubicacion_recoger,
+                        'recogio_id' => $request->recogio['value'],
+                        'nota_al_recoger' => $request->nota_solicitud,
+                        'registro_id' => (int) $request->user()->id,
+                        'fechahora_registro' => now()
+                    ]
+                );
+                $id_return = $id_servicio;
+                /**todo salio bien y se debe de guardar */
+            } else {
+                /**es modificar */
+                DB::table('planes_funerarios')->where('id', $request->id_plan_modificar)->update(
+                    [
+                        'plan' => $request->descripcion,
+                        'plan_ingles' => $request->descripcion_ingles,
+                        'nota' => $request->nota != '' ? $request->nota : '',
+                        'nota_ingles' => $request->nota_ingles != '' ? $request->nota_ingles : '',
+                        'modifico_id' => (int) $request->user()->id,
+                        'fecha_modificacion' => now()
+                    ]
+                );
+                /**eliminamos los coceptos originales */
+                DB::table('plan_conceptos')->where('planes_funerarios_id', $request->id_plan_modificar)->delete();
+                /**al actualizzar el plan, se procede a registrar los conceptos nuevamente*/
+                foreach ($request->conceptos as $key_seccion => $seccion) {
+                    foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
+                        DB::table('plan_conceptos')->insert(
+                            [
+                                'seccion_id' => ($key_seccion + 1),
+                                'concepto' => $concepto['concepto'],
+                                'concepto_ingles' => $concepto['concepto_ingles'],
+                                'planes_funerarios_id' => $request->id_plan_modificar
+                            ]
+                        );
+                    }
+                }
+                $id_return = $request->id_plan_modificar;
+            }
+            DB::commit();
+            return $id_return;
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;

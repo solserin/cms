@@ -16,7 +16,7 @@ class ServiciosFunerarios extends Migration
         Schema::create('servicios_funerarios', function (Blueprint $table) {
             $table->bigIncrements('id');
             /**campos requeridos para la solicitud del servicio */
-            $table->unsignedBigInteger('tipo_solicitud_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('tipo_solicitud_id');
             $table->foreign('tipo_solicitud_id')->references('id')->on('tipo_solicitud');
             $table->unsignedBigInteger('servicios_funerarios_exhumado_id')->unsigned()->nullable();
             $table->foreign('servicios_funerarios_exhumado_id')->references('id')->on('servicios_funerarios');
@@ -33,8 +33,6 @@ class ServiciosFunerarios extends Migration
             $table->string('causa_muerte')->nullable();
             $table->tinyInteger('contagioso_b')->nullable();
             $table->tinyInteger('muerte_natural_b')->nullable();
-
-
             /**informacion capturada para el contrato */
 
             $table->tinyInteger('custodia_b')->nullable();
@@ -55,14 +53,14 @@ class ServiciosFunerarios extends Migration
             $table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
             $table->foreign('titulos_id')->references('id')->on('titulos');
             $table->dateTime('fechahora_llegada_afectado')->nullable();
-            $table->unsignedBigInteger('nacionalidades_id');
+            $table->unsignedBigInteger('nacionalidades_id')->unsigned()->nullable();
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades');
-            $table->unsignedBigInteger('generos_id');
+            $table->unsignedBigInteger('generos_id')->unsigned()->nullable();
             $table->foreign('generos_id')->references('id')->on('generos');
             $table->date('fecha_nacimiento')->nullable();
             $table->dateTime('fechahora_defuncion')->nullable();
             $table->string('ocupacion')->nullable();
-            $table->unsignedBigInteger('estado_afectado_id');
+            $table->unsignedBigInteger('estado_afectado_id')->unsigned()->nullable();
             $table->foreign('estado_afectado_id')->references('id')->on('estado_afectado');
             $table->unsignedBigInteger('sitios_muerte_id')->unsigned()->nullable();
             $table->foreign('sitios_muerte_id')->references('id')->on('sitios_muerte');
@@ -90,9 +88,9 @@ class ServiciosFunerarios extends Migration
 
 
             /**informacion sobre el lugar de la inhumacion */
-            $table->unsignedBigInteger('ventas_terrenos_id');
+            $table->unsignedBigInteger('ventas_terrenos_id')->unsigned()->nullable();
             $table->foreign('ventas_terrenos_id')->references('id')->on('ventas_terrenos');
-            $table->unsignedBigInteger('cementerios_servicio_id');
+            $table->unsignedBigInteger('cementerios_servicio_id')->unsigned()->nullable();
             $table->foreign('cementerios_servicio_id')->references('id')->on('cementerios_servicio');
             $table->string('cementerio')->nullable();
             $table->mediumText('nota_ubicacion')->nullable();
