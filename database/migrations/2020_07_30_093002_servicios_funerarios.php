@@ -18,6 +18,8 @@ class ServiciosFunerarios extends Migration
             /**campos requeridos para la solicitud del servicio */
             $table->unsignedBigInteger('tipo_solicitud_id')->unsigned()->nullable();
             $table->foreign('tipo_solicitud_id')->references('id')->on('tipo_solicitud');
+            $table->unsignedBigInteger('servicios_funerarios_exhumado_id')->unsigned()->nullable();
+            $table->foreign('servicios_funerarios_exhumado_id')->references('id')->on('servicios_funerarios');
             $table->tinyInteger('llamada_b')->nullable();
             $table->string('nombre_afectado')->nullable();
             $table->string('nombre_informante')->nullable();
