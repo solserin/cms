@@ -325,7 +325,9 @@ const router = new Router({
                     path: "/funeraria/servicios",
                     name: "servicios_funerarios",
                     component: () =>
-                        import("@/views/pages/funeraria/ventas/VentasList.vue"),
+                        import(
+                            "@/views/pages/funeraria/servicios_funerarios/ServiciosList.vue"
+                        ),
                     meta: {
                         breadcrumb: [
                             {

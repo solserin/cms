@@ -1,0 +1,1712 @@
+<template>
+  <div class="centerx">
+    <vs-popup
+      class="normal-forms venta-propiedades background-header-forms forms-popups-85"
+      fullscreen
+      close="cancelar"
+      :title="
+        getTipoformulario == 'modificar'
+          ? 'Modificar Solicitud de Servicio Funerario'
+          : 'Solicitud de Servicio Funerario'
+      "
+      :active.sync="showVentana"
+      ref="formulario"
+    >
+      <!--inicio venta-->
+      <div class="venta-details">
+        <div class="flex flex-wrap">
+          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
+            <div class="float-left pb-5 px-2">
+              <img width="36px" src="@assets/images/corpse.svg" />
+              <h3
+                class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+              >
+                Detalle de la solicitud y del Fallecido
+              </h3>
+            </div>
+
+            <div class="w-full px-2">
+              <vs-divider />
+            </div>
+            <div class="flex flex-wrap mt-1">
+              <div
+                class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+              >
+                <label class="text-sm font-bold">Origen de Solicitud</label>
+                <div class="mt-3">
+                  <vs-radio
+                    vs-name="tipoFinanciamiento"
+                    v-model="form.tipo_financiamiento"
+                    :vs-value="1"
+                    class="mr-4"
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    >Llamada Telefónica</vs-radio
+                  >
+                  <vs-radio
+                    vs-name="tipoFinanciamiento"
+                    v-model="form.tipo_financiamiento"
+                    :vs-value="2"
+                    class="mr-4"
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    >Directo en Sucursal</vs-radio
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Nombre del Fallecido
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  name="solicitud"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder=" Nombre del Fallecido"
+                  v-model="form.solicitud"
+                  :disabled="fueCancelada"
+                  maxlength="12"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("solicitud")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.solicitud"
+                    >{{ errores.solicitud[0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Fecha y Hora de Solicitud
+                  <span class="texto-importante">(*)</span>
+                </label>
+
+                <flat-pickr
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
+                  name="fecha_venta"
+                  data-vv-as=" "
+                  v-validate:fecha_venta_validacion_computed.immediate="
+                    'required'
+                  "
+                  :config="configdateTimePicker"
+                  v-model="form.fecha_venta"
+                  placeholder="Fecha de la Venta"
+                  class="w-full my-1"
+                />
+
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("fecha_venta")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.fecha_venta"
+                    >{{ errores.fecha_venta[0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Cáusa de Muerte
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  name="solicitud"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder=" Nombre del Fallecido"
+                  v-model="form.solicitud"
+                  :disabled="fueCancelada"
+                  maxlength="12"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("solicitud")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.solicitud"
+                    >{{ errores.solicitud[0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  <span>Muerte Natural</span>
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <v-select
+                  :options="planes_funerarios"
+                  :clearable="false"
+                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                  v-model="form.plan_funerario"
+                  class="mb-4 sm:mb-0 pb-1 pt-1"
+                  v-validate:plan_funerario_validacion_computed.immediate="
+                    'required'
+                  "
+                  name="plan_validacion"
+                  data-vv-as=" "
+                >
+                  <div slot="no-options">
+                    No Se Ha Seleccionado Ningún Plan
+                  </div>
+                </v-select>
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("plan_validacion")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores['plan_funerario.value']"
+                    >{{ errores["plan_funerario.value"][0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  <span>Enfermedad Contagiosa</span>
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <v-select
+                  :options="planes_funerarios"
+                  :clearable="false"
+                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                  v-model="form.plan_funerario"
+                  class="mb-4 sm:mb-0 pb-1 pt-1"
+                  v-validate:plan_funerario_validacion_computed.immediate="
+                    'required'
+                  "
+                  name="plan_validacion"
+                  data-vv-as=" "
+                >
+                  <div slot="no-options">
+                    No Se Ha Seleccionado Ningún Plan
+                  </div>
+                </v-select>
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("plan_validacion")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores['plan_funerario.value']"
+                    >{{ errores["plan_funerario.value"][0] }}</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap mt-1">
+              <div class="w-full px-2 mt-2">
+                <p class="text-xs">
+                  <span class="text-danger font-medium">Ojo:</span>
+                  Debe ingresar la información sobre el fallecido y las causas
+                  de la muerte para que el personal que traslade el cuerpo tome
+                  sus precauciones.
+                </p>
+                <vs-divider />
+              </div>
+            </div>
+
+            <div class="flex flex-wrap mt-1">
+              <div class="float-left pb-3 px-2">
+                <img width="36px" src="@assets/images/informer.svg" />
+                <h3
+                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
+                >
+                  Datos de Contacto del Informante
+                </h3>
+              </div>
+              <div class="w-full px-2">
+                <vs-divider />
+              </div>
+              <!--vendedor-->
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Nombre del Informante
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  name="solicitud"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Nombre del Informante"
+                  v-model="form.solicitud"
+                  :disabled="fueCancelada"
+                  maxlength="12"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("solicitud")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.solicitud"
+                    >{{ errores.solicitud[0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Teléfono del Informante
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  name="solicitud"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Teléfono del Informante"
+                  v-model="form.solicitud"
+                  :disabled="fueCancelada"
+                  maxlength="12"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("solicitud")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.solicitud"
+                    >{{ errores.solicitud[0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Parentesco con el Fallecido
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  name="solicitud"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Parentesco con el Fallecido"
+                  v-model="form.solicitud"
+                  :disabled="fueCancelada"
+                  maxlength="12"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("solicitud")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.solicitud"
+                    >{{ errores.solicitud[0] }}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-wrap mt-1">
+              <div class="w-full px-2 mt-2">
+                <p class="text-xs">
+                  <span class="text-danger font-medium">Ojo:</span>
+                  Ingrese la información mínima del informante para estar en
+                  contacto durante el traslado del cuerpo a la funeraria.
+                </p>
+                <vs-divider />
+              </div>
+            </div>
+
+            <div class="flex flex-wrap mt-1">
+              <div class="float-left pb-3 px-2">
+                <img width="36px" src="@assets/images/recoger.svg" />
+                <h3
+                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
+                >
+                  Ubicación y Traslado del Fallecido
+                </h3>
+              </div>
+              <div class="w-full px-2">
+                <vs-divider />
+              </div>
+              <!--vendedor-->
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Ubicación del Fallecido
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  name="solicitud"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Teléfono del Informante"
+                  v-model="form.solicitud"
+                  :disabled="fueCancelada"
+                  maxlength="12"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("solicitud")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.solicitud"
+                    >{{ errores.solicitud[0] }}</span
+                  >
+                </div>
+              </div>
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  <span>Encargado de Recoger</span>
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <v-select
+                  :options="planes_funerarios"
+                  :clearable="false"
+                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                  v-model="form.plan_funerario"
+                  class="mb-4 sm:mb-0 pb-1 pt-1"
+                  v-validate:plan_funerario_validacion_computed.immediate="
+                    'required'
+                  "
+                  name="plan_validacion"
+                  data-vv-as=" "
+                >
+                  <div slot="no-options">
+                    No Se Ha Seleccionado Ningún Plan
+                  </div>
+                </v-select>
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("plan_validacion")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores['plan_funerario.value']"
+                    >{{ errores["plan_funerario.value"][0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+              >
+                <label class="text-sm opacity-75 font-bold">
+                  Nota/Observación
+                </label>
+                <vs-input
+                  name="solicitud"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Nota/Observación"
+                  v-model="form.solicitud"
+                  :disabled="fueCancelada"
+                  maxlength="12"
+                />
+                <div>
+                  <span class="mensaje-requerido">{{
+                    errors.first("solicitud")
+                  }}</span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.solicitud"
+                    >{{ errores.solicitud[0] }}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-wrap mt-1">
+              <div class="w-full px-2 mt-2">
+                <p class="text-xs">
+                  <span class="text-danger font-medium">Ojo:</span>
+                  Ingrese la dirección donde será recogido el fallecido y
+                  seleccione de la lista al empleado responsable del traslado.
+                </p>
+                <vs-divider />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--checkout-->
+        <div class="flex flex-wrap my-6">
+          <!--precios-->
+          <div
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 ml-auto mr-auto"
+          >
+            <div class="flex flex-wrap mt-4">
+              <vs-button
+                v-if="!fueCancelada"
+                class="w-full ml-auto mr-auto"
+                @click="acceptAlert()"
+                color="success"
+                size="small"
+              >
+                <img
+                  width="25px"
+                  class="cursor-pointer"
+                  src="@assets/images/save.svg"
+                />
+                <span
+                  class="texto-btn"
+                  v-if="this.getTipoformulario == 'agregar'"
+                  >Guardar Solicitud</span
+                >
+                <span class="texto-btn" v-else>Modificar Solicitud</span>
+              </vs-button>
+              <vs-button
+                v-else
+                class="w-full ml-auto mr-auto"
+                color="success"
+                size="small"
+              >
+                <img
+                  width="25px"
+                  class="cursor-pointer"
+                  src="@assets/images/save.svg"
+                />
+                <span
+                  class="texto-btn"
+                  v-if="this.getTipoformulario == 'agregar'"
+                  >Guardar Venta</span
+                >
+                <span class="texto-btn" v-else>Modificar Venta</span>
+              </vs-button>
+            </div>
+          </div>
+        </div>
+        <!--fin del checkout-->
+      </div>
+
+      <!--fin venta-->
+    </vs-popup>
+    <Password
+      :show="openPassword"
+      :callback-on-success="callback"
+      @closeVerificar="closePassword"
+      :accion="accionNombre"
+    ></Password>
+    <ConfirmarDanger
+      :show="openConfirmarSinPassword"
+      :callback-on-success="callBackConfirmar"
+      @closeVerificar="openConfirmarSinPassword = false"
+      :accion="accionConfirmarSinPassword"
+      :confirmarButton="botonConfirmarSinPassword"
+    ></ConfirmarDanger>
+
+    <ConfirmarAceptar
+      :show="openConfirmarAceptar"
+      :callback-on-success="callBackConfirmarAceptar"
+      @closeVerificar="openConfirmarAceptar = false"
+      :accion="'He revisado la información y quiero guardar la venta'"
+      :confirmarButton="'Guardar Venta'"
+    ></ConfirmarAceptar>
+
+    <ClientesBuscador
+      :show="openBuscador"
+      @closeBuscador="openBuscador = false"
+      @retornoCliente="clienteSeleccionado"
+    ></ClientesBuscador>
+
+    <Notas :nota="form.nota" :show="openNotas" @closeNotas="closeNotas"></Notas>
+  </div>
+</template>
+<script>
+/**date picker */
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+import "flatpickr/dist/themes/airbnb.css";
+import ConfirmarDanger from "@pages/ConfirmarDanger";
+//componente de password
+import Password from "@pages/confirmar_password";
+import Notas from "@pages/notas";
+import planes from "@services/planes";
+import usuarios from "@services/Usuarios";
+import vSelect from "vue-select";
+import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
+import ClientesBuscador from "@pages/clientes/searcher.vue";
+
+/**VARIABLES GLOBALES */
+import { alfabeto, configdateTimePicker } from "@/VariablesGlobales";
+
+export default {
+  components: {
+    "v-select": vSelect,
+    flatPickr,
+    Password,
+    ConfirmarDanger,
+    ConfirmarAceptar,
+    ClientesBuscador,
+    Notas,
+  },
+  props: {
+    show: {
+      type: Boolean,
+      required: true,
+    },
+    //para saber que tipo de formulario es
+    tipo: {
+      type: String,
+      required: true,
+    },
+    id_venta: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+  },
+  watch: {
+    show: function (newValue, oldValue) {
+      this.limpiarValidation();
+      if (newValue == true) {
+        this.$nextTick(() =>
+          this.$refs["cliente_ref"].$el.querySelector("input").focus()
+        );
+        this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
+          this.cancelar();
+        };
+        (async () => {
+          await this.get_planes_funerarios();
+          await this.get_vendedores();
+          if (this.getTipoformulario == "agregar") {
+            /**acciones cuando el formulario es de agregar */
+          } else {
+            /**es modificar */
+            /**pasando el valor de la venta id */
+            this.form.id_venta = this.get_venta_id;
+            /**se cargan los datos al formulario */
+            await this.consultar_venta_id();
+          }
+        })();
+      } else {
+        /**acciones al cerrar el formulario */
+      }
+    },
+    "form.planVenta": function (newValue, oldValue) {
+      if (newValue.value != "") {
+        /**el plan cambio a un plan especifico */
+        this.form.subtotal = newValue.subtotal;
+        this.form.costo_neto_pronto_pago = newValue.costo_neto_pronto_pago;
+      }
+    },
+    /**watch para cargado de planes de venta */
+    "form.plan_funerario": function (newValue, oldValue) {
+      /**cargando planes */
+      this.cargarPlanes();
+    },
+  },
+  computed: {
+    verLista: function () {
+      if (this.form.plan_funerario.value != "") {
+        let mostrar = false;
+        this.datos = [];
+        this.form.plan_funerario.secciones.forEach((element, index_seccion) => {
+          if (element.conceptos) {
+            if (element.conceptos.length > 0) {
+              element.conceptos.forEach((concepto, index_concepto) => {
+                this.datos.push({
+                  concepto: concepto.concepto,
+                  concepto_ingles: concepto.concepto_ingles,
+                  aplicar: concepto.aplicar_en,
+                });
+              });
+              mostrar = true;
+            }
+          }
+        });
+        if (mostrar == true) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    },
+    /**dle modulo */
+    /**sacando los valores para aplicar los descuentos respectivos */
+    iva_computed: function () {
+      let iva = (
+        (Number.parseFloat(this.form.subtotal) -
+          Number.parseFloat(this.form.descuento)) *
+        0.16
+      ).toFixed(2);
+      /***actualizo el impuesto iva */
+      this.form.impuestos = iva;
+      return iva;
+    },
+    costo_neto_computed: function () {
+      let costo_neto = (
+        Number.parseFloat(this.form.subtotal) -
+        Number.parseFloat(this.form.descuento) +
+        Number.parseFloat(this.form.impuestos)
+      ).toFixed(2);
+      this.form.costo_neto = costo_neto;
+      return costo_neto;
+    },
+    /**fin de valores para la aplicacion de toales e impuestos */
+    /**minimo valor permitido del enganche */
+    valor_minimo_pago_inicial: function () {
+      if (this.form.planVenta.value == "") {
+        return 0;
+      } else {
+        if (this.form.planVenta.value == 1) {
+          //es a contado
+          if (this.form.costo_neto > 0) {
+            return this.form.costo_neto;
+          } else {
+            return 0;
+          }
+        } else {
+          /**venta a credito */
+          if (this.form.costo_neto > this.form.planVenta.pago_inicial) {
+            /**sin desucuento mando el pago  inicial definido en el plna */
+            /**se deja como minimo lo establecido en el pago inicial */
+            return this.form.planVenta.pago_inicial;
+          } else {
+            /**solo el 10 por ciento para que el resto se pague en abonos */
+            return (this.form.costo_neto * 0.1).toFixed(2);
+          }
+        }
+      }
+    },
+    /**maximo valor permitido del enganche */
+    valor_maximo_pago_inicial: function () {
+      if (this.form.planVenta.value == "") {
+        return 0;
+      } else {
+        if (this.form.planVenta.value == 1) {
+          return this.costo_neto_computed;
+        } else {
+          return (this.costo_neto_computed * 0.7).toFixed(2);
+          /**como maximo un 70 % para el resto dejarlo en abonos y mantener las buenas practicas del finaciamiento */
+        }
+      }
+    },
+
+    /**maximo valor permitido del enganche */
+    minimo_pronto_pago: function () {
+      if (this.form.costo_neto > 1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    },
+    /**checando si la venta ya fue liquidada*/
+    ventaLiquidada: function () {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.saldo_neto <= 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    /**checando si ya hay pagos vigentes realizados en la venta, por lo cual no puede cambiar la fecha de la venta */
+    tiene_pagos_realizados: function () {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.pagos_realizados > 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    /**checar si tiene pagos vencidos */
+    tienePagosVencidos: function () {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.pagos_vencidos > 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    fueCancelada: function () {
+      if (this.getTipoformulario == "modificar") {
+        if (this.datosVenta.operacion_status == 0) {
+          return true;
+        } else return false;
+      } else return false;
+    },
+    /**validar si es modificar el formulario */
+    ModificarVenta: function () {
+      if (this.getTipoformulario == "modificar") {
+        return true;
+      } else return false;
+    },
+
+    getTipoformulario: {
+      get() {
+        return this.tipo;
+      },
+      set(newValue) {
+        return newValue;
+      },
+    },
+    get_venta_id: {
+      get() {
+        return this.id_venta;
+      },
+      set(newValue) {
+        return newValue;
+      },
+    },
+
+    showVentana: {
+      get() {
+        return this.show;
+      },
+      set(newValue) {
+        return newValue;
+      },
+    },
+    capturar_num_convenio: function () {
+      if (this.form.ventaAntiguedad.value > 1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    capturar_num_titulo: function () {
+      if (this.form.ventaAntiguedad.value == 3) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    plan_venta: function () {
+      if (this.form.planVenta.value == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    //validaciones calculadas
+    //valido que elija un plan de venta
+    plan_de_venta_computed: function () {
+      return this.form.planVenta.value;
+    },
+    plan_funerario_validacion_computed: function () {
+      return this.form.plan_funerario.value;
+    },
+
+    antiguedad_validacion_computed: function () {
+      return this.form.ventaAntiguedad.value;
+    },
+
+    vendedor_validacion_computed: function () {
+      return this.form.vendedor.value;
+    },
+    fecha_venta_validacion_computed: function () {
+      return this.form.fecha_venta;
+    },
+
+    solicitud_validacion_computed: function () {
+      //checo que el dato venta a futuro este activo
+      if (this.form.tipo_financiamiento == 2) {
+        return this.form.solicitud;
+      } else return true;
+    },
+
+    num_convenio_validacion_computed: function () {
+      //checo que el dato venta a futuro este activo y que sea de venta antes del sistema
+      if (this.form.ventaAntiguedad.value >= 2) {
+        return this.form.convenio;
+      } else return true;
+    },
+    num_titulo_validacion_computed: function () {
+      //checo que el dato venta a futuro este activo
+      if (this.form.ventaAntiguedad.value == 3) {
+        return this.form.titulo;
+      } else return true;
+    },
+
+    //fin de validaciones calculadas
+  },
+  data() {
+    return {
+      planes_funerarios: [],
+      datos: [],
+      /**variables dle modulo */
+      openNotas: false,
+      configdateTimePicker: configdateTimePicker,
+      verDisponibilidad: false,
+      openBuscador: false,
+      accionConfirmarSinPassword: "",
+      botonConfirmarSinPassword: "",
+      alfabeto: alfabeto,
+      openPassword: false,
+      openConfirmarSinPassword: false,
+      callback: Function,
+      callBackConfirmar: Function,
+      openConfirmarAceptar: false,
+      callBackConfirmarAceptar: Function,
+      accionNombre: "Modificar Venta",
+      ventasAntiguedad: [
+        {
+          label: "NUEVA VENTA",
+          value: 1,
+        },
+        {
+          label: "A/S SIN LIQUIDAR",
+          value: 2,
+        },
+        {
+          label: "A/S - LIQUIDADA",
+          value: 3,
+        },
+      ],
+      vendedores: [],
+      //variables con mapa
+      planesVenta: [
+        {
+          label: "Seleccione 1",
+          value: "",
+          subtotal: "0.00",
+          impuestos: "0.00",
+          costo_neto: "0.00",
+          pago_inicial: "",
+          descuento_pronto_pago_b: "",
+          costo_neto_pronto_pago: "",
+          porcentaje_pronto_pago: "",
+          costo_neto_financiamiento_normal: "",
+        },
+      ],
+      /**para modificar, se traen los datos aqui */
+      datosVenta: [],
+      //fin var con mapa
+      form: {
+        tipo_financiamiento: 2 /**directamente solo a futuro */,
+        plan_funerario: {
+          label: "Seleccione 1",
+          plan: "",
+          plan_ingles: "",
+          nota: "",
+          nota_ingles: "",
+          value: "",
+          secciones: [],
+          precios: [],
+        },
+        /**varaibles del modulo */
+        salarios_minimos: "12",
+        id_venta: "",
+        /**datos del cliente seleccionado */
+        cliente: "seleccione 1 cliente",
+        id_cliente: "",
+        fecha_venta: "",
+        /**titular substituto */
+        titular_sustituto: "",
+        parentesco_titular_sustituto: "",
+        telefono_titular_sustituto: "",
+        //
+        solicitud: "",
+        convenio: "",
+        titulo: "",
+        /**datos origen */
+        //variables con mapa
+        planVenta: {
+          label: "Seleccione 1",
+          value: "",
+          subtotal: "0.00",
+          impuestos: "0.00",
+          costo_neto: "0.00",
+          pago_inicial: "",
+          descuento_pronto_pago_b: "",
+          costo_neto_pronto_pago: "",
+          porcentaje_pronto_pago: "",
+          costo_neto_financiamiento_normal: "",
+        },
+        ventaAntiguedad: {
+          label: "NUEVA VENTA",
+          value: 1,
+        },
+        /**muestra el enganche original con el que se hizo la venta */
+        pago_inicial_origen: "",
+        subtotal: "0.00",
+        descuento: "0.00",
+        impuestos: "0.00",
+        costo_neto: "0.00",
+        pago_inicial: "0.00",
+        costo_neto_pronto_pago: "0.00",
+        vendedor: {
+          label: "Seleccione 1",
+          value: "",
+        },
+        beneficiarios: [],
+        index_beneficiario: 0,
+        nota: "",
+        //fin var con mapa
+      },
+      errores: [],
+    };
+  },
+  methods: {
+    closeNotas(nota) {
+      this.form.nota = nota;
+      this.openNotas = false;
+    },
+    acceptAlert() {
+      this.$validator
+        .validateAll()
+        .then((result) => {
+          if (!result) {
+            this.$vs.notify({
+              title: "Error",
+              text: "Verifique que todos los datos han sido capturados",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "12000",
+            });
+            return;
+          } else {
+            /**aqui se hace la validacion en los totales de la venta */
+            //se confirma la cntraseña
+            /**actualizando los valores de total de venta */
+            //fin de actualizar datos de ubicacion
+            (async () => {
+              if (this.getTipoformulario == "agregar") {
+                this.callBackConfirmarAceptar = await this.guardar_venta;
+                this.openConfirmarAceptar = true;
+              } else {
+                /**es modificacion */
+                this.callback = await this.modificar_venta;
+                this.openPassword = true;
+              }
+            })();
+          }
+        })
+        .catch(() => {});
+    },
+
+    async guardar_venta() {
+      //aqui mando guardar los datos
+      this.errores = [];
+      this.$vs.loading();
+      try {
+        let res = await planes.guardar_venta(this.form);
+        if (res.data >= 1) {
+          //success
+          this.$vs.notify({
+            title: "Ventas de Propiedades",
+            text: "Se ha guardado la venta correctamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000,
+          });
+          this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.cerrarVentana();
+        } else {
+          this.$vs.notify({
+            title: "Ventas de Propiedades",
+            text: "Error al guardar la venta, por favor reintente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 4000,
+          });
+        }
+
+        this.$vs.loading.close();
+      } catch (err) {
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          } else if (err.response.status == 422) {
+            //checo si existe cada error
+            this.errores = err.response.data.error;
+            this.$vs.notify({
+              title: "Guardar Venta",
+              text: "Verifique los errores encontrados en los datos.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 5000,
+            });
+          } else if (err.response.status == 409) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Guardar Venta",
+              text: err.response.data.error,
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 15000,
+            });
+          }
+        }
+        this.$vs.loading.close();
+      }
+    },
+
+    async modificar_venta() {
+      //aqui mando guardar los datos
+      this.errores = [];
+      this.$vs.loading();
+      try {
+        let res = await planes.modificar_venta(this.form);
+        if (res.data >= 1) {
+          //success
+          this.$vs.notify({
+            title: "Ventas de Propiedades",
+            text: "Se ha modificado la venta correctamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000,
+          });
+          this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.cerrarVentana();
+        } else {
+          this.$vs.notify({
+            title: "Ventas de Propiedades",
+            text: "Error al modificar la venta, por favor reintente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 4000,
+          });
+        }
+
+        this.$vs.loading.close();
+      } catch (err) {
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          } else if (err.response.status == 422) {
+            //checo si existe cada error
+            this.errores = err.response.data.error;
+
+            this.$vs.notify({
+              title: "Modificar Venta",
+              text: "Verifique los errores encontrados en los datos.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 5000,
+            });
+          } else if (err.response.status == 409) {
+            //este error es por alguna condicion que el contrano no cumple para modificar
+            //la propiedad esa ya ha sido vendida
+            this.$vs.notify({
+              title: "Modificar información de la venta",
+              text: err.response.data.error,
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 30000,
+            });
+          }
+        }
+        this.$vs.loading.close();
+      }
+    },
+    cancel() {
+      this.$emit("closeVentana");
+    },
+    async get_planes_funerarios() {
+      try {
+        this.$vs.loading();
+        let res = await planes.get_planes(false, "");
+        //le agrego todos los usuarios vendedores
+        this.planes_funerarios = [];
+        this.planes_funerarios.push({
+          label: "Seleccione 1",
+          plan: "",
+          plan_ingles: "",
+          nota: "",
+          nota_ingles: "",
+          value: "",
+          secciones: [],
+          precios: [],
+        });
+        res.data.forEach((element) => {
+          this.planes_funerarios.push({
+            label: element.plan,
+            plan: element.plan,
+            plan_ingles: element.plan_ingles,
+            nota: element.nota,
+            nota_ingles: element.nota_ingles,
+            value: element.id,
+            secciones: element.secciones,
+            precios: element.precios,
+          });
+        });
+        if (this.getTipoformulario == "agregar") {
+          if (this.planes_funerarios.length > 1) {
+            /**selecciona el primer plan que venga en el arreglo */
+            this.form.plan_funerario = this.planes_funerarios[1];
+          } else {
+            /**selecciona el "Seleccione 1" */
+            this.form.plan_funerario = this.planes_funerarios[0];
+          }
+        }
+        this.$vs.loading.close();
+      } catch (error) {
+        /**error al cargar vendedores */
+        this.$vs.notify({
+          title: "Error",
+          text:
+            "Ha ocurrido un error al tratar de cargar el catálogo de vendedores, por favor reintente.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "9000",
+        });
+        this.$vs.loading.close();
+        this.cerrarVentana();
+      }
+    },
+    //get vendedores
+    async get_vendedores() {
+      try {
+        let res = await planes.get_vendedores();
+        //le agrego todos los usuarios vendedores
+        this.vendedores = [];
+        this.vendedores.push({ label: "Seleccione 1", value: "" });
+        if (this.getTipoformulario == "agregar") {
+          this.form.vendedor = this.vendedores[0];
+        }
+        res.data.forEach((element) => {
+          this.vendedores.push({
+            label: element.nombre,
+            value: element.id,
+          });
+        });
+      } catch (error) {
+        /**error al cargar vendedores */
+        this.$vs.notify({
+          title: "Error",
+          text:
+            "Ha ocurrido un error al tratar de cargar el catálogo de vendedores, por favor reintente.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "9000",
+        });
+        this.cerrarVentana();
+      }
+    },
+    cargarPlanes() {
+      this.form.planVenta = this.planesVenta[0];
+      this.planesVenta = [];
+      this.planesVenta.push({
+        label: "Seleccione 1",
+        value: "",
+        subtotal: "0.00",
+        impuestos: "0.00",
+        costo_neto: "0.00",
+        pago_inicial: "",
+        descuento_pronto_pago_b: "",
+        costo_neto_pronto_pago: "",
+        porcentaje_pronto_pago: "",
+        costo_neto_financiamiento_normal: "",
+      });
+      if (this.verLista == true) {
+        this.form.plan_funerario.precios.forEach((element) => {
+          if (element.status == 1) {
+            //la venta es a futuro y puede seleccionar todas los siguientes planes de venta
+            //precios de pagos a meses
+            if (element.financiamiento > 1) {
+              this.planesVenta.push({
+                label: element.tipo_financiamiento,
+                value: Number(element.financiamiento),
+                subtotal: Number(element.subtotal),
+                impuestos: Number(element.impuestos),
+                costo_neto: Number(element.costo_neto),
+                pago_inicial: Number(element.pago_inicial),
+                descuento_pronto_pago_b: Number(
+                  element.descuento_pronto_pago_b
+                ),
+                costo_neto_pronto_pago: Number(element.costo_neto_pronto_pago),
+                porcentaje_pronto_pago: Number(element.porcentaje_pronto_pago),
+                costo_neto_financiamiento_normal: Number(
+                  element.costo_neto_financiamiento_normal
+                ),
+              });
+            }
+          }
+        });
+        //selecciono el primero precio automaticamente
+        if (this.getTipoformulario == "agregar") {
+          /**tipo de formulario agregar */
+          this.seleccionarPlanVenta();
+        } else {
+          /**logica para traer los datos originales de la venta */
+          let plan_encontrado = false;
+          this.planesVenta.forEach((element) => {
+            if (element.value != "") {
+              if (
+                element.value == this.datosVenta.financiamiento &&
+                element.costo_neto == this.datosVenta.total &&
+                element.costo_neto_pronto_pago ==
+                  this.datosVenta.costo_neto_pronto_pago
+              ) {
+                /**en caso de que se encuentre el original */
+                this.form.planVenta = element;
+                plan_encontrado = true;
+                return;
+              }
+            }
+          });
+          if (plan_encontrado == false) {
+            /**pregurnando si el plan de venta no es el original */
+            if (
+              this.form.plan_funerario.label ==
+              this.form.plan_funerario.plan + "(Original de Venta)"
+            ) {
+              if (this.form.planVenta.value == "") {
+                /**no se encontro el plan y se debe de agregar uno como de origen */
+                let planVenta = {
+                  label:
+                    this.datosVenta.financiamiento == 1
+                      ? "Pago Único/Uso Inmediato (Plan Original)"
+                      : "Pago a " +
+                        this.datosVenta.financiamiento +
+                        " Meses/a Futuro(origen venta)",
+                  value: Number(this.datosVenta.financiamiento),
+                  subtotal: Number(this.datosVenta.subtotal),
+                  impuestos: Number(this.datosVenta.impuestos),
+                  costo_neto: Number(this.datosVenta.total),
+                  pago_inicial: Number(
+                    this.datosVenta.pagos_programados.length > 0
+                      ? this.datosVenta.pagos_programados[0].monto_programado
+                      : 0
+                  ),
+                  descuento_pronto_pago_b: Number(
+                    this.datosVenta.descuento_pronto_pago_b
+                  ),
+                  costo_neto_pronto_pago: Number(
+                    this.datosVenta.costo_neto_pronto_pago
+                  ),
+                  porcentaje_pronto_pago: 0,
+                  costo_neto_financiamiento_normal: Number(
+                    this.datosVenta.costo_neto_financiamiento_normal
+                  ),
+                };
+                this.planesVenta.push(planVenta);
+                this.form.planVenta = planVenta;
+              } else {
+                this.seleccionarPlanVenta();
+              }
+            } else {
+              this.seleccionarPlanVenta();
+            }
+          }
+
+          this.form.descuento = this.datosVenta.descuento;
+          /**seleccionando el pago inicial */
+          if (this.datosVenta.pagos_programados.length > 0) {
+            /**tiene pagos programado y debemos seleccionar el pago programado para tomar el pago inicial */
+            this.form.pago_inicial = this.datosVenta.pagos_programados[0].monto_programado;
+          } else {
+            this.form.pago_inicial = 0;
+          }
+        }
+      } //fin if datos area
+    },
+    seleccionarPlanVenta() {
+      //selecciono el primero precio automaticamente
+      if (this.planesVenta.length > 1) {
+        this.form.planVenta = this.planesVenta[1];
+      } else {
+        this.form.planVenta = this.planesVenta[0];
+        this.$vs.notify({
+          title: "Planes de Venta",
+          text:
+            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de Funeraria > Planes a Futuro > Planes de Venta'",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "12000",
+        });
+      }
+    },
+
+    cancelar() {
+      this.botonConfirmarSinPassword = "Salir y limpiar";
+      this.accionConfirmarSinPassword =
+        "Esta acción limpiará los datos que capturó en el formulario.";
+      this.openConfirmarSinPassword = true;
+      this.callBackConfirmar = this.cerrarVentana;
+    },
+
+    cerrarVentana() {
+      this.openConfirmarSinPassword = false;
+      this.limpiarVentana();
+      this.$emit("closeVentana");
+    },
+    //regresa los datos a su estado inicial
+    limpiarVentana() {
+      this.form.plan_funerario = {
+        label: "Seleccione 1",
+        plan: "",
+        plan_ingles: "",
+        nota: "",
+        nota_ingles: "",
+        value: "",
+        secciones: [],
+        precios: [],
+      };
+      this.form.ventaAntiguedad = this.ventasAntiguedad[0];
+      this.form.solicitud = "";
+      this.form.convenio = "";
+      this.form.titulo = "";
+      this.form.cliente = "";
+      this.form.id_cliente = "";
+      this.form.vendedor = { label: "Seleccione 1", value: "" };
+      this.form.fecha_venta = "";
+
+      this.form.titular_sustituto = "";
+      this.form.parentesco_titular_sustituto = "";
+      this.form.telefono_titular_sustituto = "";
+      this.form.beneficiarios = [];
+      this.form.planVenta = this.planesVenta[0];
+
+      this.form.descuento = 0;
+      this.form.subtotal = 0;
+      this.form.impuestos = 0;
+      this.form.costo_neto_pronto_pago = 0;
+      this.form.pago_inicial = 0;
+      this.form.nota = "";
+    },
+
+    closePassword() {
+      this.openPassword = false;
+    },
+
+    //agregar beneficiario
+    agregar_beneficiario() {
+      //verifico si todos los datos estan completos para dejarle agregar nuevos
+      let errores_de_captura_en_datos = 0;
+      /**maximo 10 beneficiarios */
+      if (this.form.beneficiarios.length < 10) {
+        this.form.beneficiarios.forEach((element) => {
+          if (
+            element.nombre === "" ||
+            element.parentesco === "" ||
+            element.telefono === ""
+          ) {
+            errores_de_captura_en_datos += 1;
+          }
+        });
+        if (errores_de_captura_en_datos > 0) {
+          //no paso
+          this.$vs.notify({
+            title: "Error",
+            text: "Verifique que todos los datos han sido capturados",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "9000",
+          });
+        } else {
+          //si paso la prueba de toodos los datos
+          this.form.beneficiarios.push({
+            nombre: "",
+            parentesco: "",
+            telefono: "",
+          });
+        }
+      } else {
+        //pasa de 5 beneficiarios
+        this.$vs.notify({
+          title: "Límite de Beneficiarios",
+          text: "Ha llegado a 10, el límite de beneficiarios",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "9000",
+        });
+      }
+    },
+    //remover beneficiario
+    remover_beneficiario(index_beneficiario) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea eliminar este beneficiario? Los datos quedarán eliminados del sistema?";
+      this.form.index_beneficiario = index_beneficiario;
+      this.callBackConfirmar = this.remover_beneficiario_callback;
+      this.openConfirmarSinPassword = true;
+    },
+    //remover beneficiario callback quita del array al beneficiario seleccionado
+    remover_beneficiario_callback() {
+      this.form.beneficiarios.splice(this.form.index_beneficiario, 1);
+    },
+    clienteSeleccionado(datos) {
+      /**obtiene los datos retornados del buscar cliente */
+      this.form.cliente = datos.nombre;
+      this.form.id_cliente = datos.id_cliente;
+      //alert(datos.id_cliente);
+    },
+
+    limpiarCliente() {
+      this.form.id_cliente = "";
+      this.form.cliente = "seleccione 1 cliente";
+    },
+    quitarCliente() {
+      this.botonConfirmarSinPassword = "Cambiar cliente";
+      this.accionConfirmarSinPassword =
+        "¿Desea cambiar de cliente para este contrato?";
+      this.callBackConfirmar = this.limpiarCliente;
+      this.openConfirmarSinPassword = true;
+    },
+    async consultar_venta_id() {
+      try {
+        this.$vs.loading();
+        let res = await planes.consultar_venta_id(this.form.id_venta);
+        this.datosVenta = res.data[0];
+        /**se comienza a llenar la informacion de los datos */
+        /**verificar si el plan funerario se ha mantenido igual que cuando se vendio */
+        /**aqui se se recorrer el array de planes funerarios con la informacion original del plan */
+        let plan_original = {
+          plan: this.datosVenta.venta_plan.nombre_original,
+          plan_ingles: this.datosVenta.venta_plan.nombre_original_ingles,
+          nota: this.datosVenta.venta_plan.nota_original,
+          nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
+          value: this.datosVenta.venta_plan.planes_funerarios_id,
+          secciones: this.datosVenta.venta_plan.secciones_original,
+        };
+        /**guarda los precios en caso de que no se encuentre el plan original y se deba agregar precios por separado */
+        let precios_plan = [];
+        let es_igual = true;
+        this.planes_funerarios.forEach((element, index_element) => {
+          if (index_element > 0) {
+            /**capturando los precios del plan  de la venta original*/
+            if (element.value == plan_original.value) {
+              precios_plan = element.precios;
+            }
+            if (
+              element.value == plan_original.value &&
+              element.plan == plan_original.plan &&
+              element.plan_ingles == plan_original.plan_ingles &&
+              element.nota == plan_original.nota &&
+              element.nota_ingles == plan_original.nota_ingles
+            ) {
+              /**el plan se mantiente tal y como se vendio
+               * se procede a ver si los conceptos se mantienen de igual manera
+               */
+              element.secciones.forEach(function callback(
+                seccion,
+                index_seccion
+              ) {
+                if (es_igual == true) {
+                  if (
+                    !(
+                      plan_original.secciones[index_seccion].conceptos.length ==
+                      seccion.conceptos.length
+                    )
+                  ) {
+                    /**no es igual */
+                    es_igual = false;
+                  }
+                  if (es_igual == true) {
+                    /**verificando si cambio algun concepto */
+                    seccion.conceptos.forEach(function callback(
+                      concepto,
+                      index_concepto
+                    ) {
+                      if (
+                        concepto.concepto !=
+                        plan_original.secciones[index_seccion].conceptos[
+                          index_concepto
+                        ].concepto
+                      ) {
+                        es_igual = false;
+                        return;
+                      }
+                    });
+                  }
+                }
+              });
+              /**si se encontro */
+              if (es_igual == true) {
+                this.form.plan_funerario = element;
+                return;
+              }
+              return;
+            } else {
+              /**no esta */
+              es_igual = false;
+            }
+          }
+        });
+
+        if (es_igual == false) {
+          plan_original = {
+            label:
+              this.datosVenta.venta_plan.nombre_original +
+              "(Original de Venta)",
+            plan: this.datosVenta.venta_plan.nombre_original,
+            plan_ingles: this.datosVenta.venta_plan.nombre_original_ingles,
+            nota: this.datosVenta.venta_plan.nota_original,
+            nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
+            value: this.datosVenta.venta_plan.planes_funerarios_id,
+            secciones: this.datosVenta.venta_plan.secciones_original,
+            precios: precios_plan,
+          };
+          this.planes_funerarios.push(plan_original);
+          this.form.plan_funerario = plan_original;
+          /**si no esta, se agrega el concepto original*/
+        }
+        /**cargando la antiguedad de la venta */
+        this.ventasAntiguedad.forEach((element) => {
+          if (element.value == this.datosVenta.antiguedad_operacion_id) {
+            this.form.ventaAntiguedad = element;
+            return;
+          }
+        });
+        this.form.id_cliente = this.datosVenta.cliente_id;
+        this.form.cliente = this.datosVenta.nombre;
+        /**verificando si existe el vendedor o si no para crearlo, podria no existir en caso de que haya sido cancelado */
+        this.vendedores.forEach((element) => {
+          if (element.value == this.datosVenta.venta_plan.vendedor.id) {
+            this.form.vendedor = element;
+          }
+        });
+        if (this.form.vendedor.value == "") {
+          let vendedor = {
+            value: this.datosVenta.venta_plan.vendedor.id,
+            label:
+              "(" +
+              this.datosVenta.venta_plan.vendedor.nombre +
+              ", vendedor de origen)",
+          };
+          this.vendedores.push(vendedor);
+          this.form.vendedor = vendedor;
+          /**se agrega el original y se selecciona */
+        }
+        //fin seleccionar vendedor
+        /**fecha de la venta */
+        var partes_fecha = this.datosVenta.fecha_operacion.split("-");
+        //yyyy-mm-dd
+        this.form.fecha_venta = new Date(
+          partes_fecha[0],
+          partes_fecha[1] - 1,
+          partes_fecha[2]
+        );
+        /**numeros de control */
+        this.form.solicitud = this.datosVenta.numero_solicitud;
+        this.form.convenio = this.datosVenta.numero_convenio;
+        //this.form.titulo = this.datosVenta.numero_titulo;
+        /**datos del titular sustituto */
+        this.form.titular_sustituto = this.datosVenta.titular_sustituto;
+        this.form.parentesco_titular_sustituto = this.datosVenta.parentesco_titular_sustituto;
+        this.form.telefono_titular_sustituto = this.datosVenta.telefono_titular_sustituto;
+        /**beneficairios */
+        this.form.beneficiarios = this.datosVenta.beneficiarios;
+        this.form.nota = this.datosVenta.nota;
+        /**mostrando los datos relacionados al pago */
+        this.$vs.loading.close();
+      } catch (err) {
+        this.$vs.loading.close();
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          }
+        }
+      }
+    },
+    respuestaDeshabilitado() {
+      if (this.tienePagosVencidos) {
+        this.$vs.notify({
+          title: "Seleccionar Área del planes",
+          text:
+            "No está permitido cambiar la ubicación de la propiedad mientras no esté al corriente con los pagos establecidos.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "10000",
+        });
+      } else if (this.ventaLiquidada) {
+        this.$vs.notify({
+          title: "Seleccionar Área del planes",
+          text:
+            "No está permitido cambiar la ubicación de la propiedad una vez ya liquidado el total de la cuenta.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "10000",
+        });
+      }
+    },
+    limpiarValidation() {
+      this.$validator.pause();
+      this.$nextTick(() => {
+        this.$validator.errors.clear();
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
+          this.errors.remove(field)
+        );
+        this.$validator.resume();
+      });
+    },
+  },
+  created() {},
+};
+</script>
