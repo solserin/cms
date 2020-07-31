@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms venta-propiedades background-header-forms forms-popups-85"
+      class="normal-forms solicitud-propiedades background-header-forms forms-popups-85"
       fullscreen
       close="cancelar"
       :title="
@@ -12,8 +12,8 @@
       :active.sync="showVentana"
       ref="formulario"
     >
-      <!--inicio venta-->
-      <div class="venta-details">
+      <!--inicio solicitud-->
+      <div class="solicitud-details">
         <div class="flex flex-wrap">
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
             <div class="float-left pb-5 px-2">
@@ -408,24 +408,24 @@
                   Nota/Observación
                 </label>
                 <vs-input
-                  name="nota_solicitud"
+                  name="nota_al_recoger"
                   data-vv-as=" "
                   type="text"
                   class="w-full pb-1 pt-1"
                   placeholder="Nota/Observación"
-                  v-model="form.nota_solicitud"
+                  v-model="form.nota_al_recoger"
                   maxlength="250"
                 />
                 <div>
                   <span class="text-danger">{{
-                    errors.first("nota_solicitud")
+                    errors.first("nota_al_recoger")
                   }}</span>
                 </div>
                 <div class="mt-2">
                   <span
                     class="text-danger"
-                    v-if="this.errores.nota_solicitud"
-                    >{{ errores.nota_solicitud[0] }}</span
+                    v-if="this.errores.nota_al_recoger"
+                    >{{ errores.nota_al_recoger[0] }}</span
                   >
                 </div>
               </div>
@@ -475,7 +475,7 @@
         <!--fin del checkout-->
       </div>
 
-      <!--fin venta-->
+      <!--fin solicitud-->
     </vs-popup>
     <Password
       :show="openPassword"
@@ -495,8 +495,8 @@
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
-      :accion="'He revisado la información y quiero guardar la venta'"
-      :confirmarButton="'Guardar Venta'"
+      :accion="'He revisado la información y quiero guardar la solicitud'"
+      :confirmarButton="'Guardar Solicitud'"
     ></ConfirmarAceptar>
   </div>
 </template>
@@ -556,10 +556,10 @@ export default {
             /**acciones cuando el formulario es de agregar */
           } else {
             /**es modificar */
-            /**pasando el valor de la venta id */
+            /**pasando el valor de la solicitud id */
             this.form.id_solicitud = this.get_solicitud_id;
             /**se cargan los datos al formulario */
-            await this.consultar_venta_id();
+            await this.get_solicitudes_servicios();
           }
         })();
       } else {
@@ -618,7 +618,7 @@ export default {
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
-      accionNombre: "Modificar Venta",
+      accionNombre: "Modificar Solicitud",
       opciones: [
         {
           label: "SI",
@@ -631,7 +631,7 @@ export default {
       ],
       recogioOpciones: [],
       /**para modificar, se traen los datos aqui */
-      datosSolicitud: [],
+      datos_solicitud: [],
       //fin var con mapa
       form: {
         /**varaibles del modulo */
@@ -655,7 +655,7 @@ export default {
           label: "Seleccione 1",
           value: "",
         },
-        nota_solicitud: "",
+        nota_al_recoger: "",
         /**en caso de modificar*/
         id_solicitud: "",
       },
@@ -679,9 +679,9 @@ export default {
             });
             return;
           } else {
-            /**aqui se hace la validacion en los totales de la venta */
+            /**aqui se hace la validacion en los totales de la solicitud */
             //se confirma la cntraseña
-            /**actualizando los valores de total de venta */
+            /**actualizando los valores de total de solicitud */
             //fin de actualizar datos de ubicacion
             (async () => {
               if (this.getTipoformulario == "agregar") {
@@ -689,7 +689,7 @@ export default {
                 this.openConfirmarAceptar = true;
               } else {
                 /**es modificacion */
-                this.callback = await this.modificar_venta;
+                this.callback = await this.modificar_solicitud;
                 this.openPassword = true;
               }
             })();
@@ -704,7 +704,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await funeraria.guardar_solicitud(this.form);
-        console.log("guardar_solicitud -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -715,7 +714,7 @@ export default {
             color: "success",
             time: 5000,
           });
-          this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.$emit("ver_pdfs_nueva_solicitud", res.data);
           this.cerrarVentana();
         } else {
           this.$vs.notify({
@@ -731,7 +730,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("guardar_solicitud -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -769,28 +767,29 @@ export default {
       }
     },
 
-    async modificar_venta() {
+    async modificar_solicitud() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
       try {
-        let res = await planes.modificar_venta(this.form);
+        let res = await funeraria.modificar_solicitud(this.form);
+        console.log("modificar_solicitud -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
             title: "Servicios Funerarios",
-            text: "Se ha modificado la venta correctamente.",
+            text: "Se ha modificado la solicitud correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
             time: 5000,
           });
-          this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.$emit("ver_pdfs_nueva_solicitud", res.data);
           this.cerrarVentana();
         } else {
           this.$vs.notify({
             title: "Servicios Funerarios",
-            text: "Error al modificar la venta, por favor reintente.",
+            text: "Error al modificar la solicitud, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
@@ -800,7 +799,9 @@ export default {
 
         this.$vs.loading.close();
       } catch (err) {
+        console.log("modificar_solicitud -> err", err);
         if (err.response) {
+          console.log("modificar_solicitud -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -816,7 +817,7 @@ export default {
             this.errores = err.response.data.error;
 
             this.$vs.notify({
-              title: "Modificar Venta",
+              title: "Modificar Solicitud",
               text: "Verifique los errores encontrados en los datos.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -827,7 +828,7 @@ export default {
             //este error es por alguna condicion que el contrano no cumple para modificar
             //la propiedad esa ya ha sido vendida
             this.$vs.notify({
-              title: "Modificar información de la venta",
+              title: "Modificar información de la solicitud",
               text: err.response.data.error,
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -910,7 +911,7 @@ export default {
         label: "Seleccione 1",
         value: "",
       };
-      this.form.nota_solicitud = "";
+      this.form.nota_al_recoger = "";
       /**en caso de modificar*/
       this.form.id_solicitud = "";
     },
@@ -919,152 +920,52 @@ export default {
       this.openPassword = false;
     },
 
-    async consultar_venta_id() {
+    async get_solicitudes_servicios() {
       try {
         this.$vs.loading();
-        let res = await planes.consultar_venta_id(this.form.id_solicitud);
-        this.datosSolicitud = res.data[0];
-        /**se comienza a llenar la informacion de los datos */
-        /**verificar si el plan funerario se ha mantenido igual que cuando se vendio */
-        /**aqui se se recorrer el array de planes funerarios con la informacion original del plan */
-        let plan_original = {
-          plan: this.datosSolicitud.venta_plan.nombre_original,
-          plan_ingles: this.datosSolicitud.venta_plan.nombre_original_ingles,
-          nota: this.datosSolicitud.venta_plan.nota_original,
-          nota_ingles: this.datosSolicitud.venta_plan.nota_original_ingles,
-          value: this.datosSolicitud.venta_plan.planes_funerarios_id,
-          secciones: this.datosSolicitud.venta_plan.secciones_original,
-        };
-        /**guarda los precios en caso de que no se encuentre el plan original y se deba agregar precios por separado */
-        let precios_plan = [];
-        let es_igual = true;
-        this.planes_funerarios.forEach((element, index_element) => {
-          if (index_element > 0) {
-            /**capturando los precios del plan  de la venta original*/
-            if (element.value == plan_original.value) {
-              precios_plan = element.precios;
-            }
-            if (
-              element.value == plan_original.value &&
-              element.plan == plan_original.plan &&
-              element.plan_ingles == plan_original.plan_ingles &&
-              element.nota == plan_original.nota &&
-              element.nota_ingles == plan_original.nota_ingles
-            ) {
-              /**el plan se mantiente tal y como se vendio
-               * se procede a ver si los conceptos se mantienen de igual manera
-               */
-              element.secciones.forEach(function callback(
-                seccion,
-                index_seccion
-              ) {
-                if (es_igual == true) {
-                  if (
-                    !(
-                      plan_original.secciones[index_seccion].conceptos.length ==
-                      seccion.conceptos.length
-                    )
-                  ) {
-                    /**no es igual */
-                    es_igual = false;
-                  }
-                  if (es_igual == true) {
-                    /**verificando si cambio algun concepto */
-                    seccion.conceptos.forEach(function callback(
-                      concepto,
-                      index_concepto
-                    ) {
-                      if (
-                        concepto.concepto !=
-                        plan_original.secciones[index_seccion].conceptos[
-                          index_concepto
-                        ].concepto
-                      ) {
-                        es_igual = false;
-                        return;
-                      }
-                    });
-                  }
-                }
-              });
-              /**si se encontro */
-              if (es_igual == true) {
-                this.form.plan_funerario = element;
-                return;
-              }
-              return;
-            } else {
-              /**no esta */
-              es_igual = false;
-            }
-          }
-        });
-
-        if (es_igual == false) {
-          plan_original = {
-            label:
-              this.datosSolicitud.venta_plan.nombre_original +
-              "(Original de Venta)",
-            plan: this.datosSolicitud.venta_plan.nombre_original,
-            plan_ingles: this.datosSolicitud.venta_plan.nombre_original_ingles,
-            nota: this.datosSolicitud.venta_plan.nota_original,
-            nota_ingles: this.datosSolicitud.venta_plan.nota_original_ingles,
-            value: this.datosSolicitud.venta_plan.planes_funerarios_id,
-            secciones: this.datosSolicitud.venta_plan.secciones_original,
-            precios: precios_plan,
-          };
-          this.planes_funerarios.push(plan_original);
-          this.form.plan_funerario = plan_original;
-          /**si no esta, se agrega el concepto original*/
-        }
-        /**cargando la antiguedad de la venta */
-        this.ventasAntiguedad.forEach((element) => {
-          if (element.value == this.datosSolicitud.antiguedad_operacion_id) {
-            this.form.ventaAntiguedad = element;
-            return;
-          }
-        });
-        this.form.id_cliente = this.datosSolicitud.cliente_id;
-        this.form.cliente = this.datosSolicitud.nombre;
-        /**verificando si existe el vendedor o si no para crearlo, podria no existir en caso de que haya sido cancelado */
-        this.vendedores.forEach((element) => {
-          if (element.value == this.datosSolicitud.venta_plan.vendedor.id) {
-            this.form.vendedor = element;
-          }
-        });
-        if (this.form.vendedor.value == "") {
-          let vendedor = {
-            value: this.datosSolicitud.venta_plan.vendedor.id,
-            label:
-              "(" +
-              this.datosSolicitud.venta_plan.vendedor.nombre +
-              ", vendedor de origen)",
-          };
-          this.vendedores.push(vendedor);
-          this.form.vendedor = vendedor;
-          /**se agrega el original y se selecciona */
-        }
-        //fin seleccionar vendedor
-        /**fecha de la venta */
-        var partes_fecha = this.datosSolicitud.fecha_operacion.split("-");
+        let res = await funeraria.get_solicitudes_servicios_id(
+          this.form.id_solicitud
+        );
+        this.datos_solicitud = res.data[0];
+        /**llenando datos */
+        this.form.llamada_b = this.datos_solicitud.llamada_b;
+        this.form.nombre_afectado = this.datos_solicitud.nombre_afectado;
+        /**fecha de la solicitud */
+        var partes_fecha = this.datos_solicitud.fecha_solicitud.split("-");
+        var partes_hora = this.datos_solicitud.hora_solicitud.split(":");
         //yyyy-mm-dd
         this.form.fecha_solicitud = new Date(
           partes_fecha[0],
           partes_fecha[1] - 1,
-          partes_fecha[2]
+          partes_fecha[2],
+          partes_hora[0],
+          partes_hora[1]
         );
-        /**numeros de control */
-        this.form.solicitud = this.datosSolicitud.numero_solicitud;
-        this.form.convenio = this.datosSolicitud.numero_convenio;
-        //this.form.titulo = this.datosSolicitud.numero_titulo;
-        /**datos del titular sustituto */
-        this.form.titular_sustituto = this.datosSolicitud.titular_sustituto;
-        this.form.parentesco_titular_sustituto = this.datosSolicitud.parentesco_titular_sustituto;
-        this.form.telefono_titular_sustituto = this.datosSolicitud.telefono_titular_sustituto;
-        /**beneficairios */
-        this.form.beneficiarios = this.datosSolicitud.beneficiarios;
-        this.form.nota = this.datosSolicitud.nota;
-        /**mostrando los datos relacionados al pago */
+        this.form.causa_muerte = this.datos_solicitud.causa_muerte;
+        this.opciones.forEach((element) => {
+          if (element.value == this.datos_solicitud.muerte_natural_b) {
+            this.form.muerte_natural_b = element;
+            return;
+          }
+        });
+        this.opciones.forEach((element) => {
+          if (element.value == this.datos_solicitud.contagioso_b) {
+            this.form.contagioso_b = element;
+            return;
+          }
+        });
+        this.form.nombre_informante = this.datos_solicitud.nombre_informante;
+        this.form.telefono_informante = this.datos_solicitud.telefono_informante;
+        this.form.parentesco_informante = this.datos_solicitud.parentesco_informante;
+        this.form.ubicacion_recoger = this.datos_solicitud.ubicacion_recoger;
+        this.form.nota_al_recoger = this.datos_solicitud.nota_al_recoger;
+        this.recogioOpciones.forEach((element) => {
+          if (element.value == this.datos_solicitud.recogio_id) {
+            this.form.recogio = element;
+            return;
+          }
+        });
+
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();

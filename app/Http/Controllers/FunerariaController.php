@@ -15,6 +15,7 @@ use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\CementerioController;
+use App\ServiciosFunerarios;
 
 class FunerariaController extends ApiController
 {
@@ -2506,7 +2507,7 @@ class FunerariaController extends ApiController
     }
 
 
-    public function guardar_solicitud(Request $request, $tipo_servicio = '')
+    public function control_solicitud(Request $request, $tipo_servicio = '')
     {
 
         if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
@@ -2525,7 +2526,7 @@ class FunerariaController extends ApiController
             'telefono_informante' => 'required',
             'parentesco_informante' => 'required',
             'recogio.value' => 'required',
-            'nota_solicitud' => 'required',
+            'nota_al_recoger' => 'required',
             'id_solicitud' => ''
         ];
 
@@ -2539,16 +2540,17 @@ class FunerariaController extends ApiController
             $validaciones,
             $mensajes
         );
-
         /**verificando si es tipo modificar para validar que venga el id a modificar */
-        $datos_plan = array();
+        $datos_solicitud = array();
         if ($tipo_servicio == 'modificar') {
-            $datos_plan = $this->get_planes(false, $request->id_plan_modificar)[0];
-            if (empty($datos_plan)) {
+            $r = new \Illuminate\Http\Request();
+            $r->replace(['sample' => 'sample']);
+            $datos_solicitud = $this->get_solicitudes_servicios($r, $request->id_solicitud)[0];
+            if (empty($datos_solicitud)) {
                 /**no se encontro los datos */
-                return $this->errorResponse('No se encontró la información del plan solicitada', 409);
-            } else if ($datos_plan['status'] == 0) {
-                return $this->errorResponse('Esta plan ya fue cancelado, no puede modificarse', 409);
+                return $this->errorResponse('No se encontró la información de la solicitud solicitada', 409);
+            } else if ($datos_solicitud['status_b'] == 0) {
+                return $this->errorResponse('Esta solicitud ya fue cancelada, no puede modificarse', 409);
             }
         }
         $id_return = 0;
@@ -2569,7 +2571,7 @@ class FunerariaController extends ApiController
                         'parentesco_informante' => $request->parentesco_informante,
                         'ubicacion_recoger' => $request->ubicacion_recoger,
                         'recogio_id' => $request->recogio['value'],
-                        'nota_al_recoger' => $request->nota_solicitud,
+                        'nota_al_recoger' => $request->nota_al_recoger,
                         'registro_id' => (int) $request->user()->id,
                         'fechahora_registro' => now()
                     ]
@@ -2578,32 +2580,25 @@ class FunerariaController extends ApiController
                 /**todo salio bien y se debe de guardar */
             } else {
                 /**es modificar */
-                DB::table('planes_funerarios')->where('id', $request->id_plan_modificar)->update(
+                DB::table('servicios_funerarios')->where('id', $request->id_solicitud)->update(
                     [
-                        'plan' => $request->descripcion,
-                        'plan_ingles' => $request->descripcion_ingles,
-                        'nota' => $request->nota != '' ? $request->nota : '',
-                        'nota_ingles' => $request->nota_ingles != '' ? $request->nota_ingles : '',
+                        'llamada_b' => $request->llamada_b,
+                        'nombre_afectado' => $request->nombre_afectado,
+                        'fechahora_solicitud' => $request->fecha_solicitud,
+                        'causa_muerte' => $request->causa_muerte,
+                        'muerte_natural_b' => $request->muerte_natural_b['value'],
+                        'contagioso_b' => $request->contagioso_b['value'],
+                        'nombre_informante' => $request->nombre_informante,
+                        'telefono_informante' => $request->telefono_informante,
+                        'parentesco_informante' => $request->parentesco_informante,
+                        'ubicacion_recoger' => $request->ubicacion_recoger,
+                        'recogio_id' => $request->recogio['value'],
+                        'nota_al_recoger' => $request->nota_al_recoger,
                         'modifico_id' => (int) $request->user()->id,
                         'fecha_modificacion' => now()
                     ]
                 );
-                /**eliminamos los coceptos originales */
-                DB::table('plan_conceptos')->where('planes_funerarios_id', $request->id_plan_modificar)->delete();
-                /**al actualizzar el plan, se procede a registrar los conceptos nuevamente*/
-                foreach ($request->conceptos as $key_seccion => $seccion) {
-                    foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
-                        DB::table('plan_conceptos')->insert(
-                            [
-                                'seccion_id' => ($key_seccion + 1),
-                                'concepto' => $concepto['concepto'],
-                                'concepto_ingles' => $concepto['concepto_ingles'],
-                                'planes_funerarios_id' => $request->id_plan_modificar
-                            ]
-                        );
-                    }
-                }
-                $id_return = $request->id_plan_modificar;
+                $id_return = $request->id_solicitud;
             }
             DB::commit();
             return $id_return;
@@ -2611,5 +2606,123 @@ class FunerariaController extends ApiController
             DB::rollBack();
             return $th;
         }
+    }
+
+
+    /**obtiene los servicios funerarios */
+    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false)
+    {
+        $filtro_especifico_opcion = $request->filtro_especifico_opcion;
+        $fallecido = $request->fallecido;
+        $numero_control = $request->numero_control;
+        $status = $request->status;
+        $fecha_operacion = $request->fecha_operacion;
+        $resultado_query = ServiciosFunerarios::select(
+            /**venta operacion */
+            'servicios_funerarios.id as servicio_id',
+            'llamada_b',
+            'nota_al_recoger',
+            'nombre_afectado',
+            'causa_muerte',
+            'muerte_natural_b',
+            'contagioso_b',
+            'nombre_informante',
+            'telefono_informante',
+            'parentesco_informante',
+            'ubicacion_recoger',
+            'servicios_funerarios.status as status_b',
+            'tipo_solicitud_id',
+            'recogio_id',
+            'fechahora_solicitud as fechahora_solicitud',
+            DB::raw(
+                'DATE(fechahora_solicitud) as fecha_solicitud'
+            ),
+            DB::raw(
+                'TIME(fechahora_solicitud) as hora_solicitud'
+            ),
+            DB::raw(
+                '(NULL) as fecha_solicitud_texto'
+            ),
+            DB::raw(
+                '(NULL) as muerte_natural_texto'
+            ),
+            DB::raw(
+                '(NULL) as contagioso_texto'
+            ),
+            DB::raw(
+                '(NULL) as status_texto'
+            ),
+            DB::raw(
+                '(NULL) as tipo_solicitud_texto'
+            )
+        )
+            ->where(function ($q) use ($id_servicio) {
+                if (trim($id_servicio) == 'all' || $id_servicio > 0) {
+                    if (trim($id_servicio) == 'all') {
+                        $q->where('servicios_funerarios.id', '>', $id_servicio);
+                    } else if ($id_servicio > 0) {
+                        $q->where('servicios_funerarios.id', '=', $id_servicio);
+                    }
+                }
+            })
+            ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
+                if (trim($numero_control) != '') {
+                    if ($filtro_especifico_opcion == 1) {
+                        /**filtro por numero de solicitud */
+                        $q->where('servicios_funerarios.id', '=',  $numero_control);
+                    }
+                }
+            })
+            ->where(function ($q) use ($status) {
+                if (trim($status) != '') {
+                    $q->where('servicios_funerarios.status', '=', $status);
+                }
+            })
+            //->join('clientes', 'clientes.id', '=', 'operaciones.clientes_id')
+            ->where('nombre_afectado', 'like', '%' . $fallecido . '%')
+            ->orderBy('servicios_funerarios.id', 'desc')
+            ->get();
+        /**verificando si el usario necesita el resultado paginado, todo o por id */
+        $resultado = array();
+        if ($paginated == 'paginated') {
+            /**queire el resultado paginado */
+            $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
+            $resultado = &$resultado_query['data'];
+        } else {
+            $resultado_query = $resultado_query->toArray();
+            $resultado = &$resultado_query;
+        }
+
+        foreach ($resultado as $index_venta => &$solicitud) {
+            /**DEFINIENDO EL STATUS DE LA VENTA*/
+            if ($solicitud['status_b'] == 0) {
+                $solicitud['status_texto'] = 'Cancelada';
+                /**actualizando el motivo de cancelacion */
+            } elseif ($solicitud['status_b'] == 1) {
+                $solicitud['status_texto'] = 'Activa';
+            }
+            /**tipo de solicitud */
+            if ($solicitud['tipo_solicitud_id'] == 1) {
+                $solicitud['tipo_solicitud_texto'] = 'Servicio Funerario';
+            } elseif ($solicitud['tipo_solicitud_id'] == 2) {
+                $solicitud['tipo_solicitud_texto'] = 'Exhumación';
+            }
+            if ($solicitud['contagioso_b'] == 0) {
+                $solicitud['contagioso_texto'] = 'NO';
+                /**actualizando el motivo de cancelacion */
+            } elseif ($solicitud['contagioso_b'] == 1) {
+                $solicitud['contagioso_texto'] = 'SI';
+            }
+            if ($solicitud['muerte_natural_b'] == 0) {
+                $solicitud['muerte_natural_texto'] = 'NO';
+                /**actualizando el motivo de cancelacion */
+            } elseif ($solicitud['muerte_natural_b'] == 1) {
+                $solicitud['muerte_natural_texto'] = 'SI';
+            }
+            $solicitud['fecha_solicitud_texto'] = fecha_abr($solicitud['fecha_solicitud']);
+        } //fin foreach venta
+
+        return $resultado_query;
+        /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
     }
 }

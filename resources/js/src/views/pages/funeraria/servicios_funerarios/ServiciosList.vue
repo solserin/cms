@@ -132,27 +132,24 @@
       </template>
       <template slot-scope="{ data }">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-          <vs-td :data="data[indextr].ventas_planes_id">
-            <span class="font-semibold">{{
-              data[indextr].ventas_planes_id
-            }}</span>
+          <vs-td :data="data[indextr].servicio_id">
+            <span class="font-semibold">{{ data[indextr].servicio_id }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].nombre">{{ data[indextr].nombre }}</vs-td>
-          <vs-td :data="data[indextr].venta_plan.tipo_financiamiento_texto">{{
-            data[indextr].venta_plan.tipo_financiamiento_texto
+          <vs-td :data="data[indextr].nombre_afectado">{{
+            data[indextr].nombre_afectado
           }}</vs-td>
-          <vs-td :data="data[indextr].numero_solicitud">
+          <vs-td :data="data[indextr].tipo_solicitud_texto">{{
+            data[indextr].tipo_solicitud_texto
+          }}</vs-td>
+          <vs-td :data="data[indextr].fecha_solicitud_texto">
             <span class="font-medium">{{
-              data[indextr].numero_solicitud_texto
+              data[indextr].fecha_solicitud_texto
             }}</span>
           </vs-td>
 
-          <vs-td :data="data[indextr].operacion_status">
-            <p v-if="data[indextr].operacion_status == 1" class="font-medium">
-              {{ data[indextr].status_texto }}
-            </p>
+          <vs-td :data="data[indextr].status_b">
             <p
-              v-else-if="data[indextr].operacion_status == 2"
+              v-if="data[indextr].status_b == 1"
               class="font-medium text-success"
             >
               {{ data[indextr].status_texto }}
@@ -161,36 +158,41 @@
               {{ data[indextr].status_texto }}
             </p>
           </vs-td>
-
           <vs-td :data="data[indextr].id">
             <div class="flex flex-start py-1">
               <img
-                class="cursor-pointer img-btn ml-auto"
+                class="cursor-pointer img-btn ml-auto mr-1"
                 src="@assets/images/folder.svg"
                 title="Expediente"
-                @click="ConsultarVenta(data[indextr].ventas_planes_id)"
+                @click="ConsultarVenta(data[indextr].servicio_id)"
+              />
+              <img
+                class="cursor-pointer img-btn ml-6"
+                src="@assets/images/edit.svg"
+                title="Modificar Solicitud de Servicio"
+                @click="openModificarSolicitud(data[indextr].servicio_id)"
               />
               <img
                 class="cursor-pointer img-btn ml-6 mr-6"
-                src="@assets/images/edit.svg"
-                title="Modificar Contrato"
-                @click="openModificar(data[indextr].ventas_planes_id)"
+                src="@assets/images/contrato.svg"
+                title="Editar Contrato"
+                @click="openModificar(data[indextr].servicio_id)"
               />
               <img
                 width="24"
-                v-if="data[indextr].operacion_status >= 1"
+                v-if="data[indextr].status_b >= 1"
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
-                @click="cancelarVenta(data[indextr].ventas_planes_id)"
+                @click="cancelarVenta(data[indextr].servicio_id)"
               />
               <img
                 width="24"
                 v-else
                 class="cursor-pointer mr-auto"
                 src="@assets/images/trash-open.svg"
-                title="Esta venta ya fue cancelada, puede hacer click aquí para consultar"
-                @click="ConsultarVentaAcuse(data[indextr].ventas_planes_id)"
+                title="Este contrato ya fue cancelado, puede hacer click aquí para consultar"
+                @click="ConsultarVentaAcuse(data[indextr].servicio_id)"
               />
             </div>
           </vs-td>
@@ -209,19 +211,19 @@
     </div>
 
     <FormularioVentas
-      :id_venta="id_venta_modificar"
+      :id_solicitud="id_solicitud_modificar"
       :tipo="tipoFormulario"
       :show="verFormularioVentas"
       @closeVentana="verFormularioVentas = false"
-      @ver_pdfs_nueva_venta="ConsultarVenta"
+      @ver_pdfs_nueva_solicitud="ConsultarVenta"
     ></FormularioVentas>
 
     <FormularioSolicitud
-      :id_venta="id_solicitud_modificar"
+      :id_solicitud="id_solicitud_modificar"
       :tipo="tipoFormularioSolicitud"
       :show="verFormularioSolicitud"
       @closeVentana="verFormularioSolicitud = false"
-      @ver_pdfs_nueva_venta="ConsultarVenta"
+      @ver_pdfs_nueva_solicitud="ConsultarVenta"
     ></FormularioSolicitud>
 
     <Password
@@ -235,14 +237,14 @@
       :verAcuse="verAcuse"
       :show="openReportes"
       @closeListaReportes="closeListaReportes"
-      :id_venta="id_venta"
+      :id_solicitud="id_solicitud"
     ></ReportesVentas>
 
     <CancelarVenta
       :show="openCancelar"
       @closeCancelarVenta="openCancelar = false"
       @ConsultarVenta="ConsultarVenta"
-      :id_venta="id_venta"
+      :id_solicitud="id_solicitud"
     ></CancelarVenta>
 
     <PlanesVenta
@@ -254,7 +256,7 @@
 
 <script>
 //planes de venta
-import planes from "@services/planes";
+import funeraria from "@services/funeraria";
 
 import FormularioVentas from "../servicios_funerarios/FormularioVentas";
 import FormularioSolicitud from "../servicios_funerarios/FormularioSolicitud";
@@ -352,9 +354,9 @@ export default {
       accionNombre: "",
       verAgregar: false,
       verModificar: false,
-      id_venta_modificar: 0,
+      id_solicitud_modificar: 0,
       /**opciones para filtrar la peticion del server */
-      id_venta: 0 /**para consultar los reportesw */,
+      id_solicitud: 0 /**para consultar los reportesw */,
 
       /**datos del form */
       id_solicitud_modificar: 0,
@@ -392,8 +394,8 @@ export default {
         }
       }
       let self = this;
-      if (planes.cancel) {
-        planes.cancel("Operation canceled by the user.");
+      if (funeraria.cancel) {
+        funeraria.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
@@ -403,7 +405,8 @@ export default {
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
 
       try {
-        let res = await planes.get_ventas(this.serverOptions);
+        let res = await funeraria.get_solicitudes_servicios(this.serverOptions);
+        console.log("get_data -> res", res);
         if (res.data.data) {
           this.ventas = res.data.data;
           this.total = res.data.last_page;
@@ -415,6 +418,7 @@ export default {
         this.$vs.loading.close();
         this.ver = true;
         if (err.response) {
+          console.log("get_data -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -440,24 +444,30 @@ export default {
       this.openStatus = false;
     },
 
-    ConsultarVenta(id_venta) {
-      this.id_venta = id_venta;
+    ConsultarVenta(id_solicitud) {
+      this.id_solicitud = id_solicitud;
       this.openReportes = true;
     },
-    ConsultarVentaAcuse(id_venta) {
+    ConsultarVentaAcuse(id_solicitud) {
       this.verAcuse = true;
-      this.id_venta = id_venta;
+      this.id_solicitud = id_solicitud;
       this.openReportes = true;
     },
 
-    openModificar(id_venta) {
+    openModificar(id_solicitud) {
       this.tipoFormulario = "modificar";
-      this.id_venta_modificar = id_venta;
+      this.id_solicitud_modificar = id_solicitud;
       this.verFormularioVentas = true;
     },
 
-    cancelarVenta(id_venta) {
-      this.id_venta = id_venta;
+    openModificarSolicitud(id_solicitud) {
+      this.tipoFormularioSolicitud = "modificar";
+      this.id_solicitud_modificar = id_solicitud;
+      this.verFormularioSolicitud = true;
+    },
+
+    cancelarVenta(id_solicitud) {
+      this.id_solicitud = id_solicitud;
       this.openCancelar = true;
     },
     formulario(tipo) {
@@ -473,7 +483,7 @@ export default {
     closeListaReportes() {
       this.openReportes = false;
       this.verAcuse = false;
-      this.id_venta = 0;
+      this.id_solicitud = 0;
       (async () => {
         await this.get_data(this.actual);
       })();

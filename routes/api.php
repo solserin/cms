@@ -32,14 +32,12 @@ Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
 Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
 Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
 Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
-Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
-Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
-Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
+
 
 
 /**rutas de servicios funerarios */
 Route::get('funeraria/get_personal_recoger', 'FunerariaController@get_personal_recoger');
-
+Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}', 'FunerariaController@get_solicitudes_servicios');
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
@@ -197,13 +195,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/precios_tarifas', 'CementerioController@precios_tarifas');
     Route::post('inventarios/cementerio/actualizar_precios_tarifas', 'CementerioController@actualizar_precios_tarifas');
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
-
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
+    Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
+    Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
+    Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
 
     /**rutas de servicios funerarios */
-    Route::post('funeraria/guardar_solicitud/{tipo_servicio}', 'FunerariaController@guardar_solicitud');
+    Route::post('funeraria/control_solicitud/{tipo_servicio}', 'FunerariaController@control_solicitud');
 
 
 

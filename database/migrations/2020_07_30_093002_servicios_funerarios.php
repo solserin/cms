@@ -129,6 +129,7 @@ class ServiciosFunerarios extends Migration
             $table->foreign('registro_contrato_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('modifico_id')->unsigned()->nullable();
             $table->foreign('modifico_id')->references('id')->on('usuarios');
+            $table->dateTime('fecha_modificacion')->nullable();
             $table->unsignedBigInteger('cancelo_id')->unsigned()->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
             $table->tinyInteger('status')->default(1);

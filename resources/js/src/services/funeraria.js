@@ -11,8 +11,31 @@ export default {
         return axios.get("/funeraria/get_personal_recoger/");
     },
     guardar_solicitud(param) {
-        let call = "/funeraria/guardar_solicitud/agregar";
+        let call = "/funeraria/control_solicitud/agregar";
         return axios.post(call, param);
+    },
+
+    modificar_solicitud(param) {
+        let call = "/funeraria/control_solicitud/modificar";
+        return axios.post(call, param);
+    },
+
+    get_solicitudes_servicios(param) {
+        return axios.get("/funeraria/get_solicitudes_servicios/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
+    get_solicitudes_servicios_id(param) {
+        return axios.get("/funeraria/get_solicitudes_servicios/" + param, {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
     },
 
     /**serviios del modulo */
@@ -39,15 +62,6 @@ export default {
         return axios.post(call, param);
     },
 
-    get_inventario(param) {
-        return axios.get("/inventario/get_inventario/all/paginated", {
-            cancelToken: new CancelToken(c => {
-                self.cancel = c;
-            }),
-            params: param
-        });
-    },
-
     get_ajustes(param) {
         return axios.get("/inventario/get_ajustes/all/paginated", {
             cancelToken: new CancelToken(c => {
@@ -59,15 +73,6 @@ export default {
 
     get_inventariable(param) {
         return axios.get("/inventario/get_inventario/all/paginated/0/0/0/1", {
-            cancelToken: new CancelToken(c => {
-                self.cancel = c;
-            }),
-            params: param
-        });
-    },
-
-    get_articulo_by_id(param) {
-        return axios.get("/inventario/get_inventario/" + param, {
             cancelToken: new CancelToken(c => {
                 self.cancel = c;
             }),
