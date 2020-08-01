@@ -337,7 +337,7 @@ export default {
         },
         {
           documento: "Formato de Preautorización de Servicio Funerario",
-          url: "/funeraria/documento_convenio",
+          url: "/funeraria/hoja_preautorizacion",
           tipo: "pdf",
         },
         {

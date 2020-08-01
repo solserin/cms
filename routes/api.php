@@ -39,7 +39,7 @@ Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamen
 Route::get('funeraria/get_personal_recoger', 'FunerariaController@get_personal_recoger');
 Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}', 'FunerariaController@get_solicitudes_servicios');
 Route::get('funeraria/get_hoja_solicitud', 'FunerariaController@get_hoja_solicitud');
-
+Route::get('funeraria/hoja_preautorizacion', 'FunerariaController@hoja_preautorizacion');
 
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
