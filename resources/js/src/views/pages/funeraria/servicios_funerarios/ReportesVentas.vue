@@ -8,7 +8,7 @@
       ref="lista_reportes"
     >
       <div class="flex flex-wrap">
-        <div class="w-full" v-if="datosVenta.operacion_id">
+        <div class="w-full" v-if="datosSolicitud.servicio_id">
           <vs-table class="" :data="documentos" noDataText="0 Resultados">
             <template slot="header">
               <h3>Documentos del contrato</h3>
@@ -58,10 +58,10 @@
         </div>
       </div>
 
-      <div class="w-full pt-8" v-if="datosVenta.operacion_id">
+      <div class="w-full pt-8" v-if="datosSolicitud.operacion_id">
         <vs-table
           class="tablas-pagos"
-          :data="datosVenta.pagos_programados"
+          :data="datosSolicitud.pagos_programados"
           noDataText="0 Resultados"
           ref="tabla_pagos_programados"
         >
@@ -84,7 +84,7 @@
             <vs-tr
               v-show="programados.status == 1"
               v-for="(programados,
-              index_programado) in datosVenta.pagos_programados"
+              index_programado) in datosSolicitud.pagos_programados"
               v-bind:key="programados.id"
               ref="row"
             >
@@ -132,7 +132,7 @@
               <vs-td
                 :class="[
                   programados.status_pago == 0 ? 'text-danger' : '',
-                  programados.status_pago == 2 ? 'text-success' : ''
+                  programados.status_pago == 2 ? 'text-success' : '',
                 ]"
               >
                 <span>{{ programados.status_pago_texto }}</span>
@@ -165,7 +165,7 @@
         </vs-table>
       </div>
 
-      <div class="w-full pt-8" v-if="datosVenta.operacion_id">
+      <div class="w-full pt-8" v-if="datosSolicitud.operacion_id">
         <vs-table class="tablas-pagos" :data="pagos" noDataText="0 Resultados">
           <template slot="header">
             <h3>Listado de Abonos Recibidos</h3>
@@ -247,31 +247,31 @@
 </template>
 <script>
 import Reporteador from "@pages/Reporteador";
-import planes from "@services/planes";
+import funeraria from "@services/funeraria";
 import pagos from "@services/pagos";
 import FormularioPagos from "@pages/pagos/FormularioPagos";
 export default {
   components: {
     Reporteador,
-    FormularioPagos
+    FormularioPagos,
   },
   props: {
     verAcuse: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
-    id_venta: {
+    id_solicitud: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["lista_reportes"].$el.querySelector(
           ".vs-icon"
@@ -279,9 +279,9 @@ export default {
           this.cancelar();
         };
         (async () => {
-          await this.consultar_venta_id();
+          await this.get_solicitudes_servicios_id();
           if (this.operacion_id != "") {
-            await this.consultar_pagos_operacion_id();
+            //await this.consultar_pagos_operacion_id();
           }
           /**checamos si esta ventana fue abierta con el fin de ver el acuse de cancelacion */
           if (this.getVerAcuse == true) {
@@ -295,10 +295,10 @@ export default {
         })();
       } else {
         /**cerrar ventana */
-        this.datosVenta = [];
+        this.datosSolicitud = [];
         this.total = 0;
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -307,15 +307,15 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    get_venta_id: {
+    get_solicitud_id: {
       get() {
-        return this.id_venta;
+        return this.id_solicitud;
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getVerAcuse: {
       get() {
@@ -323,64 +323,64 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       referencia: "",
       documentos: [
         {
-          documento: "Formato de Solicitud",
-          url: "/funeraria/documento_solicitud",
-          tipo: "pdf"
+          documento: "Hoja de Solicitud de Servicio",
+          url: "/funeraria/get_hoja_solicitud",
+          tipo: "pdf",
         },
         {
-          documento: "Convenio",
+          documento: "Formato de Preautorización de Servicio Funerario",
           url: "/funeraria/documento_convenio",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
-          documento: "Constancia de Finiquito",
+          documento: "Prellenado Para Certificado de Defunción",
           url: "/funeraria/documento_finiquitado",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
-          documento: "Estado de cuenta",
+          documento: "Guía de Servicio Para el Cliente",
           url: "/funeraria/documento_estado_de_cuenta_planes",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Talonario de Pagos",
           url: "/funeraria/referencias_de_pago",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Reglamento de Pago",
           url: "/funeraria/reglamento_pago",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Acuse de cancelación",
           url: "/funeraria/acuse_cancelacion",
-          tipo: "pdf"
-        }
+          tipo: "pdf",
+        },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,
       funcion_reemplazada: [],
-      datosVenta: [],
+      datosSolicitud: [],
       ListaReportes: [],
       request: {
         id_pago: "",
-        venta_id: "",
+        id_servicio: "",
         email: "",
-        destinatario: ""
+        destinatario: "",
       },
       openReportesLista: false,
       verFormularioPagos: false,
       tipoFormularioPagos: "",
       operacion_id: "",
-      pagos: []
+      pagos: [],
     };
   },
   methods: {
@@ -389,7 +389,7 @@ export default {
     },
     retorno_pagos(datos) {
       (async () => {
-        await this.consultar_venta_id();
+        await this.get_solicitudes_servicios_id();
         if (this.operacion_id != "") {
           await this.consultar_pagos_operacion_id();
           /**llamando el pago recien hecho */
@@ -415,12 +415,12 @@ export default {
       } else {
         if (documento == "Acuse de cancelación") {
           /**chenado si esta cancelada la venta para mostrar este archivo de acuse de cancelacion */
-          if (this.datosVenta.operacion_status == 0) {
+          if (this.datosSolicitud.operacion_status == 0) {
             return true;
           } else return false;
         } else if (documento == "Constancia de Finiquito") {
           /**chenado si tiene saldo pendiente */
-          if (this.datosVenta.saldo_neto <= 0) {
+          if (this.datosSolicitud.saldo_neto <= 0) {
             return true;
           } else return false;
         }
@@ -435,35 +435,38 @@ export default {
       this.ListaReportes = [];
       this.ListaReportes.push({
         nombre: nombre_reporte,
-        url: link
+        url: link,
       });
       //estado de cuenta
-      this.request.email = this.datosVenta.email;
+      this.request.email = this.datosSolicitud.email;
 
       if (tipo == "pago") {
         this.request.id_pago = parametro;
       } else {
-        this.request.venta_id = this.datosVenta.ventas_planes_id;
+        this.request.id_servicio = this.datosSolicitud.servicio_id;
       }
 
-      this.request.destinatario = this.datosVenta.nombre;
+      this.request.destinatario = this.datosSolicitud.nombre;
       this.openReportesLista = true;
       this.$vs.loading.close();
     },
-    async consultar_venta_id() {
+    async get_solicitudes_servicios_id() {
       this.ListaReportes = [];
       this.$vs.loading();
       try {
         this.operacion_id = "";
-        let res = await planes.consultar_venta_id(this.get_venta_id);
-        this.datosVenta = res.data[0];
-        this.operacion_id = this.datosVenta.operacion_id;
-        /*if (this.datosVenta.pagos_programados.length > 0) {
+        let res = await funeraria.get_solicitudes_servicios_id(
+          this.get_solicitud_id
+        );
+        console.log("get_solicitudes_servicios_id -> res", res);
+        this.datosSolicitud = res.data[0];
+        //this.operacion_id = this.datosSolicitud.operacion_id;
+        /*if (this.datosSolicitud.pagos_programados.length > 0) {
           //calculando el total de rows 
           this.funcion_reemplazada = [];
           for (
             let index = 0;
-            index < this.datosVenta.pagos_programados.length;
+            index < this.datosSolicitud.pagos_programados.length;
             index++
           ) {
             this.$nextTick(() => {
@@ -488,7 +491,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -512,16 +515,16 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
       }
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showVentana) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -529,7 +532,7 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
 
