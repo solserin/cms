@@ -3052,4 +3052,83 @@ class FunerariaController extends ApiController
             return $this->errorResponse('Error al solicitar los datos', 409);
         }
     }
+
+
+
+    public function instrucciones_servicio_funerario(Request $request)
+    {
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            /*  $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_servicio = $requestVentasList['id_servicio'];
+*/
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            $id_servicio = 1;
+            $email = false;
+            $email_to = 'hector@gmail.com';
+
+            //obtengo la informacion de esa venta
+            $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+            if (empty($datos_solicitud)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+
+            $pdf = PDF::loadView('funeraria/instrucciones_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "GUÍA DEL CLIENTE PARA SERVICIOS FUNERARIOS " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.instrucciones_servicio_funerario.footer'),
+            ]);
+            if ($datos_solicitud['status_b'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.instrucciones_servicio_funerario.header')
+                ]);
+            }
+
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 24.4);
+            $pdf->setOption('page-size', 'a4');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_solicitud['nombre_afectado']),
+                    'GUÍA DEL CLIENTE PARA SERVICIOS FUNERARIOS',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar los datos', 409);
+        }
+    }
 }

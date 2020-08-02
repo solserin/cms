@@ -328,7 +328,7 @@ export default {
         },
         {
           documento: "Guía de Servicio Para el Cliente",
-          url: "/funeraria/documento_estado_de_cuenta_planes",
+          url: "/funeraria/instrucciones_servicio_funerario",
           tipo: "pdf"
         },
         {

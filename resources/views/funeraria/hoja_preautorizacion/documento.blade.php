@@ -136,7 +136,7 @@
             <tr>
                 <td class="w-1">Yo</td>
                 <td class="w-85 border-bottom center ml-auto mr-auto uppercase">
-                     @if ($datos['operacion']['cliente'])
+                     @if (!is_null($datos['operacion']['cliente']))
                          {{$datos['operacion']['cliente']['nombre']}}  
                      @endif
                     </td>
@@ -202,7 +202,7 @@
         <table class="w-100 tabla_dato size-19px mt-4">
             <tr>
                 <td class="w-100 border-bottom center ml-auto mr-auto uppercase">  
-                    @if ($datos['operacion']['cliente'])
+                    @if (!is_null($datos['operacion']['cliente']))
                          {{$datos['operacion']['cliente']['domicilio']}}  
                      @endif
                 </td>
@@ -213,7 +213,7 @@
             <tr>
                 <td class="w-20">Siendo mi número de teléfono:</td>
                 <td class="w-40 border-bottom center ml-auto mr-auto uppercase">
-                    @if ($datos['operacion']['cliente'])
+                    @if (!is_null($datos['operacion']['cliente']))
                          {{$datos['operacion']['cliente']['telefono']}}  
                      @endif
                 </td>
