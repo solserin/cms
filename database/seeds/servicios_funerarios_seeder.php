@@ -51,7 +51,7 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('afiliaciones')->insert(['afiliacion' => 'semar']);
         DB::table('afiliaciones')->insert(['afiliacion' => 'sedena']);
         DB::table('afiliaciones')->insert(['afiliacion' => 'otros']);
-
+        DB::table('afiliaciones')->insert(['afiliacion' => 'se ignora']);
 
         /**estados civiles */
         DB::table('estados_civiles')->insert(['estado' => 'soltero (a)']);
@@ -60,6 +60,7 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('estados_civiles')->insert(['estado' => 'divorciado (a)']);
         DB::table('estados_civiles')->insert(['estado' => 'unión libre']);
         DB::table('estados_civiles')->insert(['estado' => 'viudo']);
+        DB::table('estados_civiles')->insert(['estado' => 'se ignora']);
 
         /**sitio muerte */
         DB::table('sitios_muerte')->insert(['sitio' => 'domicilio']);

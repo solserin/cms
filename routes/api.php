@@ -40,7 +40,7 @@ Route::get('funeraria/get_personal_recoger', 'FunerariaController@get_personal_r
 Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}', 'FunerariaController@get_solicitudes_servicios');
 Route::get('funeraria/get_hoja_solicitud', 'FunerariaController@get_hoja_solicitud');
 Route::get('funeraria/hoja_preautorizacion', 'FunerariaController@hoja_preautorizacion');
-
+Route::get('funeraria/certificado_defuncion', 'FunerariaController@certificado_defuncion');
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */

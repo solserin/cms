@@ -135,7 +135,11 @@
         <table class="w-100 tabla_dato line-lg size-19px">
             <tr>
                 <td class="w-1">Yo</td>
-                <td class="w-85 border-bottom center ml-auto mr-auto uppercase"> {{ $datos['nombre_afectado'] }}</td>
+                <td class="w-85 border-bottom center ml-auto mr-auto uppercase">
+                     @if ($datos['operacion']['cliente'])
+                         {{$datos['operacion']['cliente']['nombre']}}  
+                     @endif
+                    </td>
                 <td class="w-5">, por</td>
             </tr>
         </table>
@@ -148,9 +152,25 @@
             , a
             través de las personas que tengan a bien designar, efectúen todos los trámites necesarios ante las
             autoridades
-            correspondientes con el fin de lograr la <span class="bold">( ___ ) preparación</span>, <span class="bold">(
-                ___ )
-                inhumación</span>, <span class="bold">( ___ ) cremación, y/o ( ___ ) traslado del cuerpo</span>
+            correspondientes con el fin de lograr la <span class="bold">( @if ($datos['embalsamar_b']!=0)
+                __X__
+            @else
+                ____
+            @endif ) preparación</span>, <span class="bold">(
+                @if ($datos['inhumacion_b']!=0)
+                      __X__
+                @else
+                      ____
+                @endif )
+                inhumación</span>, <span class="bold">( @if ($datos['cremacion_b']!=0)
+                      __X__
+                @else
+                      ____
+                @endif ) cremación, y/o ( @if ($datos['traslado_b']!=0)
+                      __X__
+                @else
+                      ____
+                @endif ) traslado del cuerpo</span>
             del (la)
         </p>
         <table class="w-100 tabla_dato size-19px">
@@ -179,9 +199,12 @@
             </tr>
         </table>
 
-        <table class="w-100 tabla_dato size-19px mt-2">
+        <table class="w-100 tabla_dato size-19px mt-4">
             <tr>
-                <td class="w-100 border-bottom center ml-auto mr-auto uppercase"> Lorem ipsum dolor sit
+                <td class="w-100 border-bottom center ml-auto mr-auto uppercase">  
+                    @if ($datos['operacion']['cliente'])
+                         {{$datos['operacion']['cliente']['domicilio']}}  
+                     @endif
                 </td>
             </tr>
         </table>
@@ -189,7 +212,10 @@
         <table class="w-100 tabla_dato size-19px mt-4">
             <tr>
                 <td class="w-20">Siendo mi número de teléfono:</td>
-                <td class="w-40 border-bottom center ml-auto mr-auto uppercase"> {{ $datos['parentesco_contratante'] }}
+                <td class="w-40 border-bottom center ml-auto mr-auto uppercase">
+                    @if ($datos['operacion']['cliente'])
+                         {{$datos['operacion']['cliente']['telefono']}}  
+                     @endif
                 </td>
             </tr>
         </table>

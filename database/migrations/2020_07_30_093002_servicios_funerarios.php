@@ -39,14 +39,14 @@ class ServiciosFunerarios extends Migration
             $table->string('nota_cadena_custodia')->nullable();
             $table->unsignedBigInteger('tipo_servicios_funerarios_id')->unsigned()->nullable();
             $table->foreign('tipo_servicios_funerarios_id')->references('id')->on('tipo_servicios_funerarios');
-            $table->tinyInteger('embalsamar_b')->nullable();
-            $table->tinyInteger('velacion_b')->nullable();
-            $table->tinyInteger('cremacion_b')->nullable();
-            $table->tinyInteger('inhumacion_b')->nullable();
-            $table->tinyInteger('traslado_b')->nullable();
-            $table->tinyInteger('exhumar_b')->nullable();
-            $table->tinyInteger('reinhumar_b')->nullable();
-            $table->tinyInteger('aseguradora_b')->nullable();
+            $table->tinyInteger('embalsamar_b')->default(0);
+            $table->tinyInteger('velacion_b')->default(0);
+            $table->tinyInteger('cremacion_b')->default(0);
+            $table->tinyInteger('inhumacion_b')->default(0);
+            $table->tinyInteger('traslado_b')->default(0);
+            $table->tinyInteger('exhumar_b')->default(0);
+            $table->tinyInteger('reinhumar_b')->default(0);
+            $table->tinyInteger('aseguradora_b')->default(0);
             $table->string('aseguradora')->nullable();
 
             /**mas datos del fallecido */
@@ -59,6 +59,7 @@ class ServiciosFunerarios extends Migration
             $table->foreign('generos_id')->references('id')->on('generos');
             $table->date('fecha_nacimiento')->nullable();
             $table->dateTime('fechahora_defuncion')->nullable();
+            $table->string('edad', 10)->nullable();
             $table->string('ocupacion')->nullable();
             $table->unsignedBigInteger('estado_afectado_id')->unsigned()->nullable();
             $table->foreign('estado_afectado_id')->references('id')->on('estado_afectado');
@@ -69,6 +70,7 @@ class ServiciosFunerarios extends Migration
 
 
             /**datos del certificado medico */
+            $table->tinyInteger('atencion_medica_b')->nullable();
             $table->unsignedBigInteger('estados_civiles_id')->unsigned()->nullable();
             $table->foreign('estados_civiles_id')->references('id')->on('estados_civiles');
             $table->unsignedBigInteger('afiliaciones_id')->unsigned()->nullable();
@@ -77,9 +79,11 @@ class ServiciosFunerarios extends Migration
             $table->unsignedBigInteger('escolaridades_id')->unsigned()->nullable();
             $table->foreign('escolaridades_id')->references('id')->on('escolaridades');
             $table->string('folio_certificado')->nullable();
+            $table->string('direccion_fallecido')->nullable();
             $table->string('folio_acta')->nullable();
             $table->string('enfermedades_padecidas')->nullable();
             $table->string('medicamentos')->nullable();
+            $table->string('lugar_nacimiento')->nullable();
             $table->string('medico_legista')->nullable();
             $table->string('certificado_informante')->nullable();
             $table->string('certificado_informante_telefono')->nullable();
