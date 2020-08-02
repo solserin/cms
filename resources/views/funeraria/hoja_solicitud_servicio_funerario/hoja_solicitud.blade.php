@@ -181,7 +181,13 @@
             <td class="w-60 px-2">{{ $datos['registro']['nombre'] }}</td>
         </tr>
         <tr class="size-15px">
-            <td class="w-40 py-2 px-2 pb-60" colspan="2">
+            <td class="w-40 py-2 px-2
+            <?php
+            if(is_null($datos['nota_al_recoger'])){
+                echo 'pb-60';
+            }
+            ?>
+            " colspan="2">
                 <div class="bold">
                     observaciones al recoger el cuerpo (pertenencias, documentos, etc.)
                 </div>
