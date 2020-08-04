@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use PDF;
 use App\User;
+use App\Generos;
 use App\Clientes;
 use Carbon\Carbon;
 use App\Operaciones;
 use App\VentasPlanes;
 use App\PreciosPlanes;
 use App\PlanesFunerarios;
+use App\ServiciosFunerarios;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\CementerioController;
-use App\ServiciosFunerarios;
 
 class FunerariaController extends ApiController
 {
@@ -2643,7 +2644,6 @@ class FunerariaController extends ApiController
             'registro_id',
             'fecha_nacimiento',
             'generos_id',
-            'lugar_nacimiento',
             DB::raw(
                 '(NULL) as genero_texto'
             ),
@@ -2702,7 +2702,10 @@ class FunerariaController extends ApiController
             'certificado_informante_parentesco',
             'folio_certificado',
             'medico_legista',
+            'sitios_muerte_id',
             'lugar_muerte',
+            'afiliaciones_id',
+            'afiliacion_nota',
         )->with('registro:id,nombre')
             ->with('nacionalidad')
             ->with('escolaridad')
@@ -3002,14 +3005,17 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+            /**cargando los datos que se ocupan para ordener las copciones seleccionadas por el usuario */
+            $opciones['generos'] = Generos::get();
+
+            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'opciones' => $opciones]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CERTIFICADO DE DEFUNCION " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
-            $pdf->setOptions([
-                'title' => $name_pdf,
-                'footer-html' => view('funeraria.certificado_defuncion.footer'),
-            ]);
+            /*$pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('funeraria.certificado_defuncion.footer'),
+        ]);*/
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
                     'header-html' => view('funeraria.certificado_defuncion.header')
@@ -3021,7 +3027,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
-            $pdf->setOption('margin-bottom', 24.4);
+            $pdf->setOption('margin-bottom', 12.4);
             $pdf->setOption('page-size', 'a4');
 
             if ($email == true) {

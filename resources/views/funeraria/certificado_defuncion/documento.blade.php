@@ -74,6 +74,22 @@
         .datos_tabla td {
             border: 1px solid #ddd;
         }
+
+        .opcion {
+            width: 20px !important;
+            height: 20px !important;
+            display: inline-block;
+            text-align: center !important;
+            border: 1px solid #ddd !important;
+        }
+
+        .display {
+            visibility: visible !important;
+        }
+
+        .hidden {
+            visibility: hidden !important;
+        }
     </style>
 </head>
 
@@ -131,9 +147,8 @@
         <div class="mt-2 w-normal">(information needed to prepare the death certificate)</div>
     </h1>
     <table class="w-100 texto-base mt-5 datos_tabla uppercase">
-        @if (!is_null($datos['folio_certificado']))
-               <tr class="size-15px">
-            <td class="w-25 bold px-2 py-1">
+        <tr class="size-13px">
+            <td class="w-34 bold px-2 ">
                 Folio del Certificado
                 <div class="w-normal">
                     (Certificate Folio)
@@ -141,167 +156,440 @@
             </td>
             <td class="w-75 px-2">{{ $datos['folio_certificado'] }}</td>
         </tr>
-        @endif
-        <tr class="size-15px">
-            <td class="w-25 bold px-2 py-1">
-                nombre del fallecido
+
+        <tr class="size-13px">
+            <td class="w-34 bold px-2 ">
+                nombre completo del fallecido
                 <div class="w-normal">
-                    (name of the deceased)
+                    (full name of the deceased)
                 </div>
             </td>
             <td class="w-75 px-2">{{ $datos['nombre_afectado'] }}</td>
         </tr>
-    </table>
-    <table class="w-100 texto-base mt-1 datos_tabla uppercase">
-        <tr class="size-15px">
-            <td class="w-25  bold px-2 py-1">
-               fecha de nacimiento
-                 <div class="w-normal">
-                    (date of birth)
-                </div>
-            </td>
-            <td class="w-25 px-2">
-                @if (!is_null($datos['fecha_nacimiento']))
-                     {{ $datos['fecha_nacimiento_texto'] }}
-                @endif
-            </td>
-            <td class="w-25  bold px-2 py-1">
-              sexo
-                 <div class="w-normal">
+        <tr class="size-13px">
+            <td class="w-34 bold px-2 ">
+                sexo
+                <div class="w-normal">
                     (gender)
                 </div>
             </td>
-            <td class="w-25 px-2">
-                  @if (!is_null($datos['generos_id']))
-                     {{ $datos['genero_texto'] }}
-                @endif
+            <td class="w-75 px-2">
+                <div class="opcion">
+                    <span
+                        class="<?php if (!is_null($datos['generos_id']) && $datos['generos_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Hombre/Male
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['generos_id']) && $datos['generos_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Mujer/Female
             </td>
         </tr>
-         <tr class="size-15px">
-            <td class="w-25  bold px-2 py-1">
-               lugar de nacimiento
-                 <div class="w-normal">
-                    (place of birth)
+    </table>
+
+
+    <table class="w-100 texto-base mt-1 datos_tabla uppercase">
+        <tr class="size-13px">
+            <td class="w-25  bold px-2 ">
+                fecha de nacimiento
+                <div class="w-normal">
+                    (date of birth)
                 </div>
             </td>
-            <td class="w-25 px-2">{{ $datos['lugar_nacimiento'] }}</td>
-            <td class="w-25  bold px-2 py-1">
-              nacionalidad
-                 <div class="w-normal">
-                    (natioality)
-                </div>
-            </td>
-            <td class="w-25 px-2">
-                  @if (!is_null($datos['nacionalidades_id']))
-                     {{ $datos['nacionalidad']['nacionalidad'] }}
+            <td class="w-35 px-2">
+                @if (!is_null($datos['fecha_nacimiento']))
+                {{ $datos['fecha_nacimiento_texto'] }}
                 @endif
             </td>
-        </tr>
-         <tr class="size-15px">
-            <td class="w-25  bold px-2 py-1">
-               edad
-                 <div class="w-normal">
+            <td class="w-10  bold px-2 ">
+                edad
+                <div class="w-normal">
                     (age)
                 </div>
             </td>
-            <td class="w-25 px-2">{{ $datos['edad'] }}</td>
-            <td class="w-25  bold px-2 py-1">
-              estado civil
-                 <div class="w-normal">
-                    (marital status)
+            <td class="w-30 px-2">{{ $datos['edad'] }}</td>
+        </tr>
+    </table>
+    <table class="w-100 texto-base mt-1 datos_tabla uppercase">
+        <tr class="size-13px">
+            <td class="w-25  bold px-2 ">
+                lugar de nacimiento
+                <div class="w-normal">
+                    (place of birth)
+                </div>
+            </td>
+            <td class="w-35 px-2">{{ $datos['lugar_nacimiento'] }}</td>
+            <td class="w-15  bold px-2 ">
+                nacionalidad
+                <div class="w-normal">
+                    (nationality)
                 </div>
             </td>
             <td class="w-25 px-2">
-                 @if (!is_null($datos['estados_civiles_id']))
-                     {{ $datos['estado_civil']['estado'] }}
+                @if (!is_null($datos['nacionalidades_id']))
+                {{ $datos['nacionalidad']['nacionalidad'] }}
                 @endif
             </td>
         </tr>
-           <tr class="size-15px">
-            <td class="w-25  bold px-2 py-1">
-               domcicilio actual
-                 <div class="w-normal">
-                    (permanent address)
+    </table>
+
+
+    <table class="w-100 texto-base mt-1 datos_tabla uppercase">
+        <tr class="size-13px">
+            <td class="w-25 bold px-2 ">
+                Estado civil
+                <div class="w-normal">
+                    (marital status)
+                </div>
+            </td>
+            <td class="w-75 px-2">
+                <div class="opcion">
+                    <span
+                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Soltero(a)/Single
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Casado(a)/Married
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==4){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Divorciado(a)/Divorced
+                <br>
+                <div class="opcion mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Separado(a)/Separated
+                <div class="opcion mt-1 ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Viudo(a)/Widow
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==5){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Unión Libre/Free Union
+                <br>
+                <div class="opcion mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Se ignora/Unknown
+                <br>
+            </td>
+        </tr>
+        <tr class="size-13px">
+            <td class="w-25  bold px-2 ">
+                domicilio actual
+                <div class="w-normal">
+                    (last known address)
                 </div>
             </td>
             <td class="w-75 px-2" colspan="3">{{ $datos['direccion_fallecido'] }}</td>
         </tr>
-            <tr class="size-15px">
-            <td class="w-25  bold px-2 py-1">
-               escolaridad
-                 <div class="w-normal">
+        <tr class="size-13px">
+            <td class="w-25  bold px-2 ">
+                escolaridad
+                <div class="w-normal">
                     (academic degree)
                 </div>
             </td>
-            <td class="w-25 px-2">
-                  @if (!is_null($datos['escolaridades_id']))
-                     {{ $datos['escolaridad']['escolaridad'] }}
-                @endif
+            <td class="w-75 px-2" colspan="3">
+                <div class="opcion">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Ninguna/None
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Preescolar/Preschool
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Primaria/elementary
+                <br>
+                <div class="opcion mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==4){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                secundaria(a)/middle school
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==5){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                preparatoria/high school
+                <br>
+                <div class="opcion mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                profesional/college
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                postgrado(a)/master
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==8){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                se ignora(a)/unknown
             </td>
-            <td class="w-25  bold px-2 py-1">
-              ocupación
-                 <div class="w-normal">
-                    (ocupation)
+        </tr>
+        <tr class="size-13px">
+            <td class="w-25  bold px-2 ">
+                Afiliación a
+                <div class="w-normal">
+                    (AFFILIATION TO)
                 </div>
             </td>
-            <td class="w-25 px-2">{{ $datos['ocupacion'] }}</td>
+            <td class="w-75 px-2" colspan="3">
+                <div class="opcion">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                Ninguna/None
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                imss
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                pemex
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                semar
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==5){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                imss prospera
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                isste
+                <br>
+                <div class="opcion mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==8){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                sedena
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==9){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                otros
+                <div class="my-3">
+                    <span class="bold">
+                        otra afiliación/affiliation to:
+                    </span> {{ $datos['afiliacion_nota'] }}
+                </div>
+            </td>
+        </tr>
+        <tr class="size-13px">
+            <td class="w-25  bold px-2 ">
+                ocupación
+                <div class="w-normal">
+                    (occupation)
+                </div>
+            </td>
+            <td class="w-25 px-2">
+                {{ $datos['ocupacion'] }}
+            </td>
+        </tr>
+        <tr class="size-13px">
+            <td class="w-27  bold px-2 ">
+                lugar del fallecimiento
+                <div class="w-normal">
+                    (place of death)
+                </div>
+            </td>
+            <td class="w-65 px-2" colspan="3">
+                <div class="opcion">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                domicilio/Home address
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                hospital imss
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                pemex
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==4){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                hospital privado/private hospital
+                <div class="opcion ml-2 mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                hospital isste
+                <div class="opcion ml-2 mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                hospital semar
+                <div class="opcion ml-2">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==8){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                hospital sedena
+                <div class="opcion mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==9){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                otro/other
+                <div class="my-3">
+                    <span class="bold">
+                        Donde/Where:
+                    </span> {{ $datos['lugar_muerte'] }}
+                </div>
+            </td>
         </tr>
     </table>
     <table class="w-100 texto-base mt-1 datos_tabla uppercase">
-        <tr class="size-15px">
-            <td class="w-35  bold px-2 py-1">
-               lugar del fallecimiento
-                 <div class="w-normal">
-                    (place where the death took place)
-                </div>
-            </td>
-            <td class="w-65 px-2" colspan="3">{{ $datos['lugar_muerte'] }}</td>
         </tr>
-    </table>
- <table class="w-100 texto-base mt-1 datos_tabla uppercase">
-    </tr>
-            <tr class="size-15px">
-            <td class="w-21  bold px-2 py-1">
-               fecha y hora de muerte
-                 <div class="w-normal">
+        <tr class="size-13px">
+            <td class="w-21  bold px-2 ">
+                fecha y hora de muerte
+                <div class="w-normal">
                     (date and time of death)
                 </div>
             </td>
             <td class="w-20 px-2">
                 @if (!is_null($datos['fechahora_defuncion']))
-                     {{ $datos['fecha_muerte_texto'] }}
+                {{ $datos['fecha_muerte_texto'] }}
                 @endif
             </td>
-            <td class="w-30  bold px-2 py-1">
-              ¿atención médica antes de morir?
-                 <div class="w-normal">
+            <td class="w-30  bold px-2 ">
+                ¿atención médica antes de morir?
+                <div class="w-normal">
                     (medical attention before death?)
                 </div>
             </td>
             <td class="w-10 px-2">
-                 @if (!is_null($datos['atencion_medica_b']))
-                     {{ $datos['atencion_medica_texto'] }}
-                @endif
+                <div class="opcion">
+                    <span
+                        class="<?php if (!is_null($datos['atencion_medica_b']) && $datos['atencion_medica_b']==1){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                si/yes
+                <br>
+                <div class="opcion mt-1">
+                    <span
+                        class="<?php if (!is_null($datos['atencion_medica_b']) && $datos['atencion_medica_b']==0){echo 'display';}else{echo 'hidden';}?>">
+                        x
+                    </span>
+                </div>
+                no
             </td>
         </tr>
-        
+
     </table>
-     <table class="w-100 texto-base mt-1 datos_tabla uppercase">
-          <tr class="size-15px">
-            <td class="w-35  bold px-2 py-1">
-               ¿padecía alguna enfermedad?
-                 <div class="w-normal">
-                    (any disease?)
+    <table class="w-100 texto-base mt-1 datos_tabla uppercase">
+        <tr class="size-13px">
+            <td class="w-35  bold px-2 ">
+                ¿padecía alguna enfermedad?
+                <div class="w-normal">
+                    (medical problems)
                 </div>
             </td>
             <td class="w-65 px-2" colspan="3">{{ $datos['enfermedades_padecidas'] }}</td>
         </tr>
-     </table>
+    </table>
     <table class="w-100 texto-base mt-1 datos_tabla uppercase">
-        <tr class="size-15px">
-            <td class="w-30  bold px-2 py-1">
-               nombre del informante
-                 <div class="w-normal">
+        <tr class="size-13px">
+            <td class="w-30  bold px-2 ">
+                nombre del informante
+                <div class="w-normal">
                     (informant's name)
                 </div>
             </td>
@@ -310,47 +598,44 @@
     </table>
 
 
-     <table class="w-100 texto-base mt-1 datos_tabla uppercase">
-        <tr class="size-15px">
-            <td class="w-35  bold px-2 py-1">
-              parentesco con el fallecido
-                 <div class="w-normal">
+    <table class="w-100 texto-base mt-1 datos_tabla uppercase">
+        <tr class="size-13px">
+            <td class="w-35  bold px-2 ">
+                parentesco con el fallecido
+                <div class="w-normal">
                     (relationship with the deceased)
                 </div>
             </td>
             <td class="w-75 px-2">{{ $datos['certificado_informante_parentesco'] }}</td>
         </tr>
-         <tr class="size-15px">
-            <td class="w-35  bold px-2 py-1">
-              teléfono
-                 <div class="w-normal">
+        <tr class="size-13px">
+            <td class="w-35  bold px-2 ">
+                teléfono
+                <div class="w-normal">
                     (telephone number)
                 </div>
             </td>
             <td class="w-75 px-2">{{ $datos['certificado_informante_telefono'] }}</td>
         </tr>
-          @if (!is_null($datos['medico_legista']))
-             <tr class="size-15px">
-            <td class="w-35  bold px-2 py-1">
-              médico legista
-                 <div class="w-normal">
+        <tr class="size-13px">
+            <td class="w-35  bold px-2 ">
+                médico legista
+                <div class="w-normal">
                     (medical examiner)
                 </div>
             </td>
             <td class="w-75 px-2">{{ $datos['medico_legista'] }}</td>
         </tr>
-        @endif
-         
     </table>
 
-    <div class="w-100 center">
-            <div class="w-50  mt-25 mr-auto ml-auto">
-                <div class="w-90 border-top">
-                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm"></span></div>
-                    <span class="uppercase bold texto-sm">firma del informante</span>
-                </div>
+    <div class="w-100 center mt-10">
+        <div class="w-50  mr-auto ml-auto">
+            <div class="w-90 border-top">
+                <div class="pt-3 pb-1"><span class="uppercase  texto-sm"></span></div>
+                <span class="uppercase bold texto-sm">firma del informante</span>
             </div>
         </div>
+    </div>
 </body>
 
 </html>
