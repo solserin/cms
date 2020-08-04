@@ -136,10 +136,12 @@
             <tr>
                 <td class="w-1">Yo</td>
                 <td class="w-85 border-bottom center ml-auto mr-auto uppercase">
-                     @if (!is_null($datos['operacion']['cliente']))
-                         {{$datos['operacion']['cliente']['nombre']}}  
-                     @endif
-                    </td>
+                    @if (isset($datos['operacion']['cliente']))
+                    @if (!is_null($datos['operacion']['cliente']))
+                    {{$datos['operacion']['cliente']['nombre']}}
+                    @endif
+                    @endif
+                </td>
                 <td class="w-5">, por</td>
             </tr>
         </table>
@@ -154,22 +156,22 @@
             autoridades
             correspondientes con el fin de lograr la <span class="bold">( @if ($datos['embalsamar_b']!=0)
                 __X__
-            @else
-                ____
-            @endif ) preparación</span>, <span class="bold">(
-                @if ($datos['inhumacion_b']!=0)
-                      __X__
                 @else
-                      ____
+                ____
+                @endif ) preparación</span>, <span class="bold">(
+                @if ($datos['inhumacion_b']!=0)
+                __X__
+                @else
+                ____
                 @endif )
                 inhumación</span>, <span class="bold">( @if ($datos['cremacion_b']!=0)
-                      __X__
+                __X__
                 @else
-                      ____
+                ____
                 @endif ) cremación, y/o ( @if ($datos['traslado_b']!=0)
-                      __X__
+                __X__
                 @else
-                      ____
+                ____
                 @endif ) traslado del cuerpo</span>
             del (la)
         </p>
@@ -201,10 +203,12 @@
 
         <table class="w-100 tabla_dato size-19px mt-4">
             <tr>
-                <td class="w-100 border-bottom center ml-auto mr-auto uppercase">  
+                <td class="w-100 border-bottom center ml-auto mr-auto uppercase">
+                    @if (isset($datos['operacion']['cliente']))
                     @if (!is_null($datos['operacion']['cliente']))
-                         {{$datos['operacion']['cliente']['domicilio']}}  
-                     @endif
+                    {{$datos['operacion']['cliente']['domicilio']}}
+                    @endif
+                    @endif
                 </td>
             </tr>
         </table>
@@ -213,9 +217,11 @@
             <tr>
                 <td class="w-20">Siendo mi número de teléfono:</td>
                 <td class="w-40 border-bottom center ml-auto mr-auto uppercase">
+                    @if (isset($datos['operacion']['cliente']))
                     @if (!is_null($datos['operacion']['cliente']))
-                         {{$datos['operacion']['cliente']['telefono']}}  
-                     @endif
+                    {{$datos['operacion']['cliente']['telefono']}}
+                    @endif
+                    @endif
                 </td>
             </tr>
         </table>
