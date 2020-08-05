@@ -210,13 +210,13 @@
       ></vs-pagination>
     </div>
 
-    <FormularioVentas
+    <FormularioServicios
       :id_solicitud="id_solicitud_modificar"
       :tipo="tipoFormulario"
-      :show="verFormularioVentas"
-      @closeVentana="verFormularioVentas = false"
+      :show="verFormularioServicios"
+      @closeVentana="verFormularioServicios = false"
       @ver_pdfs_nueva_solicitud="ConsultarVenta"
-    ></FormularioVentas>
+    ></FormularioServicios>
 
     <FormularioSolicitud
       :id_solicitud="id_solicitud_modificar"
@@ -258,7 +258,7 @@
 //planes de venta
 import funeraria from "@services/funeraria";
 
-import FormularioVentas from "../servicios_funerarios/FormularioVentas";
+import FormularioServicios from "../servicios_funerarios/FormularioServicios";
 import FormularioSolicitud from "../servicios_funerarios/FormularioSolicitud";
 
 import ReportesVentas from "../servicios_funerarios/ReportesVentas";
@@ -276,7 +276,7 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    FormularioVentas,
+    FormularioServicios,
     ReportesVentas,
     CancelarVenta,
     PlanesVenta,
@@ -305,7 +305,7 @@ export default {
       openPlanesVenta: false,
       openCancelar: false,
       openReportes: false,
-      verFormularioVentas: false,
+      verFormularioServicios: false,
       tipoFormulario: "",
       //variable
       tipo_propiedades: [],
@@ -457,7 +457,7 @@ export default {
     openModificar(id_solicitud) {
       this.tipoFormulario = "modificar";
       this.id_solicitud_modificar = id_solicitud;
-      this.verFormularioVentas = true;
+      this.verFormularioServicios = true;
     },
 
     openModificarSolicitud(id_solicitud) {
@@ -472,7 +472,7 @@ export default {
     },
     formulario(tipo) {
       this.tipoFormulario = tipo;
-      this.verFormularioVentas = true;
+      this.verFormularioServicios = true;
     },
 
     TipoFormularioSolicitud(tipo) {

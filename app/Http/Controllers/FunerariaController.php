@@ -2991,7 +2991,7 @@ class FunerariaController extends ApiController
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
-            /*$id_servicio = 1;
+            /* $id_servicio = 1;
         $email = false;
         $email_to = 'hector@gmail.com';
 */
@@ -3005,10 +3005,7 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa = $get_funeraria->get_empresa_data();
 
-            /**cargando los datos que se ocupan para ordener las copciones seleccionadas por el usuario */
-            $opciones['generos'] = Generos::get();
-
-            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'opciones' => $opciones]);
+            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CERTIFICADO DE DEFUNCION " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -3027,7 +3024,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
-            $pdf->setOption('margin-bottom', 12.4);
+            $pdf->setOption('margin-bottom', 4.4);
             $pdf->setOption('page-size', 'a4');
 
             if ($email == true) {

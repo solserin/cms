@@ -47,7 +47,7 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('afiliaciones')->insert(['afiliacion' => 'pemex']);
         DB::table('afiliaciones')->insert(['afiliacion' => 'unidad médica privada']);
         DB::table('afiliaciones')->insert(['afiliacion' => 'imss prospera']);
-        DB::table('afiliaciones')->insert(['afiliacion' => 'isste']);
+        DB::table('afiliaciones')->insert(['afiliacion' => 'issste']);
         DB::table('afiliaciones')->insert(['afiliacion' => 'semar']);
         DB::table('afiliaciones')->insert(['afiliacion' => 'sedena']);
         DB::table('afiliaciones')->insert(['afiliacion' => 'otros']);
@@ -68,7 +68,7 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('sitios_muerte')->insert(['sitio' => 'pemex']);
         DB::table('sitios_muerte')->insert(['sitio' => 'unidad médica privada']);
         DB::table('sitios_muerte')->insert(['sitio' => 'imss prospera']);
-        DB::table('sitios_muerte')->insert(['sitio' => 'isste']);
+        DB::table('sitios_muerte')->insert(['sitio' => 'issste']);
         DB::table('sitios_muerte')->insert(['sitio' => 'semar']);
         DB::table('sitios_muerte')->insert(['sitio' => 'sedena']);
         DB::table('sitios_muerte')->insert(['sitio' => 'otro']);

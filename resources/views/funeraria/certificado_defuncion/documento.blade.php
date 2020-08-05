@@ -75,12 +75,18 @@
             border: 1px solid #ddd;
         }
 
+        .alineador tr th,
+        .alineador td {
+            border: none !important;
+        }
+
         .opcion {
             width: 20px !important;
             height: 20px !important;
             display: inline-block;
             text-align: center !important;
             border: 1px solid #ddd !important;
+            font-weight: bold !important;
         }
 
         .display {
@@ -106,9 +112,7 @@
                         <h1>
                             {{ $empresa->razon_social }}
                         </h1>
-                        <p class="datos-header">
-                            r.f.c. {{ $empresa->rfc }}
-                        </p>
+
                         <p class="datos-header">
                             {{ strtolower($empresa->calle) }} Núm. Ext {{ $empresa->num_ext }}
                         </p>
@@ -143,8 +147,8 @@
             </table>
         </section>
     </header>
-    <h1 class="center mt-5">información necesaria para elaborar el certificado de defunción
-        <div class="mt-2 w-normal">(information needed to prepare the death certificate)</div>
+    <h1 class="center mt-5">información necesaria para elaborar el certificado médico de defunción
+        <div class="mt-2 w-normal">(information worksheet for medical death certificate)</div>
     </h1>
     <table class="w-100 texto-base mt-5 datos_tabla uppercase">
         <tr class="size-13px">
@@ -181,7 +185,7 @@
                     </span>
                 </div>
                 Hombre/Male
-                <div class="opcion ml-2">
+                <div class="opcion ml-3">
                     <span
                         class="<?php if (!is_null($datos['generos_id']) && $datos['generos_id']==2){echo 'display';}else{echo 'hidden';}?>">
                         x
@@ -248,58 +252,79 @@
                 </div>
             </td>
             <td class="w-75 px-2">
-                <div class="opcion">
-                    <span
-                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==1){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Soltero(a)/Single
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==2){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Casado(a)/Married
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==4){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Divorciado(a)/Divorced
-                <br>
-                <div class="opcion mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==6){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Separado(a)/Separated
-                <div class="opcion mt-1 ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==3){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Viudo(a)/Widow
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==5){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Unión Libre/Free Union
-                <br>
-                <div class="opcion mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==7){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Se ignora/Unknown
-                <br>
+                <table class="w-100 alineador">
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Soltero(a)/Single
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Casado(a)/Married
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==4){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Divorciado(a)/Divorced
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="opcion mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Separado(a)/Separated
+                        </td>
+                        <td>
+                            <div class="opcion mt-1 ">
+                                <span
+                                    class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Viudo(a)/Widowed
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==5){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Unión Libre/Free Union
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="opcion mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['estados_civiles_id']) && $datos['estados_civiles_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Se ignora/Unknown
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
             </td>
         </tr>
         <tr class="size-13px">
@@ -319,64 +344,92 @@
                 </div>
             </td>
             <td class="w-75 px-2" colspan="3">
-                <div class="opcion">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==1){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Ninguna/None
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==2){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Preescolar/Preschool
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==3){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Primaria/elementary
-                <br>
-                <div class="opcion mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==4){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                secundaria(a)/middle school
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==5){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                preparatoria/high school
-                <br>
-                <div class="opcion mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==6){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                profesional/college
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==7){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                postgrado(a)/master
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==8){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                se ignora(a)/unknown
+                <table class="w-100 alineador">
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Ninguna/None
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Preescolar/Preschool
+                        </td>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Primaria/elementary
+                        </td>
+                    </tr>
+                </table>
+                <table class="w-100 alineador">
+                    <tr>
+                        <td>
+                            <div class="opcion mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==4){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            secundaria/middle school
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==5){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            preparatoria/high school
+                        </td>
+                    </tr>
+                </table>
+                <table class="w-100 alineador">
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            posgrado/master
+                        </td>
+                        <td>
+                            <div class="opcion mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            profesional/college
+                        </td>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==8){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            se ignora/unknown
+                        </td>
+                    </tr>
+                </table>
+
+
             </td>
         </tr>
         <tr class="size-13px">
@@ -387,68 +440,95 @@
                 </div>
             </td>
             <td class="w-75 px-2" colspan="3">
-                <div class="opcion">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==1){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                Ninguna/None
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==2){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                imss
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==3){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                pemex
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==7){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                semar
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==5){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                imss prospera
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==6){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                isste
-                <br>
-                <div class="opcion mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==8){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                sedena
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==9){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                otros
-                <div class="my-3">
-                    <span class="bold">
-                        otra afiliación/affiliation to:
-                    </span> {{ $datos['afiliacion_nota'] }}
-                </div>
+                <table class="w-100 alineador">
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            Ninguna/None
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            imss
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            pemex
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            semar
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==5){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            imss prospera
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            issste
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="opcion mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==8){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            sedena
+                        </td>
+                        <td colspan="2">
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['afiliaciones_id']) && $datos['afiliaciones_id']==9){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            otros
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div class="mb-3">
+                                <span class="bold">
+                                    otra afiliación/affiliation to:
+                                </span> {{ $datos['afiliacion_nota'] }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
         <tr class="size-13px">
@@ -470,67 +550,96 @@
                 </div>
             </td>
             <td class="w-65 px-2" colspan="3">
-                <div class="opcion">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==1){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                domicilio/Home address
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==2){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                hospital imss
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==3){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                pemex
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==4){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                hospital privado/private hospital
-                <div class="opcion ml-2 mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==6){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                hospital isste
-                <div class="opcion ml-2 mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==7){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                hospital semar
-                <div class="opcion ml-2">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==8){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                hospital sedena
-                <div class="opcion mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==9){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                otro/other
-                <div class="my-3">
-                    <span class="bold">
-                        Donde/Where:
-                    </span> {{ $datos['lugar_muerte'] }}
-                </div>
+                <table class="w-100 alineador">
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==1){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            domicilio/Home address
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==2){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            hospital imss
+                        </td>
+                        <td>
+                            <div class="opcion ">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==3){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            pemex
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==4){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            hospital privado/private hospital
+                        </td>
+                        <td>
+                            <div class="opcion  mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==6){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            hospital issste
+                        </td>
+                        <td>
+                            <div class="opcion  mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            hospital semar
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==8){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            hospital sedena
+                        </td>
+                        <td>
+                            <div class="opcion mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['sitios_muerte_id']) && $datos['sitios_muerte_id']==9){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            otro/other
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div class="mb-3">
+                                <span class="bold">
+                                    dirección/address:
+                                </span> {{ $datos['lugar_muerte'] }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
             </td>
         </tr>
     </table>
@@ -548,28 +657,37 @@
                 {{ $datos['fecha_muerte_texto'] }}
                 @endif
             </td>
-            <td class="w-30  bold px-2 ">
+            <td class="w-25  bold px-2 ">
                 ¿atención médica antes de morir?
                 <div class="w-normal">
                     (medical attention before death?)
                 </div>
             </td>
-            <td class="w-10 px-2">
-                <div class="opcion">
-                    <span
-                        class="<?php if (!is_null($datos['atencion_medica_b']) && $datos['atencion_medica_b']==1){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                si/yes
-                <br>
-                <div class="opcion mt-1">
-                    <span
-                        class="<?php if (!is_null($datos['atencion_medica_b']) && $datos['atencion_medica_b']==0){echo 'display';}else{echo 'hidden';}?>">
-                        x
-                    </span>
-                </div>
-                no
+            <td class="w-15 px-2">
+                <table class="w-100">
+                    <tr>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['atencion_medica_b']) && $datos['atencion_medica_b']==1){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            si/yes
+                        </td>
+                        <td>
+                            <div class="opcion mt-1">
+                                <span
+                                    class="<?php if (!is_null($datos['atencion_medica_b']) && $datos['atencion_medica_b']==0){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            no
+                        </td>
+                    </tr>
+                </table>
+
+
             </td>
         </tr>
 
@@ -579,7 +697,7 @@
             <td class="w-35  bold px-2 ">
                 ¿padecía alguna enfermedad?
                 <div class="w-normal">
-                    (medical problems)
+                    (does he/she have any disease?)
                 </div>
             </td>
             <td class="w-65 px-2" colspan="3">{{ $datos['enfermedades_padecidas'] }}</td>
@@ -628,11 +746,12 @@
         </tr>
     </table>
 
-    <div class="w-100 center mt-10">
+    <div class="w-100 center mt-8">
         <div class="w-50  mr-auto ml-auto">
             <div class="w-90 border-top">
-                <div class="pt-3 pb-1"><span class="uppercase  texto-sm"></span></div>
+                <div class="pt-1 pb-1"><span class="uppercase  texto-sm"></span></div>
                 <span class="uppercase bold texto-sm">firma del informante</span>
+                <div class=""><span class="uppercase  texto-sm">(siganture)</span></div>
             </div>
         </div>
     </div>
