@@ -664,7 +664,7 @@
                 </div>
             </td>
             <td class="w-15 px-2">
-                <table class="w-100">
+                <table class="w-100 alineador">
                     <tr>
                         <td>
                             <div class="opcion">
@@ -751,7 +751,7 @@
             <div class="w-90 border-top">
                 <div class="pt-1 pb-1"><span class="uppercase  texto-sm"></span></div>
                 <span class="uppercase bold texto-sm">firma del informante</span>
-                <div class=""><span class="uppercase  texto-sm">(siganture)</span></div>
+                <div class=""><span class="uppercase  texto-sm">(signature)</span></div>
             </div>
         </div>
     </div>
