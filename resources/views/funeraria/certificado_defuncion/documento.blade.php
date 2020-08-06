@@ -147,7 +147,7 @@
             </table>
         </section>
     </header>
-    <h1 class="center mt-5">información necesaria para elaborar el certificado médico de defunción
+    <h1 class="center mt-2">información necesaria para elaborar el certificado médico de defunción
         <div class="mt-2 w-normal">(information worksheet for medical death certificate)</div>
     </h1>
     <table class="w-100 texto-base mt-5 datos_tabla uppercase">

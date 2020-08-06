@@ -100,8 +100,6 @@ class ServiciosFunerarios extends Migration
             $table->mediumText('nota_ubicacion')->nullable();
 
             /**resto del contrato */
-            $table->unsignedBigInteger('clientes_id')->unsigned()->nullable();
-            $table->foreign('clientes_id')->references('id')->on('clientes');
             $table->dateTime('fechahora_contrato')->nullable();
             $table->string('parentesco_contratante')->nullable();
 
