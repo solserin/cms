@@ -150,7 +150,7 @@
     <h1 class="center mt-2">información necesaria para elaborar el certificado médico de defunción
         <div class="mt-2 w-normal">(information worksheet for medical death certificate)</div>
     </h1>
-    <table class="w-100 texto-base mt-5 datos_tabla uppercase">
+    <table class="w-100 texto-base mt-3 datos_tabla uppercase">
         <tr class="size-13px">
             <td class="w-34 bold px-2 ">
                 Folio del Certificado
@@ -160,7 +160,6 @@
             </td>
             <td class="w-75 px-2">{{ $datos['folio_certificado'] }}</td>
         </tr>
-
         <tr class="size-13px">
             <td class="w-34 bold px-2 ">
                 nombre completo del fallecido
@@ -308,7 +307,7 @@
                                     x
                                 </span>
                             </div>
-                            Unión Libre/Free Union
+                            Unión Libre/Civil Union
                         </td>
                     </tr>
                     <tr>
@@ -400,15 +399,6 @@
                 <table class="w-100 alineador">
                     <tr>
                         <td>
-                            <div class="opcion">
-                                <span
-                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==7){echo 'display';}else{echo 'hidden';}?>">
-                                    x
-                                </span>
-                            </div>
-                            posgrado/master
-                        </td>
-                        <td>
                             <div class="opcion mt-1">
                                 <span
                                     class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==6){echo 'display';}else{echo 'hidden';}?>">
@@ -416,6 +406,15 @@
                                 </span>
                             </div>
                             profesional/college
+                        </td>
+                        <td>
+                            <div class="opcion">
+                                <span
+                                    class="<?php if (!is_null($datos['escolaridades_id']) && $datos['escolaridades_id']==7){echo 'display';}else{echo 'hidden';}?>">
+                                    x
+                                </span>
+                            </div>
+                            posgrado/master
                         </td>
                         <td>
                             <div class="opcion">
@@ -697,7 +696,7 @@
             <td class="w-35  bold px-2 ">
                 ¿padecía alguna enfermedad?
                 <div class="w-normal">
-                    (does he/she have any disease?)
+                    (did he/she have any disease?)
                 </div>
             </td>
             <td class="w-65 px-2" colspan="3">{{ $datos['enfermedades_padecidas'] }}</td>
@@ -746,7 +745,7 @@
         </tr>
     </table>
 
-    <div class="w-100 center mt-8">
+    <div class="w-100 center mt-7">
         <div class="w-50  mr-auto ml-auto">
             <div class="w-90 border-top">
                 <div class="pt-1 pb-1"><span class="uppercase  texto-sm"></span></div>

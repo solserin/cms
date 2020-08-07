@@ -24,6 +24,7 @@
                 Detalle de la solicitud y del Fallecido
               </h3>
             </div>
+
             <div class="w-full px-2">
               <vs-divider />
             </div>

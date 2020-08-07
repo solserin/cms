@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms venta-propiedades background-header-forms"
+      class="normal-forms background-header-forms normal"
       fullscreen
       close="cancelar"
       :title="
@@ -14,825 +14,2307 @@
     >
       <!--inicio venta-->
       <div class="venta-details">
-        <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-            <!--contenido del informacion del fallecido-->
-            <div>
+        <vs-tabs alignment="left" position="top" v-model="activeTab">
+          <vs-tab
+            label="FALLECIDO"
+            icon="supervisor_account"
+            class="pb-5"
+          ></vs-tab>
+          <vs-tab label="CERTIFICADO MÉDICO" icon="gavel"></vs-tab>
+          <vs-tab label="DESTINOS DEL SERVICIO" icon="location_on"></vs-tab>
+          <vs-tab
+            label="DETALLE Y SERVICIOS DEL CONTRATO "
+            icon="attach_file"
+          ></vs-tab>
+          <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
+        </vs-tabs>
+        <div class="tab-content mt-1" v-show="activeTab == 0">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+            >
+              <!--contenido del informacion del fallecido-->
+              <div>
+                <div class="float-left pb-5 px-2">
+                  <img width="36px" src="@assets/images/corpse.svg" />
+                  <h3
+                    class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
+                  >
+                    Información del Fallecido
+                  </h3>
+                </div>
+              </div>
+              <div class="w-full px-2">
+                <vs-divider />
+              </div>
+
+              <div class="flex flex-wrap">
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Nombre del Fallecido
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="nombre_afectado"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="150"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Nombre Fallecido"
+                    v-model="form.nombre_afectado"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("nombre_afectado")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.nombre_afectado"
+                      >{{ errores.nombre_afectado[0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Fecha de Nacimiento
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <flat-pickr
+                    name="fecha_nacimiento"
+                    data-vv-as=" "
+                    v-validate:fecha_solicitud_validacion_computed.immediate="
+                      'required'
+                    "
+                    :config="configdateTimePickerWithTime"
+                    v-model="form.fecha_nacimiento"
+                    placeholder="Fecha de Nacimiento"
+                    class="w-full my-1"
+                  />
+                  <div>
+                    <span class="text-danger">
+                      {{ errors.first("fecha_nacimiento") }}
+                    </span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.fecha_nacimiento"
+                      >{{ errores.fecha_nacimiento[0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Edad
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="edad"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="10"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Edad del Fallecido"
+                    v-model="form.edad"
+                  />
+                  <div>
+                    <span class="text-danger">{{ errors.first("edad") }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span class="text-danger" v-if="this.errores.edad">{{
+                      errores.edad[0]
+                    }}</span>
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Género</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="generos"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.genero"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="genero"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("genero")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['genero.value']"
+                      >{{ errores["genero.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Nacionalidad</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="nacionalidades"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.nacionalidad"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="plan_validacion"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("plan_validacion")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['nacionalidad.value']"
+                      >{{ errores["nacionalidad.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Entidad de Nacimiento
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="lugar_nacimiento"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="100"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Lugar donde nació el fallecido"
+                    v-model="form.lugar_nacimiento"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("lugar_nacimiento")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.lugar_nacimiento"
+                      >{{ errores.lugar_nacimiento[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Ocupación Habitual
+                  </label>
+                  <vs-input
+                    name="ocupacion"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="75"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Ocupación del fallecido"
+                    v-model="form.ocupacion"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("ocupacion")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span class="text-danger" v-if="this.errores.ocupacion">{{
+                      errores.ocupacion[0]
+                    }}</span>
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Último Domicilio
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="direccion_fallecido"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="150"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Última dirección del fallecido"
+                    v-model="form.direccion_fallecido"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("direccion_fallecido")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.direccion_fallecido"
+                      >{{ errores.direccion_fallecido[0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Estado Civil</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="estados_civiles"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.estado_civil"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="estado_civil"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("estado_civil")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['estado_civil.value']"
+                      >{{ errores["estado_civil.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Escolaridad</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="escolaridades"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.escolaridad"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="escolaridad"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("plan_validacion")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['escolaridad.value']"
+                      >{{ errores["escolaridad.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Afiliado a</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="afiliaciones"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.afiliacion"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="afiliacion"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("afiliacion")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['afiliacion.value']"
+                      >{{ errores["afiliacion.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Indique la afiliación
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="afiliacion_nota"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="75"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Describa esa otra afiliación"
+                    v-model="form.afiliacion_nota"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("afiliacion_nota")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.afiliacion_nota"
+                      >{{ errores.afiliacion_nota[0] }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!--fin de contenido del informacion del fallecido-->
+            </div>
+          </div>
+          <div class="flex flex-wrap mt-1 px-2">
+            <div class="w-full px-2 mt-2">
+              <p class="texto-ojo">
+                <span class="text-danger font-medium">Ojo:</span>
+                Debe seleccionar la modalidad de la venta que se esté
+                registrando en caso de que haya sido realizada fuera del control
+                del sistema, ya que ese tipo de ventas cuenta con un control
+                especial de números de órden.
+              </p>
+              <vs-divider />
+            </div>
+          </div>
+        </div>
+        <div class="tab-content mt-1" v-show="activeTab == 1">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+            >
               <div class="float-left pb-5 px-2">
-                <img width="36px" src="@assets/images/corpse.svg" />
-                <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
-                  Información del Fallecido
+                <img width="36px" src="@assets/images/doctor.svg" />
+                <h3
+                  class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                >
+                  Información del Certificado Médico de Defunción
                 </h3>
               </div>
+
+              <div class="w-full px-2">
+                <vs-divider />
+              </div>
+              <div class="flex flex-wrap mt-1">
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Folio del Certificado Médico
+                  </label>
+                  <vs-input
+                    name="folio_certificado"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="45"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Número de Folio"
+                    v-model="form.folio_certificado"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("folio_certificado")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.folio_certificado"
+                      >{{ errores.folio_certificado[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Fecha y Hora del Fallecimiento
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <flat-pickr
+                    name="fechahora_defuncion"
+                    data-vv-as=" "
+                    v-validate:fecha_solicitud_validacion_computed.immediate="
+                      'required'
+                    "
+                    :config="configdateTimePickerWithTime"
+                    v-model="form.fechahora_defuncion"
+                    placeholder="Fecha y hora del fallecimiento"
+                    class="w-full my-1"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("fechahora_defuncion")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.fechahora_defuncion"
+                      >{{ errores.fechahora_defuncion[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Causa de Muerte
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="causa_muerte"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="100"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Cáusa de la muerte"
+                    v-model="form.causa_muerte"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("causa_muerte")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.causa_muerte"
+                      >{{ errores.causa_muerte[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Muerte Natural</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="sino"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.muerte_natural_b"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="muerte_natural_b"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("muerte_natural_b")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['muerte_natural_b.value']"
+                      >{{ errores["muerte_natural_b.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Enfermedad Contagiosa</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="sino"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.contagioso_b"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="contagioso_b"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("contagioso_b")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['contagioso_b.value']"
+                      >{{ errores["contagioso_b.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Lugar de Fallecimiento</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="sitios_muerte"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.sitio_muerte"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="sitio_muerte"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("sitio_muerte")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['sitio_muerte.value']"
+                      >{{ errores["sitio_muerte.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Indique dirección
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="lugar_muerte"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="125"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Dirección donde murió"
+                    v-model="form.lugar_muerte"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("lugar_muerte")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.lugar_muerte"
+                      >{{ errores.lugar_muerte[0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>¿Atención Médica Antes de morir?</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="sino"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.atencion_medica_b"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="atencion_medica_b"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("atencion_medica_b")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['atencion_medica_b.value']"
+                      >{{ errores["atencion_medica_b.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    ¿Padecía Alguna Enfermedad?
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="enfermedades_padecidas"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="125"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Enfermedades que padecía"
+                    v-model="form.enfermedades_padecidas"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("enfermedades_padecidas")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.enfermedades_padecidas"
+                      >{{ errores.enfermedades_padecidas[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Nombre del Informante
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="certificado_informante"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="125"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Nombre del informante para el certificado"
+                    v-model="form.certificado_informante"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("certificado_informante")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.certificado_informante"
+                      >{{ errores.certificado_informante[0] }}</span
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Teléfono del Informante
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="certificado_informante_telefono"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="45"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Teléfono del informante"
+                    v-model="form.certificado_informante_telefono"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("certificado_informante_telefono")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.certificado_informante_telefono"
+                      >{{ errores.certificado_informante_telefono[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Parentesco con el fallecido
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="certificado_informante_parentesco"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="45"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Ingrese un teléfono"
+                    v-model="form.certificado_informante_parentesco"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("certificado_informante_parentesco")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.certificado_informante_parentesco"
+                      >{{ errores.certificado_informante_parentesco[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Nombre del Médico Legista
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <vs-input
+                    name="medico_legista"
+                    data-vv-as=" "
+                    v-validate.disabled="'required'"
+                    maxlength="125"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Nombre del médico legista"
+                    v-model="form.medico_legista"
+                  />
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("medico_legista")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores.medico_legista"
+                      >{{ errores.medico_legista[0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Estado del Cuerpo</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="estados_cuerpo"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.estado_cuerpo"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="estado_cuerpo"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      Seleccione 1
+                    </div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">{{
+                      errors.first("estado_cuerpo")
+                    }}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['estado_cuerpo.value']"
+                      >{{ errores["estado_cuerpo.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="w-full px-2">
-              <vs-divider />
-            </div>
-
-            <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Nombre del fallecido
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="150"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Nombre del titular sustituto"
-                  v-model="form.titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.titular_sustituto"
-                    >{{ errores.titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Fecha de Nacimiento
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="parentesco_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ej. Hermano"
-                  v-model="form.parentesco_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">
-                    {{ errors.first("parentesco_titular_sustituto") }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.parentesco_titular_sustituto"
-                    >{{ errores.parentesco_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Edad
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Género</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_validacion")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                    >{{ errores["plan_funerario.value"][0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Nacionalidad</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_validacion")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                    >{{ errores["plan_funerario.value"][0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Entidad de Nacimiento
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Ocupación Habitual
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label class="text-sm opacity-75 font-bold">
-                  Último Domicilio
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Estado Civil</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_validacion")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                    >{{ errores["plan_funerario.value"][0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Escolaridad</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_validacion")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                    >{{ errores["plan_funerario.value"][0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Afiliado a</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_validacion")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                    >{{ errores["plan_funerario.value"][0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Indique la afiliación
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!--fin de contenido del informacion del fallecido-->
           </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-            <div class="float-left pb-5 px-2">
-              <img width="36px" src="@assets/images/doctor.svg" />
-              <h3
-                class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-              >
-                Información del Certificado Médico de Defunción
-              </h3>
-            </div>
-
-            <div class="w-full px-2">
+          <div class="flex flex-wrap mt-1 px-2">
+            <div class="w-full px-2 mt-2">
+              <p class="texto-ojo">
+                <span class="text-danger font-medium">Ojo:</span>
+                Debe seleccionar la modalidad de la venta que se esté
+                registrando en caso de que haya sido realizada fuera del control
+                del sistema, ya que ese tipo de ventas cuenta con un control
+                especial de números de órden.
+              </p>
               <vs-divider />
-            </div>
-            <div class="flex flex-wrap mt-1">
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Folio del Certificado Médico
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Fecha y Hora del Fallecimiento
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Lugar de Fallecimiento</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_validacion")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                    >{{ errores["plan_funerario.value"][0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Indique dirección
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>¿Atención Médica Antes de morir?</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan
-                  </div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_validacion")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                    >{{ errores["plan_funerario.value"][0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  ¿Padecía Alguna Enfermedad?
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label class="text-sm opacity-75 font-bold">
-                  Nombre del Informante
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Teléfono del Informante
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Parentesco con el fallecido
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label class="text-sm opacity-75 font-bold">
-                  Nombre del Médico Legista
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="telefono_titular_sustituto"
-                  data-vv-as=" "
-                  data-vv-validate-on="blur"
-                  v-validate="'required'"
-                  maxlength="45"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ingrese un teléfono"
-                  v-model="form.telefono_titular_sustituto"
-                  :disabled="fueCancelada"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("telefono_titular_sustituto")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.telefono_titular_sustituto"
-                    >{{ errores.telefono_titular_sustituto[0] }}</span
-                  >
-                </div>
-              </div>
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap mt-1">
-          <div class="w-full px-2 mt-2">
-            <p class="text-xs">
-              <span class="text-danger font-medium">Ojo:</span>
-              Debe seleccionar la modalidad de la venta que se esté registrando
-              en caso de que haya sido realizada fuera del control del sistema,
-              ya que ese tipo de ventas cuenta con un control especial de
-              números de órden.
-            </p>
-          </div>
-        </div>
-        <vs-divider />
+        <div class="tab-content mt-1" v-show="activeTab == 2">
+          <div class="flex flex-wrap mt-1 px-2">
+            <div class="w-full">
+              <div class="flex flex-wrap mt-1 px-2">
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <!--contenido del informacion del fallecido-->
+                  <div>
+                    <div class="float-left pb-5 px-2">
+                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <h3
+                        class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
+                      >
+                        Datos del Embalsamiento
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold"
+                        >¿Embalsamar Cuerpo?</label
+                      >
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Nombre del Médico Responsable
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        <span>Seleccione al Preparador</span>
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <v-select
+                        :options="planes_funerarios"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="form.plan_funerario"
+                        class="mb-4 sm:mb-0 pb-1 pt-1"
+                        v-validate:plan_funerario_validacion_computed.immediate="
+                          'required'
+                        "
+                        name="plan_validacion"
+                        data-vv-as=" "
+                      >
+                        <div slot="no-options">
+                          Seleccione 1
+                        </div>
+                      </v-select>
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("plan_validacion")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores['plan_funerario.value']"
+                          >{{ errores["plan_funerario.value"][0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!--fin de contenido del informacion del fallecido-->
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <div class="float-left pb-5 px-2">
+                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <h3
+                      class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                    >
+                      Datos de la Velación
+                    </h3>
+                  </div>
 
-        <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-            <div class="float-left pb-5 px-2">
-              <img width="36px" src="@assets/images/corpse.svg" />
-              <h3
-                class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-              >
-                Detalle de la solicitud y del Fallecido
-              </h3>
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold">¿Velar Cuerpo?</label>
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        <span>¿Lugar de Velación?</span>
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <v-select
+                        :options="planes_funerarios"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="form.plan_funerario"
+                        class="mb-4 sm:mb-0 pb-1 pt-1"
+                        v-validate:plan_funerario_validacion_computed.immediate="
+                          'required'
+                        "
+                        name="plan_validacion"
+                        data-vv-as=" "
+                      >
+                        <div slot="no-options">
+                          Seleccione 1
+                        </div>
+                      </v-select>
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("plan_validacion")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores['plan_funerario.value']"
+                          >{{ errores["plan_funerario.value"][0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Dirección del Servicio
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="w-full px-2">
+            <div class="w-full mt-5">
+              <div class="flex flex-wrap mt-1 px-2">
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <!--contenido del informacion del fallecido-->
+                  <div>
+                    <div class="float-left pb-5 px-2">
+                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <h3
+                        class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
+                      >
+                        Datos de la Cremación
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold">¿Cremar Cuerpo?</label>
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Fecha de la Cremación
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <flat-pickr
+                        name="fecha_solicitud"
+                        data-vv-as=" "
+                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                          'required'
+                        "
+                        :config="configdateTimePickerWithTime"
+                        v-model="form.fecha_solicitud"
+                        placeholder="Fecha y Hora de Solicitud"
+                        class="w-full my-1"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Fecha de Entrga de Cenizas
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <flat-pickr
+                        name="fecha_solicitud"
+                        data-vv-as=" "
+                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                          'required'
+                        "
+                        :config="configdateTimePickerWithTime"
+                        v-model="form.fecha_solicitud"
+                        placeholder="Fecha y Hora de Solicitud"
+                        class="w-full my-1"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Descripción de Urna
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!--fin de contenido del informacion del fallecido-->
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <div class="float-left pb-5 px-2">
+                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <h3
+                      class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                    >
+                      Datos de la Inhumación
+                    </h3>
+                  </div>
+
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold">¿Inhumar Cuerpo?</label>
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+
+                    <div
+                      class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        <span>¿Lugar de Inhumación?</span>
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <v-select
+                        :options="planes_funerarios"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="form.plan_funerario"
+                        class="mb-4 sm:mb-0 pb-1 pt-1"
+                        v-validate:plan_funerario_validacion_computed.immediate="
+                          'required'
+                        "
+                        name="plan_validacion"
+                        data-vv-as=" "
+                      >
+                        <div slot="no-options">
+                          Seleccione 1
+                        </div>
+                      </v-select>
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("plan_validacion")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores['plan_funerario.value']"
+                          >{{ errores["plan_funerario.value"][0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Fecha Inhumación
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <flat-pickr
+                        name="fecha_solicitud"
+                        data-vv-as=" "
+                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                          'required'
+                        "
+                        :config="configdateTimePickerWithTime"
+                        v-model="form.fecha_solicitud"
+                        placeholder="Fecha y Hora de Solicitud"
+                        class="w-full my-1"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                    >
+                      <div class="py-1">
+                        <label class="text-sm opacity-75 font-bold">
+                          Seleccione un Cliente
+                          <span class="texto-importante">(*)</span>
+                        </label>
+                      </div>
+                      <div class="flex flex-wrap">
+                        <div
+                          class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
+                        >
+                          <div v-if="fueCancelada != true">
+                            <img
+                              v-if="form.id_cliente == ''"
+                              width="46px"
+                              class="cursor-pointer p-2"
+                              src="@assets/images/search.svg"
+                              @click="openBuscador = true"
+                              title="Buscar Cliente"
+                            />
+                            <img
+                              v-else
+                              width="46px"
+                              class="cursor-pointer p-2"
+                              src="@assets/images/minus.svg"
+                              @click="quitarCliente()"
+                            />
+                          </div>
+                          <div v-else>
+                            <img
+                              width="46px"
+                              class="cursor-pointer p-2"
+                              src="@assets/images/minus.svg"
+                            />
+                          </div>
+                        </div>
+                        <div
+                          class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12"
+                        >
+                          <vs-input
+                            readonly
+                            v-validate.disabled="'required'"
+                            name="id_cliente"
+                            data-vv-as=" "
+                            type="text"
+                            class="w-full py-1 cursor-pointer texto-bold"
+                            placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
+                            v-model="form.cliente"
+                            maxlength="100"
+                            ref="cliente_ref"
+                          />
+                          <div>
+                            <span class="text-danger">{{
+                              errors.first("id_cliente")
+                            }}</span>
+                          </div>
+                          <div class="mt-2">
+                            <span
+                              class="text-danger"
+                              v-if="this.errores.id_cliente"
+                              >{{ errores.id_cliente[0] }}</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="hidden w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Indique ubicación
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="w-full mt-5">
+              <div class="flex flex-wrap mt-1 px-2">
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <!--contenido del informacion del fallecido-->
+                  <div>
+                    <div class="float-left pb-5 px-2">
+                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <h3
+                        class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
+                      >
+                        Datos del Traslado
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold">¿Velar Cuerpo?</label>
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Fecha del Traslado
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <flat-pickr
+                        name="fecha_solicitud"
+                        data-vv-as=" "
+                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                          'required'
+                        "
+                        :config="configdateTimePickerWithTime"
+                        v-model="form.fecha_solicitud"
+                        placeholder="Fecha y Hora de Solicitud"
+                        class="w-full my-1"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Lugar del Traslado
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!--fin de contenido del informacion del fallecido-->
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <div class="float-left pb-5 px-2">
+                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <h3
+                      class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                    >
+                      Datos de la Aseguradora
+                    </h3>
+                  </div>
+
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold">¿Velar Cuerpo?</label>
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Num. Convenio
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Aseguradora
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Teléfonos
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="w-full mt-5">
+              <div class="flex flex-wrap mt-1 px-2">
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <!--contenido del informacion del fallecido-->
+                  <div>
+                    <div class="float-left pb-5 px-2">
+                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <h3
+                        class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
+                      >
+                        Datos de la Misa
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold">Ceremonia o Misa?</label>
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Fecha y Hora
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <flat-pickr
+                        name="fecha_solicitud"
+                        data-vv-as=" "
+                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                          'required'
+                        "
+                        :config="configdateTimePickerWithTime"
+                        v-model="form.fecha_solicitud"
+                        placeholder="Fecha y Hora de Solicitud"
+                        class="w-full my-1"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Iglesia o Templo
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Dirección
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!--fin de contenido del informacion del fallecido-->
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <div class="float-left pb-5 px-2">
+                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <h3
+                      class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                    >
+                      Datos de la Cadena de Custodia
+                    </h3>
+                  </div>
+
+                  <div class="w-full px-2">
+                    <vs-divider />
+                  </div>
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                    >
+                      <label class="text-sm font-bold"
+                        >¿Requirió Custodia?</label
+                      >
+                      <div class="mt-3">
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="1"
+                          class="mr-4"
+                          >SI</vs-radio
+                        >
+                        <vs-radio
+                          vs-name="llamada_b"
+                          v-model="form.llamada_b"
+                          :vs-value="0"
+                          class="mr-4"
+                          >NO</vs-radio
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Nombre del Responsable
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Folio de Referencia
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    >
+                      <label class="text-sm opacity-75 font-bold">
+                        Folio de Liberación
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                      <vs-input
+                        name="titular_sustituto"
+                        data-vv-as=" "
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del titular sustituto"
+                        v-model="form.titular_sustituto"
+                      />
+                      <div>
+                        <span class="text-danger">{{
+                          errors.first("titular_sustituto")
+                        }}</span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.titular_sustituto"
+                          >{{ errores.titular_sustituto[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap mt-1 px-2">
+            <div class="w-full px-2 mt-2">
+              <p class="texto-ojo">
+                <span class="text-danger font-medium">Ojo:</span>
+                Debe seleccionar la modalidad de la venta que se esté
+                registrando en caso de que haya sido realizada fuera del control
+                del sistema, ya que ese tipo de ventas cuenta con un control
+                especial de números de órden.
+              </p>
               <vs-divider />
             </div>
-            <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-              <label class="text-sm opacity-75 font-bold">
-                Nombre del Informante
-                <span class="texto-importante">(*)</span>
-              </label>
-              <div v-if="fueCancelada != true">
-                <img
-                  v-if="form.id_cliente == ''"
-                  width="46px"
-                  class="cursor-pointer p-2 mt-2"
-                  src="@assets/images/search.svg"
-                  @click="openBuscador = true"
-                  title="Buscar Cliente"
-                />
-                <img
-                  v-else
-                  width="46px"
-                  class="cursor-pointer p-2 mt-2"
-                  src="@assets/images/minus.svg"
-                  @click="quitarCliente()"
-                />
-              </div>
-              <div v-else>
-                <img
-                  width="46px"
-                  class="cursor-pointer p-2 mt-2"
-                  src="@assets/images/minus.svg"
-                />
-              </div>
-              <vs-input
-                readonly
-                v-validate="'required'"
-                name="id_cliente"
-                data-vv-as=" "
-                type="text"
-                class="w-full py-1 cursor-pointer texto-bold float-right"
-                placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR LA VENTA."
-                v-model="form.cliente"
-                maxlength="100"
-                ref="cliente_ref"
-              />
-              <div>
-                <span class="mensaje-requerido">{{
-                  errors.first("id_cliente")
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="mensaje-requerido"
-                  v-if="this.errores.id_cliente"
-                  >{{ errores.id_cliente[0] }}</span
+          </div>
+        </div>
+        <div class="tab-content mt-1" v-show="activeTab == 3">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+            >
+              <div class="float-left pb-5 px-2">
+                <img width="36px" src="@assets/images/corpse.svg" />
+                <h3
+                  class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
                 >
+                  Indique los Detalles del Contrato
+                </h3>
+              </div>
+              <div class="w-full px-2">
+                <vs-divider />
+              </div>
+              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+                <div class="flex flex-wrap">
+                  <div
+                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      <span>Destino del Cuerpo</span>
+                      <span class="texto-importante">(*)</span>
+                    </label>
+                    <v-select
+                      :options="planes_funerarios"
+                      :clearable="false"
+                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                      v-model="form.plan_funerario"
+                      class="mb-4 sm:mb-0 pb-1 pt-1"
+                      v-validate:plan_funerario_validacion_computed.immediate="
+                        'required'
+                      "
+                      name="plan_validacion"
+                      data-vv-as=" "
+                    >
+                      <div slot="no-options">
+                        Seleccione 1
+                      </div>
+                    </v-select>
+                    <div>
+                      <span class="text-danger">{{
+                        errors.first("plan_validacion")
+                      }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger"
+                        v-if="this.errores['plan_funerario.value']"
+                        >{{ errores["plan_funerario.value"][0] }}</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      Fecha del Contrato
+                      <span class="texto-importante">(*)</span>
+                    </label>
+
+                    <flat-pickr
+                      name="fecha_solicitud"
+                      data-vv-as=" "
+                      v-validate:fecha_solicitud_validacion_computed.immediate="
+                        'required'
+                      "
+                      :config="configdateTimePickerWithTime"
+                      v-model="form.fecha_solicitud"
+                      placeholder="Fecha y Hora de Solicitud"
+                      class="w-full my-1"
+                    />
+                    <div>
+                      <span class="text-danger">{{
+                        errors.first("telefono_titular_sustituto")
+                      }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger"
+                        v-if="this.errores.telefono_titular_sustituto"
+                        >{{ errores.telefono_titular_sustituto[0] }}</span
+                      >
+                    </div>
+                  </div>
+
+                  <div
+                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      Seleccione al Contratante
+                      <span class="texto-importante">(*)</span>
+                    </label>
+
+                    <div class="flex flex-wrap">
+                      <div
+                        class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                      >
+                        <div v-if="fueCancelada != true">
+                          <img
+                            v-if="form.id_cliente == ''"
+                            width="46px"
+                            class="cursor-pointer p-2"
+                            src="@assets/images/search.svg"
+                            @click="openBuscador = true"
+                            title="Buscar Cliente"
+                          />
+                          <img
+                            v-else
+                            width="46px"
+                            class="cursor-pointer p-2"
+                            src="@assets/images/minus.svg"
+                            @click="quitarCliente()"
+                          />
+                        </div>
+                        <div v-else>
+                          <img
+                            width="46px"
+                            class="cursor-pointer p-2"
+                            src="@assets/images/minus.svg"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2"
+                      >
+                        <vs-input
+                          readonly
+                          v-validate.disabled="'required'"
+                          name="id_cliente"
+                          data-vv-as=" "
+                          type="text"
+                          class="w-full py-1 cursor-pointer texto-bold"
+                          placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
+                          v-model="form.cliente"
+                          maxlength="100"
+                          ref="cliente_ref"
+                        />
+                        <div>
+                          <span class="text-danger">{{
+                            errors.first("id_cliente")
+                          }}</span>
+                        </div>
+                        <div class="mt-2">
+                          <span
+                            class="text-danger"
+                            v-if="this.errores.id_cliente"
+                            >{{ errores.id_cliente[0] }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      Parentesco con el Fallecido
+                      <span class="texto-importante">(*)</span>
+                    </label>
+
+                    <vs-input
+                      name="telefono_titular_sustituto"
+                      data-vv-as=" "
+                      v-validate.disabled="'required'"
+                      maxlength="45"
+                      type="text"
+                      class="w-full pb-1 pt-1"
+                      placeholder="Ingrese un teléfono"
+                      v-model="form.telefono_titular_sustituto"
+                    />
+                    <div>
+                      <span class="text-danger">{{
+                        errors.first("telefono_titular_sustituto")
+                      }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger"
+                        v-if="this.errores.telefono_titular_sustituto"
+                        >{{ errores.telefono_titular_sustituto[0] }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-5"
+            >
+              <div class="float-left pb-5 px-2">
+                <img width="36px" src="@assets/images/corpse.svg" />
+                <h3
+                  class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                >
+                  Datos del Acta de Defunción
+                </h3>
+              </div>
+              <div class="w-full px-2">
+                <vs-divider />
+              </div>
+              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+                <div class="flex flex-wrap">
+                  <div
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      Folio del Acta
+                      <span class="texto-importante">(*)</span>
+                    </label>
+
+                    <vs-input
+                      name="telefono_titular_sustituto"
+                      data-vv-as=" "
+                      v-validate.disabled="'required'"
+                      maxlength="45"
+                      type="text"
+                      class="w-full pb-1 pt-1"
+                      placeholder="Ingrese un teléfono"
+                      v-model="form.telefono_titular_sustituto"
+                    />
+                    <div>
+                      <span class="text-danger">{{
+                        errors.first("telefono_titular_sustituto")
+                      }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger"
+                        v-if="this.errores.telefono_titular_sustituto"
+                        >{{ errores.telefono_titular_sustituto[0] }}</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      Fecha de Levantamiento
+                      <span class="texto-importante">(*)</span>
+                    </label>
+
+                    <flat-pickr
+                      name="fecha_solicitud"
+                      data-vv-as=" "
+                      v-validate:fecha_solicitud_validacion_computed.immediate="
+                        'required'
+                      "
+                      :config="configdateTimePickerWithTime"
+                      v-model="form.fecha_solicitud"
+                      placeholder="Fecha y Hora de Solicitud"
+                      class="w-full my-1"
+                    />
+                    <div>
+                      <span class="text-danger">{{
+                        errors.first("telefono_titular_sustituto")
+                      }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger"
+                        v-if="this.errores.telefono_titular_sustituto"
+                        >{{ errores.telefono_titular_sustituto[0] }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <div class="flex flex-wrap mt-1 px-2">
+            <div class="w-full px-2 mt-2">
+              <p class="texto-ojo">
+                <span class="text-danger font-medium">Ojo:</span>
+                Debe seleccionar la modalidad de la venta que se esté
+                registrando en caso de que haya sido realizada fuera del control
+                del sistema, ya que ese tipo de ventas cuenta con un control
+                especial de números de órden.
+              </p>
+              <vs-divider />
+            </div>
+          </div>
         </div>
+        <div class="tab-content mt-1" v-show="activeTab == 4"></div>
       </div>
       <!--fin venta-->
     </vs-popup>
@@ -863,8 +2345,6 @@
       @closeBuscador="openBuscador = false"
       @retornoCliente="clienteSeleccionado"
     ></ClientesBuscador>
-
-    <Notas :nota="form.nota" :show="openNotas" @closeNotas="closeNotas"></Notas>
   </div>
 </template>
 <script>
@@ -875,7 +2355,6 @@ import "flatpickr/dist/themes/airbnb.css";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
-import Notas from "@pages/notas";
 import planes from "@services/planes";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
@@ -883,7 +2362,11 @@ import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
 
 /**VARIABLES GLOBALES */
-import { alfabeto, configdateTimePicker } from "@/VariablesGlobales";
+import {
+  alfabeto,
+  configdateTimePicker,
+  configdateTimePickerWithTime,
+} from "@/VariablesGlobales";
 
 export default {
   components: {
@@ -893,7 +2376,6 @@ export default {
     ConfirmarDanger,
     ConfirmarAceptar,
     ClientesBuscador,
-    Notas,
   },
   props: {
     show: {
@@ -922,170 +2404,30 @@ export default {
           this.cancelar();
         };
         (async () => {
-          await this.get_planes_funerarios();
-          await this.get_vendedores();
           if (this.getTipoformulario == "agregar") {
             /**acciones cuando el formulario es de agregar */
           } else {
             /**es modificar */
             /**pasando el valor de la venta id */
-            this.form.id_venta = this.get_venta_id;
+            //this.form.id_venta = this.get_venta_id;
             /**se cargan los datos al formulario */
-            await this.consultar_venta_id();
+            //await this.consultar_venta_id();
           }
         })();
       } else {
         /**acciones al cerrar el formulario */
       }
     },
-    "form.planVenta": function (newValue, oldValue) {
-      if (newValue.value != "") {
-        /**el plan cambio a un plan especifico */
-        this.form.subtotal = newValue.subtotal;
-        this.form.costo_neto_pronto_pago = newValue.costo_neto_pronto_pago;
-      }
-    },
-    /**watch para cargado de planes de venta */
-    "form.plan_funerario": function (newValue, oldValue) {
-      /**cargando planes */
-      this.cargarPlanes();
-    },
   },
   computed: {
-    verLista: function () {
-      if (this.form.plan_funerario.value != "") {
-        let mostrar = false;
-        this.datos = [];
-        this.form.plan_funerario.secciones.forEach((element, index_seccion) => {
-          if (element.conceptos) {
-            if (element.conceptos.length > 0) {
-              element.conceptos.forEach((concepto, index_concepto) => {
-                this.datos.push({
-                  concepto: concepto.concepto,
-                  concepto_ingles: concepto.concepto_ingles,
-                  aplicar: concepto.aplicar_en,
-                });
-              });
-              mostrar = true;
-            }
-          }
-        });
-        if (mostrar == true) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
+    showVentana: {
+      get() {
+        return this.show;
+      },
+      set(newValue) {
+        return newValue;
+      },
     },
-    /**dle modulo */
-    /**sacando los valores para aplicar los descuentos respectivos */
-    iva_computed: function () {
-      let iva = (
-        (Number.parseFloat(this.form.subtotal) -
-          Number.parseFloat(this.form.descuento)) *
-        0.16
-      ).toFixed(2);
-      /***actualizo el impuesto iva */
-      this.form.impuestos = iva;
-      return iva;
-    },
-    costo_neto_computed: function () {
-      let costo_neto = (
-        Number.parseFloat(this.form.subtotal) -
-        Number.parseFloat(this.form.descuento) +
-        Number.parseFloat(this.form.impuestos)
-      ).toFixed(2);
-      this.form.costo_neto = costo_neto;
-      return costo_neto;
-    },
-    /**fin de valores para la aplicacion de toales e impuestos */
-    /**minimo valor permitido del enganche */
-    valor_minimo_pago_inicial: function () {
-      if (this.form.planVenta.value == "") {
-        return 0;
-      } else {
-        if (this.form.planVenta.value == 1) {
-          //es a contado
-          if (this.form.costo_neto > 0) {
-            return this.form.costo_neto;
-          } else {
-            return 0;
-          }
-        } else {
-          /**venta a credito */
-          if (this.form.costo_neto > this.form.planVenta.pago_inicial) {
-            /**sin desucuento mando el pago  inicial definido en el plna */
-            /**se deja como minimo lo establecido en el pago inicial */
-            return this.form.planVenta.pago_inicial;
-          } else {
-            /**solo el 10 por ciento para que el resto se pague en abonos */
-            return (this.form.costo_neto * 0.1).toFixed(2);
-          }
-        }
-      }
-    },
-    /**maximo valor permitido del enganche */
-    valor_maximo_pago_inicial: function () {
-      if (this.form.planVenta.value == "") {
-        return 0;
-      } else {
-        if (this.form.planVenta.value == 1) {
-          return this.costo_neto_computed;
-        } else {
-          return (this.costo_neto_computed * 0.7).toFixed(2);
-          /**como maximo un 70 % para el resto dejarlo en abonos y mantener las buenas practicas del finaciamiento */
-        }
-      }
-    },
-
-    /**maximo valor permitido del enganche */
-    minimo_pronto_pago: function () {
-      if (this.form.costo_neto > 1) {
-        return 1;
-      } else {
-        return 0;
-      }
-    },
-    /**checando si la venta ya fue liquidada*/
-    ventaLiquidada: function () {
-      if (this.getTipoformulario == "modificar") {
-        if (this.datosVenta.saldo_neto <= 0) {
-          return true;
-        } else return false;
-      } else return false;
-    },
-    /**checando si ya hay pagos vigentes realizados en la venta, por lo cual no puede cambiar la fecha de la venta */
-    tiene_pagos_realizados: function () {
-      if (this.getTipoformulario == "modificar") {
-        if (this.datosVenta.pagos_realizados > 0) {
-          return true;
-        } else return false;
-      } else return false;
-    },
-    /**checar si tiene pagos vencidos */
-    tienePagosVencidos: function () {
-      if (this.getTipoformulario == "modificar") {
-        if (this.datosVenta.pagos_vencidos > 0) {
-          return true;
-        } else return false;
-      } else return false;
-    },
-    fueCancelada: function () {
-      if (this.getTipoformulario == "modificar") {
-        if (this.datosVenta.operacion_status == 0) {
-          return true;
-        } else return false;
-      } else return false;
-    },
-    /**validar si es modificar el formulario */
-    ModificarVenta: function () {
-      if (this.getTipoformulario == "modificar") {
-        return true;
-      } else return false;
-    },
-
     getTipoformulario: {
       get() {
         return this.tipo;
@@ -1102,87 +2444,137 @@ export default {
         return newValue;
       },
     },
-
-    showVentana: {
-      get() {
-        return this.show;
-      },
-      set(newValue) {
-        return newValue;
-      },
-    },
-    capturar_num_convenio: function () {
-      if (this.form.ventaAntiguedad.value > 1) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    capturar_num_titulo: function () {
-      if (this.form.ventaAntiguedad.value == 3) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
-    plan_venta: function () {
-      if (this.form.planVenta.value == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
-    //validaciones calculadas
-    //valido que elija un plan de venta
-    plan_de_venta_computed: function () {
-      return this.form.planVenta.value;
-    },
-    plan_funerario_validacion_computed: function () {
-      return this.form.plan_funerario.value;
-    },
-
-    antiguedad_validacion_computed: function () {
-      return this.form.ventaAntiguedad.value;
-    },
-
-    vendedor_validacion_computed: function () {
-      return this.form.vendedor.value;
-    },
-    fecha_venta_validacion_computed: function () {
-      return this.form.fecha_venta;
-    },
-
-    solicitud_validacion_computed: function () {
-      //checo que el dato venta a futuro este activo
-      if (this.form.tipo_financiamiento == 2) {
-        return this.form.solicitud;
-      } else return true;
-    },
-
-    num_convenio_validacion_computed: function () {
-      //checo que el dato venta a futuro este activo y que sea de venta antes del sistema
-      if (this.form.ventaAntiguedad.value >= 2) {
-        return this.form.convenio;
-      } else return true;
-    },
-    num_titulo_validacion_computed: function () {
-      //checo que el dato venta a futuro este activo
-      if (this.form.ventaAntiguedad.value == 3) {
-        return this.form.titulo;
-      } else return true;
-    },
-
-    //fin de validaciones calculadas
   },
   data() {
     return {
-      planes_funerarios: [],
-      datos: [],
+      activeTab: 0,
+      generos: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+        {
+          value: 1,
+          label: "Hombre",
+        },
+        {
+          value: 2,
+          label: "Mujer",
+        },
+      ],
+      nacionalidades: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      estados_civiles: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      afiliaciones: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      escolaridades: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      sino: [
+        {
+          value: "1",
+          label: "SI",
+        },
+        {
+          value: "0",
+          label: "NO",
+        },
+      ],
+      sitios_muerte: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      estados_cuerpo: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      form: {
+        /**fallecido */
+        nombre_afectado: "",
+        fecha_nacimiento: "",
+        edad: "",
+        genero: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        nacionalidad: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        lugar_nacimiento: "",
+        ocupacion: "",
+        direccion_fallecido: "",
+        estado_civil: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        afiliacion: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        escolaridad: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        afiliacion_nota: "",
+        /**fin datos fallecido */
+
+        /**certificad de defuncion */
+        folio_certificado: "",
+        fechahora_defuncion: "",
+        causa_muerte: "",
+        muerte_natural_b: {
+          value: "1",
+          label: "SI",
+        },
+        sitio_muerte: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        lugar_muerte: "",
+        atencion_medica_b: {
+          value: "1",
+          label: "SI",
+        },
+        contagioso_b: {
+          value: "1",
+          label: "SI",
+        },
+        enfermedades_padecidas: "",
+        certificado_informante: "",
+        certificado_informante_telefono: "",
+        certificado_informante_parentesco: "",
+        medico_legista: "",
+        estado_cuerpo: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        /**fin de datos dle certificado */
+      },
       /**variables dle modulo */
       openNotas: false,
       configdateTimePicker: configdateTimePicker,
+      configdateTimePickerWithTime: configdateTimePickerWithTime,
       verDisponibilidad: false,
       openBuscador: false,
       accionConfirmarSinPassword: "",
@@ -1194,110 +2586,11 @@ export default {
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
-      accionNombre: "Modificar Venta",
-      ventasAntiguedad: [
-        {
-          label: "NUEVA VENTA",
-          value: 1,
-        },
-        {
-          label: "A/S SIN LIQUIDAR",
-          value: 2,
-        },
-        {
-          label: "A/S - LIQUIDADA",
-          value: 3,
-        },
-      ],
-      vendedores: [],
-      //variables con mapa
-      planesVenta: [
-        {
-          label: "Seleccione 1",
-          value: "",
-          subtotal: "0.00",
-          impuestos: "0.00",
-          costo_neto: "0.00",
-          pago_inicial: "",
-          descuento_pronto_pago_b: "",
-          costo_neto_pronto_pago: "",
-          porcentaje_pronto_pago: "",
-          costo_neto_financiamiento_normal: "",
-        },
-      ],
-      /**para modificar, se traen los datos aqui */
-      datosVenta: [],
-      //fin var con mapa
-      form: {
-        tipo_financiamiento: 2 /**directamente solo a futuro */,
-        plan_funerario: {
-          label: "Seleccione 1",
-          plan: "",
-          plan_ingles: "",
-          nota: "",
-          nota_ingles: "",
-          value: "",
-          secciones: [],
-          precios: [],
-        },
-        /**varaibles del modulo */
-        salarios_minimos: "12",
-        id_venta: "",
-        /**datos del cliente seleccionado */
-        cliente: "seleccione 1 cliente",
-        id_cliente: "",
-        fecha_venta: "",
-        /**titular substituto */
-        titular_sustituto: "",
-        parentesco_titular_sustituto: "",
-        telefono_titular_sustituto: "",
-        //
-        solicitud: "",
-        convenio: "",
-        titulo: "",
-        /**datos origen */
-        //variables con mapa
-        planVenta: {
-          label: "Seleccione 1",
-          value: "",
-          subtotal: "0.00",
-          impuestos: "0.00",
-          costo_neto: "0.00",
-          pago_inicial: "",
-          descuento_pronto_pago_b: "",
-          costo_neto_pronto_pago: "",
-          porcentaje_pronto_pago: "",
-          costo_neto_financiamiento_normal: "",
-        },
-        ventaAntiguedad: {
-          label: "NUEVA VENTA",
-          value: 1,
-        },
-        /**muestra el enganche original con el que se hizo la venta */
-        pago_inicial_origen: "",
-        subtotal: "0.00",
-        descuento: "0.00",
-        impuestos: "0.00",
-        costo_neto: "0.00",
-        pago_inicial: "0.00",
-        costo_neto_pronto_pago: "0.00",
-        vendedor: {
-          label: "Seleccione 1",
-          value: "",
-        },
-        beneficiarios: [],
-        index_beneficiario: 0,
-        nota: "",
-        //fin var con mapa
-      },
+      accionNombre: "Actualizar Contrato",
       errores: [],
     };
   },
   methods: {
-    closeNotas(nota) {
-      this.form.nota = nota;
-      this.openNotas = false;
-    },
     acceptAlert() {
       this.$validator
         .validateAll()
@@ -1560,142 +2853,6 @@ export default {
         this.cerrarVentana();
       }
     },
-    cargarPlanes() {
-      this.form.planVenta = this.planesVenta[0];
-      this.planesVenta = [];
-      this.planesVenta.push({
-        label: "Seleccione 1",
-        value: "",
-        subtotal: "0.00",
-        impuestos: "0.00",
-        costo_neto: "0.00",
-        pago_inicial: "",
-        descuento_pronto_pago_b: "",
-        costo_neto_pronto_pago: "",
-        porcentaje_pronto_pago: "",
-        costo_neto_financiamiento_normal: "",
-      });
-      if (this.verLista == true) {
-        this.form.plan_funerario.precios.forEach((element) => {
-          if (element.status == 1) {
-            //la venta es a futuro y puede seleccionar todas los siguientes planes de venta
-            //precios de pagos a meses
-            if (element.financiamiento > 1) {
-              this.planesVenta.push({
-                label: element.tipo_financiamiento,
-                value: Number(element.financiamiento),
-                subtotal: Number(element.subtotal),
-                impuestos: Number(element.impuestos),
-                costo_neto: Number(element.costo_neto),
-                pago_inicial: Number(element.pago_inicial),
-                descuento_pronto_pago_b: Number(
-                  element.descuento_pronto_pago_b
-                ),
-                costo_neto_pronto_pago: Number(element.costo_neto_pronto_pago),
-                porcentaje_pronto_pago: Number(element.porcentaje_pronto_pago),
-                costo_neto_financiamiento_normal: Number(
-                  element.costo_neto_financiamiento_normal
-                ),
-              });
-            }
-          }
-        });
-        //selecciono el primero precio automaticamente
-        if (this.getTipoformulario == "agregar") {
-          /**tipo de formulario agregar */
-          this.seleccionarPlanVenta();
-        } else {
-          /**logica para traer los datos originales de la venta */
-          let plan_encontrado = false;
-          this.planesVenta.forEach((element) => {
-            if (element.value != "") {
-              if (
-                element.value == this.datosVenta.financiamiento &&
-                element.costo_neto == this.datosVenta.total &&
-                element.costo_neto_pronto_pago ==
-                  this.datosVenta.costo_neto_pronto_pago
-              ) {
-                /**en caso de que se encuentre el original */
-                this.form.planVenta = element;
-                plan_encontrado = true;
-                return;
-              }
-            }
-          });
-          if (plan_encontrado == false) {
-            /**pregurnando si el plan de venta no es el original */
-            if (
-              this.form.plan_funerario.label ==
-              this.form.plan_funerario.plan + "(Original de Venta)"
-            ) {
-              if (this.form.planVenta.value == "") {
-                /**no se encontro el plan y se debe de agregar uno como de origen */
-                let planVenta = {
-                  label:
-                    this.datosVenta.financiamiento == 1
-                      ? "Pago Único/Uso Inmediato (Plan Original)"
-                      : "Pago a " +
-                        this.datosVenta.financiamiento +
-                        " Meses/a Futuro(origen venta)",
-                  value: Number(this.datosVenta.financiamiento),
-                  subtotal: Number(this.datosVenta.subtotal),
-                  impuestos: Number(this.datosVenta.impuestos),
-                  costo_neto: Number(this.datosVenta.total),
-                  pago_inicial: Number(
-                    this.datosVenta.pagos_programados.length > 0
-                      ? this.datosVenta.pagos_programados[0].monto_programado
-                      : 0
-                  ),
-                  descuento_pronto_pago_b: Number(
-                    this.datosVenta.descuento_pronto_pago_b
-                  ),
-                  costo_neto_pronto_pago: Number(
-                    this.datosVenta.costo_neto_pronto_pago
-                  ),
-                  porcentaje_pronto_pago: 0,
-                  costo_neto_financiamiento_normal: Number(
-                    this.datosVenta.costo_neto_financiamiento_normal
-                  ),
-                };
-                this.planesVenta.push(planVenta);
-                this.form.planVenta = planVenta;
-              } else {
-                this.seleccionarPlanVenta();
-              }
-            } else {
-              this.seleccionarPlanVenta();
-            }
-          }
-
-          this.form.descuento = this.datosVenta.descuento;
-          /**seleccionando el pago inicial */
-          if (this.datosVenta.pagos_programados.length > 0) {
-            /**tiene pagos programado y debemos seleccionar el pago programado para tomar el pago inicial */
-            this.form.pago_inicial = this.datosVenta.pagos_programados[0].monto_programado;
-          } else {
-            this.form.pago_inicial = 0;
-          }
-        }
-      } //fin if datos area
-    },
-    seleccionarPlanVenta() {
-      //selecciono el primero precio automaticamente
-      if (this.planesVenta.length > 1) {
-        this.form.planVenta = this.planesVenta[1];
-      } else {
-        this.form.planVenta = this.planesVenta[0];
-        this.$vs.notify({
-          title: "Planes de Venta",
-          text:
-            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de Funeraria > Planes a Futuro > Planes de Venta'",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          position: "bottom-right",
-          time: "12000",
-        });
-      }
-    },
 
     cancelar() {
       this.botonConfirmarSinPassword = "Salir y limpiar";
@@ -1712,110 +2869,19 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
-      this.form.plan_funerario = {
-        label: "Seleccione 1",
-        plan: "",
-        plan_ingles: "",
-        nota: "",
-        nota_ingles: "",
-        value: "",
-        secciones: [],
-        precios: [],
-      };
-      this.form.ventaAntiguedad = this.ventasAntiguedad[0];
-      this.form.solicitud = "";
-      this.form.convenio = "";
-      this.form.titulo = "";
-      this.form.cliente = "";
-      this.form.id_cliente = "";
-      this.form.vendedor = { label: "Seleccione 1", value: "" };
-      this.form.fecha_venta = "";
-
-      this.form.titular_sustituto = "";
-      this.form.parentesco_titular_sustituto = "";
-      this.form.telefono_titular_sustituto = "";
-      this.form.beneficiarios = [];
-      this.form.planVenta = this.planesVenta[0];
-
-      this.form.descuento = 0;
-      this.form.subtotal = 0;
-      this.form.impuestos = 0;
-      this.form.costo_neto_pronto_pago = 0;
-      this.form.pago_inicial = 0;
-      this.form.nota = "";
+      console.log("limpiar");
     },
 
     closePassword() {
       this.openPassword = false;
     },
 
-    //agregar beneficiario
-    agregar_beneficiario() {
-      //verifico si todos los datos estan completos para dejarle agregar nuevos
-      let errores_de_captura_en_datos = 0;
-      /**maximo 10 beneficiarios */
-      if (this.form.beneficiarios.length < 10) {
-        this.form.beneficiarios.forEach((element) => {
-          if (
-            element.nombre === "" ||
-            element.parentesco === "" ||
-            element.telefono === ""
-          ) {
-            errores_de_captura_en_datos += 1;
-          }
-        });
-        if (errores_de_captura_en_datos > 0) {
-          //no paso
-          this.$vs.notify({
-            title: "Error",
-            text: "Verifique que todos los datos han sido capturados",
-            iconPack: "feather",
-            icon: "icon-alert-circle",
-            color: "danger",
-            position: "bottom-right",
-            time: "9000",
-          });
-        } else {
-          //si paso la prueba de toodos los datos
-          this.form.beneficiarios.push({
-            nombre: "",
-            parentesco: "",
-            telefono: "",
-          });
-        }
-      } else {
-        //pasa de 5 beneficiarios
-        this.$vs.notify({
-          title: "Límite de Beneficiarios",
-          text: "Ha llegado a 10, el límite de beneficiarios",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          position: "bottom-right",
-          time: "9000",
-        });
-      }
-    },
-    //remover beneficiario
-    remover_beneficiario(index_beneficiario) {
-      this.botonConfirmarSinPassword = "eliminar";
-      this.accionConfirmarSinPassword =
-        "¿Desea eliminar este beneficiario? Los datos quedarán eliminados del sistema?";
-      this.form.index_beneficiario = index_beneficiario;
-      this.callBackConfirmar = this.remover_beneficiario_callback;
-      this.openConfirmarSinPassword = true;
-    },
-    //remover beneficiario callback quita del array al beneficiario seleccionado
-    remover_beneficiario_callback() {
-      this.form.beneficiarios.splice(this.form.index_beneficiario, 1);
-    },
     clienteSeleccionado(datos) {
       /**obtiene los datos retornados del buscar cliente */
       this.form.cliente = datos.nombre;
       this.form.id_cliente = datos.id_cliente;
       //alert(datos.id_cliente);
     },
-
     limpiarCliente() {
       this.form.id_cliente = "";
       this.form.cliente = "seleccione 1 cliente";
@@ -1830,149 +2896,18 @@ export default {
     async consultar_venta_id() {
       try {
         this.$vs.loading();
-        let res = await planes.consultar_venta_id(this.form.id_venta);
-        this.datosVenta = res.data[0];
-        /**se comienza a llenar la informacion de los datos */
-        /**verificar si el plan funerario se ha mantenido igual que cuando se vendio */
-        /**aqui se se recorrer el array de planes funerarios con la informacion original del plan */
-        let plan_original = {
-          plan: this.datosVenta.venta_plan.nombre_original,
-          plan_ingles: this.datosVenta.venta_plan.nombre_original_ingles,
-          nota: this.datosVenta.venta_plan.nota_original,
-          nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
-          value: this.datosVenta.venta_plan.planes_funerarios_id,
-          secciones: this.datosVenta.venta_plan.secciones_original,
-        };
-        /**guarda los precios en caso de que no se encuentre el plan original y se deba agregar precios por separado */
-        let precios_plan = [];
-        let es_igual = true;
-        this.planes_funerarios.forEach((element, index_element) => {
-          if (index_element > 0) {
-            /**capturando los precios del plan  de la venta original*/
-            if (element.value == plan_original.value) {
-              precios_plan = element.precios;
-            }
-            if (
-              element.value == plan_original.value &&
-              element.plan == plan_original.plan &&
-              element.plan_ingles == plan_original.plan_ingles &&
-              element.nota == plan_original.nota &&
-              element.nota_ingles == plan_original.nota_ingles
-            ) {
-              /**el plan se mantiente tal y como se vendio
-               * se procede a ver si los conceptos se mantienen de igual manera
-               */
-              element.secciones.forEach(function callback(
-                seccion,
-                index_seccion
-              ) {
-                if (es_igual == true) {
-                  if (
-                    !(
-                      plan_original.secciones[index_seccion].conceptos.length ==
-                      seccion.conceptos.length
-                    )
-                  ) {
-                    /**no es igual */
-                    es_igual = false;
-                  }
-                  if (es_igual == true) {
-                    /**verificando si cambio algun concepto */
-                    seccion.conceptos.forEach(function callback(
-                      concepto,
-                      index_concepto
-                    ) {
-                      if (
-                        concepto.concepto !=
-                        plan_original.secciones[index_seccion].conceptos[
-                          index_concepto
-                        ].concepto
-                      ) {
-                        es_igual = false;
-                        return;
-                      }
-                    });
-                  }
-                }
-              });
-              /**si se encontro */
-              if (es_igual == true) {
-                this.form.plan_funerario = element;
-                return;
-              }
-              return;
-            } else {
-              /**no esta */
-              es_igual = false;
-            }
-          }
-        });
+        //let res = await planes.consultar_venta_id(this.form.id_venta);
+        //this.datosVenta = res.data[0];
 
-        if (es_igual == false) {
-          plan_original = {
-            label:
-              this.datosVenta.venta_plan.nombre_original +
-              "(Original de Venta)",
-            plan: this.datosVenta.venta_plan.nombre_original,
-            plan_ingles: this.datosVenta.venta_plan.nombre_original_ingles,
-            nota: this.datosVenta.venta_plan.nota_original,
-            nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
-            value: this.datosVenta.venta_plan.planes_funerarios_id,
-            secciones: this.datosVenta.venta_plan.secciones_original,
-            precios: precios_plan,
-          };
-          this.planes_funerarios.push(plan_original);
-          this.form.plan_funerario = plan_original;
-          /**si no esta, se agrega el concepto original*/
-        }
         /**cargando la antiguedad de la venta */
-        this.ventasAntiguedad.forEach((element) => {
+        /* this.ventasAntiguedad.forEach((element) => {
           if (element.value == this.datosVenta.antiguedad_operacion_id) {
             this.form.ventaAntiguedad = element;
             return;
           }
         });
-        this.form.id_cliente = this.datosVenta.cliente_id;
-        this.form.cliente = this.datosVenta.nombre;
-        /**verificando si existe el vendedor o si no para crearlo, podria no existir en caso de que haya sido cancelado */
-        this.vendedores.forEach((element) => {
-          if (element.value == this.datosVenta.venta_plan.vendedor.id) {
-            this.form.vendedor = element;
-          }
-        });
-        if (this.form.vendedor.value == "") {
-          let vendedor = {
-            value: this.datosVenta.venta_plan.vendedor.id,
-            label:
-              "(" +
-              this.datosVenta.venta_plan.vendedor.nombre +
-              ", vendedor de origen)",
-          };
-          this.vendedores.push(vendedor);
-          this.form.vendedor = vendedor;
-          /**se agrega el original y se selecciona */
-        }
-        //fin seleccionar vendedor
-        /**fecha de la venta */
-        var partes_fecha = this.datosVenta.fecha_operacion.split("-");
-        //yyyy-mm-dd
-        this.form.fecha_venta = new Date(
-          partes_fecha[0],
-          partes_fecha[1] - 1,
-          partes_fecha[2]
-        );
-        /**numeros de control */
-        this.form.solicitud = this.datosVenta.numero_solicitud;
-        this.form.convenio = this.datosVenta.numero_convenio;
-        //this.form.titulo = this.datosVenta.numero_titulo;
-        /**datos del titular sustituto */
-        this.form.titular_sustituto = this.datosVenta.titular_sustituto;
-        this.form.parentesco_titular_sustituto = this.datosVenta.parentesco_titular_sustituto;
-        this.form.telefono_titular_sustituto = this.datosVenta.telefono_titular_sustituto;
-        /**beneficairios */
-        this.form.beneficiarios = this.datosVenta.beneficiarios;
-        this.form.nota = this.datosVenta.nota;
-        /**mostrando los datos relacionados al pago */
+        */
+
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
@@ -1989,31 +2924,6 @@ export default {
             });
           }
         }
-      }
-    },
-    respuestaDeshabilitado() {
-      if (this.tienePagosVencidos) {
-        this.$vs.notify({
-          title: "Seleccionar Área del planes",
-          text:
-            "No está permitido cambiar la ubicación de la propiedad mientras no esté al corriente con los pagos establecidos.",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          position: "bottom-right",
-          time: "10000",
-        });
-      } else if (this.ventaLiquidada) {
-        this.$vs.notify({
-          title: "Seleccionar Área del planes",
-          text:
-            "No está permitido cambiar la ubicación de la propiedad una vez ya liquidado el total de la cuenta.",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          position: "bottom-right",
-          time: "10000",
-        });
       }
     },
     limpiarValidation() {

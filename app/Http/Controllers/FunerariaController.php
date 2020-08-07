@@ -684,7 +684,7 @@ class FunerariaController extends ApiController
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 10.4);
         $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'letter');
         if ($email == true) {
             /**email */
             /**
@@ -761,7 +761,7 @@ class FunerariaController extends ApiController
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 10.4);
         $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'letter');
         if ($email == true) {
             /**email */
             /**
@@ -1881,7 +1881,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 5.4);
             $pdf->setOption('margin-top', 5.4);
             $pdf->setOption('margin-bottom', 10.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2045,7 +2045,7 @@ class FunerariaController extends ApiController
         $pdf->setOption('margin-right', 14.4);
         $pdf->setOption('margin-top', 24.4);
         $pdf->setOption('margin-bottom', 24.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -2156,7 +2156,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 12.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2236,7 +2236,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 13.4);
             $pdf->setOption('margin-top', 9.4);
             $pdf->setOption('margin-bottom', 13.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2319,7 +2319,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 20.4);
             $pdf->setOption('margin-top', 10.4);
             $pdf->setOption('margin-bottom', 25.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'letter');
             if ($email == true) {
                 /**email */
                 /**
@@ -2397,7 +2397,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 13.4);
             $pdf->setOption('margin-top', 9.4);
             $pdf->setOption('margin-bottom', 13.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'letter');
             if ($email == true) {
                 /**email */
                 /**
@@ -2861,7 +2861,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 12.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2947,7 +2947,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 24.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2991,9 +2991,9 @@ class FunerariaController extends ApiController
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
-            /* $id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
+            /*$id_servicio = 1;
+            $email = false;
+            $email_to = 'hector@gmail.com';
 */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
@@ -3023,9 +3023,9 @@ class FunerariaController extends ApiController
             //$pdf->setOption('header-right', 'dddd');
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
-            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-top', 5.4);
             $pdf->setOption('margin-bottom', 4.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -3104,7 +3104,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 24.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */

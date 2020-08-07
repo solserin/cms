@@ -1,7 +1,8 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-pagos pagos_forms normal-forms"
+      class="forms-popups-pagos normal-forms pagos_forms"
+      fullscreen
       close="cancelar"
       :title="'control de cobranza'"
       :active.sync="showVentana"
@@ -240,52 +241,52 @@
               </vs-tr>
               <vs-tr class="tr_especial">
                 <vs-td colspan="5">
-                  <div class="py-2 font-bold text-base "></div>
+                  <div class="py-2 font-bold text-base"></div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     Monto Programado $
                   </div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     Intereses Generados $
                   </div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     Descuento Disponible $
                   </div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     Saldo del Pago(Sin descuento) $
                   </div>
                 </vs-td>
               </vs-tr>
               <vs-tr class="">
                 <vs-td colspan="5">
-                  <div class="py-2 font-bold text-base ">
+                  <div class="py-2 font-bold text-base">
                     Totales $
                   </div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     $ {{ maximo_abono | numFormat("0,000.00") }}
                   </div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     $ {{ maximo_interes | numFormat("0,000.00") }}
                   </div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     $ {{ maximo_descuento | numFormat("0,000.00") }}
                   </div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base ">
+                  <div class="py-2 text-base">
                     $ {{ maximo_saldo | numFormat("0,000.00") }}
                   </div>
                 </vs-td>
@@ -529,7 +530,7 @@
                 </label>
                 <img
                   width="25"
-                  class="img-center float-left mt-10 mr-1 "
+                  class="img-center float-left mt-10 mr-1"
                   src="@assets/images/capital.svg"
                 />
                 <vs-input
@@ -540,9 +541,9 @@
                   data-vv-as=" "
                   v-validate="
                     'required|decimal:2|min_value:' +
-                      minimo_abono +
-                      '|max_value:' +
-                      maximo_abono
+                    minimo_abono +
+                    '|max_value:' +
+                    maximo_abono
                   "
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
@@ -570,7 +571,7 @@
                 </label>
                 <img
                   width="25"
-                  class="img-center float-left mt-10 mr-1 "
+                  class="img-center float-left mt-10 mr-1"
                   src="@assets/images/intereses.svg"
                 />
                 <vs-input
@@ -610,7 +611,7 @@
                 </label>
                 <img
                   width="25"
-                  class="img-center float-left mt-10 mr-1 "
+                  class="img-center float-left mt-10 mr-1"
                   src="@assets/images/discount.svg"
                 />
                 <vs-input
@@ -621,7 +622,7 @@
                   data-vv-as=" "
                   v-validate="
                     'required|decimal:2|min_value:0|max_value:' +
-                      maximo_descuento
+                    maximo_descuento
                   "
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
@@ -651,7 +652,7 @@
                 </label>
                 <img
                   width="25"
-                  class="img-center float-left mt-10 mr-1 "
+                  class="img-center float-left mt-10 mr-1"
                   src="@assets/images/payment-method.svg"
                 />
 
@@ -692,7 +693,7 @@
                 </label>
                 <img
                   width="25"
-                  class="img-center float-left mt-10 mr-1 "
+                  class="img-center float-left mt-10 mr-1"
                   src="@assets/images/cantidad_pago.svg"
                 />
                 <vs-input
@@ -703,9 +704,9 @@
                   data-vv-as=" "
                   v-validate="
                     'required|decimal:2|min_value:' +
-                      cantidad_a_regresar +
-                      '|max_value:' +
-                      maximo_cantidad_pago
+                    cantidad_a_regresar +
+                    '|max_value:' +
+                    maximo_cantidad_pago
                   "
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
@@ -736,7 +737,7 @@
                 </label>
                 <img
                   width="25"
-                  class="img-center float-left mt-10 mr-1 "
+                  class="img-center float-left mt-10 mr-1"
                   src="@assets/images/cantidad_cambio.svg"
                 />
                 <vs-input
@@ -867,21 +868,21 @@ export default {
     Password,
     ConfirmarDanger,
     ConfirmarAceptar,
-    flatPickr
+    flatPickr,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     referencia: {
       type: String,
       required: false,
-      default: ""
-    }
+      default: "",
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         //cargo nacionalidades
         this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
@@ -931,15 +932,15 @@ export default {
         this.$validator.pause();
         this.$nextTick(() => {
           this.$validator.errors.clear();
-          this.$validator.fields.items.forEach(field => field.reset());
-          this.$validator.fields.items.forEach(field =>
+          this.$validator.fields.items.forEach((field) => field.reset());
+          this.$validator.fields.items.forEach((field) =>
             this.errors.remove(field)
           );
           this.$validator.resume();
         });
       }
     },
-    "form.formaPago": function(newValue, oldValue) {
+    "form.formaPago": function (newValue, oldValue) {
       if (newValue.value != 1) {
         /**no es efectivo */
         this.form.pago_con_cantidad = this.form.total;
@@ -947,10 +948,10 @@ export default {
         /**no es efectivo */
         this.form.pago_con_cantidad = "0";
       }
-    }
+    },
   },
   computed: {
-    cantidad_a_regresar: function() {
+    cantidad_a_regresar: function () {
       let total = 0;
       if (Number(this.form.formaPago.value) == 1) {
         /**efectivo */
@@ -960,7 +961,7 @@ export default {
       }
       return parseFloat(total).toFixed(2);
     },
-    total_pagar: function() {
+    total_pagar: function () {
       let total =
         parseFloat(this.form.abono) -
         parseFloat(this.form.descuento_pronto_pago) +
@@ -969,15 +970,15 @@ export default {
       return this.form.total;
     },
 
-    minimo_abono: function() {
+    minimo_abono: function () {
       let minimo = this.form.descuento_pronto_pago;
       return minimo;
     },
 
-    maximo_abono: function() {
+    maximo_abono: function () {
       let maximo = 0;
       if (this.form.pagos_a_cubrir.length > 0) {
-        this.form.pagos_a_cubrir.forEach(element => {
+        this.form.pagos_a_cubrir.forEach((element) => {
           if (element.status_pago != 2) {
             /**diferente de pagado */
             maximo +=
@@ -987,12 +988,12 @@ export default {
       }
       return maximo.toFixed(2);
     },
-    maximo_interes: function() {
+    maximo_interes: function () {
       let maximo = 0;
       if (this.form.pagos_a_cubrir.length > 0) {
         /**verificando que el la forma de pago no es remision de deuda, en caso de ser remision de deuda(descuento al capital) este deberia ser 0 */
         if (this.form.formaPago["value"] != 7) {
-          this.form.pagos_a_cubrir.forEach(element => {
+          this.form.pagos_a_cubrir.forEach((element) => {
             if (element.status_pago != 2) {
               /**diferente de pagado */
               maximo += element.intereses;
@@ -1005,12 +1006,12 @@ export default {
       }
       return parseFloat(maximo).toFixed(2);
     },
-    maximo_descuento: function() {
+    maximo_descuento: function () {
       let maximo = 0;
       if (this.form.pagos_a_cubrir.length > 0) {
         /**verificando que el la forma de pago no es remision de deuda, en caso de ser remision de deuda(descuento al capital) este deberia ser 0 */
         if (this.form.formaPago["value"] != 7) {
-          this.form.pagos_a_cubrir.forEach(element => {
+          this.form.pagos_a_cubrir.forEach((element) => {
             if (element.status_pago != 2) {
               /**diferente de pagado */
               maximo += element.descuento_pronto_pago;
@@ -1023,10 +1024,10 @@ export default {
       }
       return parseFloat(maximo).toFixed(2);
     },
-    maximo_saldo: function() {
+    maximo_saldo: function () {
       let maximo = 0;
       if (this.form.pagos_a_cubrir.length > 0) {
-        this.form.pagos_a_cubrir.forEach(element => {
+        this.form.pagos_a_cubrir.forEach((element) => {
           if (element.status_pago != 2) {
             /**diferente de pagado */
             maximo += element.saldo_neto;
@@ -1036,7 +1037,7 @@ export default {
       return parseFloat(maximo).toFixed(2);
     },
 
-    maximo_cantidad_pago: function() {
+    maximo_cantidad_pago: function () {
       /**verificando que el la forma de pago no es remision de deuda, en caso de ser remision de deuda(descuento al capital) este deberia ser 0 */
       if (this.form.formaPago["value"] == 7) {
         this.form.pago_con_cantidad = 0;
@@ -1046,7 +1047,7 @@ export default {
       }
     },
 
-    mostrar_datos_operacion: function() {
+    mostrar_datos_operacion: function () {
       if (this.form.datos_operacion) {
         if (this.form.datos_operacion.operacion_id) {
           return true;
@@ -1059,7 +1060,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
 
     getReferencia: {
@@ -1068,17 +1069,17 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    fecha_pago_validacion_computed: function() {
+    fecha_pago_validacion_computed: function () {
       return this.form.fecha_pago;
     },
-    forma_pago_validacion_computed: function() {
+    forma_pago_validacion_computed: function () {
       return this.form.formaPago;
     },
-    cobrador_validacion_computed: function() {
+    cobrador_validacion_computed: function () {
       return this.form.cobrador.value;
-    }
+    },
   },
   data() {
     return {
@@ -1117,9 +1118,9 @@ export default {
         descuento_pronto_pago: "0",
         banco: "",
         pago_con_cantidad: 0,
-        cambio_pago: 0
+        cambio_pago: 0,
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
@@ -1130,10 +1131,10 @@ export default {
         let res = await pagos.get_cobradores();
         if (typeof res.data.data !== undefined) {
           if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
+            res.data.data.forEach((element) => {
               this.Cobradores.push({
                 value: element.id,
-                label: element.nombre
+                label: element.nombre,
               });
             });
             this.form.cobrador = this.Cobradores[0];
@@ -1149,7 +1150,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
         this.cerrarVentana();
       }
@@ -1162,11 +1163,11 @@ export default {
         let res = await pagos.get_monedas_sat();
         if (typeof res.data.data !== undefined) {
           if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
+            res.data.data.forEach((element) => {
               this.Monedas.push({
                 value: element.id,
                 codigo_moneda: element.codigo_moneda,
-                label: element.descripcion
+                label: element.descripcion,
               });
             });
             this.form.moneda = this.Monedas[0];
@@ -1182,7 +1183,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
         this.cerrarVentana();
       }
@@ -1195,11 +1196,11 @@ export default {
         let res = await pagos.get_formas_pago_sat();
         if (typeof res.data.data !== undefined) {
           if (res.data.data.length > 0) {
-            res.data.data.forEach(element => {
+            res.data.data.forEach((element) => {
               this.FormasPago.push({
                 value: element.id,
                 clave: element.clave,
-                label: element.forma
+                label: element.forma,
               });
             });
             this.form.formaPago = this.FormasPago[0];
@@ -1215,7 +1216,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
         this.cerrarVentana();
       }
@@ -1226,7 +1227,7 @@ export default {
       if (event.target.checked == true) {
         let index_pago = 0;
         if (this.form.datos_operacion.pagos_programados) {
-          this.form.datos_operacion.pagos_programados.forEach(pago => {
+          this.form.datos_operacion.pagos_programados.forEach((pago) => {
             if (pago.status_pago != 2) {
               /**no pagados */
               this.$refs["pago_seleccionado"][index_pago].$el.querySelector(
@@ -1283,7 +1284,7 @@ export default {
       try {
         let res = await pagos.guardar_pago(this.form);
         let retornar = {
-          id_pago: res.data
+          id_pago: res.data,
         };
         this.$emit("retorno_pagos", retornar);
         this.$vs.loading.close();
@@ -1299,7 +1300,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada errores
@@ -1311,7 +1312,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             this.error = err.response.data.error;
@@ -1321,7 +1322,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000
+              time: 30000,
             });
           }
         }
@@ -1338,7 +1339,7 @@ export default {
         let res = await pagos.calcular_adeudo({
           fecha_pago: this.form.fecha_pago,
           referencia: this.form.referencia,
-          multipago: this.form.multipago
+          multipago: this.form.multipago,
         });
         this.form.empresa_operaciones_id = res.data[0].empresa_operaciones_id;
         this.form.pagos_a_cubrir = [];
@@ -1346,11 +1347,11 @@ export default {
         this.$nextTick(() => {
           let index_pago = 0;
           if (this.form.datos_operacion.pagos_programados.length > 0) {
-            this.form.datos_operacion.pagos_programados.forEach(pago => {
+            this.form.datos_operacion.pagos_programados.forEach((pago) => {
               if (pago.status_pago != 2) {
                 this.$refs["pago_seleccionado"][index_pago].$el.querySelector(
                   "input"
-                ).onchange = $event => {
+                ).onchange = ($event) => {
                   /**revisar si se activo el check */
                   this.checkSeleccionarTodos();
                 };
@@ -1363,7 +1364,7 @@ export default {
           //seleccionar_todos
           this.$refs["seleccionar_todos"].$el.querySelector(
             "input"
-          ).onchange = $event => {
+          ).onchange = ($event) => {
             /**revisar si se activo el check */
             this.checarPagos($event);
           };
@@ -1390,7 +1391,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -1401,7 +1402,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             this.error = err.response.data.error;
@@ -1412,7 +1413,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000
+              time: 30000,
             });
           }
         }
@@ -1422,7 +1423,7 @@ export default {
     CalcularPago() {
       this.$validator
         .validateAll("form_calcular_adeudo")
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Calcular Adeudo a Pagar",
@@ -1431,7 +1432,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             /**obteniendo los datos del pago segun la referencia y fecha */
@@ -1446,7 +1447,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll("pago_form")
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Registro de Pagos",
@@ -1455,7 +1456,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             /**checando que exista al menos un pago a cubrir */
@@ -1473,7 +1474,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "danger",
                 position: "bottom-right",
-                time: "8000"
+                time: "8000",
               });
             }
           }
@@ -1510,8 +1511,8 @@ export default {
 
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

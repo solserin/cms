@@ -332,10 +332,6 @@
     margin-right: 12px !important;
 }
 
-.pagos_forms .vs-popup--content {
-    max-height: 85vh !important;
-}
-
 /* -------------------------------------------------------------------------- */
 /*                                 title forms                                */
 /* -------------------------------------------------------------------------- */
@@ -440,67 +436,6 @@
 .forms-popups {
     .vs-popup {
         width: 100% !important;
-    }
-}
-
-/**medias queries para el popup de captura de datos */
-// Extra small devices (portrait phones, less than 576px)
-@media (min-width: 576px) {
-    .forms-popups-50 {
-        .vs-popup {
-            width: 50% !important;
-        }
-    }
-}
-
-// Small devices (landscape phones, less than 768px)
-@media (min-width: 768px) {}
-
-// Medium devices (tablets, less than 992px)
-@media (min-width: 992px) {}
-
-// Large devices (desktops, less than 1200px)
-@media (min-width: 1200px) {
-    .forms-popups-cancelar_cementerio {
-        .vs-popup {
-            width: 1000px !important;
-        }
-    }
-
-    .forms-popups-pagos {
-        .vs-popup {
-            width: 90% !important;
-        }
-    }
-
-    .forms-popups-75 {
-        .vs-popup {
-            width: 75% !important;
-        }
-    }
-
-    .forms-popups-55 {
-        .vs-popup {
-            width: 55% !important;
-        }
-    }
-
-    .forms-popups-65 {
-        .vs-popup {
-            width: 65% !important;
-        }
-    }
-
-    .forms-popups-85 {
-        .vs-popup {
-            width: 85% !important;
-        }
-    }
-
-    .forms-popups {
-        .vs-popup {
-            width: 90% !important;
-        }
     }
 }
 
@@ -1005,3 +940,94 @@ th .vs-table-text {
 }
 
 /*fin de cancelar ventas del cementerio*/
+
+/*medias queries*/
+
+/*alturas verticales personalizadas de los content*/
+
+.normal-forms .vs-popup--content {
+    max-height: 80vh !important;
+}
+.pagos_forms .vs-popup--content {
+    max-height: 70vh !important;
+}
+
+/**medias queries para el popup de captura de datos */
+// Extra small devices (portrait phones, less than 576px)
+@media (min-width: 576px) {
+    .forms-popups-50 {
+        .vs-popup {
+            width: 50% !important;
+        }
+    }
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (min-width: 768px) {
+}
+
+// Medium devices (tablets, less than 992px)
+@media (min-width: 992px) {
+}
+
+// Large devices (desktops, less than 1200px)
+@media (min-width: 1200px) {
+    .forms-popups-cancelar_cementerio {
+        .vs-popup {
+            width: 1000px !important;
+        }
+    }
+
+    .forms-popups-pagos {
+        .vs-popup {
+            width: 95% !important;
+        }
+    }
+
+    .forms-popups-75 {
+        .vs-popup {
+            width: 75% !important;
+        }
+    }
+
+    .forms-popups-55 {
+        .vs-popup {
+            width: 55% !important;
+        }
+    }
+
+    .forms-popups-65 {
+        .vs-popup {
+            width: 65% !important;
+        }
+    }
+
+    .forms-popups-85 {
+        .vs-popup {
+            width: 85% !important;
+        }
+    }
+
+    .forms-popups {
+        .vs-popup {
+            width: 90% !important;
+        }
+    }
+}
+@media (min-width: 1500px) {
+    .normal-forms .vs-popup--content {
+        min-height: 87vh !important;
+    }
+
+    .pagos_forms .vs-popup--content {
+        min-height: 83vh !important;
+    }
+}
+
+/*tabs*/
+.ul-tabs li {
+    padding: 0px 1px 0px 1px !important;
+}
+.vs-tabs--btn {
+    border: 1px solid #ddd !important;
+}

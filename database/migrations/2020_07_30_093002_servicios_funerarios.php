@@ -40,19 +40,32 @@ class ServiciosFunerarios extends Migration
             $table->unsignedBigInteger('tipo_servicios_funerarios_id')->unsigned()->nullable();
             $table->foreign('tipo_servicios_funerarios_id')->references('id')->on('tipo_servicios_funerarios');
             $table->tinyInteger('embalsamar_b')->default(0);
+            $table->string('medico_responsable_embalsamado')->nullable();
+            $table->unsignedBigInteger('preparo_id')->unsigned()->nullable();
+            $table->foreign('preparo_id')->references('id')->on('usuarios');
             $table->tinyInteger('velacion_b')->default(0);
             $table->tinyInteger('cremacion_b')->default(0);
+            $table->dateTime('fechahora_cremacion')->nullable();
             $table->tinyInteger('inhumacion_b')->default(0);
+            $table->dateTime('fechahora_inhumacion')->nullable();
             $table->tinyInteger('traslado_b')->default(0);
+            $table->dateTime('fechahora_traslado')->nullable();
             $table->tinyInteger('exhumar_b')->default(0);
+            $table->dateTime('fechahora_exhumacion')->nullable();
             $table->tinyInteger('reinhumar_b')->default(0);
+            $table->dateTime('fechahora_reinhumacion')->nullable();
             $table->tinyInteger('aseguradora_b')->default(0);
             $table->string('aseguradora')->nullable();
 
+            /**datos para el acta de defuncion */
+            $table->tinyInteger('acta_b')->default(0);
+            $table->string('folio_acta', 50)->nullable();
+
             /**mas datos del fallecido */
-            $table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
-            $table->foreign('titulos_id')->references('id')->on('titulos');
-            $table->dateTime('fechahora_llegada_afectado')->nullable();
+            //$table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
+            //$table->foreign('titulos_id')->references('id')->on('titulos');
+            //$table->dateTime('fechahora_llegada_afectado')->nullable();
+
             $table->unsignedBigInteger('nacionalidades_id')->unsigned()->nullable();
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades');
             $table->unsignedBigInteger('generos_id')->unsigned()->nullable();
@@ -118,10 +131,9 @@ class ServiciosFunerarios extends Migration
 
 
             /**datos sobre el lugar donde se dara el servicio */
-            $table->string('direccion_servicio')->nullable();
-            $table->dateTime('fechahora_fin_servicio')->nullable();
+            $table->unsignedBigInteger('lugares_servicios_id')->unsigned()->nullable();
+            $table->foreign('lugares_servicios_id')->references('id')->on('lugares_servicios');
             $table->dateTime('fechahora_entrega_cenizas')->nullable();
-
 
             $table->mediumText('nota_reinhumacion')->nullable();
             $table->dateTime('fechahora_registro')->nullable();
