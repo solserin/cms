@@ -36,30 +36,52 @@ class ServiciosFunerarios extends Migration
             /**informacion capturada para el contrato */
 
             $table->tinyInteger('custodia_b')->nullable();
-            $table->string('nota_cadena_custodia')->nullable();
+            $table->string('responsable_custodia')->nullable();
+            $table->string('folio_custodia')->nullable();
+            $table->string('folio_liberacion')->nullable();
             $table->unsignedBigInteger('tipo_servicios_funerarios_id')->unsigned()->nullable();
             $table->foreign('tipo_servicios_funerarios_id')->references('id')->on('tipo_servicios_funerarios');
             $table->tinyInteger('embalsamar_b')->default(0);
             $table->string('medico_responsable_embalsamado')->nullable();
-            $table->unsignedBigInteger('preparo_id')->unsigned()->nullable();
-            $table->foreign('preparo_id')->references('id')->on('usuarios');
+            $table->string('preparador')->nullable();
+            //$table->unsignedBigInteger('preparo_id')->unsigned()->nullable();
+            //$table->foreign('preparo_id')->references('id')->on('usuarios');
             $table->tinyInteger('velacion_b')->default(0);
+            $table->unsignedBigInteger('lugares_servicios_id')->unsigned()->nullable();
+            $table->foreign('lugares_servicios_id')->references('id')->on('lugares_servicios');
+            $table->string('direccion_velacion')->nullable();
             $table->tinyInteger('cremacion_b')->default(0);
             $table->dateTime('fechahora_cremacion')->nullable();
+            $table->string('descripcion_urna')->nullable();
+            $table->dateTime('fechahora_entrega_cenizas')->nullable();
             $table->tinyInteger('inhumacion_b')->default(0);
             $table->dateTime('fechahora_inhumacion')->nullable();
             $table->tinyInteger('traslado_b')->default(0);
             $table->dateTime('fechahora_traslado')->nullable();
+            $table->string('destino_traslado')->nullable();
             $table->tinyInteger('exhumar_b')->default(0);
             $table->dateTime('fechahora_exhumacion')->nullable();
             $table->tinyInteger('reinhumar_b')->default(0);
             $table->dateTime('fechahora_reinhumacion')->nullable();
             $table->tinyInteger('aseguradora_b')->default(0);
+            $table->string('numero_convenio_aseguradora')->nullable();
             $table->string('aseguradora')->nullable();
+            $table->string('telefono_aseguradora')->nullable();
+
+            /**requiere misa */
+            $table->tinyInteger('misa_b')->nullable();
+            $table->dateTime('fechahora_misa')->nullable();
+            $table->string('iglesia_misa')->nullable();
+            $table->string('direccion_iglesia')->nullable();
+
 
             /**datos para el acta de defuncion */
             $table->tinyInteger('acta_b')->default(0);
             $table->string('folio_acta', 50)->nullable();
+
+
+            /**indica si se maneja material de velacion */
+            $table->tinyInteger('material_velacion_b')->default(0);
 
             /**mas datos del fallecido */
             //$table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
@@ -116,10 +138,7 @@ class ServiciosFunerarios extends Migration
             $table->dateTime('fechahora_contrato')->nullable();
             $table->string('parentesco_contratante')->nullable();
 
-            /**requiere misa */
-            $table->tinyInteger('misa_b')->nullable();
-            $table->dateTime('fechahora_misa')->nullable();
-            $table->string('iglesia_misa')->nullable();
+
 
 
 
@@ -131,10 +150,7 @@ class ServiciosFunerarios extends Migration
 
 
             /**datos sobre el lugar donde se dara el servicio */
-            $table->unsignedBigInteger('lugares_servicios_id')->unsigned()->nullable();
-            $table->foreign('lugares_servicios_id')->references('id')->on('lugares_servicios');
             $table->dateTime('fechahora_entrega_cenizas')->nullable();
-
             $table->mediumText('nota_reinhumacion')->nullable();
             $table->dateTime('fechahora_registro')->nullable();
             $table->unsignedBigInteger('registro_id')->unsigned()->nullable();

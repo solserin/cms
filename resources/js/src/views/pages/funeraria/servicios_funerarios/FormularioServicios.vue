@@ -22,10 +22,9 @@
           ></vs-tab>
           <vs-tab label="CERTIFICADO MÉDICO" icon="gavel"></vs-tab>
           <vs-tab label="DESTINOS DEL SERVICIO" icon="location_on"></vs-tab>
-          <vs-tab
-            label="DETALLE Y SERVICIOS DEL CONTRATO "
-            icon="attach_file"
-          ></vs-tab>
+          <vs-tab label="MATERIAL DE VELACIÓN" icon="event_seat"></vs-tab>
+          <vs-tab label="CONTRATO " icon="attach_file"></vs-tab>
+
           <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
         </vs-tabs>
         <div class="tab-content mt-1" v-show="activeTab == 0">
@@ -953,7 +952,7 @@
                   <!--contenido del informacion del fallecido-->
                   <div>
                     <div class="float-left pb-5 px-2">
-                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <img width="36px" src="@assets/images/preparar.svg" />
                       <h3
                         class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
                       >
@@ -973,15 +972,15 @@
                       >
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="embalsamar_b"
+                          v-model="form.embalsamar_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="embalsamar_b"
+                          v-model="form.embalsamar_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -996,25 +995,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="medico_responsable_embalsamado"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Médico Responsable"
+                        v-model="form.medico_responsable_embalsamado"
+                        :disabled="form.embalsamar_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("medico_responsable_embalsamado")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.medico_responsable_embalsamado"
+                          >{{ errores.medico_responsable_embalsamado[0] }}</span
                         >
                       </div>
                     </div>
@@ -1022,35 +1022,30 @@
                       class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
                     >
                       <label class="text-sm opacity-75 font-bold">
-                        <span>Seleccione al Preparador</span>
+                        Nombre del preparador
                         <span class="texto-importante">(*)</span>
                       </label>
-                      <v-select
-                        :options="planes_funerarios"
-                        :clearable="false"
-                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                        v-model="form.plan_funerario"
-                        class="mb-4 sm:mb-0 pb-1 pt-1"
-                        v-validate:plan_funerario_validacion_computed.immediate="
-                          'required'
-                        "
-                        name="plan_validacion"
+                      <vs-input
+                        name="preparador"
                         data-vv-as=" "
-                      >
-                        <div slot="no-options">
-                          Seleccione 1
-                        </div>
-                      </v-select>
+                        v-validate.disabled="'required'"
+                        maxlength="150"
+                        type="text"
+                        class="w-full pb-1 pt-1"
+                        placeholder="Nombre del preparador"
+                        v-model="form.preparador"
+                        :disabled="form.embalsamar_b != 1 ? true : false"
+                      />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("plan_validacion")
+                          errors.first("preparador")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores['plan_funerario.value']"
-                          >{{ errores["plan_funerario.value"][0] }}</span
+                          v-if="this.errores.preparador"
+                          >{{ errores.preparador[0] }}</span
                         >
                       </div>
                     </div>
@@ -1061,7 +1056,7 @@
                   class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                 >
                   <div class="float-left pb-5 px-2">
-                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <img width="36px" src="@assets/images/velacion.svg" />
                     <h3
                       class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
                     >
@@ -1079,15 +1074,15 @@
                       <label class="text-sm font-bold">¿Velar Cuerpo?</label>
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="velacion_b"
+                          v-model="form.velacion_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="velacion_b"
+                          v-model="form.velacion_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -1103,16 +1098,17 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <v-select
-                        :options="planes_funerarios"
+                        :options="lugares_servicio"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                        v-model="form.plan_funerario"
+                        v-model="form.lugar_servicio"
                         class="mb-4 sm:mb-0 pb-1 pt-1"
                         v-validate:plan_funerario_validacion_computed.immediate="
                           'required'
                         "
-                        name="plan_validacion"
+                        name="lugar_servicio"
                         data-vv-as=" "
+                        :disabled="form.velacion_b != 1 ? true : false"
                       >
                         <div slot="no-options">
                           Seleccione 1
@@ -1120,14 +1116,14 @@
                       </v-select>
                       <div>
                         <span class="text-danger">{{
-                          errors.first("plan_validacion")
+                          errors.first("lugar_servicio")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores['plan_funerario.value']"
-                          >{{ errores["plan_funerario.value"][0] }}</span
+                          v-if="this.errores['lugar_servicio.value']"
+                          >{{ errores["lugar_servicio.value"][0] }}</span
                         >
                       </div>
                     </div>
@@ -1139,25 +1135,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="direccion_velacion"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Dirección donde se velará"
+                        v-model="form.direccion_velacion"
+                        :disabled="form.velacion_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("direccion_velacion")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.direccion_velacion"
+                          >{{ errores.direccion_velacion[0] }}</span
                         >
                       </div>
                     </div>
@@ -1173,7 +1170,7 @@
                   <!--contenido del informacion del fallecido-->
                   <div>
                     <div class="float-left pb-5 px-2">
-                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <img width="36px" src="@assets/images/cremar.svg" />
                       <h3
                         class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
                       >
@@ -1192,15 +1189,15 @@
                       <label class="text-sm font-bold">¿Cremar Cuerpo?</label>
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="cremacion_b"
+                          v-model="form.cremacion_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="cremacion_b"
+                          v-model="form.cremacion_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -1215,26 +1212,27 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <flat-pickr
-                        name="fecha_solicitud"
+                        name="fechahora_cremacion"
                         data-vv-as=" "
                         v-validate:fecha_solicitud_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
-                        v-model="form.fecha_solicitud"
-                        placeholder="Fecha y Hora de Solicitud"
+                        v-model="form.fechahora_cremacion"
+                        placeholder="Fecha y Hora de Cremación"
                         class="w-full my-1"
+                        :disabled="form.cremacion_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("fechahora_cremacion")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.fechahora_cremacion"
+                          >{{ errores.fechahora_cremacion[0] }}</span
                         >
                       </div>
                     </div>
@@ -1246,26 +1244,27 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <flat-pickr
-                        name="fecha_solicitud"
+                        name="fechahora_entrega_cenizas"
                         data-vv-as=" "
                         v-validate:fecha_solicitud_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
-                        v-model="form.fecha_solicitud"
-                        placeholder="Fecha y Hora de Solicitud"
+                        v-model="form.fechahora_entrega_cenizas"
+                        placeholder="Fecha y hora para entrega de cenizas"
                         class="w-full my-1"
+                        :disabled="form.cremacion_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("fechahora_entrega_cenizas")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.fechahora_entrega_cenizas"
+                          >{{ errores.fechahora_entrega_cenizas[0] }}</span
                         >
                       </div>
                     </div>
@@ -1277,25 +1276,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="descripcion_urna"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Descripción de urna"
+                        v-model="form.descripcion_urna"
+                        :disabled="form.cremacion_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("descripcion_urna")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.descripcion_urna"
+                          >{{ errores.descripcion_urna[0] }}</span
                         >
                       </div>
                     </div>
@@ -1306,7 +1306,7 @@
                   class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                 >
                   <div class="float-left pb-5 px-2">
-                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <img width="36px" src="@assets/images/inhumar.svg" />
                     <h3
                       class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
                     >
@@ -1324,15 +1324,15 @@
                       <label class="text-sm font-bold">¿Inhumar Cuerpo?</label>
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="inhumacion_b"
+                          v-model="form.inhumacion_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="inhumacion_b"
+                          v-model="form.inhumacion_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -1348,16 +1348,17 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <v-select
-                        :options="planes_funerarios"
+                        :options="cementerios_servicio"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                        v-model="form.plan_funerario"
+                        v-model="form.cementerio_servicio"
                         class="mb-4 sm:mb-0 pb-1 pt-1"
                         v-validate:plan_funerario_validacion_computed.immediate="
                           'required'
                         "
-                        name="plan_validacion"
+                        name="cementerio_servicio"
                         data-vv-as=" "
+                        :disabled="form.inhumacion_b != 1 ? true : false"
                       >
                         <div slot="no-options">
                           Seleccione 1
@@ -1365,14 +1366,14 @@
                       </v-select>
                       <div>
                         <span class="text-danger">{{
-                          errors.first("plan_validacion")
+                          errors.first("cementerio_servicio")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores['plan_funerario.value']"
-                          >{{ errores["plan_funerario.value"][0] }}</span
+                          v-if="this.errores['cementerio_servicio.value']"
+                          >{{ errores["cementerio_servicio.value"][0] }}</span
                         >
                       </div>
                     </div>
@@ -1384,26 +1385,27 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <flat-pickr
-                        name="fecha_solicitud"
+                        name="fechahora_inhumacion"
                         data-vv-as=" "
                         v-validate:fecha_solicitud_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
-                        v-model="form.fecha_solicitud"
-                        placeholder="Fecha y Hora de Solicitud"
+                        v-model="form.fechahora_inhumacion"
+                        placeholder="Fecha y hora de inhumación"
                         class="w-full my-1"
+                        :disabled="form.inhumacion_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("fechahora_inhumacion")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.fechahora_inhumacion"
+                          >{{ errores.fechahora_inhumacion[0] }}</span
                         >
                       </div>
                     </div>
@@ -1412,7 +1414,7 @@
                     >
                       <div class="py-1">
                         <label class="text-sm opacity-75 font-bold">
-                          Seleccione un Cliente
+                          Seleccione el Convenio del Terreno
                           <span class="texto-importante">(*)</span>
                         </label>
                       </div>
@@ -1451,25 +1453,26 @@
                           <vs-input
                             readonly
                             v-validate.disabled="'required'"
-                            name="id_cliente"
+                            name="ventas_terrenos_id"
                             data-vv-as=" "
                             type="text"
                             class="w-full py-1 cursor-pointer texto-bold"
-                            placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
+                            placeholder="SELECCIONE EL CONVENIO DEL TERRENO"
                             v-model="form.cliente"
                             maxlength="100"
                             ref="cliente_ref"
+                            :disabled="form.inhumacion_b != 1 ? true : false"
                           />
                           <div>
                             <span class="text-danger">{{
-                              errors.first("id_cliente")
+                              errors.first("ventas_terrenos_id")
                             }}</span>
                           </div>
                           <div class="mt-2">
                             <span
                               class="text-danger"
-                              v-if="this.errores.id_cliente"
-                              >{{ errores.id_cliente[0] }}</span
+                              v-if="this.errores.ventas_terrenos_id"
+                              >{{ errores.ventas_terrenos_id[0] }}</span
                             >
                           </div>
                         </div>
@@ -1483,25 +1486,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="ubicacion"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Ubicación del terreno"
+                        v-model="form.ubicacion"
+                        :disabled="form.inhumacion_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("ubicacion")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.ubicacion"
+                          >{{ errores.ubicacion[0] }}</span
                         >
                       </div>
                     </div>
@@ -1517,7 +1521,7 @@
                   <!--contenido del informacion del fallecido-->
                   <div>
                     <div class="float-left pb-5 px-2">
-                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <img width="36px" src="@assets/images/traslado.svg" />
                       <h3
                         class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
                       >
@@ -1533,18 +1537,20 @@
                     <div
                       class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
                     >
-                      <label class="text-sm font-bold">¿Velar Cuerpo?</label>
+                      <label class="text-sm font-bold"
+                        >¿Trasladar Fallecido?</label
+                      >
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="traslado_b"
+                          v-model="form.traslado_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="traslado_b"
+                          v-model="form.traslado_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -1559,26 +1565,27 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <flat-pickr
-                        name="fecha_solicitud"
+                        name="fechahora_traslado"
                         data-vv-as=" "
                         v-validate:fecha_solicitud_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
-                        v-model="form.fecha_solicitud"
-                        placeholder="Fecha y Hora de Solicitud"
+                        v-model="form.fechahora_traslado"
+                        placeholder="Fecha y hora del traslado"
                         class="w-full my-1"
+                        :disabled="form.traslado_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("fechahora_traslado")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.fechahora_traslado"
+                          >{{ errores.fechahora_traslado[0] }}</span
                         >
                       </div>
                     </div>
@@ -1590,25 +1597,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="destino_traslado"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Dirección a trasladar"
+                        v-model="form.destino_traslado"
+                        :disabled="form.traslado_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("destino_traslado")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.destino_traslado"
+                          >{{ errores.destino_traslado[0] }}</span
                         >
                       </div>
                     </div>
@@ -1619,7 +1627,7 @@
                   class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                 >
                   <div class="float-left pb-5 px-2">
-                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <img width="36px" src="@assets/images/aseguradora.svg" />
                     <h3
                       class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
                     >
@@ -1632,20 +1640,22 @@
                   </div>
                   <div class="flex flex-wrap">
                     <div
-                      class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
+                      class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 text-center"
                     >
-                      <label class="text-sm font-bold">¿Velar Cuerpo?</label>
+                      <label class="text-sm font-bold"
+                        >¿Servicio con Aseguradora?</label
+                      >
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="aseguradora_b"
+                          v-model="form.aseguradora_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="aseguradora_b"
+                          v-model="form.aseguradora_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -1653,32 +1663,33 @@
                       </div>
                     </div>
                     <div
-                      class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
+                      class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2"
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Num. Convenio
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="numero_convenio_aseguradora"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Núm. Convenio de referencia"
+                        v-model="form.numero_convenio_aseguradora"
+                        :disabled="form.aseguradora_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("numero_convenio_aseguradora")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.numero_convenio_aseguradora"
+                          >{{ errores.numero_convenio_aseguradora[0] }}</span
                         >
                       </div>
                     </div>
@@ -1690,25 +1701,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="aseguradora"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Nombre de la aseguradora"
+                        v-model="form.aseguradora"
+                        :disabled="form.aseguradora_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("aseguradora")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.aseguradora"
+                          >{{ errores.aseguradora[0] }}</span
                         >
                       </div>
                     </div>
@@ -1716,29 +1728,30 @@
                       class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                     >
                       <label class="text-sm opacity-75 font-bold">
-                        Teléfonos
+                        Teléfono (s)
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="telefono_aseguradora"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
-                        maxlength="150"
+                        maxlength="45"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Teléfonos de la aseguradora"
+                        v-model="form.telefono_aseguradora"
+                        :disabled="form.aseguradora_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("telefono_aseguradora")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.telefono_aseguradora"
+                          >{{ errores.telefono_aseguradora[0] }}</span
                         >
                       </div>
                     </div>
@@ -1754,7 +1767,7 @@
                   <!--contenido del informacion del fallecido-->
                   <div>
                     <div class="float-left pb-5 px-2">
-                      <img width="36px" src="@assets/images/corpse.svg" />
+                      <img width="36px" src="@assets/images/church.svg" />
                       <h3
                         class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
                       >
@@ -1773,15 +1786,15 @@
                       <label class="text-sm font-bold">Ceremonia o Misa?</label>
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="misa_b"
+                          v-model="form.misa_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="misa_b"
+                          v-model="form.misa_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -1796,26 +1809,27 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <flat-pickr
-                        name="fecha_solicitud"
+                        name="fechahora_misa"
                         data-vv-as=" "
                         v-validate:fecha_solicitud_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
-                        v-model="form.fecha_solicitud"
-                        placeholder="Fecha y Hora de Solicitud"
+                        v-model="form.fechahora_misa"
+                        placeholder="Fecha y hora de la misa"
                         class="w-full my-1"
+                        :disabled="form.misa_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("fechahora_misa")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.fechahora_misa"
+                          >{{ errores.fechahora_misa[0] }}</span
                         >
                       </div>
                     </div>
@@ -1827,25 +1841,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="iglesia_misa"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
-                        maxlength="150"
+                        maxlength="75"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Nombre de la iglesia"
+                        v-model="form.iglesia_misa"
+                        :disabled="form.misa_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("iglesia_misa")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.iglesia_misa"
+                          >{{ errores.iglesia_misa[0] }}</span
                         >
                       </div>
                     </div>
@@ -1857,25 +1872,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="direccion_iglesia"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Dirección de la iglesia"
+                        v-model="form.direccion_iglesia"
+                        :disabled="form.misa_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("direccion_iglesia")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.direccion_iglesia"
+                          >{{ errores.direccion_iglesia[0] }}</span
                         >
                       </div>
                     </div>
@@ -1886,7 +1902,7 @@
                   class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                 >
                   <div class="float-left pb-5 px-2">
-                    <img width="36px" src="@assets/images/doctor.svg" />
+                    <img width="36px" src="@assets/images/custodia.svg" />
                     <h3
                       class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
                     >
@@ -1906,15 +1922,15 @@
                       >
                       <div class="mt-3">
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="custodia_b"
+                          v-model="form.custodia_b"
                           :vs-value="1"
                           class="mr-4"
                           >SI</vs-radio
                         >
                         <vs-radio
-                          vs-name="llamada_b"
-                          v-model="form.llamada_b"
+                          vs-name="custodia_b"
+                          v-model="form.custodia_b"
                           :vs-value="0"
                           class="mr-4"
                           >NO</vs-radio
@@ -1929,25 +1945,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="responsable_custodia"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Nombre del responsable"
+                        v-model="form.responsable_custodia"
+                        :disabled="form.custodia_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("responsable_custodia")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.responsable_custodia"
+                          >{{ errores.responsable_custodia[0] }}</span
                         >
                       </div>
                     </div>
@@ -1959,25 +1976,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="folio_custodia"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
-                        maxlength="150"
+                        maxlength="45"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Folio de la cadena de custodia"
+                        v-model="form.folio_custodia"
+                        :disabled="form.custodia_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("folio_custodia")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.folio_custodia"
+                          >{{ errores.folio_custodia[0] }}</span
                         >
                       </div>
                     </div>
@@ -1989,25 +2007,26 @@
                         <span class="texto-importante">(*)</span>
                       </label>
                       <vs-input
-                        name="titular_sustituto"
+                        name="folio_liberacion"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
-                        maxlength="150"
+                        maxlength="45"
                         type="text"
                         class="w-full pb-1 pt-1"
-                        placeholder="Nombre del titular sustituto"
-                        v-model="form.titular_sustituto"
+                        placeholder="Folio del acta de liberación"
+                        v-model="form.folio_liberacion"
+                        :disabled="form.custodia_b != 1 ? true : false"
                       />
                       <div>
                         <span class="text-danger">{{
-                          errors.first("titular_sustituto")
+                          errors.first("folio_liberacion")
                         }}</span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.titular_sustituto"
-                          >{{ errores.titular_sustituto[0] }}</span
+                          v-if="this.errores.folio_liberacion"
+                          >{{ errores.folio_liberacion[0] }}</span
                         >
                       </div>
                     </div>
@@ -2029,13 +2048,15 @@
             </div>
           </div>
         </div>
-        <div class="tab-content mt-1" v-show="activeTab == 3">
+
+        <div class="tab-content mt-1" v-show="activeTab == 3"></div>
+        <div class="tab-content mt-1" v-show="activeTab == 4">
           <div class="flex flex-wrap">
             <div
               class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
             >
               <div class="float-left pb-5 px-2">
-                <img width="36px" src="@assets/images/corpse.svg" />
+                <img width="36px" src="@assets/images/detallescontrato.svg" />
                 <h3
                   class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
                 >
@@ -2048,10 +2069,10 @@
               <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
                 <div class="flex flex-wrap">
                   <div
-                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   >
                     <label class="text-sm opacity-75 font-bold">
-                      <span>Destino del Cuerpo</span>
+                      <span>Tipo de Contrato</span>
                       <span class="texto-importante">(*)</span>
                     </label>
                     <v-select
@@ -2084,7 +2105,7 @@
                     </div>
                   </div>
                   <div
-                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   >
                     <label class="text-sm opacity-75 font-bold">
                       Fecha del Contrato
@@ -2117,16 +2138,18 @@
                   </div>
 
                   <div
-                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   >
-                    <label class="text-sm opacity-75 font-bold">
-                      Seleccione al Contratante
-                      <span class="texto-importante">(*)</span>
-                    </label>
+                    <div class="py-2">
+                      <label class="text-sm opacity-75 font-bold">
+                        Seleccione al Contratante
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                    </div>
 
                     <div class="flex flex-wrap">
                       <div
-                        class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                        class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
                       >
                         <div v-if="fueCancelada != true">
                           <img
@@ -2154,7 +2177,7 @@
                         </div>
                       </div>
                       <div
-                        class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2"
+                        class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
                       >
                         <vs-input
                           readonly
@@ -2185,12 +2208,14 @@
                   </div>
 
                   <div
-                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   >
-                    <label class="text-sm opacity-75 font-bold">
-                      Parentesco con el Fallecido
-                      <span class="texto-importante">(*)</span>
-                    </label>
+                    <div class="py-2">
+                      <label class="text-sm opacity-75 font-bold">
+                        Parentesco con el Fallecido
+                        <span class="texto-importante">(*)</span>
+                      </label>
+                    </div>
 
                     <vs-input
                       name="telefono_titular_sustituto"
@@ -2300,6 +2325,88 @@
                 </div>
               </div>
             </div>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-5"
+            >
+              <div class="float-left pb-5 px-2">
+                <img width="36px" src="@assets/images/corpse.svg" />
+                <h3
+                  class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                >
+                  Servicios y Artículos del Contrato
+                </h3>
+              </div>
+              <div class="w-full px-2">
+                <vs-divider />
+              </div>
+              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+                <div class="flex flex-wrap">
+                  <div
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      Folio del Acta
+                      <span class="texto-importante">(*)</span>
+                    </label>
+
+                    <vs-input
+                      name="telefono_titular_sustituto"
+                      data-vv-as=" "
+                      v-validate.disabled="'required'"
+                      maxlength="45"
+                      type="text"
+                      class="w-full pb-1 pt-1"
+                      placeholder="Ingrese un teléfono"
+                      v-model="form.telefono_titular_sustituto"
+                    />
+                    <div>
+                      <span class="text-danger">{{
+                        errors.first("telefono_titular_sustituto")
+                      }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger"
+                        v-if="this.errores.telefono_titular_sustituto"
+                        >{{ errores.telefono_titular_sustituto[0] }}</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                  >
+                    <label class="text-sm opacity-75 font-bold">
+                      Fecha de Levantamiento
+                      <span class="texto-importante">(*)</span>
+                    </label>
+
+                    <flat-pickr
+                      name="fecha_solicitud"
+                      data-vv-as=" "
+                      v-validate:fecha_solicitud_validacion_computed.immediate="
+                        'required'
+                      "
+                      :config="configdateTimePickerWithTime"
+                      v-model="form.fecha_solicitud"
+                      placeholder="Fecha y Hora de Solicitud"
+                      class="w-full my-1"
+                    />
+                    <div>
+                      <span class="text-danger">{{
+                        errors.first("telefono_titular_sustituto")
+                      }}</span>
+                    </div>
+                    <div class="mt-2">
+                      <span
+                        class="text-danger"
+                        v-if="this.errores.telefono_titular_sustituto"
+                        >{{ errores.telefono_titular_sustituto[0] }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="flex flex-wrap mt-1 px-2">
             <div class="w-full px-2 mt-2">
@@ -2314,7 +2421,6 @@
             </div>
           </div>
         </div>
-        <div class="tab-content mt-1" v-show="activeTab == 4"></div>
       </div>
       <!--fin venta-->
     </vs-popup>
@@ -2508,6 +2614,18 @@ export default {
           label: "Seleccione 1",
         },
       ],
+      lugares_servicio: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      cementerios_servicio: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
       form: {
         /**fallecido */
         nombre_afectado: "",
@@ -2570,6 +2688,45 @@ export default {
           label: "Seleccione 1",
         },
         /**fin de datos dle certificado */
+
+        /**datos del destino del servicio */
+        embalsamar_b: 0,
+        medico_responsable_embalsamado: "",
+        preparador: "",
+        velacion_b: 0,
+        lugar_servicio: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        direccion_velacion: "",
+        cremacion_b: 0,
+        fechahora_cremacion: "",
+        fechahora_entrega_cenizas: "",
+        descripcion_urna: "",
+        inhumacion_b: 0,
+        cementerio_servicio: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        fechahora_inhumacion: "",
+        ubicacion: "",
+        ventas_terrenos_id: 0,
+        traslado_b: 0,
+        fechahora_traslado: "",
+        destino_traslado: "",
+        aseguradora_b: 0,
+        numero_convenio_aseguradora: "",
+        aseguradora: "",
+        telefono_aseguradora: "",
+        misa_b: 0,
+        fechahora_misa: "",
+        iglesia_misa: "",
+        direccion_iglesia: "",
+        custodia_b: 0,
+        responsable_custodia: "",
+        folio_custodia: "",
+        folio_liberacion: "",
+        /**fin de datos del destino del servicio */
       },
       /**variables dle modulo */
       openNotas: false,
