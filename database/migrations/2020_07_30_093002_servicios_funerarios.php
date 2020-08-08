@@ -84,8 +84,8 @@ class ServiciosFunerarios extends Migration
             $table->tinyInteger('material_velacion_b')->default(0);
 
             /**mas datos del fallecido */
-            //$table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
-            //$table->foreign('titulos_id')->references('id')->on('titulos');
+            $table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
+            $table->foreign('titulos_id')->references('id')->on('titulos');
             //$table->dateTime('fechahora_llegada_afectado')->nullable();
 
             $table->unsignedBigInteger('nacionalidades_id')->unsigned()->nullable();
@@ -115,7 +115,6 @@ class ServiciosFunerarios extends Migration
             $table->foreign('escolaridades_id')->references('id')->on('escolaridades');
             $table->string('folio_certificado')->nullable();
             $table->string('direccion_fallecido')->nullable();
-            $table->string('folio_acta')->nullable();
             $table->string('enfermedades_padecidas')->nullable();
             $table->string('medicamentos')->nullable();
             $table->string('lugar_nacimiento')->nullable();
@@ -150,7 +149,6 @@ class ServiciosFunerarios extends Migration
 
 
             /**datos sobre el lugar donde se dara el servicio */
-            $table->dateTime('fechahora_entrega_cenizas')->nullable();
             $table->mediumText('nota_reinhumacion')->nullable();
             $table->dateTime('fechahora_registro')->nullable();
             $table->unsignedBigInteger('registro_id')->unsigned()->nullable();

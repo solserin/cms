@@ -13,10 +13,19 @@ class servicios_funerarios_seeder extends Seeder
     public function run()
     {
         /** insertando titulos */
-        DB::table('titulos')->insert(['titulo' => 'Sr/Sra']);
-        DB::table('titulos')->insert(['titulo' => 'Joven/Srta']);
-        DB::table('titulos')->insert(['titulo' => 'Niño/Niña']);
+        DB::table('titulos')->insert(['titulo' => 'Señor']);
+        DB::table('titulos')->insert(['titulo' => 'Señora']);
+        DB::table('titulos')->insert(['titulo' => 'Joven']);
+        DB::table('titulos')->insert(['titulo' => 'Señorita']);
+        DB::table('titulos')->insert(['titulo' => 'Niño']);
+        DB::table('titulos')->insert(['titulo' => 'Niña']);
         DB::table('titulos')->insert(['titulo' => 'Recién Nacido']);
+
+        /**lugares de servicio de velacion */
+        DB::table('lugares_servicios')->insert(['lugar' => 'Domicilio']);
+        DB::table('lugares_servicios')->insert(['lugar' => 'Funeraria Aeternus | Sala la piedad']);
+        DB::table('lugares_servicios')->insert(['lugar' => 'Funeraria Aeternus | Sala la misericordia']);
+        DB::table('lugares_servicios')->insert(['lugar' => 'Funeraria Aeternus | Sala la resurreción']);
 
         /**tipo de servicios funerarios */
         DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Embalsamar']);
@@ -82,8 +91,8 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('estado_afectado')->insert(['estado' => 'por confirmar']);
 
         /**cementerios servicio */
-        DB::table('cementerios_servicio')->insert(['cementerio' => 'Aeternus']);
-        DB::table('cementerios_servicio')->insert(['cementerio' => 'Otro cementerio']);
+        DB::table('cementerios_servicio')->insert(['cementerio' => 'Cementerio Aeternus']);
+        DB::table('cementerios_servicio')->insert(['cementerio' => 'Otro Cementerio']);
         DB::table('cementerios_servicio')->insert(['cementerio' => 'Fosa Común']);
     }
 }

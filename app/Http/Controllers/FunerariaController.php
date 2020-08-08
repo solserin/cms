@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use PDF;
 use App\User;
 use App\Generos;
+use App\Titulos;
 use App\Clientes;
 use Carbon\Carbon;
 use App\Operaciones;
+use App\Afiliaciones;
+use App\SitiosMuerte;
 use App\VentasPlanes;
+use App\Escolaridades;
 use App\PreciosPlanes;
+use App\EstadosCiviles;
+use App\EstadosAfectado;
+use App\LugaresServicio;
 use App\PlanesFunerarios;
+use App\LugaresInhumacion;
 use App\ServiciosFunerarios;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Foreach_;
@@ -3133,5 +3141,86 @@ class FunerariaController extends ApiController
         } catch (\Throwable $th) {
             return $this->errorResponse('Error al solicitar los datos', 409);
         }
+    }
+
+
+    public function get_estados_civiles()
+    {
+        return EstadosCiviles::select(
+            'id',
+            DB::raw(
+                'UPPER(estado) as estado'
+            ),
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_escolaridades()
+    {
+        return Escolaridades::select(
+            'id',
+            DB::raw(
+                'UPPER(escolaridad) as escolaridad'
+            ),
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_afiliaciones()
+    {
+        return Afiliaciones::select(
+            'id',
+            DB::raw(
+                'UPPER(afiliacion) as afiliacion'
+            ),
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_sitios_muerte()
+    {
+        return SitiosMuerte::select(
+            'id',
+            DB::raw(
+                'UPPER(sitio) as sitio'
+            ),
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_titulos()
+    {
+        return Titulos::select(
+            'id',
+            DB::raw(
+                'UPPER(titulo) as titulo'
+            ),
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_estados_afectado()
+    {
+        return EstadosAfectado::select(
+            'id',
+            DB::raw(
+                'UPPER(estado) as estado'
+            ),
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_lugares_velacion()
+    {
+        return LugaresServicio::select(
+            'id',
+            DB::raw(
+                'UPPER(lugar) as lugar'
+            ),
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_lugares_inhumacion()
+    {
+        return LugaresInhumacion::select(
+            'id',
+            DB::raw(
+                'UPPER(cementerio) as cementerio'
+            ),
+        )->orderBy('id', 'asc')->get();
     }
 }
