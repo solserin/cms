@@ -1533,6 +1533,7 @@ class CementerioController extends ApiController
                 'antiguedad_operacion_id',
                 'empresa_operaciones_id',
                 'subtotal',
+                'tasa_iva',
                 'descuento',
                 'impuestos',
                 'total',
