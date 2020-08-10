@@ -150,7 +150,7 @@ class ServiciosFunerarios extends Migration
 
 
             /**datos sobre el lugar donde se dara el servicio */
-            $table->dateTime('fechahora_entrega_cenizas')->nullable();
+            //$table->dateTime('fechahora_entrega_cenizas')->nullable();
             $table->mediumText('nota_reinhumacion')->nullable();
             $table->dateTime('fechahora_registro')->nullable();
             $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
