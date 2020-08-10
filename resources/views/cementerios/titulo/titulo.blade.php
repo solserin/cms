@@ -103,9 +103,6 @@
                     {{ $empresa->razon_social }}
                 </h1>
                 <p class="datos-header  size-16px capitalize line-small">
-                    r.f.c. {{ $empresa->rfc }}
-                </p>
-                <p class="datos-header  size-16px capitalize line-small">
                     {{ $empresa->calle }} Núm. Ext {{ $empresa->num_ext }}
                 </p>
                 <p class="datos-header  size-16px capitalize line-small">
