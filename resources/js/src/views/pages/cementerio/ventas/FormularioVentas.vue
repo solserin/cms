@@ -1058,6 +1058,9 @@
                   <span class="texto-importante">(*)</span>
                 </label>
                 <vs-input
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
                   size="large"
                   v-validate.disabled="
                     'required|integer|min_value:' +
