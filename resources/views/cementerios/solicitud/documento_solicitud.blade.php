@@ -386,8 +386,12 @@
                         </tr>
                         <tr>
                             <td class="w-55 py-1 left bg-nada">
+                                @if (trim($datos['tasa_iva'])=='')
+                                <span class="bold">iva (16 %):</span>
+                                @else
+                                <span class="bold">iva ({{ $datos['tasa_iva'] }} %):</span>
+                                @endif
 
-                                <span class="bold">iva:</span>
                             </td>
                             <td class="w-45 py-1 right bg-gray">
                                 $ {{ number_format( $datos['impuestos'],2)}}

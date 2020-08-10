@@ -217,7 +217,7 @@
                         <tr>
                             <td class="w-50 py-1 left bg-nada">
 
-                                <span class="bold">iva:</span>
+                                <span class="bold">iva ({{ $datos['tasa_iva'] }}%):</span>
                             </td>
                             <td class="w-50 py-1 right bg-gray">
                                 $ {{ number_format( $datos['impuestos'],2)}}

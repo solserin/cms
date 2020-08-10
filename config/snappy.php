@@ -37,7 +37,7 @@ return [
         //'binary'  => '"C:\projects\tools\wkhtmltopdf\bin\wkhtmltopdf.exe"',
         'binary'  => env('WKHTMLTOPDF'),
         'timeout' => false,
-        'options' => [],
+        'options' => ['enable-local-file-access'=>true],
         'env'     => [],
     ],
 
