@@ -1360,42 +1360,6 @@
                 <div class="mt-2"></div>
               </div>
 
-              <div class="w-full pt-3 px-2">
-                <div
-                  class="flex flex-wrap bg-seccion-forms dark-text font-medium py-2"
-                >
-                  <div
-                    class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
-                  >
-                    <span class="text-gray-100 font-bold"
-                      >$ Costo neto con pronto pago (Catálogo Planes)</span
-                    >
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2 text-right"
-                  >
-                    <span
-                      v-if="this.form.planVenta.descuento_pronto_pago_b > 0"
-                    >
-                      <span>
-                        <span class="font-bold">
-                          $
-                          {{
-                            this.form.planVenta.costo_neto_pronto_pago
-                              | numFormat("0,000.00")
-                          }}
-                          Pesos </span
-                        >, Pagando sus abonos antes de la fecha programada
-                      </span>
-                    </span>
-                    <span v-else class="text-danger uppercase font-medium"
-                      >No aplica para este financiamiento</span
-                    >
-                  </div>
-                </div>
-                <vs-divider />
-              </div>
-
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
@@ -1403,11 +1367,14 @@
                   <div
                     class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
                   >
-                    <div class="float-left" v-if="costo_neto_computed == 0">
-                      <img width="26px" src="@assets/images/warning.svg" />
-                      <h3
-                        class="float-right ml-3 text-base text-danger font-medium mt-1"
-                      >
+                    <div
+                      class="float-left"
+                      v-if="
+                        costo_neto_computed == 0 &&
+                        (!isNaN(this.form.subtotal) && this.form.subtotal > 0)
+                      "
+                    >
+                      <h3 class="text-sm text-danger font-medium mt-1">
                         Advertencia, está haciendo un descuento del 100%,
                         verifique si desea continuar.
                       </h3>
@@ -1428,10 +1395,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="flex flex-wrap mt-4">
+                <div class="flex flex-wrap mt-8">
                   <vs-button
                     v-if="!fueCancelada"
-                    class="w-full ml-auto mr-auto"
+                    class="w-full ml-auto mr-auto mt-5"
                     @click="acceptAlert()"
                     color="success"
                     size="small"
@@ -1450,7 +1417,7 @@
                   </vs-button>
                   <vs-button
                     v-else
-                    class="w-full ml-auto mr-auto"
+                    class="w-full ml-auto mr-auto mt-5"
                     color="success"
                     size="small"
                   >
@@ -1557,6 +1524,7 @@ export default {
   },
   watch: {
     show: function (newValue, oldValue) {
+      this.limpiarValidation();
       if (newValue == true) {
         this.$nextTick(() =>
           this.$refs["cliente_ref"].$el.querySelector("input").focus()
@@ -2775,6 +2743,17 @@ export default {
           time: "10000",
         });
       }
+    },
+    limpiarValidation() {
+      this.$validator.pause();
+      this.$nextTick(() => {
+        this.$validator.errors.clear();
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
+          this.errors.remove(field)
+        );
+        this.$validator.resume();
+      });
     },
   },
   created() {},
