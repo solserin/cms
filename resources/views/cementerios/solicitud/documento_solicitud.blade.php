@@ -241,7 +241,11 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-55 center">
+                            @if (trim($datos['fecha_nac'])!='')
                             {{ fecha_abr(($datos['fecha_nac'])) }}
+                            @else
+                            N/A
+                            @endif
                         </div>
                     </div>
                 </td>
@@ -253,7 +257,12 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-60 center">
+                            @if (trim($datos['fecha_nac'])!='')
                             {{ calculaedad((String)($datos['fecha_nac'])) }} años
+                            @else
+                            N/A
+                            @endif
+
                         </div>
                     </div>
                 </td>
