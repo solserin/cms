@@ -115,7 +115,7 @@ class ServiciosFunerarios extends Migration
             $table->foreign('escolaridades_id')->references('id')->on('escolaridades');
             $table->string('folio_certificado')->nullable();
             $table->string('direccion_fallecido')->nullable();
-            $table->string('folio_acta')->nullable();
+            //$table->string('folio_acta')->nullable();
             $table->string('enfermedades_padecidas')->nullable();
             $table->string('medicamentos')->nullable();
             $table->string('lugar_nacimiento')->nullable();
