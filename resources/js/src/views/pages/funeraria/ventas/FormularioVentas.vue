@@ -808,7 +808,7 @@
                   </div>
                 </div>
                 <vs-divider />
-                <div class="flex flex-wrap">
+                <div class="flex flex-wrap hidden">
                   <div
                     class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
                   >
@@ -843,7 +843,7 @@
                     >
                   </div>
                 </div>
-                <vs-divider />
+                <vs-divider class="hidden" />
                 <div class="flex flex-wrap">
                   <div
                     class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
@@ -912,7 +912,7 @@
                   </div>
                 </div>
                 <vs-divider />
-                <div class="w-full pb-24">
+                <div class="w-full pb-9">
                   <h3
                     class="mt-2 text-base px-2 py-1 bg-seccion-forms"
                     style="line-height: 1.6em;"
@@ -954,46 +954,48 @@
               </div>
             </div>
             <div class="flex flex-wrap">
-              <!--precios-->
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
-                  <span>Plan de Venta</span>
+                  <span v-if="form.tipo_financiamiento == 1">Pago Único</span>
+                  <span v-if="form.tipo_financiamiento == 2"
+                    >A Futuro/A Meses</span
+                  >
                   <span class="texto-importante">(*)</span>
                 </label>
-                <v-select
-                  :options="planesVenta"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.planVenta"
-                  class="pb-1 pt-1 large_select"
-                  v-validate:plan_de_venta_computed.immediate="'required'"
-                  name="plan_venta"
-                  data-vv-as=" "
+                <vs-input
                   :disabled="
                     tiene_pagos_realizados || ventaLiquidada || fueCancelada
                   "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ningún Plan de Venta
-                  </div>
-                </v-select>
+                  size="large"
+                  v-validate.disabled="
+                    'required|integer|min_value:' +
+                    minimo_financiamiento +
+                    '|max_value:' +
+                    maximo_financiamiento
+                  "
+                  name="financiamiento"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Número de pagos"
+                  v-model="form.financiamiento"
+                  maxlength="3"
+                />
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("plan_venta")
-                  }}</span>
+                  <span class="mensaje-requerido">
+                    {{ errors.first("financiamiento") }}
+                  </span>
                 </div>
                 <div class="mt-2">
                   <span
                     class="mensaje-requerido"
-                    v-if="this.errores['planVenta.value']"
-                    >{{ errores["planVenta.value"][0] }}</span
+                    v-if="this.errores.financiamiento"
+                    >{{ errores.financiamiento[0] }}</span
                   >
                 </div>
               </div>
 
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   $ Sub Total
                   <span class="texto-importante">(*)</span>
@@ -1012,9 +1014,9 @@
                   v-model="form.subtotal"
                 />
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("subtotal")
-                  }}</span>
+                  <span class="mensaje-requerido">
+                    {{ errors.first("subtotal") }}
+                  </span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -1025,7 +1027,7 @@
                 </div>
               </div>
 
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   $ Descuento
                   <span class="texto-importante">(*)</span>
@@ -1039,7 +1041,7 @@
                   data-vv-as=" "
                   v-validate="
                     'required|decimal:2|min_value:0|max_value:' +
-                      this.form.subtotal
+                    this.form.subtotal
                   "
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
@@ -1048,9 +1050,9 @@
                 />
 
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("descuento")
-                  }}</span>
+                  <span class="mensaje-requerido">
+                    {{ errors.first("descuento") }}
+                  </span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -1060,7 +1062,41 @@
                   >
                 </div>
               </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Tasa IVA %
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <vs-input
+                  :disabled="
+                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                  "
+                  size="large"
+                  name="tasa_iva"
+                  data-vv-as=" "
+                  v-validate="'required|decimal:2|min_value:0|max_value:25'"
+                  type="text"
+                  class="w-full pb-1 pt-1 texto-bold"
+                  placeholder="Porcentaje IVA"
+                  v-model="form.tasa_iva"
+                  maxlength="2"
+                />
+                <div>
+                  <span class="mensaje-requerido">
+                    {{ errors.first("tasa_iva") }}
+                  </span>
+                </div>
+                <div class="mt-2">
+                  <span
+                    class="mensaje-requerido"
+                    v-if="this.errores.tasa_iva"
+                    >{{ errores.tasa_iva[0] }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   $ IVA
                   <span class="texto-importante">(*)</span>
@@ -1072,15 +1108,15 @@
                   v-validate="'required|decimal:2|min_value:0'"
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
-                  placeholder="$ 0.00"
+                  placeholder
                   v-model="iva_computed"
                   :disabled="true"
                 />
 
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("impuestos")
-                  }}</span>
+                  <span class="mensaje-requerido">
+                    {{ errors.first("impuestos") }}
+                  </span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -1090,7 +1126,8 @@
                   >
                 </div>
               </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
                 <label class="text-sm opacity-75 font-bold">
                   $ Total a Pagar
                   <span class="texto-importante">(*)</span>
@@ -1102,16 +1139,15 @@
                   v-validate="'required|decimal:2|min_value:0'"
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
-                  placeholder="$ 0.00"
                   v-model="costo_neto_computed"
-                  readonly
                   :disabled="true"
+                  readonly
                 />
 
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("costo_neto")
-                  }}</span>
+                  <span class="mensaje-requerido">
+                    {{ errors.first("costo_neto") }}
+                  </span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -1120,7 +1156,6 @@
                     >{{ errores.costo_neto[0] }}</span
                   >
                 </div>
-                <div class="mt-2"></div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
@@ -1137,20 +1172,21 @@
                   data-vv-as=" "
                   v-validate="
                     'required|decimal:2|min_value:' +
-                      this.valor_minimo_pago_inicial +
-                      '|max_value:' +
-                      this.valor_maximo_pago_inicial
+                    this.valor_minimo_pago_inicial +
+                    '|max_value:' +
+                    this.valor_maximo_pago_inicial
                   "
-                  maxlength="7"
+                  maxlength="10"
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
                   v-model="form.pago_inicial"
+                  placeholder="$ 0.00"
                 />
 
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_inicial")
-                  }}</span>
+                  <span class="mensaje-requerido">
+                    {{ errors.first("pago_inicial") }}
+                  </span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -1176,20 +1212,21 @@
                   data-vv-as=" "
                   v-validate="
                     'required|decimal:2|min_value:' +
-                      minimo_pronto_pago +
-                      '|max_value:' +
-                      form.costo_neto
+                    minimo_pronto_pago +
+                    '|max_value:' +
+                    costo_neto_computed
                   "
-                  maxlength="7"
+                  maxlength="10"
                   type="text"
                   class="w-full pb-1 pt-1 texto-bold"
                   v-model="form.costo_neto_pronto_pago"
+                  placeholder="$ 0.00"
                 />
 
                 <div>
-                  <span class="mensaje-requerido">
-                    {{ errors.first("costo_neto_pronto_pago") }}
-                  </span>
+                  <span class="mensaje-requerido">{{
+                    errors.first("costo_neto_pronto_pago")
+                  }}</span>
                 </div>
                 <div class="mt-2">
                   <span
@@ -1199,42 +1236,6 @@
                   >
                 </div>
                 <div class="mt-2"></div>
-              </div>
-
-              <div class="w-full pt-3 px-2">
-                <div
-                  class="flex flex-wrap bg-seccion-forms dark-text font-medium py-2"
-                >
-                  <div
-                    class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
-                  >
-                    <span class="text-gray-100 font-bold">
-                      $ Costo neto con pronto pago (Catálogo Planes)
-                    </span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2 text-right"
-                  >
-                    <span
-                      v-if="this.form.planVenta.descuento_pronto_pago_b > 0"
-                    >
-                      <span>
-                        <span class="font-bold">
-                          $
-                          {{
-                            this.form.planVenta.costo_neto_pronto_pago
-                              | numFormat("0,000.00")
-                          }}
-                          Pesos </span
-                        >, Pagando sus abonos antes de la fecha programada
-                      </span>
-                    </span>
-                    <span v-else class="text-danger uppercase font-medium"
-                      >No aplica para este financiamiento</span
-                    >
-                  </div>
-                </div>
-                <vs-divider />
               </div>
 
               <div
@@ -1248,13 +1249,10 @@
                       class="float-left"
                       v-if="
                         costo_neto_computed == 0 &&
-                          this.form.planVenta.value != ''
+                        (!isNaN(this.form.subtotal) && this.form.subtotal > 0)
                       "
                     >
-                      <img width="26px" src="@assets/images/warning.svg" />
-                      <h3
-                        class="float-right ml-3 text-base text-danger font-medium mt-1"
-                      >
+                      <h3 class="text-sm text-danger font-medium mt-1">
                         Advertencia, está haciendo un descuento del 100%,
                         verifique si desea continuar.
                       </h3>
@@ -1275,10 +1273,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="flex flex-wrap mt-4">
+                <div class="flex flex-wrap mt-3">
                   <vs-button
                     v-if="!fueCancelada"
-                    class="w-full ml-auto mr-auto"
+                    class="w-full ml-auto mr-auto mt-5"
                     @click="acceptAlert()"
                     color="success"
                     size="small"
@@ -1297,7 +1295,7 @@
                   </vs-button>
                   <vs-button
                     v-else
-                    class="w-full ml-auto mr-auto"
+                    class="w-full ml-auto mr-auto mt-5"
                     color="success"
                     size="small"
                   >
@@ -1381,26 +1379,26 @@ export default {
     ConfirmarDanger,
     ConfirmarAceptar,
     ClientesBuscador,
-    Notas
+    Notas,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     //para saber que tipo de formulario es
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_venta: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       this.limpiarValidation();
       if (newValue == true) {
         this.$nextTick(() =>
@@ -1426,7 +1424,7 @@ export default {
         /**acciones al cerrar el formulario */
       }
     },
-    "form.planVenta": function(newValue, oldValue) {
+    "form.planVenta": function (newValue, oldValue) {
       if (newValue.value != "") {
         /**el plan cambio a un plan especifico */
         this.form.subtotal = newValue.subtotal;
@@ -1434,13 +1432,71 @@ export default {
       }
     },
     /**watch para cargado de planes de venta */
-    "form.plan_funerario": function(newValue, oldValue) {
+    "form.plan_funerario": function (newValue, oldValue) {
       /**cargando planes */
-      this.cargarPlanes();
-    }
+      //this.cargarPlanes();
+    },
   },
   computed: {
-    verLista: function() {
+    minimo_financiamiento: function () {
+      if (this.form.tipo_financiamiento == 1) {
+        return 1;
+      } else {
+        return 2;
+      }
+    },
+    maximo_financiamiento: function () {
+      if (this.form.tipo_financiamiento == 1) {
+        return 1;
+      } else {
+        return 120;
+      }
+    },
+    /**sacando los valores para aplicar los descuentos respectivos */
+    tasa_iva_porcentaje_computed: function () {
+      /**calculando el iva */
+      let tasa_iva = (Number(this.form.tasa_iva) / 100).toFixed(2);
+      if (isNaN(tasa_iva)) {
+        return 0;
+      } else {
+        return tasa_iva;
+      }
+      return tasa_iva;
+    },
+    tasa_iva_computed: function () {
+      /**calculando el iva */
+      let tasa_iva = (Number(this.form.tasa_iva) / 100 + 1).toFixed(2);
+      if (isNaN(tasa_iva)) {
+        return 0;
+      } else {
+        return tasa_iva;
+      }
+    },
+    iva_computed: function () {
+      /**calculando el iva */
+      let iva = (
+        (Number(this.form.subtotal) - Number(this.form.descuento)) *
+        this.tasa_iva_porcentaje_computed
+      ).toFixed(2);
+      if (isNaN(iva)) {
+        return 0;
+      } else {
+        return iva;
+      }
+    },
+    costo_neto_computed: function () {
+      /**calculando el iva */
+      let costo_neto = (
+        (Number(this.form.subtotal) - Number(this.form.descuento)) *
+        this.tasa_iva_computed
+      ).toFixed(2);
+      if (isNaN(costo_neto)) {
+        return 0;
+      } else {
+        return costo_neto;
+      }
+    },
+    verLista: function () {
       if (this.form.plan_funerario.value != "") {
         let mostrar = false;
         this.datos = [];
@@ -1451,7 +1507,7 @@ export default {
                 this.datos.push({
                   concepto: concepto.concepto,
                   concepto_ingles: concepto.concepto_ingles,
-                  aplicar: concepto.aplicar_en
+                  aplicar: concepto.aplicar_en,
                 });
               });
               mostrar = true;
@@ -1468,76 +1524,55 @@ export default {
       }
     },
     /**dle modulo */
-    /**sacando los valores para aplicar los descuentos respectivos */
-    iva_computed: function() {
-      let iva = (
-        (Number.parseFloat(this.form.subtotal) -
-          Number.parseFloat(this.form.descuento)) *
-        0.16
-      ).toFixed(2);
-      /***actualizo el impuesto iva */
-      this.form.impuestos = iva;
-      return iva;
-    },
-    costo_neto_computed: function() {
-      let costo_neto = (
-        Number.parseFloat(this.form.subtotal) -
-        Number.parseFloat(this.form.descuento) +
-        Number.parseFloat(this.form.impuestos)
-      ).toFixed(2);
-      this.form.costo_neto = costo_neto;
-      return costo_neto;
-    },
+
     /**fin de valores para la aplicacion de toales e impuestos */
     /**minimo valor permitido del enganche */
-    valor_minimo_pago_inicial: function() {
-      if (this.form.planVenta.value == "") {
+    valor_minimo_pago_inicial: function () {
+      let pago_inicial_minimo = 0;
+      if (this.form.tipo_financiamiento == 1) {
+        pago_inicial_minimo = this.costo_neto_computed;
+      } else {
+        pago_inicial_minimo = this.costo_neto_computed * 0.1;
+      }
+      if (isNaN(pago_inicial_minimo)) {
         return 0;
       } else {
-        if (this.form.planVenta.value == 1) {
-          //es a contado
-          if (this.form.costo_neto > 0) {
-            return this.form.costo_neto;
-          } else {
-            return 0;
-          }
-        } else {
-          /**venta a credito */
-          if (this.form.costo_neto > this.form.planVenta.pago_inicial) {
-            /**sin desucuento mando el pago  inicial definido en el plna */
-            /**se deja como minimo lo establecido en el pago inicial */
-            return this.form.planVenta.pago_inicial;
-          } else {
-            /**solo el 10 por ciento para que el resto se pague en abonos */
-            return (this.form.costo_neto * 0.1).toFixed(2);
-          }
-        }
+        return pago_inicial_minimo;
       }
     },
     /**maximo valor permitido del enganche */
-    valor_maximo_pago_inicial: function() {
-      if (this.form.planVenta.value == "") {
+    valor_maximo_pago_inicial: function () {
+      let pago_inicial_maximo = 0;
+      if (this.form.tipo_financiamiento == 1) {
+        pago_inicial_maximo = this.costo_neto_computed;
+      } else {
+        pago_inicial_maximo = this.costo_neto_computed * 0.7;
+      }
+
+      if (isNaN(pago_inicial_maximo)) {
         return 0;
       } else {
-        if (this.form.planVenta.value == 1) {
-          return this.costo_neto_computed;
-        } else {
-          return (this.costo_neto_computed * 0.7).toFixed(2);
-          /**como maximo un 70 % para el resto dejarlo en abonos y mantener las buenas practicas del finaciamiento */
-        }
+        return pago_inicial_maximo;
       }
     },
 
     /**maximo valor permitido del enganche */
-    minimo_pronto_pago: function() {
-      if (this.form.costo_neto > 1) {
-        return 1;
+    minimo_pronto_pago: function () {
+      let minimo_pronto_pago = 0;
+      if (this.form.tipo_financiamiento == 1) {
+        minimo_pronto_pago = this.costo_neto_computed;
       } else {
+        minimo_pronto_pago = 0;
+      }
+
+      if (isNaN(minimo_pronto_pago)) {
         return 0;
+      } else {
+        return minimo_pronto_pago;
       }
     },
     /**checando si la venta ya fue liquidada*/
-    ventaLiquidada: function() {
+    ventaLiquidada: function () {
       if (this.getTipoformulario == "modificar") {
         if (this.datosVenta.saldo_neto <= 0) {
           return true;
@@ -1545,7 +1580,7 @@ export default {
       } else return false;
     },
     /**checando si ya hay pagos vigentes realizados en la venta, por lo cual no puede cambiar la fecha de la venta */
-    tiene_pagos_realizados: function() {
+    tiene_pagos_realizados: function () {
       if (this.getTipoformulario == "modificar") {
         if (this.datosVenta.pagos_realizados > 0) {
           return true;
@@ -1553,14 +1588,14 @@ export default {
       } else return false;
     },
     /**checar si tiene pagos vencidos */
-    tienePagosVencidos: function() {
+    tienePagosVencidos: function () {
       if (this.getTipoformulario == "modificar") {
         if (this.datosVenta.pagos_vencidos > 0) {
           return true;
         } else return false;
       } else return false;
     },
-    fueCancelada: function() {
+    fueCancelada: function () {
       if (this.getTipoformulario == "modificar") {
         if (this.datosVenta.operacion_status == 0) {
           return true;
@@ -1568,7 +1603,7 @@ export default {
       } else return false;
     },
     /**validar si es modificar el formulario */
-    ModificarVenta: function() {
+    ModificarVenta: function () {
       if (this.getTipoformulario == "modificar") {
         return true;
       } else return false;
@@ -1580,7 +1615,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_venta_id: {
       get() {
@@ -1588,7 +1623,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
 
     showVentana: {
@@ -1597,16 +1632,16 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    capturar_num_convenio: function() {
+    capturar_num_convenio: function () {
       if (this.form.ventaAntiguedad.value > 1) {
         return true;
       } else {
         return false;
       }
     },
-    capturar_num_titulo: function() {
+    capturar_num_titulo: function () {
       if (this.form.ventaAntiguedad.value == 3) {
         return true;
       } else {
@@ -1614,7 +1649,7 @@ export default {
       }
     },
 
-    plan_venta: function() {
+    plan_venta: function () {
       if (this.form.planVenta.value == 0) {
         return true;
       } else {
@@ -1624,43 +1659,43 @@ export default {
 
     //validaciones calculadas
     //valido que elija un plan de venta
-    plan_de_venta_computed: function() {
+    plan_de_venta_computed: function () {
       return this.form.planVenta.value;
     },
-    plan_funerario_validacion_computed: function() {
+    plan_funerario_validacion_computed: function () {
       return this.form.plan_funerario.value;
     },
 
-    antiguedad_validacion_computed: function() {
+    antiguedad_validacion_computed: function () {
       return this.form.ventaAntiguedad.value;
     },
 
-    vendedor_validacion_computed: function() {
+    vendedor_validacion_computed: function () {
       return this.form.vendedor.value;
     },
-    fecha_venta_validacion_computed: function() {
+    fecha_venta_validacion_computed: function () {
       return this.form.fecha_venta;
     },
 
-    solicitud_validacion_computed: function() {
+    solicitud_validacion_computed: function () {
       //checo que el dato venta a futuro este activo
       if (this.form.tipo_financiamiento == 2) {
         return this.form.solicitud;
       } else return true;
     },
 
-    num_convenio_validacion_computed: function() {
+    num_convenio_validacion_computed: function () {
       //checo que el dato venta a futuro este activo y que sea de venta antes del sistema
       if (this.form.ventaAntiguedad.value >= 2) {
         return this.form.convenio;
       } else return true;
     },
-    num_titulo_validacion_computed: function() {
+    num_titulo_validacion_computed: function () {
       //checo que el dato venta a futuro este activo
       if (this.form.ventaAntiguedad.value == 3) {
         return this.form.titulo;
       } else return true;
-    }
+    },
 
     //fin de validaciones calculadas
   },
@@ -1686,16 +1721,16 @@ export default {
       ventasAntiguedad: [
         {
           label: "NUEVA VENTA",
-          value: 1
+          value: 1,
         },
         {
           label: "A/S SIN LIQUIDAR",
-          value: 2
+          value: 2,
         },
         {
           label: "A/S - LIQUIDADA",
-          value: 3
-        }
+          value: 3,
+        },
       ],
       vendedores: [],
       //variables con mapa
@@ -1710,8 +1745,8 @@ export default {
           descuento_pronto_pago_b: "",
           costo_neto_pronto_pago: "",
           porcentaje_pronto_pago: "",
-          costo_neto_financiamiento_normal: ""
-        }
+          costo_neto_financiamiento_normal: "",
+        },
       ],
       /**para modificar, se traen los datos aqui */
       datosVenta: [],
@@ -1726,7 +1761,7 @@ export default {
           nota_ingles: "",
           value: "",
           secciones: [],
-          precios: []
+          precios: [],
         },
         /**varaibles del modulo */
         salarios_minimos: "12",
@@ -1755,30 +1790,32 @@ export default {
           descuento_pronto_pago_b: "",
           costo_neto_pronto_pago: "",
           porcentaje_pronto_pago: "",
-          costo_neto_financiamiento_normal: ""
+          costo_neto_financiamiento_normal: "",
         },
         ventaAntiguedad: {
           label: "NUEVA VENTA",
-          value: 1
+          value: 1,
         },
         /**muestra el enganche original con el que se hizo la venta */
+        tasa_iva: 16,
+        impuestos: "",
+        financiamiento: "",
         pago_inicial_origen: "",
-        subtotal: "0.00",
-        descuento: "0.00",
-        impuestos: "0.00",
-        costo_neto: "0.00",
-        pago_inicial: "0.00",
-        costo_neto_pronto_pago: "0.00",
+        subtotal: "",
+        descuento: "",
+        costo_neto: "",
+        pago_inicial: "",
+        costo_neto_pronto_pago: "",
         vendedor: {
           label: "Seleccione 1",
-          value: ""
+          value: "",
         },
         beneficiarios: [],
         index_beneficiario: 0,
-        nota: ""
+        nota: "",
         //fin var con mapa
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
@@ -1789,7 +1826,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Error",
@@ -1798,7 +1835,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "12000"
+              time: "12000",
             });
             return;
           } else {
@@ -1806,6 +1843,8 @@ export default {
             //se confirma la cntraseña
             /**actualizando los valores de total de venta */
             //fin de actualizar datos de ubicacion
+            this.form.costo_neto = this.costo_neto_computed;
+            this.form.impuestos = this.iva_computed;
             (async () => {
               if (this.getTipoformulario == "agregar") {
                 this.callBackConfirmarAceptar = await this.guardar_venta;
@@ -1835,7 +1874,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("ver_pdfs_nueva_venta", res.data);
           this.cerrarVentana();
@@ -1846,7 +1885,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
         }
 
@@ -1861,7 +1900,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -1872,7 +1911,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             /**FORBIDDEN ERROR */
@@ -1882,7 +1921,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 15000
+              time: 15000,
             });
           }
         }
@@ -1904,7 +1943,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("ver_pdfs_nueva_venta", res.data);
           this.cerrarVentana();
@@ -1915,7 +1954,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
         }
 
@@ -1930,7 +1969,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -1942,7 +1981,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             //este error es por alguna condicion que el contrano no cumple para modificar
@@ -1953,7 +1992,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000
+              time: 30000,
             });
           }
         }
@@ -1977,9 +2016,9 @@ export default {
           nota_ingles: "",
           value: "",
           secciones: [],
-          precios: []
+          precios: [],
         });
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.planes_funerarios.push({
             label: element.plan,
             plan: element.plan,
@@ -1988,7 +2027,7 @@ export default {
             nota_ingles: element.nota_ingles,
             value: element.id,
             secciones: element.secciones,
-            precios: element.precios
+            precios: element.precios,
           });
         });
         if (this.getTipoformulario == "agregar") {
@@ -2011,7 +2050,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
         this.$vs.loading.close();
         this.cerrarVentana();
@@ -2027,10 +2066,10 @@ export default {
         if (this.getTipoformulario == "agregar") {
           this.form.vendedor = this.vendedores[0];
         }
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.vendedores.push({
             label: element.nombre,
-            value: element.id
+            value: element.id,
           });
         });
       } catch (error) {
@@ -2043,7 +2082,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
         this.cerrarVentana();
       }
@@ -2061,10 +2100,10 @@ export default {
         descuento_pronto_pago_b: "",
         costo_neto_pronto_pago: "",
         porcentaje_pronto_pago: "",
-        costo_neto_financiamiento_normal: ""
+        costo_neto_financiamiento_normal: "",
       });
       if (this.verLista == true) {
-        this.form.plan_funerario.precios.forEach(element => {
+        this.form.plan_funerario.precios.forEach((element) => {
           if (element.status == 1) {
             //la venta es a futuro y puede seleccionar todas los siguientes planes de venta
             //precios de pagos a meses
@@ -2083,7 +2122,7 @@ export default {
                 porcentaje_pronto_pago: Number(element.porcentaje_pronto_pago),
                 costo_neto_financiamiento_normal: Number(
                   element.costo_neto_financiamiento_normal
-                )
+                ),
               });
             }
           }
@@ -2091,11 +2130,11 @@ export default {
         //selecciono el primero precio automaticamente
         if (this.getTipoformulario == "agregar") {
           /**tipo de formulario agregar */
-          this.seleccionarPlanVenta();
+          //this.seleccionarPlanVenta();
         } else {
           /**logica para traer los datos originales de la venta */
           let plan_encontrado = false;
-          this.planesVenta.forEach(element => {
+          this.planesVenta.forEach((element) => {
             if (element.value != "") {
               if (
                 element.value == this.datosVenta.financiamiento &&
@@ -2143,7 +2182,7 @@ export default {
                   porcentaje_pronto_pago: 0,
                   costo_neto_financiamiento_normal: Number(
                     this.datosVenta.costo_neto_financiamiento_normal
-                  )
+                  ),
                 };
                 this.planesVenta.push(planVenta);
                 this.form.planVenta = planVenta;
@@ -2180,7 +2219,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "12000"
+          time: "12000",
         });
       }
     },
@@ -2208,7 +2247,7 @@ export default {
         nota_ingles: "",
         value: "",
         secciones: [],
-        precios: []
+        precios: [],
       };
       this.form.ventaAntiguedad = this.ventasAntiguedad[0];
       this.form.solicitud = "";
@@ -2223,13 +2262,13 @@ export default {
       this.form.parentesco_titular_sustituto = "";
       this.form.telefono_titular_sustituto = "";
       this.form.beneficiarios = [];
-      this.form.planVenta = this.planesVenta[0];
-
-      this.form.descuento = 0;
-      this.form.subtotal = 0;
-      this.form.impuestos = 0;
-      this.form.costo_neto_pronto_pago = 0;
-      this.form.pago_inicial = 0;
+      //this.form.planVenta = this.planesVenta[0];
+      this.form.tasa_iva = 16;
+      this.form.descuento = "";
+      this.form.subtotal = "";
+      this.form.impuestos = "";
+      this.form.costo_neto_pronto_pago = "";
+      this.form.pago_inicial = "";
       this.form.nota = "";
     },
 
@@ -2243,7 +2282,7 @@ export default {
       let errores_de_captura_en_datos = 0;
       /**maximo 10 beneficiarios */
       if (this.form.beneficiarios.length < 10) {
-        this.form.beneficiarios.forEach(element => {
+        this.form.beneficiarios.forEach((element) => {
           if (
             element.nombre === "" ||
             element.parentesco === "" ||
@@ -2261,14 +2300,14 @@ export default {
             icon: "icon-alert-circle",
             color: "danger",
             position: "bottom-right",
-            time: "9000"
+            time: "9000",
           });
         } else {
           //si paso la prueba de toodos los datos
           this.form.beneficiarios.push({
             nombre: "",
             parentesco: "",
-            telefono: ""
+            telefono: "",
           });
         }
       } else {
@@ -2280,7 +2319,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
       }
     },
@@ -2329,7 +2368,7 @@ export default {
           nota: this.datosVenta.venta_plan.nota_original,
           nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
           value: this.datosVenta.venta_plan.planes_funerarios_id,
-          secciones: this.datosVenta.venta_plan.secciones_original
+          secciones: this.datosVenta.venta_plan.secciones_original,
         };
         /**guarda los precios en caso de que no se encuentre el plan original y se deba agregar precios por separado */
         let precios_plan = [];
@@ -2407,14 +2446,14 @@ export default {
             nota_ingles: this.datosVenta.venta_plan.nota_original_ingles,
             value: this.datosVenta.venta_plan.planes_funerarios_id,
             secciones: this.datosVenta.venta_plan.secciones_original,
-            precios: precios_plan
+            precios: precios_plan,
           };
           this.planes_funerarios.push(plan_original);
           this.form.plan_funerario = plan_original;
           /**si no esta, se agrega el concepto original*/
         }
         /**cargando la antiguedad de la venta */
-        this.ventasAntiguedad.forEach(element => {
+        this.ventasAntiguedad.forEach((element) => {
           if (element.value == this.datosVenta.antiguedad_operacion_id) {
             this.form.ventaAntiguedad = element;
             return;
@@ -2423,7 +2462,7 @@ export default {
         this.form.id_cliente = this.datosVenta.cliente_id;
         this.form.cliente = this.datosVenta.nombre;
         /**verificando si existe el vendedor o si no para crearlo, podria no existir en caso de que haya sido cancelado */
-        this.vendedores.forEach(element => {
+        this.vendedores.forEach((element) => {
           if (element.value == this.datosVenta.venta_plan.vendedor.id) {
             this.form.vendedor = element;
           }
@@ -2434,7 +2473,7 @@ export default {
             label:
               "(" +
               this.datosVenta.venta_plan.vendedor.nombre +
-              ", vendedor de origen)"
+              ", vendedor de origen)",
           };
           this.vendedores.push(vendedor);
           this.form.vendedor = vendedor;
@@ -2459,6 +2498,13 @@ export default {
         this.form.telefono_titular_sustituto = this.datosVenta.telefono_titular_sustituto;
         /**beneficairios */
         this.form.beneficiarios = this.datosVenta.beneficiarios;
+        this.form.financiamiento = this.datosVenta.financiamiento;
+        this.form.subtotal = this.datosVenta.subtotal;
+        this.form.descuento = this.datosVenta.descuento;
+        this.form.tasa_iva =
+          Number(this.datosVenta.tasa_iva) <= 0 ? 16 : this.datosVenta.tasa_iva;
+        this.form.pago_inicial = this.datosVenta.pagos_programados[0].monto_programado;
+        this.form.costo_neto_pronto_pago = this.datosVenta.costo_neto_pronto_pago;
         this.form.nota = this.datosVenta.nota;
         /**mostrando los datos relacionados al pago */
         this.$vs.loading.close();
@@ -2473,7 +2519,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -2489,7 +2535,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "10000"
+          time: "10000",
         });
       } else if (this.ventaLiquidada) {
         this.$vs.notify({
@@ -2500,7 +2546,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "10000"
+          time: "10000",
         });
       }
     },
@@ -2508,14 +2554,14 @@ export default {
       this.$validator.pause();
       this.$nextTick(() => {
         this.$validator.errors.clear();
-        this.$validator.fields.items.forEach(field => field.reset());
-        this.$validator.fields.items.forEach(field =>
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
           this.errors.remove(field)
         );
         this.$validator.resume();
       });
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

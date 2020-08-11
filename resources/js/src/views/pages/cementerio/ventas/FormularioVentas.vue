@@ -1727,7 +1727,7 @@ export default {
         (Number(this.form.subtotal) - Number(this.form.descuento)) *
         this.tasa_iva_porcentaje_computed
       ).toFixed(2);
-      if (iva <= 0 || isNaN(iva)) {
+      if (isNaN(iva)) {
         return 0;
       } else {
         return iva;
@@ -1739,7 +1739,7 @@ export default {
         (Number(this.form.subtotal) - Number(this.form.descuento)) *
         this.tasa_iva_computed
       ).toFixed(2);
-      if (costo_neto <= 0 || isNaN(costo_neto)) {
+      if (isNaN(costo_neto)) {
         return 0;
       } else {
         return costo_neto;
@@ -1765,7 +1765,7 @@ export default {
       } else {
         pago_inicial_minimo = this.costo_neto_computed * 0.1;
       }
-      if (pago_inicial_minimo <= 0 || isNaN(pago_inicial_minimo)) {
+      if (isNaN(pago_inicial_minimo)) {
         return 0;
       } else {
         return pago_inicial_minimo;
@@ -1780,7 +1780,7 @@ export default {
         pago_inicial_maximo = this.costo_neto_computed * 0.7;
       }
 
-      if (pago_inicial_maximo <= 0 || isNaN(pago_inicial_maximo)) {
+      if (isNaN(pago_inicial_maximo)) {
         return 0;
       } else {
         return pago_inicial_maximo;
@@ -1796,7 +1796,7 @@ export default {
         minimo_pronto_pago = 0;
       }
 
-      if (minimo_pronto_pago <= 0 || isNaN(minimo_pronto_pago)) {
+      if (isNaN(minimo_pronto_pago)) {
         return 0;
       } else {
         return minimo_pronto_pago;
