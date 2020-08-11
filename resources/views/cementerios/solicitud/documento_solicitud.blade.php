@@ -79,9 +79,6 @@
                             {{ $empresa->razon_social }}
                         </h1>
                         <p class="datos-header">
-                            r.f.c. {{ $empresa->rfc }}
-                        </p>
-                        <p class="datos-header">
                             {{ strtolower($empresa->calle) }} Núm. Ext {{ $empresa->num_ext }}
                         </p>
                         <p class="datos-header">
@@ -241,7 +238,11 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-55 center">
+                            @if (trim($datos['fecha_nac'])!='')
                             {{ fecha_abr(($datos['fecha_nac'])) }}
+                            @else
+                            N/A
+                            @endif
                         </div>
                     </div>
                 </td>
@@ -253,7 +254,11 @@
                             </span>
                         </div>
                         <div class="float-right bg-gray w-60 center">
+                            @if (trim($datos['fecha_nac'])!='')
                             {{ calculaedad((String)($datos['fecha_nac'])) }} años
+                            @else
+                            N/A
+                            @endif
                         </div>
                     </div>
                 </td>
@@ -386,8 +391,12 @@
                         </tr>
                         <tr>
                             <td class="w-55 py-1 left bg-nada">
+                                @if (trim($datos['tasa_iva'])=='')
+                                <span class="bold">iva (16 %):</span>
+                                @else
+                                <span class="bold">iva ({{ $datos['tasa_iva'] }} %):</span>
+                                @endif
 
-                                <span class="bold">iva:</span>
                             </td>
                             <td class="w-45 py-1 right bg-gray">
                                 $ {{ number_format( $datos['impuestos'],2)}}

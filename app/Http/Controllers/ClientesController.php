@@ -127,7 +127,7 @@ class ClientesController extends ApiController
         $validaciones = [
             /**personal */
             'nombre' => 'required',
-            'fecha_nac' => 'required',
+            'fecha_nac' => '',
             'direccion' => 'required',
             'ciudad' => 'required',
             'estado' => 'required',
@@ -155,6 +155,7 @@ class ClientesController extends ApiController
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
+            'date_format' => 'Formato de Fecha yyyy-mm-dd',
             'required' => 'Este dato es obligatorio',
             'email.email' => 'Ingrese un email válido',
             'email.unique' => 'Este email ya fue registrado',
@@ -175,7 +176,7 @@ class ClientesController extends ApiController
                 'direccion' => $request->direccion,
                 'ciudad' => $request->ciudad,
                 'estado' => $request->estado,
-                'fecha_nac' =>  date('Y-m-d H:i:s', strtotime($request->fecha_nac)),
+                'fecha_nac' =>  trim($request->fecha_nac) != '' ? date('Y-m-d H:i:s', strtotime($request->fecha_nac)) : NULL,
                 'telefono' => trim($request->telefono) != '' ? trim($request->telefono) : NULL,
                 'celular' => trim($request->celular) != '' ? trim($request->celular) : NULL,
                 'telefono_extra' => trim($request->telefono_extra) != '' ? trim($request->telefono_extra) : NULL,
@@ -203,7 +204,6 @@ class ClientesController extends ApiController
         $validaciones = [
             /**personal */
             'nombre' => 'required',
-            'fecha_nac' => 'required',
             'direccion' => 'required',
             'ciudad' => 'required',
             'estado' => 'required',
@@ -257,7 +257,7 @@ class ClientesController extends ApiController
                 'direccion' => $request->direccion,
                 'ciudad' => $request->ciudad,
                 'estado' => $request->estado,
-                'fecha_nac' =>  date('Y-m-d H:i:s', strtotime($request->fecha_nac)),
+                'fecha_nac' =>  trim($request->fecha_nac) != '' ? date('Y-m-d H:i:s', strtotime($request->fecha_nac)) : NULL,
                 'telefono' => trim($request->telefono) != '' ? trim($request->telefono) : NULL,
                 'celular' => trim($request->celular) != '' ? trim($request->celular) : NULL,
                 'telefono_extra' => trim($request->telefono_extra) != '' ? trim($request->telefono_extra) : NULL,
