@@ -703,7 +703,8 @@
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima octava.- </span>
-            Toda documentación adicional que se firme por ambas partes en relación y con motivo de este convenio,
+            Se anexa hoja de reglamento interno del Panteón Aeternus. Toda documentación adicional que se firme por
+            ambas partes en relación y con motivo de este convenio,
             constituirá un anexo del mismo, y, por lo tanto, formará parte integral del presente convenio.
         </p>
 
