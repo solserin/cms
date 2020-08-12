@@ -78,14 +78,14 @@ class ServiciosFunerarios extends Migration
             /**datos para el acta de defuncion */
             $table->tinyInteger('acta_b')->default(0);
             $table->string('folio_acta', 50)->nullable();
-
+            $table->date('fecha_acta')->nullable();
 
             /**indica si se maneja material de velacion */
             $table->tinyInteger('material_velacion_b')->default(0);
 
             /**mas datos del fallecido */
-            //$table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
-            //$table->foreign('titulos_id')->references('id')->on('titulos');
+            $table->unsignedBigInteger('titulos_id')->unsigned()->nullable();
+            $table->foreign('titulos_id')->references('id')->on('titulos');
             //$table->dateTime('fechahora_llegada_afectado')->nullable();
 
             $table->unsignedBigInteger('nacionalidades_id')->unsigned()->nullable();
@@ -94,7 +94,7 @@ class ServiciosFunerarios extends Migration
             $table->foreign('generos_id')->references('id')->on('generos');
             $table->date('fecha_nacimiento')->nullable();
             $table->dateTime('fechahora_defuncion')->nullable();
-            $table->string('edad', 10)->nullable();
+            //$table->string('edad', 10)->nullable();
             $table->string('ocupacion')->nullable();
             $table->unsignedBigInteger('estado_afectado_id')->unsigned()->nullable();
             $table->foreign('estado_afectado_id')->references('id')->on('estado_afectado');
@@ -137,8 +137,6 @@ class ServiciosFunerarios extends Migration
             /**resto del contrato */
             $table->dateTime('fechahora_contrato')->nullable();
             $table->string('parentesco_contratante')->nullable();
-
-
 
 
 

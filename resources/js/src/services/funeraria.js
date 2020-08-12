@@ -38,6 +38,57 @@ export default {
         });
     },
 
+    get_estados_civiles() {
+        let call = "/funeraria/get_estados_civiles";
+        return axios.get(call);
+    },
+
+    get_escolaridades() {
+        let call = "/funeraria/get_escolaridades";
+        return axios.get(call);
+    },
+
+    get_afiliaciones() {
+        let call = "/funeraria/get_afiliaciones";
+        return axios.get(call);
+    },
+
+    get_sitios_muerte() {
+        let call = "/funeraria/get_sitios_muerte";
+        return axios.get(call);
+    },
+    get_titulos() {
+        let call = "/funeraria/get_titulos";
+        return axios.get(call);
+    },
+    get_estados_afectado() {
+        let call = "/funeraria/get_estados_afectado";
+        return axios.get(call);
+    },
+
+    get_lugares_velacion() {
+        let call = "/funeraria/get_lugares_velacion";
+        return axios.get(call);
+    },
+
+    get_lugares_inhumacion() {
+        let call = "/funeraria/get_lugares_inhumacion";
+        return axios.get(call);
+    },
+
+    get_material_velacion(param) {
+        return axios.get("/funeraria/get_material_velacion/all/false/3/0/0/1", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
+    get_tipos_contrato() {
+        let call = "/funeraria/get_tipos_contrato";
+        return axios.get(call);
+    },
     /**serviios del modulo */
 
     get_categorias() {
