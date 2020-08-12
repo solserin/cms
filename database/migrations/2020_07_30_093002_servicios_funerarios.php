@@ -147,6 +147,10 @@ class ServiciosFunerarios extends Migration
             $table->foreign('ventas_planes_id')->references('id')->on('ventas_planes');
 
 
+            $table->unsignedBigInteger('tipos_contratante_id')->unsigned()->nullable();
+            $table->foreign('tipos_contratante_id')->references('id')->on('tipos_contratante');
+
+
             /**datos sobre el lugar donde se dara el servicio */
             //$table->dateTime('fechahora_entrega_cenizas')->nullable();
             $table->mediumText('nota_reinhumacion')->nullable();

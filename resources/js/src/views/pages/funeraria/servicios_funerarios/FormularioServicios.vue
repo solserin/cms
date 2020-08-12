@@ -657,12 +657,9 @@
                 >
                   <label class="text-sm opacity-75 font-bold">
                     Indique dirección
-                    <span class="texto-importante">(*)</span>
                   </label>
                   <vs-input
                     name="lugar_muerte"
-                    data-vv-as=" "
-                    v-validate.disabled="'required'"
                     maxlength="125"
                     type="text"
                     class="w-full pb-1 pt-1"
@@ -2307,29 +2304,29 @@
                       <span class="texto-importante">(*)</span>
                     </label>
                     <v-select
-                      :options="tipos_contrato"
+                      :options="planes_funerarios"
                       :clearable="false"
                       :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      v-model="form.tipo_contrato"
+                      v-model="form.plan_funerario"
                       class="mb-4 sm:mb-0 pb-1 pt-1"
                       v-validate:plan_funerario_validacion_computed.immediate="
                         'required'
                       "
-                      name="tipo_contrato"
+                      name="plan_funerario"
                       data-vv-as=" "
                     >
                       <div slot="no-options">Seleccione 1</div>
                     </v-select>
                     <div>
                       <span class="text-danger">
-                        {{ errors.first("tipo_contrato") }}
+                        {{ errors.first("plan_funerario") }}
                       </span>
                     </div>
                     <div class="mt-2">
                       <span
                         class="text-danger"
-                        v-if="this.errores['tipo_contrato.value']"
-                        >{{ errores["tipo_contrato.value"][0] }}</span
+                        v-if="this.errores['plan_funerario.value']"
+                        >{{ errores["plan_funerario.value"][0] }}</span
                       >
                     </div>
                   </div>
@@ -2337,7 +2334,7 @@
                     class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   >
                     <label class="text-sm opacity-75 font-bold">
-                      Seleccione al Contratante
+                      Seleccione el Convenio
                       <span class="texto-importante">(*)</span>
                     </label>
                     <div class="flex flex-wrap">
@@ -2476,14 +2473,11 @@
                     <div class="py-2">
                       <label class="text-sm opacity-75 font-bold">
                         Parentesco con el Fallecido
-                        <span class="texto-importante">(*)</span>
                       </label>
                     </div>
 
                     <vs-input
                       name="parentesco_contratante"
-                      data-vv-as=" "
-                      v-validate.disabled="'required'"
                       maxlength="45"
                       type="text"
                       class="w-full pb-1 pt-1"
@@ -2772,6 +2766,13 @@ export default {
           label: "Seleccione 1",
         },
       ],
+      planes_funerarios: [
+        {
+          value: "",
+          label: "Seleccione 1",
+          detalle: [],
+        },
+      ],
       form: {
         /**fallecido */
         nombre_afectado: "",
@@ -2893,10 +2894,18 @@ export default {
           value: "",
           label: "Seleccione 1",
         },
+
         fechahora_contrato: "",
         id_cliente: "",
         cliente: "",
         parentesco_contratante: "",
+        plan_funerario: {
+          value: "",
+          label: "Seleccione 1",
+          detalle: [],
+        },
+        id_convenio_plan: "",
+        plan: "",
         articulos_servicios: [],
         /**fin datos del contrato */
       },

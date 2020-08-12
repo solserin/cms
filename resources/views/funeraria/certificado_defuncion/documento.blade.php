@@ -215,7 +215,7 @@
                     (age)
                 </div>
             </td>
-            <td class="w-30 px-2">{{ $datos['edad'] }}</td>
+            <td class="w-30 px-2">calcular</td>
         </tr>
     </table>
     <table class="w-100 texto-base mt-1 datos_tabla uppercase">

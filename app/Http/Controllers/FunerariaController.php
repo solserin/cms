@@ -2713,7 +2713,6 @@ class FunerariaController extends ApiController
             'parentesco_contratante',
             'nacionalidades_id',
             'estados_civiles_id',
-            'edad',
             'direccion_fallecido',
             'escolaridades_id',
             'ocupacion',

@@ -81,9 +81,6 @@
                             {{ $empresa->razon_social }}
                         </h1>
                         <p class="datos-header">
-                            r.f.c. {{ $empresa->rfc }}
-                        </p>
-                        <p class="datos-header">
                             {{ strtolower($empresa->calle) }} Núm. Ext {{ $empresa->num_ext }}
                         </p>
                         <p class="datos-header">
@@ -95,7 +92,7 @@
                             Tel. {{ $empresa->telefono }}, fax {{ $empresa->fax }}
                         </p>
                     </td>
-                   <td style="width:25%;">
+                    <td style="width:25%;">
                         <div class="numeros-contrato">
                             <div class="control bg-gray">
                                 Número Servicio
@@ -117,27 +114,38 @@
             </table>
         </section>
     </header>
- 
+
 
     <div class="contenido parrafo4">
         <h1 class="center mt-5 size-22px">guía del <span class="bold">Cliente</span></h1>
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">1.- </span>
-            Una vez recibida la solicitud por parte del <span class="bold">Cliente</span>, <span class="bold">Aeternus Funerales</span>, a través del personal que disponga, efectuará los tramites y procedimientos necesarios para atender los requerimientos del <span class="bold">Cliente</span> y trasladar al fallecido a las instalaciones de <span class="bold">Aeternus Funerales</span>.
+            Una vez recibida la solicitud por parte del <span class="bold">Cliente</span>, <span class="bold">Aeternus
+                Funerales</span>, a través del personal que disponga, efectuará los tramites y procedimientos necesarios
+            para atender los requerimientos del <span class="bold">Cliente</span> y trasladar al fallecido a las
+            instalaciones de <span class="bold">Aeternus Funerales</span>.
         </p>
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">2.- </span>
-            El personal de <span class="bold">Aeternus Funerales</span> entregará al <span class="bold">Cliente</span> los formatos de autorización e información necesaria para llevar a cabo la elaboración del certificado de defunción (en caso de aplicar), con el cual <span class="bold">Aeternus Funerales</span> podrá llevar a cabo la elaboración del contrato para la prestación del servicio funerario que el <span class="bold">Cliente</span> haya solicitado.
+            El personal de <span class="bold">Aeternus Funerales</span> entregará al <span class="bold">Cliente</span>
+            los formatos de autorización e información necesaria para llevar a cabo la elaboración del certificado de
+            defunción (en caso de aplicar), con el cual <span class="bold">Aeternus Funerales</span> podrá llevar a cabo
+            la elaboración del contrato para la prestación del servicio funerario que el <span
+                class="bold">Cliente</span> haya solicitado.
         </p>
-         <p class="texto-base justificar line-base">
+        <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">3.- </span>
-            Una vez el cuerpo del fallecido haya sido trasladado a las instalaciones de <span class="bold">Aeternus Funerales</span>, la persona que se hará cargo de llevar a cabo el contrato para recibir el servicio por parte de <span class="bold">Aeternus Funerales</span> deberá presentarse en las instalaciones de <span class="bold">Aeternus Funerales</span> para firmar la autorización del contrato e indicar los servicios y artículos que se incluirán en dicho contrato.
+            Una vez el cuerpo del fallecido haya sido trasladado a las instalaciones de <span class="bold">Aeternus
+                Funerales</span>, la persona que se hará cargo de llevar a cabo el contrato para recibir el servicio por
+            parte de <span class="bold">Aeternus Funerales</span> deberá presentarse en las instalaciones de <span
+                class="bold">Aeternus Funerales</span> para firmar la autorización del contrato e indicar los servicios
+            y artículos que se incluirán en dicho contrato.
         </p>
 
-          <p class="texto-base justificar line-base">
-              <span class="bg-gray px-2">
-El cliente deberá entregar la siguiente documentación para elaborar el acta de defunción:
-              </span>
+        <p class="texto-base justificar line-base">
+            <span class="bg-gray px-2">
+                El cliente deberá entregar la siguiente documentación para elaborar el acta de defunción:
+            </span>
         </p>
         <div class="lista pl-11 -mt-1">
             <p class="texto-base justificar line-base">
@@ -149,7 +157,7 @@ El cliente deberá entregar la siguiente documentación para elaborar el acta de
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">b) </span>
                 <span class="ml-2">
-                   Copia del acta de nacimiento del fallecido
+                    Copia del acta de nacimiento del fallecido
                 </span>
             </p>
             <p class="texto-base justificar line-base">
@@ -177,11 +185,11 @@ El cliente deberá entregar la siguiente documentación para elaborar el acta de
                 </span>
             </p>
         </div>
-         <p class="texto-base justificar line-base">
+        <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">4.- </span>
             Copia de identificación oficial de la persona quien realiza el trámite del acta de defunción
         </p>
-        </div>
+    </div>
 
 
 </body>

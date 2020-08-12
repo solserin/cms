@@ -89,9 +89,6 @@
                             {{ $empresa->razon_social }}
                         </h1>
                         <p class="datos-header">
-                            r.f.c. {{ $empresa->rfc }}
-                        </p>
-                        <p class="datos-header">
                             {{ strtolower($empresa->calle) }} Núm. Ext {{ $empresa->num_ext }}
                         </p>
                         <p class="datos-header">

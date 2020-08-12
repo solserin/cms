@@ -94,5 +94,11 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('cementerios_servicio')->insert(['cementerio' => 'Cementerio Aeternus']);
         DB::table('cementerios_servicio')->insert(['cementerio' => 'Otro Cementerio']);
         DB::table('cementerios_servicio')->insert(['cementerio' => 'Fosa Común']);
+
+
+        DB::table('tipos_contratante')->insert(['tipo' => 'titular']);
+        DB::table('tipos_contratante')->insert(['tipo' => 'titular sustituto']);
+        DB::table('tipos_contratante')->insert(['tipo' => 'beneficiario']);
+        DB::table('tipos_contratante')->insert(['tipo' => 'otro respresentante']);
     }
 }
