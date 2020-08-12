@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms solicitud-propiedades background-header-forms forms-popups-85"
+      class="normal-forms solicitud-propiedades background-header-forms forms-popups"
       fullscreen
       close="cancelar"
       :title="
