@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="searcher_clientes forms-popups normal-forms inline-header-forms"
+      class="forms-popups normal-forms inline-header-forms searcher_terrenos"
       fullscreen
       title="Catálogo de Terrenos Vendidos"
       :active.sync="showVentana"
@@ -15,7 +15,7 @@
             color="success"
             size="small"
             class="w-full ml-auto"
-            @click="verFormularioTerrenos = true"
+            @click="verFormularioVentas = true"
           >
             <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
             <span class="texto-btn">Vender Propiedad</span>
@@ -191,18 +191,19 @@
           </div>
         </div>
       </div>
-      <FormularioClientes
+      <FormularioVentas
+        :id_venta="''"
         :tipo="'agregar'"
-        :show="verFormularioTerrenos"
-        @closeVentana="verFormularioTerrenos = false"
-        @retornar_id="retorno_id"
-      ></FormularioClientes>
+        :show="verFormularioVentas"
+        @closeVentana="verFormularioVentas = false"
+        @ver_pdfs_nueva_venta="get_data('', 1)"
+      ></FormularioVentas>
       <!--fin de buscador-->
     </vs-popup>
   </div>
 </template>
 <script>
-import FormularioClientes from "@pages/clientes/FormularioClientes";
+import FormularioVentas from "@pages/cementerio/ventas/FormularioVentas";
 import funeraria from "@services/funeraria";
 import vSelect from "vue-select";
 import Datepicker from "vuejs-datepicker";
@@ -212,7 +213,7 @@ export default {
   components: {
     "v-select": vSelect,
     Datepicker,
-    FormularioClientes,
+    FormularioVentas,
   },
   props: {
     show: {
@@ -257,7 +258,7 @@ export default {
   },
   data() {
     return {
-      verFormularioTerrenos: false,
+      verFormularioVentas: false,
       selected: [],
       disabledDates: {
         from: new Date(),

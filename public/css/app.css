@@ -5596,6 +5596,19 @@ button:focus {
   padding-left: 10px !important;
 }
 
+.searcher_terrenos .vs-popup--title h3:before {
+  vertical-align: middle;
+  content: url(/images/browse-system.svg?f68f7b09f0c6ac5cb04200da02c2cb11);
+}
+
+[dir=ltr] .searcher_terrenos .vs-popup--title h3:before {
+  padding-right: 10px !important;
+}
+
+[dir=rtl] .searcher_terrenos .vs-popup--title h3:before {
+  padding-left: 10px !important;
+}
+
 .roles .vs-popup--title h3:before {
   content: url(/images/roles.svg?b2727787dabda7f9bf1ca4b797b0491a);
 }
@@ -6214,16 +6227,28 @@ button:focus {
 
 /**fin de  confirmar dialogos */
 
+.servicios_funerarios {
+  z-index: 51999 !important;
+}
+
+.searcher_terrenos {
+  z-index: 52000 !important;
+}
+
+.venta-propiedades {
+  z-index: 52001 !important;
+}
+
 /*searcher clientes*/
 
 .searcher_clientes,
 .ver_disponibilidad {
-  z-index: 52001 !important;
+  z-index: 52002 !important;
 }
 
 .clientes,
 .articulos {
-  z-index: 52002 !important;
+  z-index: 52003 !important;
 }
 
 .contrasena {

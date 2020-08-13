@@ -299,6 +299,12 @@
     content: url("../../../../../resources/assets/images/browse-system.svg");
 }
 
+.searcher_terrenos .vs-popup--title h3:before {
+    vertical-align: middle;
+    padding-right: 10px !important;
+    content: url("../../../../../resources/assets/images/browse-system.svg");
+}
+
 .roles .vs-popup--title h3:before {
     content: url("../../../../../resources/assets/images/roles.svg");
 }
@@ -841,16 +847,27 @@
 
 /**fin de  confirmar dialogos */
 
+.servicios_funerarios {
+    z-index: 51999 !important;
+}
+
+.searcher_terrenos {
+    z-index: 52000 !important;
+}
+.venta-propiedades {
+    z-index: 52001 !important;
+}
+
 /*searcher clientes*/
 .searcher_clientes,
 .ver_disponibilidad {
-    z-index: 52001 !important;
+    z-index: 52002 !important;
 }
 
 .clientes,
 .articulos {
     //1 arriba de searche_clientes
-    z-index: 52002 !important;
+    z-index: 52003 !important;
 }
 
 .contrasena {

@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms background-header-forms normal"
+      class="normal-forms background-header-forms normal servicios_funerarios"
       fullscreen
       close="cancelar"
       :title="
