@@ -2299,107 +2299,6 @@
                   <div
                     class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   >
-                    <label class="text-sm opacity-75 font-bold">
-                      <span>Plan Funerario</span>
-                      <span class="texto-importante">(*)</span>
-                    </label>
-                    <v-select
-                      :options="planes_funerarios"
-                      :clearable="false"
-                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      v-model="form.plan_funerario"
-                      class="mb-4 sm:mb-0 pb-1 pt-1"
-                      v-validate:plan_funerario_validacion_computed.immediate="
-                        'required'
-                      "
-                      name="plan_funerario"
-                      data-vv-as=" "
-                    >
-                      <div slot="no-options">Seleccione 1</div>
-                    </v-select>
-                    <div>
-                      <span class="text-danger">
-                        {{ errors.first("plan_funerario") }}
-                      </span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger"
-                        v-if="this.errores['plan_funerario.value']"
-                        >{{ errores["plan_funerario.value"][0] }}</span
-                      >
-                    </div>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
-                  >
-                    <label class="text-sm opacity-75 font-bold">
-                      Seleccione el Convenio
-                      <span class="texto-importante">(*)</span>
-                    </label>
-                    <div class="flex flex-wrap">
-                      <div
-                        class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
-                      >
-                        <div v-if="fueCancelada != true">
-                          <img
-                            v-if="form.id_cliente == ''"
-                            width="46px"
-                            class="cursor-pointer p-2"
-                            src="@assets/images/search.svg"
-                            @click="openBuscador = true"
-                            title="Buscar Cliente"
-                          />
-                          <img
-                            v-else
-                            width="46px"
-                            class="cursor-pointer p-2"
-                            src="@assets/images/minus.svg"
-                            @click="quitarCliente()"
-                          />
-                        </div>
-                        <div v-else>
-                          <img
-                            width="46px"
-                            class="cursor-pointer p-2"
-                            src="@assets/images/minus.svg"
-                          />
-                        </div>
-                      </div>
-                      <div
-                        class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
-                      >
-                        <vs-input
-                          readonly
-                          v-validate.disabled="'required'"
-                          name="id_cliente"
-                          data-vv-as=" "
-                          type="text"
-                          class="w-full py-1 cursor-pointer texto-bold"
-                          placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
-                          v-model="form.cliente"
-                          maxlength="100"
-                          ref="cliente_ref"
-                        />
-                        <div>
-                          <span class="text-danger">
-                            {{ errors.first("id_cliente") }}
-                          </span>
-                        </div>
-                        <div class="mt-2">
-                          <span
-                            class="text-danger"
-                            v-if="this.errores.id_cliente"
-                            >{{ errores.id_cliente[0] }}</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
-                  >
                     <div class="py-2">
                       <label class="text-sm opacity-75 font-bold">
                         Seleccione al Contratante
@@ -2515,8 +2414,142 @@
               <div class="w-full px-2">
                 <vs-divider />
               </div>
-              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
-                aqui
+              <div class="flex flex-wrap">
+                <div
+                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>¿Maneja Plan Funerario?</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <v-select
+                    :options="sino"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.plan_funerario_b"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="plan_funerario_b"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">Seleccione 1</div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">
+                      {{ errors.first("plan_funerario_b") }}
+                    </span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['plan_funerario_b.value']"
+                      >{{ errores["plan_funerario_b.value"][0] }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    Seleccione el Convenio
+                    <span class="texto-importante">(*)</span>
+                  </label>
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
+                    >
+                      <div v-if="fueCancelada != true">
+                        <img
+                          v-if="form.id_cliente == ''"
+                          width="46px"
+                          class="cursor-pointer p-2"
+                          src="@assets/images/search.svg"
+                          @click="openBuscador = true"
+                          title="Buscar Cliente"
+                        />
+                        <img
+                          v-else
+                          width="46px"
+                          class="cursor-pointer p-2"
+                          src="@assets/images/minus.svg"
+                          @click="quitarCliente()"
+                        />
+                      </div>
+                      <div v-else>
+                        <img
+                          width="46px"
+                          class="cursor-pointer p-2"
+                          src="@assets/images/minus.svg"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
+                    >
+                      <vs-input
+                        readonly
+                        v-validate.disabled="'required'"
+                        name="id_cliente"
+                        data-vv-as=" "
+                        type="text"
+                        class="w-full py-1 cursor-pointer texto-bold"
+                        placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
+                        v-model="form.cliente"
+                        maxlength="100"
+                        ref="cliente_ref"
+                      />
+                      <div>
+                        <span class="text-danger">
+                          {{ errors.first("id_cliente") }}
+                        </span>
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          class="text-danger"
+                          v-if="this.errores.id_cliente"
+                          >{{ errores.id_cliente[0] }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">
+                    <span>Tipo de Contratante</span>
+                    <span class="texto-importante">(*)</span>
+                  </label>
+
+                  <v-select
+                    :options="tipos_contratante"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.tipo_contratante"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="tipo_contratante"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">Seleccione 1</div>
+                  </v-select>
+                  <div>
+                    <span class="text-danger">
+                      {{ errors.first("tipo_contratante") }}
+                    </span>
+                  </div>
+                  <div class="mt-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['tipo_contratante.value']"
+                      >{{ errores["tipo_contratante.value"][0] }}</span
+                    >
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2637,6 +2670,7 @@ export default {
           await this.get_titulos();
           await this.get_material_velacion();
           await this.get_tipos_contrato();
+          await this.get_tipos_contratante();
 
           if (this.getTipoformulario == "agregar") {
             /**acciones cuando el formulario es de agregar */
@@ -2773,6 +2807,12 @@ export default {
           detalle: [],
         },
       ],
+      tipos_contratante: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
       form: {
         /**fallecido */
         nombre_afectado: "",
@@ -2894,6 +2934,10 @@ export default {
           value: "",
           label: "Seleccione 1",
         },
+        tipo_contratante: {
+          value: "",
+          label: "Seleccione 1",
+        },
 
         fechahora_contrato: "",
         id_cliente: "",
@@ -2904,6 +2948,11 @@ export default {
           label: "Seleccione 1",
           detalle: [],
         },
+        plan_funerario_b: {
+          value: "0",
+          label: "NO",
+        },
+
         id_convenio_plan: "",
         plan: "",
         articulos_servicios: [],
@@ -3134,6 +3183,27 @@ export default {
         });
     },
 
+    async get_tipos_contratante() {
+      //this.$vs.loading();
+      await funeraria
+        .get_tipos_contratante()
+        .then((res) => {
+          this.tipos_contratante = [];
+          this.tipos_contratante.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.tipos_contratante.push({
+              label: element.tipo,
+              value: element.id,
+            });
+          });
+          this.form.tipo_contratante = this.tipos_contratante[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
     async get_material_velacion() {
       //this.$vs.loading();
       await funeraria
@@ -3153,6 +3223,7 @@ export default {
           this.$vs.loading.close();
         });
     },
+
     acceptAlert() {
       this.$validator
         .validateAll()

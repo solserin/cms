@@ -143,13 +143,11 @@ class ServiciosFunerarios extends Migration
             $table->mediumText('nota_servicio')->nullable();
 
             /**datos sobre el plan funerario  */
+            $table->tinyInteger('plan_funerario_b')->default(0);
             $table->unsignedBigInteger('ventas_planes_id')->unsigned()->nullable();
             $table->foreign('ventas_planes_id')->references('id')->on('ventas_planes');
-
-
             $table->unsignedBigInteger('tipos_contratante_id')->unsigned()->nullable();
             $table->foreign('tipos_contratante_id')->references('id')->on('tipos_contratante');
-
 
             /**datos sobre el lugar donde se dara el servicio */
             //$table->dateTime('fechahora_entrega_cenizas')->nullable();

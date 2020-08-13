@@ -89,6 +89,11 @@ export default {
         let call = "/funeraria/get_tipos_contrato";
         return axios.get(call);
     },
+
+    get_tipos_contratante() {
+        let call = "/funeraria/get_tipos_contratante";
+        return axios.get(call);
+    },
     /**serviios del modulo */
 
     get_categorias() {

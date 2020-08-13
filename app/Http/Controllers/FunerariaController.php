@@ -25,6 +25,7 @@ use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\CementerioController;
+use App\TiposContratante;
 use App\TiposContrato;
 
 class FunerariaController extends ApiController
@@ -3252,6 +3253,19 @@ class FunerariaController extends ApiController
     public function get_tipos_contrato()
     {
         return TiposContrato::select(
+            'id',
+            DB::raw(
+                'UPPER(tipo) as tipo'
+            )
+        )
+            ->whereNotIn('id', [6, 7])
+
+            ->orderBy('id', 'asc')->get();
+    }
+
+    public function get_tipos_contratante()
+    {
+        return TiposContratante::select(
             'id',
             DB::raw(
                 'UPPER(tipo) as tipo'

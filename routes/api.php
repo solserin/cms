@@ -52,6 +52,8 @@ Route::get('funeraria/get_lugares_velacion', 'FunerariaController@get_lugares_ve
 Route::get('funeraria/get_lugares_inhumacion', 'FunerariaController@get_lugares_inhumacion');
 Route::get('funeraria/get_tipos_contrato', 'FunerariaController@get_tipos_contrato');
 Route::get('funeraria/get_material_velacion/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
+Route::get('funeraria/get_tipos_contratante', 'FunerariaController@get_tipos_contratante');
+
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
