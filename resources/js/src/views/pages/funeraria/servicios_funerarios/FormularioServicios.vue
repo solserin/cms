@@ -2426,26 +2426,26 @@
                     :options="sino"
                     :clearable="false"
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                    v-model="form.plan_funerario_b"
+                    v-model="form.plan_funerario_futuro_b"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
                     v-validate:plan_funerario_validacion_computed.immediate="
                       'required'
                     "
-                    name="plan_funerario_b"
+                    name="plan_funerario_futuro_b"
                     data-vv-as=" "
                   >
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
                     <span class="text-danger">
-                      {{ errors.first("plan_funerario_b") }}
+                      {{ errors.first("plan_funerario_futuro_b") }}
                     </span>
                   </div>
                   <div class="mt-2">
                     <span
                       class="text-danger"
-                      v-if="this.errores['plan_funerario_b.value']"
-                      >{{ errores["plan_funerario_b.value"][0] }}</span
+                      v-if="this.errores['plan_funerario_futuro_b.value']"
+                      >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
                     >
                   </div>
                 </div>
@@ -2948,7 +2948,7 @@ export default {
           label: "Seleccione 1",
           detalle: [],
         },
-        plan_funerario_b: {
+        plan_funerario_futuro_b: {
           value: "0",
           label: "NO",
         },

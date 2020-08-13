@@ -2648,8 +2648,6 @@ class FunerariaController extends ApiController
             'cremacion_b',
             'inhumacion_b',
             'traslado_b',
-            'exhumar_b',
-            'reinhumar_b',
             /**venta operacion */
             'servicios_funerarios.id as servicio_id',
             'llamada_b',
