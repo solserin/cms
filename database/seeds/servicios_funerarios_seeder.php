@@ -27,15 +27,6 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('lugares_servicios')->insert(['lugar' => 'Funeraria Aeternus | Sala la misericordia']);
         DB::table('lugares_servicios')->insert(['lugar' => 'Funeraria Aeternus | Sala la resurreción']);
 
-        /**tipo de servicios funerarios */
-        DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Embalsamar']);
-        DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Velación']);
-        DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Cremacion']);
-        DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Inhumación']);
-        DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Traslado']);
-        DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Exhumación']);
-        DB::table('tipo_servicios_funerarios')->insert(['tipo' => 'Reinhumación']);
-
         /**Tipo Solicitud*/
         DB::table('tipo_solicitud')->insert(['tipo' => 'Servicio Funerario']);
         DB::table('tipo_solicitud')->insert(['tipo' => 'Exhumación']);
@@ -99,6 +90,6 @@ class servicios_funerarios_seeder extends Seeder
         DB::table('tipos_contratante')->insert(['tipo' => 'titular']);
         DB::table('tipos_contratante')->insert(['tipo' => 'titular sustituto']);
         DB::table('tipos_contratante')->insert(['tipo' => 'beneficiario']);
-        DB::table('tipos_contratante')->insert(['tipo' => 'otro respresentante']);
+        DB::table('tipos_contratante')->insert(['tipo' => 'otro']);
     }
 }

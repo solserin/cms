@@ -84,15 +84,18 @@ export default {
             params: param
         });
     },
-
-    get_tipos_contrato() {
-        let call = "/funeraria/get_tipos_contrato";
-        return axios.get(call);
-    },
-
     get_tipos_contratante() {
         let call = "/funeraria/get_tipos_contratante";
         return axios.get(call);
+    },
+
+    get_terrenos(param) {
+        return axios.get("/cementerio/get_ventas/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
     },
     /**serviios del modulo */
 

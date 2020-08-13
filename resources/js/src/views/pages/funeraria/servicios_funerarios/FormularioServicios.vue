@@ -62,11 +62,10 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.titulo"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
-                      'required'
-                    "
+                    v-validate:titulo_validacion_computed.immediate="'required'"
                     name="titulo"
                     data-vv-as=" "
+                    ref="titulo_ref"
                   >
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
@@ -100,6 +99,7 @@
                     class="w-full pb-1 pt-1"
                     placeholder="Nombre Fallecido"
                     v-model="form.nombre_afectado"
+                    ref="fallecido_ref"
                   />
                   <div>
                     <span class="text-danger">
@@ -125,7 +125,7 @@
                   <flat-pickr
                     name="fecha_nacimiento"
                     data-vv-as=" "
-                    v-validate:fecha_solicitud_validacion_computed.immediate="
+                    v-validate:fecha_nacimiento_validacion_computed.immediate="
                       'required'
                     "
                     :config="configdateTimePicker"
@@ -160,9 +160,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.genero"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
-                      'required'
-                    "
+                    v-validate:genero_validacion_computed.immediate="'required'"
                     name="genero"
                     data-vv-as=" "
                   >
@@ -194,17 +192,17 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.nacionalidad"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:nacionalidad_validacion_computed.immediate="
                       'required'
                     "
-                    name="plan_validacion"
+                    name="nacionalidad"
                     data-vv-as=" "
                   >
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
                     <span class="text-danger">
-                      {{ errors.first("plan_validacion") }}
+                      {{ errors.first("nacionalidad") }}
                     </span>
                   </div>
                   <div class="mt-2">
@@ -309,7 +307,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.estado_civil"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:estado_civil_validacion_computed.immediate="
                       'required'
                     "
                     name="estado_civil"
@@ -343,7 +341,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.escolaridad"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:escolaridad_validacion_computed.immediate="
                       'required'
                     "
                     name="escolaridad"
@@ -353,7 +351,7 @@
                   </v-select>
                   <div>
                     <span class="text-danger">
-                      {{ errors.first("plan_validacion") }}
+                      {{ errors.first("escolaridad") }}
                     </span>
                   </div>
                   <div class="mt-2">
@@ -377,7 +375,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.afiliacion"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:afiliacion_validacion_computed.immediate="
                       'required'
                     "
                     name="afiliacion"
@@ -499,7 +497,7 @@
                   <flat-pickr
                     name="fechahora_defuncion"
                     data-vv-as=" "
-                    v-validate:fecha_solicitud_validacion_computed.immediate="
+                    v-validate:fechahora_defuncion_validacion_computed.immediate="
                       'required'
                     "
                     :config="configdateTimePickerWithTime"
@@ -631,7 +629,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.sitio_muerte"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:sitio_muerte_validacion_computed.immediate="
                       'required'
                     "
                     name="sitio_muerte"
@@ -864,7 +862,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.estado_cuerpo"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:estado_cuerpo_validacion_computed.immediate="
                       'required'
                     "
                     name="estado_cuerpo"
@@ -979,12 +977,18 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Nombre del preparador
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.embalsamar_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <vs-input
                         name="preparador"
                         data-vv-as=" "
-                        v-validate.disabled="'required'"
+                        v-validate:preparador_validacion_computed.immediate="
+                          'required'
+                        "
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
@@ -1051,7 +1055,11 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         <span>¿Lugar de Velación?</span>
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.velacion_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <v-select
                         :options="lugares_servicio"
@@ -1059,7 +1067,7 @@
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
                         v-model="form.lugar_servicio"
                         class="mb-4 sm:mb-0 pb-1 pt-1"
-                        v-validate:plan_funerario_validacion_computed.immediate="
+                        v-validate:lugar_servicio_validacion_computed.immediate="
                           'required'
                         "
                         name="lugar_servicio"
@@ -1086,12 +1094,18 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Dirección del Servicio
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.velacion_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <vs-input
                         name="direccion_velacion"
                         data-vv-as=" "
-                        v-validate.disabled="'required'"
+                        v-validate:direccion_velacion_validacion_computed.immediate="
+                          'required'
+                        "
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
@@ -1163,12 +1177,16 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Fecha de la Cremación
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.cremacion_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <flat-pickr
                         name="fechahora_cremacion"
                         data-vv-as=" "
-                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                        v-validate:fechahora_cremacion_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
@@ -1195,12 +1213,16 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Fecha de Entrga de Cenizas
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.cremacion_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <flat-pickr
                         name="fechahora_entrega_cenizas"
                         data-vv-as=" "
-                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                        v-validate:fechahora_entrega_cenizas_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
@@ -1296,7 +1318,11 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         <span>¿Lugar de Inhumación?</span>
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.inhumacion_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <v-select
                         :options="cementerios_servicio"
@@ -1304,7 +1330,7 @@
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
                         v-model="form.cementerio_servicio"
                         class="mb-4 sm:mb-0 pb-1 pt-1"
-                        v-validate:plan_funerario_validacion_computed.immediate="
+                        v-validate:cementerio_servicio_validacion_computed.immediate="
                           'required'
                         "
                         name="cementerio_servicio"
@@ -1331,12 +1357,16 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Fecha Inhumación
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.inhumacion_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <flat-pickr
                         name="fechahora_inhumacion"
                         data-vv-as=" "
-                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                        v-validate:fechahora_inhumacion_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
@@ -1374,19 +1404,19 @@
                         >
                           <div v-if="fueCancelada != true">
                             <img
-                              v-if="form.id_cliente == ''"
+                              v-if="form.ventas_terrenos_id == ''"
                               width="46px"
                               class="cursor-pointer p-2"
                               src="@assets/images/search.svg"
-                              @click="openBuscador = true"
-                              title="Buscar Cliente"
+                              @click="openBuscadorTerreno = true"
+                              title="Buscar Terreno"
                             />
                             <img
                               v-else
                               width="46px"
                               class="cursor-pointer p-2"
                               src="@assets/images/minus.svg"
-                              @click="quitarCliente()"
+                              @click="quitarTerreno()"
                             />
                           </div>
                           <div v-else>
@@ -1402,13 +1432,15 @@
                         >
                           <vs-input
                             readonly
-                            v-validate.disabled="'required'"
+                            v-validate:ventas_terrenos_id_validacion_computed.immediate="
+                              'required'
+                            "
                             name="ventas_terrenos_id"
                             data-vv-as=" "
                             type="text"
                             class="w-full py-1 cursor-pointer texto-bold"
                             placeholder="SELECCIONE EL CONVENIO DEL TERRENO"
-                            v-model="form.cliente"
+                            v-model="form.ubicacion"
                             maxlength="100"
                             ref="cliente_ref"
                             :disabled="form.inhumacion_b != 1 ? true : false"
@@ -1433,13 +1465,23 @@
                       class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
                     >
                       <label class="text-sm opacity-75 font-bold">
-                        Indique ubicación (Fila, lote y sección)
-                        <span class="texto-importante">(*)</span>
+                        Cementerio y Ubicación (Cementerio, Fila, Lote y
+                        Sección)
+                        <span
+                          class="texto-importante"
+                          v-if="
+                            form.inhumacion_b == 1 &&
+                            form.cementerio_servicio.value > 1
+                          "
+                          >(*)</span
+                        >
                       </label>
                       <vs-input
                         name="ubicacion"
                         data-vv-as=" "
-                        v-validate.disabled="'required'"
+                        v-validate:ubicacion_validacion_computed.immediate="
+                          'required'
+                        "
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
@@ -1513,12 +1555,16 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Fecha del Traslado
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.traslado_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <flat-pickr
                         name="fechahora_traslado"
                         data-vv-as=" "
-                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                        v-validate:fechahora_traslado_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
@@ -1545,12 +1591,18 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Lugar del Traslado
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.traslado_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <vs-input
                         name="destino_traslado"
                         data-vv-as=" "
-                        v-validate.disabled="'required'"
+                        v-validate:destino_traslado_validacion_computed.immediate="
+                          'required'
+                        "
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
@@ -1646,12 +1698,18 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Aseguradora
-                        <span class="texto-importante">(*)</span>
+                        <span
+                          class="texto-importante"
+                          v-if="form.aseguradora_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <vs-input
                         name="aseguradora"
                         data-vv-as=" "
-                        v-validate.disabled="'required'"
+                        v-validate:aseguradora_validacion_computed.immediate="
+                          'required'
+                        "
                         maxlength="150"
                         type="text"
                         class="w-full pb-1 pt-1"
@@ -1753,12 +1811,14 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Fecha y Hora
-                        <span class="texto-importante">(*)</span>
+                        <span class="texto-importante" v-if="form.misa_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <flat-pickr
                         name="fechahora_misa"
                         data-vv-as=" "
-                        v-validate:fecha_solicitud_validacion_computed.immediate="
+                        v-validate:fechahora_misa_validacion_computed.immediate="
                           'required'
                         "
                         :config="configdateTimePickerWithTime"
@@ -1785,12 +1845,16 @@
                     >
                       <label class="text-sm opacity-75 font-bold">
                         Iglesia o Templo
-                        <span class="texto-importante">(*)</span>
+                        <span class="texto-importante" v-if="form.misa_b == 1"
+                          >(*)</span
+                        >
                       </label>
                       <vs-input
                         name="iglesia_misa"
                         data-vv-as=" "
-                        v-validate.disabled="'required'"
+                        v-validate:iglesia_misa_validacion_computed.immediate="
+                          'required'
+                        "
                         maxlength="75"
                         type="text"
                         class="w-full pb-1 pt-1"
@@ -2037,6 +2101,7 @@
                     <vs-th>#</vs-th>
                     <vs-th>Clave</vs-th>
                     <vs-th>Artículo</vs-th>
+                    <vs-th>Nota</vs-th>
                     <vs-th>Cantidad</vs-th>
                   </template>
                   <template slot-scope="{ data }">
@@ -2055,17 +2120,28 @@
                           <span class="capitalize">{{ tr.id }}</span>
                         </div>
                       </vs-td>
-                      <vs-td class="w-7/12">
+                      <vs-td class="w-4/12">
                         <div class="capitalize">
                           {{ tr.descripcion }}
                         </div>
+                      </vs-td>
+                      <vs-td class="w-4/12">
+                        <vs-input
+                          :name="'nota_material' + indextr"
+                          class="w-full sm:w-11/12 md:w-10/12 lg:w-10/12 xl:w-10/12 mr-auto ml-auto mt-1 cantidad"
+                          maxlength="180"
+                          v-model="form.material_velacion[indextr].nota"
+                          :disabled="
+                            form.material_velacion_b == 0 ? true : false
+                          "
+                        />
                       </vs-td>
                       <vs-td class="w-2/12">
                         <vs-input
                           :name="'cantidad' + indextr"
                           data-vv-as=" "
                           data-vv-validate-on="blur"
-                          v-validate="'required|integer|min_value:' + 0"
+                          v-validate="'integer|min_value:' + 0"
                           class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad"
                           maxlength="4"
                           v-model="form.material_velacion[indextr].cantidad"
@@ -2143,10 +2219,17 @@
                   >
                     <label class="text-sm opacity-75 font-bold">
                       Folio del Acta
+                      <span class="texto-importante" v-if="form.acta_b == 1"
+                        >(*)</span
+                      >
                     </label>
 
                     <vs-input
                       name="folio_acta"
+                      data-vv-as=" "
+                      v-validate:folio_acta_validacion_computed.immediate="
+                        'required'
+                      "
                       maxlength="45"
                       type="text"
                       class="w-full pb-1 pt-1"
@@ -2172,12 +2255,19 @@
                   >
                     <label class="text-sm opacity-75 font-bold">
                       Fecha de Levantamiento
+                      <span class="texto-importante" v-if="form.acta_b == 1"
+                        >(*)</span
+                      >
                     </label>
                     <flat-pickr
                       name="fecha_acta"
-                      :config="configdateTimePickerWithTime"
+                      data-vv-as=" "
+                      v-validate:fecha_acta_validacion_computed.immediate="
+                        'required'
+                      "
+                      :config="configdateTimePicker"
                       v-model="form.fecha_acta"
-                      placeholder="Fecha y Hora de Levantamiento"
+                      placeholder="Fecha de Levantamiento"
                       class="w-full my-1"
                       :disabled="this.form.acta_b == 0 ? true : false"
                     />
@@ -2230,41 +2320,7 @@
               <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
                 <div class="flex flex-wrap">
                   <div
-                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
-                  >
-                    <label class="text-sm opacity-75 font-bold">
-                      <span>Tipo de Contrato</span>
-                      <span class="texto-importante">(*)</span>
-                    </label>
-                    <v-select
-                      :options="tipos_contrato"
-                      :clearable="false"
-                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      v-model="form.tipo_contrato"
-                      class="mb-4 sm:mb-0 pb-1 pt-1"
-                      v-validate:plan_funerario_validacion_computed.immediate="
-                        'required'
-                      "
-                      name="tipo_contrato"
-                      data-vv-as=" "
-                    >
-                      <div slot="no-options">Seleccione 1</div>
-                    </v-select>
-                    <div>
-                      <span class="text-danger">
-                        {{ errors.first("tipo_contrato") }}
-                      </span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger"
-                        v-if="this.errores['tipo_contrato.value']"
-                        >{{ errores["tipo_contrato.value"][0] }}</span
-                      >
-                    </div>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
                   >
                     <label class="text-sm opacity-75 font-bold">
                       Fecha del Contrato
@@ -2274,7 +2330,7 @@
                     <flat-pickr
                       name="fechahora_contrato"
                       data-vv-as=" "
-                      v-validate:fecha_solicitud_validacion_computed.immediate="
+                      v-validate:fechahora_contrato_validacion_computed.immediate="
                         'required'
                       "
                       :config="configdateTimePickerWithTime"
@@ -2297,14 +2353,12 @@
                   </div>
 
                   <div
-                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
                   >
-                    <div class="py-2">
-                      <label class="text-sm opacity-75 font-bold">
-                        Seleccione al Contratante
-                        <span class="texto-importante">(*)</span>
-                      </label>
-                    </div>
+                    <label class="text-sm opacity-75 font-bold">
+                      Seleccione al Contratante
+                      <span class="texto-importante">(*)</span>
+                    </label>
 
                     <div class="flex flex-wrap">
                       <div
@@ -2367,13 +2421,11 @@
                   </div>
 
                   <div
-                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                    class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
                   >
-                    <div class="py-2">
-                      <label class="text-sm opacity-75 font-bold">
-                        Parentesco con el Fallecido
-                      </label>
-                    </div>
+                    <label class="text-sm opacity-75 font-bold">
+                      Parentesco con el Fallecido
+                    </label>
 
                     <vs-input
                       name="parentesco_contratante"
@@ -2419,7 +2471,7 @@
                   class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
                 >
                   <label class="text-sm opacity-75 font-bold">
-                    <span>¿Maneja Plan Funerario?</span>
+                    <span>¿Tiene Plan Funerario?</span>
                     <span class="texto-importante">(*)</span>
                   </label>
                   <v-select
@@ -2596,6 +2648,12 @@
       @closeBuscador="openBuscador = false"
       @retornoCliente="clienteSeleccionado"
     ></ClientesBuscador>
+
+    <TerrenosBuscador
+      :show="openBuscadorTerreno"
+      @closeBuscador="openBuscadorTerreno = false"
+      @retornoTerreno="TerrenoSeleccionado"
+    ></TerrenosBuscador>
   </div>
 </template>
 <script>
@@ -2612,6 +2670,7 @@ import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
+import TerrenosBuscador from "@pages/cementerio/searcher.vue";
 import clientes from "@services/clientes";
 
 /**VARIABLES GLOBALES */
@@ -2629,6 +2688,7 @@ export default {
     ConfirmarDanger,
     ConfirmarAceptar,
     ClientesBuscador,
+    TerrenosBuscador,
   },
   props: {
     show: {
@@ -2651,7 +2711,7 @@ export default {
       this.limpiarValidation();
       if (newValue == true) {
         this.$nextTick(() =>
-          this.$refs["cliente_ref"].$el.querySelector("input").focus()
+          this.$refs["fallecido_ref"].$el.querySelector("input").focus()
         );
         this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
           this.cancelar();
@@ -2669,7 +2729,6 @@ export default {
           await this.get_lugares_inhumacion();
           await this.get_titulos();
           await this.get_material_velacion();
-          await this.get_tipos_contrato();
           await this.get_tipos_contratante();
 
           if (this.getTipoformulario == "agregar") {
@@ -2686,8 +2745,200 @@ export default {
         /**acciones al cerrar el formulario */
       }
     },
+
+    "form.inhumacion_b": function (newValue, oldValue) {
+      this.form.ubicacion = "";
+      this.form.ventas_terrenos_id = "";
+    },
+    "form.cementerio_servicio": function (newValue, oldValue) {
+      this.form.ubicacion = "";
+      this.form.ventas_terrenos_id = "";
+    },
   },
   computed: {
+    /**validaciones de los selects */
+    nacionalidad_validacion_computed: function () {
+      return this.form.nacionalidad.value;
+    },
+
+    estado_civil_validacion_computed: function () {
+      return this.form.estado_civil.value;
+    },
+
+    escolaridad_validacion_computed: function () {
+      return this.form.escolaridad.value;
+    },
+
+    afiliacion_validacion_computed: function () {
+      return this.form.afiliacion.value;
+    },
+
+    sitio_muerte_validacion_computed: function () {
+      return this.form.sitio_muerte.value;
+    },
+
+    estado_cuerpo_validacion_computed: function () {
+      return this.form.estado_cuerpo.value;
+    },
+
+    genero_validacion_computed: function () {
+      return this.form.genero.value;
+    },
+
+    preparador_validacion_computed: function () {
+      if (this.form.embalsamar_b == 1) {
+        return this.form.preparador;
+      } else {
+        return true;
+      }
+    },
+
+    lugar_servicio_validacion_computed: function () {
+      if (this.form.velacion_b == 1) {
+        return this.form.lugar_servicio.value;
+      } else {
+        return true;
+      }
+    },
+
+    direccion_velacion_validacion_computed: function () {
+      if (this.form.velacion_b == 1) {
+        return this.form.direccion_velacion;
+      } else {
+        return true;
+      }
+    },
+
+    fechahora_cremacion_validacion_computed: function () {
+      if (this.form.cremacion_b == 1) {
+        return this.form.fechahora_cremacion;
+      } else {
+        return true;
+      }
+    },
+
+    fechahora_entrega_cenizas_validacion_computed: function () {
+      if (this.form.cremacion_b == 1) {
+        return this.form.fechahora_entrega_cenizas;
+      } else {
+        return true;
+      }
+    },
+
+    cementerio_servicio_validacion_computed: function () {
+      if (this.form.inhumacion_b == 1) {
+        return this.form.cementerio_servicio.value;
+      } else {
+        return true;
+      }
+    },
+
+    fechahora_inhumacion_validacion_computed: function () {
+      if (this.form.inhumacion_b == 1) {
+        return this.form.fechahora_inhumacion;
+      } else {
+        return true;
+      }
+    },
+
+    ubicacion_validacion_computed: function () {
+      if (
+        this.form.inhumacion_b == 1 &&
+        this.form.cementerio_servicio.value > 1
+      ) {
+        return this.form.ubicacion;
+      } else {
+        return true;
+      }
+    },
+
+    ventas_terrenos_id_validacion_computed: function () {
+      if (
+        this.form.inhumacion_b == 1 &&
+        this.form.cementerio_servicio.value == 1
+      ) {
+        return this.form.ventas_terrenos_id;
+      } else {
+        return true;
+      }
+    },
+
+    fechahora_traslado_validacion_computed: function () {
+      if (this.form.traslado_b == 1) {
+        return this.form.fechahora_traslado;
+      } else {
+        return true;
+      }
+    },
+
+    destino_traslado_validacion_computed: function () {
+      if (this.form.traslado_b == 1) {
+        return this.form.destino_traslado;
+      } else {
+        return true;
+      }
+    },
+
+    aseguradora_validacion_computed: function () {
+      if (this.form.aseguradora_b == 1) {
+        return this.form.aseguradora;
+      } else {
+        return true;
+      }
+    },
+
+    fechahora_misa_validacion_computed: function () {
+      if (this.form.misa_b == 1) {
+        return this.form.fechahora_misa;
+      } else {
+        return true;
+      }
+    },
+
+    iglesia_misa_validacion_computed: function () {
+      if (this.form.misa_b == 1) {
+        return this.form.iglesia_misa;
+      } else {
+        return true;
+      }
+    },
+
+    folio_acta_validacion_computed: function () {
+      if (this.form.acta_b == 1) {
+        return this.form.folio_acta;
+      } else {
+        return true;
+      }
+    },
+
+    fecha_acta_validacion_computed: function () {
+      if (this.form.acta_b == 1) {
+        return this.form.fecha_acta;
+      } else {
+        return true;
+      }
+    },
+
+    tipo_contrato_validacion_computed: function () {
+      return this.form.tipo_contrato.value;
+    },
+
+    titulo_validacion_computed: function () {
+      return this.form.titulo.value;
+    },
+
+    fecha_nacimiento_validacion_computed: function () {
+      return this.form.fecha_nacimiento;
+    },
+
+    fechahora_defuncion_validacion_computed: function () {
+      return this.form.fechahora_defuncion;
+    },
+
+    fechahora_contrato_validacion_computed: function () {
+      return this.form.fechahora_contrato;
+    },
+
     showVentana: {
       get() {
         return this.show;
@@ -2789,12 +3040,6 @@ export default {
         },
       ],
       cementerios_servicio: [
-        {
-          value: "",
-          label: "Seleccione 1",
-        },
-      ],
-      tipos_contrato: [
         {
           value: "",
           label: "Seleccione 1",
@@ -2930,10 +3175,6 @@ export default {
         fecha_acta: "",
         /**fin datos del acta de defuncion */
         /**datos del contrato */
-        tipo_contrato: {
-          value: "",
-          label: "Seleccione 1",
-        },
         tipo_contratante: {
           value: "",
           label: "Seleccione 1",
@@ -2959,6 +3200,7 @@ export default {
         /**fin datos del contrato */
       },
       /**variables dle modulo */
+      openBuscadorTerreno: false,
       openNotas: false,
       configdateTimePicker: configdateTimePicker,
       configdateTimePickerWithTime: configdateTimePickerWithTime,
@@ -3035,27 +3277,6 @@ export default {
             });
           });
           this.form.estado_cuerpo = this.estados_cuerpo[0];
-          this.$vs.loading.close();
-        })
-        .catch((err) => {
-          this.$vs.loading.close();
-        });
-    },
-
-    async get_tipos_contrato() {
-      //this.$vs.loading();
-      await funeraria
-        .get_tipos_contrato()
-        .then((res) => {
-          this.tipos_contrato = [];
-          this.tipos_contrato.push({ label: "Seleccione 1", value: "" });
-          res.data.forEach((element) => {
-            this.tipos_contrato.push({
-              label: element.tipo,
-              value: element.id,
-            });
-          });
-          this.form.tipo_contrato = this.tipos_contrato[0];
           this.$vs.loading.close();
         })
         .catch((err) => {
@@ -3214,6 +3435,7 @@ export default {
             this.form.material_velacion.push({
               id: element.id,
               descripcion: element.descripcion,
+              nota: "",
               cantidad: 0,
             });
           });
@@ -3515,6 +3737,26 @@ export default {
       this.form.id_cliente = datos.id_cliente;
       //alert(datos.id_cliente);
     },
+
+    TerrenoSeleccionado(datos) {
+      /**obtiene los datos retornados del buscar cliente */
+      this.form.ubicacion = datos.ubicacion;
+      this.form.ventas_terrenos_id = datos.numero_control;
+      //alert(datos.id_cliente);
+    },
+
+    limpiarTerreno() {
+      this.form.ventas_terrenos_id = "";
+      this.form.ubicacion = "seleccione 1 ubicación";
+    },
+    quitarTerreno() {
+      this.botonConfirmarSinPassword = "Cambiar de Ubicación";
+      this.accionConfirmarSinPassword =
+        "¿Desea cambiar de ubicación para este contrato?";
+      this.callBackConfirmar = this.limpiarTerreno;
+      this.openConfirmarSinPassword = true;
+    },
+
     limpiarCliente() {
       this.form.id_cliente = "";
       this.form.cliente = "seleccione 1 cliente";

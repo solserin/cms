@@ -3248,18 +3248,6 @@ class FunerariaController extends ApiController
         )->orderBy('id', 'asc')->get();
     }
 
-    public function get_tipos_contrato()
-    {
-        return TiposContrato::select(
-            'id',
-            DB::raw(
-                'UPPER(tipo) as tipo'
-            )
-        )
-            ->whereNotIn('id', [6, 7])
-
-            ->orderBy('id', 'asc')->get();
-    }
 
     public function get_tipos_contratante()
     {

@@ -50,10 +50,9 @@ Route::get('funeraria/get_titulos', 'FunerariaController@get_titulos');
 Route::get('funeraria/get_estados_afectado', 'FunerariaController@get_estados_afectado');
 Route::get('funeraria/get_lugares_velacion', 'FunerariaController@get_lugares_velacion');
 Route::get('funeraria/get_lugares_inhumacion', 'FunerariaController@get_lugares_inhumacion');
-Route::get('funeraria/get_tipos_contrato', 'FunerariaController@get_tipos_contrato');
 Route::get('funeraria/get_material_velacion/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
 Route::get('funeraria/get_tipos_contratante', 'FunerariaController@get_tipos_contratante');
-
+Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
@@ -64,7 +63,7 @@ Route::middleware(['client'])->group(function () {
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
     Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
-    Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+
     Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
     /**RUTA PARA OBTENER LOS PUESTOS DISPONIBLEN EN LA EMPRESA */

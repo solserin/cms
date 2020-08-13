@@ -71,7 +71,6 @@
         <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
           <label class="text-sm opacity-75 font-bold">
             Fecha de Nacimiento (Año-Mes-Dia)
-            <span class="text-danger text-sm">(*)</span>
           </label>
 
           <flat-pickr
