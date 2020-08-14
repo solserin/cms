@@ -106,6 +106,10 @@ export default {
             params: param
         });
     },
+
+    get_planes() {
+        return axios.get("/funeraria/get_planes");
+    },
     /**serviios del modulo */
 
     get_categorias() {

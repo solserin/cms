@@ -8,9 +8,7 @@
       ref="buscador_terrenos"
     >
       <div class="flex flex-wrap my-2 hidden">
-        <div
-          class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
-        >
+        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
           <vs-button
             color="success"
             size="small"
@@ -24,21 +22,12 @@
       </div>
       <!--inicio de buscador-->
       <div class="py-3">
-        <vx-card
-          no-radius
-          title="Filtros de selección"
-          refresh-content-action
-          @refresh="reset"
-        >
+        <vx-card no-radius title="Filtros de selección" refresh-content-action @refresh="reset">
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
-                <div
-                  class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Núm. Convenio</label
-                  >
+                <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+                  <label class="text-sm opacity-75 font-bold">Núm. Convenio</label>
                   <vs-input
                     name="numero_control"
                     data-vv-as=" "
@@ -51,19 +40,17 @@
                     v-on:blur="get_data('numero_control', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{
+                    <span class="text-danger text-sm">
+                      {{
                       errors.first("numero_control")
-                    }}</span>
+                      }}
+                    </span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
 
-                <div
-                  class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Titular del Plan Funerario</label
-                  >
+                <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
+                  <label class="text-sm opacity-75 font-bold">Titular del Plan Funerario</label>
                   <vs-input
                     ref="nombre_titular"
                     name="nombre_titular"
@@ -77,9 +64,11 @@
                     v-on:blur="get_data('titular', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{
+                    <span class="text-danger text-sm">
+                      {{
                       errors.first("nombre_titular")
-                    }}</span>
+                      }}
+                    </span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
@@ -114,39 +103,37 @@
                     data[indextr].operacion_status == 0 ? 'text-danger' : ''
                   "
                 >
-                  <span class="font-semibold">{{
+                  <span class="font-semibold">
+                    {{
                     data[indextr].ventas_planes_id
-                  }}</span>
+                    }}
+                  </span>
                 </vs-td>
                 <vs-td
                   :data="data[indextr].id"
                   :class="
                     data[indextr].operacion_status == 0 ? 'text-danger' : ''
                   "
-                  >{{ data[indextr].numero_convenio }}</vs-td
-                >
+                >{{ data[indextr].numero_convenio }}</vs-td>
 
                 <vs-td
                   :data="data[indextr].id"
                   :class="
                     data[indextr].operacion_status == 0 ? 'text-danger' : ''
                   "
-                  >{{ data[indextr].nombre }}</vs-td
-                >
+                >{{ data[indextr].nombre }}</vs-td>
                 <vs-td
                   :data="data[indextr].venta_plan"
                   :class="
                     data[indextr].operacion_status == 0 ? 'text-danger' : ''
                   "
-                  >{{ data[indextr].venta_plan.nombre_original }}</vs-td
-                >
+                >{{ data[indextr].venta_plan.nombre_original }}</vs-td>
                 <vs-td
                   :data="data[indextr].status_texto"
                   :class="
                     data[indextr].operacion_status == 0 ? 'text-danger' : ''
                   "
-                  >{{ data[indextr].status_texto }}</vs-td
-                >
+                >{{ data[indextr].status_texto }}</vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
                     width="25"
@@ -159,7 +146,8 @@
                           data[indextr].numero_convenio,
                         data[indextr].ventas_planes_id,
                         data[indextr].operacion_status,
-                        data[indextr].venta_plan.conceptos_originales
+                        data[indextr].venta_plan.conceptos_originales,
+                        data[indextr].venta_plan.secciones_original
                       )
                     "
                   />
@@ -168,12 +156,7 @@
             </template>
           </vs-table>
           <div>
-            <vs-pagination
-              v-if="verPaginado"
-              :total="this.total"
-              v-model="actual"
-              class="mt-3"
-            ></vs-pagination>
+            <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-3"></vs-pagination>
           </div>
         </div>
       </div>
@@ -333,14 +316,17 @@ export default {
       plan_funerario = "",
       id = "",
       operacion_status = "",
-      conceptos_originales = []
+      conceptos_originales = [],
+      secciones_original = []
     ) {
       if (operacion_status != 0) {
+        console.log("handleSort -> conceptos_originales", conceptos_originales);
         /**retorna los datos seleccionados a la venta que los solicita */
         this.$emit("retornoPlan", {
           numero_control: id,
           plan: plan_funerario,
           conceptos_originales: conceptos_originales,
+          secciones_original: secciones_original,
         });
         this.$emit("closeBuscador");
       } else {

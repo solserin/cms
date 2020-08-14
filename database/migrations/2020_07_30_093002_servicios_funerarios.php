@@ -135,6 +135,8 @@ class ServiciosFunerarios extends Migration
 
 
             /**DATOS DE CONTRATO */
+            $table->unsignedBigInteger('tipo_servicios_funerarios_id')->unsigned()->nullable();
+            $table->foreign('tipo_servicios_funerarios_id')->references('id')->on('tipo_servicios_funerarios');
             $table->dateTime('fechahora_contrato')->nullable();
             /**el id del cliente va en la tabla de operaciones */
             $table->string('parentesco_contratante')->nullable();
@@ -152,16 +154,10 @@ class ServiciosFunerarios extends Migration
             $table->unsignedDecimal('costo_plan_original', 10, 2)->nullable();
             /**FIN DE DATOS DE CONTRATO */
 
-
-
-
-
-
             //$table->tinyInteger('exhumar_b')->default(0);
             //$table->dateTime('fechahora_exhumacion')->nullable();
             //$table->tinyInteger('reinhumar_b')->default(0);
             //$table->dateTime('fechahora_reinhumacion')->nullable();
-
 
 
             /**RESTO DE DATOS DE CONTRATO */
