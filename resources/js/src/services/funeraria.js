@@ -97,6 +97,15 @@ export default {
             params: param
         });
     },
+
+    get_planes_a_futuro(param) {
+        return axios.get("/funeraria/get_ventas/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
     /**serviios del modulo */
 
     get_categorias() {

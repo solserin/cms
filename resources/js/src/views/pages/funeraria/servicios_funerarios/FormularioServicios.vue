@@ -2088,7 +2088,6 @@
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
-                {{ form.material_velacion }}
                 <vs-table
                   class="w-full mt-5"
                   :data="form.material_velacion"
@@ -2320,7 +2319,7 @@
               <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
                 <div class="flex flex-wrap">
                   <div
-                    class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+                    class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
                   >
                     <label class="text-sm opacity-75 font-bold">
                       Fecha del Contrato
@@ -2353,7 +2352,7 @@
                   </div>
 
                   <div
-                    class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+                    class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                   >
                     <label class="text-sm opacity-75 font-bold">
                       Seleccione al Contratante
@@ -2468,6 +2467,56 @@
               </div>
               <div class="flex flex-wrap">
                 <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mb-6"
+                  v-if="form.conceptos_plan.length > 0"
+                >
+                  <div class="w-full">
+                    <vx-card
+                      no-radius
+                      title="Ver contenido del plan funerario"
+                      collapse-action
+                    >
+                      <vs-table
+                        class="w-full"
+                        :data="form.conceptos_plan"
+                        noDataText="No se han agregado Artículos ni Servicios"
+                      >
+                        <template slot="header">
+                          <h3>
+                            Servicios y Artículos que Incluye el Plan Funerario
+                          </h3>
+                        </template>
+                        <template slot="thead">
+                          <vs-th>#</vs-th>
+                          <vs-th>Artículo/Servicio</vs-th>
+                        </template>
+                        <template slot-scope="{ data }">
+                          <vs-tr
+                            :data="tr"
+                            :key="indextr"
+                            v-for="(tr, indextr) in data"
+                          >
+                            <vs-td class="w-1/12">
+                              <div class="capitalize">
+                                <span class="lowercase"
+                                  >{{ alfabeto[indextr] }})</span
+                                >
+                              </div>
+                            </vs-td>
+                            <vs-td class="w-7/12">
+                              <div class="capitalize">
+                                {{ tr.concepto }}
+                              </div>
+                            </vs-td>
+                          </vs-tr>
+                        </template>
+                      </vs-table>
+                    </vx-card>
+                  </div>
+                  <!--fin de contenido del plan funerario-->
+                </div>
+
+                <div
                   class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
                 >
                   <label class="text-sm opacity-75 font-bold">
@@ -2480,7 +2529,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.plan_funerario_futuro_b"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:plan_funerario_futuro_b_validacion_computed.immediate="
                       'required'
                     "
                     name="plan_funerario_futuro_b"
@@ -2503,6 +2552,7 @@
                 </div>
                 <div
                   class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                  v-if="form.plan_funerario_futuro_b.value == 1"
                 >
                   <label class="text-sm opacity-75 font-bold">
                     Seleccione el Convenio
@@ -2514,11 +2564,11 @@
                     >
                       <div v-if="fueCancelada != true">
                         <img
-                          v-if="form.id_cliente == ''"
+                          v-if="form.id_convenio_plan == ''"
                           width="46px"
                           class="cursor-pointer p-2"
                           src="@assets/images/search.svg"
-                          @click="openBuscador = true"
+                          @click="openBuscadorPlan = true"
                           title="Buscar Cliente"
                         />
                         <img
@@ -2526,7 +2576,7 @@
                           width="46px"
                           class="cursor-pointer p-2"
                           src="@assets/images/minus.svg"
-                          @click="quitarCliente()"
+                          @click="quitarPlan()"
                         />
                       </div>
                       <div v-else>
@@ -2542,26 +2592,28 @@
                     >
                       <vs-input
                         readonly
-                        v-validate.disabled="'required'"
-                        name="id_cliente"
+                        v-validate:id_convenio_plan_validacion_computed.immediate="
+                          'required'
+                        "
+                        name="id_convenio_plan"
                         data-vv-as=" "
                         type="text"
                         class="w-full py-1 cursor-pointer texto-bold"
-                        placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
-                        v-model="form.cliente"
-                        maxlength="100"
-                        ref="cliente_ref"
+                        placeholder="SELECCIONE EL CONVENIO DEL PLAN FUNERARIO."
+                        v-model="form.plan"
+                        maxlength="150"
+                        ref="plan_ref"
                       />
                       <div>
                         <span class="text-danger">
-                          {{ errors.first("id_cliente") }}
+                          {{ errors.first("id_convenio_plan") }}
                         </span>
                       </div>
                       <div class="mt-2">
                         <span
                           class="text-danger"
-                          v-if="this.errores.id_cliente"
-                          >{{ errores.id_cliente[0] }}</span
+                          v-if="this.errores.id_convenio_plan"
+                          >{{ errores.id_convenio_plan[0] }}</span
                         >
                       </div>
                     </div>
@@ -2569,6 +2621,7 @@
                 </div>
                 <div
                   class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+                  v-if="form.plan_funerario_futuro_b.value == 1"
                 >
                   <label class="text-sm opacity-75 font-bold">
                     <span>Tipo de Contratante</span>
@@ -2581,7 +2634,7 @@
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="form.tipo_contratante"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
-                    v-validate:plan_funerario_validacion_computed.immediate="
+                    v-validate:tipo_contratante_validacion_computed.immediate="
                       'required'
                     "
                     name="tipo_contratante"
@@ -2654,6 +2707,12 @@
       @closeBuscador="openBuscadorTerreno = false"
       @retornoTerreno="TerrenoSeleccionado"
     ></TerrenosBuscador>
+
+    <PlanesBuscador
+      :show="openBuscadorPlan"
+      @closeBuscador="openBuscadorPlan = false"
+      @retornoPlan="PlanSeleccionado"
+    ></PlanesBuscador>
   </div>
 </template>
 <script>
@@ -2671,6 +2730,8 @@ import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
 import TerrenosBuscador from "@pages/cementerio/searcher.vue";
+import PlanesBuscador from "@pages/funeraria/ventas/searcher.vue";
+
 import clientes from "@services/clientes";
 
 /**VARIABLES GLOBALES */
@@ -2689,6 +2750,7 @@ export default {
     ConfirmarAceptar,
     ClientesBuscador,
     TerrenosBuscador,
+    PlanesBuscador,
   },
   props: {
     show: {
@@ -2753,6 +2815,16 @@ export default {
     "form.cementerio_servicio": function (newValue, oldValue) {
       this.form.ubicacion = "";
       this.form.ventas_terrenos_id = "";
+    },
+
+    "form.plan_funerario_futuro_b": function (newValue, oldValue) {
+      this.form.plan = "";
+      this.form.id_convenio_plan = "";
+      this.form.conceptos_plan = [];
+      this.form.tipo_contratante = {
+        value: "",
+        label: "Seleccione 1",
+      };
     },
   },
   computed: {
@@ -2937,6 +3009,26 @@ export default {
 
     fechahora_contrato_validacion_computed: function () {
       return this.form.fechahora_contrato;
+    },
+
+    plan_funerario_futuro_b_validacion_computed: function () {
+      return this.form.plan_funerario_futuro_b;
+    },
+
+    id_convenio_plan_validacion_computed: function () {
+      if (this.form.plan_funerario_futuro_b.value == 1) {
+        return this.form.id_convenio_plan;
+      } else {
+        return true;
+      }
+    },
+
+    tipo_contratante_validacion_computed: function () {
+      if (this.form.plan_funerario_futuro_b.value == 1) {
+        return this.form.tipo_contratante.value;
+      } else {
+        return true;
+      }
     },
 
     showVentana: {
@@ -3196,11 +3288,13 @@ export default {
 
         id_convenio_plan: "",
         plan: "",
+        conceptos_plan: [],
         articulos_servicios: [],
         /**fin datos del contrato */
       },
       /**variables dle modulo */
       openBuscadorTerreno: false,
+      openBuscadorPlan: false,
       openNotas: false,
       configdateTimePicker: configdateTimePicker,
       configdateTimePickerWithTime: configdateTimePickerWithTime,
@@ -3745,9 +3839,17 @@ export default {
       //alert(datos.id_cliente);
     },
 
+    PlanSeleccionado(datos) {
+      /**obtiene los datos retornados del buscar cliente */
+      this.form.plan = datos.plan;
+      this.form.id_convenio_plan = datos.numero_control;
+      this.form.conceptos_plan = datos.conceptos_originales;
+      //alert(datos.id_cliente);
+    },
+
     limpiarTerreno() {
       this.form.ventas_terrenos_id = "";
-      this.form.ubicacion = "seleccione 1 ubicación";
+      this.form.ubicacion = "";
     },
     quitarTerreno() {
       this.botonConfirmarSinPassword = "Cambiar de Ubicación";
@@ -3757,9 +3859,22 @@ export default {
       this.openConfirmarSinPassword = true;
     },
 
+    limpiarPlan() {
+      this.form.id_convenio_plan = "";
+      this.form.plan = "";
+      this.form.conceptos_plan = [];
+    },
+    quitarPlan() {
+      this.botonConfirmarSinPassword = "Cambiar Convenio";
+      this.accionConfirmarSinPassword =
+        "¿Desea cambiar de plan funerario para este contrato?";
+      this.callBackConfirmar = this.limpiarPlan;
+      this.openConfirmarSinPassword = true;
+    },
+
     limpiarCliente() {
       this.form.id_cliente = "";
-      this.form.cliente = "seleccione 1 cliente";
+      this.form.cliente = "";
     },
     quitarCliente() {
       this.botonConfirmarSinPassword = "Cambiar cliente";
