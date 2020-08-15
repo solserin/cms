@@ -2600,6 +2600,9 @@
                     "
                     name="plan_funerario"
                     data-vv-as=" "
+                    :disabled="
+                      form.plan_funerario_inmediato_b.value == 0 ? true : false
+                    "
                   >
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
@@ -2885,20 +2888,36 @@ export default {
     },
 
     "form.plan_funerario_futuro_b": function (newValue, oldValue) {
-      /*if (newValue.value == 0) {
+      if (newValue.value == 0) {
+        this.secciones = [];
         (async () => {
           await this.get_planes_uso_inmediato();
         })();
-        this.form.plan = "";
+        /*this.form.plan = "";
         this.form.id_convenio_plan = "";
-        this.form.conceptos_plan = [];
         this.form.tipo_contratante = {
           value: "",
           label: "Seleccione 1",
-        };
+        };*/
+      } else {
+        this.secciones = this.secciones_original;
+        /**cargar datos de origien del plan de uso a futuro */
       }
-      this.form.plan_funerario = this.planes_funerarios[0];
-      */
+    },
+    "form.plan_funerario_inmediato_b": function (newValue, oldValue) {
+      if (newValue.value == 1) {
+        this.secciones = this.form.plan_funerario.secciones;
+      } else {
+        this.form.plan_funerario = this.planes_funerarios[0];
+        this.secciones = [];
+      }
+    },
+    "form.plan_funerario": function (newValue, oldValue) {
+      if (newValue.value != "") {
+        this.secciones = this.form.plan_funerario.secciones;
+      } else {
+        this.secciones = [];
+      }
     },
   },
   computed: {
@@ -3135,7 +3154,7 @@ export default {
     },
 
     verLista: function () {
-      if (this.form.conceptos_plan.length > 0) {
+      if (this.secciones.length > 0) {
         let mostrar = false;
         this.conceptos = [];
         this.secciones.forEach((element, index_seccion) => {
@@ -3164,7 +3183,7 @@ export default {
   },
   data() {
     return {
-      conceptos: [],
+      secciones_original: [],
       secciones: [],
       activeTab: 0,
       generos: [
@@ -3401,7 +3420,7 @@ export default {
         plan_funerario: {
           value: "",
           label: "Seleccione 1",
-          detalle: [],
+          secciones: [],
         },
         /**fin datos del contrato */
       },
@@ -3657,18 +3676,17 @@ export default {
       await funeraria
         .get_planes()
         .then((res) => {
-          console.log("get_planes_uso_inmediato -> res", res);
           this.planes_funerarios = [];
           this.planes_funerarios.push({
             label: "Seleccione 1",
             value: "",
-            detalle: [],
+            secciones: [],
           });
           res.data.forEach((element) => {
             this.planes_funerarios.push({
               label: element.plan,
               value: element.id,
-              detalle: element.secciones,
+              secciones: element.secciones,
             });
           });
           this.form.plan_funerario = this.planes_funerarios[0];
@@ -3982,9 +4000,8 @@ export default {
       /**obtiene los datos retornados del buscar cliente */
       this.form.plan = datos.plan;
       this.form.id_convenio_plan = datos.numero_control;
+      this.secciones_original = datos.secciones_original;
       this.secciones = datos.secciones_original;
-      this.form.conceptos_plan = datos.conceptos_originales;
-      //alert(datos.id_cliente);
     },
 
     limpiarTerreno() {
@@ -4002,7 +4019,7 @@ export default {
     limpiarPlan() {
       this.form.id_convenio_plan = "";
       this.form.plan = "";
-      this.form.conceptos_plan = [];
+      this.secciones = [];
     },
     quitarPlan() {
       this.botonConfirmarSinPassword = "Cambiar Convenio";
