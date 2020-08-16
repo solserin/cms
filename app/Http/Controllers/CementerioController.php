@@ -208,6 +208,7 @@ class CementerioController extends ApiController
 
         /**aqui comienzan a gurdar los datos */
         $subtotal = $request->subtotal; //sin iva
+        $tasa_iva = $request->tasa_iva; //sin iva
         $iva = $request->impuestos; //solo el iva
         $descuento = $request->descuento;
         $costo_neto = $request->costo_neto;
@@ -237,7 +238,10 @@ class CementerioController extends ApiController
             /**id del cliente */
             'id_cliente' => 'required',
             //info del plan de venta y pagos
-            'planVenta.value' => 'numeric|required',
+            //'planVenta.value' => 'numeric|required',
+            /**nuevos datos a requerir */
+            'financiamiento' => '',
+            'tasa_iva' => 'numeric|required|min:1|max:25',
             'subtotal' => 'numeric|required|min:1',
             'descuento' => 'required|numeric|min:0|max:' . $request->subtotal,
             'impuestos' => 'numeric|required|min:0',
@@ -257,7 +261,7 @@ class CementerioController extends ApiController
             ],
             'beneficiarios.*.telefono' => [
                 'required',
-            ],
+            ]
         ];
 
         /**verificando si es tipo modificar para validar que venga el id a modificar */
@@ -278,21 +282,13 @@ class CementerioController extends ApiController
         /**solo en caso de modificaciones */
 
         /**validando el pago inicial */
-        if ($request->planVenta['value'] == 1) {
+        if ($request->financiamiento == 1) {
             /**cuando es a contado */
             /**es un solo pago de inicio */
             $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
         } else {
-            /**cuando es a credito */
-            if ($request->costo_neto > $request->planVenta['pago_inicial']) {
-                /**minimo el pago inicial y maximo un 70% del costo neto */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->planVenta['pago_inicial'] . '|max:' . ($request->costo_neto) * .7;
-            } else {
-                /**si el descuento es menor al pago inicial se forza al usuario a ingresa como pago inicial minmo un 10% del totoa a pagar y un 70% de maximo 
-                 * de pago inicial y el resto liquidarlo con los abonos
-                 */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
-            }
+            //cuando es a credito
+            $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
         }
 
 
@@ -333,6 +329,15 @@ class CementerioController extends ApiController
                     return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
                 }
             }
+        }
+
+        if ($request->tipo_financiamiento == 1) {
+            /**cuando es a contado */
+            /**es un solo pago de inicio */
+            $validaciones['financiamiento'] = 'numeric|required|min:' . 1 . '|max:' . 1;
+        } else {
+            //cuando es a credito
+            $validaciones['financiamiento'] = 'numeric|required|min:' . 2 . '|max:' . 120;
         }
 
         //validnado en caso de que sea de uso futuro
@@ -506,17 +511,18 @@ class CementerioController extends ApiController
                         'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
                         'empresa_operaciones_id' => 1, //venta de terrenos
                         'subtotal' => $subtotal,
+                        'tasa_iva' => $tasa_iva,
                         'descuento' => $descuento,
                         'impuestos' => $iva,
                         'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'descuento_pronto_pago_b' => 1,
                         'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto' => $request->titular_sustituto,
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->planVenta['value'],
+                        'financiamiento' => $request->financiamiento,
                         'aplica_devolucion_b' => 0,
                         'costo_neto_financiamiento_normal' => round($request->planVenta['costo_neto_financiamiento_normal'], 2, PHP_ROUND_HALF_UP),
                         'comision_venta_neto' => 0,
@@ -566,6 +572,7 @@ class CementerioController extends ApiController
                         'numero_convenio' => trim($request->convenio),
                         'numero_titulo' => trim($request->titulo),
                         'subtotal' => $subtotal,
+                        'tasa_iva' => $tasa_iva,
                         'descuento' => $descuento,
                         'impuestos' => $iva,
                         'total' => $costo_neto,
@@ -576,7 +583,7 @@ class CementerioController extends ApiController
                         'titular_sustituto' => $request->titular_sustituto,
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->planVenta['value'],
+                        'financiamiento' => $request->financiamiento,
                         'costo_neto_financiamiento_normal' => $request->planVenta['costo_neto_financiamiento_normal'],
                         'status' => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
                         'fecha_modificacion' => now(),
@@ -799,7 +806,7 @@ class CementerioController extends ApiController
 
         //puede que venga con descuento pero no es del 100%
         //determinamos que tipo de ventas
-        if ($request->tipo_financiamiento == 1 || (int) $request->planVenta['value'] == 1) {
+        if ($request->tipo_financiamiento == 1 || (int) $request->financiamiento == 1) {
             //de uso inmediato sin importar si es seleccionado a futuro o inmediato ya que selecciono pagarlo de contado
             /**se crea un solo pago */
             //se agregan 0 dias a los enganches y a las liquidaciones para ser capturadas
@@ -845,12 +852,12 @@ class CementerioController extends ApiController
             );
 
 
-            //$monto_abono = round(($costo_neto - $pago_inicial) / $request->planVenta['value'], 2, PHP_ROUND_HALF_UP);
+            //$monto_abono = round(($costo_neto - $pago_inicial) / $request->financiamiento, 2, PHP_ROUND_HALF_UP);
 
             //a futuro y a meses
-            for ($i = 1; $i <= ((int) $request->planVenta['value']); $i++) {
+            for ($i = 1; $i <= ((int) $request->financiamiento); $i++) {
                 /**calculando el abono en bruto */
-                $monto_abono = ($costo_neto - $pago_inicial) / $request->planVenta['value'];
+                $monto_abono = ($costo_neto - $pago_inicial) / $request->financiamiento;
 
                 $numero_pago_para_referencia = '';
                 if ($i < 9) {
@@ -868,7 +875,7 @@ class CementerioController extends ApiController
                     $decimales = $monto_abono - intval($monto_abono);
                     if ($decimales > 0) {
                         /**tiene decimales */
-                        $abono = ($costo_neto - $request->pago_inicial - (intval($monto_abono) * $request->planVenta['value']));
+                        $abono = ($costo_neto - $request->pago_inicial - (intval($monto_abono) * $request->financiamiento));
                         $monto_abono = $abono + intval($monto_abono);
                     }
                 } else {
