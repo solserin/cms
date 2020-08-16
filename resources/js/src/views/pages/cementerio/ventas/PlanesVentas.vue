@@ -273,7 +273,7 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Precios x Propiedad (Español)",
-        url: "/cementerio/lista_precios_pdf/esf"
+        url: "/cementerio/lista_precios_pdf/es"
       });
       this.ListaReportes.push({
         nombre: "Precios x Propiedad (Inglés)",

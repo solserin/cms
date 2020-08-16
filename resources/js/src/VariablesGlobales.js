@@ -1,4 +1,6 @@
-import { Spanish } from "flatpickr/dist/l10n/es.js";
+import {
+    Spanish
+} from "flatpickr/dist/l10n/es.js";
 export const configdateTimePickerWithTime = {
     enableTime: true,
     dateFormat: "Y-m-d H:i",
@@ -14,9 +16,16 @@ export const configdateTimePicker = {
     shorthandCurrentMonth: false,
     maxDate: new Date(new Date().setDate(new Date().getDate() + 25))
 };
+
+export const configdateTimePickerFechasCaducidad = {
+    enableTime: false,
+    dateFormat: "Y-m-d",
+    locale: Spanish,
+    shorthandCurrentMonth: false,
+    maxDate: new Date(new Date().setDate(new Date().getDate() + 2000))
+};
 /**SELECT OPTIONS */
-export const mostrarOptions = [
-    {
+export const mostrarOptions = [{
         label: "15",
         value: "15"
     },
@@ -42,8 +51,7 @@ export const mostrarOptions = [
     }
 ];
 
-export const estadosOptions = [
-    {
+export const estadosOptions = [{
         label: "Todos",
         value: ""
     },
@@ -57,8 +65,7 @@ export const estadosOptions = [
     }
 ];
 
-export const generosOptions = [
-    {
+export const generosOptions = [{
         label: "Hombre",
         value: "1"
     },
@@ -124,6 +131,6 @@ export const alfabeto = [
     "AZ"
 ];
 
-export const PermisosModulo = localStorage.getItem("AccessPermissions")
-    ? JSON.parse(localStorage.getItem("AccessPermissions"))
-    : null;
+export const PermisosModulo = localStorage.getItem("AccessPermissions") ?
+    JSON.parse(localStorage.getItem("AccessPermissions")) :
+    null;

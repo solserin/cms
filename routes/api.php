@@ -24,6 +24,21 @@ Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaControl
 /**fin de rutas de modulo en proceso */
 Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
 
+Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
+
+/**inventario */
+Route::get('inventario/get_tipo_articulos', 'InventarioController@get_tipo_articulos');
+Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
+Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
+Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
+Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
+Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
+Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
+Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
+
+
+
+Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
 Route::middleware(['client'])->group(function () {
     Route::get('pagos/get_pagos_backend/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
@@ -156,8 +171,17 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('pagos/cancelar_pago', 'PagosController@cancelar_pago');
     /**fin de rutas de pagos */
 
+    /**proveedores */
+    Route::post('/proveedores/guardar_proveedor', 'ProveedoresController@guardar_proveedor');
+    Route::post('/proveedores/modificar_proveedor', 'ProveedoresController@modificar_proveedor')->middleware('permiso:10,28');
+    Route::post('/proveedores/delete_proveedor', 'ProveedoresController@delete_proveedor');
+    Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
 
 
+    /**invnetario */
+    Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
+    Route::post('inventario/enable_disable/{tipo}', 'InventarioController@enable_disable');
+    Route::post('inventario/ajustar_inventario', 'InventarioController@ajustar_inventario');
 
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
 

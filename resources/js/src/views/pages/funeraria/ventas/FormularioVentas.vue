@@ -1966,7 +1966,7 @@ export default {
     async get_planes_funerarios() {
       try {
         this.$vs.loading();
-        let res = await planes.get_planes(true, "");
+        let res = await planes.get_planes(false, "");
         //le agrego todos los usuarios vendedores
         this.planes_funerarios = [];
         this.planes_funerarios.push({

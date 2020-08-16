@@ -242,6 +242,85 @@ const router = new Router({
                     }
                 },
 
+                {
+                    path: "/inventarios/funeraria/proveedores",
+                    name: "catalogo_proveedores",
+                    component: () =>
+                        import(
+                            "@/views/pages/inventarios/proveedores/ProveedoresList.vue"
+                        ),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Catálogos"
+                            },
+                            {
+                                title: "Control de proveedores",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Proveedores",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
+                {
+                    path: "/inventarios/funeraria/articulos",
+                    name: "catalogo_articulos",
+                    component: () =>
+                        import(
+                            "@/views/pages/inventarios/articulos/ArticulosList.vue"
+                        ),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Catálogos"
+                            },
+                            {
+                                title: "Control de artículos y servicios",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Artículos / Servicios",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
+                {
+                    path: "/inventarios/funeraria/ajustes",
+                    name: "ajuste_inventario",
+                    component: () =>
+                        import(
+                            "@/views/pages/inventarios/ajustes/AjustesList.vue"
+                        ),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Catálogos"
+                            },
+                            {
+                                title: "Ajustes de inventario",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Ajustar Inventario",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
+
                 // =============================================================================
                 // Pages Routes
                 // =============================================================================

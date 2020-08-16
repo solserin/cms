@@ -2,139 +2,168 @@
 
 namespace App\Http\Controllers;
 
-use App\Proveedores;
+use App\proveedores;
 use Illuminate\Http\Request;
-use PDF;
+use Illuminate\Support\Facades\DB;
 
 class ProveedoresController extends ApiController
 {
-    public function create(Request $request) {
-        $proveedorData = (object) $request->all();
-        $rfc = trim($request->rfc);
-
-        $existsRFC = Proveedores::whereRaw('LOWER(rfc) = LOWER(?)', $rfc)->exists();
-        if ($existsRFC) {
-            return $this->errorResponse('Proveedor con el RFC '.$rfc.' ya existe', 409);
-        }
-
-        $proveedor = new Proveedores;
-        foreach ($proveedorData as $key => $value) {
-            $proveedor->{$key} = $proveedorData->{$key};
-        }
-
-        $proveedor->save();
-        if ($proveedor->id) {
-            return response()->json(['message' => 'Proveedor creado', 'proveedor' => $proveedor->id], 201);
-        }
-
-        return $this->errorResponse('Proveedor con el RFC '.$rfc.' ya existe', 501);
-    }
-
-    public function save($id, Request $request)
+    public function get_proveedores(Request $request, $id_proveedor = 'all', $paginated = '')
     {
-        if (Proveedores::where('id', $id)->exists()) {
-            $proveedor = Proveedores::find($id);
-
-            $rfc = trim($request->rfc);
-
-            $existsRFC = Proveedores::whereRaw('LOWER(rfc) = LOWER(?)', $rfc)->first();
-            if ($existsRFC && $existsRFC->id != $proveedor->id) {
-                return $this->errorResponse('Proveedor con el RFC '.$rfc.' ya existe', 409);
-            }
-
-            $proveedorData = (object) $request->all();            
-
-            foreach ($proveedorData as $key => $value) {
-                $proveedor->{$key} = !is_null($proveedorData->{$key}) ? $proveedorData->{$key} : $proveedor->{$key};
-            }
+        $filtro_especifico_opcion = $request->filtro_especifico_opcion;
+        $nombre_comercial = $request->nombre_comercial;
+        $numero_control = $request->numero_control;
+        $status = $request->status;
+        $resultado_query = Proveedores::select(
+            'id',
+            'nombre_comercial',
+            'razon_social',
+            'nombre_contacto',
+            'telefono',
+            'nota',
+            'direccion',
+            'email',
+            'status',
+            DB::Raw('IF(proveedores.status=1 , "ACTIVO","DESACTIVADO" ) as status_texto')
+        )
+            ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
+                if (trim($numero_control) != '') {
+                    if ($filtro_especifico_opcion == 1) {
+                        $q->where('proveedores.id', '=',  $numero_control);
+                    } else if ($filtro_especifico_opcion == 2) {
+                        $q->where('proveedores.telefono', '=',  $numero_control);
+                    }
+                }
+            })
+            ->where(function ($q) use ($nombre_comercial) {
+                if (trim($nombre_comercial) != '') {
+                    $q->where('proveedores.nombre_comercial', 'like', '%' . $nombre_comercial . '%');
+                }
+            })
+            ->where(function ($q) use ($id_proveedor) {
+                if (trim($id_proveedor) != '' && trim($id_proveedor != 'all')) {
+                    $q->where('proveedores.id', '=', $id_proveedor);
+                }
+            })
+            ->where(function ($q) use ($status) {
+                if (trim($status) != '') {
+                    $q->where('proveedores.status', '=', $status);
+                }
+            })
+            /**descartando el nombre_comercial publico en general */
+            ->orderBy('proveedores.id', 'desc')
+            ->get();
+        $resultado = $resultado_query;
+        if ($paginated == 'paginated') {
+            $resultado = $this->showAllPaginated($resultado_query);
         }
-
-        $proveedor->save();
-
-        return response()->json(['message' => 'Proveedor modificado', 'proveedor' => $proveedor->id], 200);
+        //se retorna el resultado
+        return $resultado;
     }
 
-    public function getAll(Request $request) {
-        $search = $request->search;
-        $status = $request->estado;
 
-        $proveedores = Proveedores::where(function($query) use (&$search) {
-            $query->where('nombre_comercial', 'like', '%'.$search.'%')
-            ->orWhere('razon_social', 'like', '%'.$search.'%')
-            ->orWhere('rfc', 'like', '%'.$search.'%')
-            ->orWhere('nombre_contacto', 'like', '%'.$search.'%')
-            ->orWhere('telefono', 'like', '%'.$search.'%')
-            ->orWhere('email', 'like', '%'.$search.'%');
-        })->where(function ($q) use ($status) {
-            if (!is_null($status)) {
-                $q->where('status', $status);
-            }
-        })->get();
+    public function guardar_proveedor(Request $request)
+    {
+        $validaciones = [
+            /**personal */
+            'nombre_comercial' => 'required',
+            'nombre_contacto' => 'required',
+            'email' => 'email'
+        ];
 
-        $paginatedData = $this->showAllPaginated($proveedores);
-        return response($paginatedData, 200);
+        $mensajes = [
+            'required' => 'Este dato es obligatorio',
+            'email.email' => 'Ingrese un email válido'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        return DB::table('proveedores')->insertGetId(
+            [
+                /**informacion fiscal */
+                'nombre_comercial' => $request->nombre_comercial,
+                'direccion' => $request->direccion,
+                'razon_social' => $request->razon_social,
+                'nombre_contacto' => $request->nombre_contacto,
+                'telefono' => trim($request->telefono) != '' ? trim($request->telefono) : NULL,
+                'email' => trim($request->email) != '' ? trim($request->email) : NULL,
+                'nota' => trim($request->nota) != '' ? trim($request->nota) : NULL
+            ]
+        );
     }
 
-    public function get($id) {
-        if (Proveedores::where('id', $id)->exists()) {
-            $proveedor = Proveedores::where('id', $id)->get()->first();
-            return response()->json($proveedor, 200);
+    /**modificar proveedores */
+    public function modificar_proveedor(Request $request)
+    {
+        $validaciones = [
+            'nombre_comercial' => 'required',
+            'nombre_contacto' => 'required',
+            'email' => 'email',
+            'id_proveedor_modificar' => 'required'
+        ];
+        $mensajes = [
+            'required' => 'Este dato es obligatorio',
+            'id_proveedor_modificar.required' => 'Ingrese el id del proveedor a modificar',
+            'email.email' => 'Ingrese un email válido'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+        $res = DB::table('proveedores')->where('id', $request->id_proveedor_modificar)->update(
+            [
+                /**informacion fiscal */
+                'nombre_comercial' => $request->nombre_comercial,
+                'direccion' => $request->direccion,
+                'razon_social' => $request->razon_social,
+                'nombre_contacto' => $request->nombre_contacto,
+                'telefono' => trim($request->telefono) != '' ? trim($request->telefono) : NULL,
+                'email' => trim($request->email) != '' ? trim($request->email) : NULL,
+                'nota' => trim($request->nota) != '' ? trim($request->nota) : NULL
+            ]
+        );
+        if ($res > 0) {
+            return  $request->id_proveedor_modificar;
         } else {
-            return $this->errorResponse('Proveedor no encontrado', 404);
+            return 0;
         }
-    }    
-    
-    public function getActive() {
-        $proveedores = Proveedores::where('status', 1)->get();
-        return response($proveedores, 200);
     }
 
-    public function getPDF(Request $request) {
-        $search = $request->search;
-        $status = $request->estado;
-        
-        $proveedores = Proveedores::where(function($query) use (&$search) {
-            $query->where('nombre_comercial', 'like', '%'.$search.'%')
-            ->orWhere('razon_social', 'like', '%'.$search.'%')
-            ->orWhere('rfc', 'like', '%'.$search.'%')
-            ->orWhere('nombre_contacto', 'like', '%'.$search.'%')
-            ->orWhere('telefono', 'like', '%'.$search.'%')
-            ->orWhere('email', 'like', '%'.$search.'%');
-        })->where(function ($q) use ($status) {
-            if (!is_null($status)) {
-                $q->where('status', $status);
-            }
-        })->get();
-
-        $getFuneraria = new EmpresaController();
-        $empresa = $getFuneraria->get_empresa_data();
-        $pdf = PDF::loadView('lista_proveedores', ['usuarios' => $proveedores, 'empresa' => $empresa]);
-        $pdf->setOptions([
-            'title' => 'Reporte de Proveedores',
-            'footer-html' => view('footer'),
-            'header-html' => view('header'),
-        ]);
-        $pdf->setOption('margin-top', 10);
-        $pdf->setOption('margin-bottom', 15);
-
-        return $pdf->inline();
+    public function delete_proveedor(Request $request)
+    {
+        $proveedor_id = $request->proveedor_id;
+        request()->validate(
+            [
+                'proveedor_id' => 'required',
+            ],
+            [
+                'proveedor_id.required' => 'El ID del proveedor es necesario.',
+            ]
+        );
+        return DB::table('proveedores')->where('id', $proveedor_id)->update(
+            [
+                'status' => 0,
+            ]
+        );
     }
 
-    public function proveedorPDF($id, Request $request) {
-        $proveedor = Proveedores::find($id);
-
-        $getFuneraria = new EmpresaController();
-        $empresa = $getFuneraria->get_empresa_data();
-        $pdf = PDF::loadView('proveedor', ['proveedor' => $proveedor, 'empresa' => $empresa]);
-        $pdf->setOptions([
-            'title' => 'Proveedor',
-            'footer-html' => view('footer'),
-            'header-html' => view('header'),
-        ]);
-
-        $pdf->setOption('margin-top', 10);
-        $pdf->setOption('margin-bottom', 15);
-
-        return $pdf->inline();
+    public function alta_proveedor(Request $request)
+    {
+        $proveedor_id = $request->proveedor_id;
+        request()->validate(
+            [
+                'proveedor_id' => 'required',
+            ],
+            [
+                'proveedor_id.required' => 'El ID del proveedor es necesario.',
+            ]
+        );
+        return DB::table('proveedores')->where('id', $proveedor_id)->update(
+            [
+                'status' => 1,
+            ]
+        );
     }
 }
