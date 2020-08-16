@@ -452,6 +452,7 @@ class CementerioController extends ApiController
             /**verificando que no hay modificado nada relativo a precios */
 
             if (
+                $request->financiamiento != $datos_venta['financiamiento'] ||
                 $request->fecha_venta != $datos_venta['fecha_operacion'] ||
                 (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
@@ -498,7 +499,6 @@ class CementerioController extends ApiController
                         'salarios_minimos' => $request->salarios_minimos
                     ]
                 );
-
                 /**a partir de la venta se crea la operaicon */
                 $id_operacion = DB::table('operaciones')->insertGetId(
                     [
@@ -524,7 +524,7 @@ class CementerioController extends ApiController
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
                         'financiamiento' => $request->financiamiento,
                         'aplica_devolucion_b' => 0,
-                        'costo_neto_financiamiento_normal' => round($request->planVenta['costo_neto_financiamiento_normal'], 2, PHP_ROUND_HALF_UP),
+                        'costo_neto_financiamiento_normal' => $costo_neto,
                         'comision_venta_neto' => 0,
                         'fecha_registro' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
@@ -576,7 +576,7 @@ class CementerioController extends ApiController
                         'descuento' => $descuento,
                         'impuestos' => $iva,
                         'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'descuento_pronto_pago_b' => 1,
                         'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
@@ -584,7 +584,7 @@ class CementerioController extends ApiController
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
                         'financiamiento' => $request->financiamiento,
-                        'costo_neto_financiamiento_normal' => $request->planVenta['costo_neto_financiamiento_normal'],
+                        'costo_neto_financiamiento_normal' => $costo_neto,
                         'status' => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
                         'fecha_modificacion' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),

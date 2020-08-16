@@ -80,9 +80,7 @@
                         <h1>
                             {{ $empresa->razon_social }}
                         </h1>
-                        <p class="datos-header">
-                            r.f.c. {{ $empresa->rfc }}
-                        </p>
+
                         <p class="datos-header">
                             {{ strtolower($empresa->calle) }} Núm. Ext {{ $empresa->num_ext }}
                         </p>
@@ -180,13 +178,17 @@
         <p class="texto-base justificar line-base">
             <span class="uppercase bold">III. </span>
             Declara “El Cliente” tener el interés y capacidad legal para celebrar este convenio, y declara tener
+            @if (trim($datos['fecha_nac'])!='')
             <span class="bg-gray px-1 mr-1">
-
-
                 (<span class="uppercase bold texto-sm">{{ calculaedad((String)($datos['fecha_nac'])) }}</span>)
                 años de
                 edad
             </span>
+            @else
+            (<span class="uppercase bold texto-sm">N/A</span>)
+            años de
+            edad
+            @endif
             y su domicilio en: <span class="uppercase bold texto-sm">
                 {{ $datos['direccion'] }}</span>, Tel. <span class="uppercase bold texto-sm">
                 {{ ($datos['telefono'])!='' ? ($datos['telefono']):'"No registrado"' }}</span>,
@@ -701,7 +703,8 @@
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima octava.- </span>
-            Toda documentación adicional que se firme por ambas partes en relación y con motivo de este convenio,
+            Se anexa hoja de reglamento interno del Panteón Aeternus. Toda documentación adicional que se firme por
+            ambas partes en relación y con motivo de este convenio,
             constituirá un anexo del mismo, y, por lo tanto, formará parte integral del presente convenio.
         </p>
 

@@ -798,6 +798,7 @@ class FunerariaController extends ApiController
         /**aqui comienzan a gurdar los datos */
         $subtotal = $request->subtotal; //sin iva
         $iva = $request->impuestos; //solo el iva
+        $tasa_iva = $request->tasa_iva; //sin iva
         $descuento = $request->descuento;
         $costo_neto = $request->costo_neto;
 
@@ -841,7 +842,9 @@ class FunerariaController extends ApiController
                 'required',
             ],
             //info del plan de venta y pagos
-            'planVenta.value' => 'numeric|required',
+            //'planVenta.value' => 'numeric|required',
+            'financiamiento' => '',
+            'tasa_iva' => 'numeric|required|min:1|max:25',
             'subtotal' => 'numeric|required|min:1',
             'descuento' => 'required|numeric|min:0|max:' . $request->subtotal,
             'impuestos' => 'numeric|required|min:0',
@@ -867,23 +870,20 @@ class FunerariaController extends ApiController
         /**si pasan estas condicones podemos continuar */
         /**solo en caso de modificaciones */
 
+
+
         /**validando el pago inicial */
-        if ($request->planVenta['value'] == 1) {
+
+        /**validando el pago inicial */
+        if ($request->financiamiento == 1) {
             /**cuando es a contado */
             /**es un solo pago de inicio */
             $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
         } else {
-            /**cuando es a credito */
-            if ($request->costo_neto > $request->planVenta['pago_inicial']) {
-                /**minimo el pago inicial y maximo un 70% del costo neto */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->planVenta['pago_inicial'] . '|max:' . ($request->costo_neto) * .7;
-            } else {
-                /**si el descuento es menor al pago inicial se forza al usuario a ingresa como pago inicial minmo un 10% del totoa a pagar y un 70% de maximo 
-                 * de pago inicial y el resto liquidarlo con los abonos
-                 */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
-            }
+            //cuando es a credito
+            $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
         }
+
 
         /**VALIDACIONES CONDICIONADAS*/
         /**deshabilitnado numero de titulo */
@@ -905,6 +905,17 @@ class FunerariaController extends ApiController
             }
         }
 */
+
+        if ($request->tipo_financiamiento == 1) {
+            /**cuando es a contado */
+            /**es un solo pago de inicio */
+            $validaciones['financiamiento'] = 'numeric|required|min:' . 1 . '|max:' . 1;
+        } else {
+            //cuando es a credito
+            $validaciones['financiamiento'] = 'numeric|required|min:' . 2 . '|max:' . 120;
+        }
+
+
         //validnado en caso de que sea de uso futuro
         if ($request->tipo_financiamiento == 2) {
             //venta de uso inmediato
@@ -1051,6 +1062,7 @@ class FunerariaController extends ApiController
                 }
             }
             if (
+                $request->financiamiento != $datos_venta['financiamiento'] ||
                 $request->fecha_venta != $datos_venta['fecha_operacion'] ||
                 (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
@@ -1135,19 +1147,20 @@ class FunerariaController extends ApiController
                         //'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
                         'empresa_operaciones_id' => 4, //venta de planes a futuro
                         'subtotal' => $subtotal,
+                        'tasa_iva' => $tasa_iva,
                         'descuento' => $descuento,
                         'impuestos' => $iva,
                         'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'descuento_pronto_pago_b' => 1,
                         'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto' => $request->titular_sustituto,
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->planVenta['value'],
+                        'financiamiento' => $request->financiamiento,
                         'aplica_devolucion_b' => 0,
-                        'costo_neto_financiamiento_normal' => round($request->planVenta['costo_neto_financiamiento_normal'], 2, PHP_ROUND_HALF_UP),
+                        'costo_neto_financiamiento_normal' => $costo_neto,
                         'comision_venta_neto' => 0,
                         'fecha_registro' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
@@ -1225,18 +1238,19 @@ class FunerariaController extends ApiController
                         'numero_convenio' => trim($request->convenio),
                         //'numero_titulo' => trim($request->titulo),
                         'subtotal' => $subtotal,
+                        'tasa_iva' => $tasa_iva,
                         'descuento' => $descuento,
                         'impuestos' => $iva,
                         'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'descuento_pronto_pago_b' => 1,
                         'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto' => $request->titular_sustituto,
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->planVenta['value'],
-                        'costo_neto_financiamiento_normal' => $request->planVenta['costo_neto_financiamiento_normal'],
+                        'financiamiento' => $request->financiamiento,
+                        'costo_neto_financiamiento_normal' => $costo_neto,
                         'status' => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
                         'fecha_modificacion' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
@@ -1312,6 +1326,7 @@ class FunerariaController extends ApiController
                 'antiguedad_operacion_id',
                 'empresa_operaciones_id',
                 'subtotal',
+                'tasa_iva',
                 'descuento',
                 'impuestos',
                 'total',
