@@ -298,7 +298,7 @@ class CementerioController extends ApiController
 
         /**validando de manera manual si la ubicacion enviada ya esta registrada y esta activa */
         $ubicacion_enviada = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-            ->where('ubicacion', '=', $request->ubicacion)->where('operaciones.status', 1)->first();
+            ->where('ubicacion', '=', $request->ubicacion)->where('operaciones.status', '<>', 0)->first();
         if (!empty($ubicacion_enviada)) {
             if ($tipo_servicio == 'modificar') {
                 if ($ubicacion_enviada->id != $request->id_venta)
@@ -323,7 +323,7 @@ class CementerioController extends ApiController
             $validaciones['titulo'] = 'required';
             /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
             $titulo = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+                ->where('numero_titulo', $request->titulo)->where('operaciones.status', '<>', 0)->first();
             if (!empty($titulo)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($titulo->id != $request->id_venta)
@@ -342,7 +342,7 @@ class CementerioController extends ApiController
 
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $solicitud = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', 1)->first();
+                ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', '<>', 0)->first();
             if (!empty($solicitud)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($solicitud->id != $request->id_venta)
@@ -360,7 +360,7 @@ class CementerioController extends ApiController
             $validaciones['convenio'] = 'required';
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', 1)->first();
+                ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($convenio->id != $request->id_venta)
@@ -376,7 +376,7 @@ class CementerioController extends ApiController
 
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_convenio', $request->convenio)->where('operaciones.status', 1)->first();
+                ->where('numero_convenio', $request->convenio)->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($convenio->id != $request->id_venta)
@@ -387,7 +387,7 @@ class CementerioController extends ApiController
             }
             /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
             $titulo = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+                ->where('numero_titulo', $request->titulo)->where('operaciones.status', '<>', 0)->first();
             if (!empty($titulo)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($titulo->id != $request->id_venta)
