@@ -923,7 +923,7 @@ class FunerariaController extends ApiController
 
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $solicitud = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
-                ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', 1)->first();
+                ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', '<>', 0)->first();
             if (!empty($solicitud)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($solicitud->id != $request->id_venta)
@@ -941,7 +941,7 @@ class FunerariaController extends ApiController
             $validaciones['convenio'] = 'required';
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
-                ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', 1)->first();
+                ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($convenio->id != $request->id_venta)
@@ -957,7 +957,7 @@ class FunerariaController extends ApiController
 
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
-                ->where('numero_convenio', $request->convenio)->where('operaciones.status', 1)->first();
+                ->where('numero_convenio', $request->convenio)->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($convenio->id != $request->id_venta)
