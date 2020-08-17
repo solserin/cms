@@ -3261,4 +3261,3 @@ class FunerariaController extends ApiController
             ->orderBy('id', 'asc')->get();
     }
 }
-}

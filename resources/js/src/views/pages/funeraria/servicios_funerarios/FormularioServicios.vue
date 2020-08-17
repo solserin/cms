@@ -2235,6 +2235,8 @@
                             </vs-td>
                           </vs-tr>
 
+                          <!--mostrar en caso de que se use un plan ya comprado para uso a futuro-->
+
                           <vs-tr v-if="form.plan_funerario_futuro_b.value==1">
                             <vs-td class="w-1/12"></vs-td>
                             <vs-td class="w-7/12">
@@ -2314,6 +2316,30 @@
                               </div>
                             </vs-td>
                           </vs-tr>
+
+                          <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO A FUTURO-->
+
+                          <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO INMEDIATO-->
+                          <vs-tr v-if="form.plan_funerario_inmediato_b.value==1">
+                            <vs-td class="w-1/12"></vs-td>
+                            <vs-td class="w-7/12">
+                              <div
+                                class="capitalize py-1 text-right pr-4 dato_servicio"
+                              >Total del Plan Funerario</div>
+                            </vs-td>
+                            <vs-td class="w-2/12">
+                              <div
+                                v-if="datosPlanFunerario!=[]"
+                                class="capitalize dato_servicio_valor"
+                              >
+                                $ {{
+                                costo_uso_inmediato_computed | numFormat("0,000.00")
+                                }}
+                              </div>
+                            </vs-td>
+                          </vs-tr>
+
+                          <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO INMEDIATO-->
                         </template>
                       </vs-table>
                     </vx-card>
@@ -2933,6 +2959,15 @@ export default {
       }
     },
 
+    /**costo del plan a uso inmediato */
+    costo_uso_inmediato_computed: function () {
+      if (this.form.plan_funerario.value != "") {
+        return this.form.plan_funerario.costo_neto;
+      } else {
+        return 0;
+      }
+    },
+
     showVentana: {
       get() {
         return this.show;
@@ -3074,7 +3109,8 @@ export default {
         {
           value: "",
           label: "Seleccione 1",
-          detalle: [],
+          secciones: [],
+          costo_neto: 0,
         },
       ],
       tipos_contratante: [
@@ -3227,6 +3263,7 @@ export default {
           value: "",
           label: "Seleccione 1",
           secciones: [],
+          costo_neto: 0,
         },
         /**fin datos del contrato */
       },
@@ -3487,12 +3524,18 @@ export default {
             label: "Seleccione 1",
             value: "",
             secciones: [],
+            costo_neto: 0,
           });
-          res.data.forEach((element) => {
-            this.planes_funerarios.push({
-              label: element.plan,
-              value: element.id,
-              secciones: element.secciones,
+          res.data.forEach((plan) => {
+            plan.precios.forEach((precio) => {
+              if (precio.financiamiento == 1) {
+                this.planes_funerarios.push({
+                  label: plan.plan,
+                  value: plan.id,
+                  secciones: plan.secciones,
+                  costo_neto: precio.costo_neto,
+                });
+              }
             });
           });
           this.form.plan_funerario = this.planes_funerarios[0];
@@ -3679,91 +3722,6 @@ export default {
     },
     cancel() {
       this.$emit("closeVentana");
-    },
-    async get_planes_funerarios() {
-      try {
-        this.$vs.loading();
-        let res = await planes.get_planes(false, "");
-        //le agrego todos los usuarios vendedores
-        this.planes_funerarios = [];
-        this.planes_funerarios.push({
-          label: "Seleccione 1",
-          plan: "",
-          plan_ingles: "",
-          nota: "",
-          nota_ingles: "",
-          value: "",
-          secciones: [],
-          precios: [],
-        });
-        res.data.forEach((element) => {
-          this.planes_funerarios.push({
-            label: element.plan,
-            plan: element.plan,
-            plan_ingles: element.plan_ingles,
-            nota: element.nota,
-            nota_ingles: element.nota_ingles,
-            value: element.id,
-            secciones: element.secciones,
-            precios: element.precios,
-          });
-        });
-        if (this.getTipoformulario == "agregar") {
-          if (this.planes_funerarios.length > 1) {
-            /**selecciona el primer plan que venga en el arreglo */
-            this.form.plan_funerario = this.planes_funerarios[1];
-          } else {
-            /**selecciona el "Seleccione 1" */
-            this.form.plan_funerario = this.planes_funerarios[0];
-          }
-        }
-        this.$vs.loading.close();
-      } catch (error) {
-        /**error al cargar vendedores */
-        this.$vs.notify({
-          title: "Error",
-          text:
-            "Ha ocurrido un error al tratar de cargar el catálogo de vendedores, por favor reintente.",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          position: "bottom-right",
-          time: "9000",
-        });
-        this.$vs.loading.close();
-        this.cerrarVentana();
-      }
-    },
-    //get vendedores
-    async get_vendedores() {
-      try {
-        let res = await planes.get_vendedores();
-        //le agrego todos los usuarios vendedores
-        this.vendedores = [];
-        this.vendedores.push({ label: "Seleccione 1", value: "" });
-        if (this.getTipoformulario == "agregar") {
-          this.form.vendedor = this.vendedores[0];
-        }
-        res.data.forEach((element) => {
-          this.vendedores.push({
-            label: element.nombre,
-            value: element.id,
-          });
-        });
-      } catch (error) {
-        /**error al cargar vendedores */
-        this.$vs.notify({
-          title: "Error",
-          text:
-            "Ha ocurrido un error al tratar de cargar el catálogo de vendedores, por favor reintente.",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          position: "bottom-right",
-          time: "9000",
-        });
-        this.cerrarVentana();
-      }
     },
 
     cancelar() {

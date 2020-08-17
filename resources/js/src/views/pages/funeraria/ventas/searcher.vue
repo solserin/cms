@@ -295,7 +295,6 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     retornarSeleccion(datos) {
-      console.log("retornarSeleccion -> datos", datos);
       if (datos.operacion_status != 0) {
         /**retorna los datos seleccionados a la venta que los solicita */
         this.$emit("retornoPlan", datos);
