@@ -110,6 +110,20 @@ export default {
     get_planes() {
         return axios.get("/funeraria/get_planes");
     },
+
+    get_categorias_servicio() {
+        return axios.get("/funeraria/get_categorias_servicio");
+    },
+
+    get_inventario_servicios(param) {
+        return axios.get("/funeraria/get_inventario/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
     /**serviios del modulo */
 
     get_categorias() {

@@ -9,6 +9,7 @@ use App\Titulos;
 use App\Clientes;
 use App\Articulos;
 use Carbon\Carbon;
+use App\Categorias;
 use App\Operaciones;
 use App\Afiliaciones;
 use App\SitiosMuerte;
@@ -3263,24 +3264,28 @@ class FunerariaController extends ApiController
     }
 
     /**obteniendo los articulos y servicios para la venta y servicios */
-    public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '', $id_departamento = 0)
+    public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '')
     {
-        $articulo = $request->articulo;
-        $codigo_barras_request = $request->codigo_barras;
+        $descripcion = $request->descripcion;
+        $numero_control = $request->numero_control;
+        $categoria_id = $request->categorias_id;
         $resultado_query =  Articulos::select(
-            '*',
-            DB::raw(
-                '(NULL) AS existencia'
-            ),
+            '*'
         )
             ->with('inventario')
             ->with('categoria')
             ->with('tipo_articulo')
             ->where('categorias_id', '<>', '4')
-            ->where('descripcion', 'like', '%' . $articulo . '%')
-            ->where(function ($q) use ($codigo_barras_request) {
-                if (trim($codigo_barras_request) != '') {
-                    $q->where('articulos.codigo_barras', '=', $codigo_barras_request);
+            ->where('status', '<>', 0)
+            ->where('descripcion', 'like', '%' . $descripcion . '%')
+            ->where(function ($q) use ($numero_control) {
+                if (trim($numero_control) != '') {
+                    $q->where('articulos.codigo_barras', '=', $numero_control);
+                }
+            })
+            ->where(function ($q) use ($categoria_id) {
+                if (trim($categoria_id) != '') {
+                    $q->where('articulos.categorias_id', '=', $categoria_id);
                 }
             })
             ->get();
@@ -3352,5 +3357,12 @@ class FunerariaController extends ApiController
         }
 
         return $resultado_query;
+    }
+
+    /**categorias para filtrar los articulos en la venta en el servicio funerario */
+    public function get_categorias_servicio()
+    {
+        /**todas menos los de articulos de renta */
+        return Categorias::where('departamentos_id', '<>', 3)->get();
     }
 }
