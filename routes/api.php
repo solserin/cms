@@ -54,6 +54,8 @@ Route::get('funeraria/get_material_velacion/{id_articulo?}/{paginated?}/{id_depa
 Route::get('funeraria/get_tipos_contratante', 'FunerariaController@get_tipos_contratante');
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
+Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{codigo_barras?}', 'FunerariaController@get_inventario');
+
 
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
