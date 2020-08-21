@@ -3270,7 +3270,10 @@ class FunerariaController extends ApiController
         $numero_control = $request->numero_control;
         $categoria_id = $request->categorias_id;
         $resultado_query =  Articulos::select(
-            '*'
+            '*',
+            DB::raw(
+                '(NULL) AS existencia'
+            )
         )
             ->with('inventario')
             ->with('categoria')

@@ -5,16 +5,25 @@
       fullscreen
       title="Catálogo de Artículos y Servicios por Lote"
       :active.sync="showVentana"
-      ref="buscador_terrenos"
+      ref="buscador_lotes"
     >
       <!--inicio de buscador-->
       <div class="py-3">
-        <vx-card no-radius title="Filtros de selección" refresh-content-action @refresh="reset">
+        <vx-card
+          no-radius
+          title="Filtros de selección"
+          refresh-content-action
+          @refresh="reset"
+        >
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
-                <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Cód. Barras</label>
+                <div
+                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold"
+                    >Cód. Barras</label
+                  >
                   <vs-input
                     name="numero_control"
                     data-vv-as=" "
@@ -27,12 +36,16 @@
                     v-on:blur="get_data('numero_control', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{ errors.first("numero_control") }}</span>
+                    <span class="text-danger text-sm">{{
+                      errors.first("numero_control")
+                    }}</span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
 
-                <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+                <div
+                  class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
+                >
                   <label class="text-sm opacity-75 font-bold">
                     <span>Categorías</span>
                     <span class="texto-importante">(*)</span>
@@ -49,12 +62,18 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{ errors.first("categoria") }}</span>
+                    <span class="text-danger">{{
+                      errors.first("categoria")
+                    }}</span>
                   </div>
                 </div>
 
-                <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Descripción</label>
+                <div
+                  class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold"
+                    >Descripción</label
+                  >
                   <vs-input
                     ref="descripcion"
                     name="descripcion"
@@ -68,7 +87,9 @@
                     v-on:blur="get_data('descripcion', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{ errors.first("descripcion") }}</span>
+                    <span class="text-danger text-sm">{{
+                      errors.first("descripcion")
+                    }}</span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
@@ -76,52 +97,72 @@
             </div>
           </template>
         </vx-card>
-        <div class="resultados_clientes mt-10">
+        <div class="mt-10">
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
-            :data="articulos"
+            :data="lotes"
             stripe
             noDataText="0 Resultados"
           >
             <template slot="header">
-              <h3>Lista actualizada de clientes registrados</h3>
+              <h3>Lista de Artículos y Servicios por Lotes</h3>
             </template>
             <template slot="thead">
-              <vs-th>Núm. Venta</vs-th>
-              <vs-th>Núm. Convenio</vs-th>
-              <vs-th>Titular</vs-th>
-              <vs-th>Plan Funerario</vs-th>
-              <vs-th>Estado</vs-th>
+              <vs-th>Cód. Barras</vs-th>
+              <vs-th>Tipo</vs-th>
+              <vs-th>Categoría</vs-th>
+              <vs-th>Descripción</vs-th>
+              <vs-th>Lote</vs-th>
+              <vs-th>$ Costo</vs-th>
+              <vs-th>Existencia</vs-th>
               <vs-th>Seleccionar</vs-th>
             </template>
             <template slot-scope="{ data }">
               <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-                <vs-td :data="data[indextr].id">
-                  <span class="font-semibold">{{ data[indextr].id }}</span>
+                <vs-td :data="data[indextr].codigo_barras">
+                  <span class="font-semibold">{{
+                    data[indextr].codigo_barras
+                  }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
+                <vs-td :data="data[indextr].tipo">{{
+                  data[indextr].tipo
+                }}</vs-td>
 
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
+                <vs-td :data="data[indextr].categoria">{{
+                  data[indextr].categoria
+                }}</vs-td>
+                <vs-td :data="data[indextr].descripcion">{{
+                  data[indextr].descripcion
+                }}</vs-td>
+                <vs-td :data="data[indextr].lote">{{
+                  data[indextr].lote
+                }}</vs-td>
+                <vs-td :data="data[indextr].costo_neto_normal">
+                  $
+                  {{ data[indextr].costo_neto_normal | numFormat("0,000.00") }}
+                </vs-td>
+                <vs-td :data="data[indextr].existencia">{{
+                  data[indextr].existencia
+                }}</vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
                     width="25"
                     class="cursor-pointer"
                     src="@assets/images/checked.svg"
-                    @click="
-                      retornarSeleccion(
-                        data[indextr]
-                      )
-                    "
+                    @click="retornarSeleccion(data[indextr])"
                   />
                 </vs-td>
               </vs-tr>
             </template>
           </vs-table>
           <div>
-            <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-3"></vs-pagination>
+            <vs-pagination
+              v-if="verPaginado"
+              :total="this.total"
+              v-model="actual"
+              class="mt-3"
+            ></vs-pagination>
           </div>
         </div>
       </div>
@@ -133,13 +174,10 @@
 <script>
 import funeraria from "@services/funeraria";
 import vSelect from "vue-select";
-import Datepicker from "vuejs-datepicker";
-import { es } from "vuejs-datepicker/dist/locale";
 
 export default {
   components: {
     "v-select": vSelect,
-    Datepicker,
   },
   props: {
     show: {
@@ -159,7 +197,7 @@ export default {
         this.$nextTick(() =>
           this.$refs["descripcion"].$el.querySelector("input").focus()
         );
-        this.$refs["buscador_terrenos"].$el.querySelector(
+        this.$refs["buscador_lotes"].$el.querySelector(
           ".vs-icon"
         ).onclick = () => {
           this.cancelar();
@@ -172,6 +210,65 @@ export default {
         /**cerrar y limpiar el formulario */
         this.serverOptions.numero_control = "";
         this.serverOptions.titular = "";
+      }
+    },
+    articulos: function (newValue, oldValue) {
+      /**se limpian los lotes */
+      this.lotes = [];
+      if (newValue.length > 0) {
+        /**tiene datos el arreglo */
+        newValue.forEach((articulo) => {
+          if (articulo.tipo_articulos_id == 2) {
+            /**es de tipo servicio */
+            this.lotes.push({
+              id: articulo.id,
+              codigo_barras: articulo.codigo_barras,
+              tipo: "Servicio",
+              categoria: articulo.categoria.categoria,
+              descripcion: articulo.descripcion,
+              lote: "N/A",
+              subtotal: 0,
+              descuento: 0,
+              iva: 0,
+              costo_neto_normal: articulo.precio_venta,
+              costo_neto_plan: articulo.precio_venta,
+              costo: articulo.precio_venta,
+              importe: 0,
+              grava_iva_b: articulo.grava_iva_b,
+              existencia: articulo.existencia,
+              cantidad: 1,
+              facturable_b: 1,
+              descuento_plan_b: 0,
+            });
+          } else if (articulo.tipo_articulos_id == 1) {
+            /**es de tipo articulo */
+            /**checando que haya existencia para poder mostrarlo */
+            if (articulo.inventario.length > 0) {
+              articulo.inventario.forEach((lote) => {
+                this.lotes.push({
+                  id: articulo.id,
+                  codigo_barras: articulo.codigo_barras,
+                  tipo: "Artículo",
+                  categoria: articulo.categoria.categoria,
+                  descripcion: articulo.descripcion,
+                  lote: lote.lotes_id,
+                  subtotal: 0,
+                  descuento: 0,
+                  iva: 0,
+                  costo_neto_normal: articulo.precio_venta,
+                  costo_neto_plan: articulo.precio_venta,
+                  costo: articulo.precio_venta,
+                  importe: 0,
+                  grava_iva_b: articulo.grava_iva_b,
+                  existencia: lote.existencia,
+                  cantidad: 1,
+                  facturable_b: 1,
+                  descuento_plan_b: 0,
+                });
+              });
+            }
+          }
+        });
       }
     },
   },
@@ -194,10 +291,8 @@ export default {
         },
       ],
       selected: [],
-      disabledDates: {
-        from: new Date(),
-      },
       articulos: [],
+      lotes: [],
       serverOptions: {
         categoria: {
           label: "Seleccione 1",
@@ -213,7 +308,6 @@ export default {
       verPaginado: true,
       total: 0,
       actual: 1,
-      spanishDatepicker: es,
     };
   },
   methods: {
@@ -253,8 +347,8 @@ export default {
         return;
       } else {
         /**checando el origen */
-        if (origen == "titular") {
-          if (this.serverOptions.titular.trim() == "") {
+        if (origen == "descripcion") {
+          if (this.serverOptions.descripcion.trim() == "") {
             //return;
           }
         } else if (origen == "numero_control") {
@@ -271,7 +365,7 @@ export default {
       this.$vs.loading();
       this.verPaginado = false;
       this.serverOptions.page = page;
-      this.serverOptions.per_page = 12;
+      this.serverOptions.per_page = 24;
       this.serverOptions.categorias_id = this.serverOptions.categoria.value;
       funeraria
         .get_inventario_servicios(this.serverOptions)
@@ -305,24 +399,8 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     retornarSeleccion(datos) {
-      if (datos.operacion_status != 0) {
-        /**retorna los datos seleccionados a la venta que los solicita */
-        this.$emit("retornoPlan", datos);
-        this.$emit("closeBuscador");
-      } else {
-        /**error, venta cancelada */
-        this.$vs.notify({
-          title: "Servicios Funerarios",
-          text: "Seleccione otra opción, esta operación fue cancelada.",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          time: 6000,
-        });
-      }
-    },
-    retorno_id(dato) {
-      this.get_data("", this.actual);
+      this.$emit("LoteSeleccionado", datos);
+      this.$emit("closeBuscador");
     },
   },
 };
