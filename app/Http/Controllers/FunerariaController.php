@@ -1102,8 +1102,8 @@ class FunerariaController extends ApiController
                         'planes_funerarios_id' => $request->plan_funerario['value'],
                         'nombre_original' => $request->plan_funerario['plan'],
                         'nombre_original_ingles' => $request->plan_funerario['plan_ingles'],
-                        'nota_original' => $request->plan_funerario['nota'],
-                        'nota_original_ingles' => $request->plan_funerario['nota_ingles']
+                        'nota_original' => trim($request->plan_funerario['nota']) != '' ? $request->plan_funerario['nota'] : 'N/A',
+                        'nota_original_ingles' => trim($request->plan_funerario['nota_ingles']) != '' ? $request->plan_funerario['nota_ingles'] : 'N/A'
                     ]
                 );
 
@@ -1195,8 +1195,8 @@ class FunerariaController extends ApiController
                         'planes_funerarios_id' => $request->plan_funerario['value'],
                         'nombre_original' => $request->plan_funerario['plan'],
                         'nombre_original_ingles' => $request->plan_funerario['plan_ingles'],
-                        'nota_original' => $request->plan_funerario['nota'],
-                        'nota_original_ingles' => $request->plan_funerario['nota_ingles']
+                        'nota_original' => trim($request->plan_funerario['nota']) != '' ? $request->plan_funerario['nota'] : 'N/A',
+                        'nota_original_ingles' => trim($request->plan_funerario['nota_ingles']) != '' ? $request->plan_funerario['nota_ingles'] : 'N/A'
                     ]
                 );
 
