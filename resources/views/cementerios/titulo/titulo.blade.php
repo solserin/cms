@@ -198,10 +198,6 @@
             <td class="w-50"></td>
         </tr>
     </table>
-    <p class="justificar italic mt-20">
-        Esta impresión es solo una copia del título original emitido por la empresa y no es válido sin el membrete
-        oficial de la empresa.
-    </p>
 </body>
 
 </html>
