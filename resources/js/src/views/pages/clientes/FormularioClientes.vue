@@ -13,16 +13,12 @@
       <div class="flex flex-wrap px-2">
         <div class="w-full pt-3 pb-3 px-2">
           <h3 class="text-xl">
-            <feather-icon
-              icon="UserCheckIcon"
-              class="mr-2"
-              svgClasses="w-5 h-5"
-            />Información del Cliente
+            <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Información del Cliente
           </h3>
           <div class="mt-3">
-            <label class="text-sm opacity-75 font-bold uppercase text-primary"
-              >Seleccione el estado actual del cliente</label
-            >
+            <label
+              class="text-sm opacity-75 font-bold uppercase text-primary"
+            >Seleccione el estado actual del cliente</label>
             <vs-switch
               style="width: 95px;"
               color="success"
@@ -57,21 +53,24 @@
             v-model="form.nombre"
           />
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("nombre")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">{{
+            <span class="text-danger text-sm" v-if="this.errores.nombre">
+              {{
               errores.nombre[0]
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
 
         <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Fecha de Nacimiento (Año-Mes-Dia)
-          </label>
+          <label class="text-sm opacity-75 font-bold">Fecha de Nacimiento (Año-Mes-Dia)</label>
+          <label class="text-sm opacity-75 font-bold">Fecha de Nacimiento (Año-Mes-Dia)</label>
 
           <flat-pickr
             name="fecha_nacimiento"
@@ -81,14 +80,18 @@
             class="w-full my-1"
           />
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("fecha_nacimiento")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.fecha_nac">{{
+            <span class="text-danger text-sm" v-if="this.errores.fecha_nac">
+              {{
               errores.fecha_nac[0]
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
 
@@ -110,16 +113,17 @@
             <div slot="no-options">Seleccione una opción</div>
           </v-select>
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("genero")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores['genero.value']"
-              >{{ errores["genero.value"][0] }}</span
-            >
+            >{{ errores["genero.value"][0] }}</span>
           </div>
         </div>
 
@@ -140,14 +144,18 @@
             v-model="form.direccion"
           />
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("direccion")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.direccion">{{
+            <span class="text-danger text-sm" v-if="this.errores.direccion">
+              {{
               errores.direccion[0]
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
@@ -168,16 +176,17 @@
             <div slot="no-options">Seleccione una opción</div>
           </v-select>
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("nacionalidades_id")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores['nacionalidad.value']"
-              >{{ errores["nacionalidad.value"][0] }}</span
-            >
+            >{{ errores["nacionalidad.value"][0] }}</span>
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
@@ -197,14 +206,18 @@
             v-model="form.ciudad"
           />
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("ciudad")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.ciudad">{{
+            <span class="text-danger text-sm" v-if="this.errores.ciudad">
+              {{
               errores.ciudad[0]
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
 
@@ -225,14 +238,18 @@
             v-model="form.estado"
           />
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("estado")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.estado">{{
+            <span class="text-danger text-sm" v-if="this.errores.estado">
+              {{
               errores.estado[0]
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
 
@@ -261,9 +278,7 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Tél. Extra (Trabajo)</label
-          >
+          <label class="text-sm opacity-75 font-bold">Tél. Extra (Trabajo)</label>
           <vs-input
             maxlength="25"
             type="text"
@@ -290,9 +305,11 @@
             <span class="text-danger text-sm">{{ errors.first("email") }}</span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.email">{{
+            <span class="text-danger text-sm" v-if="this.errores.email">
+              {{
               errores.email[0]
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
 
@@ -301,21 +318,13 @@
         <vs-divider />
         <div class="w-full pt-3 pb-3 px-2">
           <h3 class="text-xl">
-            <feather-icon
-              icon="UserCheckIcon"
-              class="mr-2"
-              svgClasses="w-5 h-5"
-            />Información Fiscal (Para aquellos que facturan)
+            <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Información Fiscal (Para aquellos que facturan)
           </h3>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
           <label class="text-sm opacity-75 font-bold">
             RFC
-            <span
-              v-if="datos_fiscales_validacion_computed"
-              class="text-danger text-sm"
-              >(*)</span
-            >
+            <span v-if="datos_fiscales_validacion_computed" class="text-danger text-sm">(*)</span>
           </label>
           <vs-input
             data-vv-as=" "
@@ -331,9 +340,11 @@
             <span class="text-danger text-sm">{{ errors.first("rfc") }}</span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rfc">{{
+            <span class="text-danger text-sm" v-if="this.errores.rfc">
+              {{
               errores.rfc[0]
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
 
@@ -343,8 +354,7 @@
             <span
               v-if="datos_fiscales_validacion_computed"
               class="text-danger text-sm"
-              >(*)</span
-            >
+            >(*)</span>
           </label>
           <vs-input
             name="razon_social"
@@ -357,16 +367,17 @@
             v-model="form.razon_social"
           />
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("razon_social")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.razon_social"
-              >{{ errores.razon_social[0] }}</span
-            >
+            >{{ errores.razon_social[0] }}</span>
           </div>
         </div>
 
@@ -376,8 +387,7 @@
             <span
               v-if="datos_fiscales_validacion_computed"
               class="text-danger text-sm"
-              >(*)</span
-            >
+            >(*)</span>
           </label>
           <vs-input
             name="direccion_fiscal"
@@ -390,16 +400,17 @@
             v-model="form.direccion_fiscal"
           />
           <div>
-            <span class="text-danger text-sm">{{
+            <span class="text-danger text-sm">
+              {{
               errors.first("direccion_fiscal")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.direccion_fiscal"
-              >{{ errores.direccion_fiscal[0] }}</span
-            >
+            >{{ errores.direccion_fiscal[0] }}</span>
           </div>
         </div>
 
@@ -407,17 +418,11 @@
 
         <div class="w-full pt-3 pb-3 px-2">
           <h3 class="text-xl">
-            <feather-icon
-              icon="UserCheckIcon"
-              class="mr-2"
-              svgClasses="w-5 h-5"
-            />Referencia de Contacto
+            <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Referencia de Contacto
           </h3>
         </div>
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Nombre de un contacto de referencia</label
-          >
+          <label class="text-sm opacity-75 font-bold">Nombre de un contacto de referencia</label>
           <vs-input
             name="nombre_contacto"
             maxlength="150"
@@ -429,9 +434,7 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Parentesco con el contacto</label
-          >
+          <label class="text-sm opacity-75 font-bold">Parentesco con el contacto</label>
           <vs-input
             name="parentesco_contacto"
             data-vv-as=" "
@@ -444,9 +447,7 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Teléfono del contacto</label
-          >
+          <label class="text-sm opacity-75 font-bold">Teléfono del contacto</label>
           <vs-input
             name="telefono_contacto"
             data-vv-as=" "
@@ -472,19 +473,10 @@
           </div>
         </div>
       </div>
-      <div
-        class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto"
-      >
+      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto">
         <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img
-            width="25px"
-            class="cursor-pointer"
-            size="small"
-            src="@assets/images/save.svg"
-          />
-          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
-            >Guardar Datos</span
-          >
+          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
+          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'">Guardar Datos</span>
           <span class="texto-btn" v-else>Modificar Datos</span>
         </vs-button>
       </div>
