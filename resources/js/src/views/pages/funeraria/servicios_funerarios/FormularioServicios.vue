@@ -2937,6 +2937,7 @@
                                   <vs-th>IVA</vs-th>
                                   <vs-th>Costo</vs-th>
                                   <vs-th>Importe</vs-th>
+                                  <vs-th>Importe a Pagar</vs-th>
                                   <vs-th>Plan Funerario</vs-th>
                                   <vs-th>Facturable</vs-th>
                                   <vs-th>Quitar</vs-th>
@@ -2986,7 +2987,6 @@
                                           form.articulos_servicios[indextr]
                                             .cantidad
                                         "
-                                        @keyup="calculandoCostos('keyup')"
                                       />
                                       <div>
                                         <span class="text-danger text-xs">
@@ -3016,7 +3016,6 @@
                                           form.articulos_servicios[indextr]
                                             .subtotal
                                         "
-                                        @keyup="calculandoCostos('keyup')"
                                       />
                                       <div>
                                         <span class="text-danger text-xs">
@@ -3051,7 +3050,6 @@
                                             form.articulos_servicios[indextr]
                                               .descuento
                                           "
-                                          @keyup="calculandoCostos('keyup')"
                                           :disabled="
                                             habilitar_plan_funerario_b &&
                                             form.articulos_servicios[indextr]
@@ -3098,6 +3096,15 @@
                                       </div>
                                     </vs-td>
                                     <vs-td>
+                                      <div class="capitalize">
+                                        $
+                                        {{
+                                          data[indextr].importe
+                                            | numFormat("0,000.00")
+                                        }}
+                                      </div>
+                                    </vs-td>
+                                    <vs-td>
                                       <vs-switch
                                         class="ml-auto mr-auto"
                                         color="success"
@@ -3106,7 +3113,6 @@
                                           form.articulos_servicios[indextr]
                                             .descuento_plan_b
                                         "
-                                        @change="calculandoCostos('keyup')"
                                         :disabled="habilitar_plan_funerario_b"
                                       >
                                         <span slot="on">SI</span>
@@ -3869,7 +3875,6 @@ export default {
         id_convenio_plan: "",
         plan: "",
         conceptos_plan: [],
-        articulos_servicios: [],
         plan_funerario_inmediato_b: {
           value: "1",
           label: "SI",
@@ -4392,7 +4397,7 @@ export default {
 
     LoteSeleccionado(datos) {
       this.form.articulos_servicios.push(datos);
-      this.calculandoCostos("keyup");
+
       /**agregando los datos a la lista de articulos y servicios */
     },
 
