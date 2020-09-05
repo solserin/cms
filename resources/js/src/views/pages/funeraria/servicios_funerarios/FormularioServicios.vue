@@ -4396,8 +4396,8 @@ export default {
     },
 
     LoteSeleccionado(datos) {
+      console.log("LoteSeleccionado -> datos", datos);
       this.form.articulos_servicios.push(datos);
-
       /**agregando los datos a la lista de articulos y servicios */
     },
 
