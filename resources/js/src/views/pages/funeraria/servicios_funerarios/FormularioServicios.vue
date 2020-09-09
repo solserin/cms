@@ -2099,7 +2099,7 @@
                     >
                       <vs-td class="w-1/12">
                         <div class="capitalize">
-                          <span class="lowercase">{{ (indextr+1) }})</span>
+                          <span class="lowercase">{{ indextr + 1 }})</span>
                         </div>
                       </vs-td>
                       <vs-td class="w-1/12">
@@ -2932,12 +2932,10 @@
                                   <vs-th>Descripción</vs-th>
                                   <vs-th>Lote</vs-th>
                                   <vs-th>Cant.</vs-th>
-                                  <vs-th>Subtotal</vs-th>
-                                  <vs-th>Desc.</vs-th>
-                                  <vs-th>IVA</vs-th>
-                                  <vs-th>Costo</vs-th>
+                                  <vs-th>Costo Neto</vs-th>
+                                  <vs-th>Aplicar Descuento</vs-th>
+                                  <vs-th>Costo Neto Con Descuento</vs-th>
                                   <vs-th>Importe</vs-th>
-                                  <vs-th>Importe a Pagar</vs-th>
                                   <vs-th>Plan Funerario</vs-th>
                                   <vs-th>Facturable</vs-th>
                                   <vs-th>Quitar</vs-th>
@@ -2999,10 +2997,16 @@
                                         </span>
                                       </div>
                                     </vs-td>
-                                    <vs-td>
+                                    <vs-td
+                                      v-if="
+                                        habilitar_plan_funerario_b == false ||
+                                        form.articulos_servicios[indextr]
+                                          .plan_b == 0
+                                      "
+                                    >
                                       <vs-input
                                         :name="
-                                          'subtotal_articulos_servicios' +
+                                          'costo_neto_normal_articulos_servicios' +
                                           indextr
                                         "
                                         data-vv-as=" "
@@ -3014,110 +3018,124 @@
                                         maxlength="10"
                                         v-model="
                                           form.articulos_servicios[indextr]
-                                            .subtotal
+                                            .costo_neto_normal
                                         "
                                       />
                                       <div>
                                         <span class="text-danger text-xs">
                                           {{
                                             errors.first(
-                                              "subtotal_articulos_servicios" +
+                                              "costo_neto_normal_articulos_servicios" +
                                                 indextr
                                             )
                                           }}
                                         </span>
                                       </div>
                                     </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        <vs-input
-                                          :name="
-                                            'descuento_articulos_servicios' +
-                                            indextr
-                                          "
-                                          data-vv-as=" "
-                                          data-vv-validate-on="blur"
-                                          v-validate="
-                                            'required|decimal:2|min_value:' +
-                                            0 +
-                                            '|max_value:' +
-                                            form.articulos_servicios[indextr]
-                                              .subtotal
-                                          "
-                                          class="w-full sm:w-8/12 md:w-7/12 lg:w-7/12 xl:w-7/12 mr-auto ml-auto mt-1 cantidad"
-                                          maxlength="10"
-                                          v-model="
-                                            form.articulos_servicios[indextr]
-                                              .descuento
-                                          "
-                                          :disabled="
-                                            habilitar_plan_funerario_b &&
-                                            form.articulos_servicios[indextr]
-                                              .descuento_plan_b == 1
-                                          "
-                                        />
-                                        <div>
-                                          <span class="text-danger text-xs">
-                                            {{
-                                              errors.first(
-                                                "descuento_articulos_servicios" +
-                                                  indextr
-                                              )
-                                            }}
-                                          </span>
-                                        </div>
-                                      </div>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
                                     </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].iva
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].costo
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].importe
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].importe
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
+
+                                    <vs-td
+                                      v-if="
+                                        habilitar_plan_funerario_b == false ||
+                                        form.articulos_servicios[indextr]
+                                          .plan_b == 0
+                                      "
+                                    >
                                       <vs-switch
                                         class="ml-auto mr-auto"
                                         color="success"
                                         icon-pack="feather"
                                         v-model="
                                           form.articulos_servicios[indextr]
-                                            .descuento_plan_b
+                                            .descuento_b
                                         "
-                                        :disabled="habilitar_plan_funerario_b"
                                       >
                                         <span slot="on">SI</span>
                                         <span slot="off">NO</span>
                                       </vs-switch>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
+                                    </vs-td>
+                                    <vs-td
+                                      v-if="
+                                        form.articulos_servicios[indextr]
+                                          .descuento_b == 1 ||
+                                        habilitar_plan_funerario_b == false ||
+                                        form.articulos_servicios[indextr]
+                                          .plan_b == 0
+                                      "
+                                    >
+                                      <vs-input
+                                        :name="
+                                          'costo_neto_descuento_articulos_servicios' +
+                                          indextr
+                                        "
+                                        data-vv-as=" "
+                                        data-vv-validate-on="blur"
+                                        v-validate="
+                                          'required|decimal:2|min_value:' + 0
+                                        "
+                                        class="w-full sm:w-8/12 md:w-7/12 lg:w-7/12 xl:w-7/12 mr-auto ml-auto mt-1 cantidad"
+                                        maxlength="10"
+                                        v-model="
+                                          form.articulos_servicios[indextr]
+                                            .costo_neto_descuento
+                                        "
+                                      />
+                                      <div>
+                                        <span class="text-danger text-xs">
+                                          {{
+                                            errors.first(
+                                              "costo_neto_descuento_articulos_servicios" +
+                                                indextr
+                                            )
+                                          }}
+                                        </span>
+                                      </div>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
+                                    </vs-td>
+
+                                    <vs-td
+                                      v-if="
+                                        habilitar_plan_funerario_b == false ||
+                                        form.articulos_servicios[indextr]
+                                          .plan_b == 0
+                                      "
+                                    >
+                                      <div class="capitalize">
+                                        $
+                                        {{
+                                          data[indextr].importe
+                                            | numFormat("0,000.00")
+                                        }}
+                                      </div>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
+                                    </vs-td>
+
+                                    <vs-td v-if="habilitar_plan_funerario_b">
+                                      <vs-switch
+                                        class="ml-auto mr-auto"
+                                        color="success"
+                                        icon-pack="feather"
+                                        v-model="
+                                          form.articulos_servicios[indextr]
+                                            .plan_b
+                                        "
+                                        :disabled="!habilitar_plan_funerario_b"
+                                      >
+                                        <span slot="on">SI</span>
+                                        <span slot="off">NO</span>
+                                      </vs-switch>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
                                     </vs-td>
                                     <vs-td>
                                       <vs-switch
@@ -3572,23 +3590,22 @@ export default {
           this.form.id_convenio_plan <= 0 ||
           this.form.id_convenio_plan == ""
         ) {
-          return true;
-        } else {
           return false;
+        } else {
+          return true;
         }
       } else {
         if (this.form.plan_funerario_inmediato_b.value == "") {
-          return true;
+          return false;
         } else {
           if (this.form.plan_funerario.value == "") {
-            return true;
-          } else {
             return false;
+          } else {
+            return true;
           }
         }
       }
     },
-
     showVentana: {
       get() {
         return this.show;
@@ -4516,7 +4533,7 @@ export default {
           if (this.form.id_convenio_plan > 0) {
             /**se ha seleccionado un plan a futuro */
             this.form.articulos_servicios.forEach((articulo) => {
-              if (articulo.descuento_plan_b == 1) {
+              if (articulo.plan_b == 1) {
                 /**sacando el subtotal */
                 articulo.subtotal = 0;
                 articulo.descuento = 0;
