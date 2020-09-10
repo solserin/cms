@@ -4300,6 +4300,25 @@ export default {
             }
 
             /**aqui me quede */
+            /**datos del acta */
+            this.form.acta_b = data.acta_b;
+            if (data.acta_b == 1) {
+              /**datos de la cadena de custodia que existen en la bd */
+              this.form.folio_acta = data.folio_acta;
+
+
+ var fecha_acta = data.fecha_acta.split("-");
+                  //yyyy-mm-dd hh:mm
+                  this.form.fecha_acta = new Date(
+                    fecha_acta[0],
+                    fecha_acta[1] - 1,
+                    fecha_acta[2]
+                  );
+
+
+               this.form.folio_acta = data.folio_acta;
+            }
+
             /**FIN DE datos para la inhumacion del cuerpo */
           } else {
             console.log("no datos");

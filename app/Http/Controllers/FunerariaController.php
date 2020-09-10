@@ -2656,6 +2656,7 @@ class FunerariaController extends ApiController
             'aseguradora_b',
             'custodia_b',
             'material_velacion_b',
+            'acta_b',
             /**venta operacion */
             'servicios_funerarios.id as servicio_id',
             'llamada_b',
@@ -2695,6 +2696,8 @@ class FunerariaController extends ApiController
             'responsable_custodia',
             'folio_custodia',
             'folio_liberacion',
+            'folio_acta',
+            'fechahora_acta',
             DB::raw(
                 '(NULL) as genero_texto'
             ),
@@ -2754,6 +2757,11 @@ class FunerariaController extends ApiController
             DB::raw(
                 'TIME(fechahora_inhumacion) as hora_inhumacion'
             ),
+
+            DB::raw(
+                'DATE(fechahora_acta) as fecha_acta'
+            ),
+
 
 
             DB::raw(
