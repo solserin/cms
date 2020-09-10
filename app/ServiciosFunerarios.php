@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiciosFunerarios extends Model
@@ -37,5 +38,26 @@ class ServiciosFunerarios extends Model
     public function escolaridad()
     {
         return $this->hasOne('App\Escolaridades', 'id', 'escolaridades_id');
+    }
+
+    public function terreno()
+    {
+        return $this->hasOne('App\VentasTerrenos', 'id', 'ventas_terrenos_id')
+            ->select(
+                'ubicacion',
+                'operaciones.ventas_terrenos_id',
+                'operaciones.id as id_operacion',
+                'ventas_terrenos.id',
+                DB::raw(
+                    '(NULL) as ubicacion_servicio'
+                ),
+                DB::raw(
+                    '(NULL) as status_operacion'
+                ),
+                DB::raw(
+                    '(NULL) as status_operacion_texto'
+                )
+            )
+            ->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id');
     }
 }

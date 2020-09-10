@@ -2652,6 +2652,8 @@ class FunerariaController extends ApiController
             'inhumacion_b',
             'traslado_b',
             'misa_b',
+            'aseguradora_b',
+            'custodia_b',
             /**venta operacion */
             'servicios_funerarios.id as servicio_id',
             'llamada_b',
@@ -2679,6 +2681,18 @@ class FunerariaController extends ApiController
             'fechahora_misa',
             'iglesia_misa',
             'direccion_iglesia',
+            'lugares_servicios_id',
+            'direccion_velacion',
+            'cementerios_servicio_id',
+            'fechahora_inhumacion',
+            'ventas_terrenos_id',
+            'nota_ubicacion',
+            'numero_convenio_aseguradora',
+            'aseguradora',
+            'telefono_aseguradora',
+            'responsable_custodia',
+            'folio_custodia',
+            'folio_liberacion',
             DB::raw(
                 '(NULL) as genero_texto'
             ),
@@ -2732,7 +2746,12 @@ class FunerariaController extends ApiController
                 'TIME(fechahora_misa) as hora_misa'
             ),
 
-
+            DB::raw(
+                'DATE(fechahora_inhumacion) as fecha_inhumacion'
+            ),
+            DB::raw(
+                'TIME(fechahora_inhumacion) as hora_inhumacion'
+            ),
 
 
             DB::raw(
@@ -2778,6 +2797,8 @@ class FunerariaController extends ApiController
             ->with('operacion.cliente')
             ->with('recogio:id,nombre')
             ->with('estado_civil')
+            ->with('nacionalidad')
+            ->with('terreno')
             ->where(function ($q) use ($id_servicio) {
                 if (trim($id_servicio) == 'all' || $id_servicio > 0) {
                     if (trim($id_servicio) == 'all') {
@@ -2867,6 +2888,18 @@ class FunerariaController extends ApiController
             } elseif ($solicitud['atencion_medica_b'] == 1) {
                 $solicitud['atencion_medica_texto'] = 'SI';
             }
+
+            /**agregando la ubicacion del servicio cuando es en el cementerio de la empresa, id 1(cementerio aeternus) */
+            $cementerio_controller = new CementerioController();
+            $datos_cementerio = $cementerio_controller->get_cementerio();
+            /**verificando que tipo de operacion_empresa es */
+            if ($solicitud['inhumacion_b'] == 1 && $solicitud['cementerios_servicio_id'] == 1)
+                if (!is_null($solicitud['terreno'])) {
+                    $datos_venta_propiedad = $cementerio_controller->get_ventas($request, $solicitud['terreno']['ventas_terrenos_id'], '')[0];
+                    $solicitud['terreno']['status_operacion'] = $datos_venta_propiedad['operacion_status'];
+                    $solicitud['terreno']['status_operacion_texto'] = $datos_venta_propiedad['status_texto'];
+                    $solicitud['terreno']['ubicacion_servicio'] = strtoupper($cementerio_controller->ubicacion_texto($solicitud['terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . '(' . $datos_venta_propiedad['venta_terreno']['tipo_propiedad']['tipo'] . ' convenio ' . $datos_venta_propiedad['numero_convenio'] . ')');
+                }
         } //fin foreach venta
 
         return $resultado_query;
