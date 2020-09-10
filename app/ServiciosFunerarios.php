@@ -60,4 +60,11 @@ class ServiciosFunerarios extends Model
             )
             ->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id');
     }
+
+    public function materialrentado()
+    {
+        return $this->hasMany('App\MaterialRentado', 'servicios_funerarios_id', 'id')
+            ->select('servicios_funerarios_id', 'articulos_id', 'descripcion', 'cantidad', 'material_rentado.nota')
+            ->join('articulos', 'material_rentado.articulos_id', '=', 'articulos.id');
+    }
 }

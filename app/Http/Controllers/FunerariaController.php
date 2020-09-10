@@ -2645,6 +2645,7 @@ class FunerariaController extends ApiController
         $status = $request->status;
         $fecha_operacion = $request->fecha_operacion;
         $resultado_query = ServiciosFunerarios::select(
+            'id',
             'titulos_id',
             'embalsamar_b',
             'velacion_b',
@@ -2654,6 +2655,7 @@ class FunerariaController extends ApiController
             'misa_b',
             'aseguradora_b',
             'custodia_b',
+            'material_velacion_b',
             /**venta operacion */
             'servicios_funerarios.id as servicio_id',
             'llamada_b',
@@ -2791,14 +2793,15 @@ class FunerariaController extends ApiController
             'estado_afectado_id',
             'medico_responsable_embalsamado',
             'preparador'
-        )->with('registro:id,nombre')
+        )
+            ->with('registro:id,nombre')
             ->with('nacionalidad')
             ->with('escolaridad')
             ->with('operacion.cliente')
             ->with('recogio:id,nombre')
             ->with('estado_civil')
-            ->with('nacionalidad')
             ->with('terreno')
+            ->with('materialrentado')
             ->where(function ($q) use ($id_servicio) {
                 if (trim($id_servicio) == 'all' || $id_servicio > 0) {
                     if (trim($id_servicio) == 'all') {

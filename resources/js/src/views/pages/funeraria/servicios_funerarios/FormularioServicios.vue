@@ -4283,6 +4283,22 @@ export default {
               this.form.folio_custodia = data.folio_custodia;
               this.form.folio_liberacion = data.folio_liberacion;
             }
+
+            /**datos del material de velacion */
+            this.form.material_velacion_b = data.material_velacion_b;
+            if (data.material_velacion_b == 1) {
+              /**cargando el material de velacion que tiene este contrato*/
+              this.form.material_velacion.forEach((material) => {
+                data.materialrentado.forEach((rentado) => {
+                  if (material.id == rentado.articulos_id) {
+                    material.cantidad = rentado.cantidad;
+                    material.nota = rentado.nota;
+                    return;
+                  }
+                });
+              });
+            }
+
             /**aqui me quede */
             /**FIN DE datos para la inhumacion del cuerpo */
           } else {
