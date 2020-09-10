@@ -3348,7 +3348,7 @@ export default {
       type: String,
       required: true,
     },
-    id_venta: {
+    id_solicitud: {
       type: Number,
       required: false,
       default: 0,
@@ -3367,7 +3367,6 @@ export default {
         (async () => {
           await this.get_nacionalidades();
           await this.get_estados_afectado();
-
           await this.get_titulos();
           await this.get_estados_civiles();
           await this.get_escolaridades();
@@ -3375,14 +3374,16 @@ export default {
           await this.get_sitios_muerte();
           await this.get_lugares_velacion();
           await this.get_lugares_inhumacion();
-          await this.get_titulos();
           await this.get_material_velacion();
           await this.get_tipos_contratante();
 
           if (this.getTipoformulario == "agregar") {
             /**acciones cuando el formulario es de agregar */
           } else {
+            await this.get_solicitudes_servicios_id();
+            /**aqui cargo la informacion que existe hasta el momento sobre este servicio */
             /**es modificar */
+            /**aqui me traigo la informacion capturara hasta el momento de esta llamada de modificacion */
             /**pasando el valor de la venta id */
             //this.form.id_venta = this.get_venta_id;
             /**se cargan los datos al formulario */
@@ -3691,9 +3692,9 @@ export default {
         return newValue;
       },
     },
-    get_venta_id: {
+    get_id_solicitud: {
       get() {
-        return this.id_venta;
+        return this.id_solicitud;
       },
       set(newValue) {
         return newValue;
@@ -3998,6 +3999,62 @@ export default {
     };
   },
   methods: {
+    async get_solicitudes_servicios_id() {
+      this.$vs.loading();
+      await funeraria
+        .get_solicitudes_servicios_id(this.get_id_solicitud)
+        .then((res) => {
+          if (res.data.length > 0) {
+            /**hay datos que mostrar */
+            let data = res.data[0];
+            /**cargando el tipo de titulo que tiene la persona */
+            this.titulos.forEach((titulo) => {
+              if (titulo.value == data.titulos_id) {
+                this.form.titulo = titulo;
+                return;
+              }
+            });
+            /**nombre del afectado */
+            this.form.nombre_afectado = data.nombre_afectado;
+            var fecha_nacimiento =
+              data.fecha_nacimiento != null
+                ? data.fecha_nacimiento.split("-")
+                : null;
+            //yyyy-mm-dd
+            this.form.fecha_nacimiento =
+              data.fecha_nacimiento != null
+                ? new Date(
+                    fecha_nacimiento[0],
+                    fecha_nacimiento[1] - 1,
+                    fecha_nacimiento[2]
+                  )
+                : null;
+            /**cargando el genero */
+            this.generos.forEach((genero) => {
+              if (genero.value == data.generos_id) {
+                this.form.genero = genero;
+                return;
+              }
+            });
+            /**cargando la nacionalidad */
+            this.nacionalidades.forEach((element) => {
+              if (element.value == data.nacionalidades_id) {
+                this.form.nacionalidad = element;
+                return;
+              }
+            });
+          } else {
+            console.log("no datos");
+            /**no hay datos que mostrar y se cierra la ventana */
+          }
+          /**aqui cargo los datos obtenidos */
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
     async get_nacionalidades() {
       this.$vs.loading();
       await clientes
@@ -4013,7 +4070,6 @@ export default {
             });
           });
           this.form.nacionalidad = this.nacionalidades[122];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4033,7 +4089,6 @@ export default {
             });
           });
           this.form.titulo = this.titulos[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4054,7 +4109,6 @@ export default {
             });
           });
           this.form.estado_cuerpo = this.estados_cuerpo[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4073,8 +4127,7 @@ export default {
               value: element.id,
             });
           });
-          this.form.estado_civil = this.nacionalidades[0];
-          this.$vs.loading.close();
+          this.form.estado_civil = this.estados_civiles[0];
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4094,7 +4147,6 @@ export default {
             });
           });
           this.form.escolaridad = this.escolaridades[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4114,7 +4166,6 @@ export default {
             });
           });
           this.form.lugar_servicio = this.lugares_servicio[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4134,7 +4185,6 @@ export default {
             });
           });
           this.form.cementerio_servicio = this.cementerios_servicio[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4154,7 +4204,6 @@ export default {
             });
           });
           this.form.afiliacion = this.afiliaciones[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4174,7 +4223,6 @@ export default {
             });
           });
           this.form.sitio_muerte = this.sitios_muerte[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4195,7 +4243,6 @@ export default {
             });
           });
           this.form.tipo_contratante = this.tipos_contratante[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4216,7 +4263,6 @@ export default {
               cantidad: 0,
             });
           });
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();

@@ -2645,6 +2645,7 @@ class FunerariaController extends ApiController
         $status = $request->status;
         $fecha_operacion = $request->fecha_operacion;
         $resultado_query = ServiciosFunerarios::select(
+            'titulos_id',
             'embalsamar_b',
             'velacion_b',
             'cremacion_b',
