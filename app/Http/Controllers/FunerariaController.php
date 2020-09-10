@@ -2651,6 +2651,7 @@ class FunerariaController extends ApiController
             'cremacion_b',
             'inhumacion_b',
             'traslado_b',
+            'misa_b',
             /**venta operacion */
             'servicios_funerarios.id as servicio_id',
             'llamada_b',
@@ -2670,6 +2671,14 @@ class FunerariaController extends ApiController
             'registro_id',
             'fecha_nacimiento',
             'generos_id',
+            'fechahora_cremacion',
+            'fechahora_entrega_cenizas',
+            'descripcion_urna',
+            'fechahora_traslado',
+            'destino_traslado',
+            'fechahora_misa',
+            'iglesia_misa',
+            'direccion_iglesia',
             DB::raw(
                 '(NULL) as genero_texto'
             ),
@@ -2697,6 +2706,35 @@ class FunerariaController extends ApiController
             DB::raw(
                 '(NULL) as fecha_solicitud_texto'
             ),
+            DB::raw(
+                'DATE(fechahora_cremacion) as fecha_cremacion'
+            ),
+            DB::raw(
+                'TIME(fechahora_cremacion) as hora_cremacion'
+            ),
+            DB::raw(
+                'DATE(fechahora_entrega_cenizas) as fecha_entrega_cenizas'
+            ),
+            DB::raw(
+                'TIME(fechahora_entrega_cenizas) as hora_entrega_cenizas'
+            ),
+            DB::raw(
+                'DATE(fechahora_traslado) as fecha_traslado'
+            ),
+            DB::raw(
+                'TIME(fechahora_traslado) as hora_traslado'
+            ),
+
+            DB::raw(
+                'DATE(fechahora_misa) as fecha_misa'
+            ),
+            DB::raw(
+                'TIME(fechahora_misa) as hora_misa'
+            ),
+
+
+
+
             DB::raw(
                 '(NULL) as muerte_natural_texto'
             ),
@@ -2731,6 +2769,9 @@ class FunerariaController extends ApiController
             'lugar_muerte',
             'afiliaciones_id',
             'afiliacion_nota',
+            'estado_afectado_id',
+            'medico_responsable_embalsamado',
+            'preparador'
         )->with('registro:id,nombre')
             ->with('nacionalidad')
             ->with('escolaridad')
