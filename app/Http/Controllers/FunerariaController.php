@@ -2657,6 +2657,7 @@ class FunerariaController extends ApiController
             'custodia_b',
             'material_velacion_b',
             'acta_b',
+            'plan_funerario_futuro_b',
             /**venta operacion */
             'servicios_funerarios.id as servicio_id',
             'llamada_b',
@@ -2700,6 +2701,7 @@ class FunerariaController extends ApiController
             'fechahora_acta',
             'fechahora_contrato',
             'parentesco_contratante',
+            'ventas_planes_id',
             DB::raw(
                 '(NULL) as genero_texto'
             ),
@@ -2785,6 +2787,15 @@ class FunerariaController extends ApiController
             DB::raw(
                 '(NULL) as atencion_medica_texto'
             ),
+            DB::raw(
+                '(NULL) as plan_funerario_futuro'
+            ),
+            DB::raw(
+                '(NULL) as plan_funerario_secciones_originales'
+            ),
+            DB::raw(
+                '(NULL) as nombre_titular_plan_funerario_futuro'
+            ),
             'parentesco_contratante',
             'nacionalidades_id',
             'estados_civiles_id',
@@ -2806,7 +2817,8 @@ class FunerariaController extends ApiController
             'afiliacion_nota',
             'estado_afectado_id',
             'medico_responsable_embalsamado',
-            'preparador'
+            'preparador',
+            'tipos_contratante_id'
         )
             ->with('registro:id,nombre')
             ->with('nacionalidad')
@@ -2910,13 +2922,27 @@ class FunerariaController extends ApiController
             $cementerio_controller = new CementerioController();
             $datos_cementerio = $cementerio_controller->get_cementerio();
             /**verificando que tipo de operacion_empresa es */
-            if ($solicitud['inhumacion_b'] == 1 && $solicitud['cementerios_servicio_id'] == 1)
+            if ($solicitud['inhumacion_b'] == 1 && $solicitud['cementerios_servicio_id'] == 1) {
                 if (!is_null($solicitud['terreno'])) {
                     $datos_venta_propiedad = $cementerio_controller->get_ventas($request, $solicitud['terreno']['ventas_terrenos_id'], '')[0];
                     $solicitud['terreno']['status_operacion'] = $datos_venta_propiedad['operacion_status'];
                     $solicitud['terreno']['status_operacion_texto'] = $datos_venta_propiedad['status_texto'];
                     $solicitud['terreno']['ubicacion_servicio'] = strtoupper($cementerio_controller->ubicacion_texto($solicitud['terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . '(' . $datos_venta_propiedad['venta_terreno']['tipo_propiedad']['tipo'] . ' convenio ' . $datos_venta_propiedad['numero_convenio'] . ')');
                 }
+            }
+
+            /**verificando si la operacion esta lleva anexado un plan funerario de venta a futuro para usar */
+            if ($solicitud['plan_funerario_futuro_b'] == 1 && trim($solicitud['ventas_planes_id']) != '') {
+                /**cargar los datos de la venta de este plan para mandar al frontend */
+                $datos_plan = $this->get_ventas($request, $solicitud['ventas_planes_id'])[0];
+                $solicitud['plan_funerario_futuro'] = strtoupper($datos_plan['venta_plan']['nombre_original'] . '(' . $datos_plan['numero_convenio'] . ')');
+                $solicitud['plan_funerario_secciones_originales'] = $datos_plan['venta_plan']['secciones_original'];
+                $solicitud['nombre_titular_plan_funerario_futuro'] = $datos_plan['nombre'];
+                $solicitud['plan_funerario_futuro_status'] = $datos_plan['operacion_status'];
+                $solicitud['plan_funerario_futuro_status_texto'] = $datos_plan['status_texto'];
+                $solicitud['plan_funerario_futuro_fecha_venta_texto'] = $datos_plan['fecha_operacion_texto'];
+                $solicitud['plan_funerario_futuro_saldo_restante'] = $datos_plan['saldo_neto'];
+            }
         } //fin foreach venta
 
         return $resultado_query;
