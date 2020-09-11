@@ -4305,21 +4305,41 @@ export default {
             if (data.acta_b == 1) {
               /**datos de la cadena de custodia que existen en la bd */
               this.form.folio_acta = data.folio_acta;
-
-
- var fecha_acta = data.fecha_acta.split("-");
-                  //yyyy-mm-dd hh:mm
-                  this.form.fecha_acta = new Date(
-                    fecha_acta[0],
-                    fecha_acta[1] - 1,
-                    fecha_acta[2]
-                  );
-
-
-               this.form.folio_acta = data.folio_acta;
+              if (data.fecha_acta != null) {
+                var fecha_acta = data.fecha_acta.split("-");
+                //yyyy-mm-dd hh:mm
+                this.form.fecha_acta = new Date(
+                  fecha_acta[0],
+                  fecha_acta[1] - 1,
+                  fecha_acta[2]
+                );
+              }
+              this.form.folio_acta = data.folio_acta;
             }
 
-            /**FIN DE datos para la inhumacion del cuerpo */
+            /**datos del tab de contrato */
+
+            if (data.fechahora_contrato != null) {
+              var fecha_contrato = data.fecha_contrato.split("-");
+              var hora_contrato = data.hora_contrato.split(":");
+              //yyyy-mm-dd hh:mm
+              this.form.fechahora_contrato = new Date(
+                fecha_contrato[0],
+                fecha_contrato[1] - 1,
+                fecha_contrato[2],
+                hora_contrato[0],
+                hora_contrato[1]
+              );
+            }
+            /**aqui revisamos si el contrato ya fue asigando a una operacion */
+            if (data.operacion != null) {
+              /**al si tener registrada una operacion, se carga el cliente asociado a la operacion */
+              this.form.id_cliente = data.operacion.clientes_id;
+              this.form.cliente = data.operacion.cliente.nombre;
+            } else {
+              alert("no ha operado");
+            }
+            this.form.parentesco_contratante = data.parentesco_contratante;
           } else {
             console.log("no datos");
             /**no hay datos que mostrar y se cierra la ventana */

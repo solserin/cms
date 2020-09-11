@@ -22,7 +22,7 @@ class ServiciosFunerarios extends Model
 
     public function operacion()
     {
-        return $this->belongsTo('App\Operaciones', 'servicios_funerarios_id', 'servicio_id');
+        return $this->hasOne('App\Operaciones', 'servicios_funerarios_id', 'id');
     }
 
     public function nacionalidad()

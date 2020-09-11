@@ -2698,6 +2698,8 @@ class FunerariaController extends ApiController
             'folio_liberacion',
             'folio_acta',
             'fechahora_acta',
+            'fechahora_contrato',
+            'parentesco_contratante',
             DB::raw(
                 '(NULL) as genero_texto'
             ),
@@ -2743,24 +2745,28 @@ class FunerariaController extends ApiController
             DB::raw(
                 'TIME(fechahora_traslado) as hora_traslado'
             ),
-
             DB::raw(
                 'DATE(fechahora_misa) as fecha_misa'
             ),
             DB::raw(
                 'TIME(fechahora_misa) as hora_misa'
             ),
-
             DB::raw(
                 'DATE(fechahora_inhumacion) as fecha_inhumacion'
             ),
             DB::raw(
                 'TIME(fechahora_inhumacion) as hora_inhumacion'
             ),
-
             DB::raw(
                 'DATE(fechahora_acta) as fecha_acta'
             ),
+            DB::raw(
+                'DATE(fechahora_contrato) as fecha_contrato'
+            ),
+            DB::raw(
+                'TIME(fechahora_contrato) as hora_contrato'
+            ),
+
 
 
 
@@ -2805,11 +2811,11 @@ class FunerariaController extends ApiController
             ->with('registro:id,nombre')
             ->with('nacionalidad')
             ->with('escolaridad')
-            ->with('operacion.cliente')
             ->with('recogio:id,nombre')
             ->with('estado_civil')
             ->with('terreno')
             ->with('materialrentado')
+            ->with('operacion.cliente')
             ->where(function ($q) use ($id_servicio) {
                 if (trim($id_servicio) == 'all' || $id_servicio > 0) {
                     if (trim($id_servicio) == 'all') {
