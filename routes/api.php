@@ -57,7 +57,7 @@ Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaControlle
 Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{codigo_barras?}', 'FunerariaController@get_inventario');
 Route::get('funeraria/get_categorias_servicio', 'FunerariaController@get_categorias_servicio');
 
-
+Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
@@ -219,7 +219,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
-    Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
+
     Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
 
     /**rutas de servicios funerarios */
