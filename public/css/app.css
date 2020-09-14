@@ -5596,6 +5596,19 @@ button:focus {
   padding-left: 10px !important;
 }
 
+.searcher_terrenos .vs-popup--title h3:before {
+  vertical-align: middle;
+  content: url(/images/browse-system.svg?f68f7b09f0c6ac5cb04200da02c2cb11);
+}
+
+[dir=ltr] .searcher_terrenos .vs-popup--title h3:before {
+  padding-right: 10px !important;
+}
+
+[dir=rtl] .searcher_terrenos .vs-popup--title h3:before {
+  padding-left: 10px !important;
+}
+
 .roles .vs-popup--title h3:before {
   content: url(/images/roles.svg?b2727787dabda7f9bf1ca4b797b0491a);
 }
@@ -5637,10 +5650,6 @@ button:focus {
 
 [dir=rtl] .pagos_forms .vs-popup--close {
   margin-left: 12px !important;
-}
-
-.pagos_forms .vs-popup--content {
-  max-height: 85vh !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -5734,44 +5743,6 @@ button:focus {
 
 .forms-popups .vs-popup {
   width: 100% !important;
-}
-
-/**medias queries para el popup de captura de datos */
-
-@media (min-width: 576px) {
-  .forms-popups-50 .vs-popup {
-    width: 50% !important;
-  }
-}
-
-@media (min-width: 1200px) {
-  .forms-popups-cancelar_cementerio .vs-popup {
-    width: 1000px !important;
-  }
-
-  .forms-popups-pagos .vs-popup {
-    width: 90% !important;
-  }
-
-  .forms-popups-75 .vs-popup {
-    width: 75% !important;
-  }
-
-  .forms-popups-55 .vs-popup {
-    width: 55% !important;
-  }
-
-  .forms-popups-65 .vs-popup {
-    width: 65% !important;
-  }
-
-  .forms-popups-85 .vs-popup {
-    width: 85% !important;
-  }
-
-  .forms-popups .vs-popup {
-    width: 90% !important;
-  }
 }
 
 [dir] .vs-popup--background {
@@ -6256,16 +6227,28 @@ button:focus {
 
 /**fin de  confirmar dialogos */
 
+.servicios_funerarios {
+  z-index: 51999 !important;
+}
+
+.searcher_terrenos {
+  z-index: 52000 !important;
+}
+
+.venta-propiedades {
+  z-index: 52001 !important;
+}
+
 /*searcher clientes*/
 
 .searcher_clientes,
 .ver_disponibilidad {
-  z-index: 52001 !important;
+  z-index: 52002 !important;
 }
 
 .clientes,
 .articulos {
-  z-index: 52002 !important;
+  z-index: 52003 !important;
 }
 
 .contrasena {
@@ -6362,4 +6345,88 @@ th .vs-table-text {
 }
 
 /*fin de cancelar ventas del cementerio*/
+
+/*medias queries*/
+
+/*alturas verticales personalizadas de los content*/
+
+.normal-forms .vs-popup--content {
+  max-height: 80vh !important;
+}
+
+.pagos_forms .vs-popup--content {
+  max-height: 70vh !important;
+}
+
+/**medias queries para el popup de captura de datos */
+
+@media (min-width: 576px) {
+  .forms-popups-50 .vs-popup {
+    width: 50% !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .forms-popups-cancelar_cementerio .vs-popup {
+    width: 1000px !important;
+  }
+
+  .forms-popups-pagos .vs-popup {
+    width: 95% !important;
+  }
+
+  .forms-popups-75 .vs-popup {
+    width: 75% !important;
+  }
+
+  .forms-popups-55 .vs-popup {
+    width: 55% !important;
+  }
+
+  .forms-popups-65 .vs-popup {
+    width: 65% !important;
+  }
+
+  .forms-popups-85 .vs-popup {
+    width: 85% !important;
+  }
+
+  .forms-popups .vs-popup {
+    width: 90% !important;
+  }
+}
+
+@media (min-width: 1500px) {
+  .normal-forms .vs-popup--content {
+    min-height: 87vh !important;
+  }
+
+  .pagos_forms .vs-popup--content {
+    min-height: 83vh !important;
+  }
+}
+
+/*tabs*/
+
+[dir] .ul-tabs li {
+  padding: 0px 1px 0px 1px !important;
+}
+
+[dir] .vs-tabs--btn {
+  border: 1px solid #ddd !important;
+}
+
+/*estilos del plan funerario en el servicio funerario*/
+
+.dato_servicio {
+  font-size: 1.05em !important;
+  font-weight: bold !important;
+}
+
+.dato_servicio_valor {
+  font-weight: bold !important;
+  font-size: 1.05em !important;
+}
+
+/*FIN estilos del plan funerario en el servicio funerario*/
 

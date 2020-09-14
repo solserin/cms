@@ -111,7 +111,9 @@
         .word-spacing-{{$i}}{
           word-spacing: {{($i)}}px !important;
         }
-  
+   .w-{{$i}}-px{
+          width: {{($i)}}px !important;
+        }
         .w-{{$i}}{
           width: {{($i)}}% !important;
         }

@@ -3,12 +3,27 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\User;
+use App\Generos;
+use App\Titulos;
 use App\Clientes;
+use App\Articulos;
 use Carbon\Carbon;
+use App\Categorias;
 use App\Operaciones;
+use App\Afiliaciones;
+use App\SitiosMuerte;
 use App\VentasPlanes;
+use App\Escolaridades;
 use App\PreciosPlanes;
+use App\TiposContrato;
+use App\EstadosCiviles;
+use App\EstadosAfectado;
+use App\LugaresServicio;
 use App\PlanesFunerarios;
+use App\TiposContratante;
+use App\LugaresInhumacion;
+use App\ServiciosFunerarios;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\DB;
@@ -681,7 +696,7 @@ class FunerariaController extends ApiController
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 10.4);
         $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'letter');
         if ($email == true) {
             /**email */
             /**
@@ -758,7 +773,7 @@ class FunerariaController extends ApiController
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 10.4);
         $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'letter');
         if ($email == true) {
             /**email */
             /**
@@ -1895,7 +1910,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 5.4);
             $pdf->setOption('margin-top', 5.4);
             $pdf->setOption('margin-bottom', 10.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2059,7 +2074,7 @@ class FunerariaController extends ApiController
         $pdf->setOption('margin-right', 14.4);
         $pdf->setOption('margin-top', 24.4);
         $pdf->setOption('margin-bottom', 24.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -2170,7 +2185,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 12.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2250,7 +2265,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 13.4);
             $pdf->setOption('margin-top', 9.4);
             $pdf->setOption('margin-bottom', 13.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2333,7 +2348,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 20.4);
             $pdf->setOption('margin-top', 10.4);
             $pdf->setOption('margin-bottom', 25.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'letter');
             if ($email == true) {
                 /**email */
                 /**
@@ -2411,7 +2426,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-right', 13.4);
             $pdf->setOption('margin-top', 9.4);
             $pdf->setOption('margin-bottom', 13.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'letter');
             if ($email == true) {
                 /**email */
                 /**
@@ -2506,5 +2521,853 @@ class FunerariaController extends ApiController
             DB::rollBack();
             return $th;
         }
+    }
+
+    public function get_personal_recoger()
+    {
+        //no super usuarios
+        /**puesto de venderor id 4 */
+        /**obtiene los usuarios con puesto de servicios operativos */
+        return User::select('id', 'nombre')
+            ->join('usuarios_puestos', 'usuarios_puestos.usuarios_id', '=', 'usuarios.id')
+            ->where('roles_id', '>', 1)
+            ->where('puestos_id', '=', 4)
+            ->where('usuarios.status', '>', 0)
+            ->get();
+    }
+
+
+    public function control_solicitud(Request $request, $tipo_servicio = '')
+    {
+
+        if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
+            return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
+        }
+
+        //validaciones directas sin condicionales
+        $validaciones = [
+            'llamada_b' => 'required',
+            'nombre_afectado' => 'required',
+            'fecha_solicitud' => 'required',
+            'causa_muerte' => 'required',
+            'muerte_natural_b.value' => 'required',
+            'contagioso_b.value' => 'required',
+            'nombre_informante' => 'required',
+            'telefono_informante' => 'required',
+            'parentesco_informante' => 'required',
+            'recogio.value' => 'required',
+            'id_solicitud' => ''
+        ];
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+        $mensajes = [
+            'required' => 'Ingrese este dato'
+        ];
+
+
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+        /**verificando si es tipo modificar para validar que venga el id a modificar */
+        $datos_solicitud = array();
+        if ($tipo_servicio == 'modificar') {
+            $r = new \Illuminate\Http\Request();
+            $r->replace(['sample' => 'sample']);
+            $datos_solicitud = $this->get_solicitudes_servicios($r, $request->id_solicitud)[0];
+            if (empty($datos_solicitud)) {
+                /**no se encontro los datos */
+                return $this->errorResponse('No se encontró la información de la solicitud solicitada', 409);
+            } else if ($datos_solicitud['status_b'] == 0) {
+                return $this->errorResponse('Esta solicitud ya fue cancelada, no puede modificarse', 409);
+            }
+        }
+        $id_return = 0;
+        try {
+            DB::beginTransaction();
+            if ($tipo_servicio == 'agregar') {
+                $id_servicio = DB::table('servicios_funerarios')->insertGetId(
+                    [
+                        'tipo_solicitud_id' => 1,
+                        'llamada_b' => $request->llamada_b,
+                        'nombre_afectado' => $request->nombre_afectado,
+                        'fechahora_solicitud' => $request->fecha_solicitud,
+                        'causa_muerte' => $request->causa_muerte,
+                        'muerte_natural_b' => $request->muerte_natural_b['value'],
+                        'contagioso_b' => $request->contagioso_b['value'],
+                        'nombre_informante' => $request->nombre_informante,
+                        'telefono_informante' => $request->telefono_informante,
+                        'parentesco_informante' => $request->parentesco_informante,
+                        'ubicacion_recoger' => $request->ubicacion_recoger,
+                        'recogio_id' => $request->recogio['value'],
+                        'nota_al_recoger' => $request->nota_al_recoger,
+                        'registro_id' => (int) $request->user()->id,
+                        'fechahora_registro' => now()
+                    ]
+                );
+                $id_return = $id_servicio;
+                /**todo salio bien y se debe de guardar */
+            } else {
+                /**es modificar */
+                DB::table('servicios_funerarios')->where('id', $request->id_solicitud)->update(
+                    [
+                        'llamada_b' => $request->llamada_b,
+                        'nombre_afectado' => $request->nombre_afectado,
+                        'fechahora_solicitud' => $request->fecha_solicitud,
+                        'causa_muerte' => $request->causa_muerte,
+                        'muerte_natural_b' => $request->muerte_natural_b['value'],
+                        'contagioso_b' => $request->contagioso_b['value'],
+                        'nombre_informante' => $request->nombre_informante,
+                        'telefono_informante' => $request->telefono_informante,
+                        'parentesco_informante' => $request->parentesco_informante,
+                        'ubicacion_recoger' => $request->ubicacion_recoger,
+                        'recogio_id' => $request->recogio['value'],
+                        'nota_al_recoger' => $request->nota_al_recoger,
+                        'modifico_id' => (int) $request->user()->id,
+                        'fecha_modificacion' => now()
+                    ]
+                );
+                $id_return = $request->id_solicitud;
+            }
+            DB::commit();
+            return $id_return;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+    /**obtiene los servicios funerarios */
+    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false)
+    {
+        $filtro_especifico_opcion = $request->filtro_especifico_opcion;
+        $fallecido = $request->fallecido;
+        $numero_control = $request->numero_control;
+        $status = $request->status;
+        $fecha_operacion = $request->fecha_operacion;
+        $resultado_query = ServiciosFunerarios::select(
+            'embalsamar_b',
+            'velacion_b',
+            'cremacion_b',
+            'inhumacion_b',
+            'traslado_b',
+            /**venta operacion */
+            'servicios_funerarios.id as servicio_id',
+            'llamada_b',
+            'nota_al_recoger',
+            'nombre_afectado',
+            'causa_muerte',
+            'muerte_natural_b',
+            'contagioso_b',
+            'nombre_informante',
+            'telefono_informante',
+            'parentesco_informante',
+            'ubicacion_recoger',
+            'servicios_funerarios.status as status_b',
+            'tipo_solicitud_id',
+            'recogio_id',
+            'fechahora_solicitud as fechahora_solicitud',
+            'registro_id',
+            'fecha_nacimiento',
+            'generos_id',
+            DB::raw(
+                '(NULL) as genero_texto'
+            ),
+            DB::raw(
+                '(NULL) as fecha_nacimiento_texto'
+            ),
+            DB::raw(
+                '(NULL) as llamada_texto'
+            ),
+            DB::raw(
+                'DATE(fechahora_solicitud) as fecha_solicitud'
+            ),
+            DB::raw(
+                'TIME(fechahora_solicitud) as hora_solicitud'
+            ),
+            DB::raw(
+                'DATE(fechahora_defuncion) as fecha_muerte'
+            ),
+            DB::raw(
+                'TIME(fechahora_defuncion) as hora_muerte'
+            ),
+            DB::raw(
+                '(NULL) as fecha_muerte_texto'
+            ),
+            DB::raw(
+                '(NULL) as fecha_solicitud_texto'
+            ),
+            DB::raw(
+                '(NULL) as muerte_natural_texto'
+            ),
+            DB::raw(
+                '(NULL) as contagioso_texto'
+            ),
+            DB::raw(
+                '(NULL) as status_texto'
+            ),
+            DB::raw(
+                '(NULL) as tipo_solicitud_texto'
+            ),
+            DB::raw(
+                '(NULL) as atencion_medica_texto'
+            ),
+            'parentesco_contratante',
+            'nacionalidades_id',
+            'estados_civiles_id',
+            'direccion_fallecido',
+            'escolaridades_id',
+            'ocupacion',
+            'lugar_nacimiento',
+            'fechahora_defuncion',
+            'atencion_medica_b',
+            'enfermedades_padecidas',
+            'certificado_informante',
+            'certificado_informante_telefono',
+            'certificado_informante_parentesco',
+            'folio_certificado',
+            'medico_legista',
+            'sitios_muerte_id',
+            'lugar_muerte',
+            'afiliaciones_id',
+            'afiliacion_nota',
+        )->with('registro:id,nombre')
+            ->with('nacionalidad')
+            ->with('escolaridad')
+            ->with('operacion.cliente')
+            ->with('recogio:id,nombre')
+            ->with('estado_civil')
+            ->where(function ($q) use ($id_servicio) {
+                if (trim($id_servicio) == 'all' || $id_servicio > 0) {
+                    if (trim($id_servicio) == 'all') {
+                        $q->where('servicios_funerarios.id', '>', $id_servicio);
+                    } else if ($id_servicio > 0) {
+                        $q->where('servicios_funerarios.id', '=', $id_servicio);
+                    }
+                }
+            })
+            ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
+                if (trim($numero_control) != '') {
+                    if ($filtro_especifico_opcion == 1) {
+                        /**filtro por numero de solicitud */
+                        $q->where('servicios_funerarios.id', '=',  $numero_control);
+                    }
+                }
+            })
+            ->where(function ($q) use ($status) {
+                if (trim($status) != '') {
+                    $q->where('servicios_funerarios.status', '=', $status);
+                }
+            })
+            //->join('operaciones', 'operaciones.servicios_funerarios_id', '=', 'servicios_funerarios.id')
+            //->join('clientes', 'clientes.id', '=', 'operaciones.clientes_id')
+            ->where('nombre_afectado', 'like', '%' . $fallecido . '%')
+            ->orderBy('servicios_funerarios.id', 'desc')
+            ->get();
+        /**verificando si el usario necesita el resultado paginado, todo o por id */
+        $resultado = array();
+        if ($paginated == 'paginated') {
+            /**queire el resultado paginado */
+            $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
+            $resultado = &$resultado_query['data'];
+        } else {
+            $resultado_query = $resultado_query->toArray();
+            $resultado = &$resultado_query;
+        }
+
+        foreach ($resultado as $index_venta => &$solicitud) {
+            /**DEFINIENDO EL STATUS DE LA VENTA*/
+            if ($solicitud['status_b'] == 0) {
+                $solicitud['status_texto'] = 'Cancelada';
+                /**actualizando el motivo de cancelacion */
+            } elseif ($solicitud['status_b'] == 1) {
+                $solicitud['status_texto'] = 'Activa';
+            }
+
+            /**definiendo si fue por llamada la solicitud */
+
+            if ($solicitud['llamada_b'] == 1) {
+                $solicitud['llamada_texto'] = 'Llamada telefónica';
+            } else {
+                $solicitud['llamada_texto'] = 'Solicitud en Sucursal';
+            }
+
+
+
+            /**tipo de solicitud */
+            if ($solicitud['tipo_solicitud_id'] == 1) {
+                $solicitud['tipo_solicitud_texto'] = 'Servicio Funerario';
+            } elseif ($solicitud['tipo_solicitud_id'] == 2) {
+                $solicitud['tipo_solicitud_texto'] = 'Exhumación';
+            }
+            if ($solicitud['contagioso_b'] == 0) {
+                $solicitud['contagioso_texto'] = 'NO';
+                /**actualizando el motivo de cancelacion */
+            } elseif ($solicitud['contagioso_b'] == 1) {
+                $solicitud['contagioso_texto'] = 'SI';
+            }
+            if ($solicitud['muerte_natural_b'] == 0) {
+                $solicitud['muerte_natural_texto'] = 'NO';
+                /**actualizando el motivo de cancelacion */
+            } elseif ($solicitud['muerte_natural_b'] == 1) {
+                $solicitud['muerte_natural_texto'] = 'SI';
+            }
+            $solicitud['fecha_solicitud_texto'] = fecha_abr($solicitud['fecha_solicitud']);
+            $solicitud['fecha_nacimiento_texto'] = fecha_abr($solicitud['fecha_nacimiento']);
+            if ($solicitud['generos_id'] == 1) {
+                $solicitud['genero_texto'] = 'HOMBRE';
+            } elseif ($solicitud['generos_id'] == 2) {
+                $solicitud['genero_texto'] = 'MUJER';
+            }
+            $solicitud['fecha_muerte_texto'] = fechahora($solicitud['fechahora_defuncion']);
+
+            if ($solicitud['atencion_medica_b'] == 0) {
+                $solicitud['atencion_medica_texto'] = 'NO';
+            } elseif ($solicitud['atencion_medica_b'] == 1) {
+                $solicitud['atencion_medica_texto'] = 'SI';
+            }
+        } //fin foreach venta
+
+        return $resultado_query;
+        /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
+    }
+
+
+    public function get_hoja_solicitud(Request $request)
+    {
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_servicio = $requestVentasList['id_servicio'];
+
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            /*$id_servicio = 1;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+*/
+
+            //obtengo la informacion de esa venta
+            $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+            if (empty($datos_solicitud)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+            /**verificando si el documento aplica para esta solictitud */
+            /*if ($datos_venta['numero_solicitud_raw'] == null) {
+            return 0;
+        }*/
+
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+
+            $pdf = PDF::loadView('funeraria/hoja_solicitud_servicio_funerario/hoja_solicitud', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "HOJA DE SERVICIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.hoja_solicitud_servicio_funerario.footer'),
+            ]);
+            if ($datos_solicitud['status_b'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.hoja_solicitud_servicio_funerario.header')
+                ]);
+            }
+
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 12.4);
+            $pdf->setOption('page-size', 'letter');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_solicitud['nombre_afectado']),
+                    'HOJA DE SERVICIO',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar los datos', 409);
+        }
+    }
+
+
+
+    public function hoja_preautorizacion(Request $request)
+    {
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_servicio = $requestVentasList['id_servicio'];
+
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            /*$id_servicio = 1;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+*/
+
+            //obtengo la informacion de esa venta
+            $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+            if (empty($datos_solicitud)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+            /**verificando si el documento aplica para esta solictitud */
+            /*if ($datos_venta['numero_solicitud_raw'] == null) {
+            return 0;
+        }*/
+
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+
+            $pdf = PDF::loadView('funeraria/hoja_preautorizacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "HOJA DE PREAUTORIZACIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.hoja_preautorizacion.footer'),
+            ]);
+            if ($datos_solicitud['status_b'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.hoja_preautorizacion.header')
+                ]);
+            }
+
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 24.4);
+            $pdf->setOption('page-size', 'letter');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_solicitud['nombre_afectado']),
+                    'HOJA DE PREAUTORIZACIÓN',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar los datos', 409);
+        }
+    }
+
+
+    public function certificado_defuncion(Request $request)
+    {
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_servicio = $requestVentasList['id_servicio'];
+
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            /*$id_servicio = 1;
+            $email = false;
+            $email_to = 'hector@gmail.com';
+*/
+            //obtengo la informacion de esa venta
+            $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+            if (empty($datos_solicitud)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+
+            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "CERTIFICADO DE DEFUNCION " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+            /*$pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('funeraria.certificado_defuncion.footer'),
+        ]);*/
+            if ($datos_solicitud['status_b'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.certificado_defuncion.header')
+                ]);
+            }
+
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 5.4);
+            $pdf->setOption('margin-bottom', 4.4);
+            $pdf->setOption('page-size', 'letter');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_solicitud['nombre_afectado']),
+                    'CERTIFICADO DE DEFUNCION',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar los datos', 409);
+        }
+    }
+
+
+
+    public function instrucciones_servicio_funerario(Request $request)
+    {
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            /*  $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_servicio = $requestVentasList['id_servicio'];
+*/
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            $id_servicio = 1;
+            $email = false;
+            $email_to = 'hector@gmail.com';
+
+            //obtengo la informacion de esa venta
+            $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+            if (empty($datos_solicitud)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+
+            $pdf = PDF::loadView('funeraria/instrucciones_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "GUÍA DEL CLIENTE PARA SERVICIOS FUNERARIOS " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.instrucciones_servicio_funerario.footer'),
+            ]);
+            if ($datos_solicitud['status_b'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.instrucciones_servicio_funerario.header')
+                ]);
+            }
+
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 12.4);
+            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 24.4);
+            $pdf->setOption('page-size', 'letter');
+
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_solicitud['nombre_afectado']),
+                    'GUÍA DEL CLIENTE PARA SERVICIOS FUNERARIOS',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar los datos', 409);
+        }
+    }
+
+
+    public function get_estados_civiles()
+    {
+        return EstadosCiviles::select(
+            'id',
+            DB::raw(
+                'UPPER(estado) as estado'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_escolaridades()
+    {
+        return Escolaridades::select(
+            'id',
+            DB::raw(
+                'UPPER(escolaridad) as escolaridad'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_afiliaciones()
+    {
+        return Afiliaciones::select(
+            'id',
+            DB::raw(
+                'UPPER(afiliacion) as afiliacion'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_sitios_muerte()
+    {
+        return SitiosMuerte::select(
+            'id',
+            DB::raw(
+                'UPPER(sitio) as sitio'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_titulos()
+    {
+        return Titulos::select(
+            'id',
+            DB::raw(
+                'UPPER(titulo) as titulo'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_estados_afectado()
+    {
+        return EstadosAfectado::select(
+            'id',
+            DB::raw(
+                'UPPER(estado) as estado'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_lugares_velacion()
+    {
+        return LugaresServicio::select(
+            'id',
+            DB::raw(
+                'UPPER(lugar) as lugar'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_lugares_inhumacion()
+    {
+        return LugaresInhumacion::select(
+            'id',
+            DB::raw(
+                'UPPER(cementerio) as cementerio'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+    public function get_material_velacion()
+    {
+        return LugaresInhumacion::select(
+            'id',
+            DB::raw(
+                'UPPER(cementerio) as cementerio'
+            )
+        )->orderBy('id', 'asc')->get();
+    }
+
+
+    public function get_tipos_contratante()
+    {
+        return TiposContratante::select(
+            'id',
+            DB::raw(
+                'UPPER(tipo) as tipo'
+            )
+        )
+            ->whereNotIn('id', [6, 7])
+            ->orderBy('id', 'asc')->get();
+    }
+
+    /**obteniendo los articulos y servicios para la venta y servicios */
+    public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '')
+    {
+        $descripcion = $request->descripcion;
+        $numero_control = $request->numero_control;
+        $categoria_id = $request->categorias_id;
+        $resultado_query =  Articulos::select(
+            '*',
+            DB::raw(
+                '(NULL) AS existencia'
+            )
+        )
+            ->with('inventario')
+            ->with('categoria')
+            ->with('tipo_articulo')
+            ->where('categorias_id', '<>', '4')
+            ->where('status', '<>', 0)
+            ->where('descripcion', 'like', '%' . $descripcion . '%')
+            ->where(function ($q) use ($numero_control) {
+                if (trim($numero_control) != '') {
+                    $q->where('articulos.codigo_barras', '=', $numero_control);
+                }
+            })
+            ->where(function ($q) use ($categoria_id) {
+                if (trim($categoria_id) != '') {
+                    $q->where('articulos.categorias_id', '=', $categoria_id);
+                }
+            })
+            ->get();
+
+        $resultado = array();
+        if ($paginated == 'paginated') {
+            /**queire el resultado paginado */
+            $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
+            $resultado = &$resultado_query['data'];
+        } else {
+            $resultado_query = $resultado_query->toArray();
+            $resultado = &$resultado_query;
+        }
+
+
+        foreach ($resultado as $key_articulo => &$articulo) {
+            if ($articulo['status'] == 1) {
+                $articulo['estatus_texto'] = 'Activo';
+            } else {
+                $articulo['estatus_texto'] = 'Deshabilitado';
+            }
+
+            /**actualizando iva texto y caduca texto */
+            if ($articulo['grava_iva_b'] == 1) {
+                $articulo['grava_iva_texto'] = 'si';
+            } else {
+                $articulo['grava_iva_texto'] = 'no';
+            }
+            if ($articulo['caduca_b'] == 1) {
+                $articulo['caduca_texto'] = 'si';
+            } else {
+                $articulo['caduca_texto'] = 'no';
+            }
+
+            if ($articulo['tipo_articulos_id'] == 2) {
+                $articulo['codigo_barras'] = 'N/A';
+            }
+
+            if ($articulo['tipo_articulos_id'] != 2) {
+                /**sumando existencia */
+                $existencia = 0;
+                foreach ($articulo['inventario'] as $key_inventario => &$inventario) {
+                    $existencia += $inventario['existencia'];
+                }
+                $articulo['existencia'] = $existencia;
+
+
+                if ($existencia < $articulo['minimo']) {
+                    $articulo['estatus_inventario_b'] = '0';
+                    $articulo['estatus_inventario_texto'] = 'Desabastecido';
+                } elseif ($existencia <= $articulo['maximo']) {
+                    $articulo['estatus_inventario_b'] = '1';
+                    $articulo['estatus_inventario_texto'] = 'Abastecido';
+                } else {
+                    $articulo['estatus_inventario_b'] = '2';
+                    $articulo['estatus_inventario_texto'] = 'Sobrestock';
+                }
+            } else {
+                $articulo['existencia'] = 'N/A';
+
+
+                $articulo['estatus_inventario_b'] = '1';
+                $articulo['estatus_inventario_texto'] = 'N/A';
+            }
+
+
+
+            /**veirifanco los estatus del inventario */
+        }
+
+        return $resultado_query;
+    }
+
+    /**categorias para filtrar los articulos en la venta en el servicio funerario */
+    public function get_categorias_servicio()
+    {
+        /**todas menos los de articulos de renta */
+        return Categorias::where('departamentos_id', '<>', 3)->get();
     }
 }
