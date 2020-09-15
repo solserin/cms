@@ -3290,9 +3290,9 @@
                           </div>
                           <div class="flex flex-wrap">
                             <div
-                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 text-center"
                             >
-                              <label class="text-sm opacity-75 font-bold">
+                              <label class="text-xl opacity-75">
                                 Tasa IVA %
                                 <span class="texto-importante">(*)</span>
                               </label>
@@ -3309,7 +3309,7 @@
                                   'required|decimal:2|min_value:0|max_value:25'
                                 "
                                 type="text"
-                                class="w-full pb-1 pt-1 texto-bold"
+                                class="w-full pb-1 pt-1 texto-bold cantidad"
                                 placeholder="Porcentaje IVA"
                                 v-model="form.tasa_iva"
                                 maxlength="2"
@@ -3328,19 +3328,36 @@
                               </div>
                             </div>
                             <div
-                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 text-center"
                             >
-                              <label class="text-sm opacity-75 font-bold">
+                              <label class="text-xl opacity-75">
                                 $ Total a Pagar
                               </label>
+                              <div class="mt-3 text-center">
+                                <span class="total_contrato text-3xl font-bold">
+                                  $ 10,500.00
+                                </span>
+                              </div>
                             </div>
+
+                            <div class="w-full px-2 mt-2 text-center">
+                              <p class="texto-ojo">
+                                <span class="text-danger font-medium"
+                                  >Ojo:</span
+                                >
+                                Los costos de los conceptos capturados ya
+                                incluyen el IVA.
+                              </p>
+                              <vs-divider />
+                            </div>
+
                             <div
                               class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
                             >
-                              <div class="flex flex-wrap mt-3">
+                              <div class="flex flex-wrap">
                                 <vs-button
                                   v-if="!fueCancelada"
-                                  class="w-full ml-auto mr-auto mt-5"
+                                  class="w-full ml-auto mr-auto mt-1"
                                   @click="acceptAlert()"
                                   color="success"
                                   size="large"
