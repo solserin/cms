@@ -3234,6 +3234,165 @@
                         </div>
                       </div>
                     </div>
+
+                    <!--checkout-->
+                    <div class="w-full">
+                      <div class="flex flex-wrap my-6">
+                        <div class="w-full px-2">
+                          <vs-divider />
+                        </div>
+                        <div class="w-full sm:w-12/12 md:w-8/12 lg:9/12 px-2">
+                          <div class="flex flex-wrap">
+                            <div class="w-full pt-3 pb-3 px-2">
+                              <div class="float-left">
+                                <img
+                                  class="float-left"
+                                  width="36px"
+                                  src="@assets/images/notes.svg"
+                                />
+                                <h3
+                                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
+                                >
+                                  Notas / Observaciones Sobre el Contrato
+                                </h3>
+                              </div>
+                            </div>
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                            >
+                              <label class="text-sm opacity-75 font-bold">
+                                NOTA U OBSERVACIÓN:
+                              </label>
+                              <vs-textarea
+                                height="240px"
+                                maxlength="350"
+                                size="large"
+                                ref="nota"
+                                type="text"
+                                class="w-full pt-3 pb-3 mt-1 large_textarea"
+                                placeholder="Ingrese una nota..."
+                                v-model.trim="form.nota"
+                              />
+                            </div>
+                          </div>
+                          <!--fin del resumen de la venta-->
+                        </div>
+                        <div class="w-full sm:w-12/12 md:w-4/12 lg:3/12 px-2">
+                          <div class="flex flex-wrap">
+                            <div class="w-full pt-3 pb-3 px-2">
+                              <div class="float-left">
+                                <img
+                                  class="float-left"
+                                  width="36px"
+                                  src="@assets/images/payments.svg"
+                                />
+                                <h3
+                                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
+                                >
+                                  Total del Contrato Funerario
+                                </h3>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="flex flex-wrap">
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                            >
+                              <label class="text-sm opacity-75 font-bold">
+                                Tasa IVA %
+                                <span class="texto-importante">(*)</span>
+                              </label>
+                              <vs-input
+                                :disabled="
+                                  tiene_pagos_realizados ||
+                                  ventaLiquidada ||
+                                  fueCancelada
+                                "
+                                size="large"
+                                name="tasa_iva"
+                                data-vv-as=" "
+                                v-validate="
+                                  'required|decimal:2|min_value:0|max_value:25'
+                                "
+                                type="text"
+                                class="w-full pb-1 pt-1 texto-bold"
+                                placeholder="Porcentaje IVA"
+                                v-model="form.tasa_iva"
+                                maxlength="2"
+                              />
+                              <div>
+                                <span class="mensaje-requerido">
+                                  {{ errors.first("tasa_iva") }}
+                                </span>
+                              </div>
+                              <div class="mt-2">
+                                <span
+                                  class="mensaje-requerido"
+                                  v-if="this.errores.tasa_iva"
+                                  >{{ errores.tasa_iva[0] }}</span
+                                >
+                              </div>
+                            </div>
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                            >
+                              <label class="text-sm opacity-75 font-bold">
+                                $ Total a Pagar
+                                <span class="texto-importante">(*)</span>
+                              </label>
+                              <vs-input
+                                size="large"
+                                name="costo_neto"
+                                data-vv-as=" "
+                                v-validate="'required|decimal:2|min_value:0'"
+                                type="text"
+                                class="w-full pb-1 pt-1 texto-bold"
+                                v-model="costo_neto_computed"
+                                :disabled="true"
+                                readonly
+                              />
+
+                              <div>
+                                <span class="mensaje-requerido">
+                                  {{ errors.first("costo_neto") }}
+                                </span>
+                              </div>
+                              <div class="mt-2">
+                                <span
+                                  class="mensaje-requerido"
+                                  v-if="this.errores.costo_neto"
+                                  >{{ errores.costo_neto[0] }}</span
+                                >
+                              </div>
+                            </div>
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                            >
+                              <div class="flex flex-wrap mt-3">
+                                <vs-button
+                                  v-if="!fueCancelada"
+                                  class="w-full ml-auto mr-auto mt-5"
+                                  @click="acceptAlert()"
+                                  color="success"
+                                  size="large"
+                                >
+                                  <img
+                                    width="25px"
+                                    class="cursor-pointer img-btn"
+                                    src="@assets/images/save.svg"
+                                  />
+                                  <span class="texto-btn"
+                                    >Guardar Contrato</span
+                                  >
+                                </vs-button>
+                              </div>
+                            </div>
+                            <!--fin de precios-->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--fin del checkout-->
                   </vx-card>
                 </div>
               </div>
