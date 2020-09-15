@@ -2656,6 +2656,7 @@
                               form.plan_funerario_futuro_b.value == 0 &&
                               form.plan_funerario.value != ''
                             "
+                            class="hidden"
                           >
                             <vs-td class="w-1/12"></vs-td>
                             <vs-td class="w-7/12">
@@ -2947,6 +2948,7 @@
                       <div
                         class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12"
                       >
+                        {{ form.plan_funerario_futuro_b.value }}
                         <div class="flex flex-wrap">
                           <div
                             class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12"
@@ -3038,7 +3040,8 @@
                                       v-if="
                                         habilitar_plan_funerario_b == false ||
                                         form.articulos_servicios[indextr]
-                                          .plan_b == 0
+                                          .plan_b == 0 ||
+                                        form.plan_funerario_futuro_b.value == 0
                                       "
                                     >
                                       <vs-input
@@ -3074,7 +3077,7 @@
                                       </div>
                                     </vs-td>
                                     <vs-td v-else>
-                                      <div class="capitalize">N/A</div>
+                                      <div class="capitalize">$ 0.00</div>
                                     </vs-td>
                                     <vs-td
                                       v-if="
@@ -3178,7 +3181,7 @@
                                       </div>
                                     </vs-td>
                                     <vs-td v-else>
-                                      <div class="capitalize">N/A</div>
+                                      <div class="capitalize">$ 0.00</div>
                                     </vs-td>
 
                                     <vs-td v-if="habilitar_plan_funerario_b">
@@ -3199,13 +3202,7 @@
                                     <vs-td v-else>
                                       <div class="capitalize">N/A</div>
                                     </vs-td>
-                                    <vs-td
-                                      v-if="
-                                        habilitar_plan_funerario_b == false ||
-                                        form.articulos_servicios[indextr]
-                                          .plan_b == 0
-                                      "
-                                    >
+                                    <vs-td>
                                       <vs-switch
                                         class="ml-auto mr-auto"
                                         color="success"
@@ -3218,9 +3215,6 @@
                                         <span slot="on">SI</span>
                                         <span slot="off">NO</span>
                                       </vs-switch>
-                                    </vs-td>
-                                    <vs-td v-else>
-                                      <div class="capitalize">SI</div>
                                     </vs-td>
 
                                     <vs-td>
@@ -3248,7 +3242,7 @@
                                 <img
                                   class="float-left"
                                   width="36px"
-                                  src="@assets/images/notes.svg"
+                                  src="@assets/images/notas_add.svg"
                                 />
                                 <h3
                                   class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
@@ -3338,32 +3332,7 @@
                             >
                               <label class="text-sm opacity-75 font-bold">
                                 $ Total a Pagar
-                                <span class="texto-importante">(*)</span>
                               </label>
-                              <vs-input
-                                size="large"
-                                name="costo_neto"
-                                data-vv-as=" "
-                                v-validate="'required|decimal:2|min_value:0'"
-                                type="text"
-                                class="w-full pb-1 pt-1 texto-bold"
-                                v-model="costo_neto_computed"
-                                :disabled="true"
-                                readonly
-                              />
-
-                              <div>
-                                <span class="mensaje-requerido">
-                                  {{ errors.first("costo_neto") }}
-                                </span>
-                              </div>
-                              <div class="mt-2">
-                                <span
-                                  class="mensaje-requerido"
-                                  v-if="this.errores.costo_neto"
-                                  >{{ errores.costo_neto[0] }}</span
-                                >
-                              </div>
                             </div>
                             <div
                               class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
