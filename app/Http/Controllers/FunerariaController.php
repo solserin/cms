@@ -927,7 +927,7 @@ class FunerariaController extends ApiController
             $validaciones['financiamiento'] = 'numeric|required|min:' . 1 . '|max:' . 1;
         } else {
             //cuando es a credito
-            $validaciones['financiamiento'] = 'numeric|required|min:' . 2 . '|max:' . 120;
+            $validaciones['financiamiento'] = 'numeric|required|min:' . 1 . '|max:' . 120;
         }
 
 
@@ -1015,6 +1015,8 @@ class FunerariaController extends ApiController
             '*.telefono.required' => 'ingrese este dato',
             'lte' => 'verifique la cantidad',
             'unique.num_operacion' => 'Este número de operación ya fue registrado.',
+            'pago_inicial.min' => 'El valor del pago inicial debe ser mínimo :min'
+
         ];
         request()->validate(
             $validaciones,
