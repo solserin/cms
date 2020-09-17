@@ -2731,7 +2731,7 @@ class FunerariaController extends ApiController
             'sitios_muerte_id',
             'lugar_muerte',
             'afiliaciones_id',
-            'afiliacion_nota',
+            'afiliacion_nota'
         )->with('registro:id,nombre')
             ->with('nacionalidad')
             ->with('escolaridad')
