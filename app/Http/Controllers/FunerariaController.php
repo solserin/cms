@@ -1896,7 +1896,7 @@ class FunerariaController extends ApiController
             $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('funeraria.solicitud.footer'),
+                'footer-html' => view('funeraria.solicitud.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
@@ -1909,7 +1909,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-left', 5.4);
             $pdf->setOption('margin-right', 5.4);
             $pdf->setOption('margin-top', 5.4);
-            $pdf->setOption('margin-bottom', 10.4);
+            $pdf->setOption('margin-bottom', 33.4);
             $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
@@ -1981,7 +1981,7 @@ class FunerariaController extends ApiController
 
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('funeraria.convenio.footer'),
+                'footer-html' => view('funeraria.convenio.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
@@ -1993,8 +1993,8 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-left', 20.4);
             $pdf->setOption('margin-right', 20.4);
             $pdf->setOption('margin-top', 15.4);
-            $pdf->setOption('margin-bottom', 25.4);
-            $pdf->setOption('page-size', 'legal');
+            $pdf->setOption('margin-bottom', 33.4);
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2055,7 +2055,7 @@ class FunerariaController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('funeraria.finiquitado.footer'),
+            'footer-html' => view('funeraria.finiquitado.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['saldo_neto'] > 0 && $datos_venta['operacion_status'] != 0) {
             $pdf->setOptions([
@@ -2073,7 +2073,7 @@ class FunerariaController extends ApiController
         $pdf->setOption('margin-left', 14.4);
         $pdf->setOption('margin-right', 14.4);
         $pdf->setOption('margin-top', 24.4);
-        $pdf->setOption('margin-bottom', 24.4);
+        $pdf->setOption('margin-bottom', 30.4);
         $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
@@ -2170,7 +2170,7 @@ class FunerariaController extends ApiController
             $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['nombre']) . '.pdf';
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('funeraria.estado_cuenta.footer'),
+                'footer-html' => view('funeraria.estado_cuenta.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
@@ -2184,7 +2184,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
-            $pdf->setOption('margin-bottom', 12.4);
+            $pdf->setOption('margin-bottom', 33.4);
             $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
@@ -2335,7 +2335,7 @@ class FunerariaController extends ApiController
 
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('funeraria.reglamento_pago.footer'),
+                'footer-html' => view('funeraria.reglamento_pago.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
@@ -2347,7 +2347,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-left', 20.4);
             $pdf->setOption('margin-right', 20.4);
             $pdf->setOption('margin-top', 10.4);
-            $pdf->setOption('margin-bottom', 25.4);
+            $pdf->setOption('margin-bottom', 33.4);
             $pdf->setOption('page-size', 'letter');
             if ($email == true) {
                 /**email */
