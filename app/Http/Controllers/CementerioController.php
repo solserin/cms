@@ -2156,7 +2156,7 @@ class CementerioController extends ApiController
             $pdf->setOption('margin-right', 13.4);
             $pdf->setOption('margin-top', 9.4);
             $pdf->setOption('margin-bottom', 13.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'Letter');
 
             if ($email == true) {
                 /**email */
@@ -2239,7 +2239,7 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 14.4);
         $pdf->setOption('margin-top', 24.4);
         $pdf->setOption('margin-bottom', 24.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'Letter');
 
         if ($email == true) {
             /**email */
@@ -2316,7 +2316,7 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 13.4);
         $pdf->setOption('margin-top', 9.4);
         $pdf->setOption('margin-bottom', 13.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'Letter');
 
         if ($email == true) {
             /**email */
@@ -2678,7 +2678,7 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 10.4);
         $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'Letter');
         if ($email == true) {
             /**email */
             /**
