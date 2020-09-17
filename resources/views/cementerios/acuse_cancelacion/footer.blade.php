@@ -1,14 +1,16 @@
- <!DOCTYPE html>
-  <html><head>
+<!DOCTYPE html>
+<html>
+
+<head>
   <meta charset="UTF-8">
-    <style>
-    table{
+  <style>
+    table {
       width: 100%;
-      padding: 0px 0px 0px 0px !important;
+      padding: 0px 0px 10px 0px;
     }
-    </style>
+  </style>
   <script>
-  function subst() {
+    function subst() {
       var vars = {};
       var query_strings_from_url = document.location.search.substring(1).split('&');
       for (var query_string in query_strings_from_url) {
@@ -27,17 +29,36 @@
           }
       }
   }
-  </script></head>
-  @include('layouts.estilos')
-  <body class="m-0 p-0" onload="subst()">
-  <table class="pt-2 italic">
+  </script>
+</head>
+@include('layouts.estilos')
+
+<body class="m-0 p-0" onload="subst()">
+  <table class="capitalize">
+    <tr>
+      <td colspan="2">
+        <div class="w-100 border-top-black-1">
+
+        </div>
+      </td>
+    </tr>
     <tr>
       <td align="left" class="texto-sm">
- Impresión, {{fechahora_completa()}}. 
+        <span>Salas de Velación</span><br>
+        <span>{{ $empresa->calle }} # {{ $empresa->num_ext }}</span><br>
+        <span>Col. {{ $empresa->colonia }} C.P. {{ $empresa->cp }} </span><br>
+        <span>Tel. {{ $empresa->telefono }}</span><br>
+        <span>Fax. {{ $empresa->fax }}</span>
       </td>
-      <td style="text-align:right">
-       Pág. <span class="page"></span> de <span class="topage"></span>
+      <td align="right" class="texto-sm">
+        <span>Parque Funerario y Horno Crematorio</span><br>
+        <span>{{ $empresa->cementerio['calle'] }} # {{ $empresa->cementerio['num_ext'] }}</span><br>
+        <span>{{ $empresa->cementerio['ciudad'] }}, {{ $empresa->cementerio['estado'] }} </span><br>
+        <span>Tel. {{ $empresa->cementerio['telefono'] }}</span><br>
+        <span>Fax. {{ $empresa->cementerio['fax'] }}</span>
       </td>
     </tr>
   </table>
-  </body></html>
+</body>
+
+</html>

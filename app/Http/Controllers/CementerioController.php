@@ -1340,7 +1340,7 @@ class CementerioController extends ApiController
         $name_pdf = __('cementerio/lista_precios.titulo_reporte')  . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.planes_venta.footer'),
+            'footer-html' => view('cementerios.planes_venta.footer', ['empresa' => $empresa]),
         ]);
 
         $pdf->setOptions([
@@ -1353,7 +1353,7 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 12.4);
         $pdf->setOption('margin-top', 12.4);
         $pdf->setOption('margin-bottom', 12.4);
-        $pdf->setOption('page-size', 'a4');
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -2140,7 +2140,7 @@ class CementerioController extends ApiController
 
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('cementerios.acuse_cancelacion.footer'),
+                'footer-html' => view('cementerios.acuse_cancelacion.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] != 0) {
                 $pdf->setOptions([
@@ -2157,7 +2157,7 @@ class CementerioController extends ApiController
             $pdf->setOption('margin-right', 13.4);
             $pdf->setOption('margin-top', 9.4);
             $pdf->setOption('margin-bottom', 13.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'Letter');
 
             if ($email == true) {
                 /**email */
@@ -2223,7 +2223,7 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.titulo.footer'),
+            'footer-html' => view('cementerios.titulo.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2239,8 +2239,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 14.4);
         $pdf->setOption('margin-right', 14.4);
         $pdf->setOption('margin-top', 24.4);
-        $pdf->setOption('margin-bottom', 24.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-bottom', 30.4);
+        $pdf->setOption('page-size', 'Letter');
 
         if ($email == true) {
             /**email */
@@ -2317,7 +2317,7 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 13.4);
         $pdf->setOption('margin-top', 9.4);
         $pdf->setOption('margin-bottom', 13.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'Letter');
 
         if ($email == true) {
             /**email */
@@ -2349,8 +2349,8 @@ class CementerioController extends ApiController
     /**pdf del convenio plan de cementerio */
     public function documento_convenio(Request $request)
     {
-        /*
-        $id_venta = 38;
+
+        /* $id_venta = 136;
         $email = false;
         $email_to = 'hector@gmail.com';
 */
@@ -2386,7 +2386,7 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.convenio.footer'),
+            'footer-html' => view('cementerios.convenio.footer', ['empresa' => $empresa])
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2398,8 +2398,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 20.4);
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 15.4);
-        $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'legal');
+        $pdf->setOption('margin-bottom', 30.4);
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -2469,7 +2469,7 @@ class CementerioController extends ApiController
         $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.solicitud.footer'),
+            'footer-html' => view('cementerios.solicitud.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2482,8 +2482,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 5.4);
         $pdf->setOption('margin-right', 5.4);
         $pdf->setOption('margin-top', 5.4);
-        $pdf->setOption('margin-bottom', 10.4);
-        $pdf->setOption('page-size', 'a4');
+        $pdf->setOption('margin-bottom', 35.4);
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -2577,7 +2577,7 @@ class CementerioController extends ApiController
             $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['nombre']) . '.pdf';
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('cementerios.estado_cuenta.footer'),
+                'footer-html' => view('cementerios.estado_cuenta.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
@@ -2591,8 +2591,8 @@ class CementerioController extends ApiController
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
-            $pdf->setOption('margin-bottom', 12.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('margin-bottom', 30.4);
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2666,7 +2666,7 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.reglamento_pago.footer'),
+            'footer-html' => view('cementerios.reglamento_pago.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2678,8 +2678,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 20.4);
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 10.4);
-        $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-bottom', 35.4);
+        $pdf->setOption('page-size', 'Letter');
         if ($email == true) {
             /**email */
             /**
@@ -2742,7 +2742,7 @@ class CementerioController extends ApiController
         $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.estado_cuenta.footer'),
+            'footer-html' => view('inventarios.cementerios.estado_cuenta.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['status'] == 0) {
             $pdf->setOptions([

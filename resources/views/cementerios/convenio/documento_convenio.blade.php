@@ -724,14 +724,14 @@
             desde luego a cualquier otro fuero que por la razón de su domicilio podría convenir.
         </p>
 
-        <div class="w-100 center mt-40">
-            <div class="w-50 float-left mt-100">
+        <div class="w-100 center">
+            <div class="w-50 float-left mt-50">
                 <div class="w-90 mr-auto ml-auto border-top">
                     <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span></div>
                     <span class="uppercase bold texto-sm">"la empresa"</span>
                 </div>
             </div>
-            <div class="w-50 float-right mt-100">
+            <div class="w-50 float-right mt-50">
                 <div class="w-90 mr-auto ml-auto border-top">
                     <div class="pt-3 pb-1"><span class="uppercase  texto-sm">El (La) C. {{ $datos['nombre'] }}</span>
                     </div>

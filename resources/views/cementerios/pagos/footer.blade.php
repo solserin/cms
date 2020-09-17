@@ -1,14 +1,16 @@
- <!DOCTYPE html>
-  <html><head>
+<!DOCTYPE html>
+<html>
+
+<head>
   <meta charset="UTF-8">
-    <style>
-    table{
+  <style>
+    table {
       width: 100%;
       padding: 0px 0px 5px 0px;
     }
-    </style>
+  </style>
   <script>
-  function subst() {
+    function subst() {
       var vars = {};
       var query_strings_from_url = document.location.search.substring(1).split('&');
       for (var query_string in query_strings_from_url) {
@@ -27,17 +29,21 @@
           }
       }
   }
-  </script></head>
-  @include('layouts.estilos')
-  <body class="m-0 p-0" onload="subst()">
+  </script>
+</head>
+@include('layouts.estilos')
+
+<body class="m-0 p-0" onload="subst()">
   <table class="italic">
     <tr>
       <td align="left" class="texto-sm">
- Impresión, {{fechahora_completa()}}. 
+        Impresión, {{fechahora_completa()}}.
       </td>
       <td style="text-align:right">
-       Pág. <span class="page"></span> de <span class="topage"></span>
+        Pág. <span class="page"></span> de <span class="topage"></span>
       </td>
     </tr>
   </table>
-  </body></html>
+</body>
+
+</html>
