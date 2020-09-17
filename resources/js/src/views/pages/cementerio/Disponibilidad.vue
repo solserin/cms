@@ -48,21 +48,21 @@ export default {
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     datosAreas: {
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
           this.cerrarVentana();
         };
       } else {
       }
-    }
+    },
   },
 
   computed: {
@@ -72,7 +72,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getDatosAreas: {
       get() {
@@ -80,8 +80,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {};
@@ -89,8 +89,8 @@ export default {
   methods: {
     cerrarVentana() {
       this.$emit("closeVentana");
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>
