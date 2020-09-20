@@ -2933,7 +2933,6 @@ import "flatpickr/dist/themes/airbnb.css";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
-import planes from "@services/planes";
 import funeraria from "@services/funeraria";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
@@ -3534,6 +3533,8 @@ export default {
         },
       ],
       form: {
+        /**ID DEL SERVICIO */
+        id_servicio: 0,
         /**fallecido */
         nombre_afectado: "",
         fecha_nacimiento: "",
@@ -4355,17 +4356,15 @@ export default {
             });
             return;
           } else {
-            /**aqui se hace la validacion en los totales de la venta */
-            //se confirma la cntraseña
-            /**actualizando los valores de total de venta */
-            //fin de actualizar datos de ubicacion
+            //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
             (async () => {
               if (this.getTipoformulario == "agregar") {
-                this.callBackConfirmarAceptar = await this.guardar_venta;
-                this.openConfirmarAceptar = true;
+                /**EL FORMULARIO ES SOLO DE VALIDACION */
+                //this.callBackConfirmarAceptar = await this.guardar_venta;
+                //this.openConfirmarAceptar = true;
               } else {
                 /**es modificacion */
-                this.callback = await this.modificar_venta;
+                this.callback = await this.modificar_contrato;
                 this.openPassword = true;
               }
             })();
@@ -4374,17 +4373,20 @@ export default {
         .catch(() => {});
     },
 
-    async guardar_venta() {
+    async modificar_contrato() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
       try {
-        let res = await planes.guardar_venta(this.form);
-        if (res.data >= 1) {
+        alert("okkk ");
+        this.form.id_servicio = this.get_id_solicitud;
+        let res = await funeraria.modificar_contrato(this.form);
+
+        /* if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Se ha guardado la venta correctamente.",
+            title: "Contrato Funerario",
+            text: "Se ha modificado el contrato correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
@@ -4394,84 +4396,15 @@ export default {
           this.cerrarVentana();
         } else {
           this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Error al guardar la venta, por favor reintente.",
+            title: "Contrato Funerario",
+            text: "Error al modificar el contrato, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
             time: 4000,
           });
         }
-
-        this.$vs.loading.close();
-      } catch (err) {
-        if (err.response) {
-          if (err.response.status == 403) {
-            /**FORBIDDEN ERROR */
-            this.$vs.notify({
-              title: "Permiso denegado",
-              text: "Verifique sus permisos con el administrador del sistema.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "warning",
-              time: 4000,
-            });
-          } else if (err.response.status == 422) {
-            //checo si existe cada error
-            this.errores = err.response.data.error;
-            this.$vs.notify({
-              title: "Guardar Venta",
-              text: "Verifique los errores encontrados en los datos.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              time: 5000,
-            });
-          } else if (err.response.status == 409) {
-            /**FORBIDDEN ERROR */
-            this.$vs.notify({
-              title: "Guardar Venta",
-              text: err.response.data.error,
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              time: 15000,
-            });
-          }
-        }
-        this.$vs.loading.close();
-      }
-    },
-
-    async modificar_venta() {
-      //aqui mando guardar los datos
-      this.errores = [];
-      this.$vs.loading();
-      try {
-        let res = await planes.modificar_venta(this.form);
-        if (res.data >= 1) {
-          //success
-          this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Se ha modificado la venta correctamente.",
-            iconPack: "feather",
-            icon: "icon-alert-circle",
-            color: "success",
-            time: 5000,
-          });
-          this.$emit("ver_pdfs_nueva_venta", res.data);
-          this.cerrarVentana();
-        } else {
-          this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Error al modificar la venta, por favor reintente.",
-            iconPack: "feather",
-            icon: "icon-alert-circle",
-            color: "danger",
-            time: 4000,
-          });
-        }
-
+*/
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
@@ -4490,7 +4423,7 @@ export default {
             this.errores = err.response.data.error;
 
             this.$vs.notify({
-              title: "Modificar Venta",
+              title: "Contrato Funerario",
               text: "Verifique los errores encontrados en los datos.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -4501,7 +4434,7 @@ export default {
             //este error es por alguna condicion que el contrano no cumple para modificar
             //la propiedad esa ya ha sido vendida
             this.$vs.notify({
-              title: "Modificar información de la venta",
+              title: "Modificar información del contrato",
               text: err.response.data.error,
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -4532,7 +4465,140 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
-      console.log("limpiar");
+      this.form.nombre_afectado = "";
+      this.form.fecha_nacimiento = "";
+      this.form.edad = "";
+      this.form.genero = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.titulo = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.nacionalidad = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.lugar_nacimiento = "";
+      this.form.ocupacion = "";
+      this.form.estado_civil = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.afiliacion = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.escolaridad = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.afiliacion_nota = "";
+
+      /*DATOS DEL CERTIFICADO MEDICO*/
+      this.form.folio_certificado = "";
+      this.form.fechahora_defuncion = "";
+      this.form.causa_muerte = "";
+      this.form.muerte_natural_b = {
+        value: "1",
+        label: "SI",
+      };
+      this.form.sitios_muerte = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.lugar_muerte = "";
+      this.form.atencion_medica_b = {
+        value: "1",
+        label: "SI",
+      };
+      this.form.contagioso_b = {
+        value: "1",
+        label: "SI",
+      };
+      this.form.enfermedades_padecidas = "";
+      this.form.certificado_informante = "";
+      this.form.certificado_informante_telefono = "";
+      this.form.certificado_informante_parentesco = "";
+      this.form.medico_legista = "";
+      this.form.estados_cuerpo = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      /**DESTINOS DEL SERVICIO */
+      this.form.embalsamar_b = 0;
+      this.form.medico_responsable_embalsamado = "";
+      this.form.preparador = "";
+      this.form.velacion_b = 0;
+      this.form.lugar_servicio = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.direccion_velacion = "";
+
+      this.form.cremacion_b = 0;
+      this.form.fechahora_cremacion = "";
+      this.form.fechahora_entrega_cenizas = "";
+      this.form.descripcion_urna = "";
+      this.form.inhumacion_b = 0;
+      this.form.cementerio_servicio = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.fechahora_inhumacion = "";
+      this.form.ubicacion = "";
+      this.form.ubicacion_convenio = "";
+      this.form.ventas_terrenos_id = 0;
+
+      this.form.traslado_b = 0;
+      this.form.fechahora_traslado = "";
+      this.form.destino_traslado = "";
+
+      this.form.aseguradora_b = 0;
+      this.form.numero_convenio_aseguradora = "";
+      this.form.aseguradora = "";
+      this.form.telefono_aseguradora = "";
+
+      this.form.misa_b = 0;
+      this.form.iglesia_misa = "";
+      this.form.direccion_iglesia = "";
+      this.form.fechahora_misa = "";
+
+      this.form.custodia_b = "";
+      this.form.responsable_custodia = "";
+      this.form.folio_custodia = "";
+      this.form.folio_liberacion = "";
+
+      this.form.material_velacion_b = 0;
+      this.form.material_velacion = [];
+
+      this.form.acta_b = 0;
+      this.form.fecha_acta = "";
+      this.form.folio_acta = "";
+
+      this.form.fechahora_contrato = "";
+
+      this.form.id_cliente = "";
+      this.form.cliente = "";
+      this.form.parentesco_contratante = "";
+
+      this.form.plan_funerario_futuro_b = { value: "0", label: "NO" };
+      this.form.id_convenio_plan = "";
+      this.form.plan = "";
+      this.form.conceptos_plan = [];
+
+      this.form.plan_funerario_inmediato_b = { value: "0", label: "NO" };
+      this.form.plan_funerario = {
+        value: "",
+        label: "Seleccione 1",
+        secciones: [],
+        costo_neto: 0,
+      };
+
+      this.form.articulos_servicios = [];
+      this.form.tasa_iva = 16;
+      this.form.nota = "";
     },
 
     closePassword() {
