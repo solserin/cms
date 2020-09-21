@@ -20,6 +20,11 @@ export default {
         return axios.post(call, param);
     },
 
+    modificar_contrato(param) {
+        let call = "/funeraria/control_contratos/modificar";
+        return axios.post(call, param);
+    },
+
     get_solicitudes_servicios(param) {
         return axios.get("/funeraria/get_solicitudes_servicios/all/paginated", {
             cancelToken: new CancelToken(c => {

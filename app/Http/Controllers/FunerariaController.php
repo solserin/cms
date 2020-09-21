@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use App\PlanConceptosServicioOriginal;
 use App\Http\Controllers\CementerioController;
 
 class FunerariaController extends ApiController
@@ -2637,6 +2638,350 @@ class FunerariaController extends ApiController
         }
     }
 
+    public function control_contratos(Request $request, $tipo_servicio = '')
+    {
+
+        if (!(trim($tipo_servicio) == 'modificar')) {
+            return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
+        }
+
+        //validaciones directas sin condicionales
+        $validaciones = [
+            'id_servicio' => 'required',
+            /**DATOS DEL FALLECIDO */
+            'titulo.value' => 'required',
+            'nombre_afectado' => 'required',
+            'fecha_nacimiento' => 'required',
+            'genero.value' => 'required',
+            'nacionalidad.value' => 'required',
+            'estado_civil.value' => 'required',
+            'escolaridad.value' => 'required',
+            'afiliacion.value' => 'required',
+
+            /**DATOS DEL CERTIFICADO MEDICO */
+            'fechahora_defuncion' => 'required',
+            'causa_muerte' => 'required',
+            'muerte_natural_b.value' => 'required',
+            'contagioso_b.value' => 'required',
+            'sitio_muerte.value' => 'required',
+            'atencion_medica_b.value' => 'required',
+            'estado_cuerpo.value' => 'required',
+
+            /**DESTINOS DEL SERVICIO */
+            'embalsamar_b' => 'required|numeric|min:0|max:1',
+            'preparador' => '',
+
+
+            'velacion_b' => 'required|numeric|min:0|max:1',
+            'lugar_servicio.value' => '',
+            'direccion_velacion' => '',
+
+            'cremacion_b' => 'required|numeric|min:0|max:1',
+            'fechahora_cremacion' => '',
+            'fechahora_entrega_cenizas' => '',
+
+            'inhumacion_b' => 'required|numeric|min:0|max:1',
+            'cementerio_servicio.value' => '',
+            'fechahora_inhumacion' => '',
+            'ubicacion' => '',
+            'ventas_terrenos_id' => '',
+
+
+            'traslado_b' => 'required|numeric|min:0|max:1',
+            'fechahora_traslado' => '',
+            'destino_traslado' => '',
+
+            'aseguradora_b' => 'required|numeric|min:0|max:1',
+            'aseguradora' => '',
+
+            'misa_b' => 'required|numeric|min:0|max:1',
+            'fechahora_misa' => '',
+            'iglesia_misa' => '',
+
+            'custodia_b' => 'required|numeric|min:0|max:1',
+
+            'material_velacion_b' => 'required|numeric|min:0|max:1',
+            'material_velacion' => '',
+
+            'acta_b' => 'required|numeric|min:0|max:1',
+            'folio_acta' => '',
+            'fecha_acta' => '',
+
+
+            /**DATOS DEL CONTRATO */
+            'fechahora_contrato' => 'required',
+            'id_cliente' => 'required|numeric|min:1',
+            'tasa_iva' => 'required|numeric|min:14|max:25',
+
+
+            'plan_funerario_futuro_b.value' => 'required|numeric|min:0|max:1',
+            'id_convenio_plan' => '',
+            'tipo_contratante.value' => '',
+
+            'plan_funerario_inmediato_b.value' => 'required|numeric|min:0|max:1',
+            'plan_funerario.value' => '',
+
+
+            'articulos_servicios' => '',
+        ];
+
+        /**VALIDACIONES CONDICIONADAS */
+        if ($request->embalsamar_b == 1) {
+            $validaciones['preparador'] = 'required';
+        }
+
+        if ($request->velacion_b == 1) {
+            $validaciones['lugar_servicio.value'] = 'required|numeric|min:0';
+            $validaciones['direccion_velacion'] = 'required';
+        }
+
+        if ($request->cremacion_b == 1) {
+            $validaciones['fechahora_cremacion'] = 'required';
+            $validaciones['fechahora_entrega_cenizas'] = 'required';
+        }
+
+        if ($request->inhumacion_b == 1) {
+            $validaciones['cementerio_servicio.value'] = 'required|numeric|min:0|max:3';
+            $validaciones['fechahora_inhumacion'] = 'required';
+            if ($request->cementerio_servicio['value'] == 1) {
+                $validaciones['ventas_terrenos_id'] = 'required|numeric|min:0';
+            } else {
+                $validaciones['ubicacion'] = 'required';
+            }
+        }
+
+
+        if ($request->traslado_b == 1) {
+            $validaciones['fechahora_traslado'] = 'required';
+            $validaciones['destino_traslado'] = 'required';
+        }
+
+        if ($request->aseguradora_b == 1) {
+            $validaciones['aseguradora'] = 'required';
+        }
+
+        if ($request->misa_b == 1) {
+            $validaciones['fechahora_misa'] = 'required';
+            $validaciones['iglesia_misa'] = 'required';
+        }
+
+        if ($request->material_velacion_b == 1) {
+            $validaciones['material_velacion.*.id'] = 'required|integer|min:1';
+            $validaciones['material_velacion.*.cantidad'] = 'required|integer|min:1';
+        }
+
+        if ($request->acta_b == 1) {
+            $validaciones['folio_acta'] = 'required';
+            $validaciones['fecha_acta'] = 'required';
+        }
+
+        if ($request->plan_funerario_futuro_b['value'] == 1) {
+            /**tiene un servicio funerario asociado */
+            $validaciones['id_convenio_plan'] = 'required|integer|min:1';
+        } else {
+            /**NO TIENE PLAN DE USO A FUTURO Y SE VERIFICA SI TIENE UNO DE USO INMEDIATO */
+            if ($request->plan_funerario_inmediato_b['value'] == 1) {
+                $validaciones['plan_funerario.value'] = 'required|integer|min:1';
+                $validaciones['plan_funerario.label'] = 'required';
+                $validaciones['plan_funerario.costo_neto'] = 'required|numeric|min:0';
+                $validaciones['plan_funerario.secciones'] = 'required';
+            }
+        }
+
+
+        /**VALIDANDO LOS DATOS EN CASO DE QUE USE UN SERVICIO FUNERARIO*/
+
+
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+        $mensajes = [
+            'required' => 'Ingrese este dato'
+        ];
+
+
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+        /**verificando si es tipo modificar para validar que venga el id a modificar */
+        $datos_solicitud = array();
+        if ($tipo_servicio == 'modificar') {
+            $r = new \Illuminate\Http\Request();
+            $r->replace(['sample' => 'sample']);
+            $datos_solicitud = $this->get_solicitudes_servicios($r, $request->id_servicio)[0];
+            if (empty($datos_solicitud)) {
+                /**no se encontro los datos */
+                return $this->errorResponse('No se encontró la información de la solicitud solicitada', 409);
+            } else if ($datos_solicitud['status_b'] == 0) {
+                return $this->errorResponse('Esta solicitud ya fue cancelada, no puede modificarse', 409);
+            }
+        }
+        $id_return = 0;
+        try {
+            DB::beginTransaction();
+            /**SE COMIENZA EL PROCESO PARA ACTUALIZAR EL CONTRATO */
+
+            DB::table('servicios_funerarios')->where('id', $request->id_servicio)->update(
+                [
+                    /**ACTUALIZANDO LA PARTE DEL FALLECIDO */
+                    'titulos_id' => $request->titulo['value'],
+                    'nombre_afectado' => strtoupper($request->nombre_afectado),
+                    'fecha_nacimiento' => $request->fecha_nacimiento,
+                    'generos_id' => $request->genero['value'],
+                    'nacionalidades_id' => $request->nacionalidad['value'],
+                    'lugar_nacimiento' => $request->lugar_nacimiento != NULL ? strtoupper($request->lugar_nacimiento) : NULL,
+                    'ocupacion' => $request->ocupacion != NULL ? strtoupper($request->ocupacion) : NULL,
+                    'direccion_fallecido' => $request->direccion_fallecido != NULL ? strtoupper($request->direccion_fallecido) : NULL,
+                    'estados_civiles_id' => $request->estado_civil['value'],
+                    'escolaridades_id' => $request->escolaridad['value'],
+                    'afiliaciones_id' => $request->afiliacion['value'],
+                    'afiliacion_nota' => $request->afiliacion_nota != NULL ? strtoupper($request->afiliacion_nota) : NULL,
+
+                    /**ACTUALIZANDO EL CERTIFICADO DE DEFUNCION */
+                    'folio_certificado' => $request->folio_certificado != NULL ? strtoupper($request->folio_certificado) : NULL,
+                    'fechahora_defuncion' => $request->fechahora_defuncion,
+                    'causa_muerte' => strtoupper($request->causa_muerte),
+                    'muerte_natural_b' => $request->muerte_natural_b['value'],
+                    'contagioso_b' => $request->contagioso_b['value'],
+                    'sitios_muerte_id' => $request->sitio_muerte['value'],
+                    'lugar_muerte' => $request->lugar_muerte != NULL ? strtoupper($request->lugar_muerte) : NULL,
+                    'atencion_medica_b' => $request->atencion_medica_b['value'],
+                    'enfermedades_padecidas' => $request->enfermedades_padecidas != NULL ? strtoupper($request->enfermedades_padecidas) : NULL,
+                    'certificado_informante' => $request->certificado_informante != NULL ? strtoupper($request->certificado_informante) : NULL,
+                    'certificado_informante_telefono' => $request->certificado_informante_telefono != NULL ? strtoupper($request->certificado_informante_telefono) : NULL,
+                    'certificado_informante_parentesco' => $request->certificado_informante_parentesco != NULL ? strtoupper($request->certificado_informante_parentesco) : NULL,
+                    'medico_legista' => $request->medico_legista != NULL ? strtoupper($request->medico_legista) : NULL,
+                    'estado_afectado_id' => $request->estado_cuerpo['value'],
+
+
+                    /**ACTUALIZANDO LOS DESTINOS DEL SERVICIO */
+                    'embalsamar_b' => $request->embalsamar_b != 1 ? 0 : 1,
+                    'preparador' => $request->preparador != NULL ? strtoupper($request->preparador) : NULL,
+                    'medico_responsable_embalsamado' => $request->embalsamar_b != 1 ?  NULL : strtoupper($request->medico_responsable_embalsamado),
+                    'velacion_b' => $request->velacion_b != 1 ? 0 : 1,
+                    'lugares_servicios_id' => $request->velacion_b != 1 ?  NULL : strtoupper($request->lugar_servicio['value']),
+                    'direccion_velacion' => $request->velacion_b != 1 ?  NULL : strtoupper($request->direccion_velacion),
+                    'cremacion_b' => $request->cremacion_b != 1 ? 0 : 1,
+                    'fechahora_cremacion' => $request->cremacion_b != 1 ?  NULL : $request->fechahora_cremacion,
+                    'fechahora_entrega_cenizas' => $request->cremacion_b != 1 ?  NULL : $request->fechahora_entrega_cenizas,
+                    'descripcion_urna' => $request->cremacion_b != 1 ?  NULL : strtoupper($request->descripcion_urna),
+                    'inhumacion_b' => $request->inhumacion_b != 1 ? 0 : 1,
+                    'fechahora_inhumacion' => $request->inhumacion_b != 1 ?  NULL : $request->fechahora_inhumacion,
+                    'cementerios_servicio_id' => $request->inhumacion_b != 1 ?  NULL : $request->cementerio_servicio['value'],
+                    'ventas_terrenos_id' => $request->inhumacion_b != 1 ?  NULL : ($request->cementerio_servicio['value'] == 1 ? $request->ventas_terrenos_id : NULL),
+                    'nota_ubicacion' => $request->inhumacion_b != 1 ?  NULL : ($request->cementerio_servicio['value'] != 1 ? strtoupper($request->ubicacion) : NULL),
+                    'traslado_b' => $request->traslado_b != 1 ? 0 : 1,
+                    'fechahora_traslado' => $request->traslado_b != 1 ?  NULL : $request->fechahora_traslado,
+                    'destino_traslado' => $request->traslado_b != 1 ?  NULL : strtoupper($request->destino_traslado),
+                    'aseguradora_b' => $request->aseguradora_b != 1 ? 0 : 1,
+                    'numero_convenio_aseguradora' => $request->aseguradora_b != 1 ?  NULL : $request->numero_convenio_aseguradora,
+                    'aseguradora' => $request->aseguradora_b != 1 ?  NULL : strtoupper($request->aseguradora),
+                    'telefono_aseguradora' => $request->aseguradora_b != 1 ?  NULL : $request->telefono_aseguradora,
+                    'misa_b' => $request->misa_b != 1 ? 0 : 1,
+                    'iglesia_misa' => $request->misa_b != 1 ?  NULL : strtoupper($request->iglesia_misa),
+                    'direccion_iglesia' => $request->misa_b != 1 ?  NULL : strtoupper($request->direccion_iglesia),
+                    'fechahora_misa' => $request->misa_b != 1 ?  NULL : $request->fechahora_misa,
+                    'custodia_b' => $request->custodia_b != 1 ? 0 : 1,
+                    'responsable_custodia' => $request->custodia_b != 1 ?  NULL : strtoupper($request->responsable_custodia),
+                    'folio_custodia' => $request->custodia_b != 1 ?  NULL : $request->folio_custodia,
+                    'folio_liberacion' => $request->custodia_b != 1 ?  NULL : $request->folio_liberacion,
+
+                    /**MATERIAL DE VELACION */
+                    'material_velacion_b' => $request->material_velacion_b != 1 ?  0 : 1,
+                    /**PENDIENTE DE BORRAR MATERIAL EN CASO DE QUE NO LLEVE MATERIAL EL SERVICIO */
+                    /**ACTA DE DEFUNCION */
+                    'acta_b' => $request->acta_b != 1 ? 0 : 1,
+                    'fechahora_acta' => $request->acta_b != 1 ?  NULL : $request->fecha_acta,
+                    'folio_acta' => $request->acta_b != 1 ?  NULL : $request->folio_acta,
+
+                    /**DATOS DEL CONTRATO */
+                    'fechahora_contrato' => $request->fechahora_contrato,
+                    'parentesco_contratante' => strtoupper($request->parentesco_contratante),
+
+                    'plan_funerario_futuro_b' => $request->plan_funerario_futuro_b['value'] != 1 ? 0 : 1,
+                    'ventas_planes_id' => $request->plan_funerario_futuro_b['value'] != 1 ? NULL : $request->id_convenio_plan,
+                    'tipos_contratante_id' => $request->plan_funerario_futuro_b['value'] != 1 ? NULL : $request->tipo_contratante['value'],
+
+
+                    'plan_funerario_inmediato_b' => ($request->plan_funerario_futuro_b['value'] == 1) ? 0 : $request->plan_funerario_inmediato_b['value'],
+                    'planes_funerarios_id' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['value'],
+                    'plan_funerario_original' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['plan'],
+                    'costo_plan_original' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['costo_neto'],
+
+
+                    'modifico_id' => (int) $request->user()->id,
+                    'fecha_modificacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                    'registro_contrato_id' => $datos_solicitud['registro_contrato_id'] == NULL ? (int) $request->user()->id : $datos_solicitud['registro_contrato_id'],
+
+                    'nota_servicio' => strtoupper($request->nota),
+                    /*  'causa_muerte' => $request->causa_muerte,
+                    'muerte_natural_b' => $request->muerte_natural_b['value'],
+                    'contagioso_b' => $request->contagioso_b['value'],
+                    'nombre_informante' => $request->nombre_informante,
+                    'telefono_informante' => $request->telefono_informante,
+                    'parentesco_informante' => $request->parentesco_informante,
+                    'ubicacion_recoger' => $request->ubicacion_recoger,
+                    'recogio_id' => $request->recogio['value'],
+                    'nota_al_recoger' => $request->nota_al_recoger,
+                    
+                    'fecha_modificacion' => now()
+                    */
+                ]
+            );
+
+            /**ELIMINANDO EL MATERIAL DE VELACION ANTERIOR */
+            DB::table('material_rentado')->where('servicios_funerarios_id', '=', $request->id_servicio)->delete();
+            foreach ($request->material_velacion as $material) {
+                DB::table('material_rentado')->insert(
+                    [
+                        'servicios_funerarios_id' => $request->id_servicio,
+                        'articulos_id' => $material['id'],
+                        'cantidad' => $material['cantidad'],
+                        'nota' => $material['nota']
+                    ]
+                );
+            }
+
+            /**ACTUALIZANDO LOS CONCEPTOS ORIGINALES DEL PLAN FUNERARIO DE USO INMEDIATO */
+            DB::table('plan_conceptos_servicio_original')->where('servicios_funerarios_id', '=', $request->id_servicio)->delete();
+            if ($request->plan_funerario_inmediato_b['value'] == 1) {
+                /**guardando los conceptos del plan */
+                foreach ($request->plan_funerario['secciones'] as $key_seccion => $seccion) {
+                    foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
+                        $seccion = 1;
+                        if ($concepto['seccion'] == 'incluye') {
+                            $seccion = 1;
+                        } elseif ($concepto['seccion'] == 'inhumacion') {
+                            $seccion = 2;
+                        } elseif ($concepto['seccion'] == 'cremacion') {
+                            $seccion = 3;
+                        } elseif ($concepto['seccion'] == 'velacion') {
+                            $seccion = 4;
+                        } else {
+                            /**error no existe el concepto */
+                            return $this->errorResponse('Los conceptos no siguen el formato correcto.', 409);
+                        }
+                        DB::table('plan_conceptos_servicio_original')->insert(
+                            [
+                                'seccion_id' => $seccion,
+                                'servicios_funerarios_id' => $request->id_servicio,
+                                'concepto' => $concepto['concepto'],
+                                'concepto_ingles' => $concepto['concepto_ingles']
+                            ]
+                        );
+                    }
+                }
+            }
+
+            $id_return = $request->id_servicio;
+            DB::commit();
+            return $id_return;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
 
     /**obtiene los servicios funerarios */
     public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false)
@@ -2648,6 +2993,8 @@ class FunerariaController extends ApiController
         $fecha_operacion = $request->fecha_operacion;
         $resultado_query = ServiciosFunerarios::select(
             'id',
+            'registro_contrato_id',
+            'nota_servicio',
             'titulos_id',
             'embalsamar_b',
             'velacion_b',
@@ -2659,7 +3006,9 @@ class FunerariaController extends ApiController
             'custodia_b',
             'material_velacion_b',
             'acta_b',
+            'planes_funerarios_id',
             'plan_funerario_futuro_b',
+            'plan_funerario_inmediato_b',
             /**venta operacion */
             'servicios_funerarios.id as servicio_id',
             'llamada_b',
@@ -2770,10 +3119,6 @@ class FunerariaController extends ApiController
             DB::raw(
                 'TIME(fechahora_contrato) as hora_contrato'
             ),
-
-
-
-
             DB::raw(
                 '(NULL) as muerte_natural_texto'
             ),
@@ -2798,6 +3143,8 @@ class FunerariaController extends ApiController
             DB::raw(
                 '(NULL) as nombre_titular_plan_funerario_futuro'
             ),
+            'plan_funerario_original',
+            'costo_plan_original',
             'parentesco_contratante',
             'nacionalidades_id',
             'estados_civiles_id',
@@ -2944,6 +3291,87 @@ class FunerariaController extends ApiController
                 $solicitud['plan_funerario_futuro_status_texto'] = $datos_plan['status_texto'];
                 $solicitud['plan_funerario_futuro_fecha_venta_texto'] = $datos_plan['fecha_operacion_texto'];
                 $solicitud['plan_funerario_futuro_saldo_restante'] = $datos_plan['saldo_neto'];
+            } else {
+                /**verificnado si tiene un plan de servicios de uso inmediato */
+                if ($solicitud['plan_funerario_inmediato_b'] == 1 && trim($solicitud['planes_funerarios_id']) != '') {
+                    /**si lo tiene y se debe de cargar la lista de conceptos que tiene ese plan funerario */
+                    $conceptos = PlanConceptosServicioOriginal::where('servicios_funerarios_id', $solicitud['id'])->get();
+                    /**agregando los conceptos originales del plan */
+                    $secciones = [
+                        [
+                            'seccion' => 'incluye',
+                            'seccion_ingles' => 'include',
+                            'conceptos' => []
+                        ],
+                        [
+                            'seccion' => 'inhumacion',
+                            'seccion_ingles' => 'inhumation',
+                            'conceptos' => []
+                        ],
+                        [
+                            'seccion' => 'cremacion',
+                            'seccion_ingles' => 'cremation',
+                            'conceptos' => []
+                        ],
+                        [
+                            'seccion' => 'velacion',
+                            'seccion_ingles' => 'wakefulness',
+                            'conceptos' => []
+                        ]
+                    ];
+                    foreach ($conceptos as $key_seccion => $seccion) {
+                        /**agregando los conceptos segun su seccion */
+                        if ($seccion['seccion_id'] == 1) {
+                            /**incluye */
+                            array_push(
+                                $secciones[0]['conceptos'],
+                                [
+                                    'concepto' => $seccion['concepto'],
+                                    'concepto_ingles' => $seccion['concepto_ingles'],
+                                    'aplicar_en' => 'plan funerario',
+                                    'seccion' => 'incluye'
+                                ]
+                            );
+                        } elseif ($seccion['seccion_id'] == 2) {
+                            /**inhumacion */
+                            array_push(
+                                $secciones[1]['conceptos'],
+                                [
+                                    'concepto' => $seccion['concepto'],
+                                    'concepto_ingles' => $seccion['concepto_ingles'],
+                                    'aplicar_en' => 'caso de inhumación',
+                                    'seccion' => 'inhumacion'
+                                ]
+                            );
+                        } elseif ($seccion['seccion_id'] == 3) {
+                            /**cremacion */
+                            array_push(
+                                $secciones[2]['conceptos'],
+                                [
+                                    'concepto' => $seccion['concepto'],
+                                    'concepto_ingles' => $seccion['concepto_ingles'],
+                                    'aplicar_en' => 'caso de cremación',
+                                    'seccion' => 'cremacion'
+                                ]
+                            );
+                        } elseif ($seccion['seccion_id'] == 4) {
+                            /**velacion */
+                            array_push(
+                                $secciones[3]['conceptos'],
+                                [
+                                    'concepto' => $seccion['concepto'],
+                                    'concepto_ingles' => $seccion['concepto_ingles'],
+                                    'aplicar_en' => 'caso de velación',
+                                    'seccion' => 'velacion'
+                                ]
+                            );
+                        }
+                    }
+                    /**push al array padre */
+                    $venta['venta_plan']['secciones_original'] = $secciones;
+
+                    $solicitud['plan_funerario_secciones_originales'] = $secciones;
+                }
             }
         } //fin foreach venta
 

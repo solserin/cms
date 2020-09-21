@@ -2173,43 +2173,6 @@
                               </div>
                             </vs-td>
                           </vs-tr>
-                          <vs-tr
-                            v-if="
-                              form.plan_funerario_inmediato_b.value == 1 &&
-                              form.plan_funerario_futuro_b.value == 0 &&
-                              form.plan_funerario.value != ''
-                            "
-                            class="hidden"
-                          >
-                            <vs-td class="w-1/12"></vs-td>
-                            <vs-td class="w-7/12">
-                              <div
-                                class="capitalize py-1 text-right pr-4 dato_servicio"
-                              >Ajustar Costo del Plan Funerario</div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <vs-input
-                                v-if="datosPlanFunerario != []"
-                                :name="'costo_neto_plan_funerario_uso_inmediato'"
-                                data-vv-as=" "
-                                data-vv-validate-on="blur"
-                                v-validate="'integer|min_value:' + 0"
-                                class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad capitalize dato_servicio_valor"
-                                maxlength="10"
-                                v-model="form.plan_funerario.costo_neto"
-                                :disabled="form.plan_funerario.value == ''"
-                              />
-                              <div>
-                                <span class="text-danger text-xs">
-                                  {{
-                                  errors.first(
-                                  "costo_neto_plan_funerario_uso_inmediato"
-                                  )
-                                  }}
-                                </span>
-                              </div>
-                            </vs-td>
-                          </vs-tr>
 
                           <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO INMEDIATO-->
                         </template>
@@ -3052,6 +3015,13 @@ export default {
     },
     "form.plan_funerario_inmediato_b": function (newValue, oldValue) {
       if (newValue.value == 1) {
+        if (this.data_contrato != []) {
+          /**el contrato tiene un plan funerario de uso inmediato */
+          //se selecciona este por defecto
+          this.form.plan_funerario = this.planes_funerarios[
+            this.planes_funerarios.length - 1
+          ];
+        }
         this.secciones = this.form.plan_funerario.secciones;
       } else {
         this.form.plan_funerario = this.planes_funerarios[0];
@@ -3533,6 +3503,8 @@ export default {
         },
       ],
       form: {
+        /**DATOS DEL CONTRATO DE LA BD */
+        data_contrato: [],
         /**ID DEL SERVICIO */
         id_servicio: 0,
         /**fallecido */
@@ -3669,7 +3641,6 @@ export default {
 
         id_convenio_plan: "",
         plan: "",
-        conceptos_plan: [],
         plan_funerario_inmediato_b: {
           value: "1",
           label: "SI",
@@ -3677,6 +3648,7 @@ export default {
         plan_funerario: {
           value: "",
           label: "Seleccione 1",
+          plan: "",
           secciones: [],
           costo_neto: 0,
         },
@@ -3716,6 +3688,7 @@ export default {
           if (res.data.length > 0) {
             /**hay datos que mostrar */
             let data = res.data[0];
+            this.data_contrato = data;
             /**cargando el tipo de titulo que tiene la persona */
             for (let index = 0; index < this.titulos.length; index++) {
               if (this.titulos[index].value == data.titulos_id) {
@@ -3840,15 +3813,15 @@ export default {
 
             /**comenzando datos de destinos del servicio */
             this.form.embalsamar_b = data.embalsamar_b;
-
             if (this.form.embalsamar_b == 1) {
               this.form.medico_responsable_embalsamado =
                 data.medico_responsable_embalsamado;
               this.form.preparador = data.preparador;
+            } else {
+              this.form.embalsamar_b = 0;
             }
 
             this.form.cremacion_b = data.cremacion_b;
-
             if (
               this.form.cremacion_b == 1 &&
               data.fechahora_cremacion != null
@@ -3864,22 +3837,26 @@ export default {
                 hora_cremacion[1]
               );
             } else {
+              this.form.cremacion_b = 0;
               this.form.fechahora_cremacion = null;
             }
+
             if (
               this.form.cremacion_b == 1 &&
-              data.fechahora_cremacion != null
+              data.fechahora_entrega_cenizas != null
             ) {
-              var fecha_entrega_cenizas = data.fecha_entrega_cenizas.split("-");
-              var hora_entrega_cenizas = data.hora_entrega_cenizas.split(":");
+              var fecha_cremacion = data.fecha_entrega_cenizas.split("-");
+              var hora_cremacion = data.hora_entrega_cenizas.split(":");
               //yyyy-mm-dd hh:mm
               this.form.fechahora_entrega_cenizas = new Date(
-                fecha_entrega_cenizas[0],
-                fecha_entrega_cenizas[1] - 1,
-                fecha_entrega_cenizas[2],
-                hora_entrega_cenizas[0],
-                hora_entrega_cenizas[1]
+                fecha_cremacion[0],
+                fecha_cremacion[1] - 1,
+                fecha_cremacion[2],
+                hora_cremacion[0],
+                hora_cremacion[1]
               );
+            } else {
+              this.form.fechahora_entrega_cenizas = null;
             }
 
             if (this.form.cremacion_b == 1) {
@@ -3898,6 +3875,8 @@ export default {
                 hora_traslado[0],
                 hora_traslado[1]
               );
+            } else {
+              this.form.traslado_b = 0;
             }
 
             if (this.form.traslado_b == 1) {
@@ -3917,6 +3896,8 @@ export default {
                 hora_misa[0],
                 hora_misa[1]
               );
+            } else {
+              this.form.misa_b = 0;
             }
 
             if (this.form.misa_b == 1) {
@@ -3934,6 +3915,8 @@ export default {
                 }
               });
               this.form.direccion_velacion = data.direccion_velacion;
+            } else {
+              this.form.velacion_b = 0;
             }
             /**fin de velacion */
 
@@ -3968,6 +3951,8 @@ export default {
                 /**es de cualquier otro cementerio */
                 this.form.ubicacion = data.nota_ubicacion;
               }
+            } else {
+              this.form.inhumacion_b = 0;
             }
 
             /**datos de la aseguradora */
@@ -3978,6 +3963,8 @@ export default {
                 data.numero_convenio_aseguradora;
               this.form.aseguradora = data.aseguradora;
               this.form.telefono_aseguradora = data.telefono_aseguradora;
+            } else {
+              this.form.aseguradora_b = 0;
             }
 
             /**datos de la cadena de custodia */
@@ -3987,6 +3974,8 @@ export default {
               this.form.responsable_custodia = data.responsable_custodia;
               this.form.folio_custodia = data.folio_custodia;
               this.form.folio_liberacion = data.folio_liberacion;
+            } else {
+              this.form.custodia_b = 0;
             }
 
             /**datos del material de velacion */
@@ -4002,6 +3991,8 @@ export default {
                   }
                 });
               });
+            } else {
+              this.form.material_velacion_b = 0;
             }
 
             /**datos del acta */
@@ -4019,6 +4010,8 @@ export default {
                 );
               }
               this.form.folio_acta = data.folio_acta;
+            } else {
+              this.form.acta_b = 0;
             }
 
             /**datos del tab de contrato */
@@ -4040,48 +4033,59 @@ export default {
               /**al si tener registrada una operacion, se carga el cliente asociado a la operacion */
               this.form.id_cliente = data.operacion.clientes_id;
               this.form.cliente = data.operacion.cliente.nombre;
-
-              /**cargando los datos para el plan funerario a futuro en caso de que tenga uno en el contrato */
-              if (
-                data.plan_funerario_futuro_b == 1 &&
-                data.ventas_planes_id > 0
-              ) {
-                this.form.plan_funerario_futuro_b = this.sino[0];
-                /**el contrato tiene venta de plan funerario y se debe de cargar los conceptos */
-                this.form.id_convenio_plan = data.ventas_planes_id;
-                this.form.plan = data.plan_funerario_futuro;
-                this.secciones = data.plan_funerario_secciones_originales;
-                this.secciones_original =
-                  data.plan_funerario_secciones_originales;
-                this.datosPlanFunerario.nombre =
-                  data.nombre_titular_plan_funerario_futuro;
-                this.datosPlanFunerario.fecha_operacion_texto =
-                  data.plan_funerario_futuro_fecha_venta_texto;
-                this.datosPlanFunerario.operacion_status =
-                  data.plan_funerario_futuro_status;
-                this.datosPlanFunerario.status_texto =
-                  data.plan_funerario_futuro_status_texto;
-                this.datosPlanFunerario.saldo_neto =
-                  data.plan_funerario_futuro_saldo_restante;
-
-                if (data.tipos_contratante_id != "") {
-                  /**cargando el tipo de contratante*/
-                  this.tipos_contratante.forEach((tipo) => {
-                    if (tipo.value == data.tipos_contratante_id) {
-                      this.form.tipo_contratante = tipo;
-                      return;
-                    }
-                  });
-                }
-              } else {
-                /**no tiene plan a futuro seleccionado y por lo tanto se debe verificar si cuenta con un plan de uso inmediato incluido */
-                this.form.plan_funerario_futuro_b = this.sino[1];
-                /**aqui me quede */
-              }
             } else {
               alert("no ha operado");
             }
             this.form.parentesco_contratante = data.parentesco_contratante;
+
+            /**cargando los datos para el plan funerario a futuro en caso de que tenga uno en el contrato */
+            if (
+              data.plan_funerario_futuro_b == 1 &&
+              data.ventas_planes_id > 0
+            ) {
+              this.form.plan_funerario_futuro_b = this.sino[0];
+              /**el contrato tiene venta de plan funerario y se debe de cargar los conceptos */
+              this.form.id_convenio_plan = data.ventas_planes_id;
+              this.form.plan = data.plan_funerario_futuro;
+              this.secciones = data.plan_funerario_secciones_originales;
+              this.secciones_original =
+                data.plan_funerario_secciones_originales;
+              this.datosPlanFunerario.nombre =
+                data.nombre_titular_plan_funerario_futuro;
+              this.datosPlanFunerario.fecha_operacion_texto =
+                data.plan_funerario_futuro_fecha_venta_texto;
+              this.datosPlanFunerario.operacion_status =
+                data.plan_funerario_futuro_status;
+              this.datosPlanFunerario.status_texto =
+                data.plan_funerario_futuro_status_texto;
+              this.datosPlanFunerario.saldo_neto =
+                data.plan_funerario_futuro_saldo_restante;
+
+              if (data.tipos_contratante_id != "") {
+                /**cargando el tipo de contratante*/
+                this.tipos_contratante.forEach((tipo) => {
+                  if (tipo.value == data.tipos_contratante_id) {
+                    this.form.tipo_contratante = tipo;
+                    return;
+                  }
+                });
+              }
+            } else {
+              this.form.plan_funerario_futuro_b = this.sino[1];
+              /**no tiene plan a futuro seleccionado y por lo tanto se debe verificar si cuenta con un plan de uso inmediato incluido */
+              if (
+                data.plan_funerario_inmediato_b == 1 &&
+                data.planes_funerarios_id > 0
+              ) {
+                this.form.plan_funerario_inmediato_b = this.sino[0];
+                /**aqui al cargarse los planes funerario se debe de dejar cargar y despues agregar el plan seleccionado como plan original */
+              } else {
+                /**simplemente no hay plan funerario de uso inmediato */
+                this.form.plan_funerario_inmediato_b = this.sino[1];
+              }
+            }
+
+            this.form.nota = data.nota_servicio;
           } else {
             console.log("no datos");
             /**no hay datos que mostrar y se cierra la ventana */
@@ -4317,6 +4321,7 @@ export default {
           this.planes_funerarios.push({
             label: "Seleccione 1",
             value: "",
+            plan: "",
             secciones: [],
             costo_neto: 0,
           });
@@ -4326,13 +4331,38 @@ export default {
                 this.planes_funerarios.push({
                   label: plan.plan,
                   value: plan.id,
+                  plan: plan.plan,
                   secciones: plan.secciones,
                   costo_neto: precio.costo_neto,
                 });
               }
             });
           });
-          this.form.plan_funerario = this.planes_funerarios[0];
+          /**aqui se verifica si existen datos de algun plan fuenrario que haya sido cargado desde la bd por el contrato */
+          if (this.data_contrato != []) {
+            if (this.data_contrato.plan_funerario_inmediato_b == 1) {
+              /**el contrato tiene un plan funerario de uso inmediato */
+              this.planes_funerarios.push({
+                label:
+                  this.data_contrato.plan_funerario_original +
+                  " (PLAN ORIGINAL)",
+                value: this.data_contrato.planes_funerarios_id,
+                plan: this.data_contrato.plan_funerario_original,
+                secciones: this.data_contrato
+                  .plan_funerario_secciones_originales,
+                costo_neto: this.data_contrato.costo_plan_original,
+              });
+            }
+            //se selecciona este por defecto
+            if (this.form.plan_funerario_inmediato_b.value == 1) {
+              this.form.plan_funerario = this.planes_funerarios[
+                this.planes_funerarios.length - 1
+              ];
+            }
+          } else {
+            this.form.plan_funerario = this.planes_funerarios[0];
+          }
+
           this.$vs.loading.close();
         })
         .catch((err) => {
@@ -4378,11 +4408,10 @@ export default {
       this.errores = [];
       this.$vs.loading();
       try {
-        alert("okkk ");
         this.form.id_servicio = this.get_id_solicitud;
         let res = await funeraria.modificar_contrato(this.form);
-
-        /* if (res.data >= 1) {
+        console.log("modificar_contrato -> res", res);
+        if (res.data >= 1) {
           //success
           this.$vs.notify({
             title: "Contrato Funerario",
@@ -4404,10 +4433,11 @@ export default {
             time: 4000,
           });
         }
-*/
+
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
+          console.log("modificar_contrato -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -4465,6 +4495,8 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
+      this.data_contrato = [];
+      this.activeTab = 0;
       this.form.nombre_afectado = "";
       this.form.fecha_nacimiento = "";
       this.form.edad = "";
@@ -4480,6 +4512,7 @@ export default {
         value: "",
         label: "Seleccione 1",
       };
+      this.form.direccion_fallecido = "";
       this.form.lugar_nacimiento = "";
       this.form.ocupacion = "";
       this.form.estado_civil = {
@@ -4565,7 +4598,7 @@ export default {
       this.form.direccion_iglesia = "";
       this.form.fechahora_misa = "";
 
-      this.form.custodia_b = "";
+      this.form.custodia_b = 0;
       this.form.responsable_custodia = "";
       this.form.folio_custodia = "";
       this.form.folio_liberacion = "";
@@ -4585,8 +4618,15 @@ export default {
 
       this.form.plan_funerario_futuro_b = { value: "0", label: "NO" };
       this.form.id_convenio_plan = "";
+      this.form.tipo_contratante = {
+        value: "",
+        label: "Seleccione 1",
+      };
+
       this.form.plan = "";
-      this.form.conceptos_plan = [];
+      this.secciones = [];
+      this.datosPlanFunerario = [];
+      this.secciones_original = [];
 
       this.form.plan_funerario_inmediato_b = { value: "0", label: "NO" };
       this.form.plan_funerario = {
@@ -4628,7 +4668,9 @@ export default {
         datos.numero_convenio +
         ")";
       this.form.id_convenio_plan = datos.ventas_planes_id;
+
       this.secciones = datos.venta_plan.secciones_original;
+      this.secciones_original = datos.venta_plan.secciones_original;
     },
 
     LoteSeleccionado(datos) {
@@ -4652,6 +4694,7 @@ export default {
       this.form.id_convenio_plan = "";
       this.form.plan = "";
       this.secciones = [];
+      this.secciones_original = [];
     },
     quitarPlan() {
       this.botonConfirmarSinPassword = "Cambiar Convenio";

@@ -225,7 +225,7 @@ Route::middleware(['auth:api'])->group(function () {
     /**rutas de servicios funerarios */
     Route::post('funeraria/control_solicitud/{tipo_servicio}', 'FunerariaController@control_solicitud');
 
-
+    Route::post('funeraria/control_contratos/{tipo_servicio}', 'FunerariaController@control_contratos');
 
 
 
