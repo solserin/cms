@@ -2767,7 +2767,7 @@ class FunerariaController extends ApiController
 
         if ($request->material_velacion_b == 1) {
             $validaciones['material_velacion.*.id'] = 'required|integer|min:1';
-            $validaciones['material_velacion.*.cantidad'] = 'required|integer|min:1';
+            $validaciones['material_velacion.*.cantidad'] = 'required|integer|min:0';
         }
 
         if ($request->acta_b == 1) {
@@ -2795,6 +2795,8 @@ class FunerariaController extends ApiController
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
+            'material_velacion.*.cantidad.min' => 'La cantidad debe ser mínimo 0',
+            'material_velacion.*.cantidad.integer' => 'La cantidad debe ser un número entero',
             'required' => 'Ingrese este dato'
         ];
 
