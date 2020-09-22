@@ -3003,103 +3003,6 @@ class FunerariaController extends ApiController
                 );
             } else {
                 /**LA OPERACION NIO EXISTE Y SE DEBE DE REGISTRAR */
-                /**CONTROL DE LOS ARTICULOS Y LOS SERVICIOS PARA ACTUALLIZAR INVENTARIO */
-                foreach ($request->articulos_servicios as $articulo) {
-                    $encontrado = 0;
-                    foreach ($inventario_lotes as $lotes) {
-                        if ($articulo['id'] == $lotes['id']) {
-                            //se en encontró el articulo en el inventario 
-                            $encontrado++;
-                            if ($lotes['tipo_articulos_id'] != 2) {
-                                /**lleva lote porque no es de tipo servicio */
-                                /**ahora se debe revisar si hay lote y existencia */
-                                foreach ($lotes['inventario'] as $lote) {
-                                    $lote_valido = false;
-                                    if ($lote['lotes_id'] == $articulo['lote']) {
-                                        $lote_valido = true;
-                                        /**lote encontrado, se procede arevisar si hay existencia */
-                                        if ($articulo['cantidad'] <= $lote['existencia']) {
-                                            /**hay existencia */
-                                            /**verificando los costos para saber si aplicar costo */
-                                            if ($request->plan_funerario_futuro_b['value'] == 1) {
-                                                /**checando que exista el id de un plan funerario de uso a futuro */
-                                                if (trim($request->id_convenio_plan) != '') {
-                                                    /**se tiene seleccionado un plan de uso a futuro*/
-                                                    /**CALCULANDO TOTALES*/
-                                                    /**LOS QUE SEAN MARCADOS CON PLAN_B 1 SERAN CONSIDERADOS CON PRECIO DE VENTA 0 */
-                                                    if ($articulo['plan_b'] == 1) {
-                                                        /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
-                                                    } else {
-                                                        /**no es parte del plan funerario */
-                                                        if ($articulo['descuento_b'] == 1) {
-                                                            //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
-                                                            if ($articulo['costo_neto_normal'] >= $articulo['costo_neto_descuento']) {
-                                                                /**si se puede aplicar descuento */
-                                                                if ($articulo['facturable_b'] == 1) {
-                                                                    /**se desglosa el IVA */
-                                                                    $subtotal += (($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo['cantidad']);
-                                                                    $impuestos += ((($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo['cantidad']);
-                                                                    $descuento += ((($articulo['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo['cantidad']);
-                                                                } else {
-                                                                    /**no grava IVA */
-                                                                    $subtotal += (($articulo['costo_neto_descuento']) * $articulo['cantidad']);
-                                                                    $descuento += ((($articulo['costo_neto_normal']) - ($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo['cantidad']);
-                                                                }
-                                                                //sumando el total
-                                                                $total += $articulo['costo_neto_descuento'] * $articulo['cantidad'];
-                                                            } else {
-                                                                /**no se puede proceder por que el precio de descuento no es correcto */
-                                                                return $this->errorResponse('Verifique que el costo de descuento es menor que el precio normal', 409);
-                                                            }
-                                                        } else {
-                                                            /**fueron puros precios sin descuento */
-                                                            if ($articulo['facturable_b'] == 1) {
-                                                                /**se desglosa el IVA */
-                                                                $subtotal += (($articulo['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo['cantidad']);
-                                                                $impuestos += ((($articulo['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo['cantidad']);
-                                                            } else {
-                                                                /**no grava IVA */
-                                                                $subtotal += (($articulo['costo_neto_normal']) * $articulo['cantidad']);
-                                                            }
-                                                            //sumando el total
-                                                            $total += $articulo['costo_neto_normal'] * $articulo['cantidad'];
-                                                        }
-                                                    }
-                                                } else {
-                                                    return $this->errorResponse('Seleccione un plan funerario para aplicar los descuentos', 409);
-                                                }
-                                            } else {
-                                                if ($request->plan_funerario_inmediato_b['value'] == 1) {
-                                                    /**checando que exista el id de un plan funerario de uso a futuro */
-                                                    if (trim($request->plan_funerario['value']) != '') {
-                                                        /**se tiene seleccionado un plan de uso inmediato */
-                                                    } else {
-                                                        return $this->errorResponse('Seleccione un plan funerario para aplicar los descuentos', 409);
-                                                    }
-                                                } else {
-                                                    /**no hay plan seleccionado y los costos no aplican plan_b, solo precio normal y con descuento */
-                                                }
-                                            }
-                                        } else {
-                                            /**no hay suficiente existencia en el lote */
-                                            return $this->errorResponse('error ya que el lote no tiene suficiente existencia', 409);
-                                        }
-                                        break; //rompo la busqueda de lote ps ya se encontró
-                                    }
-                                    if ($lote_valido == 0) {
-                                        return $this->errorResponse('error ya que el lote no existe', 409);
-                                    }
-                                }
-                            } else {
-                                /**pasan directo las cantidades e importes por costo ya que no llevan lote */
-                            }
-                            break;
-                        }
-                    }
-                    if ($encontrado == 0) {
-                        return $this->errorResponse('error ya que el articulo no existe', 409);
-                    }
-                }
                 /**UNA VEZ ARRIBA CALCULADO LOS MONTOS SE PROCEDE A ACTUALIZAR TABLAS */
                 DB::table('operaciones')->insert(
                     [
@@ -3128,9 +3031,6 @@ class FunerariaController extends ApiController
             $datos['subtotal'] = $subtotal;
 
             return $this->errorResponse($datos, 409);
-
-
-
 
             $id_return = $request->id_servicio;
             DB::commit();
