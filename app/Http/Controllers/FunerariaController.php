@@ -2726,9 +2726,9 @@ class FunerariaController extends ApiController
             'articulos_servicios.*.cantidad' => 'integer|min:1',
             'articulos_servicios.*.costo_neto_normal' => 'numeric|min:0',
             'articulos_servicios.*.costo_neto_descuento' => 'numeric|min:0',
-            'articulos_servicios.*.plan_b' => 'integer|min:0|max:1',
-            'articulos_servicios.*.descuento_b' => 'integer|min:0|max:1',
-            'articulos_servicios.*.facturable_b' => 'integer|min:0|max:1'
+            'articulos_servicios.*.plan_b' => 'boolean',
+            'articulos_servicios.*.descuento_b' => 'boolean',
+            'articulos_servicios.*.facturable_b' => 'boolean'
         ];
 
         /**VALIDACIONES CONDICIONADAS */
@@ -3011,7 +3011,7 @@ class FunerariaController extends ApiController
                             //se en encontró el articulo en el inventario 
                             $encontrado++;
                             if ($lotes['tipo_articulos_id'] != 2) {
-                                /**lleva lote poruqe no es de tipo servicio */
+                                /**lleva lote porque no es de tipo servicio */
                                 /**ahora se debe revisar si hay lote y existencia */
                                 foreach ($lotes['inventario'] as $lote) {
                                     $lote_valido = false;
@@ -3028,17 +3028,17 @@ class FunerariaController extends ApiController
                                                     /**CALCULANDO TOTALES*/
                                                     /**LOS QUE SEAN MARCADOS CON PLAN_B 1 SERAN CONSIDERADOS CON PRECIO DE VENTA 0 */
                                                     if ($articulo['plan_b'] == 1) {
-                                                        /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ...*/
+                                                        /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                                     } else {
                                                         /**no es parte del plan funerario */
                                                         if ($articulo['descuento_b'] == 1) {
                                                             //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
-                                                            if ($articulo['costo_neto_normal'] <= $articulo['costo_neto_descuento']) {
+                                                            if ($articulo['costo_neto_normal'] >= $articulo['costo_neto_descuento']) {
                                                                 /**si se puede aplicar descuento */
                                                                 if ($articulo['facturable_b'] == 1) {
                                                                     /**se desglosa el IVA */
                                                                     $subtotal += (($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo['cantidad']);
-                                                                    $impuestos += ((($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (1 + ($request->tasa_iva / 100))) * $articulo['cantidad']);
+                                                                    $impuestos += ((($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo['cantidad']);
                                                                     $descuento += ((($articulo['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo['cantidad']);
                                                                 } else {
                                                                     /**no grava IVA */
@@ -3056,7 +3056,7 @@ class FunerariaController extends ApiController
                                                             if ($articulo['facturable_b'] == 1) {
                                                                 /**se desglosa el IVA */
                                                                 $subtotal += (($articulo['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo['cantidad']);
-                                                                $impuestos += ((($articulo['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * (1 + ($request->tasa_iva / 100))) * $articulo['cantidad']);
+                                                                $impuestos += ((($articulo['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo['cantidad']);
                                                             } else {
                                                                 /**no grava IVA */
                                                                 $subtotal += (($articulo['costo_neto_normal']) * $articulo['cantidad']);
@@ -3084,6 +3084,7 @@ class FunerariaController extends ApiController
                                             /**no hay suficiente existencia en el lote */
                                             return $this->errorResponse('error ya que el lote no tiene suficiente existencia', 409);
                                         }
+                                        break; //rompo la busqueda de lote ps ya se encontró
                                     }
                                     if ($lote_valido == 0) {
                                         return $this->errorResponse('error ya que el lote no existe', 409);
@@ -3099,12 +3100,7 @@ class FunerariaController extends ApiController
                         return $this->errorResponse('error ya que el articulo no existe', 409);
                     }
                 }
-
-                return $this->errorResponse('total ' . $total, 409);
-
                 /**UNA VEZ ARRIBA CALCULADO LOS MONTOS SE PROCEDE A ACTUALIZAR TABLAS */
-
-                return $this->errorResponse($inventario_lotes, 409);
                 DB::table('operaciones')->insert(
                     [
                         'financiamiento' => 1,
@@ -3125,6 +3121,15 @@ class FunerariaController extends ApiController
                     ]
                 );
             }
+
+            $datos['total'] = $total;
+            $datos['impuestos'] = $impuestos;
+            $datos['descuento'] = $descuento;
+            $datos['subtotal'] = $subtotal;
+
+            return $this->errorResponse($datos, 409);
+
+
 
 
             $id_return = $request->id_servicio;
