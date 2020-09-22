@@ -3030,7 +3030,7 @@ class FunerariaController extends ApiController
             $datos['descuento'] = $descuento;
             $datos['subtotal'] = $subtotal;
 
-            return $this->errorResponse($datos, 409);
+            //return $this->errorResponse($datos, 409);
 
             $id_return = $request->id_servicio;
             DB::commit();
