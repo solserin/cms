@@ -4618,6 +4618,7 @@ export default {
               /**al si tener registrada una operacion, se carga el cliente asociado a la operacion */
               this.form.id_cliente = data.operacion.clientes_id;
               this.form.cliente = data.operacion.cliente.nombre;
+              this.form.tasa_iva=data.operacion.tasa_iva;
             } else {
               alert("no ha operado");
             }
@@ -5260,6 +5261,7 @@ export default {
 
     LoteSeleccionado(datos) {
       this.form.articulos_servicios.push(datos);
+      console.log("LoteSeleccionado -> datos", datos)
       /**agregando los datos a la lista de articulos y servicios */
     },
 

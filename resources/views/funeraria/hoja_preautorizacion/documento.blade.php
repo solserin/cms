@@ -203,7 +203,7 @@
                 <td class="w-100 border-bottom center ml-auto mr-auto uppercase">
                     @if (isset($datos['operacion']['cliente']))
                     @if (!is_null($datos['operacion']['cliente']))
-                    {{$datos['operacion']['cliente']['domicilio']}}
+                    {{$datos['operacion']['cliente']['direccion']}}
                     @endif
                     @endif
                 </td>
