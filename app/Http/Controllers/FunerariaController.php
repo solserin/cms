@@ -2840,7 +2840,6 @@ class FunerariaController extends ApiController
                     'escolaridades_id' => $request->escolaridad['value'],
                     'afiliaciones_id' => $request->afiliacion['value'],
                     'afiliacion_nota' => $request->afiliacion_nota != NULL ? strtoupper($request->afiliacion_nota) : NULL,
-
                     /**ACTUALIZANDO EL CERTIFICADO DE DEFUNCION */
                     'folio_certificado' => $request->folio_certificado != NULL ? strtoupper($request->folio_certificado) : NULL,
                     'fechahora_defuncion' => $request->fechahora_defuncion,
@@ -2856,8 +2855,6 @@ class FunerariaController extends ApiController
                     'certificado_informante_parentesco' => $request->certificado_informante_parentesco != NULL ? strtoupper($request->certificado_informante_parentesco) : NULL,
                     'medico_legista' => $request->medico_legista != NULL ? strtoupper($request->medico_legista) : NULL,
                     'estado_afectado_id' => $request->estado_cuerpo['value'],
-
-
                     /**ACTUALIZANDO LOS DESTINOS DEL SERVICIO */
                     'embalsamar_b' => $request->embalsamar_b != 1 ? 0 : 1,
                     'preparador' => $request->preparador != NULL ? strtoupper($request->preparador) : NULL,
@@ -2889,7 +2886,6 @@ class FunerariaController extends ApiController
                     'responsable_custodia' => $request->custodia_b != 1 ?  NULL : strtoupper($request->responsable_custodia),
                     'folio_custodia' => $request->custodia_b != 1 ?  NULL : $request->folio_custodia,
                     'folio_liberacion' => $request->custodia_b != 1 ?  NULL : $request->folio_liberacion,
-
                     /**MATERIAL DE VELACION */
                     'material_velacion_b' => $request->material_velacion_b != 1 ?  0 : 1,
                     /**PENDIENTE DE BORRAR MATERIAL EN CASO DE QUE NO LLEVE MATERIAL EL SERVICIO */
@@ -2897,26 +2893,19 @@ class FunerariaController extends ApiController
                     'acta_b' => $request->acta_b != 1 ? 0 : 1,
                     'fechahora_acta' => $request->acta_b != 1 ?  NULL : $request->fecha_acta,
                     'folio_acta' => $request->acta_b != 1 ?  NULL : $request->folio_acta,
-
                     /**DATOS DEL CONTRATO */
                     'fechahora_contrato' => $request->fechahora_contrato,
                     'parentesco_contratante' => strtoupper($request->parentesco_contratante),
-
                     'plan_funerario_futuro_b' => $request->plan_funerario_futuro_b['value'] != 1 ? 0 : 1,
                     'ventas_planes_id' => $request->plan_funerario_futuro_b['value'] != 1 ? NULL : $request->id_convenio_plan,
                     'tipos_contratante_id' => $request->plan_funerario_futuro_b['value'] != 1 ? NULL : $request->tipo_contratante['value'],
-
-
                     'plan_funerario_inmediato_b' => ($request->plan_funerario_futuro_b['value'] == 1) ? 0 : $request->plan_funerario_inmediato_b['value'],
                     'planes_funerarios_id' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['value'],
                     'plan_funerario_original' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['plan'],
                     'costo_plan_original' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['costo_neto'],
-
-
                     'modifico_id' => (int) $request->user()->id,
                     'fecha_modificacion' => now(),
                     'registro_contrato_id' => $datos_solicitud['registro_contrato_id'] == NULL ? (int) $request->user()->id : $datos_solicitud['registro_contrato_id'],
-
                     'nota_servicio' => strtoupper($request->nota),
                     /*  'causa_muerte' => $request->causa_muerte,
                     'muerte_natural_b' => $request->muerte_natural_b['value'],
@@ -2927,7 +2916,6 @@ class FunerariaController extends ApiController
                     'ubicacion_recoger' => $request->ubicacion_recoger,
                     'recogio_id' => $request->recogio['value'],
                     'nota_al_recoger' => $request->nota_al_recoger,
-                    
                     'fecha_modificacion' => now()
                     */
                 ]
@@ -2988,23 +2976,13 @@ class FunerariaController extends ApiController
             $r->replace(['sample' => 'sample']);
             $inventario_lotes = $this->get_inventario($r);
 
-            if ($datos_solicitud['operacion'] != null) {
-                /**existe la operacion registrada, por lo cual solo actualizaremos datos */
-                DB::table('operaciones')->where('servicios_funerarios_id', $request->id_servicio)->update(
-                    [
-                        'clientes_id' => $request->id_cliente,
-                        'fecha_operacion' => $request->fechahora_contrato,
-                        'subtotal' => $subtotal,
-                        'descuento' => 0,
-                        'impuestos' => $impuestos,
-                        'total' => $total,
-                        'tasa_iva' => $request->tasa_iva,
-                    ]
-                );
-            } else {
+            /**se inicializan los valores para el id de la operacion y el movimiento en el inventario */
+            $id_operacion = null;
+            $id_movimiento_inventario = null;
+            if ($datos_solicitud['operacion'] == null && !isset($datos_solicitud['operacion']['movimientoinventario'])) {
                 /**LA OPERACION NIO EXISTE Y SE DEBE DE REGISTRAR */
                 /**UNA VEZ ARRIBA CALCULADO LOS MONTOS SE PROCEDE A ACTUALIZAR TABLAS */
-                DB::table('operaciones')->insert(
+                $id_operacion = DB::table('operaciones')->insertGetId(
                     [
                         'financiamiento' => 1,
                         'clientes_id' => $request->id_cliente,
@@ -3023,15 +3001,99 @@ class FunerariaController extends ApiController
                         'status' => 1
                     ]
                 );
+                /**se registra el movimiento en el inventario */
+                $id_movimiento_inventario = DB::table('movimientos_inventario')->insertGetId(
+                    [
+                        'fecha_movimiento' => $request->fechahora_contrato,
+                        'fecha_registro' => now(),
+                        'operaciones_id' => $id_operacion,
+                        'tipo_movimientos_id' => 9, //venta de mercancia
+                        'registro_id' =>  (int) $request->user()->id,
+                        'status' => 1
+                    ]
+                );
+            } else {
+                /**se toman los ids de la operacion existente */
+                $id_operacion = $datos_solicitud['operacion']['id'];
+                $id_movimiento_inventario = $datos_solicitud['operacion']['movimientoinventario']['id'];
             }
+            /**verificando si la operacion existia */
+            $operacion_existia = isset($datos_solicitud['operacion']['movimientoinventario']) ? true : false;
 
+
+            /**VERIFICANDO PRIMERO LA EXISTENCIA DE ARTICULOS EN INVENTARIO */
+
+            //CARGANDO EL INVENTARIO PARA COMPARAR DISPONIBILIDAD
+            $r = new \Illuminate\Http\Request();
+            $r->replace(['sample' => 'sample']);
+            $inventario = $this->get_inventario($r);
+            foreach ($request->articulos_servicios as $articulo_servicio) {
+                /**busncando articulo en el inventario actual */
+                $articulo_encontrado = false;
+                foreach ($inventario as $articulo) {
+                    if ($articulo_servicio['id'] == $articulo['id']) {
+                        $articulo_encontrado = true;
+                        /**articulo encontrado */
+                        if ($articulo['status'] != 0) {
+                            /**comienzo recorrer el invnetario actual para comparar la existencia que pide vender el operador*/
+                            if ($articulo['tipo_articulos_id'] != 2) {
+                                /**no es de tipo servicio */
+                                $inventario_disponible = false;
+                                /**verificando si la operacion ya existia, y ver si la cantidd que pide sigue estando disponible */
+                                if ($operacion_existia) {
+                                    /**la operacion ya existia, por lo tanto se revisa la existencia actual en el inventario y la que el usuario pide de nuevo */
+                                    $existe_lote = false;
+                                    foreach ($articulo['inventario'] as $lote) {
+                                        if ($lote['lotes_id'] == $articulo_servicio['lote']) {
+                                            /**el lote existe */
+                                            $existe_lote = true;
+                                            /**se verifica la existencia que hay actualmente mas la que tiene el servicio actualmente y ver si hay disponibilidad */
+
+                                            /**verifico si el lote fue solicitado en diferentes precios y cantidades */
+                                            if ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] == null) {
+                                                return $this->errorResponse('aqui', 409);
+                                                /**la operacion no tenia articulos ni servicios agregados*/
+                                            } else {
+                                                /**la operacion ya tenia articulos y servicios agregados y se debe de revisar disponibilidad agregada mas la actual*/
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    if ($existe_lote == false) {
+                                        /**al no ser encontrado el lote en la bd, el sistema no puede proceder */
+                                        return $this->errorResponse('No se encontró el lote ' . $articulo_servicio['lote'], 409);
+                                    }
+                                    return $this->errorResponse('si', 409);
+                                } else {
+                                    /**la operacion existia, por lo tanto solo se pide la existencia que el usuario solicita */
+                                    return $this->errorResponse('no', 409);
+                                }
+                            } else {
+                                /**es de tipo servicio y pasa directo sin tener en cuenta lote ni caducidad */
+                            }
+                        } else {
+                            return $this->errorResponse('Revise que los artículos están debidamente habilitados.', 409);
+                        }
+                        break; //break por que se encontró el articulo en el inventario
+                    }
+                }
+                if ($articulo_encontrado == false) {
+                    /**al no ser encontrado el articulo en la bd, el sistema no puede proceder */
+                    return $this->errorResponse('No se encontró el articulo ' . $articulo_servicio['descripcion'], 409);
+                }
+            } //fin foreach articulos servicios
+
+
+
+
+
+
+            /**al tener el registro de la operacion se debe de actualizar con los datos segun los conceptos y cliente que se manda para la operacion */
             $datos['total'] = $total;
             $datos['impuestos'] = $impuestos;
             $datos['descuento'] = $descuento;
             $datos['subtotal'] = $subtotal;
-
             //return $this->errorResponse($datos, 409);
-
             $id_return = $request->id_servicio;
             DB::commit();
             return $id_return;
@@ -3235,6 +3297,7 @@ class FunerariaController extends ApiController
             ->with('estado_civil')
             ->with('terreno')
             ->with('materialrentado')
+            ->with('operacion.movimientoinventario.articulosserviciofunerario')
             ->with('operacion.cliente')
             ->where(function ($q) use ($id_servicio) {
                 if (trim($id_servicio) == 'all' || $id_servicio > 0) {

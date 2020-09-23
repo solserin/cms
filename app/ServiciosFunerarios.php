@@ -22,7 +22,27 @@ class ServiciosFunerarios extends Model
 
     public function operacion()
     {
-        return $this->hasOne('App\Operaciones', 'servicios_funerarios_id', 'id');
+        return $this->hasOne('App\Operaciones', 'servicios_funerarios_id', 'id')->select(
+                'id',
+                'clientes_id',
+                'subtotal',
+                'descuento',
+                'impuestos',
+                'tasa_iva',
+                'total',
+                'servicios_funerarios_id',
+                'fecha_operacion',
+                'fecha_registro',
+                'fecha_modificacion',
+                'modifico_id',
+                'registro_id',
+                'fecha_cancelacion',
+                'motivos_cancelacion_id',
+                'cantidad_a_regresar_cancelacion',
+                'cancelo_id',
+                'nota_cancelacion',
+                'status'
+            );
     }
 
     public function nacionalidad()
