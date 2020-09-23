@@ -121,7 +121,7 @@ export default {
     },
 
     get_inventario_servicios(param) {
-        return axios.get("/funeraria/get_inventario/all/paginated", {
+        return axios.get("/funeraria/get_inventario_buscador/all/paginated", {
             cancelToken: new CancelToken(c => {
                 self.cancel = c;
             }),

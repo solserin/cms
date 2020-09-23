@@ -3047,12 +3047,15 @@ class FunerariaController extends ApiController
                                         /**el lote existe */
                                         $existe_lote = true;
                                         $tenia_articulos = false;
-                                        if ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] == null) {
-                                            /**la operacion no tenia articulos ni servicios agregados*/
-                                        } else {
-                                            /**la operacion ya tenia articulos y servicios agregados y se debe de revisar disponibilidad agregada mas la actual*/
-                                            $tenia_articulos = true;
+                                        if (isset($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
+                                            if ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] == null) {
+                                                /**la operacion no tenia articulos ni servicios agregados*/
+                                            } else {
+                                                /**la operacion ya tenia articulos y servicios agregados y se debe de revisar disponibilidad agregada mas la actual*/
+                                                $tenia_articulos = true;
+                                            }
                                         }
+
                                         /**se verifica la existencia que hay actualmente mas la que tiene el servicio actualmente y ver si hay disponibilidad */
                                         /**verifico si el lote fue solicitado en diferentes precios y cantidades */
                                         /**la existencia actual en el inventario de este lote de este articulo esta en $lote['existencia'] */
@@ -3433,7 +3436,7 @@ class FunerariaController extends ApiController
             } //fin foreach articulos servicios
 
             /**buscamos los articulos que ya estan en el contrato pero que se quitaron y se deben devolver al inventario */
-            if ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] != null) {
+            if (isset($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
                 /**la operacion ya tenia articulos y servicios agregados y se deben de revisar para ver cuales
                  * se quitaron y se deben regresar al inventario
                  */
@@ -3454,15 +3457,18 @@ class FunerariaController extends ApiController
                                 }
                             }
                         } else {
+
                             $articulo_encontrado = false;
                             foreach ($inventario as $articulo) {
-                                foreach ($articulo['inventario'] as $lote) {
+                                foreach ($articulo['inventario'] as &$lote) {
                                     if ($lote['lotes_id'] == $articulo_contrato['lotes_id'] && $lote['articulos_id'] == $articulo_contrato['articulos_id']) {
+                                        $lote['existencia'] +=  $articulo_contrato['cantidad'];
                                         array_push($detalle_inventario, [
                                             'lotes_id' => $articulo_contrato['lotes_id'],
                                             'articulos_id' => $articulo_contrato['articulos_id'],
-                                            'existencia' => $lote['existencia'] + $articulo_contrato['cantidad']
+                                            'existencia' => $lote['existencia']
                                         ]);
+                                        //return $this->errorResponse($lote['existencia'] + $articulo_contrato['cantidad'], 409);
                                         break;
                                     }
                                 }
@@ -3474,7 +3480,7 @@ class FunerariaController extends ApiController
 
             //detalle_inventario
             //$detalle_venta
-            //return $this->errorResponse($detalle_inventario, 409);
+
 
 
             /**al tener el registro de la operacion se debe de actualizar con los datos segun los conceptos y cliente que se manda para la operacion */
@@ -3483,6 +3489,11 @@ class FunerariaController extends ApiController
             $datos['descuento'] = round($descuento, 2, PHP_ROUND_HALF_UP);
             $datos['subtotal'] = round($subtotal, 2, PHP_ROUND_HALF_UP);*/
             //return $this->errorResponse($datos, 409);
+
+
+
+
+            /**actualizo el inventario */
 
 
             /**eliminando los articulos y servicios anteriores */
@@ -3504,7 +3515,7 @@ class FunerariaController extends ApiController
                 );
             }
 
-            /**actualizo el inventario */
+            //return $this->errorResponse($detalle_inventario, 409);
             foreach ($detalle_inventario as $index_detalle => $detalle) {
                 DB::table('inventario')
                     ->where('articulos_id', '=', $detalle['articulos_id'])
@@ -4356,6 +4367,110 @@ class FunerariaController extends ApiController
 
     /**obteniendo los articulos y servicios para la venta y servicios */
     public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '')
+    {
+        $descripcion = $request->descripcion;
+        $numero_control = $request->numero_control;
+        $categoria_id = $request->categorias_id;
+        $resultado_query =  Articulos::select(
+            '*',
+            DB::raw(
+                '(NULL) AS existencia'
+            )
+        )
+            ->with('inventario')
+            ->with('categoria')
+            ->with('tipo_articulo')
+            ->where('categorias_id', '<>', '4')
+            ->where('status', '<>', 0)
+            ->where('descripcion', 'like', '%' . $descripcion . '%')
+            ->where(function ($q) use ($numero_control) {
+                if (trim($numero_control) != '') {
+                    $q->where('articulos.codigo_barras', '=', $numero_control);
+                }
+            })
+            ->where(function ($q) use ($categoria_id) {
+                if (trim($categoria_id) != '') {
+                    $q->where('articulos.categorias_id', '=', $categoria_id);
+                }
+            })
+            ->get();
+
+        $resultado = array();
+        if ($paginated == 'paginated') {
+            /**queire el resultado paginado */
+            $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
+            $resultado = &$resultado_query['data'];
+        } else {
+            $resultado_query = $resultado_query->toArray();
+            $resultado = &$resultado_query;
+        }
+
+
+        foreach ($resultado as $key_articulo => &$articulo) {
+            if ($articulo['status'] == 1) {
+                $articulo['estatus_texto'] = 'Activo';
+            } else {
+                $articulo['estatus_texto'] = 'Deshabilitado';
+            }
+
+            /**actualizando iva texto y caduca texto */
+            if ($articulo['grava_iva_b'] == 1) {
+                $articulo['grava_iva_texto'] = 'si';
+            } else {
+                $articulo['grava_iva_texto'] = 'no';
+            }
+            if ($articulo['caduca_b'] == 1) {
+                $articulo['caduca_texto'] = 'si';
+            } else {
+                $articulo['caduca_texto'] = 'no';
+            }
+
+            if ($articulo['tipo_articulos_id'] == 2) {
+                $articulo['codigo_barras'] = 'N/A';
+            }
+
+            if ($articulo['tipo_articulos_id'] != 2) {
+                /**sumando existencia */
+                $existencia = 0;
+                foreach ($articulo['inventario'] as $key_inventario => &$inventario) {
+                    $existencia += $inventario['existencia'];
+                }
+                $articulo['existencia'] = $existencia;
+
+
+                if ($existencia < $articulo['minimo']) {
+                    $articulo['estatus_inventario_b'] = '0';
+                    $articulo['estatus_inventario_texto'] = 'Desabastecido';
+                } elseif ($existencia <= $articulo['maximo']) {
+                    $articulo['estatus_inventario_b'] = '1';
+                    $articulo['estatus_inventario_texto'] = 'Abastecido';
+                } else {
+                    $articulo['estatus_inventario_b'] = '2';
+                    $articulo['estatus_inventario_texto'] = 'Sobrestock';
+                }
+            } else {
+                $articulo['existencia'] = 'N/A';
+
+
+                $articulo['estatus_inventario_b'] = '1';
+                $articulo['estatus_inventario_texto'] = 'N/A';
+            }
+
+
+
+            /**veirifanco los estatus del inventario */
+        }
+
+        return $resultado_query;
+    }
+
+
+
+
+
+
+    /**obteniendo los articulos y servicios para la venta y servicios en el buscador de articulos */
+    public function get_inventario_buscador(Request $request, $id_articulo = 'all', $paginated = '')
     {
         $descripcion = $request->descripcion;
         $numero_control = $request->numero_control;
