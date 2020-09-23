@@ -2906,18 +2906,7 @@ class FunerariaController extends ApiController
                     'modifico_id' => (int) $request->user()->id,
                     'fecha_modificacion' => now(),
                     'registro_contrato_id' => $datos_solicitud['registro_contrato_id'] == NULL ? (int) $request->user()->id : $datos_solicitud['registro_contrato_id'],
-                    'nota_servicio' => strtoupper($request->nota),
-                    /*  'causa_muerte' => $request->causa_muerte,
-                    'muerte_natural_b' => $request->muerte_natural_b['value'],
-                    'contagioso_b' => $request->contagioso_b['value'],
-                    'nombre_informante' => $request->nombre_informante,
-                    'telefono_informante' => $request->telefono_informante,
-                    'parentesco_informante' => $request->parentesco_informante,
-                    'ubicacion_recoger' => $request->ubicacion_recoger,
-                    'recogio_id' => $request->recogio['value'],
-                    'nota_al_recoger' => $request->nota_al_recoger,
-                    'fecha_modificacion' => now()
-                    */
+                    'nota_servicio' => strtoupper($request->nota)
                 ]
             );
 
@@ -3022,12 +3011,24 @@ class FunerariaController extends ApiController
 
 
             /**VERIFICANDO PRIMERO LA EXISTENCIA DE ARTICULOS EN INVENTARIO */
-
+            /**consultas para detalle venta y actualizacion del inventario */
+            $detalle_venta = [];
+            $detalle_inventario = [];
             //CARGANDO EL INVENTARIO PARA COMPARAR DISPONIBILIDAD
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
             $inventario = $this->get_inventario($r);
-            foreach ($request->articulos_servicios as $articulo_servicio) {
+            $subtotal = 0;
+            $descuento = 0;
+            $impuestos = 0;
+            $total = 0;
+            $articulos_servicios_recorridos = [];
+            /**arreglo vacio para que cada que se encuentre en la lista de artivulos enviados se descarte en la proxima vuelta */
+            foreach ($request->articulos_servicios as $index_articulo_servicio => $articulo_servicio) {
+                if (in_array($index_articulo_servicio, $articulos_servicios_recorridos)) {
+                    /**me brinco al siguiente */
+                    continue;
+                }
                 /**busncando articulo en el inventario actual */
                 $articulo_encontrado = false;
                 foreach ($inventario as $articulo) {
@@ -3040,36 +3041,395 @@ class FunerariaController extends ApiController
                                 /**no es de tipo servicio */
                                 $inventario_disponible = false;
                                 /**verificando si la operacion ya existia, y ver si la cantidd que pide sigue estando disponible */
-                                if ($operacion_existia) {
-                                    /**la operacion ya existia, por lo tanto se revisa la existencia actual en el inventario y la que el usuario pide de nuevo */
-                                    $existe_lote = false;
-                                    foreach ($articulo['inventario'] as $lote) {
-                                        if ($lote['lotes_id'] == $articulo_servicio['lote']) {
-                                            /**el lote existe */
-                                            $existe_lote = true;
-                                            /**se verifica la existencia que hay actualmente mas la que tiene el servicio actualmente y ver si hay disponibilidad */
+                                /**comienza existia   if ($operacion_existia) {*/
 
-                                            /**verifico si el lote fue solicitado en diferentes precios y cantidades */
-                                            if ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] == null) {
-                                                return $this->errorResponse('aqui', 409);
-                                                /**la operacion no tenia articulos ni servicios agregados*/
-                                            } else {
-                                                /**la operacion ya tenia articulos y servicios agregados y se debe de revisar disponibilidad agregada mas la actual*/
+                                /**la operacion ya existia, por lo tanto se revisa la existencia actual en el inventario y la que el usuario pide de nuevo */
+                                $existe_lote = false;
+                                foreach ($articulo['inventario'] as $lote) {
+                                    if ($lote['lotes_id'] == $articulo_servicio['lote']) {
+                                        /**el lote existe */
+                                        $existe_lote = true;
+                                        $tenia_articulos = false;
+                                        if ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] == null) {
+                                            /**la operacion no tenia articulos ni servicios agregados*/
+                                        } else {
+                                            /**la operacion ya tenia articulos y servicios agregados y se debe de revisar disponibilidad agregada mas la actual*/
+                                            $tenia_articulos = true;
+                                        }
+                                        /**se verifica la existencia que hay actualmente mas la que tiene el servicio actualmente y ver si hay disponibilidad */
+                                        /**verifico si el lote fue solicitado en diferentes precios y cantidades */
+
+                                        /**la existencia actual en el inventario de este lote de este articulo esta en $lote['existencia'] */
+                                        $cantidad_lote_solicitado = 0;
+                                        foreach ($request->articulos_servicios as $index_encontrado => $articulo_servicio_index) {
+                                            if ($articulo_servicio_index['id'] == $lote['articulos_id'] && $articulo_servicio_index['lote'] == $lote['lotes_id']) {
+                                                /**si el articulo viene varias veces bajo el mismo lote, lo agregamos a la lista para que no se repita
+                                                 * y sumamos la cantidad que pide
+                                                 */
+                                                $cantidad_lote_solicitado += $articulo_servicio_index['cantidad'];
+                                                array_push($articulos_servicios_recorridos, $index_encontrado);
+
+                                                /**aqui comenzo a agregar lo que seran los nuevos registros del sistema para el detalle de venta de articulos*/
+                                                /**verificando los costos para saber si aplicar costo de plan funeario*/
+                                                if ($request->plan_funerario_futuro_b['value'] == 1) {
+                                                    /**maneja plan funerario de uso a futuro */
+                                                    /**checando que exista el id de un plan funerario de uso a futuro */
+                                                    if (trim($request->id_convenio_plan) != '') {
+                                                        /**si se capturo el id del plan funerario a futuro vendido */
+                                                        if ($articulo_servicio_index['plan_b'] == 1) {
+                                                            /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
+                                                            array_push($detalle_venta, [
+                                                                'cantidad' => $articulo_servicio_index['cantidad'],
+                                                                'lotes_id' => $articulo_servicio_index['lote'],
+                                                                'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                                'articulos_id' => $articulo_servicio_index['id'],
+                                                                'costo_neto_normal' => 0,
+                                                                'costo_neto_descuento' => 0,
+                                                                'descuento_b' => 0,
+                                                                'plan_b' => 1,
+                                                                'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                            ]);
+                                                        } else {
+                                                            /**no es parte del plan funerario */
+                                                            if ($articulo_servicio_index['descuento_b'] == 1) {
+                                                                //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
+                                                                if ($articulo_servicio_index['costo_neto_normal'] >= $articulo_servicio_index['costo_neto_descuento']) {
+                                                                    /**si se puede aplicar descuento */
+                                                                    if ($articulo_servicio_index['facturable_b'] == 1) {
+                                                                        /**se desglosa el IVA */
+                                                                        $subtotal += (($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                        $impuestos += ((($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                        $descuento += ((($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
+                                                                    } else {
+                                                                        /**no grava IVA */
+                                                                        $subtotal += (($articulo_servicio_index['costo_neto_descuento']) * $articulo_servicio_index['cantidad']);
+                                                                        $descuento += ((($articulo_servicio_index['costo_neto_normal']) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
+                                                                    }
+                                                                    //sumando el total
+                                                                    $total += $articulo_servicio_index['costo_neto_descuento'] * $articulo_servicio_index['cantidad'];
+                                                                } else {
+                                                                    /**no se puede proceder por que el precio de descuento no es correcto */
+                                                                    return $this->errorResponse('Verifique que el costo de descuento es menor que el precio normal', 409);
+                                                                }
+                                                                /**el registro con descuento_b */
+                                                                /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
+                                                                array_push($detalle_venta, [
+                                                                    'cantidad' => $articulo_servicio_index['cantidad'],
+                                                                    'lotes_id' => $articulo_servicio_index['lote'],
+                                                                    'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                                    'articulos_id' => $articulo_servicio_index['id'],
+                                                                    'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
+                                                                    'costo_neto_descuento' =>  $articulo_servicio_index['costo_neto_descuento'],
+                                                                    'descuento_b' => 1,
+                                                                    'plan_b' => 0,
+                                                                    'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                                ]);
+                                                            } else {
+                                                                /**fueron puros precios sin descuento */
+                                                                if ($articulo_servicio_index['facturable_b'] == 1) {
+                                                                    /**se desglosa el IVA */
+                                                                    $subtotal += (($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                    $impuestos += ((($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                } else {
+                                                                    /**no grava IVA */
+                                                                    $subtotal += (($articulo_servicio_index['costo_neto_normal']) * $articulo_servicio_index['cantidad']);
+                                                                }
+                                                                //sumando el total
+                                                                $total += $articulo_servicio_index['costo_neto_normal'] * $articulo_servicio_index['cantidad'];
+                                                                array_push($detalle_venta, [
+                                                                    'cantidad' => $articulo_servicio_index['cantidad'],
+                                                                    'lotes_id' => $articulo_servicio_index['lote'],
+                                                                    'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                                    'articulos_id' => $articulo_servicio_index['id'],
+                                                                    'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
+                                                                    'costo_neto_descuento' => 0,
+                                                                    'descuento_b' => 0,
+                                                                    'plan_b' => 0,
+                                                                    'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                                ]);
+                                                            }
+                                                        }
+                                                    } else {
+                                                        return $this->errorResponse('Seleccione un plan funerario para aplicar los descuentos', 409);
+                                                    }
+                                                } else {
+                                                    /**no llevaba plan funerario a futuro */
+                                                    if ($request->plan_funerario_inmediato_b['value'] == 1) {
+                                                        /**checando que exista el id de un plan funerario de uso a futuro */
+                                                        if (trim($request->plan_funerario['value']) == '') {
+                                                            /**no se tiene seleccionado un plan de uso inmediato */
+                                                            return $this->errorResponse('Seleccione un plan funerario para aplicar los descuentos', 409);
+                                                        }
+                                                    }
+                                                    /**no es parte del plan funerario */
+                                                    if ($articulo_servicio_index['descuento_b'] == 1) {
+                                                        //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
+                                                        if ($articulo_servicio_index['costo_neto_normal'] >= $articulo_servicio_index['costo_neto_descuento']) {
+                                                            /**si se puede aplicar descuento */
+                                                            if ($articulo_servicio_index['facturable_b'] == 1) {
+                                                                /**se desglosa el IVA */
+                                                                $subtotal += (($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                $impuestos += ((($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                $descuento += ((($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
+                                                            } else {
+                                                                /**no grava IVA */
+                                                                $subtotal += (($articulo_servicio_index['costo_neto_descuento']) * $articulo_servicio_index['cantidad']);
+                                                                $descuento += ((($articulo_servicio_index['costo_neto_normal']) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
+                                                            }
+                                                            //sumando el total
+                                                            $total += $articulo_servicio_index['costo_neto_descuento'] * $articulo_servicio_index['cantidad'];
+                                                        } else {
+                                                            /**no se puede proceder por que el precio de descuento no es correcto */
+                                                            return $this->errorResponse('Verifique que el costo de descuento es menor que el precio normal', 409);
+                                                        }
+                                                        /**el registro con descuento_b */
+                                                        /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
+                                                        array_push($detalle_venta, [
+                                                            'cantidad' => $articulo_servicio_index['cantidad'],
+                                                            'lotes_id' => $articulo_servicio_index['lote'],
+                                                            'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                            'articulos_id' => $articulo_servicio_index['id'],
+                                                            'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
+                                                            'costo_neto_descuento' =>  $articulo_servicio_index['costo_neto_descuento'],
+                                                            'descuento_b' => 1,
+                                                            'plan_b' => $articulo_servicio_index['plan_b'],
+                                                            'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                        ]);
+                                                    } else {
+                                                        /**fueron puros precios sin descuento */
+                                                        if ($articulo_servicio_index['facturable_b'] == 1) {
+                                                            /**se desglosa el IVA */
+                                                            $subtotal += (($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                            $impuestos += ((($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                        } else {
+                                                            /**no grava IVA */
+                                                            $subtotal += (($articulo_servicio_index['costo_neto_normal']) * $articulo_servicio_index['cantidad']);
+                                                        }
+                                                        //sumando el total
+                                                        $total += $articulo_servicio_index['costo_neto_normal'] * $articulo_servicio_index['cantidad'];
+                                                        array_push($detalle_venta, [
+                                                            'cantidad' => $articulo_servicio_index['cantidad'],
+                                                            'lotes_id' => $articulo_servicio_index['lote'],
+                                                            'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                            'articulos_id' => $articulo_servicio_index['id'],
+                                                            'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
+                                                            'costo_neto_descuento' => 0,
+                                                            'descuento_b' => 0,
+                                                            'plan_b' => $articulo_servicio_index['plan_b'],
+                                                            'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                        ]);
+                                                    }
+                                                }
                                             }
-                                            break;
+                                        }
+
+                                        $existencia_inventario_tomando_en_cuenta_el_contrato = 0;
+                                        /**verificando si el lote tiene suficiente existencia tomando en cuenta si el contrato ya tiene o no asignado articulos */
+                                        if ($tenia_articulos) {
+                                            /**se recorre el arreglo de articulos y servicios para sacar la suma de articulos que ya tenia asigando */
+                                            foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $articulo_contrato) {
+                                                if ($articulo_contrato['articulos_id'] == $lote['articulos_id'] && $articulo_contrato['lotes_id'] == $lote['lotes_id']) {
+                                                    //se encontro el articulo que ya esta registrada en la venta
+                                                    /**se debe sumar a la cantidad que ya esta asignado */
+                                                    $existencia_inventario_tomando_en_cuenta_el_contrato += $articulo_contrato['cantidad'];
+                                                }
+                                            }
+                                        }
+
+                                        /**se suma la cantidad que esta en el inventario */
+                                        $existencia_inventario_tomando_en_cuenta_el_contrato += $lote['existencia'];
+                                        if ($existencia_inventario_tomando_en_cuenta_el_contrato < $cantidad_lote_solicitado) {
+                                            return $this->errorResponse('No se tiene suficiente cantidad del artículo ' . $articulo_servicio['descripcion'] . ' en el lote ' . $lote['lotes_id'], 409);
+                                        } else {
+                                            /**aqui comienzo a agregar el detalle de como quedara actualizado la parte del inventario 
+                                             * con la actualizacion de la nueva demanda de
+                                             * articulos
+                                             */
+                                            array_push($detalle_inventario, [
+                                                'lotes_id' => $articulo_servicio_index['lote'],
+                                                'articulos_id' => $articulo_servicio_index['id'],
+                                                'existencia' => $existencia_inventario_tomando_en_cuenta_el_contrato - $cantidad_lote_solicitado
+                                            ]);
+                                        }
+                                        //return $this->errorResponse($detalle_venta, 409);
+                                        break;
+                                    }
+                                }
+                                /**en 
+                                 * caso de 
+                                 * que no tenga
+                                 * lote
+                                 */
+                                if ($existe_lote == false) {
+                                    /**al no ser encontrado el lote en la bd, el sistema no puede proceder */
+                                    return $this->errorResponse('No se encontró el lote ' . $articulo_servicio['lote'], 409);
+                                }
+                                //return $this->errorResponse('si existia', 409);
+                                /**termina existia   if ($operacion_existia) {*/
+                            } else {
+                                /**
+                                 * hasta
+                                 * aqui
+                                 * no
+                                 * importa
+                                 * el codigo
+                                 * porque no aplica lotes
+                                 */
+                                /**es de tipo servicio y pasa directo sin tener en cuenta lote ni caducidad */
+
+                                /**verificando los costos para saber si aplicar costo de plan funeario*/
+                                if ($request->plan_funerario_futuro_b['value'] == 1) {
+                                    /**maneja plan funerario de uso a futuro */
+                                    /**checando que exista el id de un plan funerario de uso a futuro */
+                                    if (trim($request->id_convenio_plan) != '') {
+                                        /**si se capturo el id del plan funerario a futuro vendido */
+                                        if ($articulo_servicio['plan_b'] == 1) {
+                                            /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
+                                            array_push($detalle_venta, [
+                                                'cantidad' => $articulo_servicio['cantidad'],
+                                                'lotes_id' => NULL,
+                                                'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                'articulos_id' => $articulo_servicio['id'],
+                                                'costo_neto_normal' => 0,
+                                                'costo_neto_descuento' => 0,
+                                                'descuento_b' => 0,
+                                                'plan_b' => 1,
+                                                'facturable_b' => $articulo_servicio['facturable_b']
+                                            ]);
+                                        } else {
+                                            /**no es parte del plan funerario */
+                                            if ($articulo_servicio['descuento_b'] == 1) {
+                                                //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
+                                                if ($articulo_servicio['costo_neto_normal'] >= $articulo_servicio['costo_neto_descuento']) {
+                                                    /**si se puede aplicar descuento */
+                                                    if ($articulo_servicio['facturable_b'] == 1) {
+                                                        /**se desglosa el IVA */
+                                                        $subtotal += (($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                        $impuestos += ((($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                        $descuento += ((($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
+                                                    } else {
+                                                        /**no grava IVA */
+                                                        $subtotal += (($articulo_servicio['costo_neto_descuento']) * $articulo_servicio['cantidad']);
+                                                        $descuento += ((($articulo_servicio['costo_neto_normal']) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
+                                                    }
+                                                    //sumando el total
+                                                    $total += $articulo_servicio['costo_neto_descuento'] * $articulo_servicio['cantidad'];
+                                                } else {
+                                                    /**no se puede proceder por que el precio de descuento no es correcto */
+                                                    return $this->errorResponse('Verifique que el costo de descuento es menor que el precio normal', 409);
+                                                }
+                                                /**el registro con descuento_b */
+                                                /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
+                                                array_push($detalle_venta, [
+                                                    'cantidad' => $articulo_servicio['cantidad'],
+                                                    'lotes_id' => NULL,
+                                                    'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                    'articulos_id' => $articulo_servicio['id'],
+                                                    'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
+                                                    'costo_neto_descuento' =>  $articulo_servicio['costo_neto_descuento'],
+                                                    'descuento_b' => 1,
+                                                    'plan_b' => 0,
+                                                    'facturable_b' => $articulo_servicio['facturable_b']
+                                                ]);
+                                            } else {
+                                                /**fueron puros precios sin descuento */
+                                                if ($articulo_servicio['facturable_b'] == 1) {
+                                                    /**se desglosa el IVA */
+                                                    $subtotal += (($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                    $impuestos += ((($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                } else {
+                                                    /**no grava IVA */
+                                                    $subtotal += (($articulo_servicio['costo_neto_normal']) * $articulo_servicio['cantidad']);
+                                                }
+                                                //sumando el total
+                                                $total += $articulo_servicio['costo_neto_normal'] * $articulo_servicio['cantidad'];
+                                                array_push($detalle_venta, [
+                                                    'cantidad' => $articulo_servicio['cantidad'],
+                                                    'lotes_id' => NULL,
+                                                    'movimientos_inventario_id' => $id_movimiento_inventario,
+                                                    'articulos_id' => $articulo_servicio['id'],
+                                                    'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
+                                                    'costo_neto_descuento' => 0,
+                                                    'descuento_b' => 0,
+                                                    'plan_b' => 0,
+                                                    'facturable_b' => $articulo_servicio['facturable_b']
+                                                ]);
+                                            }
+                                        }
+                                    } else {
+                                        return $this->errorResponse('Seleccione un plan funerario para aplicar los descuentos', 409);
+                                    }
+                                } else {
+                                    /**no llevaba plan funerario a futuro */
+                                    if ($request->plan_funerario_inmediato_b['value'] == 1) {
+                                        /**checando que exista el id de un plan funerario de uso a futuro */
+                                        if (trim($request->plan_funerario['value']) == '') {
+                                            /**no se tiene seleccionado un plan de uso inmediato */
+                                            return $this->errorResponse('Seleccione un plan funerario para aplicar los descuentos', 409);
                                         }
                                     }
-                                    if ($existe_lote == false) {
-                                        /**al no ser encontrado el lote en la bd, el sistema no puede proceder */
-                                        return $this->errorResponse('No se encontró el lote ' . $articulo_servicio['lote'], 409);
+
+
+
+                                    /**no es parte del plan funerario */
+                                    if ($articulo_servicio['descuento_b'] == 1) {
+                                        //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
+                                        if ($articulo_servicio['costo_neto_normal'] >= $articulo_servicio['costo_neto_descuento']) {
+                                            /**si se puede aplicar descuento */
+                                            if ($articulo_servicio['facturable_b'] == 1) {
+                                                /**se desglosa el IVA */
+                                                $subtotal += (($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                $impuestos += ((($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                $descuento += ((($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
+                                            } else {
+                                                /**no grava IVA */
+                                                $subtotal += (($articulo_servicio['costo_neto_descuento']) * $articulo_servicio['cantidad']);
+                                                $descuento += ((($articulo_servicio['costo_neto_normal']) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
+                                            }
+                                            //sumando el total
+                                            $total += $articulo_servicio['costo_neto_descuento'] * $articulo_servicio['cantidad'];
+                                        } else {
+                                            /**no se puede proceder por que el precio de descuento no es correcto */
+                                            return $this->errorResponse('Verifique que el costo de descuento es menor que el precio normal', 409);
+                                        }
+                                        /**el registro con descuento_b */
+                                        /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
+                                        array_push($detalle_venta, [
+                                            'cantidad' => $articulo_servicio['cantidad'],
+                                            'lotes_id' => NULL,
+                                            'movimientos_inventario_id' => $id_movimiento_inventario,
+                                            'articulos_id' => $articulo_servicio['id'],
+                                            'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
+                                            'costo_neto_descuento' =>  $articulo_servicio['costo_neto_descuento'],
+                                            'descuento_b' => 1,
+                                            'plan_b' => $articulo_servicio['plan_b'],
+                                            'facturable_b' => $articulo_servicio['facturable_b']
+                                        ]);
+                                    } else {
+                                        /**fueron puros precios sin descuento */
+                                        if ($articulo_servicio['facturable_b'] == 1) {
+                                            /**se desglosa el IVA */
+                                            $subtotal += (($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                            $impuestos += ((($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                        } else {
+                                            /**no grava IVA */
+                                            $subtotal += (($articulo_servicio['costo_neto_normal']) * $articulo_servicio['cantidad']);
+                                        }
+                                        //sumando el total
+                                        $total += $articulo_servicio['costo_neto_normal'] * $articulo_servicio['cantidad'];
+                                        array_push($detalle_venta, [
+                                            'cantidad' => $articulo_servicio['cantidad'],
+                                            'lotes_id' => NULL,
+                                            'movimientos_inventario_id' => $id_movimiento_inventario,
+                                            'articulos_id' => $articulo_servicio['id'],
+                                            'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
+                                            'costo_neto_descuento' => 0,
+                                            'descuento_b' => 0,
+                                            'plan_b' => $articulo_servicio['plan_b'],
+                                            'facturable_b' => $articulo_servicio['facturable_b']
+                                        ]);
                                     }
-                                    return $this->errorResponse('si', 409);
-                                } else {
-                                    /**la operacion existia, por lo tanto solo se pide la existencia que el usuario solicita */
-                                    return $this->errorResponse('no', 409);
                                 }
-                            } else {
-                                /**es de tipo servicio y pasa directo sin tener en cuenta lote ni caducidad */
                             }
                         } else {
                             return $this->errorResponse('Revise que los artículos están debidamente habilitados.', 409);
@@ -3083,17 +3443,18 @@ class FunerariaController extends ApiController
                 }
             } //fin foreach articulos servicios
 
-
-
+            //detalle_inventario
+            //$detalle_venta
+            //return $this->errorResponse($detalle_inventario, 409);
 
 
 
             /**al tener el registro de la operacion se debe de actualizar con los datos segun los conceptos y cliente que se manda para la operacion */
-            $datos['total'] = $total;
-            $datos['impuestos'] = $impuestos;
-            $datos['descuento'] = $descuento;
-            $datos['subtotal'] = $subtotal;
-            //return $this->errorResponse($datos, 409);
+            $datos['total'] = round($total, 2, PHP_ROUND_HALF_UP);
+            $datos['impuestos'] = round($impuestos, 2, PHP_ROUND_HALF_UP);
+            $datos['descuento'] = round($descuento, 2, PHP_ROUND_HALF_UP);
+            $datos['subtotal'] = round($subtotal, 2, PHP_ROUND_HALF_UP);
+            return $this->errorResponse($datos, 409);
             $id_return = $request->id_servicio;
             DB::commit();
             return $id_return;
