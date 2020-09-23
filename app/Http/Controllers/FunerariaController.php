@@ -3008,8 +3008,6 @@ class FunerariaController extends ApiController
             }
             /**verificando si la operacion existia */
             $operacion_existia = isset($datos_solicitud['operacion']['movimientoinventario']) ? true : false;
-
-
             /**VERIFICANDO PRIMERO LA EXISTENCIA DE ARTICULOS EN INVENTARIO */
             /**consultas para detalle venta y actualizacion del inventario */
             $detalle_venta = [];
@@ -3042,7 +3040,6 @@ class FunerariaController extends ApiController
                                 $inventario_disponible = false;
                                 /**verificando si la operacion ya existia, y ver si la cantidd que pide sigue estando disponible */
                                 /**comienza existia   if ($operacion_existia) {*/
-
                                 /**la operacion ya existia, por lo tanto se revisa la existencia actual en el inventario y la que el usuario pide de nuevo */
                                 $existe_lote = false;
                                 foreach ($articulo['inventario'] as $lote) {
@@ -3058,7 +3055,6 @@ class FunerariaController extends ApiController
                                         }
                                         /**se verifica la existencia que hay actualmente mas la que tiene el servicio actualmente y ver si hay disponibilidad */
                                         /**verifico si el lote fue solicitado en diferentes precios y cantidades */
-
                                         /**la existencia actual en el inventario de este lote de este articulo esta en $lote['existencia'] */
                                         $cantidad_lote_solicitado = 0;
                                         foreach ($request->articulos_servicios as $index_encontrado => $articulo_servicio_index) {
@@ -3068,7 +3064,6 @@ class FunerariaController extends ApiController
                                                  */
                                                 $cantidad_lote_solicitado += $articulo_servicio_index['cantidad'];
                                                 array_push($articulos_servicios_recorridos, $index_encontrado);
-
                                                 /**aqui comenzo a agregar lo que seran los nuevos registros del sistema para el detalle de venta de articulos*/
                                                 /**verificando los costos para saber si aplicar costo de plan funeario*/
                                                 if ($request->plan_funerario_futuro_b['value'] == 1) {
@@ -3222,7 +3217,6 @@ class FunerariaController extends ApiController
                                                 }
                                             }
                                         }
-
                                         $existencia_inventario_tomando_en_cuenta_el_contrato = 0;
                                         /**verificando si el lote tiene suficiente existencia tomando en cuenta si el contrato ya tiene o no asignado articulos */
                                         if ($tenia_articulos) {
@@ -3235,7 +3229,6 @@ class FunerariaController extends ApiController
                                                 }
                                             }
                                         }
-
                                         /**se suma la cantidad que esta en el inventario */
                                         $existencia_inventario_tomando_en_cuenta_el_contrato += $lote['existencia'];
                                         if ($existencia_inventario_tomando_en_cuenta_el_contrato < $cantidad_lote_solicitado) {
@@ -3276,7 +3269,6 @@ class FunerariaController extends ApiController
                                  * porque no aplica lotes
                                  */
                                 /**es de tipo servicio y pasa directo sin tener en cuenta lote ni caducidad */
-
                                 /**verificando los costos para saber si aplicar costo de plan funeario*/
                                 if ($request->plan_funerario_futuro_b['value'] == 1) {
                                     /**maneja plan funerario de uso a futuro */
@@ -3368,9 +3360,6 @@ class FunerariaController extends ApiController
                                             return $this->errorResponse('Seleccione un plan funerario para aplicar los descuentos', 409);
                                         }
                                     }
-
-
-
                                     /**no es parte del plan funerario */
                                     if ($articulo_servicio['descuento_b'] == 1) {
                                         //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
@@ -3443,18 +3432,89 @@ class FunerariaController extends ApiController
                 }
             } //fin foreach articulos servicios
 
+            /**buscamos los articulos que ya estan en el contrato pero que se quitaron y se deben devolver al inventario */
+            if ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] != null) {
+                /**la operacion ya tenia articulos y servicios agregados y se deben de revisar para ver cuales
+                 * se quitaron y se deben regresar al inventario
+                 */
+                foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $articulo_contrato) {
+                    /**se revisa cual articulo ya no fue incluido en la nueva peticion y se debe de aumentar esa existencia en el inventario */
+                    $esta = false;
+                    foreach ($request->articulos_servicios as $index_articulo_servicio => $articulo_servicio) {
+                        if ($articulo_servicio['lote'] == $articulo_contrato['lotes_id'] && $articulo_servicio['id'] == $articulo_contrato['lotes_id']) {
+                            $esta = true;
+                        }
+                    }
+                    //si no esta se aumenta al inventario
+                    if (!$esta) {
+                        if ($detalle_inventario != null) {
+                            foreach ($detalle_inventario as $index_detalle => &$detalle) {
+                                if ($detalle['lotes_id'] == $articulo_contrato['lotes_id'] && $detalle['articulos_id'] == $articulo_contrato['articulos_id']) {
+                                    $detalle['existencia'] += $articulo_contrato['cantidad'];
+                                }
+                            }
+                        } else {
+                            $articulo_encontrado = false;
+                            foreach ($inventario as $articulo) {
+                                foreach ($articulo['inventario'] as $lote) {
+                                    if ($lote['lotes_id'] == $articulo_contrato['lotes_id'] && $lote['articulos_id'] == $articulo_contrato['articulos_id']) {
+                                        array_push($detalle_inventario, [
+                                            'lotes_id' => $articulo_contrato['lotes_id'],
+                                            'articulos_id' => $articulo_contrato['articulos_id'],
+                                            'existencia' => $lote['existencia'] + $articulo_contrato['cantidad']
+                                        ]);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             //detalle_inventario
             //$detalle_venta
             //return $this->errorResponse($detalle_inventario, 409);
 
 
-
             /**al tener el registro de la operacion se debe de actualizar con los datos segun los conceptos y cliente que se manda para la operacion */
-            $datos['total'] = round($total, 2, PHP_ROUND_HALF_UP);
+            /*$datos['total'] = round($total, 2, PHP_ROUND_HALF_UP);
             $datos['impuestos'] = round($impuestos, 2, PHP_ROUND_HALF_UP);
             $datos['descuento'] = round($descuento, 2, PHP_ROUND_HALF_UP);
-            $datos['subtotal'] = round($subtotal, 2, PHP_ROUND_HALF_UP);
-            return $this->errorResponse($datos, 409);
+            $datos['subtotal'] = round($subtotal, 2, PHP_ROUND_HALF_UP);*/
+            //return $this->errorResponse($datos, 409);
+
+
+            /**eliminando los articulos y servicios anteriores */
+            DB::table('venta_detalle')->where('movimientos_inventario_id', '=', $id_movimiento_inventario)->delete();
+            /**guardando os articulos y servicios nuevos */
+            foreach ($detalle_venta as $index_detalle => $detalle) {
+                DB::table('venta_detalle')->insert(
+                    [
+                        'cantidad' => $detalle['cantidad'],
+                        'lotes_id' => $detalle['lotes_id'],
+                        'movimientos_inventario_id' => $detalle['movimientos_inventario_id'],
+                        'articulos_id' => $detalle['articulos_id'],
+                        'costo_neto_normal' => $detalle['costo_neto_normal'],
+                        'costo_neto_descuento' => $detalle['costo_neto_descuento'],
+                        'descuento_b' => $detalle['descuento_b'],
+                        'plan_b' => $detalle['plan_b'],
+                        'facturable_b' => $detalle['facturable_b']
+                    ]
+                );
+            }
+
+            /**actualizo el inventario */
+            foreach ($detalle_inventario as $index_detalle => $detalle) {
+                DB::table('inventario')
+                    ->where('articulos_id', '=', $detalle['articulos_id'])
+                    ->where('lotes_id', '=', $detalle['lotes_id'])->update(
+                        [
+                            'existencia' => $detalle['existencia']
+                        ]
+                    );
+            }
+
             $id_return = $request->id_servicio;
             DB::commit();
             return $id_return;
