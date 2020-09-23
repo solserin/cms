@@ -3228,7 +3228,16 @@
                                     </vs-td>
 
                                     <vs-td>
-                                      <div class="capitalize">1</div>
+                                      <div
+                                        class=""
+                                        @click="remover_articulo(indextr)"
+                                        v-if="!fueCancelada"
+                                      >
+                                        <img
+                                          class="cursor-pointer img-btn"
+                                          src="@assets/images/minus.svg"
+                                        />
+                                      </div>
                                     </vs-td>
                                   </vs-tr>
                                 </template>
@@ -4088,6 +4097,7 @@ export default {
         },
       ],
       form: {
+        index_articulo_servicio: "",
         /**DATOS DEL CONTRATO DE LA BD */
         data_contrato: [],
         /**ID DEL SERVICIO */
@@ -4619,8 +4629,6 @@ export default {
               this.form.id_cliente = data.operacion.clientes_id;
               this.form.cliente = data.operacion.cliente.nombre;
               this.form.tasa_iva = data.operacion.tasa_iva;
-            } else {
-              alert("no ha operado");
             }
             this.form.parentesco_contratante = data.parentesco_contratante;
 
@@ -4672,25 +4680,30 @@ export default {
             }
 
             /**cargando articulos */
-            if(data.operacion.movimientoinventario.articulosserviciofunerario.length>0){
-              data.operacion.movimientoinventario.articulosserviciofunerario.forEach(articulo => {
+            if (
+              data.operacion.movimientoinventario.articulosserviciofunerario
+                .length > 0
+            ) {
+              data.operacion.movimientoinventario.articulosserviciofunerario.forEach(
+                (articulo) => {
                   this.form.articulos_servicios.push({
-                  id: articulo.articulos_id,
-                  codigo_barras: articulo.codigo_barras,
-                  tipo: articulo.tipo,
-                  categoria: articulo.categoria,
-                  descripcion: articulo.descripcion,
-                  lote: articulo.lotes_id,
-                  cantidad: articulo.cantidad,
-                  costo_neto_normal: articulo.costo_neto_normal,
-                  descuento_b: articulo.descuento_b,
-                  costo_neto_descuento: articulo.costo_neto_descuento,
-                  importe: articulo.importe,
-                  facturable_b: articulo.facturable_b,
-                  existencia: 'N/A',
-                  plan_b:articulo.plan_b,
-                });
-              });
+                    id: articulo.articulos_id,
+                    codigo_barras: articulo.codigo_barras,
+                    tipo: articulo.tipo,
+                    categoria: articulo.categoria,
+                    descripcion: articulo.descripcion,
+                    lote: articulo.lotes_id,
+                    cantidad: articulo.cantidad,
+                    costo_neto_normal: articulo.costo_neto_normal,
+                    descuento_b: articulo.descuento_b,
+                    costo_neto_descuento: articulo.costo_neto_descuento,
+                    importe: articulo.importe,
+                    facturable_b: articulo.facturable_b,
+                    existencia: "N/A",
+                    plan_b: articulo.plan_b,
+                  });
+                }
+              );
             }
             /**fin de cargar articulos */
 
@@ -5096,6 +5109,23 @@ export default {
         "Esta acción limpiará los datos que capturó en el formulario.";
       this.openConfirmarSinPassword = true;
       this.callBackConfirmar = this.cerrarVentana;
+    },
+
+    //remover beneficiario
+    remover_articulo(index_articulo_servicio) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea eliminar este concepto? Los datos quedarán eliminados del sistema?";
+      this.form.index_articulo_servicio = index_articulo_servicio;
+      this.callBackConfirmar = this.remover_articulo_callback;
+      this.openConfirmarSinPassword = true;
+    },
+    //remover beneficiario callback quita del array al beneficiario seleccionado
+    remover_articulo_callback() {
+      this.form.articulos_servicios.splice(
+        this.form.index_articulo_servicio,
+        1
+      );
     },
 
     cerrarVentana() {
