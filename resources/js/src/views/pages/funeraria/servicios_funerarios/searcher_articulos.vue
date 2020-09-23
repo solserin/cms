@@ -251,7 +251,7 @@ export default {
                   cantidad: 1,
                   costo_neto_normal: articulo.precio_venta,
                   descuento_b: 0,
-                  costo_neto_descuento: articulo.precio_venta,
+                  costo_neto_descuento: 0,
                   importe: 0,
                   facturable_b: articulo.grava_iva_b,
                   existencia: articulo.existencia,

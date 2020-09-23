@@ -3769,7 +3769,40 @@ class FunerariaController extends ApiController
             $resultado = &$resultado_query;
         }
 
+        /**traigo el inventario para llenar los datos de los conceptos del contrato */
+        $articulos = Articulos::with('categoria')->with('tipo_articulo')->get();
+
         foreach ($resultado as $index_venta => &$solicitud) {
+
+            if (isset($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
+                /**actualizo los datos del arreglo de articulos */
+                foreach ($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_articulo => &$articulo) {
+                    foreach ($articulos as $index_inventario => $inventario) {
+                        if ($articulo['articulos_id'] == $inventario['id']) {
+                            $articulo['descripcion'] = $inventario['descripcion'];
+                            $articulo['categoria'] = $inventario['categoria']['categoria'];
+                            $articulo['tipo'] = $inventario['tipo_articulo']['tipo'];
+                            $articulo['codigo_barras'] = $inventario['codigo_barras'];
+
+                            /**importa para cuando es con plan funerario a futuro  */
+                            if ($solicitud['plan_funerario_futuro_b'] == 1 && trim($solicitud['ventas_planes_id']) != '') {
+                                if ($articulo['plan_b'] == 1) {
+                                    $articulo['importe'] = 0;
+                                }
+                            } else {
+                                /**es con plan funerario de uso inmediato o sin plan */
+                                if ($articulo['descuento_b'] == 1) {
+                                    $articulo['importe'] = $articulo['cantidad'] * $articulo['costo_neto_descuento'];
+                                } else {
+                                    $articulo['importe'] = $articulo['cantidad'] * $articulo['costo_neto_normal'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
             /**DEFINIENDO EL STATUS DE LA VENTA*/
             if ($solicitud['status_b'] == 0) {
                 $solicitud['status_texto'] = 'Cancelada';
