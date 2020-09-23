@@ -3494,7 +3494,16 @@ class FunerariaController extends ApiController
 
 
             /**actualizo el inventario */
-
+            //return $this->errorResponse($detalle_inventario, 409);
+            foreach ($detalle_inventario as $index_detalle => $detalle) {
+                DB::table('inventario')
+                    ->where('articulos_id', '=', $detalle['articulos_id'])
+                    ->where('lotes_id', '=', $detalle['lotes_id'])->update(
+                        [
+                            'existencia' => $detalle['existencia']
+                        ]
+                    );
+            }
 
             /**eliminando los articulos y servicios anteriores */
             DB::table('venta_detalle')->where('movimientos_inventario_id', '=', $id_movimiento_inventario)->delete();
@@ -3515,16 +3524,7 @@ class FunerariaController extends ApiController
                 );
             }
 
-            //return $this->errorResponse($detalle_inventario, 409);
-            foreach ($detalle_inventario as $index_detalle => $detalle) {
-                DB::table('inventario')
-                    ->where('articulos_id', '=', $detalle['articulos_id'])
-                    ->where('lotes_id', '=', $detalle['lotes_id'])->update(
-                        [
-                            'existencia' => $detalle['existencia']
-                        ]
-                    );
-            }
+
 
             $id_return = $request->id_servicio;
             DB::commit();
@@ -4366,7 +4366,7 @@ class FunerariaController extends ApiController
     }
 
     /**obteniendo los articulos y servicios para la venta y servicios */
-    public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '')
+    public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '', $solo_con_existencia = 0)
     {
         $descripcion = $request->descripcion;
         $numero_control = $request->numero_control;
@@ -4377,7 +4377,12 @@ class FunerariaController extends ApiController
                 '(NULL) AS existencia'
             )
         )
-            ->with('inventario')
+            ->with(['inventario' => function ($q) use ($solo_con_existencia) {
+                if ($solo_con_existencia != 0) {
+                    $q->where('existencia', '>', 0);
+                }
+            }])
+
             ->with('categoria')
             ->with('tipo_articulo')
             ->where('categorias_id', '<>', '4')
@@ -4466,107 +4471,6 @@ class FunerariaController extends ApiController
 
 
 
-
-
-
-    /**obteniendo los articulos y servicios para la venta y servicios en el buscador de articulos */
-    public function get_inventario_buscador(Request $request, $id_articulo = 'all', $paginated = '')
-    {
-        $descripcion = $request->descripcion;
-        $numero_control = $request->numero_control;
-        $categoria_id = $request->categorias_id;
-        $resultado_query =  Articulos::select(
-            '*',
-            DB::raw(
-                '(NULL) AS existencia'
-            )
-        )
-            ->with('inventario')
-            ->with('categoria')
-            ->with('tipo_articulo')
-            ->where('categorias_id', '<>', '4')
-            ->where('status', '<>', 0)
-            ->where('descripcion', 'like', '%' . $descripcion . '%')
-            ->where(function ($q) use ($numero_control) {
-                if (trim($numero_control) != '') {
-                    $q->where('articulos.codigo_barras', '=', $numero_control);
-                }
-            })
-            ->where(function ($q) use ($categoria_id) {
-                if (trim($categoria_id) != '') {
-                    $q->where('articulos.categorias_id', '=', $categoria_id);
-                }
-            })
-            ->get();
-
-        $resultado = array();
-        if ($paginated == 'paginated') {
-            /**queire el resultado paginado */
-            $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado = &$resultado_query['data'];
-        } else {
-            $resultado_query = $resultado_query->toArray();
-            $resultado = &$resultado_query;
-        }
-
-
-        foreach ($resultado as $key_articulo => &$articulo) {
-            if ($articulo['status'] == 1) {
-                $articulo['estatus_texto'] = 'Activo';
-            } else {
-                $articulo['estatus_texto'] = 'Deshabilitado';
-            }
-
-            /**actualizando iva texto y caduca texto */
-            if ($articulo['grava_iva_b'] == 1) {
-                $articulo['grava_iva_texto'] = 'si';
-            } else {
-                $articulo['grava_iva_texto'] = 'no';
-            }
-            if ($articulo['caduca_b'] == 1) {
-                $articulo['caduca_texto'] = 'si';
-            } else {
-                $articulo['caduca_texto'] = 'no';
-            }
-
-            if ($articulo['tipo_articulos_id'] == 2) {
-                $articulo['codigo_barras'] = 'N/A';
-            }
-
-            if ($articulo['tipo_articulos_id'] != 2) {
-                /**sumando existencia */
-                $existencia = 0;
-                foreach ($articulo['inventario'] as $key_inventario => &$inventario) {
-                    $existencia += $inventario['existencia'];
-                }
-                $articulo['existencia'] = $existencia;
-
-
-                if ($existencia < $articulo['minimo']) {
-                    $articulo['estatus_inventario_b'] = '0';
-                    $articulo['estatus_inventario_texto'] = 'Desabastecido';
-                } elseif ($existencia <= $articulo['maximo']) {
-                    $articulo['estatus_inventario_b'] = '1';
-                    $articulo['estatus_inventario_texto'] = 'Abastecido';
-                } else {
-                    $articulo['estatus_inventario_b'] = '2';
-                    $articulo['estatus_inventario_texto'] = 'Sobrestock';
-                }
-            } else {
-                $articulo['existencia'] = 'N/A';
-
-
-                $articulo['estatus_inventario_b'] = '1';
-                $articulo['estatus_inventario_texto'] = 'N/A';
-            }
-
-
-
-            /**veirifanco los estatus del inventario */
-        }
-
-        return $resultado_query;
-    }
 
     /**categorias para filtrar los articulos en la venta en el servicio funerario */
     public function get_categorias_servicio()
