@@ -387,7 +387,7 @@
         </p>
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">sexta.- </span>
-            A fin de que “La Empresa” esté en posibilidad de arreglar el lugar donde se realizara el servicio de
+            A fin de que “La Empresa” esté en posibilidad de arreglar el lugar donde se realizará el servicio de
             inhumación motivo de este convenio, así como de proporcionar el equipo adecuado y necesario para el mismo,
             “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
                 class="uppercase bold texto-sm">cinco</span> horas de anticipación.
@@ -400,7 +400,7 @@
         </p>
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">sexta.- </span>
-            A fin de que “La Empresa” esté en posibilidad de arreglar el lugar donde se realizara el servicio de
+            A fin de que “La Empresa” esté en posibilidad de arreglar el lugar donde se realizará el servicio de
             inhumación de cenizas motivo de este convenio, así como de proporcionar el equipo adecuado y necesario para
             el mismo,
             “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
