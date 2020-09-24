@@ -6,7 +6,6 @@
 /public/mix-manifest.json
 /public/js/*
 /public/build
-/public/mix-manifest.json
 /public/js/chunks
 /public/js/app.js
 /storage/*.key
