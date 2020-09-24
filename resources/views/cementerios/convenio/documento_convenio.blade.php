@@ -160,6 +160,8 @@
                 class="uppercase bold texto-sm">{{ NumerosEnLetras::convertir($empresa->registro_publico['num_np']) }}</span>),
             licenciado <span class="uppercase bold texto-sm">{{ $empresa->registro_publico['fe_lic'] }}</span>.
         </p>
+
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
             <span class="uppercase bold">II. </span>
             Sigue declarando “La empresa” que los servicios de inhumación amparados por este convenio,
@@ -174,6 +176,23 @@
             <span class="uppercase bold texto-sm">{{ $empresa->cementerio->ciudad }},
                 {{ $empresa->cementerio->estado }}</span>.
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold">II. </span>
+            Sigue declarando “La empresa” que los servicios de inhumación de cenizas amparados por este convenio,
+            se realizaran en el cementerio denominado <span
+                class="uppercase bold texto-sm">{{ $empresa->cementerio['cementerio'] }}</span>,
+            ubicado en <span class="uppercase bold texto-sm">{{ $empresa->cementerio->calle }},
+                #.
+                {{ ($empresa->cementerio->num_ext)!=0 ? $empresa->cementerio->num_ext:'N/A' }}
+                , Col.
+                {{ $empresa->cementerio->colonia }} C.P {{ $empresa->cementerio->cp }}</span>,
+            en el municipio de
+            <span class="uppercase bold texto-sm">{{ $empresa->cementerio->ciudad }},
+                {{ $empresa->cementerio->estado }}</span>.
+        </p>
+        @endif
+
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold">III. </span>
@@ -392,6 +411,12 @@
             “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
                 class="uppercase bold texto-sm">cinco</span> horas de anticipación.
         </p>
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
+            “La Empresa” ofrecerá el servicio de inhumación amparado por este convenio de <span
+                class="uppercase bold texto-sm">lunes a domingo de, {{ $empresa->cementerio->hora_apertura }} a
+                {{ $empresa->cementerio->hora_cierre }} horas</span>.
+        </p>
         @else
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Quinta.- </span>
@@ -406,25 +431,47 @@
             “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
                 class="uppercase bold texto-sm">cinco</span> horas de anticipación.
         </p>
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
+            “La Empresa” ofrecerá el servicio de inhumación de cenizas amparado por este convenio de <span
+                class="uppercase bold texto-sm">lunes a domingo de, {{ $empresa->cementerio->hora_apertura }} a
+                {{ $empresa->cementerio->hora_cierre }} horas</span>.
+        </p>
         @endif
 
 
 
-
-
-
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
             “La Empresa” ofrecerá el servicio de inhumación amparado por este convenio de <span
                 class="uppercase bold texto-sm">lunes a domingo de, {{ $empresa->cementerio->hora_apertura }} a
                 {{ $empresa->cementerio->hora_cierre }} horas</span>.
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
+            “La Empresa” ofrecerá el servicio de inhumación de cenizas amparado por este convenio de <span
+                class="uppercase bold texto-sm">lunes a domingo de, {{ $empresa->cementerio->hora_apertura }} a
+                {{ $empresa->cementerio->hora_cierre }} horas</span>.
+        </p>
+        @endif
 
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Octava.- </span>
             “La Empresa” se reserva el dominio del derecho de inhumación a perpetuidad hasta en tanto no hayan sido
             cubierta en forma total el pago de las aportaciones especificadas en la cláusula tercera.
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Octava.- </span>
+            “La Empresa” se reserva el dominio del derecho de inhumación de cenizas a perpetuidad hasta en tanto no
+            hayan sido
+            cubierta en forma total el pago de las aportaciones especificadas en la cláusula tercera.
+        </p>
+        @endif
+
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Novena.- </span>
@@ -442,16 +489,32 @@
             cliente no se encuentra al corriente con el pago de la cuota por concepto de mantenimiento del parque
             funerario
         </p>
+
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima primera.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima primera.- </span>
             Ambas partes acuerdan expresamente que el destino del lote mencionado en la cláusula primera será únicamente
             para la inhumación de los restos humanos que “El Cliente” señale por escrito a “La Empresa”, y que una vez
             ocupadas las gavetas respectivas, los restos solamente podrán ser exhumados cuando se hayan cumplido las
             disposiciones establecidas por las autoridades competentes.
         </p>
-
+        @else
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima segunda.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima primera.- </span>
+            Ambas partes acuerdan expresamente que el destino del lote mencionado en la cláusula primera será únicamente
+            para la inhumación de cenizas que “El Cliente” señale por escrito a “La Empresa”, y que una vez
+            ocupadas las gavetas respectivas, los restos solamente podrán ser exhumados cuando se hayan cumplido las
+            disposiciones establecidas por las autoridades competentes.
+        </p>
+        @endif
+
+
+
+
+
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Décima segunda.- </span>
             A fin de recibir el servicio de inhumación amparado por este convenio, “El Cliente” entregara en las
             instalaciones de “La Empresa”, ubicadas en <span class="uppercase texto-sm bold">{{ $empresa->calle }},
                 {{ $empresa->num_ext }},
@@ -459,12 +522,35 @@
                 {{ $empresa->colonia }} C.P {{ $empresa->cp }}. {{ $empresa->ciudad }}, {{ $empresa->estado }}
             </span>, de esta ciudad:
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Décima segunda.- </span>
+            A fin de recibir el servicio de inhumación de cenizas amparado por este convenio, “El Cliente” entregara en
+            las
+            instalaciones de “La Empresa”, ubicadas en <span class="uppercase texto-sm bold">{{ $empresa->calle }},
+                {{ $empresa->num_ext }},
+                Col.
+                {{ $empresa->colonia }} C.P {{ $empresa->cp }}. {{ $empresa->ciudad }}, {{ $empresa->estado }}
+            </span>, de esta ciudad:
+        </p>
+        @endif
+
+
+
         <div class="lista pl-11 -mt-1">
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
+
+                @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
                 <span class="ml-2">
                     El convenio que ampara dicho servicio de inhumación
                 </span>
+                @else
+                <span class="ml-2">
+                    El convenio que ampara dicho servicio de inhumación de cenizas
+                </span>
+                @endif
+
             </p>
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">b) </span>
@@ -489,7 +575,7 @@
         </div>
 
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima tercera.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima tercera.- </span>
             “El Cliente” declara haber leído y conocer perfectamente el reglamento interior de el <span
                 class="uppercase bold texto-sm">"{{ $empresa->cementerio->cementerio }}"</span>, el cual
             acepta y se obliga a respetar y a hacer respetar, así como se compromete a cumplir todas las disposiciones
@@ -498,7 +584,7 @@
         </p>
 
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima cuarta.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima cuarta.- </span>
             En caso de cambio de domicilio por parte de “El Cliente” se conviene que, en este, en un plazo máximo de
             <span class="uppercase bold texto-sm">quince días</span>, después de efectuado el cambio, deberá comunicarlo
             por escrito a “La Empresa” con acuse de
@@ -506,13 +592,13 @@
         </p>
 
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima quinta.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima quinta.- </span>
             Los servicios amparados por este convenio únicamente podrán ser ofrecidos a “El Cliente” o a uno de los
-            beneficiarios establecidos en la cláusula Decima Sexta.
+            beneficiarios establecidos en la cláusula Décima Sexta.
         </p>
 
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima sexta.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima sexta.- </span>
             “El Cliente” designa como beneficiario(s) a las siguiente(s) persona(s):
         </p>
         @if(count($datos['beneficiarios'])>0)
@@ -558,7 +644,7 @@
         </p>
 
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima séptima.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima séptima.- </span>
             “El Cliente” tendrá la facultad de ceder los derechos de uso de este convenio, mediante su renuncia a la
             membresía de “La Empresa”, lo cual podrá hacer mediante la entrega de un escrito a “La Empresa” con acuse de
             recibo, siempre y cuando este al corriente de sus pagos. En dicho escrito deberá especificar el nombre de la
@@ -566,7 +652,7 @@
         </p>
 
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima octava.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima octava.- </span>
             Para la cesión de los derechos de uso de este convenio, “El Cliente” deberá pagar en las instalaciones de
             “La Empresa” un cargo por concepto de la realización de dicho trámite. El importe del mismo será el que
             conste en lista de precios de “La Empresa” al momento de realizar la cesión antes mencionada. El adquiriente
@@ -576,13 +662,14 @@
         </p>
 
         <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">Decima novena.- </span>
+            <span class="uppercase bold texto-sm underline pr-2">Décima novena.- </span>
             En caso de que al realizar la cesión de derechos de este convenio, fuera necesario cubrir algún tipo de
             cuota,
             derecho, impuesto, etc. A entidades ajenas a “La Empresa”, tales como la secretaria de salud, Gobierno
             Municipal, etc., “El Cliente” será responsable de pago de las mismas.
         </p>
 
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima.- </span>
             “El Cliente” podrá designar un titular sustituto, el cual debe estar plenamente facultado para decidir sobre
@@ -593,7 +680,26 @@
             designación o modificación, anexando el escrito de
             aceptación por parte del titular sustituto.
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima.- </span>
+            “El Cliente” podrá designar un titular sustituto, el cual debe estar plenamente facultado para decidir sobre
+            la utilización del servicio de inhumación de cenizas motivo de este convenio, cuando el cliente este
+            imposibilitado
+            para hacerlo. Asimismo, podrá modificar esta designación en cualquier momento, obligándose en ambos casos a
+            hacer a notificación por escrito con acuse de recibo, tanto “La Empresa” como el titular sustituto, en un
+            plazo de <span class="uppercase bold texto-sm">quince días</span> naturales después de efectuada dicha
+            designación o modificación, anexando el escrito de
+            aceptación por parte del titular sustituto.
+        </p>
+        @endif
 
+
+
+
+
+
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima primera.- </span>
             El importe de los gastos, derecho y/o erogaciones efectuados por “La Empresa” por cuenta de “El Cliente”,
@@ -601,6 +707,17 @@
             los conceptos adicionales a los ofrecidos por este convenio, deberán ser cubiertos en las oficinas de “La
             Empresa” a más tardar dos horas antes de que se realice el servicio de inhumación.
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima primera.- </span>
+            El importe de los gastos, derecho y/o erogaciones efectuados por “La Empresa” por cuenta de “El Cliente”,
+            por
+            los conceptos adicionales a los ofrecidos por este convenio, deberán ser cubiertos en las oficinas de “La
+            Empresa” a más tardar dos horas antes de que se realice el servicio de inhumación de cenizas.
+        </p>
+        @endif
+
+
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima segunda.- </span>
@@ -737,12 +854,13 @@
             constituirá un anexo del mismo, y, por lo tanto, formará parte integral del presente convenio.
         </p>
 
+
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Vigésima novena.- </span>
             Para ofrecer servicios de inhumación en cripta el cuerpo deberá ser debidamente embalsamado en la funeraria
             que le está ofreciendo el servicio.
         </p>
-
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Trigésima.- </span>
             Para la interpretación, cumplimiento cualquier controversia con motivo del presente convenio, las partes se
@@ -752,6 +870,17 @@
             y renunciar
             desde luego a cualquier otro fuero que por la razón de su domicilio podría convenir.
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Vigésima novena.- </span>
+            Para la interpretación, cumplimiento cualquier controversia con motivo del presente convenio, las partes se
+            someten a la jurisdicción y competencia de los tribunales del fuero común de <span
+                class="uppercase bold texto-sm">{{ $empresa->registro_publico['ciudad_np'] }}</span>,
+            <span class="uppercase bold texto-sm">{{ $empresa->registro_publico['estado_np'] }}</span>
+            y renunciar
+            desde luego a cualquier otro fuero que por la razón de su domicilio podría convenir.
+        </p>
+        @endif
 
         <div class="w-100 center">
             <div class="w-50 float-left mt-50">
