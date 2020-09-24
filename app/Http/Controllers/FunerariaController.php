@@ -3217,7 +3217,6 @@ class FunerariaController extends ApiController
                                             }
                                         }
 
-
                                         $existencia_inventario_tomando_en_cuenta_el_contrato = 0;
                                         /**verificando si el lote tiene suficiente existencia tomando en cuenta si el contrato ya tiene o no asignado articulos */
                                         if ($tenia_articulos) {
@@ -3233,8 +3232,6 @@ class FunerariaController extends ApiController
                                         /**se suma la cantidad que esta en el inventario */
                                         $existencia_inventario_tomando_en_cuenta_el_contrato += $lote['existencia'];
 
-
-
                                         if ($existencia_inventario_tomando_en_cuenta_el_contrato < $cantidad_lote_solicitado) {
                                             return $this->errorResponse('No se tiene suficiente cantidad del artículo ' . $articulo_servicio['descripcion'] . ' en el lote ' . $lote['lotes_id'], 409);
                                         } else {
@@ -3243,12 +3240,11 @@ class FunerariaController extends ApiController
                                              * articulos
                                              */
                                             array_push($detalle_inventario, [
-                                                'lotes_id' => $articulo_servicio_index['lote'],
-                                                'articulos_id' => $articulo_servicio_index['id'],
+                                                'lotes_id' => $lote['lotes_id'],
+                                                'articulos_id' => $lote['articulos_id'],
                                                 'existencia' => $existencia_inventario_tomando_en_cuenta_el_contrato - $cantidad_lote_solicitado
                                             ]);
                                         }
-                                        //return $this->errorResponse($detalle_venta, 409);
                                         break;
                                     } //fin if existe lote
                                 }
@@ -3455,26 +3451,26 @@ class FunerariaController extends ApiController
                             break;
                         }
                     }
+
                     //si no esta se aumenta al inventario
                     $suma_quitado = 0;
                     if (!$esta) {
                         /**hago la suma total del material que quitaron para aumentarlo */
+
                         foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_sumar => $articulo_contrato_sumar) {
                             if ($articulo_contrato['lotes_id'] == $articulo_contrato_sumar['lotes_id'] && $articulo_contrato['articulos_id'] == $articulo_contrato_sumar['articulos_id']) {
                                 array_push($index, $index_sumar);
                                 $suma_quitado += $articulo_contrato_sumar['cantidad'];
                             }
                         }
-
-
-                        if ($detalle_inventario != null) {
-                            foreach ($detalle_inventario as $index_detalle => &$detalle) {
-                                if ($detalle['lotes_id'] == $articulo_contrato['lotes_id'] && $detalle['articulos_id'] == $articulo_contrato['articulos_id']) {
-                                    $detalle['existencia'] +=  $suma_quitado;
-                                }
+                        $esta_row = false;
+                        foreach ($detalle_inventario as $index_detalle => &$detalle) {
+                            if ($detalle['lotes_id'] == $articulo_contrato['lotes_id'] && $detalle['articulos_id'] == $articulo_contrato['articulos_id']) {
+                                $esta_row = true;
+                                $detalle['existencia'] +=  $suma_quitado;
                             }
-                        } else {
-                            $articulo_encontrado = false;
+                        }
+                        if ($esta_row == false) {
                             foreach ($inventario as $articulo) {
                                 foreach ($articulo['inventario'] as &$lote) {
                                     if ($lote['lotes_id'] == $articulo_contrato['lotes_id'] && $lote['articulos_id'] == $articulo_contrato['articulos_id']) {
@@ -3484,29 +3480,13 @@ class FunerariaController extends ApiController
                                             'articulos_id' => $articulo_contrato['articulos_id'],
                                             'existencia' => $lote['existencia']
                                         ]);
-                                        break;
                                     }
                                 }
                             }
                         }
-                    }
+                    } //fin de si no esta el articulo ya requerido para el servicio
                 }
             } //fin if isset articulos en el contrato
-
-            //detalle_inventario
-            //$detalle_venta
-
-
-
-            /**al tener el registro de la operacion se debe de actualizar con los datos segun los conceptos y cliente que se manda para la operacion */
-            /*$datos['total'] = round($total, 2, PHP_ROUND_HALF_UP);
-            $datos['impuestos'] = round($impuestos, 2, PHP_ROUND_HALF_UP);
-            $datos['descuento'] = round($descuento, 2, PHP_ROUND_HALF_UP);
-            $datos['subtotal'] = round($subtotal, 2, PHP_ROUND_HALF_UP);*/
-            //return $this->errorResponse($datos, 409);
-
-
-
 
             /**actualizo el inventario */
             //return $this->errorResponse($detalle_inventario, 409);
@@ -3538,7 +3518,6 @@ class FunerariaController extends ApiController
                     ]
                 );
             }
-
             $id_return = $request->id_servicio;
             DB::commit();
             return $id_return;
@@ -4415,7 +4394,7 @@ class FunerariaController extends ApiController
     }
 
     /**obteniendo los articulos y servicios para la venta y servicios */
-    public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '', $solo_con_existencia = 0)
+    public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '', $solo_con_existencia = 0, $material_velacion = 0)
     {
         $descripcion = $request->descripcion;
         $numero_control = $request->numero_control;
@@ -4434,7 +4413,7 @@ class FunerariaController extends ApiController
 
             ->with('categoria')
             ->with('tipo_articulo')
-            ->where('categorias_id', '<>', '4')
+            ->where('categorias_id', '<>', $material_velacion == 0 ? '4' : '')
             ->where('status', '<>', 0)
             ->where('descripcion', 'like', '%' . $descripcion . '%')
             ->where(function ($q) use ($numero_control) {
