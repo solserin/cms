@@ -3037,7 +3037,6 @@ class FunerariaController extends ApiController
                             /**comienzo recorrer el invnetario actual para comparar la existencia que pide vender el operador*/
                             if ($articulo['tipo_articulos_id'] != 2) {
                                 /**no es de tipo servicio */
-                                $inventario_disponible = false;
                                 /**verificando si la operacion ya existia, y ver si la cantidd que pide sigue estando disponible */
                                 /**comienza existia   if ($operacion_existia) {*/
                                 /**la operacion ya existia, por lo tanto se revisa la existencia actual en el inventario y la que el usuario pide de nuevo */
@@ -3055,7 +3054,6 @@ class FunerariaController extends ApiController
                                                 $tenia_articulos = true;
                                             }
                                         }
-
                                         /**se verifica la existencia que hay actualmente mas la que tiene el servicio actualmente y ver si hay disponibilidad */
                                         /**verifico si el lote fue solicitado en diferentes precios y cantidades */
                                         /**la existencia actual en el inventario de este lote de este articulo esta en $lote['existencia'] */
@@ -3249,7 +3247,7 @@ class FunerariaController extends ApiController
                                         }
                                         //return $this->errorResponse($detalle_venta, 409);
                                         break;
-                                    }
+                                    } //fin if existe lote
                                 }
                                 /**en 
                                  * caso de 
@@ -3457,7 +3455,6 @@ class FunerariaController extends ApiController
                                 }
                             }
                         } else {
-
                             $articulo_encontrado = false;
                             foreach ($inventario as $articulo) {
                                 foreach ($articulo['inventario'] as &$lote) {
@@ -3476,7 +3473,7 @@ class FunerariaController extends ApiController
                         }
                     }
                 }
-            }
+            } //fin if isset articulos en el contrato
 
             //detalle_inventario
             //$detalle_venta
@@ -3783,7 +3780,6 @@ class FunerariaController extends ApiController
                             $articulo['categoria'] = $inventario['categoria']['categoria'];
                             $articulo['tipo'] = $inventario['tipo_articulo']['tipo'];
                             $articulo['codigo_barras'] = $inventario['codigo_barras'];
-
                             /**importa para cuando es con plan funerario a futuro  */
                             if ($solicitud['plan_funerario_futuro_b'] == 1 && trim($solicitud['ventas_planes_id']) != '') {
                                 if ($articulo['plan_b'] == 1) {
@@ -3796,6 +3792,10 @@ class FunerariaController extends ApiController
                                 } else {
                                     $articulo['importe'] = $articulo['cantidad'] * $articulo['costo_neto_normal'];
                                 }
+                            }
+
+                            if ($inventario['tipo_articulos_id'] == 2) {
+                                $articulo['lotes_id'] = 'N/A';
                             }
                         }
                     }
