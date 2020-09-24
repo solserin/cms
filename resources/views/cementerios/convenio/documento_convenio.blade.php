@@ -269,6 +269,7 @@
                     Arreglar el lugar del sepelio, proporcionando el equipo necesario y adecuado para el mismo.
                 </span>
             </p>
+            @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">d) </span>
                 <span class="ml-2">
@@ -285,6 +286,15 @@
                     Conservar y mantener el parque funerario.
                 </span>
             </p>
+            @else
+            <p class="texto-base justificar line-base">
+                <span class="lowercase bold texto-sm -ml-6">d) </span>
+                <span class="ml-2">
+                    Conservar y mantener el parque funerario.
+                </span>
+            </p>
+            @endif
+
         </div>
 
         <p class="texto-base justificar line-base">
@@ -365,7 +375,7 @@
             saldo total que persista hasta la fecha y cualquier otro adeudo del servicio contratado.
         </p>
 
-
+        @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Quinta.- </span>
             Cuando “El Cliente” requiera un servicio de inhumación, deberá CUBRIR en las oficinas
@@ -375,7 +385,6 @@
             El monto de dicho cargo será por el que conste en las listas de precios de “La Empresa” en el momento de
             solicitar el servicio.
         </p>
-
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">sexta.- </span>
             A fin de que “La Empresa” esté en posibilidad de arreglar el lugar donde se realizara el servicio de
@@ -383,6 +392,26 @@
             “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
                 class="uppercase bold texto-sm">cinco</span> horas de anticipación.
         </p>
+        @else
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">Quinta.- </span>
+            Cuando “El Cliente” requiera un servicio de inhumación de cenizas, deberá acudir a las oficinas
+            de “La Empresa” para solicitar una cita para el depósito de cenizas.
+        </p>
+        <p class="texto-base justificar line-base">
+            <span class="uppercase bold texto-sm underline pr-2">sexta.- </span>
+            A fin de que “La Empresa” esté en posibilidad de arreglar el lugar donde se realizara el servicio de
+            inhumación de cenizas motivo de este convenio, así como de proporcionar el equipo adecuado y necesario para
+            el mismo,
+            “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
+                class="uppercase bold texto-sm">cinco</span> horas de anticipación.
+        </p>
+        @endif
+
+
+
+
+
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
