@@ -3097,7 +3097,7 @@ class FunerariaController extends ApiController
                                                                     } else {
                                                                         /**no grava IVA */
                                                                         $subtotal += (($articulo_servicio_index['costo_neto_descuento']) * $articulo_servicio_index['cantidad']);
-                                                                        $descuento += ((($articulo_servicio_index['costo_neto_normal']) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
+                                                                        $descuento += ((($articulo_servicio_index['costo_neto_normal']) - ($articulo_servicio_index['costo_neto_descuento'])) * $articulo_servicio_index['cantidad']);
                                                                     }
                                                                     //sumando el total
                                                                     $total += $articulo_servicio_index['costo_neto_descuento'] * $articulo_servicio_index['cantidad'];
@@ -3168,7 +3168,7 @@ class FunerariaController extends ApiController
                                                             } else {
                                                                 /**no grava IVA */
                                                                 $subtotal += (($articulo_servicio_index['costo_neto_descuento']) * $articulo_servicio_index['cantidad']);
-                                                                $descuento += ((($articulo_servicio_index['costo_neto_normal']) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
+                                                                $descuento += ((($articulo_servicio_index['costo_neto_normal']) - ($articulo_servicio_index['costo_neto_descuento'])) * $articulo_servicio_index['cantidad']);
                                                             }
                                                             //sumando el total
                                                             $total += $articulo_servicio_index['costo_neto_descuento'] * $articulo_servicio_index['cantidad'];
@@ -3302,7 +3302,7 @@ class FunerariaController extends ApiController
                                                     } else {
                                                         /**no grava IVA */
                                                         $subtotal += (($articulo_servicio['costo_neto_descuento']) * $articulo_servicio['cantidad']);
-                                                        $descuento += ((($articulo_servicio['costo_neto_normal']) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
+                                                        $descuento += ((($articulo_servicio['costo_neto_normal']) - ($articulo_servicio['costo_neto_descuento'])) * $articulo_servicio['cantidad']);
                                                     }
                                                     //sumando el total
                                                     $total += $articulo_servicio['costo_neto_descuento'] * $articulo_servicio['cantidad'];
@@ -3373,7 +3373,7 @@ class FunerariaController extends ApiController
                                             } else {
                                                 /**no grava IVA */
                                                 $subtotal += (($articulo_servicio['costo_neto_descuento']) * $articulo_servicio['cantidad']);
-                                                $descuento += ((($articulo_servicio['costo_neto_normal']) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
+                                                $descuento += (($articulo_servicio['costo_neto_normal'] - $articulo_servicio['costo_neto_descuento']) * $articulo_servicio['cantidad']);
                                             }
                                             //sumando el total
                                             $total += $articulo_servicio['costo_neto_descuento'] * $articulo_servicio['cantidad'];
@@ -3518,6 +3518,25 @@ class FunerariaController extends ApiController
                     ]
                 );
             }
+
+
+            /**actualizando totales de la operacion */
+            DB::table('operaciones')->where('servicios_funerarios_id', $request->id_servicio)->update(
+                [
+                    'subtotal' => $subtotal,
+                    'descuento' => $descuento,
+                    'impuestos' => $impuestos,
+                    'total' => $total
+                ]
+            );
+
+            /* $datos['subtotal'] = $subtotal;
+            $datos['descuento'] = $descuento;
+            $datos['impuestos'] = $impuestos;
+            $datos['total'] = $total;
+            return $this->errorResponse($datos, 409);
+            */
+
             $id_return = $request->id_servicio;
             DB::commit();
             return $id_return;
@@ -3778,14 +3797,55 @@ class FunerariaController extends ApiController
                             /**importa para cuando es con plan funerario a futuro  */
                             if ($solicitud['plan_funerario_futuro_b'] == 1 && trim($solicitud['ventas_planes_id']) != '') {
                                 if ($articulo['plan_b'] == 1) {
+                                    $articulo['subtotal'] = 0;
+                                    $articulo['descuento'] = 0;
+                                    $articulo['impuestos'] = 0;
+                                    $articulo['costo_neto'] = 0;
                                     $articulo['importe'] = 0;
                                 }
                             } else {
                                 /**es con plan funerario de uso inmediato o sin plan */
                                 if ($articulo['descuento_b'] == 1) {
-                                    $articulo['importe'] = $articulo['cantidad'] * $articulo['costo_neto_descuento'];
+                                    //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
+                                    if ($articulo['costo_neto_normal'] >= $articulo['costo_neto_descuento']) {
+                                        /**si se puede aplicar descuento */
+                                        if ($articulo['facturable_b'] == 1) {
+
+                                            /**se desglosa el IVA */
+                                            $articulo['subtotal'] = round((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['impuestos'] = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['descuento'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
+                                            $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                        } else {
+                                            /**no grava IVA */
+                                            $articulo['subtotal'] = $articulo['costo_neto_normal'];
+                                            $articulo['impuestos'] = 0;
+                                            $articulo['descuento'] = $articulo['costo_neto_normal'] - $articulo['costo_neto_descuento'];
+                                            $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
+                                            $articulo['importe'] = $articulo['costo_neto'] * $articulo['cantidad'];
+                                        }
+                                    } else {
+                                        /**no se puede proceder por que el precio de descuento no es correcto */
+                                        return $this->errorResponse('Verifique que el costo de descuento es menor que el precio normal', 409);
+                                    }
                                 } else {
-                                    $articulo['importe'] = $articulo['cantidad'] * $articulo['costo_neto_normal'];
+                                    /**fueron puros precios sin descuento */
+                                    if ($articulo['facturable_b'] == 1) {
+                                        $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                        $articulo['impuestos'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                        $articulo['descuento'] = 0;
+                                        $articulo['costo_neto'] = $articulo['costo_neto_normal'];
+                                        $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                    } else {
+                                        /**no grava IVA */
+                                        $articulo['subtotal'] = $articulo['costo_neto_normal'];
+                                        $articulo['impuestos'] = 0;
+                                        $articulo['descuento'] = 0;
+                                        $articulo['costo_neto'] = $articulo['costo_neto_normal'];
+                                        $articulo['importe'] =
+                                            round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                    }
                                 }
                             }
 
