@@ -42,6 +42,8 @@ Route::get('funeraria/get_hoja_solicitud', 'FunerariaController@get_hoja_solicit
 Route::get('funeraria/hoja_preautorizacion', 'FunerariaController@hoja_preautorizacion');
 Route::get('funeraria/certificado_defuncion', 'FunerariaController@certificado_defuncion');
 Route::get('funeraria/instrucciones_servicio_funerario', 'FunerariaController@instrucciones_servicio_funerario');
+Route::get('funeraria/contancia_de_embalsamiento', 'FunerariaController@contancia_de_embalsamiento');
+Route::get('funeraria/material_velacion_rentado', 'FunerariaController@material_velacion_rentado');
 Route::get('funeraria/get_estados_civiles', 'FunerariaController@get_estados_civiles');
 Route::get('funeraria/get_escolaridades', 'FunerariaController@get_escolaridades');
 Route::get('funeraria/get_afiliaciones', 'FunerariaController@get_afiliaciones');

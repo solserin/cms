@@ -2857,8 +2857,8 @@ class FunerariaController extends ApiController
                     'estado_afectado_id' => $request->estado_cuerpo['value'],
                     /**ACTUALIZANDO LOS DESTINOS DEL SERVICIO */
                     'embalsamar_b' => $request->embalsamar_b != 1 ? 0 : 1,
-                    'preparador' => $request->preparador != NULL ? strtoupper($request->preparador) : NULL,
-                    'medico_responsable_embalsamado' => $request->embalsamar_b != 1 ?  NULL : strtoupper($request->medico_responsable_embalsamado),
+                    'preparador' => $request->preparador != NULL ? ($request->embalsamar_b == 1 ? strtoupper($request->preparador) : NULL) : NULL,
+                    'medico_responsable_embalsamado' => $request->embalsamar_b != 1 ?  NULL : ($request->embalsamar_b == 1 ? strtoupper($request->medico_responsable_embalsamado) : NULL),
                     'velacion_b' => $request->velacion_b != 1 ? 0 : 1,
                     'lugares_servicios_id' => $request->velacion_b != 1 ?  NULL : strtoupper($request->lugar_servicio['value']),
                     'direccion_velacion' => $request->velacion_b != 1 ?  NULL : strtoupper($request->direccion_velacion),
@@ -3739,6 +3739,7 @@ class FunerariaController extends ApiController
             ->with('recogio:id,nombre')
             ->with('estado_civil')
             ->with('terreno')
+            ->with('titulo')
             ->with('materialrentado')
             ->with('operacion.movimientoinventario.articulosserviciofunerario')
             ->with('operacion.cliente')
@@ -4276,18 +4277,18 @@ class FunerariaController extends ApiController
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            /*  $email =  $request->email_send === 'true' ? true : false;
+            $email =  $request->email_send === 'true' ? true : false;
             $email_to = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
             $id_servicio = $requestVentasList['id_servicio'];
-*/
+
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
-            $id_servicio = 1;
+            /*$id_servicio = 1;
             $email = false;
             $email_to = 'hector@gmail.com';
-
+*/
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -4348,6 +4349,176 @@ class FunerariaController extends ApiController
             return $this->errorResponse('Error al solicitar los datos', 409);
         }
     }
+
+
+    public function contancia_de_embalsamiento(Request $request)
+    {
+
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /*$email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_servicio = $requestVentasList['id_servicio'];
+*/
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        $id_servicio = 1;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+        //obtengo la informacion de esa venta
+        $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+        if (empty($datos_solicitud)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+
+        /**verificando si el documento aplica para esta solictitud */
+        /*if ($datos_venta['numero_solicitud_raw'] == null) {
+            return 0;
+        }*/
+
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+
+        $pdf = PDF::loadView('funeraria/embalsamiento/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "CONSTANCIA DE EMBALSAMIENTO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('funeraria.embalsamiento.footer', ['empresa' => $empresa]),
+        ]);
+        if ($datos_solicitud['status_b'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('funeraria.embalsamiento.header')
+            ]);
+        } elseif ($datos_solicitud['embalsamar_b'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('funeraria.embalsamiento.noembalsamar')
+            ]);
+        }
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 18.4);
+        $pdf->setOption('margin-right', 18.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 33.4);
+        $pdf->setOption('page-size', 'letter');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_solicitud['nombre_afectado']),
+                'CONSTANCIA DE EMBALSAMIENTO',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
+    public function material_velacion_rentado(Request $request)
+    {
+
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /*$email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_servicio = $requestVentasList['id_servicio'];
+*/
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        $id_servicio = 1;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+        //obtengo la informacion de esa venta
+        $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+        if (empty($datos_solicitud)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+
+        /**verificando si el documento aplica para esta solictitud */
+        /*if ($datos_venta['numero_solicitud_raw'] == null) {
+            return 0;
+        }*/
+
+
+        $get_funeraria = new EmpresaController();
+        $empresa = $get_funeraria->get_empresa_data();
+
+        $pdf = PDF::loadView('funeraria/materialvelacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "CONSTANCIA DE EMBALSAMIENTO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+        $pdf->setOptions([
+            'title' => $name_pdf,
+            'footer-html' => view('funeraria.materialvelacion.footer', ['empresa' => $empresa]),
+        ]);
+        if ($datos_solicitud['status_b'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('funeraria.materialvelacion.header')
+            ]);
+        } elseif ($datos_solicitud['material_velacion_b'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('funeraria.materialvelacion.nohabilitado')
+            ]);
+        }
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 18.4);
+        $pdf->setOption('margin-right', 18.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 33.4);
+        $pdf->setOption('page-size', 'letter');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_solicitud['nombre_afectado']),
+                'CONSTANCIA DE EMBALSAMIENTO',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
+
+
 
 
     public function get_estados_civiles()

@@ -31,7 +31,9 @@
         collapse-action
       >
         <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Mostrar</label>
             <v-select
               :options="mostrarOptions"
@@ -41,7 +43,9 @@
               class="mb-4 sm:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Estado</label>
             <v-select
               :options="estadosOptions"
@@ -51,7 +55,9 @@
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+          >
             <label class="text-sm opacity-75">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
@@ -61,7 +67,9 @@
               class="mb-4 md:mb-0"
             />
           </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+          >
             <label class="text-sm opacity-75">Número de Control</label>
             <vs-input
               class="w-full"
@@ -78,10 +86,16 @@
         <div class="flex flex-wrap">
           <div class="w-full px-2">
             <h3 class="text-base font-semibold my-3">
-              <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Fallecido
+              <feather-icon
+                icon="UserIcon"
+                class="mr-2"
+                svgClasses="w-5 h-5"
+              />Filtrar por Nombre del Fallecido
             </h3>
           </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
+          >
             <label class="text-sm opacity-75">Nombre del Fallecido</label>
             <vs-input
               class="w-full"
@@ -122,20 +136,14 @@
             <span class="font-semibold">{{ data[indextr].servicio_id }}</span>
           </vs-td>
           <vs-td :data="data[indextr].nombre_afectado">
-            {{
-            data[indextr].nombre_afectado
-            }}
+            {{ data[indextr].nombre_afectado }}
           </vs-td>
           <vs-td :data="data[indextr].tipo_solicitud_texto">
-            {{
-            data[indextr].tipo_solicitud_texto
-            }}
+            {{ data[indextr].tipo_solicitud_texto }}
           </vs-td>
           <vs-td :data="data[indextr].fecha_solicitud_texto">
             <span class="font-medium">
-              {{
-              data[indextr].fecha_solicitud_texto
-              }}
+              {{ data[indextr].fecha_solicitud_texto }}
             </span>
           </vs-td>
 
@@ -143,8 +151,12 @@
             <p
               v-if="data[indextr].status_b == 1"
               class="font-medium text-success"
-            >{{ data[indextr].status_texto }}</p>
-            <p v-else class="text-danger font-medium">{{ data[indextr].status_texto }}</p>
+            >
+              {{ data[indextr].status_texto }}
+            </p>
+            <p v-else class="text-danger font-medium">
+              {{ data[indextr].status_texto }}
+            </p>
           </vs-td>
           <vs-td :data="data[indextr].id">
             <div class="flex flex-start py-1">
@@ -190,7 +202,12 @@
     </vs-table>
 
     <div>
-      <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
+      <vs-pagination
+        v-if="verPaginado"
+        :total="this.total"
+        v-model="actual"
+        class="mt-8"
+      ></vs-pagination>
     </div>
 
     <FormularioServicios
@@ -216,12 +233,12 @@
       :accion="accionNombre"
     ></Password>
 
-    <ReportesVentas
+    <ReportesServicio
       :verAcuse="verAcuse"
       :show="openReportes"
       @closeListaReportes="closeListaReportes"
       :id_solicitud="id_solicitud"
-    ></ReportesVentas>
+    ></ReportesServicio>
 
     <CancelarVenta
       :show="openCancelar"
@@ -230,7 +247,10 @@
       :id_solicitud="id_solicitud"
     ></CancelarVenta>
 
-    <PlanesVenta :show="openPlanesVenta" @closePlanesFuneraria="openPlanesVenta = false"></PlanesVenta>
+    <PlanesVenta
+      :show="openPlanesVenta"
+      @closePlanesFuneraria="openPlanesVenta = false"
+    ></PlanesVenta>
   </div>
 </template>
 
@@ -241,7 +261,7 @@ import funeraria from "@services/funeraria";
 import FormularioServicios from "../servicios_funerarios/FormularioServicios";
 import FormularioSolicitud from "../servicios_funerarios/FormularioSolicitud";
 
-import ReportesVentas from "../servicios_funerarios/ReportesVentas";
+import ReportesServicio from "../servicios_funerarios/ReportesServicio";
 import CancelarVenta from "../servicios_funerarios/CancelarVenta";
 
 //componente de password
@@ -257,7 +277,7 @@ export default {
     "v-select": vSelect,
     Password,
     FormularioServicios,
-    ReportesVentas,
+    ReportesServicio,
     CancelarVenta,
     PlanesVenta,
     FormularioSolicitud,

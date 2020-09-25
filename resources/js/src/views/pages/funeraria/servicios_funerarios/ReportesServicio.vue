@@ -88,34 +88,45 @@
               v-bind:key="programados.id"
               ref="row"
             >
-              <vs-td :class="[programados.status_pago == 0 ? 'text-danger' : '']">
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+              >
                 <span class="font-semibold">{{ programados.num_pago }}</span>
               </vs-td>
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >{{ programados.referencia_pago }}</vs-td>
+                >{{ programados.referencia_pago }}</vs-td
+              >
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >{{ programados.fecha_programada_abr }}</vs-td>
-              <vs-td :class="[programados.status_pago == 0 ? 'text-danger' : '']">
-                <span v-if="programados.saldo_neto > 0">{{ programados.fecha_a_pagar_abr }}</span>
+                >{{ programados.fecha_programada_abr }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+              >
+                <span v-if="programados.saldo_neto > 0">{{
+                  programados.fecha_a_pagar_abr
+                }}</span>
                 <span v-else>{{ programados.fecha_ultimo_pago_abr }}</span>
               </vs-td>
-              <vs-td :class="[programados.status_pago == 0 ? 'text-danger' : '']">
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+              >
                 $
-                {{
-                programados.monto_programado | numFormat("0,000.00")
-                }}
+                {{ programados.monto_programado | numFormat("0,000.00") }}
               </vs-td>
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >$ {{ programados.intereses | numFormat("0,000.00") }}</vs-td>
+                >$ {{ programados.intereses | numFormat("0,000.00") }}</vs-td
+              >
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td>
+                >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td
+              >
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >{{ programados.concepto_texto }}</vs-td>
+                >{{ programados.concepto_texto }}</vs-td
+              >
               <vs-td
                 :class="[
                   programados.status_pago == 0 ? 'text-danger' : '',
@@ -167,7 +178,11 @@
             <vs-th>Consultar</vs-th>
           </template>
           <template>
-            <vs-tr v-for="(pago, index_pago) in pagos" v-bind:key="pago.id" ref="row">
+            <vs-tr
+              v-for="(pago, index_pago) in pagos"
+              v-bind:key="pago.id"
+              ref="row"
+            >
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
                 <span class>{{ pago.id }}</span>
               </vs-td>
@@ -175,7 +190,9 @@
                 <span class>{{ pago.fecha_pago_texto }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class>$ {{ pago.total_pago | numFormat("0,000.00") }}</span>
+                <span class
+                  >$ {{ pago.total_pago | numFormat("0,000.00") }}</span
+                >
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
                 <span class>{{ pago.movimientos_pagos_texto }}</span>
@@ -234,25 +251,25 @@ import FormularioPagos from "@pages/pagos/FormularioPagos";
 export default {
   components: {
     Reporteador,
-    FormularioPagos
+    FormularioPagos,
   },
   props: {
     verAcuse: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     id_solicitud: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["lista_reportes"].$el.querySelector(
           ".vs-icon"
@@ -279,7 +296,7 @@ export default {
         this.datosSolicitud = [];
         this.total = 0;
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -288,7 +305,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_solicitud_id: {
       get() {
@@ -296,7 +313,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getVerAcuse: {
       get() {
@@ -304,8 +321,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -314,38 +331,38 @@ export default {
         {
           documento: "Solicitud de Servicio",
           url: "/funeraria/get_hoja_solicitud",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Autorización de Servicio Funerario",
           url: "/funeraria/hoja_preautorizacion",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Certificado de Defunción",
           url: "/funeraria/certificado_defuncion",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Guía de Servicio Para el Cliente",
           url: "/funeraria/instrucciones_servicio_funerario",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
-          documento: "Talonario de Pagos",
-          url: "/funeraria/referencias_de_pago",
-          tipo: "pdf"
+          documento: "Constancia de embalsamiento",
+          url: "/funeraria/contancia_de_embalsamiento",
+          tipo: "pdf",
         },
         {
-          documento: "Reglamento de Pago",
-          url: "/funeraria/reglamento_pago",
-          tipo: "pdf"
+          documento: "Material de Velación",
+          url: "/funeraria/material_velacion_rentado",
+          tipo: "pdf",
         },
         {
           documento: "Acuse de cancelación",
           url: "/funeraria/acuse_cancelacion",
-          tipo: "pdf"
-        }
+          tipo: "pdf",
+        },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,
       funcion_reemplazada: [],
@@ -355,13 +372,13 @@ export default {
         id_pago: "",
         id_servicio: "",
         email: "",
-        destinatario: ""
+        destinatario: "",
       },
       openReportesLista: false,
       verFormularioPagos: false,
       tipoFormularioPagos: "",
       operacion_id: "",
-      pagos: []
+      pagos: [],
     };
   },
   methods: {
@@ -390,7 +407,7 @@ export default {
     mostrarDocumento(documento) {
       if (
         documento != "Acuse de cancelación" &&
-        documento != "Constancia de Finiquito"
+        documento != "Constancia de embalsamiento"
       ) {
         return true;
       } else {
@@ -399,9 +416,9 @@ export default {
           if (this.datosSolicitud.operacion_status == 0) {
             return true;
           } else return false;
-        } else if (documento == "Constancia de Finiquito") {
+        } else if (documento == "Constancia de embalsamiento") {
           /**chenado si tiene saldo pendiente */
-          if (this.datosSolicitud.saldo_neto <= 0) {
+          if (this.datosSolicitud.embalsamar_b == 1) {
             return true;
           } else return false;
         }
@@ -416,7 +433,7 @@ export default {
       this.ListaReportes = [];
       this.ListaReportes.push({
         nombre: nombre_reporte,
-        url: link
+        url: link,
       });
       //estado de cuenta
       this.request.email = this.datosSolicitud.email;
@@ -472,7 +489,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -496,16 +513,16 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
       }
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showVentana) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -513,7 +530,7 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
 
