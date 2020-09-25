@@ -72,6 +72,7 @@
         }
 
         /*fin de parrafos*/
+
     </style>
 </head>
 
@@ -126,90 +127,48 @@
         <span class="bg-gray bold uppercase texto-sm  pl-2 pr-1">{{ $empresa->ciudad }}, {{ $empresa->estado }} a
             {{ fecha_only(now()) }}.</span>
     </p>
-    <h1 class="center mt-5 size-22px">CONSTANCIA DE EMBALSAMIENTO</h1>
+    <h1 class="center mt-5 size-22px">FORMATO DE ENTREGA DE CENIZAS</h1>
 
     <div class="contenido w-100 mt-5">
+
         <p class="justificar line-lg size-18px">
-            Con base en los artículos: 62, 65, 71, 72, 100, 105, 106 y 107 del reglamento de la ley general de salud, en
-            materia de
-            control sanitario de la disposición de órganos, tejido y cadáveres de seres humanos, se hace constar que el
-            cuerpo sin
-            vida de quien llevara el nombre del <span class="bold uppercase ">
-                @if (isset($datos['titulo']['titulo']))
-                {{ $datos['titulo']['titulo']}}
+            Yo, <span class="bold">
+                @if (isset($datos['operacion']['cliente']))
+                    {{ $datos['operacion']['cliente']['nombre'] }}
                 @else
-                N/A
-                @endif. {{ $datos['nombre_afectado'] }}</span> a
-            quien corresponde el
-            certificado de defunción
-            No.<span class="bold uppercase ">
-                {{  $datos['folio_certificado']}}
+                    N/A
+                @endif
+            </span>. Por medio de la presente, certifico que recibí de Aeternus Funerales 1 (UNA) urna hecha de <span
+                class="bold">
+                @if ($datos['descripcion_urna'] == null)
+                    N/A
+                @else
+                    {{ $datos['descripcion_urna'] }}
+                @endif
             </span>
-            ha sido embalsamado en la sala de preparación de esta funeraria, misma que se localiza en
-            {{ strtolower($empresa->calle) }} Núm. Ext {{ $empresa->num_ext }}
-            Col. {{ strtolower($empresa->colonia) }}. cp. {{ $empresa->cp }}.
-            {{ $empresa->ciudad }}
-            {{ $empresa->estado }}.
-        </p>
-
-        <p class="justificar line-lg size-18px">
-            La técnica utilizada para el embalsamiento consistió en:
-        </p>
-        <div class="lista pl-11 -mt-1">
-            <p class="justificar line-base size-18px">
-                <span class=" bold size-20px -ml-6"></span>
-                <span class="ml-1">
-                    • Inyección de líquidos por la vía intra-arterial a base de formol diluido en agua, glicerina,
-                    colorantes, etc.
-                </span>
-            </p>
-            <p class="justificar line-base size-18px">
-                <span class=" bold size-20px -ml-6"></span>
-                <span class="ml-1">
-                    • Se utilizó como base de drenado la vena yugular.
-                </span>
-            </p>
-            <p class="justificar line-base size-18px">
-                <span class=" bold size-20px -ml-6"></span>
-                <span class="ml-1">
-                    • Se realizó la extracción de líquidos y gases de las cavidades del tórax y abdomen por medio de un
-                    troquer conectado a
-                    un aparato de succión para posteriormente depositar las sustancias preservativas en las mismas
-                    cavidades.
-                </span>
-            </p>
-        </div>
-
-        <p class="justificar line-lg size-18px">
-            Como consecuencia de dicha técnica, el cuerpo sin vida del <span class="bold uppercase ">
-                @if (isset($datos['titulo']['titulo']))
-                {{ $datos['titulo']['titulo']}}
-                @else
+            ,
+            misma que contiene las cenizas correspondientes a el/la ( @if (!isset($datos['titulo']['titulo']))
                 N/A
-                @endif. {{ $datos['nombre_afectado'] }}</span> ha quedado en condiciones satisfactoriamente para
-            su velación, inhumación y/o traslado.
-
+            @else
+                {{ $datos['titulo']['titulo'] }}
+            @endif). <span class="bold">{{ $datos['nombre_afectado'] }}</span>.
         </p>
-
-
         <div class="w-100 center">
-            <div class="w-50 float-left mt-20">
+            <div class="w-50 ml-auto mr-auto mt-50">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
-                    <div class=" pb-1"><span class="texto-base bold">
-                            @if ($datos['embalsamar_b']==1)
-                            Dr.
+                    <div class=" pb-1">
+                        <span class="texto-base bold">
+                            @if (isset($datos['operacion']['cliente']))
+                                {{ $datos['operacion']['cliente']['nombre'] }}
+                            @else
+                                N/A
                             @endif
-                            {{ $datos['medico_responsable_embalsamado'] }}</span></div>
-                </div>
-                <span class="texto-base">Médico Responsable</span>
-            </div>
-            <div class="w-50 float-right mt-20">
-                <div class="w-90 mr-auto ml-auto border-top pt-1">
-                    <div class="pb-1"><span class="texto-base bold">{{ $datos['preparador'] }}</span>
+                        </span>
                     </div>
-                    <span class="texto-base">Embalsamador</span>
                 </div>
+                <span class="texto-base">Firma</span>
             </div>
+
         </div>
     </div>
 </body>

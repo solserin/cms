@@ -359,6 +359,16 @@ export default {
           tipo: "pdf",
         },
         {
+          documento: "Entrega de acta de defunción",
+          url: "/funeraria/entrega_acta_defuncion",
+          tipo: "pdf",
+        },
+        {
+          documento: "Entrega de cenizas",
+          url: "/funeraria/entrega_cenizas",
+          tipo: "pdf",
+        },
+        {
           documento: "Acuse de cancelación",
           url: "/funeraria/acuse_cancelacion",
           tipo: "pdf",
@@ -407,7 +417,10 @@ export default {
     mostrarDocumento(documento) {
       if (
         documento != "Acuse de cancelación" &&
-        documento != "Constancia de embalsamiento"
+        documento != "Constancia de embalsamiento" &&
+        documento != "Material de Velación" &&
+        documento != "Entrega de acta de defunción" &&
+        documento != "Entrega de cenizas"
       ) {
         return true;
       } else {
@@ -419,6 +432,21 @@ export default {
         } else if (documento == "Constancia de embalsamiento") {
           /**chenado si tiene saldo pendiente */
           if (this.datosSolicitud.embalsamar_b == 1) {
+            return true;
+          } else return false;
+        } else if (documento == "Material de Velación") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.material_velacion_b == 1) {
+            return true;
+          } else return false;
+        } else if (documento == "Entrega de acta de defunción") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.acta_b == 1) {
+            return true;
+          } else return false;
+        } else if (documento == "Entrega de cenizas") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.cremacion_b == 1) {
             return true;
           } else return false;
         }

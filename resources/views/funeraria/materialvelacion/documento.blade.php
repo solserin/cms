@@ -133,7 +133,7 @@
     </header>
     <p class="fecha  right">
         <span class="bg-gray bold uppercase texto-sm  pl-2 pr-1">{{ $empresa->ciudad }}, {{ $empresa->estado }} a
-            {{ fecha_only($datos['fechahora_solicitud']) }}.</span>
+            {{ fecha_only(now()) }}.</span>
     </p>
     <h1 class="center mt-5 size-22px">ENTREGA DE EQUIPO DE VELACIÓN</h1>
 
@@ -147,10 +147,6 @@
             velación:
         </p>
 
-
-
-
-
         <table class="w-100 texto-base mt-5 datos_tabla uppercase">
             <thead>
                 <tr class="center">
@@ -159,13 +155,21 @@
                     <td class="bg-gray bold">Cantidad</td>
                 </tr>
             </thead>
-            @foreach ($datos['materialrentado'] as $material)
+            @if (count($datos['materialrentado'] )>0)
+                @foreach ($datos['materialrentado'] as $material)
+                    <tr class="size-15px center">
+                        <td class="w-35 py-1 px-2">{{$material['descripcion']}}</td>
+                        <td class="w-50 px-2">{{ $material['nota'] }}</td>
+                        <td class="w-15 px-2">{{ $material['cantidad'] }}</td>
+                    </tr>
+                @endforeach
+            @else
             <tr class="size-15px center">
-                <td class="w-35 py-1 px-2">{{$material['descripcion']}}</td>
-                <td class="w-50 px-2">{{ $material['nota'] }}</td>
-                <td class="w-15 px-2">{{ $material['cantidad'] }}</td>
+                <td class="w-100 py-1 px-2" colspan="3">No se ha agregado material de velación a este contrato</td>
+               
             </tr>
-            @endforeach
+            @endif
+            
         </table>
 
 
