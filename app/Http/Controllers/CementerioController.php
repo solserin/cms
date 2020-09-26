@@ -1962,10 +1962,7 @@ class CementerioController extends ApiController
                 $venta['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
                 $venta['pagos_vencidos'] = $vencidos;
                 $venta['dias_vencidos'] = $dias_vencido_primer_pago_vencido;
-
-
                 /**areegloe de todos los pagos limpios(no repetidos) */
-
                 //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
             } else {
                 /**la venta no tiene pagos programados debido a que fue 100% "GRATIS" */

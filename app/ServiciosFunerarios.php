@@ -24,6 +24,7 @@ class ServiciosFunerarios extends Model
     {
         return $this->hasOne('App\Operaciones', 'servicios_funerarios_id', 'id')->select(
             'id',
+            'id as operacion_id',
             'clientes_id',
             'subtotal',
             'descuento',
@@ -41,7 +42,41 @@ class ServiciosFunerarios extends Model
             'cantidad_a_regresar_cancelacion',
             'cancelo_id',
             'nota_cancelacion',
-            'status'
+            'status',
+            'status as operacion_status',
+            DB::raw(
+                '(0) AS num_pagos_programados'
+            ),
+            DB::raw(
+                '(0) AS abonado_capital'
+            ),
+            DB::raw(
+                '(0) AS descontado_capital'
+            ),
+            DB::raw(
+                '(0) AS complementado_cancelacion'
+            ),
+            DB::raw(
+                '(0) AS saldo_neto'
+            ),
+            DB::raw(
+                '(0) AS total_cubierto'
+            ),
+
+            DB::raw(
+                '(0) AS pagos_realizados'
+            ),
+            DB::raw(
+                '(0) AS pagos_vigentes'
+            ),DB::raw(
+                '(0) AS num_pagos_programados_vigentes'
+            ),DB::raw(
+                '(0) AS pagos_cancelados'
+            ),DB::raw(
+                '(0) AS pagos_programados_cubiertos'
+            ),DB::raw(
+                '(0) AS pagos_vencidos'
+            )
         );
     }
 

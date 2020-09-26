@@ -58,10 +58,10 @@
         </div>
       </div>
 
-      <div class="w-full pt-8" v-if="datosSolicitud.operacion_id">
+      <div class="w-full pt-8" v-if="datosSolicitud.operacion">
         <vs-table
           class="tablas-pagos"
-          :data="datosSolicitud.pagos_programados"
+          :data="datosSolicitud.operacion.pagos_programados"
           noDataText="0 Resultados"
           ref="tabla_pagos_programados"
         >
@@ -72,9 +72,7 @@
             <vs-th>#</vs-th>
             <vs-th>Referencia</vs-th>
             <vs-th>Fecha Programada</vs-th>
-            <vs-th>Nueva Fecha de Pago</vs-th>
             <vs-th>Monto Pago</vs-th>
-            <vs-th>Intereses Generados</vs-th>
             <vs-th>Restante a Pagar</vs-th>
             <vs-th>Concepto</vs-th>
             <vs-th>Estatus</vs-th>
@@ -83,8 +81,8 @@
           <template>
             <vs-tr
               v-show="programados.status == 1"
-              v-for="(programados,
-              index_programado) in datosSolicitud.pagos_programados"
+              v-for="(programados, index_programado) in datosSolicitud.operacion
+                .pagos_programados"
               v-bind:key="programados.id"
               ref="row"
             >
@@ -104,21 +102,9 @@
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
               >
-                <span v-if="programados.saldo_neto > 0">{{
-                  programados.fecha_a_pagar_abr
-                }}</span>
-                <span v-else>{{ programados.fecha_ultimo_pago_abr }}</span>
-              </vs-td>
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >
                 $
                 {{ programados.monto_programado | numFormat("0,000.00") }}
               </vs-td>
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >$ {{ programados.intereses | numFormat("0,000.00") }}</vs-td
-              >
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
                 >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td
