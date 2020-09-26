@@ -2914,6 +2914,7 @@ class FunerariaController extends ApiController
                 ]
             );
 
+
             /**ELIMINANDO EL MATERIAL DE VELACION ANTERIOR */
             DB::table('material_rentado')->where('servicios_funerarios_id', '=', $request->id_servicio)->delete();
             if ($request->material_velacion_b == 1) {
@@ -3013,6 +3014,7 @@ class FunerariaController extends ApiController
                 $id_operacion = $datos_solicitud['operacion']['id'];
                 $id_movimiento_inventario = $datos_solicitud['operacion']['movimientoinventario']['id'];
             }
+
             /**verificando si la operacion existia */
             $operacion_existia = isset($datos_solicitud['operacion']['movimientoinventario']) ? true : false;
             /**VERIFICANDO PRIMERO LA EXISTENCIA DE ARTICULOS EN INVENTARIO */
@@ -3530,10 +3532,13 @@ class FunerariaController extends ApiController
             /**actualizando totales de la operacion */
             DB::table('operaciones')->where('servicios_funerarios_id', $request->id_servicio)->update(
                 [
+                    'clientes_id' => $request->id_cliente,
+                    'fecha_operacion' => $request->fechahora_contrato,
                     'subtotal' => $subtotal,
                     'descuento' => $descuento,
                     'impuestos' => $impuestos,
-                    'total' => $total
+                    'total' => $total,
+                    'tasa_iva' => $request->tasa_iva
                 ]
             );
 
@@ -4165,8 +4170,8 @@ class FunerariaController extends ApiController
 
             //$pdf->setOption('grayscale', true);
             //$pdf->setOption('header-right', 'dddd');
-            $pdf->setOption('margin-left', 12.4);
-            $pdf->setOption('margin-right', 12.4);
+            $pdf->setOption('margin-left', 16.4);
+            $pdf->setOption('margin-right', 16.4);
             $pdf->setOption('margin-top', 12.4);
             $pdf->setOption('margin-bottom', 24.4);
             $pdf->setOption('page-size', 'letter');
