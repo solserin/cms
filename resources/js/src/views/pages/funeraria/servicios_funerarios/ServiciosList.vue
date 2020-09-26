@@ -215,7 +215,7 @@
       :tipo="tipoFormulario"
       :show="verFormularioServicios"
       @closeVentana="verFormularioServicios = false"
-      @ver_pdfs_nueva_solicitud="ConsultarVenta"
+      @ver_pdfs_nueva_venta="ConsultarVenta"
     ></FormularioServicios>
 
     <FormularioSolicitud

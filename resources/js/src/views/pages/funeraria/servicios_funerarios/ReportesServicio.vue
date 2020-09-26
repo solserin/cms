@@ -369,6 +369,11 @@ export default {
           tipo: "pdf",
         },
         {
+          documento: "Hoja de Servicio",
+          url: "/funeraria/orden_servicio",
+          tipo: "pdf",
+        },
+        {
           documento: "Acuse de cancelación",
           url: "/funeraria/acuse_cancelacion",
           tipo: "pdf",
@@ -420,7 +425,8 @@ export default {
         documento != "Constancia de embalsamiento" &&
         documento != "Material de Velación" &&
         documento != "Entrega de acta de defunción" &&
-        documento != "Entrega de cenizas"
+        documento != "Entrega de cenizas" &&
+        documento != "Hoja de Servicio"
       ) {
         return true;
       } else {
@@ -447,6 +453,11 @@ export default {
         } else if (documento == "Entrega de cenizas") {
           /**chenado si tiene saldo pendiente */
           if (this.datosSolicitud.cremacion_b == 1) {
+            return true;
+          } else return false;
+        } else if (documento == "Hoja de Servicio") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.operacion != null) {
             return true;
           } else return false;
         }
