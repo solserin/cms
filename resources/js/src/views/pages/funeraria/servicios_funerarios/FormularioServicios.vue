@@ -4730,7 +4730,6 @@ export default {
 
             this.form.nota = data.nota_servicio;
           } else {
-            console.log("no datos");
             /**no hay datos que mostrar y se cierra la ventana */
           }
           /**aqui cargo los datos obtenidos */
@@ -4940,7 +4939,6 @@ export default {
       await funeraria
         .get_material_velacion()
         .then((res) => {
-          console.log("get_material_velacion -> res", res);
           this.material_velacion = [];
           res.data.forEach((element) => {
             this.form.material_velacion.push({
@@ -5315,7 +5313,6 @@ export default {
     },
 
     TerrenoSeleccionado(datos) {
-      console.log("TerrenoSeleccionado -> datos", datos);
       /**obtiene los datos retornados del buscar cliente */
       this.saldo_neto_terreno = datos.saldo_neto;
       this.form.ubicacion_convenio = datos.ubicacion;
@@ -5339,7 +5336,6 @@ export default {
 
     LoteSeleccionado(datos) {
       this.form.articulos_servicios.push(datos);
-      console.log("LoteSeleccionado -> datos", datos);
       /**agregando los datos a la lista de articulos y servicios */
     },
 
