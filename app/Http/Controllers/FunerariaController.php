@@ -3930,6 +3930,7 @@ class FunerariaController extends ApiController
                 if (!is_null($solicitud['terreno'])) {
                     $datos_venta_propiedad = $cementerio_controller->get_ventas($request, $solicitud['terreno']['ventas_terrenos_id'], '')[0];
                     $solicitud['terreno']['status_operacion'] = $datos_venta_propiedad['operacion_status'];
+                    $solicitud['terreno']['saldo_neto'] = $datos_venta_propiedad['saldo_neto'];
                     $solicitud['terreno']['status_operacion_texto'] = $datos_venta_propiedad['status_texto'];
                     $solicitud['terreno']['ubicacion_servicio'] = strtoupper($cementerio_controller->ubicacion_texto($solicitud['terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . '(' . $datos_venta_propiedad['venta_terreno']['tipo_propiedad']['tipo'] . ' convenio ' . $datos_venta_propiedad['numero_convenio'] . ')');
                 }

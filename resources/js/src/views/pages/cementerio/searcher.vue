@@ -173,7 +173,8 @@
                           data[indextr].numero_convenio +
                           ')',
                         data[indextr].venta_terreno.id,
-                        data[indextr].operacion_status
+                        data[indextr].operacion_status,
+                        data[indextr].saldo_neto
                       )
                     "
                   />
@@ -343,10 +344,16 @@ export default {
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
-    retornarSeleccion(ubicacion = "", id = "", operacion_status = "") {
+    retornarSeleccion(
+      ubicacion = "",
+      id = "",
+      operacion_status = "",
+      saldo_neto = 0
+    ) {
       if (operacion_status != 0) {
         /**retorna los datos seleccionados a la venta que los solicita */
         this.$emit("retornoTerreno", {
+          saldo_neto: saldo_neto,
           numero_control: id,
           ubicacion: ubicacion,
         });

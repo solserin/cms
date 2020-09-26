@@ -1384,6 +1384,25 @@
                         <label class="text-sm opacity-75 font-bold">
                           Seleccione el Convenio del Terreno
                           <span class="texto-importante">(*)</span>
+                          <span
+                            v-if="
+                              this.form.ventas_terrenos_id != 0 &&
+                              this.form.ventas_terrenos_id != ''
+                            "
+                          >
+                            <span
+                              v-if="this.saldo_neto_terreno == 0"
+                              class="text-success"
+                            >
+                              Terreno pagado
+                            </span>
+                            <span v-else class="text-danger">
+                              Por pagar $
+                              {{
+                                this.saldo_neto_terreno | numFormat("0,000.00")
+                              }}
+                            </span>
+                          </span>
                         </label>
                       </div>
                       <div class="flex flex-wrap">
@@ -2949,7 +2968,7 @@
                                   <vs-th>Lote</vs-th>
                                   <vs-th>Cant.</vs-th>
                                   <vs-th>Costo Neto</vs-th>
-                                  <vs-th>Aplicar Descuento</vs-th>
+                                  <vs-th>Descuento</vs-th>
                                   <vs-th>Costo Neto Con Descuento</vs-th>
                                   <vs-th>Importe</vs-th>
                                   <vs-th>Plan Funerario</vs-th>
@@ -4000,6 +4019,7 @@ export default {
   },
   data() {
     return {
+      saldo_neto_terreno: 0,
       datosPlanFunerario: [],
       secciones_original: [],
       secciones: [],
@@ -4542,6 +4562,7 @@ export default {
                 /**es de cementerio aeternus */
                 this.form.ubicacion_convenio = data.terreno.ubicacion_servicio;
                 this.form.ventas_terrenos_id = data.terreno.ventas_terrenos_id;
+                this.saldo_neto_terreno = data.terreno.saldo_neto;
               } else {
                 /**es de cualquier otro cementerio */
                 this.form.ubicacion = data.nota_ubicacion;
@@ -5135,6 +5156,7 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
+      this.saldo_neto_terreno = 0;
       this.data_contrato = [];
       this.activeTab = 0;
       this.form.nombre_afectado = "";
@@ -5293,7 +5315,9 @@ export default {
     },
 
     TerrenoSeleccionado(datos) {
+      console.log("TerrenoSeleccionado -> datos", datos);
       /**obtiene los datos retornados del buscar cliente */
+      this.saldo_neto_terreno = datos.saldo_neto;
       this.form.ubicacion_convenio = datos.ubicacion;
       this.form.ventas_terrenos_id = datos.numero_control;
       //alert(datos.id_cliente);
