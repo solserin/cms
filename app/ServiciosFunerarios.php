@@ -74,9 +74,11 @@ class ServiciosFunerarios extends Model
                 '(0) AS pagos_cancelados'
             ),DB::raw(
                 '(0) AS pagos_programados_cubiertos'
-            ),DB::raw(
-                '(0) AS pagos_vencidos'
             )
+            ,DB::raw(
+                '(null) AS status_texto'
+            )
+            
         );
     }
 

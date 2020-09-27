@@ -149,7 +149,7 @@
         </vs-table>
       </div>
 
-      <div class="w-full pt-8" v-if="datosSolicitud.operacion_id">
+      <div class="w-full pt-8" v-if="datosSolicitud.operacion">
         <vs-table class="tablas-pagos" :data="pagos" noDataText="0 Resultados">
           <template slot="header">
             <h3>Listado de Abonos Recibidos</h3>
@@ -265,7 +265,7 @@ export default {
         (async () => {
           await this.get_solicitudes_servicios_id();
           if (this.operacion_id != "") {
-            //await this.consultar_pagos_operacion_id();
+            await this.consultar_pagos_operacion_id();
           }
           /**checamos si esta ventana fue abierta con el fin de ver el acuse de cancelacion */
           if (this.getVerAcuse == true) {
@@ -483,7 +483,7 @@ export default {
         );
         console.log("get_solicitudes_servicios_id -> res", res);
         this.datosSolicitud = res.data[0];
-        //this.operacion_id = this.datosSolicitud.operacion_id;
+        this.operacion_id = this.datosSolicitud.operacion.operacion_id;
         /*if (this.datosSolicitud.pagos_programados.length > 0) {
           //calculando el total de rows 
           this.funcion_reemplazada = [];
@@ -527,6 +527,7 @@ export default {
         let datos_request = { operacion_id: this.operacion_id };
         let res = await pagos.consultar_pagos_operacion_id(datos_request);
         this.pagos = res.data.data;
+        console.log("consultar_pagos_operacion_id ->  this.pagos", this.pagos);
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();

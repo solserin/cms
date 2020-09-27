@@ -3542,13 +3542,10 @@ class FunerariaController extends ApiController
                 ]
             );
 
-
             /**actualizacion de la programacion de pagos */
             $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fechahora_contrato)))->add(0, 'day');
             if (count($datos_solicitud['operacion']['pagos_programados']) == 0) {
                 /**si no existe lo vamos a crear */
-                if ($total > 0) {
-                    /**si el total es mayor a cero se considera que la operacion no fue gratis */
                     /**se registra la referencia para los pagos */
                     $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
                         [
@@ -3562,10 +3559,10 @@ class FunerariaController extends ApiController
                             'status' => 1
                         ]
                     );
-                }
+                
             } else {
-                if ($total > 0) {
-                    DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
+                if ($datos_solicitud['operacion']['total_cubierto'] <=$total) {
+  DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
                         [
                             /**utilizo la referencia de pago 004 para servicios funerarios */
                             //'num_pago' => 1, //numero 1, pues es unico
@@ -3577,13 +3574,11 @@ class FunerariaController extends ApiController
                             'status' => 1
                         ]
                     );
-                } else {
-                    /**si el total fue cero y ya existe un pago programado para esa operacion aunque sea cancelado, se mantine el pago programado, si no se borra */
-                    /**borramos el pago programado */
-                    DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->delete();
+                }else{
+                    return $this->errorResponse('Error, Este contrato tiene pagado $'.number_format($datos_solicitud['operacion']['total_cubierto'],2).'.', 409);
                 }
+                  
             }
-            // return $this->errorResponse('R', 409);
             /* $datos['subtotal'] = $subtotal;
             $datos['descuento'] = $descuento;
             $datos['impuestos'] = $impuestos;
@@ -3914,14 +3909,6 @@ class FunerariaController extends ApiController
             }
 
 
-            /**DEFINIENDO EL STATUS DE LA VENTA*/
-            if ($solicitud['status_b'] == 0) {
-                $solicitud['status_texto'] = 'Cancelada';
-                /**actualizando el motivo de cancelacion */
-            } elseif ($solicitud['status_b'] == 1) {
-                $solicitud['status_texto'] = 'Activa';
-            }
-
             /**definiendo si fue por llamada la solicitud */
 
             if ($solicitud['llamada_b'] == 1) {
@@ -4080,7 +4067,6 @@ class FunerariaController extends ApiController
                 if ($solicitud['operacion']['num_pagos_programados'] > 0) {
                     /**si tiene pagos programados, eso quiere decir que la venta no tuvo 100 de descuento */
                     /**recorriendo arreglo de pagos programados */
-                    $vencidos = 0;
                     $pagos_programados_cubiertos = 0;
                     $pagos_vigentes = 0;
                     $pagos_cancelados = 0;
@@ -4154,6 +4140,9 @@ class FunerariaController extends ApiController
                                     $pagos_cancelados++;
                                 }
                             }
+                            if ($pagado['movimientos_pagos_id'] != 2 && $pagado['movimientos_pagos_id'] != 3) { //se excluyen aqui los que son de pronto pago y cobro por interes
+                                $pagos_realizados++;
+                            }
                         } //fin foreach pagado
 
                         /** al final del ciclo se actualizan los valores en el pago programado*/
@@ -4202,7 +4191,6 @@ class FunerariaController extends ApiController
 
                         /**monto con pronto pago de cada abono */
                         $programado['total_cubierto'] = $abonado_capital + $descontado_pronto_pago + $descontado_capital + $complemento_cancelacion;
-
                         /**actualizando los totales de montos en la venta */
                         $solicitud['operacion']['abonado_capital'] +=  $abonado_capital;
                         $solicitud['operacion']['descontado_capital'] +=  $descontado_capital;
@@ -4216,11 +4204,34 @@ class FunerariaController extends ApiController
                 $solicitud['operacion']['num_pagos_programados_vigentes'] = $num_pagos_programados_vigentes;
                 $solicitud['operacion']['pagos_cancelados'] = $pagos_cancelados;
                 $solicitud['operacion']['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
-                $solicitud['operacion']['pagos_vencidos'] = $vencidos;
                 /**areegloe de todos los pagos limpios(no repetidos) */
                 //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
                 }
             }
+            
+          
+/**ESTATUS D ELA  SOLICITUD */
+   /**DEFINIENDO EL STATUS DE LA VENTA*/
+   if ($solicitud['status_b'] == 0) { 
+    $solicitud['status_texto'] = 'Cancelada';
+    /**actualizando el motivo de cancelacion */
+} else{
+    $solicitud['status_texto'] = 'Activa';
+}
+                if(isset($solicitud['operacion']['saldo_neto'])){
+/**DEFINIENDO EL STATUS DE LA OPERACION*/
+if ($solicitud['operacion']['status']== 0) { 
+    $solicitud['operacion']['status_texto'] = 'Cancelada';
+    /**actualizando el motivo de cancelacion */
+}elseif($solicitud['operacion']['saldo_neto']==0){
+    $solicitud['operacion']['status_texto'] = 'Pagada';
+}else{
+    $solicitud['operacion']['status_texto'] = 'Por pagar';
+} 
+                }
+
+            
+
         } //fin foreach venta
 
         return $resultado_query;
