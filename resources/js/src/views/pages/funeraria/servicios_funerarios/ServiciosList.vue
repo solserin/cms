@@ -147,14 +147,26 @@
             </span>
           </vs-td>
 
-          <vs-td :data="data[indextr].status_b">
+          <vs-td>
             <p
-              v-if="data[indextr].status_b == 1"
-              class="font-medium text-success"
+              v-if="data[indextr].status_texto == 'Cancelada'"
+              class="font-medium text-danger"
             >
               {{ data[indextr].status_texto }}
             </p>
-            <p v-else class="text-danger font-medium">
+            <p
+              v-else-if="data[indextr].status_texto == 'Por pagar'"
+              class="font-medium"
+            >
+              {{ data[indextr].status_texto }}
+            </p>
+            <p
+              v-else-if="data[indextr].status_texto == 'Pagada'"
+              class="text-success font-medium"
+            >
+              {{ data[indextr].status_texto }}
+            </p>
+            <p v-else class="font-medium">
               {{ data[indextr].status_texto }}
             </p>
           </vs-td>

@@ -157,7 +157,6 @@ class ServiciosFunerarios extends Migration
             //$table->tinyInteger('reinhumar_b')->default(0);
             //$table->dateTime('fechahora_reinhumacion')->nullable();
 
-
             /**RESTO DE DATOS DE CONTRATO */
             $table->mediumText('nota_servicio')->nullable();
             $table->dateTime('fechahora_registro')->nullable();

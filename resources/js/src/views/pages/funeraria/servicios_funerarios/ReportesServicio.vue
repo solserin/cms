@@ -361,7 +361,7 @@ export default {
         },
         {
           documento: "Acuse de cancelación",
-          url: "/funeraria/acuse_cancelacion",
+          url: "/funeraria/servicio_funerario/acuse_cancelacion",
           tipo: "pdf",
         },
       ],
@@ -418,9 +418,13 @@ export default {
       } else {
         if (documento == "Acuse de cancelación") {
           /**chenado si esta cancelada la venta para mostrar este archivo de acuse de cancelacion */
-          if (this.datosSolicitud.operacion_status == 0) {
-            return true;
-          } else return false;
+          if (this.datosSolicitud.operacion != null) {
+            if (this.datosSolicitud.operacion.operacion_status == 0) {
+              return true;
+            } else return false;
+          } else {
+            return false;
+          }
         } else if (documento == "Constancia de embalsamiento") {
           /**chenado si tiene saldo pendiente */
           if (this.datosSolicitud.embalsamar_b == 1) {

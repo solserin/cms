@@ -946,6 +946,23 @@ class PagosController extends ApiController
                     /**deshabilitando numero de titulo */
                     //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
                 }
+            } else  if ($datos_operacion['empresa_operaciones_id'] == 3) {
+                /**servicios funerarios */
+                $funeraria_controller = new FunerariaController();
+                $datos_venta = $funeraria_controller->get_solicitudes_servicios($request, $datos_operacion['servicios_funerarios_id'], '')[0];
+
+                if (round($datos_venta['operacion']['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
+                    /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                    DB::table('operaciones')->where('id', $datos_venta['operacion']['operacion_id'])->update(
+                        [
+                            /**status de ya liquidada */
+                            'status' => 2
+                        ]
+                    );
+                    /**generando el numero de titulo de la venta de propiedad */
+                    /**deshabilitando numero de titulo */
+                    //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+                }
             }
 
 

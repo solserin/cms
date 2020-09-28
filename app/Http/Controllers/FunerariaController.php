@@ -2461,6 +2461,88 @@ class FunerariaController extends ApiController
         }
     }
 
+    public function servicio_acuse_cancelacion(Request $request)
+    {
+
+        try {
+            $id_venta = 1;
+            $email = false;
+            $email_to = 'hector@gmail.com';
+
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
+            $email_to = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $id_venta = $requestVentasList['id_servicio'];
+
+            /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            //obtengo la informacion de esa venta
+            $datos_venta = $this->get_solicitudes_servicios($request, $id_venta, '')[0];
+
+            if (empty($datos_venta)) {
+                /**datos vacios */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
+
+
+
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['operacion']['cliente']['nombre']) . '.pdf';
+
+            $pdf->setOptions([
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.acuse_cancelacion_servicio.footer'),
+            ]);
+            if ($datos_venta['operacion']['operacion_status'] != 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.acuse_cancelacion_servicio.header')
+                ]);
+            }
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 13.4);
+            $pdf->setOption('margin-right', 13.4);
+            $pdf->setOption('margin-top', 9.4);
+            $pdf->setOption('margin-bottom', 13.4);
+            $pdf->setOption('page-size', 'letter');
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_venta['nombre']),
+                    'ACUSE DE CANCELACIÓN',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+    }
+
+
+
+
+
 
     /**CANCELAR LA VENTA */
     public function cancelar_venta(Request $request)
@@ -3546,23 +3628,22 @@ class FunerariaController extends ApiController
             $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fechahora_contrato)))->add(0, 'day');
             if (count($datos_solicitud['operacion']['pagos_programados']) == 0) {
                 /**si no existe lo vamos a crear */
-                    /**se registra la referencia para los pagos */
-                    $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
-                        [
-                            /**utilizo la referencia de pago 004 para servicios funerarios */
-                            'num_pago' => 1, //numero 1, pues es unico
-                            'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
-                            'fecha_programada' => $fecha_maxima, //fecha de la venta
-                            'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
-                            'monto_programado' => $total,
-                            'operaciones_id' => $id_operacion,
-                            'status' => 1
-                        ]
-                    );
-                
+                /**se registra la referencia para los pagos */
+                $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
+                    [
+                        /**utilizo la referencia de pago 004 para servicios funerarios */
+                        'num_pago' => 1, //numero 1, pues es unico
+                        'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
+                        'fecha_programada' => $fecha_maxima, //fecha de la venta
+                        'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
+                        'monto_programado' => $total,
+                        'operaciones_id' => $id_operacion,
+                        'status' => 1
+                    ]
+                );
             } else {
-                if ($datos_solicitud['operacion']['total_cubierto'] <=$total) {
-  DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
+                if ($datos_solicitud['operacion']['total_cubierto'] <= $total) {
+                    DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
                         [
                             /**utilizo la referencia de pago 004 para servicios funerarios */
                             //'num_pago' => 1, //numero 1, pues es unico
@@ -3574,10 +3655,9 @@ class FunerariaController extends ApiController
                             'status' => 1
                         ]
                     );
-                }else{
-                    return $this->errorResponse('Error, Este contrato tiene pagado $'.number_format($datos_solicitud['operacion']['total_cubierto'],2).'.', 409);
+                } else {
+                    return $this->errorResponse('Error, Este contrato tiene pagado $' . number_format($datos_solicitud['operacion']['total_cubierto'], 2) . '.', 409);
                 }
-                  
             }
             /* $datos['subtotal'] = $subtotal;
             $datos['descuento'] = $descuento;
@@ -3793,6 +3873,7 @@ class FunerariaController extends ApiController
             ->with('operacion.movimientoinventario.articulosserviciofunerario')
             ->with('operacion.pagosProgramados.pagados')
             ->with('operacion.cliente')
+            ->with('operacion.cancelador')
             ->where(function ($q) use ($id_servicio) {
                 if (trim($id_servicio) == 'all' || $id_servicio > 0) {
                     if (trim($id_servicio) == 'all') {
@@ -4178,9 +4259,9 @@ class FunerariaController extends ApiController
                         /**fin varables por intereses */
                         /**verificando que el pago programado tiene un saldo de capital que cobrar para saber si aplica o no intereses */
                         if (round($saldo_pago_programado, 2, PHP_ROUND_HALF_UP) > 0) {
-                                $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-                                $programado['status_pago'] = 1;
-                                $programado['status_pago_texto'] = 'Pendiente';
+                            $programado['fecha_a_pagar'] = $programado['fecha_programada'];
+                            $programado['status_pago'] = 1;
+                            $programado['status_pago_texto'] = 'Pendiente';
                         } else {
                             $pagos_programados_cubiertos++;
                             $programado['fecha_a_pagar'] = $pagado['fecha_pago'];
@@ -4200,43 +4281,132 @@ class FunerariaController extends ApiController
                         $solicitud['operacion']['total_cubierto'] += $programado['total_cubierto'];
                     }
                     $solicitud['operacion']['pagos_realizados'] = $pagos_realizados;
-                $solicitud['operacion']['pagos_vigentes'] = $pagos_vigentes;
-                $solicitud['operacion']['num_pagos_programados_vigentes'] = $num_pagos_programados_vigentes;
-                $solicitud['operacion']['pagos_cancelados'] = $pagos_cancelados;
-                $solicitud['operacion']['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
-                /**areegloe de todos los pagos limpios(no repetidos) */
-                //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
+                    $solicitud['operacion']['pagos_vigentes'] = $pagos_vigentes;
+                    $solicitud['operacion']['num_pagos_programados_vigentes'] = $num_pagos_programados_vigentes;
+                    $solicitud['operacion']['pagos_cancelados'] = $pagos_cancelados;
+                    $solicitud['operacion']['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
+                    /**areegloe de todos los pagos limpios(no repetidos) */
+                    //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
                 }
             }
-            
-          
-/**ESTATUS D ELA  SOLICITUD */
-   /**DEFINIENDO EL STATUS DE LA VENTA*/
-   if ($solicitud['status_b'] == 0) { 
-    $solicitud['status_texto'] = 'Cancelada';
-    /**actualizando el motivo de cancelacion */
-} else{
-    $solicitud['status_texto'] = 'Activa';
-}
-                if(isset($solicitud['operacion']['saldo_neto'])){
-/**DEFINIENDO EL STATUS DE LA OPERACION*/
-if ($solicitud['operacion']['status']== 0) { 
-    $solicitud['operacion']['status_texto'] = 'Cancelada';
-    /**actualizando el motivo de cancelacion */
-}elseif($solicitud['operacion']['saldo_neto']==0){
-    $solicitud['operacion']['status_texto'] = 'Pagada';
-}else{
-    $solicitud['operacion']['status_texto'] = 'Por pagar';
-} 
+
+
+
+            if (isset($solicitud['operacion']['saldo_neto'])) {
+                /**DEFINIENDO EL STATUS DE LA OPERACION*/
+                if ($solicitud['operacion']['status'] == 0) {
+                    $solicitud['operacion']['status_texto'] = 'Cancelada';
+                    $solicitud['status_texto'] = 'Cancelada';
+
+                    if ($solicitud['operacion']['motivos_cancelacion_id'] == 1) {
+                        /**fue por fal de pago */
+                        $solicitud['operacion']['motivos_cancelacion_texto'] = 'falta de pago';
+                    } elseif ($solicitud['operacion']['motivos_cancelacion_id'] == 2) {
+                        /**fue por peticion de lciente */
+                        $solicitud['operacion']['motivos_cancelacion_texto'] = 'a petición del cliente';
+                    } elseif ($solicitud['operacion']['motivos_cancelacion_id'] == 3) {
+                        /**fue por error de captura */
+                        $solicitud['operacion']['motivos_cancelacion_texto'] = 'error de captura';
+                    }
+                    /**actualizando el motivo de cancelacion */
+                    /**actualizando el motivo de cancelacion */
+                } elseif ($solicitud['operacion']['saldo_neto'] == 0) {
+                    $solicitud['operacion']['status_texto'] = 'Pagada';
+                    $solicitud['status_texto'] = 'Pagada';
+                } else {
+                    $solicitud['operacion']['status_texto'] = 'Por pagar';
+                    $solicitud['status_texto'] = 'Por pagar';
                 }
-
-            
-
+            } else {
+                /**ESTATUS D ELA  SOLICITUD */
+                /**DEFINIENDO EL STATUS DE LA VENTA*/
+                if ($solicitud['status_b'] == 0) {
+                    $solicitud['status_texto'] = 'Cancelada';
+                    /**actualizando el motivo de cancelacion */
+                } else {
+                    $solicitud['status_texto'] = 'Activa';
+                }
+            }
         } //fin foreach venta
 
         return $resultado_query;
         /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
     }
+
+
+    /**CANCELAR LA VENTA */
+    public function cancelar_solicitud(Request $request)
+    {
+        try {
+            //return $request->minima_cuota_inicial;
+            //validaciones directas sin condicionales
+            $datos_solicitud = $this->get_solicitudes_servicios($request, $request->solicitud_id, '')[0];
+
+            /**unicamente puede regresarse lo que  se ha cubierto de capital */
+            $validaciones = [
+                'solicitud_id' => 'required',
+                'motivo.value' => 'required'
+            ];
+
+            $total_cubierto = 0;
+            if ($datos_solicitud['operacion'] != null) {
+                $validaciones['cantidad'] = 'numeric|min:0|' . 'max:' . $datos_solicitud['operacion']['total_cubierto'];
+                $total_cubierto = $datos_solicitud['operacion']['total_cubierto'];
+            }
+
+            $mensajes = [
+                'required' => 'Ingrese este dato',
+                'numeric' => 'Este dato debe ser un número',
+                'max' => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($total_cubierto, 2),
+                'min' => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN'
+            ];
+
+            request()->validate(
+                $validaciones,
+                $mensajes
+            );
+            /**validar si la propiedad tiene gente sepultada */
+            /**pendiente
+             * pendiente
+             * pendiente
+             * pendiente
+             */
+
+            /**validar si la propiedad no fue dada de baja ya */
+
+            if ($datos_solicitud['status_b'] == 0) {
+                return $this->errorResponse('Esta solicitud ya habia sido cancelada.', 409);
+            }
+
+            DB::beginTransaction();
+            /**verifico si la solicitud tiene servicio funerario sino para eliminar la soliitud */
+
+            DB::table('operaciones')->where('servicios_funerarios_id', $request->solicitud_id)->update(
+                [
+                    'motivos_cancelacion_id' => $request['motivo.value'],
+                    'fecha_cancelacion' => now(),
+                    'cantidad_a_regresar_cancelacion' => (float) $request->cantidad,
+                    'cancelo_id' => (int) $request->user()->id,
+                    'nota_cancelacion' => $request->comentario,
+                    'status' => 0
+                ]
+            );
+
+            DB::table('servicios_funerarios')->where('id', $request->solicitud_id)->update(
+                [
+                    //'cancelo_id' => (int) $request->user()->id,
+                    'status' => 0
+                ]
+            );
+
+            DB::commit();
+            return $request->solicitud_id;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
 
 
     public function get_hoja_solicitud(Request $request)

@@ -129,6 +129,11 @@ export default {
         });
     },
 
+    cancelar_solicitud(datos) {
+        let call = "/funeraria/cancelar_solicitud";
+        return axios.post(call, datos);
+    },
+
     /**serviios del modulo */
 
     get_categorias() {
