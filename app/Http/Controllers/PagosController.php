@@ -539,7 +539,7 @@ class PagosController extends ApiController
 
         /**verificando que la operaicon no este cancelada */
         $datos_operacion = $referencias_adeudos[0];
-        $datos_venta =[];
+        $datos_venta = [];
         $cementerio_controller = new CementerioController();
         /**verificando que tipo de operacion_empresa es */
         if ($datos_operacion['empresa_operaciones_id'] == 1) {
@@ -574,7 +574,7 @@ class PagosController extends ApiController
                 /**deshabilitando numero de titulo */
                 //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
             }
-        }else  if ($datos_operacion['empresa_operaciones_id'] == 3) {
+        } else  if ($datos_operacion['empresa_operaciones_id'] == 3) {
             /**servicios funerarios */
             $funeraria_controller = new FunerariaController();
             $datos_venta = $funeraria_controller->get_solicitudes_servicios($request, $datos_operacion['servicios_funerarios_id'], '')[0];
@@ -594,20 +594,19 @@ class PagosController extends ApiController
         }
 
         if ($datos_operacion['empresa_operaciones_id'] == 3) {
-  /**verificnado si la operacion no esta cancelada o pagada */
-  if ($datos_venta['operacion']['operacion_status'] == 0) {
-    return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
-}
-        }else{
-             /**verificnado si la operacion no esta cancelada o pagada */
-        if ($datos_venta['operacion_status'] == 0) {
-            return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
+            /**verificnado si la operacion no esta cancelada o pagada */
+            if ($datos_venta['operacion']['operacion_status'] == 0) {
+                return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
+            }
+        } else {
+            /**verificnado si la operacion no esta cancelada o pagada */
+            if ($datos_venta['operacion_status'] == 0) {
+                return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
+            }
         }
 
-        }
 
 
-       
 
         /**checar si el pago no esta siendo hecho antes de la fecha de la venta */
         if (date('Y-m-d', strtotime(substr($request->fecha_pago, 0, 10))) < date('Y-m-d', strtotime($referencias_adeudos[0]['fecha_operacion']))) {
@@ -1031,7 +1030,7 @@ class PagosController extends ApiController
                 ->whereHas('referencias_cubiertas', function ($q) {
                     //$q->where('referencia_pago', '=', '00120200101025');
                 })
-                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status,ventas_terrenos_id,ventas_planes_id', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre,email')
+                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status,ventas_terrenos_id,ventas_planes_id,servicios_funerarios_id', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre,email')
                 ->whereHas('referencias_cubiertas.operacion_del_pago', function ($q) use ($request) {
                     if (($request->operacion_id)) {
                         $q->where('id', '=', $request->operacion_id);
