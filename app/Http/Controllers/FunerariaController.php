@@ -3627,39 +3627,42 @@ class FunerariaController extends ApiController
 
             /**actualizacion de la programacion de pagos */
             $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fechahora_contrato)))->add(0, 'day');
-            if (count($datos_solicitud['operacion']['pagos_programados']) == 0) {
-                /**si no existe lo vamos a crear */
-                /**se registra la referencia para los pagos */
-                $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
-                    [
-                        /**utilizo la referencia de pago 004 para servicios funerarios */
-                        'num_pago' => 1, //numero 1, pues es unico
-                        'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
-                        'fecha_programada' => $fecha_maxima, //fecha de la venta
-                        'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
-                        'monto_programado' => $total,
-                        'operaciones_id' => $id_operacion,
-                        'status' => 1
-                    ]
-                );
-            } else {
-                if ($datos_solicitud['operacion']['total_cubierto'] <= $total) {
-                    DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
+            if (isset($datos_solicitud['operacion'])) {
+                if (count($datos_solicitud['operacion']['pagos_programados']) == 0) {
+                    /**si no existe lo vamos a crear */
+                    /**se registra la referencia para los pagos */
+                    $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
                         [
                             /**utilizo la referencia de pago 004 para servicios funerarios */
-                            //'num_pago' => 1, //numero 1, pues es unico
-                            //'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
+                            'num_pago' => 1, //numero 1, pues es unico
+                            'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
                             'fecha_programada' => $fecha_maxima, //fecha de la venta
-                            //'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
+                            'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
                             'monto_programado' => $total,
-                            //'operaciones_id' => $id_operacion,
+                            'operaciones_id' => $id_operacion,
                             'status' => 1
                         ]
                     );
                 } else {
-                    return $this->errorResponse('Error, Este contrato tiene pagado $' . number_format($datos_solicitud['operacion']['total_cubierto'], 2) . '.', 409);
+                    if ($datos_solicitud['operacion']['total_cubierto'] <= $total) {
+                        DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
+                            [
+                                /**utilizo la referencia de pago 004 para servicios funerarios */
+                                //'num_pago' => 1, //numero 1, pues es unico
+                                //'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
+                                'fecha_programada' => $fecha_maxima, //fecha de la venta
+                                //'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
+                                'monto_programado' => $total,
+                                //'operaciones_id' => $id_operacion,
+                                'status' => 1
+                            ]
+                        );
+                    } else {
+                        return $this->errorResponse('Error, Este contrato tiene pagado $' . number_format($datos_solicitud['operacion']['total_cubierto'], 2) . '.', 409);
+                    }
                 }
             }
+
             /* $datos['subtotal'] = $subtotal;
             $datos['descuento'] = $descuento;
             $datos['impuestos'] = $impuestos;
@@ -3928,13 +3931,56 @@ class FunerariaController extends ApiController
                             $articulo['tipo'] = $inventario['tipo_articulo']['tipo'];
                             $articulo['codigo_barras'] = $inventario['codigo_barras'];
                             /**importa para cuando es con plan funerario a futuro  */
-                            if ($solicitud['plan_funerario_futuro_b'] == 1 && trim($solicitud['ventas_planes_id']) != '') {
+                            if ($solicitud['plan_funerario_futuro_b'] == 1 && $solicitud['ventas_planes_id'] > 0) {
                                 if ($articulo['plan_b'] == 1) {
                                     $articulo['subtotal'] = 0;
                                     $articulo['descuento'] = 0;
                                     $articulo['impuestos'] = 0;
                                     $articulo['costo_neto'] = 0;
                                     $articulo['importe'] = 0;
+                                } else {
+                                    if ($articulo['descuento_b'] == 1) {
+                                        //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
+                                        if ($articulo['costo_neto_normal'] >= $articulo['costo_neto_descuento']) {
+                                            /**si se puede aplicar descuento */
+                                            if ($articulo['facturable_b'] == 1) {
+
+                                                /**se desglosa el IVA */
+                                                $articulo['subtotal'] = round((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                                $articulo['impuestos'] = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                                $articulo['descuento'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
+                                                $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
+                                                $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                            } else {
+                                                /**no grava IVA */
+                                                $articulo['subtotal'] = $articulo['costo_neto_normal'];
+                                                $articulo['impuestos'] = 0;
+                                                $articulo['descuento'] = $articulo['costo_neto_normal'] - $articulo['costo_neto_descuento'];
+                                                $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
+                                                $articulo['importe'] = $articulo['costo_neto'] * $articulo['cantidad'];
+                                            }
+                                        } else {
+                                            /**no se puede proceder por que el precio de descuento no es correcto */
+                                            return $this->errorResponse('Verifique que el costo de descuento es menor que el precio normal', 409);
+                                        }
+                                    } else {
+                                        /**fueron puros precios sin descuento */
+                                        if ($articulo['facturable_b'] == 1) {
+                                            $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['impuestos'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['descuento'] = 0;
+                                            $articulo['costo_neto'] = $articulo['costo_neto_normal'];
+                                            $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                        } else {
+                                            /**no grava IVA */
+                                            $articulo['subtotal'] = $articulo['costo_neto_normal'];
+                                            $articulo['impuestos'] = 0;
+                                            $articulo['descuento'] = 0;
+                                            $articulo['costo_neto'] = $articulo['costo_neto_normal'];
+                                            $articulo['importe'] =
+                                                round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                        }
+                                    }
                                 }
                             } else {
                                 /**es con plan funerario de uso inmediato o sin plan */
@@ -3989,6 +4035,8 @@ class FunerariaController extends ApiController
                     }
                 }
             }
+
+
 
 
             /**definiendo si fue por llamada la solicitud */
@@ -4743,75 +4791,78 @@ class FunerariaController extends ApiController
 
     public function contrato_servicio_funerario(Request $request)
     {
-
-        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        /*$email =  $request->email_send === 'true' ? true : false;
+        try {
+            /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+            $email =  $request->email_send === 'true' ? true : false;
             $email_to = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
             $id_servicio = $requestVentasList['id_servicio'];
-*/
-        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
-         * por lo cual puede variar de paramtros degun la ncecesidad
-         */
-        $id_servicio = 1;
+
+            /**aqui obtengo los datos que se ocupan para generar el rep orte, es enviado desde cada modulo al reporteador
+             * por lo cual puede variar de paramtros degun la ncecesidad
+             */
+            /*$id_servicio = 3;
         $email = false;
         $email_to = 'hector@gmail.com';
+*/
+            //obtengo la informacion de esa venta
+            $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
+            if (empty($datos_solicitud)) {
+                /**datos no encontrados */
+                return $this->errorResponse('Error al cargar los datos.', 409);
+            }
 
-        //obtengo la informacion de esa venta
-        $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
-        if (empty($datos_solicitud)) {
-            /**datos no encontrados */
-            return $this->errorResponse('Error al cargar los datos.', 409);
-        }
+            $get_funeraria = new EmpresaController();
+            $empresa = $get_funeraria->get_empresa_data();
+            $registro = RegistroPublico::first();
 
-        $get_funeraria = new EmpresaController();
-        $empresa = $get_funeraria->get_empresa_data();
-        $registro = RegistroPublico::first();
+            $pdf = PDF::loadView('funeraria/contrato_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'registro' => $registro]);
 
-        $pdf = PDF::loadView('funeraria/contrato_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'registro' => $registro]);
-
-        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-        $name_pdf = "CONTRATO DE SERVICIO FUNERARIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
-        $pdf->setOptions([
-            'title' => $name_pdf,
-            'footer-html' => view('funeraria.contrato_servicio_funerario.footer', ['empresa' => $empresa]),
-        ]);
-        if ($datos_solicitud['status_b'] == 0) {
+            //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+            $name_pdf = "CONTRATO DE SERVICIO FUNERARIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'header-html' => view('funeraria.contrato_servicio_funerario.header')
+                'title' => $name_pdf,
+                'footer-html' => view('funeraria.contrato_servicio_funerario.footer', ['empresa' => $empresa]),
             ]);
-        }
+            if ($datos_solicitud['status_b'] == 0) {
+                $pdf->setOptions([
+                    'header-html' => view('funeraria.contrato_servicio_funerario.header')
+                ]);
+            }
 
-        //$pdf->setOption('grayscale', true);
-        //$pdf->setOption('header-right', 'dddd');
-        $pdf->setOption('margin-left', 14.4);
-        $pdf->setOption('margin-right', 14.4);
-        $pdf->setOption('margin-top', 12.4);
-        $pdf->setOption('margin-bottom', 33.4);
-        $pdf->setOption('page-size', 'letter');
-        if ($email == true) {
-            /**email */
-            /**
-             * parameters lista de la funcion
-             * to destinatario
-             * to_name nombre del destinatario
-             * subject motivo del correo
-             * name_pdf nombre del pdf
-             * pdf archivo pdf a enviar
-             */
-            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
-            $email_controller = new EmailController();
-            $enviar_email = $email_controller->pdf_email(
-                $email_to,
-                strtoupper($datos_solicitud['nombre_afectado']),
-                'CONTRATO DE SERVICIO FUNERARIO',
-                $name_pdf,
-                $pdf
-            );
-            return $enviar_email;
-            /**email fin */
-        } else {
-            return $pdf->inline($name_pdf);
+            //$pdf->setOption('grayscale', true);
+            //$pdf->setOption('header-right', 'dddd');
+            $pdf->setOption('margin-left', 14.4);
+            $pdf->setOption('margin-right', 14.4);
+            $pdf->setOption('margin-top', 12.4);
+            $pdf->setOption('margin-bottom', 33.4);
+            $pdf->setOption('page-size', 'letter');
+            if ($email == true) {
+                /**email */
+                /**
+                 * parameters lista de la funcion
+                 * to destinatario
+                 * to_name nombre del destinatario
+                 * subject motivo del correo
+                 * name_pdf nombre del pdf
+                 * pdf archivo pdf a enviar
+                 */
+                /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+                $email_controller = new EmailController();
+                $enviar_email = $email_controller->pdf_email(
+                    $email_to,
+                    strtoupper($datos_solicitud['nombre_afectado']),
+                    'CONTRATO DE SERVICIO FUNERARIO',
+                    $name_pdf,
+                    $pdf
+                );
+                return $enviar_email;
+                /**email fin */
+            } else {
+                return $pdf->inline($name_pdf);
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Error al solicitar los datos', 409);
         }
     }
 

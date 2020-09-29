@@ -70,8 +70,17 @@
             border-bottom: 1px solid #ddd;
         }
 
-        /*fin de parrafos*/
 
+        .datos_tabla {
+            border-collapse: collapse;
+        }
+
+        .datos_tabla tr th,
+        .datos_tabla td {
+            border: 1px solid #ddd;
+        }
+
+        /*fin de parrafos*/
     </style>
 </head>
 
@@ -449,35 +458,250 @@
         <p class="justificar line-17 size-13px -mt-3">
             <span class="bold">b) </span> Si el Servicio prestado no corresponde con lo pactado y/o solicitado por el
             “El consumidor”. En el caso de rescisión del presente Contrato,
-            “La parte” que incumpla deberá de pagar la pena convencional establecida en la Cláusula Octava, para lo cual
+            “La parte” que incumpla deberá de pagar la pena convencional establecida en la Cláusula Novena, para lo cual
             deberá informar por escrito a
             la parte que incumplió la causa de rescisión del presente Contrato, para que esta, de así proceder, haga el
             pago correspondiente a la pena
             convencional.
         </p>
+        <p class="justificar line-17 size-13px -mt-3">
+            <span class="bold">NOVENA. PENA CONVENCIONAL.- </span>
+        </p>
+        <p class="justificar line-17 size-13px -mt-3">
+            En caso de incumplimiento por alguna de las “Las partes” a las obligaciones objeto del Presente
+            contrato, la pena convencional será equivalente al 20(veinte) % del precio total del Servicio, sin incluir
+            el Impuesto
+            al Valor Agregado (IVA).
+            En caso de que alguna de las “Las partes” requiera el pago de la Pena convencional por cualquier
+            incumplimiento a lo
+            establecido en el
+            presente Contrato, deberá de solicitar por escrito el pago de dicha pena, debiendo “La parte” que incumplió
+            hacer el
+            pago en los 5 (cinco)
+            días hábiles siguientes de haber recibido el escrito de incumplimiento.
+        </p>
+        <p class="justificar line-17 size-13px -mt-3">
+            <span class="bold">NOVENA PRIMERA. AVISO DE PRIVACIDAD.- </span>
+        </p>
+        <p class="justificar line-17 size-13px -mt-3">
+            Previo a la firma del presente Contrato y en cumplimiento a lo dispuesto en la Ley Federal
+            de Protección de datos Personales en Posesión de los Particulares, el Proveedor hizo del conocimiento al
+            Consumidor del
+            aviso de
+            privacidad, así como del procedimiento para ejercer los derechos de acceso, rectificación, cancelación y
+            oposición al
+            tratamiento de sus
+            datos personales en adelante, derechos ARCO.
+        </p>
+        <p class="justificar line-17 size-13px -mt-3">
+            <span class="bold">NOVENA SEGUNDA. JURISDICCION.- </span>
+        </p>
+        <p class="justificar line-17 size-13px -mt-3">
+            Para todo lo relativo a la interpretación, aplicación y cumplimiento del presente Contrato, “Las
+            partes” acuerdan someterse en la vía administrativa a la Procuraduría Federal del Consumidor, y en caso de
+            subsistir las
+            diferencias, a la
+            jurisdicción de los tribunales competentes del lugar donde se celebra este contrato.
+            Leído que fue y una vez hecha la explicación de su alcance legal y contenido, este Contrato se firma por
+            duplicado en
+            cada una de sus hojas
+            y al calce, en la Ciudad de Mazatlan, Sinaloa , el día <span class="bold">{{ fechahora(now()) }}</span>.
+            Entregándosele una copia del
+            mismo
+            a “El
+            consumidor”.
+        </p>
+        @if ($datos['inhumacion_b']==1)
+        <p class="center line-17 size-13px bold uppercase">
+            sobre la ubicación para inhumar
+        </p>
+        <div>
+            <table class="w-100 size-13px mt-2 datos_tabla uppercase">
+                @if ($datos['cementerios_servicio_id']==1)
+                <tr class="size-15px center uppercase">
+                    <td class="py-1 bold">ubicación</td>
+                    <td class="px-1">{{ $datos['terreno']['ubicacion_servicio'] }}</td>
+                </tr>
+                <tr class="size-15px center uppercase">
+                    <td class="py-1 bold" colspan="2">titular del convenio</td>
+                </tr>
+                <tr class="size-15px center uppercase">
+                    <td class="py-1" colspan="2">{{ $datos['terreno']['nombre'] }}</td>
+                </tr>
+                @else
+                <tr class="size-15px center uppercase">
+                    <td class="py-1 bold">ubicación</td>
+                    <td class="px-1">{{ $datos['nota_ubicacion'] }}</td>
+                </tr>
+                @endif
+            </table>
+        </div>
+        @endif
+
+        @if ($datos['plan_funerario_futuro_b']==1 || $datos['plan_funerario_inmediato_b']==1)
+        <p class="center line-17 size-13px bold uppercase">
+            sobre el plan de servicios funerarios
+        </p>
+        @if ($datos['plan_funerario_futuro_b']==1)
+        <table class="w-100 size-13px mt-2 datos_tabla uppercase">
+            <tr class="size-15px center uppercase">
+                <td class="py-1 bold">plan funerario de uso a futuro</td>
+                <td class="px-1">{{ $datos['plan_funerario_futuro'] }}</td>
+            </tr>
+            <tr class="size-15px center uppercase">
+                <td class="py-1 bold" colspan="2">titular del convenio</td>
+            </tr>
+            <tr class="size-15px center uppercase">
+                <td class="py-1" colspan="2">{{ $datos['nombre_titular_plan_funerario_futuro'] }}</td>
+            </tr>
+        </table>
+        @else
+        <table class="w-100 size-13px mt-2 datos_tabla uppercase">
+            <tr class="size-15px center uppercase">
+                <td class="py-1 bold">plan funerario de uso inmediato</td>
+                <td class="px-1">{{ $datos['plan_funerario_original'] }}</td>
+            </tr>
+        </table>
+        @endif
+
+        @endif
+
+
+        <p class="center line-17 size-13px bold uppercase">
+            anexos (artículos y servicios del contrato)
+        </p>
+
+        <div>
+            <table class="w-100 size-13px mt-5 datos_tabla uppercase">
+                <thead>
+                    <tr class="center">
+                        <td class="bg-gray bold">No.</td>
+                        <td class="bg-gray bold">Cantidad</td>
+                        <td class="bg-gray bold">Concepto</td>
+                        <td class="bg-gray bold">$ Des.</td>
+                        <td class="bg-gray bold">$ Base</td>
+                        <td class="bg-gray bold">$ IVA</td>
+                        <td class="bg-gray bold">$ Total</td>
+                        <td class="bg-gray bold">$ Imp.</td>
+                        <td class="bg-gray bold">Facturable</td>
+                        <td class="bg-gray bold">P. Funerario</td>
+                    </tr>
+                </thead>
+                @if (count($datos['operacion']['movimientoinventario']['articulosserviciofunerario'] )>0)
+                @foreach ($datos['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index=>
+                $concepto)
+                <tr class="size-15px center">
+                    <td class="py-1">{{$index+1}}</td>
+                    <td class="px-1">{{ $concepto['cantidad'] }}</td>
+                    <td class="px-1">{{ $concepto['descripcion'] }}</td>
+                    <td class="px-1">{{ number_format($concepto['descuento'], 2) }}</td>
+                    <td class="py-1">{{number_format($concepto['subtotal'], 2) }}</td>
+                    <td class="px-1">{{ number_format($concepto['impuestos'], 2) }}</td>
+                    <td class="px-1">{{ number_format($concepto['costo_neto'], 2) }}</td>
+                    <td class="px-1">{{ number_format($concepto['importe'], 2) }}</td>
+                    <td class="px-1">@if ($concepto['facturable_b']==1)
+                        SI
+                        @else
+                        NO
+                        @endif</td>
+                    <td class="px-1">
+                        @if ($concepto['plan_b']==1)
+                        SI
+                        @else
+                        NO
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+                @else
+                <tr class="size-15px center">
+                    <td class="w-100 py-1 px-2" colspan="3">No se han agregado conceptos a este contrato</td>
+
+                </tr>
+                @endif
+            </table>
+            <table class="w-100 size-13px mt-5 datos_tabla">
+                <tr class="size-15px">
+                    <td class="py-1 w-85 right px-2 bold">Subtotal $</td>
+                    <td class="py-1 center">{{number_format($datos['operacion']['subtotal'],2)}}</td>
+                </tr>
+                <tr class="size-15px center">
+                    <td class="py-1 w-85 right px-2 bold">Descuento $</td>
+                    <td class="py-1 center">{{number_format($datos['operacion']['descuento'],2)}}</td>
+                </tr>
+                <tr class="size-15px center">
+                    <td class="py-1 w-85 right px-2 bold">TASA IVA</td>
+                    <td class="py-1 center">{{$datos['operacion']['tasa_iva']/100}}</td>
+                </tr>
+                <tr class="size-15px center">
+                    <td class="py-1 w-85 right px-2 bold">IVA $</td>
+                    <td class="py-1 center">{{number_format($datos['operacion']['impuestos'],2)}}</td>
+                </tr>
+                <tr class="size-15px center">
+                    <td class="py-1 w-85 right px-2 bold">Total $</td>
+                    <td class="py-1 center">{{number_format($datos['operacion']['total'],2)}}</td>
+                </tr>
+            </table>
+        </div>
 
 
 
-        <div class="w-100 center hidden">
+        <div class="w-100 center">
             <div class="w-50 float-left mt-20">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
-                    <div class=" pb-1"><span class="texto-base bold">
-                            @if ($datos['embalsamar_b'] == 1)
-                                Dr.
-                            @endif
-                            {{ $datos['medico_responsable_embalsamado'] }}
+                    <div class=" pb-1"><span class="texto-base bold uppercase center">
+                            <p class=" line-17 size-13px">
+                                {{ $empresa['razon_social'] }}
+                            </p>
+                            <p class=" line-17 size-13px -mt-3">
+                                {{ $registro['rep_legal'] }}(REPRESENTANTE LEGAL)
+                            </p>
+
                         </span></div>
                 </div>
-                <span class="texto-base">Médico Responsable</span>
             </div>
             <div class="w-50 float-right mt-20">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
-                    <div class="pb-1"><span class="texto-base bold">{{ $datos['preparador'] }}</span>
-                    </div>
-                    <span class="texto-base">Embalsamador</span>
+                    <div class=" pb-1"><span class="texto-base bold uppercase center">
+                            <p class=" line-17 size-13px">
+                                "EL CONSUMIDOR"
+                            </p>
+                            <p class=" line-17 size-13px -mt-3">
+                                {{ $datos['operacion']['cliente']['nombre'] }}
+                            </p>
+
+                        </span></div>
                 </div>
             </div>
         </div>
+
+
+
+        <div class="w-100 center pt-30">
+            <p class="justificar line-17 size-13px mt-30">
+                <span class="bold">Autorización con fines mercadotécnicos o publicitarios.-</span> “El consumidor” Si (
+                ) NO
+                ( ) acepta que “El
+                Proveedor” Ceda O
+                transmita a
+                terceros, con fines mercadotécnicos o publicitarios, la información proporcionada con motivo del
+                presente
+                Contrato y SI
+                acepta ( ) NO acepta
+                ( ) que “El proveedor” le envié publicidad sobre bienes y servicios.
+            </p>
+            <div class="w-50 float-left mt-10">
+                <div class="w-90 mr-auto ml-auto border-top pt-1">
+                    <div class=" pb-1"><span class="texto-base bold uppercase center">
+                            <p class=" line-17 size-13px">
+                                Firma de autorización de"El Consumidor"
+                            </p>
+                        </span></div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </body>
 

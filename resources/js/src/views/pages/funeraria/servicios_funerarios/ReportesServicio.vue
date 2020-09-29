@@ -364,6 +364,11 @@ export default {
           url: "/funeraria/servicio_funerario/acuse_cancelacion",
           tipo: "pdf",
         },
+        {
+          documento: "Contrato",
+          url: "/funeraria/contrato_servicio_funerario",
+          tipo: "pdf",
+        },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,
       funcion_reemplazada: [],
@@ -412,7 +417,8 @@ export default {
         documento != "Material de Velación" &&
         documento != "Entrega de acta de defunción" &&
         documento != "Entrega de cenizas" &&
-        documento != "Hoja de Servicio"
+        documento != "Hoja de Servicio" &&
+        documento != "Contrato"
       ) {
         return true;
       } else {
@@ -450,6 +456,13 @@ export default {
           if (this.datosSolicitud.operacion != null) {
             return true;
           } else return false;
+        } else if (documento == "Contrato") {
+          /**chenado si esta cancelada la venta para mostrar este archivo de acuse de cancelacion */
+          if (this.datosSolicitud.operacion != null) {
+            return true;
+          } else {
+            return false;
+          }
         }
       }
     },

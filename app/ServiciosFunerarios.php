@@ -113,6 +113,8 @@ class ServiciosFunerarios extends Model
                 'operaciones.ventas_terrenos_id',
                 'operaciones.id as id_operacion',
                 'ventas_terrenos.id',
+                'clientes_id',
+                'nombre',
                 DB::raw(
                     '(NULL) as ubicacion_servicio'
                 ),
@@ -123,7 +125,8 @@ class ServiciosFunerarios extends Model
                     '(NULL) as status_operacion_texto'
                 )
             )
-            ->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id');
+            ->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
+            ->join('clientes', 'operaciones.clientes_id', '=', 'clientes.id');
     }
 
     public function materialrentado()
