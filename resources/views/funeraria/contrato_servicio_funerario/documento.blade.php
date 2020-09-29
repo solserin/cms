@@ -646,7 +646,7 @@
 
 
         <div class="w-100 center">
-            <div class="w-50 float-left mt-20">
+            <div class="w-50 float-left mt-50">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1"><span class="texto-base bold uppercase center">
                             <p class=" line-17 size-13px">
