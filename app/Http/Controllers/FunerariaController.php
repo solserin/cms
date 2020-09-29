@@ -4753,7 +4753,7 @@ class FunerariaController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $id_servicio = 3;
+        $id_servicio = 1;
         $email = false;
         $email_to = 'hector@gmail.com';
 
