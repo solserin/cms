@@ -1,25 +1,25 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-cancelar_cementerio normal-forms cancelar_planes background-header-forms"
+      class="forms-popups-85 normal-forms cancelar_funeraria background-header-forms"
       fullscreen
-      title="Cancelar Venta de Terreno"
+      title="Cancelar Solicitud"
       :active.sync="showVentana"
-      ref="cancelar_venta"
+      ref="cancelar_solicitud"
     >
       <div class="pb-5">
         <div class="flex flex-wrap">
           <div class="w-full text-center py-1">
             <div class="w-full">
               <span class="text-lg font-medium text-dark">
-                ¿Está seguro de querer cancelar este contrato?
+                ¿Está seguro de querer cancelar esta solicitud?
               </span>
             </div>
             <div class="w-full py-2 px-2">
               <span class="text-base">
                 Una vez realizado el proceso de cancelación no habrá manera de
-                volver a habilitar la venta. Es recomendable llevar a cabo este
-                proceso una vez esté seguro de que es necesario.
+                volver a habilitar la solicitud. Es recomendable llevar a cabo
+                este proceso una vez esté seguro de que es necesario.
               </span>
             </div>
           </div>
@@ -34,36 +34,34 @@
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2">
             <div class="w-full pt-3 text-center">
               <span class="font-medium text-dark text-lg"
-                >Tipo de Plan Funerario:</span
+                >Tipo de Servicio:</span
               >
               <div class="py-1">
-                <span class="capitalize">
-                  <span class="capitalize" v-if="datosVenta.venta_plan">{{
-                    datosVenta.venta_plan.nombre_original
-                  }}</span>
-                </span>
+                <span class="capitalize"> servicio funerario </span>
               </div>
             </div>
 
             <div class="w-full pt-3 text-center">
               <span class="font-medium text-dark text-lg"
-                >Titular del Plan Funerario:</span
+                >Nombre del finado:</span
               >
               <div class="py-1">
-                <span class="capitalize" v-if="datosVenta.nombre">{{
-                  datosVenta.nombre
+                <span class="capitalize" v-if="datosVenta.nombre_afectado">{{
+                  datosVenta.nombre_afectado
                 }}</span>
               </div>
             </div>
 
-            <div class="w-full text-center ">
+            <div class="w-full text-center">
               <span class="font-medium text-dark text-lg"
                 >Cantidad cubierta de capital hasta la fecha:</span
               >
               <div class="py-1">
-                <span class="capitalize" v-if="datosVenta">
+                <span class="capitalize" v-if="datosVenta.operacion">
                   $
-                  {{ datosVenta.abonado_capital | numFormat("0,000.00") }}
+                  {{
+                    datosVenta.operacion.total_cubierto | numFormat("0,000.00")
+                  }}
                   Pesos mxn
                 </span>
               </div>
@@ -112,9 +110,7 @@
                 name="plan_venta"
                 data-vv-as=" "
               >
-                <div slot="no-options">
-                  No Se Ha Seleccionado Ningún Motivo
-                </div>
+                <div slot="no-options">No Se Ha Seleccionado Ningún Motivo</div>
               </v-select>
               <div>
                 <span class="text-danger text-sm">{{
@@ -136,7 +132,7 @@
           <div class="py-5">
             <label class=""
               >Agregue un comentario respecto a la cancelación de esta
-              venta:</label
+              solicitud:</label
             >
           </div>
           <vs-textarea
@@ -173,7 +169,7 @@
         :show="openConfirmar"
         :callback-on-success="callback"
         @closeVerificar="openConfirmar = false"
-        :accion="'Cancelar venta de propiedad'"
+        :accion="'Cancelar servicio funerario'"
       ></Password>
 
       <ConfirmarDanger
@@ -189,29 +185,29 @@
 <script>
 import Password from "@pages/confirmar_password";
 import vSelect from "vue-select";
-import planes from "@services/planes";
+import funeraria from "@services/funeraria";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 export default {
   components: {
     Password,
     "v-select": vSelect,
-    ConfirmarDanger
+    ConfirmarDanger,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
-    id_venta: {
+    id_solicitud: {
       type: Number,
       required: true,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
-        this.$refs["cancelar_venta"].$el.querySelector(
+        this.$refs["cancelar_solicitud"].$el.querySelector(
           ".vs-icon"
         ).onclick = () => {
           this.cancelar();
@@ -224,7 +220,9 @@ export default {
           this.form.cantidad = "0.00";
           this.$vs.loading();
           try {
-            let res = await planes.consultar_venta_id(this.getVentaId);
+            let res = await funeraria.get_solicitudes_servicios_id(
+              this.getSolicitudId
+            );
             this.datosVenta = res.data[0];
             this.$vs.loading.close();
           } catch (err) {
@@ -238,7 +236,7 @@ export default {
                   iconPack: "feather",
                   icon: "icon-alert-circle",
                   color: "warning",
-                  time: 4000
+                  time: 4000,
                 });
               } else {
                 this.$vs.notify({
@@ -249,7 +247,7 @@ export default {
                   icon: "icon-alert-circle",
                   color: "danger",
                   position: "bottom-right",
-                  time: "9000"
+                  time: "9000",
                 });
               }
             }
@@ -258,10 +256,10 @@ export default {
           }
         })();
       }
-    }
+    },
   },
   computed: {
-    motivo_computed: function() {
+    motivo_computed: function () {
       return this.form.motivo.value;
     },
     showVentana: {
@@ -270,16 +268,16 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    getVentaId: {
+    getSolicitudId: {
       get() {
-        return this.id_venta;
+        return this.id_solicitud;
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -294,33 +292,33 @@ export default {
       motivos: [
         {
           label: "FALTA DE PAGO",
-          value: 1
+          value: 1,
         },
         {
           label: "A PETICIÓN DEL CLIENTE",
-          value: 2
+          value: 2,
         },
         {
           label: "ERROR AL CAPTURAR",
-          value: 3
-        }
+          value: 3,
+        },
       ],
       form: {
-        venta_id: "",
+        solicitud_id: "",
         motivo: {
           label: "FALTA DE PAGO",
-          value: 1
+          value: 1,
         },
         cantidad: "0.00",
-        comentario: ""
-      }
+        comentario: "",
+      },
     };
   },
   methods: {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Error",
@@ -329,12 +327,12 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
             return;
           } else {
             (async () => {
-              this.callback = await this.cancelar_venta;
+              this.callback = await this.cancelar_solicitud;
               this.openConfirmar = true;
             })();
           }
@@ -355,46 +353,42 @@ export default {
       this.form.cantidad = 0;
       (this.form.motivo = {
         label: "FALTA DE PAGO",
-        value: 1
+        value: 1,
       }),
         this.$emit("closeCancelarVenta");
       return;
     },
-
-    async cancelar_venta() {
+    async cancelar_solicitud() {
       this.errores = [];
       this.$vs.loading();
-      this.form.venta_id = this.getVentaId;
+      this.form.solicitud_id = this.getSolicitudId;
       try {
-        let res = await planes.cancelar_venta(this.form);
-        console.log("cancelar_venta -> res", res);
+        let res = await funeraria.cancelar_solicitud(this.form);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Ventas de Propiedades",
+            title: "Servicios Funerarios",
             text: "Se ha cancelado la venta correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("closeCancelarVenta", res.data);
           this.$emit("ConsultarVenta", res.data);
         } else {
           this.$vs.notify({
-            title: "Ventas de Propiedades",
+            title: "Servicios Funerarios",
             text: "Error al cancelar la venta, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
         }
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("cancelar_venta -> err.response", err.response);
-          //console.log("modificarVenta -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -403,12 +397,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
             this.errores = err.response.data.error;
-            if (this.errores.venta_id) {
+            if (this.errores.solicitud_id) {
               //la propiedad esa ya ha sido vendida
               this.$vs.notify({
                 title: "Seleccione una venta",
@@ -416,7 +410,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             }
 
@@ -426,7 +420,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             //este error es por alguna condicion que el contrano no cumple para modificar
@@ -437,18 +431,18 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000
+              time: 30000,
             });
           }
         }
         this.$vs.loading.close();
       }
-    }
+    },
   },
   created() {},
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showVentana) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -456,6 +450,6 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>

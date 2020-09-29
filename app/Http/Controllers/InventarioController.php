@@ -759,6 +759,7 @@ class InventarioController extends ApiController
             $datos_request = json_decode($request->request_parent[0], true);
             $id_ajuste = $datos_request['id_ajuste'];
 
+            
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */

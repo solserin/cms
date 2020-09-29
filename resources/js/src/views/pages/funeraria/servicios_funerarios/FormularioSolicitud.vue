@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms solicitud-propiedades background-header-forms forms-popups"
+      class="normal-forms solicitud-propiedades background-header-forms forms-popups-100"
       fullscreen
       close="cancelar"
       :title="
@@ -154,9 +154,7 @@
                   name="muerte_natural_b"
                   data-vv-as=" "
                 >
-                  <div slot="no-options">
-                    Seleccione 1
-                  </div>
+                  <div slot="no-options">Seleccione 1</div>
                 </v-select>
                 <div>
                   <span class="text-danger">{{
@@ -186,9 +184,7 @@
                   name="contagioso_b"
                   data-vv-as=" "
                 >
-                  <div slot="no-options">
-                    Seleccione 1
-                  </div>
+                  <div slot="no-options">Seleccione 1</div>
                 </v-select>
                 <div>
                   <span class="text-danger">{{
@@ -385,9 +381,7 @@
                   name="recogio"
                   data-vv-as=" "
                 >
-                  <div slot="no-options">
-                    Seleccione 1
-                  </div>
+                  <div slot="no-options">Seleccione 1</div>
                 </v-select>
                 <div>
                   <span class="text-danger">{{ errors.first("recogio") }}</span>
@@ -773,7 +767,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await funeraria.modificar_solicitud(this.form);
-        console.log("modificar_solicitud -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -799,9 +792,7 @@ export default {
 
         this.$vs.loading.close();
       } catch (err) {
-        console.log("modificar_solicitud -> err", err);
         if (err.response) {
-          console.log("modificar_solicitud -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({

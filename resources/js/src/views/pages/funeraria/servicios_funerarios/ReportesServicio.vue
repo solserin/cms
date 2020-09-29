@@ -58,10 +58,10 @@
         </div>
       </div>
 
-      <div class="w-full pt-8" v-if="datosSolicitud.operacion_id">
+      <div class="w-full pt-8" v-if="datosSolicitud.operacion">
         <vs-table
           class="tablas-pagos"
-          :data="datosSolicitud.pagos_programados"
+          :data="datosSolicitud.operacion.pagos_programados"
           noDataText="0 Resultados"
           ref="tabla_pagos_programados"
         >
@@ -72,9 +72,7 @@
             <vs-th>#</vs-th>
             <vs-th>Referencia</vs-th>
             <vs-th>Fecha Programada</vs-th>
-            <vs-th>Nueva Fecha de Pago</vs-th>
             <vs-th>Monto Pago</vs-th>
-            <vs-th>Intereses Generados</vs-th>
             <vs-th>Restante a Pagar</vs-th>
             <vs-th>Concepto</vs-th>
             <vs-th>Estatus</vs-th>
@@ -83,39 +81,38 @@
           <template>
             <vs-tr
               v-show="programados.status == 1"
-              v-for="(programados,
-              index_programado) in datosSolicitud.pagos_programados"
+              v-for="(programados, index_programado) in datosSolicitud.operacion
+                .pagos_programados"
               v-bind:key="programados.id"
               ref="row"
             >
-              <vs-td :class="[programados.status_pago == 0 ? 'text-danger' : '']">
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+              >
                 <span class="font-semibold">{{ programados.num_pago }}</span>
               </vs-td>
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >{{ programados.referencia_pago }}</vs-td>
+                >{{ programados.referencia_pago }}</vs-td
+              >
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >{{ programados.fecha_programada_abr }}</vs-td>
-              <vs-td :class="[programados.status_pago == 0 ? 'text-danger' : '']">
-                <span v-if="programados.saldo_neto > 0">{{ programados.fecha_a_pagar_abr }}</span>
-                <span v-else>{{ programados.fecha_ultimo_pago_abr }}</span>
-              </vs-td>
-              <vs-td :class="[programados.status_pago == 0 ? 'text-danger' : '']">
+                >{{ programados.fecha_programada_abr }}</vs-td
+              >
+              <vs-td
+                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
+              >
                 $
-                {{
-                programados.monto_programado | numFormat("0,000.00")
-                }}
+                {{ programados.monto_programado | numFormat("0,000.00") }}
               </vs-td>
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >$ {{ programados.intereses | numFormat("0,000.00") }}</vs-td>
+                >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td
+              >
               <vs-td
                 :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td>
-              <vs-td
-                :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-              >{{ programados.concepto_texto }}</vs-td>
+                >{{ programados.concepto_texto }}</vs-td
+              >
               <vs-td
                 :class="[
                   programados.status_pago == 0 ? 'text-danger' : '',
@@ -152,7 +149,7 @@
         </vs-table>
       </div>
 
-      <div class="w-full pt-8" v-if="datosSolicitud.operacion_id">
+      <div class="w-full pt-8" v-if="datosSolicitud.operacion">
         <vs-table class="tablas-pagos" :data="pagos" noDataText="0 Resultados">
           <template slot="header">
             <h3>Listado de Abonos Recibidos</h3>
@@ -167,7 +164,11 @@
             <vs-th>Consultar</vs-th>
           </template>
           <template>
-            <vs-tr v-for="(pago, index_pago) in pagos" v-bind:key="pago.id" ref="row">
+            <vs-tr
+              v-for="(pago, index_pago) in pagos"
+              v-bind:key="pago.id"
+              ref="row"
+            >
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
                 <span class>{{ pago.id }}</span>
               </vs-td>
@@ -175,7 +176,9 @@
                 <span class>{{ pago.fecha_pago_texto }}</span>
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
-                <span class>$ {{ pago.total_pago | numFormat("0,000.00") }}</span>
+                <span class
+                  >$ {{ pago.total_pago | numFormat("0,000.00") }}</span
+                >
               </vs-td>
               <vs-td :class="[pago.status == 0 ? 'text-danger' : '']">
                 <span class>{{ pago.movimientos_pagos_texto }}</span>
@@ -234,25 +237,25 @@ import FormularioPagos from "@pages/pagos/FormularioPagos";
 export default {
   components: {
     Reporteador,
-    FormularioPagos
+    FormularioPagos,
   },
   props: {
     verAcuse: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     id_solicitud: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["lista_reportes"].$el.querySelector(
           ".vs-icon"
@@ -262,7 +265,7 @@ export default {
         (async () => {
           await this.get_solicitudes_servicios_id();
           if (this.operacion_id != "") {
-            //await this.consultar_pagos_operacion_id();
+            await this.consultar_pagos_operacion_id();
           }
           /**checamos si esta ventana fue abierta con el fin de ver el acuse de cancelacion */
           if (this.getVerAcuse == true) {
@@ -279,7 +282,7 @@ export default {
         this.datosSolicitud = [];
         this.total = 0;
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -288,7 +291,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_solicitud_id: {
       get() {
@@ -296,7 +299,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getVerAcuse: {
       get() {
@@ -304,8 +307,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -314,38 +317,58 @@ export default {
         {
           documento: "Solicitud de Servicio",
           url: "/funeraria/get_hoja_solicitud",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Autorización de Servicio Funerario",
           url: "/funeraria/hoja_preautorizacion",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Certificado de Defunción",
           url: "/funeraria/certificado_defuncion",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
           documento: "Guía de Servicio Para el Cliente",
           url: "/funeraria/instrucciones_servicio_funerario",
-          tipo: "pdf"
+          tipo: "pdf",
         },
         {
-          documento: "Talonario de Pagos",
-          url: "/funeraria/referencias_de_pago",
-          tipo: "pdf"
+          documento: "Constancia de embalsamiento",
+          url: "/funeraria/contancia_de_embalsamiento",
+          tipo: "pdf",
         },
         {
-          documento: "Reglamento de Pago",
-          url: "/funeraria/reglamento_pago",
-          tipo: "pdf"
+          documento: "Material de Velación",
+          url: "/funeraria/material_velacion_rentado",
+          tipo: "pdf",
+        },
+        {
+          documento: "Entrega de acta de defunción",
+          url: "/funeraria/entrega_acta_defuncion",
+          tipo: "pdf",
+        },
+        {
+          documento: "Entrega de cenizas",
+          url: "/funeraria/entrega_cenizas",
+          tipo: "pdf",
+        },
+        {
+          documento: "Hoja de Servicio",
+          url: "/funeraria/orden_servicio",
+          tipo: "pdf",
         },
         {
           documento: "Acuse de cancelación",
-          url: "/funeraria/acuse_cancelacion",
-          tipo: "pdf"
-        }
+          url: "/funeraria/servicio_funerario/acuse_cancelacion",
+          tipo: "pdf",
+        },
+        {
+          documento: "Contrato",
+          url: "/funeraria/contrato_servicio_funerario",
+          tipo: "pdf",
+        },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,
       funcion_reemplazada: [],
@@ -355,13 +378,13 @@ export default {
         id_pago: "",
         id_servicio: "",
         email: "",
-        destinatario: ""
+        destinatario: "",
       },
       openReportesLista: false,
       verFormularioPagos: false,
       tipoFormularioPagos: "",
       operacion_id: "",
-      pagos: []
+      pagos: [],
     };
   },
   methods: {
@@ -390,20 +413,56 @@ export default {
     mostrarDocumento(documento) {
       if (
         documento != "Acuse de cancelación" &&
-        documento != "Constancia de Finiquito"
+        documento != "Constancia de embalsamiento" &&
+        documento != "Material de Velación" &&
+        documento != "Entrega de acta de defunción" &&
+        documento != "Entrega de cenizas" &&
+        documento != "Hoja de Servicio" &&
+        documento != "Contrato"
       ) {
         return true;
       } else {
         if (documento == "Acuse de cancelación") {
           /**chenado si esta cancelada la venta para mostrar este archivo de acuse de cancelacion */
-          if (this.datosSolicitud.operacion_status == 0) {
-            return true;
-          } else return false;
-        } else if (documento == "Constancia de Finiquito") {
+          if (this.datosSolicitud.operacion != null) {
+            if (this.datosSolicitud.operacion.operacion_status == 0) {
+              return true;
+            } else return false;
+          } else {
+            return false;
+          }
+        } else if (documento == "Constancia de embalsamiento") {
           /**chenado si tiene saldo pendiente */
-          if (this.datosSolicitud.saldo_neto <= 0) {
+          if (this.datosSolicitud.embalsamar_b == 1) {
             return true;
           } else return false;
+        } else if (documento == "Material de Velación") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.material_velacion_b == 1) {
+            return true;
+          } else return false;
+        } else if (documento == "Entrega de acta de defunción") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.acta_b == 1) {
+            return true;
+          } else return false;
+        } else if (documento == "Entrega de cenizas") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.cremacion_b == 1) {
+            return true;
+          } else return false;
+        } else if (documento == "Hoja de Servicio") {
+          /**chenado si tiene saldo pendiente */
+          if (this.datosSolicitud.operacion != null) {
+            return true;
+          } else return false;
+        } else if (documento == "Contrato") {
+          /**chenado si esta cancelada la venta para mostrar este archivo de acuse de cancelacion */
+          if (this.datosSolicitud.operacion != null) {
+            return true;
+          } else {
+            return false;
+          }
         }
       }
     },
@@ -416,7 +475,7 @@ export default {
       this.ListaReportes = [];
       this.ListaReportes.push({
         nombre: nombre_reporte,
-        url: link
+        url: link,
       });
       //estado de cuenta
       this.request.email = this.datosSolicitud.email;
@@ -441,7 +500,7 @@ export default {
         );
         console.log("get_solicitudes_servicios_id -> res", res);
         this.datosSolicitud = res.data[0];
-        //this.operacion_id = this.datosSolicitud.operacion_id;
+        this.operacion_id = this.datosSolicitud.operacion.operacion_id;
         /*if (this.datosSolicitud.pagos_programados.length > 0) {
           //calculando el total de rows 
           this.funcion_reemplazada = [];
@@ -472,7 +531,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -485,6 +544,7 @@ export default {
         let datos_request = { operacion_id: this.operacion_id };
         let res = await pagos.consultar_pagos_operacion_id(datos_request);
         this.pagos = res.data.data;
+        console.log("consultar_pagos_operacion_id ->  this.pagos", this.pagos);
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
@@ -496,16 +556,16 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
       }
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showVentana) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -513,7 +573,7 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
 

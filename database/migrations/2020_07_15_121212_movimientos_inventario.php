@@ -18,10 +18,10 @@ class MovimientosInventario extends Migration
             $table->string('folio_referencia')->nullable();
             $table->dateTime('fecha_registro')->nullable();
             $table->dateTime('fecha_movimiento')->nullable();
-            $table->unsignedDecimal('subtotal', 10, 2);
-            $table->unsignedDecimal('descuento', 10, 2);
-            $table->unsignedDecimal('impuestos', 10, 2);
-            $table->unsignedDecimal('total', 10, 2);
+            //$table->unsignedDecimal('subtotal', 10, 2);
+            //$table->unsignedDecimal('descuento', 10, 2);
+            //$table->unsignedDecimal('impuestos', 10, 2);
+            //$table->unsignedDecimal('total', 10, 2);
             $table->mediumText('nota')->nullable();
             $table->unsignedBigInteger('cancelo_id')->unsigned()->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
@@ -35,7 +35,7 @@ class MovimientosInventario extends Migration
             $table->foreign('proveedores_id')->references('id')->on('proveedores');
             $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
             $table->foreign('registro_id')->references('id')->on('usuarios');
-            $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('status')->default(1)->nullable();
         });
     }
 

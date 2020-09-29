@@ -22,12 +22,11 @@ class VentaDetalle extends Migration
             $table->foreign('lotes_id')->references('id')->on('movimientos_inventario');
             $table->unsignedBigInteger('articulos_id')->unsigned()->nullable();
             $table->foreign('articulos_id')->references('id')->on('articulos');
-            $table->unsignedDecimal('subtotal', 10, 2);
-            $table->unsignedDecimal('descuento', 10, 2);
-            $table->unsignedDecimal('impuestos', 10, 2);
-            $table->unsignedDecimal('total', 10, 2);
-            $table->tinyInteger('descuento_plan_b')->default(0);
-            $table->bigInteger('parent_paquete_id');
+            $table->unsignedDecimal('costo_neto_normal', 10, 2);
+            $table->unsignedDecimal('costo_neto_descuento', 10, 2);
+            $table->tinyInteger('plan_b')->default(0);
+            $table->tinyInteger('descuento_b')->default(0);
+            $table->tinyInteger('facturable_b')->default(0);
         });
     }
 

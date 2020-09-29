@@ -70,9 +70,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("titulo")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("titulo") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -102,9 +102,9 @@
                     ref="fallecido_ref"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("nombre_afectado")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("nombre_afectado") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -134,9 +134,9 @@
                     class="w-full my-1"
                   />
                   <div>
-                    <span class="text-danger">
-                      {{ errors.first("fecha_nacimiento") }}
-                    </span>
+                    <span class="text-danger">{{
+                      errors.first("fecha_nacimiento")
+                    }}</span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -167,9 +167,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("genero")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("genero") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -201,9 +201,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("nacionalidad")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("nacionalidad") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -229,9 +229,9 @@
                     v-model="form.lugar_nacimiento"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("lugar_nacimiento")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("lugar_nacimiento") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -256,14 +256,14 @@
                     v-model="form.ocupacion"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("ocupacion")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("ocupacion") }}
+                    </span>
                   </div>
                   <div class="mt-2">
-                    <span class="text-danger" v-if="this.errores.ocupacion">{{
-                      errores.ocupacion[0]
-                    }}</span>
+                    <span class="text-danger" v-if="this.errores.ocupacion">
+                      {{ errores.ocupacion[0] }}
+                    </span>
                   </div>
                 </div>
                 <div
@@ -281,9 +281,9 @@
                     v-model="form.direccion_fallecido"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("direccion_fallecido")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("direccion_fallecido") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -316,9 +316,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("estado_civil")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("estado_civil") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -350,9 +350,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("escolaridad")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("escolaridad") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -384,9 +384,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("afiliacion")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("afiliacion") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -412,9 +412,9 @@
                     v-model="form.afiliacion_nota"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("afiliacion_nota")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("afiliacion_nota") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -475,9 +475,9 @@
                     v-model="form.folio_certificado"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("folio_certificado")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("folio_certificado") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -506,9 +506,9 @@
                     class="w-full my-1"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("fechahora_defuncion")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("fechahora_defuncion") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -536,9 +536,9 @@
                     v-model="form.causa_muerte"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("causa_muerte")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("causa_muerte") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -566,9 +566,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("muerte_natural_b")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("muerte_natural_b") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -596,9 +596,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("contagioso_b")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("contagioso_b") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -630,9 +630,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("sitio_muerte")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("sitio_muerte") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -657,9 +657,9 @@
                     v-model="form.lugar_muerte"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("lugar_muerte")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("lugar_muerte") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -688,9 +688,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("atencion_medica_b")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("atencion_medica_b") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -716,9 +716,9 @@
                     v-model="form.enfermedades_padecidas"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("enfermedades_padecidas")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("enfermedades_padecidas") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -743,9 +743,9 @@
                     v-model="form.certificado_informante"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("certificado_informante")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("certificado_informante") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -771,9 +771,9 @@
                     v-model="form.certificado_informante_telefono"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("certificado_informante_telefono")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("certificado_informante_telefono") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -798,9 +798,9 @@
                     v-model="form.certificado_informante_parentesco"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("certificado_informante_parentesco")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("certificado_informante_parentesco") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -825,9 +825,9 @@
                     v-model="form.medico_legista"
                   />
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("medico_legista")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("medico_legista") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -859,9 +859,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("estado_cuerpo")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("estado_cuerpo") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -948,9 +948,9 @@
                         :disabled="form.embalsamar_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("medico_responsable_embalsamado")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("medico_responsable_embalsamado") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -985,9 +985,9 @@
                         :disabled="form.embalsamar_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("preparador")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("preparador") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1065,9 +1065,9 @@
                         <div slot="no-options">Seleccione 1</div>
                       </v-select>
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("lugar_servicio")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("lugar_servicio") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1102,9 +1102,9 @@
                         :disabled="form.velacion_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("direccion_velacion")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("direccion_velacion") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1184,9 +1184,9 @@
                         :disabled="form.cremacion_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("fechahora_cremacion")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("fechahora_cremacion") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1220,9 +1220,9 @@
                         :disabled="form.cremacion_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("fechahora_entrega_cenizas")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("fechahora_entrega_cenizas") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1248,9 +1248,9 @@
                         :disabled="form.cremacion_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("descripcion_urna")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("descripcion_urna") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1328,9 +1328,9 @@
                         <div slot="no-options">Seleccione 1</div>
                       </v-select>
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("cementerio_servicio")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("cementerio_servicio") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1364,9 +1364,9 @@
                         :disabled="form.inhumacion_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("fechahora_inhumacion")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("fechahora_inhumacion") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1384,6 +1384,25 @@
                         <label class="text-sm opacity-75 font-bold">
                           Seleccione el Convenio del Terreno
                           <span class="texto-importante">(*)</span>
+                          <span
+                            v-if="
+                              this.form.ventas_terrenos_id != 0 &&
+                              this.form.ventas_terrenos_id != ''
+                            "
+                          >
+                            <span
+                              v-if="this.saldo_neto_terreno == 0"
+                              class="text-success"
+                            >
+                              Terreno pagado
+                            </span>
+                            <span v-else class="text-danger">
+                              Por pagar $
+                              {{
+                                this.saldo_neto_terreno | numFormat("0,000.00")
+                              }}
+                            </span>
+                          </span>
                         </label>
                       </div>
                       <div class="flex flex-wrap">
@@ -1428,15 +1447,15 @@
                             type="text"
                             class="w-full py-1 cursor-pointer texto-bold"
                             placeholder="SELECCIONE EL CONVENIO DEL TERRENO"
-                            v-model="form.ubicacion"
+                            v-model="form.ubicacion_convenio"
                             maxlength="100"
                             ref="cliente_ref"
                             :disabled="form.inhumacion_b != 1 ? true : false"
                           />
                           <div>
-                            <span class="text-danger">{{
-                              errors.first("ventas_terrenos_id")
-                            }}</span>
+                            <span class="text-danger">
+                              {{ errors.first("ventas_terrenos_id") }}
+                            </span>
                           </div>
                           <div class="mt-2">
                             <span
@@ -1478,9 +1497,9 @@
                         :disabled="form.inhumacion_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("ubicacion")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("ubicacion") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1562,9 +1581,9 @@
                         :disabled="form.traslado_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("fechahora_traslado")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("fechahora_traslado") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1599,9 +1618,9 @@
                         :disabled="form.traslado_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("destino_traslado")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("destino_traslado") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1669,9 +1688,9 @@
                         :disabled="form.aseguradora_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("numero_convenio_aseguradora")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("numero_convenio_aseguradora") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1706,9 +1725,9 @@
                         :disabled="form.aseguradora_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("aseguradora")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("aseguradora") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1734,9 +1753,9 @@
                         :disabled="form.aseguradora_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("telefono_aseguradora")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("telefono_aseguradora") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1816,9 +1835,9 @@
                         :disabled="form.misa_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("fechahora_misa")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("fechahora_misa") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1851,9 +1870,9 @@
                         :disabled="form.misa_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("iglesia_misa")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("iglesia_misa") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1879,9 +1898,9 @@
                         :disabled="form.misa_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("direccion_iglesia")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("direccion_iglesia") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1949,9 +1968,9 @@
                         :disabled="form.custodia_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("responsable_custodia")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("responsable_custodia") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -1977,9 +1996,9 @@
                         :disabled="form.custodia_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("folio_custodia")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("folio_custodia") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -2005,9 +2024,9 @@
                         :disabled="form.custodia_b != 1 ? true : false"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("folio_liberacion")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("folio_liberacion") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -2099,7 +2118,7 @@
                     >
                       <vs-td class="w-1/12">
                         <div class="capitalize">
-                          <span class="lowercase">{{ (indextr+1) }})</span>
+                          <span class="lowercase">{{ indextr + 1 }})</span>
                         </div>
                       </vs-td>
                       <vs-td class="w-1/12">
@@ -2126,7 +2145,7 @@
                           :name="'cantidad' + indextr"
                           data-vv-as=" "
                           data-vv-validate-on="blur"
-                          v-validate="'integer|min_value:' + 0"
+                          v-validate="'required|integer|min_value:' + 0"
                           class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad"
                           maxlength="4"
                           v-model="form.material_velacion[indextr].cantidad"
@@ -2135,8 +2154,25 @@
                           "
                         />
                         <div>
-                          <span class="text-danger text-xs">
-                            {{ errors.first("cantidad" + indextr) }}
+                          <span class="text-danger text-xs">{{
+                            errors.first("cantidad" + indextr)
+                          }}</span>
+                        </div>
+
+                        <div>
+                          <span
+                            class="text-danger text-xs"
+                            v-if="
+                              errores[
+                                'material_velacion.' + indextr + '.cantidad'
+                              ]
+                            "
+                          >
+                            {{
+                              errores[
+                                "material_velacion." + indextr + ".cantidad"
+                              ][0]
+                            }}
                           </span>
                         </div>
                       </vs-td>
@@ -2223,9 +2259,9 @@
                       :disabled="this.form.acta_b == 0 ? true : false"
                     />
                     <div>
-                      <span class="text-danger">{{
-                        errors.first("folio_acta")
-                      }}</span>
+                      <span class="text-danger">
+                        {{ errors.first("folio_acta") }}
+                      </span>
                     </div>
                     <div class="mt-2">
                       <span
@@ -2257,9 +2293,9 @@
                       :disabled="this.form.acta_b == 0 ? true : false"
                     />
                     <div>
-                      <span class="text-danger">{{
-                        errors.first("fecha_acta")
-                      }}</span>
+                      <span class="text-danger">
+                        {{ errors.first("fecha_acta") }}
+                      </span>
                     </div>
                     <div class="mt-2">
                       <span
@@ -2324,9 +2360,9 @@
                       class="w-full my-1"
                     />
                     <div>
-                      <span class="text-danger">{{
-                        errors.first("fechahora_contrato")
-                      }}</span>
+                      <span class="text-danger">
+                        {{ errors.first("fechahora_contrato") }}
+                      </span>
                     </div>
                     <div class="mt-2">
                       <span
@@ -2390,9 +2426,9 @@
                           ref="cliente_ref"
                         />
                         <div>
-                          <span class="text-danger">{{
-                            errors.first("id_cliente")
-                          }}</span>
+                          <span class="text-danger">
+                            {{ errors.first("id_cliente") }}
+                          </span>
                         </div>
                         <div class="mt-2">
                           <span
@@ -2421,9 +2457,9 @@
                       v-model="form.parentesco_contratante"
                     />
                     <div>
-                      <span class="text-danger">{{
-                        errors.first("parentesco_contratante")
-                      }}</span>
+                      <span class="text-danger">
+                        {{ errors.first("parentesco_contratante") }}
+                      </span>
                     </div>
                     <div class="mt-2">
                       <span
@@ -2677,9 +2713,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("plan_funerario_futuro_b")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("plan_funerario_futuro_b") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -2709,18 +2745,17 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("plan_funerario_inmediato_b")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("plan_funerario_inmediato_b") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
                       class="text-danger"
                       v-if="this.errores['plan_funerario_inmediato_b.value']"
-                      >{{
-                        errores["plan_funerario_inmediato_b.value"][0]
-                      }}</span
                     >
+                      {{ errores["plan_funerario_inmediato_b.value"][0] }}
+                    </span>
                   </div>
                 </div>
 
@@ -2754,9 +2789,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("plan_funerario")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("plan_funerario") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -2786,7 +2821,7 @@
                           class="cursor-pointer p-2"
                           src="@assets/images/search.svg"
                           @click="openBuscadorPlan = true"
-                          title="Buscar Cliente"
+                          title="Buscar Convenio"
                         />
                         <img
                           v-else
@@ -2822,9 +2857,9 @@
                         ref="plan_ref"
                       />
                       <div>
-                        <span class="text-danger">{{
-                          errors.first("id_convenio_plan")
-                        }}</span>
+                        <span class="text-danger">
+                          {{ errors.first("id_convenio_plan") }}
+                        </span>
                       </div>
                       <div class="mt-2">
                         <span
@@ -2860,9 +2895,9 @@
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
                   <div>
-                    <span class="text-danger">{{
-                      errors.first("tipo_contratante")
-                    }}</span>
+                    <span class="text-danger">
+                      {{ errors.first("tipo_contratante") }}
+                    </span>
                   </div>
                   <div class="mt-2">
                     <span
@@ -2932,12 +2967,10 @@
                                   <vs-th>Descripción</vs-th>
                                   <vs-th>Lote</vs-th>
                                   <vs-th>Cant.</vs-th>
-                                  <vs-th>Subtotal</vs-th>
-                                  <vs-th>Desc.</vs-th>
-                                  <vs-th>IVA</vs-th>
-                                  <vs-th>Costo</vs-th>
+                                  <vs-th>Costo Neto</vs-th>
+                                  <vs-th>Descuento</vs-th>
+                                  <vs-th>Costo Neto Con Descuento</vs-th>
                                   <vs-th>Importe</vs-th>
-                                  <vs-th>Importe a Pagar</vs-th>
                                   <vs-th>Plan Funerario</vs-th>
                                   <vs-th>Facturable</vs-th>
                                   <vs-th>Quitar</vs-th>
@@ -2950,9 +2983,9 @@
                                   >
                                     <vs-td>
                                       <div class="capitalize">
-                                        <span class="lowercase">
-                                          {{ indextr + 1 }}
-                                        </span>
+                                        <span class="lowercase">{{
+                                          indextr + 1
+                                        }}</span>
                                       </div>
                                     </vs-td>
                                     <vs-td>
@@ -2999,10 +3032,24 @@
                                         </span>
                                       </div>
                                     </vs-td>
-                                    <vs-td>
+                                    <vs-td
+                                      v-if="
+                                        habilitar_plan_funerario_b == false ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            1 &&
+                                          form.articulos_servicios[indextr]
+                                            .plan_b == 0) ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            0 &&
+                                          form.plan_funerario_inmediato_b
+                                            .value == 1)
+                                      "
+                                    >
                                       <vs-input
                                         :name="
-                                          'subtotal_articulos_servicios' +
+                                          'costo_neto_normal_articulos_servicios' +
                                           indextr
                                         "
                                         data-vv-as=" "
@@ -3014,110 +3061,175 @@
                                         maxlength="10"
                                         v-model="
                                           form.articulos_servicios[indextr]
-                                            .subtotal
+                                            .costo_neto_normal
+                                        "
+                                        :disabled="
+                                          form.articulos_servicios[indextr]
+                                            .descuento_b == 1
                                         "
                                       />
                                       <div>
                                         <span class="text-danger text-xs">
                                           {{
                                             errors.first(
-                                              "subtotal_articulos_servicios" +
+                                              "costo_neto_normal_articulos_servicios" +
                                                 indextr
                                             )
                                           }}
                                         </span>
                                       </div>
                                     </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        <vs-input
-                                          :name="
-                                            'descuento_articulos_servicios' +
-                                            indextr
-                                          "
-                                          data-vv-as=" "
-                                          data-vv-validate-on="blur"
-                                          v-validate="
-                                            'required|decimal:2|min_value:' +
-                                            0 +
-                                            '|max_value:' +
-                                            form.articulos_servicios[indextr]
-                                              .subtotal
-                                          "
-                                          class="w-full sm:w-8/12 md:w-7/12 lg:w-7/12 xl:w-7/12 mr-auto ml-auto mt-1 cantidad"
-                                          maxlength="10"
-                                          v-model="
-                                            form.articulos_servicios[indextr]
-                                              .descuento
-                                          "
-                                          :disabled="
-                                            habilitar_plan_funerario_b &&
-                                            form.articulos_servicios[indextr]
-                                              .descuento_plan_b == 1
-                                          "
-                                        />
-                                        <div>
-                                          <span class="text-danger text-xs">
-                                            {{
-                                              errors.first(
-                                                "descuento_articulos_servicios" +
-                                                  indextr
-                                              )
-                                            }}
-                                          </span>
-                                        </div>
-                                      </div>
+                                    <vs-td v-else>
+                                      <div class="capitalize">$ 0.00</div>
                                     </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].iva
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].costo
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].importe
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        $
-                                        {{
-                                          data[indextr].importe
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
+                                    <vs-td
+                                      v-if="
+                                        habilitar_plan_funerario_b == false ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            1 &&
+                                          form.articulos_servicios[indextr]
+                                            .plan_b == 0) ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            0 &&
+                                          form.plan_funerario_inmediato_b
+                                            .value == 1)
+                                      "
+                                    >
                                       <vs-switch
                                         class="ml-auto mr-auto"
                                         color="success"
                                         icon-pack="feather"
                                         v-model="
                                           form.articulos_servicios[indextr]
-                                            .descuento_plan_b
+                                            .descuento_b
                                         "
-                                        :disabled="habilitar_plan_funerario_b"
                                       >
                                         <span slot="on">SI</span>
                                         <span slot="off">NO</span>
                                       </vs-switch>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
+                                    </vs-td>
+                                    <vs-td
+                                      v-if="
+                                        habilitar_plan_funerario_b == false ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            1 &&
+                                          form.articulos_servicios[indextr]
+                                            .plan_b == 0) ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            0 &&
+                                          form.plan_funerario_inmediato_b
+                                            .value == 1)
+                                      "
+                                    >
+                                      <vs-input
+                                        :name="
+                                          'costo_neto_descuento_articulos_servicios' +
+                                          indextr
+                                        "
+                                        data-vv-as=" "
+                                        data-vv-validate-on="blur"
+                                        v-validate="
+                                          'required|decimal:2|min_value:' +
+                                          0 +
+                                          '|max_value:' +
+                                          form.articulos_servicios[indextr]
+                                            .costo_neto_normal
+                                        "
+                                        class="w-full sm:w-8/12 md:w-7/12 lg:w-7/12 xl:w-7/12 mr-auto ml-auto mt-1 cantidad"
+                                        maxlength="10"
+                                        v-model="
+                                          form.articulos_servicios[indextr]
+                                            .costo_neto_descuento
+                                        "
+                                        :disabled="
+                                          form.articulos_servicios[indextr]
+                                            .descuento_b == 0
+                                        "
+                                      />
+                                      <div>
+                                        <span class="text-danger text-xs">
+                                          {{
+                                            errors.first(
+                                              "costo_neto_descuento_articulos_servicios" +
+                                                indextr
+                                            )
+                                          }}
+                                        </span>
+                                      </div>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
+                                    </vs-td>
+                                    <vs-td
+                                      v-if="
+                                        habilitar_plan_funerario_b == false ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            1 &&
+                                          form.articulos_servicios[indextr]
+                                            .plan_b == 0) ||
+                                        (habilitar_plan_funerario_b == true &&
+                                          form.plan_funerario_futuro_b.value ==
+                                            0 &&
+                                          form.plan_funerario_inmediato_b
+                                            .value == 1)
+                                      "
+                                    >
+                                      <div
+                                        class="capitalize"
+                                        v-if="
+                                          form.articulos_servicios[indextr]
+                                            .descuento_b == 1
+                                        "
+                                      >
+                                        $
+                                        {{
+                                          (form.articulos_servicios[indextr]
+                                            .costo_neto_descuento *
+                                            form.articulos_servicios[indextr]
+                                              .cantidad)
+                                            | numFormat("0,000.00")
+                                        }}
+                                      </div>
+                                      <div class="capitalize" v-else>
+                                        $
+                                        {{
+                                          (form.articulos_servicios[indextr]
+                                            .costo_neto_normal *
+                                            form.articulos_servicios[indextr]
+                                              .cantidad)
+                                            | numFormat("0,000.00")
+                                        }}
+                                      </div>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">$ 0.00</div>
+                                    </vs-td>
+
+                                    <vs-td v-if="habilitar_plan_funerario_b">
+                                      <vs-switch
+                                        class="ml-auto mr-auto"
+                                        color="success"
+                                        icon-pack="feather"
+                                        v-model="
+                                          form.articulos_servicios[indextr]
+                                            .plan_b
+                                        "
+                                        :disabled="!habilitar_plan_funerario_b"
+                                      >
+                                        <span slot="on">SI</span>
+                                        <span slot="off">NO</span>
+                                      </vs-switch>
+                                    </vs-td>
+                                    <vs-td v-else>
+                                      <div class="capitalize">N/A</div>
                                     </vs-td>
                                     <vs-td>
                                       <vs-switch
@@ -3135,7 +3247,16 @@
                                     </vs-td>
 
                                     <vs-td>
-                                      <div class="capitalize">1</div>
+                                      <div
+                                        class=""
+                                        @click="remover_articulo(indextr)"
+                                        v-if="!fueCancelada"
+                                      >
+                                        <img
+                                          class="cursor-pointer img-btn"
+                                          src="@assets/images/minus.svg"
+                                        />
+                                      </div>
                                     </vs-td>
                                   </vs-tr>
                                 </template>
@@ -3145,6 +3266,174 @@
                         </div>
                       </div>
                     </div>
+
+                    <!--checkout-->
+                    <div class="w-full">
+                      <div class="flex flex-wrap my-6">
+                        <div class="w-full px-2">
+                          <vs-divider />
+                        </div>
+                        <div class="w-full sm:w-12/12 md:w-8/12 lg:9/12 px-2">
+                          <div class="flex flex-wrap">
+                            <div class="w-full pt-3 pb-3 px-2">
+                              <div class="float-left">
+                                <img
+                                  class="float-left"
+                                  width="36px"
+                                  src="@assets/images/notas_add.svg"
+                                />
+                                <h3
+                                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
+                                >
+                                  Notas / Observaciones Sobre el Contrato
+                                </h3>
+                              </div>
+                            </div>
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                            >
+                              <label class="text-sm opacity-75 font-bold"
+                                >NOTA U OBSERVACIÓN:</label
+                              >
+                              <vs-textarea
+                                height="240px"
+                                maxlength="350"
+                                size="large"
+                                ref="nota"
+                                type="text"
+                                class="w-full pt-3 pb-3 mt-1 large_textarea"
+                                placeholder="Ingrese una nota..."
+                                v-model.trim="form.nota"
+                              />
+                            </div>
+                          </div>
+                          <!--fin del resumen de la venta-->
+                        </div>
+                        <div class="w-full sm:w-12/12 md:w-4/12 lg:3/12 px-2">
+                          <div class="flex flex-wrap">
+                            <div class="w-full pt-3 pb-3 px-2">
+                              <div class="float-left">
+                                <img
+                                  class="float-left"
+                                  width="36px"
+                                  src="@assets/images/payments.svg"
+                                />
+                                <h3
+                                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
+                                >
+                                  Total del Contrato Funerario
+                                </h3>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="flex flex-wrap">
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 text-center"
+                            >
+                              <label class="text-xl opacity-75">
+                                Tasa IVA %
+                                <span class="texto-importante">(*)</span>
+                              </label>
+                              <vs-input
+                                :disabled="
+                                  tiene_pagos_realizados ||
+                                  ventaLiquidada ||
+                                  fueCancelada
+                                "
+                                size="large"
+                                name="tasa_iva"
+                                data-vv-as=" "
+                                v-validate="
+                                  'required|decimal:2|min_value:14|max_value:25'
+                                "
+                                type="text"
+                                class="w-full pb-1 pt-1 texto-bold cantidad"
+                                placeholder="Porcentaje IVA"
+                                v-model="form.tasa_iva"
+                                maxlength="2"
+                              />
+                              <div>
+                                <span class="mensaje-requerido">
+                                  {{ errors.first("tasa_iva") }}
+                                </span>
+                              </div>
+                              <div class="mt-2">
+                                <span
+                                  class="mensaje-requerido"
+                                  v-if="this.errores.tasa_iva"
+                                  >{{ errores.tasa_iva[0] }}</span
+                                >
+                              </div>
+                            </div>
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 text-center"
+                              v-if="verTotalUsoinmediato"
+                            >
+                              <label class="text-lg opacity-75"
+                                >$ Total de plan de uso inmediato</label
+                              >
+                              <div class="mt-1 pb-2 text-center">
+                                <span class="total_contrato text-xl font-bold">
+                                  $
+                                  {{
+                                    totalUsoInmediato | numFormat("0,000.00")
+                                  }}
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 text-center"
+                            >
+                              <label class="text-xl opacity-75"
+                                >$ Total a Pagar</label
+                              >
+                              <div class="mt-3 text-center">
+                                <span class="total_contrato text-3xl font-bold">
+                                  $
+                                  {{ totalContrato | numFormat("0,000.00") }}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div class="w-full px-2 mt-2 text-center">
+                              <p class="texto-ojo">
+                                <span class="text-danger font-medium"
+                                  >Ojo:</span
+                                >
+                                Los costos de los conceptos capturados ya
+                                incluyen el IVA.
+                              </p>
+                              <vs-divider />
+                            </div>
+
+                            <div
+                              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                            >
+                              <div class="flex flex-wrap">
+                                <vs-button
+                                  v-if="!fueCancelada"
+                                  class="w-full ml-auto mr-auto mt-1"
+                                  @click="acceptAlert()"
+                                  color="success"
+                                  size="large"
+                                >
+                                  <img
+                                    width="25px"
+                                    class="cursor-pointer img-btn"
+                                    src="@assets/images/save.svg"
+                                  />
+                                  <span class="texto-btn"
+                                    >Guardar Contrato</span
+                                  >
+                                </vs-button>
+                              </div>
+                            </div>
+                            <!--fin de precios-->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--fin del checkout-->
                   </vx-card>
                 </div>
               </div>
@@ -3220,7 +3509,6 @@ import "flatpickr/dist/themes/airbnb.css";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
-import planes from "@services/planes";
 import funeraria from "@services/funeraria";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
@@ -3261,7 +3549,7 @@ export default {
       type: String,
       required: true,
     },
-    id_venta: {
+    id_solicitud: {
       type: Number,
       required: false,
       default: 0,
@@ -3280,7 +3568,6 @@ export default {
         (async () => {
           await this.get_nacionalidades();
           await this.get_estados_afectado();
-
           await this.get_titulos();
           await this.get_estados_civiles();
           await this.get_escolaridades();
@@ -3288,14 +3575,16 @@ export default {
           await this.get_sitios_muerte();
           await this.get_lugares_velacion();
           await this.get_lugares_inhumacion();
-          await this.get_titulos();
           await this.get_material_velacion();
           await this.get_tipos_contratante();
 
           if (this.getTipoformulario == "agregar") {
             /**acciones cuando el formulario es de agregar */
           } else {
+            await this.get_solicitudes_servicios_id();
+            /**aqui cargo la informacion que existe hasta el momento sobre este servicio */
             /**es modificar */
+            /**aqui me traigo la informacion capturara hasta el momento de esta llamada de modificacion */
             /**pasando el valor de la venta id */
             //this.form.id_venta = this.get_venta_id;
             /**se cargan los datos al formulario */
@@ -3308,12 +3597,12 @@ export default {
     },
 
     "form.inhumacion_b": function (newValue, oldValue) {
-      this.form.ubicacion = "";
-      this.form.ventas_terrenos_id = "";
+      ///this.form.ubicacion = "";
+      //this.form.ventas_terrenos_id = "";
     },
     "form.cementerio_servicio": function (newValue, oldValue) {
-      this.form.ubicacion = "";
-      this.form.ventas_terrenos_id = "";
+      //this.form.ubicacion_convenio = "";
+      //this.form.ventas_terrenos_id = "";
     },
 
     "form.plan_funerario_futuro_b": function (newValue, oldValue) {
@@ -3329,12 +3618,23 @@ export default {
           label: "Seleccione 1",
         };*/
       } else {
-        this.secciones = this.datosPlanFunerario.venta_plan.secciones_original;
-        /**cargar datos de origien del plan de uso a futuro */
+        if (this.secciones_original == []) {
+          this.secciones = this.datosPlanFunerario.venta_plan.secciones_original;
+        } else {
+          this.secciones = this.secciones_original;
+        }
+        /**cargar datos de origen del plan de uso a futuro */
       }
     },
     "form.plan_funerario_inmediato_b": function (newValue, oldValue) {
       if (newValue.value == 1) {
+        if (this.data_contrato != []) {
+          /**el contrato tiene un plan funerario de uso inmediato */
+          //se selecciona este por defecto
+          this.form.plan_funerario = this.planes_funerarios[
+            this.planes_funerarios.length - 1
+          ];
+        }
         this.secciones = this.form.plan_funerario.secciones;
       } else {
         this.form.plan_funerario = this.planes_funerarios[0];
@@ -3568,27 +3868,102 @@ export default {
     /**controla si deja al usuario decidir si aplicar al plan funerario o no */
     habilitar_plan_funerario_b: function () {
       if (this.form.plan_funerario_futuro_b.value == 1) {
-        if (
+        return true;
+        /* if (
           this.form.id_convenio_plan <= 0 ||
           this.form.id_convenio_plan == ""
         ) {
-          return true;
-        } else {
           return false;
-        }
-      } else {
-        if (this.form.plan_funerario_inmediato_b.value == "") {
-          return true;
         } else {
-          if (this.form.plan_funerario.value == "") {
-            return true;
-          } else {
+          return true;
+        }*/
+      } else {
+        if (this.form.plan_funerario_inmediato_b.value != 1) {
+          return false;
+        } else {
+          return true;
+          /*if (this.form.plan_funerario.value == "") {
             return false;
-          }
+          } else {
+            return true;
+          }*/
         }
       }
     },
+    verTotalUsoinmediato: function () {
+      if (
+        this.habilitar_plan_funerario_b == true &&
+        this.form.plan_funerario_futuro_b.value == 0 &&
+        this.form.plan_funerario_inmediato_b.value == 1
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    totalUsoInmediato: function () {
+      let total = 0;
+      this.form.articulos_servicios.forEach((element, index) => {
+        /**calculo tomando en cuenta que tiene un plan de uso inmdiato */
+        if (
+          this.habilitar_plan_funerario_b == true &&
+          this.form.plan_funerario_futuro_b.value == 0 &&
+          this.form.plan_funerario_inmediato_b.value == 1
+        ) {
+          if (this.form.articulos_servicios[index].plan_b == 1) {
+            if (this.form.articulos_servicios[index].descuento_b == 1) {
+              total +=
+                this.form.articulos_servicios[index].cantidad *
+                this.form.articulos_servicios[index].costo_neto_descuento;
+            } else {
+              total +=
+                this.form.articulos_servicios[index].cantidad *
+                this.form.articulos_servicios[index].costo_neto_normal;
+            }
+          }
+        }
+      });
+      return total;
+    },
+    totalContrato: function () {
+      let total = 0;
+      this.form.articulos_servicios.forEach((element, index) => {
+        /**calculo tomando en cuenta que no tiene seleccionado un plan fuenerario a futuro */
+        if (
+          this.habilitar_plan_funerario_b == false ||
+          (this.habilitar_plan_funerario_b == true &&
+            this.form.plan_funerario_futuro_b.value == 0 &&
+            this.form.plan_funerario_inmediato_b.value == 1)
+        ) {
+          if (this.form.articulos_servicios[index].descuento_b == 1) {
+            total +=
+              this.form.articulos_servicios[index].cantidad *
+              this.form.articulos_servicios[index].costo_neto_descuento;
+          } else {
+            total +=
+              this.form.articulos_servicios[index].cantidad *
+              this.form.articulos_servicios[index].costo_neto_normal;
+          }
+        } else {
+          /**calculo tomado en cuenta que tiene seleccionado un plan funerario a futuro */
+          if (this.form.articulos_servicios[index].plan_b != 1) {
+            /**tomando en cuenta que el concepto no es parte del plan */
 
+            /**no siendo parte del plan */
+            if (this.form.articulos_servicios[index].descuento_b == 1) {
+              total +=
+                this.form.articulos_servicios[index].cantidad *
+                this.form.articulos_servicios[index].costo_neto_descuento;
+            } else {
+              total +=
+                this.form.articulos_servicios[index].cantidad *
+                this.form.articulos_servicios[index].costo_neto_normal;
+            }
+          }
+        }
+      });
+      return total;
+    },
     showVentana: {
       get() {
         return this.show;
@@ -3605,9 +3980,9 @@ export default {
         return newValue;
       },
     },
-    get_venta_id: {
+    get_id_solicitud: {
       get() {
-        return this.id_venta;
+        return this.id_solicitud;
       },
       set(newValue) {
         return newValue;
@@ -3644,6 +4019,7 @@ export default {
   },
   data() {
     return {
+      saldo_neto_terreno: 0,
       datosPlanFunerario: [],
       secciones_original: [],
       secciones: [],
@@ -3741,6 +4117,11 @@ export default {
         },
       ],
       form: {
+        index_articulo_servicio: "",
+        /**DATOS DEL CONTRATO DE LA BD */
+        data_contrato: [],
+        /**ID DEL SERVICIO */
+        id_servicio: 0,
         /**fallecido */
         nombre_afectado: "",
         fecha_nacimiento: "",
@@ -3828,6 +4209,7 @@ export default {
         },
         fechahora_inhumacion: "",
         ubicacion: "",
+        ubicacion_convenio: "",
         ventas_terrenos_id: 0,
         traslado_b: 0,
         fechahora_traslado: "",
@@ -3874,7 +4256,6 @@ export default {
 
         id_convenio_plan: "",
         plan: "",
-        conceptos_plan: [],
         plan_funerario_inmediato_b: {
           value: "1",
           label: "SI",
@@ -3882,12 +4263,14 @@ export default {
         plan_funerario: {
           value: "",
           label: "Seleccione 1",
+          plan: "",
           secciones: [],
           costo_neto: 0,
         },
         articulos_servicios: [],
         /**fin datos del contrato */
         tasa_iva: 16,
+        nota: "",
       },
       /**variables dle modulo */
       openBuscadorArticulos: false,
@@ -3912,6 +4295,451 @@ export default {
     };
   },
   methods: {
+    async get_solicitudes_servicios_id() {
+      this.$vs.loading();
+      await funeraria
+        .get_solicitudes_servicios_id(this.get_id_solicitud)
+        .then((res) => {
+          if (res.data.length > 0) {
+            /**hay datos que mostrar */
+            let data = res.data[0];
+            this.data_contrato = data;
+            /**cargando el tipo de titulo que tiene la persona */
+            for (let index = 0; index < this.titulos.length; index++) {
+              if (this.titulos[index].value == data.titulos_id) {
+                this.form.titulo = this.titulos[index];
+                break;
+              }
+            }
+            /**nombre del afectado */
+            this.form.nombre_afectado = data.nombre_afectado;
+            var fecha_nacimiento =
+              data.fecha_nacimiento != null
+                ? data.fecha_nacimiento.split("-")
+                : null;
+            //yyyy-mm-dd
+            this.form.fecha_nacimiento =
+              data.fecha_nacimiento != null
+                ? new Date(
+                    fecha_nacimiento[0],
+                    fecha_nacimiento[1] - 1,
+                    fecha_nacimiento[2]
+                  )
+                : null;
+            /**cargando el genero */
+            this.generos.forEach((genero) => {
+              if (genero.value == data.generos_id) {
+                this.form.genero = genero;
+                return;
+              }
+            });
+            /**cargando la nacionalidad */
+            if (data.nacionalidades_id > 0) {
+              this.form.nacionalidad = {
+                value: data.nacionalidad.id,
+                label: data.nacionalidad.nacionalidad,
+              };
+            }
+
+            this.form.lugar_nacimiento = data.lugar_nacimiento;
+            this.form.ocupacion = data.ocupacion;
+            this.form.direccion_fallecido = data.direccion_fallecido;
+
+            /**cargando el estado civil del fallecido */
+            this.estados_civiles.forEach((element) => {
+              if (element.value == data.estados_civiles_id) {
+                this.form.estado_civil = element;
+                return;
+              }
+            });
+
+            /**cargando la escolaridad del fallecido */
+            this.escolaridades.forEach((element) => {
+              if (element.value == data.escolaridades_id) {
+                this.form.escolaridad = element;
+                return;
+              }
+            });
+
+            /**cargando la afiliacion del fallecido */
+            this.afiliaciones.forEach((element) => {
+              if (element.value == data.afiliaciones_id) {
+                this.form.afiliacion = element;
+                return;
+              }
+            });
+            this.form.afiliacion_nota = data.afiliacion_nota;
+
+            /**comienza a llenar los datos relavantes al certificado medico */
+            this.form.folio_certificado = data.folio_certificado;
+            if (data.fechahora_defuncion != null) {
+              var fecha_defuncion = data.fecha_muerte.split("-");
+              var hora_defuncion = data.hora_muerte.split(":");
+              //yyyy-mm-dd hh:mm
+              this.form.fechahora_defuncion = new Date(
+                fecha_defuncion[0],
+                fecha_defuncion[1] - 1,
+                fecha_defuncion[2],
+                hora_defuncion[0],
+                hora_defuncion[1]
+              );
+            }
+            this.form.causa_muerte = data.causa_muerte;
+            this.sino.forEach((element) => {
+              if (element.value == data.muerte_natural_b) {
+                this.form.muerte_natural_b = element;
+                return;
+              }
+            });
+            this.sino.forEach((element) => {
+              if (element.value == data.contagioso_b) {
+                this.form.contagioso_b = element;
+                return;
+              }
+            });
+
+            /**sitio de muerte */
+            this.sitios_muerte.forEach((element) => {
+              if (element.value == data.sitios_muerte_id) {
+                this.form.sitio_muerte = element;
+                return false;
+              }
+            });
+            this.form.lugar_muerte = data.lugar_muerte;
+            this.sino.forEach((element) => {
+              if (element.value == data.atencion_medica_b) {
+                this.form.atencion_medica_b = element;
+                return;
+              }
+            });
+            this.form.enfermedades_padecidas = data.enfermedades_padecidas;
+            this.form.certificado_informante = data.certificado_informante;
+            this.form.certificado_informante_telefono =
+              data.certificado_informante_telefono;
+            this.form.certificado_informante_parentesco =
+              data.certificado_informante_parentesco;
+            this.form.medico_legista = data.medico_legista;
+            this.estados_cuerpo.forEach((element) => {
+              if (element.value == data.estado_afectado_id) {
+                this.form.estado_cuerpo = element;
+                return;
+              }
+            });
+
+            /**comenzando datos de destinos del servicio */
+            this.form.embalsamar_b = data.embalsamar_b;
+            if (this.form.embalsamar_b == 1) {
+              this.form.medico_responsable_embalsamado =
+                data.medico_responsable_embalsamado;
+              this.form.preparador = data.preparador;
+            } else {
+              this.form.embalsamar_b = 0;
+            }
+
+            this.form.cremacion_b = data.cremacion_b;
+            if (
+              this.form.cremacion_b == 1 &&
+              data.fechahora_cremacion != null
+            ) {
+              var fecha_cremacion = data.fecha_cremacion.split("-");
+              var hora_cremacion = data.hora_cremacion.split(":");
+              //yyyy-mm-dd hh:mm
+              this.form.fechahora_cremacion = new Date(
+                fecha_cremacion[0],
+                fecha_cremacion[1] - 1,
+                fecha_cremacion[2],
+                hora_cremacion[0],
+                hora_cremacion[1]
+              );
+            } else {
+              this.form.cremacion_b = 0;
+              this.form.fechahora_cremacion = null;
+            }
+
+            if (
+              this.form.cremacion_b == 1 &&
+              data.fechahora_entrega_cenizas != null
+            ) {
+              var fecha_cremacion = data.fecha_entrega_cenizas.split("-");
+              var hora_cremacion = data.hora_entrega_cenizas.split(":");
+              //yyyy-mm-dd hh:mm
+              this.form.fechahora_entrega_cenizas = new Date(
+                fecha_cremacion[0],
+                fecha_cremacion[1] - 1,
+                fecha_cremacion[2],
+                hora_cremacion[0],
+                hora_cremacion[1]
+              );
+            } else {
+              this.form.fechahora_entrega_cenizas = null;
+            }
+
+            if (this.form.cremacion_b == 1) {
+              this.form.descripcion_urna = data.descripcion_urna;
+            }
+
+            this.form.traslado_b = data.traslado_b;
+            if (this.form.traslado_b == 1 && data.fechahora_traslado != null) {
+              var fecha_traslado = data.fecha_traslado.split("-");
+              var hora_traslado = data.hora_traslado.split(":");
+              //yyyy-mm-dd hh:mm
+              this.form.fechahora_traslado = new Date(
+                fecha_traslado[0],
+                fecha_traslado[1] - 1,
+                fecha_traslado[2],
+                hora_traslado[0],
+                hora_traslado[1]
+              );
+            } else {
+              this.form.traslado_b = 0;
+            }
+
+            if (this.form.traslado_b == 1) {
+              this.form.destino_traslado = data.destino_traslado;
+            }
+
+            this.form.misa_b = data.misa_b;
+
+            if (this.form.misa_b == 1 && data.fechahora_misa != null) {
+              var fecha_misa = data.fecha_misa.split("-");
+              var hora_misa = data.hora_misa.split(":");
+              //yyyy-mm-dd hh:mm
+              this.form.fechahora_misa = new Date(
+                fecha_misa[0],
+                fecha_misa[1] - 1,
+                fecha_misa[2],
+                hora_misa[0],
+                hora_misa[1]
+              );
+            } else {
+              this.form.misa_b = 0;
+            }
+
+            if (this.form.misa_b == 1) {
+              this.form.iglesia_misa = data.iglesia_misa;
+              this.form.direccion_iglesia = data.direccion_iglesia;
+            }
+
+            /**velacion */
+            this.form.velacion_b = data.velacion_b;
+            if (this.form.velacion_b == 1) {
+              this.lugares_servicio.forEach((element) => {
+                if (element.value == data.lugares_servicios_id) {
+                  this.form.lugar_servicio = element;
+                  return;
+                }
+              });
+              this.form.direccion_velacion = data.direccion_velacion;
+            } else {
+              this.form.velacion_b = 0;
+            }
+            /**fin de velacion */
+
+            /**datos para la inhumacion del cuerpo */
+            this.form.inhumacion_b = data.inhumacion_b;
+            if (this.form.inhumacion_b == 1) {
+              this.cementerios_servicio.forEach((element) => {
+                if (element.value == data.cementerios_servicio_id) {
+                  this.form.cementerio_servicio = element;
+                  return;
+                }
+              });
+              if (this.form.inhumacion_b == 1) {
+                if (data.fechahora_inhumacion != null) {
+                  var fecha_inhumacion = data.fecha_inhumacion.split("-");
+                  var hora_inhumacion = data.hora_inhumacion.split(":");
+                  //yyyy-mm-dd hh:mm
+                  this.form.fechahora_inhumacion = new Date(
+                    fecha_inhumacion[0],
+                    fecha_inhumacion[1] - 1,
+                    fecha_inhumacion[2],
+                    hora_inhumacion[0],
+                    hora_inhumacion[1]
+                  );
+                }
+              }
+              if (data.cementerios_servicio_id == 1) {
+                /**es de cementerio aeternus */
+                this.form.ubicacion_convenio = data.terreno.ubicacion_servicio;
+                this.form.ventas_terrenos_id = data.terreno.ventas_terrenos_id;
+                this.saldo_neto_terreno = data.terreno.saldo_neto;
+              } else {
+                /**es de cualquier otro cementerio */
+                this.form.ubicacion = data.nota_ubicacion;
+              }
+            } else {
+              this.form.inhumacion_b = 0;
+            }
+
+            /**datos de la aseguradora */
+            this.form.aseguradora_b = data.aseguradora_b;
+            if (data.aseguradora_b == 1) {
+              /**datos de la aseguradora que existen en la bd */
+              this.form.numero_convenio_aseguradora =
+                data.numero_convenio_aseguradora;
+              this.form.aseguradora = data.aseguradora;
+              this.form.telefono_aseguradora = data.telefono_aseguradora;
+            } else {
+              this.form.aseguradora_b = 0;
+            }
+
+            /**datos de la cadena de custodia */
+            this.form.custodia_b = data.custodia_b;
+            if (data.custodia_b == 1) {
+              /**datos de la cadena de custodia que existen en la bd */
+              this.form.responsable_custodia = data.responsable_custodia;
+              this.form.folio_custodia = data.folio_custodia;
+              this.form.folio_liberacion = data.folio_liberacion;
+            } else {
+              this.form.custodia_b = 0;
+            }
+
+            /**datos del material de velacion */
+            this.form.material_velacion_b = data.material_velacion_b;
+            if (data.material_velacion_b == 1) {
+              /**cargando el material de velacion que tiene este contrato*/
+              this.form.material_velacion.forEach((material) => {
+                data.materialrentado.forEach((rentado) => {
+                  if (material.id == rentado.articulos_id) {
+                    material.cantidad = rentado.cantidad;
+                    material.nota = rentado.nota;
+                    return;
+                  }
+                });
+              });
+            } else {
+              this.form.material_velacion_b = 0;
+            }
+
+            /**datos del acta */
+            this.form.acta_b = data.acta_b;
+            if (data.acta_b == 1) {
+              /**datos de la cadena de custodia que existen en la bd */
+              this.form.folio_acta = data.folio_acta;
+              if (data.fecha_acta != null) {
+                var fecha_acta = data.fecha_acta.split("-");
+                //yyyy-mm-dd hh:mm
+                this.form.fecha_acta = new Date(
+                  fecha_acta[0],
+                  fecha_acta[1] - 1,
+                  fecha_acta[2]
+                );
+              }
+              this.form.folio_acta = data.folio_acta;
+            } else {
+              this.form.acta_b = 0;
+            }
+
+            /**datos del tab de contrato */
+
+            if (data.fechahora_contrato != null) {
+              var fecha_contrato = data.fecha_contrato.split("-");
+              var hora_contrato = data.hora_contrato.split(":");
+              //yyyy-mm-dd hh:mm
+              this.form.fechahora_contrato = new Date(
+                fecha_contrato[0],
+                fecha_contrato[1] - 1,
+                fecha_contrato[2],
+                hora_contrato[0],
+                hora_contrato[1]
+              );
+            }
+            /**aqui revisamos si el contrato ya fue asigando a una operacion */
+            if (data.operacion != null) {
+              /**al si tener registrada una operacion, se carga el cliente asociado a la operacion */
+              this.form.id_cliente = data.operacion.clientes_id;
+              this.form.cliente = data.operacion.cliente.nombre;
+              this.form.tasa_iva = data.operacion.tasa_iva;
+            }
+            this.form.parentesco_contratante = data.parentesco_contratante;
+
+            /**cargando los datos para el plan funerario a futuro en caso de que tenga uno en el contrato */
+            if (
+              data.plan_funerario_futuro_b == 1 &&
+              data.ventas_planes_id > 0
+            ) {
+              this.form.plan_funerario_futuro_b = this.sino[0];
+              /**el contrato tiene venta de plan funerario y se debe de cargar los conceptos */
+              this.form.id_convenio_plan = data.ventas_planes_id;
+              this.form.plan = data.plan_funerario_futuro;
+              this.secciones = data.plan_funerario_secciones_originales;
+              this.secciones_original =
+                data.plan_funerario_secciones_originales;
+              this.datosPlanFunerario.nombre =
+                data.nombre_titular_plan_funerario_futuro;
+              this.datosPlanFunerario.fecha_operacion_texto =
+                data.plan_funerario_futuro_fecha_venta_texto;
+              this.datosPlanFunerario.operacion_status =
+                data.plan_funerario_futuro_status;
+              this.datosPlanFunerario.status_texto =
+                data.plan_funerario_futuro_status_texto;
+              this.datosPlanFunerario.saldo_neto =
+                data.plan_funerario_futuro_saldo_restante;
+
+              if (data.tipos_contratante_id != "") {
+                /**cargando el tipo de contratante*/
+                this.tipos_contratante.forEach((tipo) => {
+                  if (tipo.value == data.tipos_contratante_id) {
+                    this.form.tipo_contratante = tipo;
+                    return;
+                  }
+                });
+              }
+            } else {
+              this.form.plan_funerario_futuro_b = this.sino[1];
+              /**no tiene plan a futuro seleccionado y por lo tanto se debe verificar si cuenta con un plan de uso inmediato incluido */
+              if (
+                data.plan_funerario_inmediato_b == 1 &&
+                data.planes_funerarios_id > 0
+              ) {
+                this.form.plan_funerario_inmediato_b = this.sino[0];
+                /**aqui al cargarse los planes funerario se debe de dejar cargar y despues agregar el plan seleccionado como plan original */
+              } else {
+                /**simplemente no hay plan funerario de uso inmediato */
+                this.form.plan_funerario_inmediato_b = this.sino[1];
+              }
+            }
+
+            /**cargando articulos */
+            if (
+              data.operacion.movimientoinventario.articulosserviciofunerario
+                .length > 0
+            ) {
+              data.operacion.movimientoinventario.articulosserviciofunerario.forEach(
+                (articulo) => {
+                  this.form.articulos_servicios.push({
+                    id: articulo.articulos_id,
+                    codigo_barras: articulo.codigo_barras,
+                    tipo: articulo.tipo,
+                    categoria: articulo.categoria,
+                    descripcion: articulo.descripcion,
+                    lote: articulo.lotes_id,
+                    cantidad: articulo.cantidad,
+                    costo_neto_normal: articulo.costo_neto_normal,
+                    descuento_b: articulo.descuento_b,
+                    costo_neto_descuento: articulo.costo_neto_descuento,
+                    importe: articulo.importe,
+                    facturable_b: articulo.facturable_b,
+                    existencia: "N/A",
+                    plan_b: articulo.plan_b,
+                  });
+                }
+              );
+            }
+            /**fin de cargar articulos */
+
+            this.form.nota = data.nota_servicio;
+          } else {
+            /**no hay datos que mostrar y se cierra la ventana */
+          }
+          /**aqui cargo los datos obtenidos */
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
     async get_nacionalidades() {
       this.$vs.loading();
       await clientes
@@ -3927,7 +4755,6 @@ export default {
             });
           });
           this.form.nacionalidad = this.nacionalidades[122];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -3947,7 +4774,6 @@ export default {
             });
           });
           this.form.titulo = this.titulos[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -3968,7 +4794,6 @@ export default {
             });
           });
           this.form.estado_cuerpo = this.estados_cuerpo[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -3987,8 +4812,7 @@ export default {
               value: element.id,
             });
           });
-          this.form.estado_civil = this.nacionalidades[0];
-          this.$vs.loading.close();
+          this.form.estado_civil = this.estados_civiles[0];
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4008,7 +4832,6 @@ export default {
             });
           });
           this.form.escolaridad = this.escolaridades[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4028,7 +4851,6 @@ export default {
             });
           });
           this.form.lugar_servicio = this.lugares_servicio[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4048,7 +4870,6 @@ export default {
             });
           });
           this.form.cementerio_servicio = this.cementerios_servicio[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4068,7 +4889,6 @@ export default {
             });
           });
           this.form.afiliacion = this.afiliaciones[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4088,7 +4908,6 @@ export default {
             });
           });
           this.form.sitio_muerte = this.sitios_muerte[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4109,7 +4928,6 @@ export default {
             });
           });
           this.form.tipo_contratante = this.tipos_contratante[0];
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4130,7 +4948,6 @@ export default {
               cantidad: 0,
             });
           });
-          this.$vs.loading.close();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -4146,6 +4963,7 @@ export default {
           this.planes_funerarios.push({
             label: "Seleccione 1",
             value: "",
+            plan: "",
             secciones: [],
             costo_neto: 0,
           });
@@ -4155,13 +4973,38 @@ export default {
                 this.planes_funerarios.push({
                   label: plan.plan,
                   value: plan.id,
+                  plan: plan.plan,
                   secciones: plan.secciones,
                   costo_neto: precio.costo_neto,
                 });
               }
             });
           });
-          this.form.plan_funerario = this.planes_funerarios[0];
+          /**aqui se verifica si existen datos de algun plan fuenrario que haya sido cargado desde la bd por el contrato */
+          if (this.data_contrato != []) {
+            if (this.data_contrato.plan_funerario_inmediato_b == 1) {
+              /**el contrato tiene un plan funerario de uso inmediato */
+              this.planes_funerarios.push({
+                label:
+                  this.data_contrato.plan_funerario_original +
+                  " (PLAN ORIGINAL)",
+                value: this.data_contrato.planes_funerarios_id,
+                plan: this.data_contrato.plan_funerario_original,
+                secciones: this.data_contrato
+                  .plan_funerario_secciones_originales,
+                costo_neto: this.data_contrato.costo_plan_original,
+              });
+            }
+            //se selecciona este por defecto
+            if (this.form.plan_funerario_inmediato_b.value == 1) {
+              this.form.plan_funerario = this.planes_funerarios[
+                this.planes_funerarios.length - 1
+              ];
+            }
+          } else {
+            this.form.plan_funerario = this.planes_funerarios[0];
+          }
+
           this.$vs.loading.close();
         })
         .catch((err) => {
@@ -4185,17 +5028,15 @@ export default {
             });
             return;
           } else {
-            /**aqui se hace la validacion en los totales de la venta */
-            //se confirma la cntraseña
-            /**actualizando los valores de total de venta */
-            //fin de actualizar datos de ubicacion
+            //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
             (async () => {
               if (this.getTipoformulario == "agregar") {
-                this.callBackConfirmarAceptar = await this.guardar_venta;
-                this.openConfirmarAceptar = true;
+                /**EL FORMULARIO ES SOLO DE VALIDACION */
+                //this.callBackConfirmarAceptar = await this.guardar_venta;
+                //this.openConfirmarAceptar = true;
               } else {
                 /**es modificacion */
-                this.callback = await this.modificar_venta;
+                this.callback = await this.modificar_contrato;
                 this.openPassword = true;
               }
             })();
@@ -4204,17 +5045,18 @@ export default {
         .catch(() => {});
     },
 
-    async guardar_venta() {
+    async modificar_contrato() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
       try {
-        let res = await planes.guardar_venta(this.form);
+        this.form.id_servicio = this.get_id_solicitud;
+        let res = await funeraria.modificar_contrato(this.form);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Se ha guardado la venta correctamente.",
+            title: "Contrato Funerario",
+            text: "Se ha modificado el contrato correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
@@ -4224,77 +5066,8 @@ export default {
           this.cerrarVentana();
         } else {
           this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Error al guardar la venta, por favor reintente.",
-            iconPack: "feather",
-            icon: "icon-alert-circle",
-            color: "danger",
-            time: 4000,
-          });
-        }
-
-        this.$vs.loading.close();
-      } catch (err) {
-        if (err.response) {
-          if (err.response.status == 403) {
-            /**FORBIDDEN ERROR */
-            this.$vs.notify({
-              title: "Permiso denegado",
-              text: "Verifique sus permisos con el administrador del sistema.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "warning",
-              time: 4000,
-            });
-          } else if (err.response.status == 422) {
-            //checo si existe cada error
-            this.errores = err.response.data.error;
-            this.$vs.notify({
-              title: "Guardar Venta",
-              text: "Verifique los errores encontrados en los datos.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              time: 5000,
-            });
-          } else if (err.response.status == 409) {
-            /**FORBIDDEN ERROR */
-            this.$vs.notify({
-              title: "Guardar Venta",
-              text: err.response.data.error,
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              time: 15000,
-            });
-          }
-        }
-        this.$vs.loading.close();
-      }
-    },
-
-    async modificar_venta() {
-      //aqui mando guardar los datos
-      this.errores = [];
-      this.$vs.loading();
-      try {
-        let res = await planes.modificar_venta(this.form);
-        if (res.data >= 1) {
-          //success
-          this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Se ha modificado la venta correctamente.",
-            iconPack: "feather",
-            icon: "icon-alert-circle",
-            color: "success",
-            time: 5000,
-          });
-          this.$emit("ver_pdfs_nueva_venta", res.data);
-          this.cerrarVentana();
-        } else {
-          this.$vs.notify({
-            title: "Ventas de Propiedades",
-            text: "Error al modificar la venta, por favor reintente.",
+            title: "Contrato Funerario",
+            text: "Error al modificar el contrato, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
@@ -4320,7 +5093,7 @@ export default {
             this.errores = err.response.data.error;
 
             this.$vs.notify({
-              title: "Modificar Venta",
+              title: "Contrato Funerario",
               text: "Verifique los errores encontrados en los datos.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -4331,7 +5104,7 @@ export default {
             //este error es por alguna condicion que el contrano no cumple para modificar
             //la propiedad esa ya ha sido vendida
             this.$vs.notify({
-              title: "Modificar información de la venta",
+              title: "Modificar información del contrato",
               text: err.response.data.error,
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -4355,6 +5128,23 @@ export default {
       this.callBackConfirmar = this.cerrarVentana;
     },
 
+    //remover beneficiario
+    remover_articulo(index_articulo_servicio) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea eliminar este concepto? Los datos quedarán eliminados del sistema?";
+      this.form.index_articulo_servicio = index_articulo_servicio;
+      this.callBackConfirmar = this.remover_articulo_callback;
+      this.openConfirmarSinPassword = true;
+    },
+    //remover beneficiario callback quita del array al beneficiario seleccionado
+    remover_articulo_callback() {
+      this.form.articulos_servicios.splice(
+        this.form.index_articulo_servicio,
+        1
+      );
+    },
+
     cerrarVentana() {
       this.openConfirmarSinPassword = false;
       this.limpiarVentana();
@@ -4362,7 +5152,151 @@ export default {
     },
     //regresa los datos a su estado inicial
     limpiarVentana() {
-      console.log("limpiar");
+      this.saldo_neto_terreno = 0;
+      this.data_contrato = [];
+      this.activeTab = 0;
+      this.form.nombre_afectado = "";
+      this.form.fecha_nacimiento = "";
+      this.form.edad = "";
+      this.form.genero = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.titulo = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.nacionalidad = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.direccion_fallecido = "";
+      this.form.lugar_nacimiento = "";
+      this.form.ocupacion = "";
+      this.form.estado_civil = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.afiliacion = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.escolaridad = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.afiliacion_nota = "";
+
+      /*DATOS DEL CERTIFICADO MEDICO*/
+      this.form.folio_certificado = "";
+      this.form.fechahora_defuncion = "";
+      this.form.causa_muerte = "";
+      this.form.muerte_natural_b = {
+        value: "1",
+        label: "SI",
+      };
+      this.form.sitios_muerte = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.lugar_muerte = "";
+      this.form.atencion_medica_b = {
+        value: "1",
+        label: "SI",
+      };
+      this.form.contagioso_b = {
+        value: "1",
+        label: "SI",
+      };
+      this.form.enfermedades_padecidas = "";
+      this.form.certificado_informante = "";
+      this.form.certificado_informante_telefono = "";
+      this.form.certificado_informante_parentesco = "";
+      this.form.medico_legista = "";
+      this.form.estados_cuerpo = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      /**DESTINOS DEL SERVICIO */
+      this.form.embalsamar_b = 0;
+      this.form.medico_responsable_embalsamado = "";
+      this.form.preparador = "";
+      this.form.velacion_b = 0;
+      this.form.lugar_servicio = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.direccion_velacion = "";
+
+      this.form.cremacion_b = 0;
+      this.form.fechahora_cremacion = "";
+      this.form.fechahora_entrega_cenizas = "";
+      this.form.descripcion_urna = "";
+      this.form.inhumacion_b = 0;
+      this.form.cementerio_servicio = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.fechahora_inhumacion = "";
+      this.form.ubicacion = "";
+      this.form.ubicacion_convenio = "";
+      this.form.ventas_terrenos_id = 0;
+
+      this.form.traslado_b = 0;
+      this.form.fechahora_traslado = "";
+      this.form.destino_traslado = "";
+
+      this.form.aseguradora_b = 0;
+      this.form.numero_convenio_aseguradora = "";
+      this.form.aseguradora = "";
+      this.form.telefono_aseguradora = "";
+
+      this.form.misa_b = 0;
+      this.form.iglesia_misa = "";
+      this.form.direccion_iglesia = "";
+      this.form.fechahora_misa = "";
+
+      this.form.custodia_b = 0;
+      this.form.responsable_custodia = "";
+      this.form.folio_custodia = "";
+      this.form.folio_liberacion = "";
+
+      this.form.material_velacion_b = 0;
+      this.form.material_velacion = [];
+
+      this.form.acta_b = 0;
+      this.form.fecha_acta = "";
+      this.form.folio_acta = "";
+
+      this.form.fechahora_contrato = "";
+
+      this.form.id_cliente = "";
+      this.form.cliente = "";
+      this.form.parentesco_contratante = "";
+
+      this.form.plan_funerario_futuro_b = { value: "0", label: "NO" };
+      this.form.id_convenio_plan = "";
+      this.form.tipo_contratante = {
+        value: "",
+        label: "Seleccione 1",
+      };
+
+      this.form.plan = "";
+      this.secciones = [];
+      this.datosPlanFunerario = [];
+      this.secciones_original = [];
+
+      this.form.plan_funerario_inmediato_b = { value: "0", label: "NO" };
+      this.form.plan_funerario = {
+        value: "",
+        label: "Seleccione 1",
+        secciones: [],
+        costo_neto: 0,
+      };
+
+      this.form.articulos_servicios = [];
+      this.form.tasa_iva = 16;
+      this.form.nota = "";
     },
 
     closePassword() {
@@ -4378,7 +5312,8 @@ export default {
 
     TerrenoSeleccionado(datos) {
       /**obtiene los datos retornados del buscar cliente */
-      this.form.ubicacion = datos.ubicacion;
+      this.saldo_neto_terreno = datos.saldo_neto;
+      this.form.ubicacion_convenio = datos.ubicacion;
       this.form.ventas_terrenos_id = datos.numero_control;
       //alert(datos.id_cliente);
     },
@@ -4392,18 +5327,19 @@ export default {
         datos.numero_convenio +
         ")";
       this.form.id_convenio_plan = datos.ventas_planes_id;
+
       this.secciones = datos.venta_plan.secciones_original;
+      this.secciones_original = datos.venta_plan.secciones_original;
     },
 
     LoteSeleccionado(datos) {
-      console.log("LoteSeleccionado -> datos", datos);
       this.form.articulos_servicios.push(datos);
       /**agregando los datos a la lista de articulos y servicios */
     },
 
     limpiarTerreno() {
       this.form.ventas_terrenos_id = "";
-      this.form.ubicacion = "";
+      this.form.ubicacion_convenio = "";
     },
     quitarTerreno() {
       this.botonConfirmarSinPassword = "Cambiar de Ubicación";
@@ -4417,6 +5353,7 @@ export default {
       this.form.id_convenio_plan = "";
       this.form.plan = "";
       this.secciones = [];
+      this.secciones_original = [];
     },
     quitarPlan() {
       this.botonConfirmarSinPassword = "Cambiar Convenio";
@@ -4451,7 +5388,6 @@ export default {
           }
         });
         */
-
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
@@ -4480,68 +5416,6 @@ export default {
         );
         this.$validator.resume();
       });
-    },
-    calculandoCostos(origen = "keyup") {
-      console.log("calculandoCostos -> origen", origen);
-      /**esta funcion calcula los costos de cada concepto segun el plan funerario que utilicen o si no se utiliza un plan funerario */
-      /**calculo primero para en caso de que no existe ningun plan funerario */
-      if (
-        this.form.plan_funerario_futuro_b.value == 0 &&
-        this.form.plan_funerario_inmediato_b.value == 0
-      ) {
-        if (this.form.plan_funerario.value == "") {
-          /**SE HA ELEGIDO NO UTILIZAR NINGUN PLAN FUNERARIO
-           * POR LO CUAL SE TOMARA LOS VALORES TAL CUAL EL USUARIO LOS INGRESE
-           */
-          this.form.articulos_servicios.forEach((articulo) => {
-            /**sacando el subtotal */
-            articulo.subtotal = (
-              articulo.costo_neto_normal /
-              (1 + this.form.tasa_iva / 100)
-            ).toFixed(2);
-
-            articulo.iva =
-              (articulo.subtotal - articulo.descuento) *
-              (this.form.tasa_iva / 100);
-
-            articulo.costo =
-              articulo.subtotal - articulo.descuento + articulo.iva;
-            articulo.importe = articulo.costo * articulo.cantidad;
-          });
-        }
-      } else {
-        /**tiene algun plan funerario seleccionado */
-        /**primero aplicamos para cuando la venta es usando un plan de uso a futuro */
-        if (this.form.plan_funerario_futuro_b.value == 1) {
-          if (this.form.id_convenio_plan > 0) {
-            /**se ha seleccionado un plan a futuro */
-            this.form.articulos_servicios.forEach((articulo) => {
-              if (articulo.descuento_plan_b == 1) {
-                /**sacando el subtotal */
-                articulo.subtotal = 0;
-                articulo.descuento = 0;
-                articulo.iva =
-                  (articulo.subtotal - articulo.descuento) *
-                  (this.form.tasa_iva / 100);
-
-                articulo.costo =
-                  articulo.subtotal - articulo.descuento + articulo.iva;
-                articulo.importe = articulo.costo * articulo.cantidad;
-              } else {
-                /**no entra en el plan funerario */
-                /**sacando el subtotal */
-                articulo.iva =
-                  (articulo.subtotal - articulo.descuento) *
-                  (this.form.tasa_iva / 100);
-
-                articulo.costo =
-                  articulo.subtotal - articulo.descuento + articulo.iva;
-                articulo.importe = articulo.costo * articulo.cantidad;
-              }
-            });
-          }
-        }
-      }
     },
   },
   created() {},

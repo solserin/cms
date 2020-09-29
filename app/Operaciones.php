@@ -226,4 +226,10 @@ class Operaciones extends Model
                 )
             );
     }
+
+
+    public function movimientoinventario()
+    {
+        return $this->belongsTo('App\MovimientosInventario', 'id', 'operaciones_id');
+    }
 }
