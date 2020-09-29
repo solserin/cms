@@ -255,6 +255,9 @@
     .line-base{
       line-height: 1.5em !important;
     }
+.line-17{
+      line-height: 1.7em !important;
+    }
 
     .line-small{
       line-height: 1.3em !important;
