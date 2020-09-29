@@ -643,8 +643,6 @@
             </table>
         </div>
 
-
-
         <div class="w-100 center mt-50">
             <div class="w-50 float-left mt-20">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
