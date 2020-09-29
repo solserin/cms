@@ -615,8 +615,7 @@
                 @endforeach
                 @else
                 <tr class="size-15px center">
-                    <td class="w-100 py-1 px-2" colspan="3">No se han agregado conceptos a este contrato</td>
-
+                    <td class="w-100 py-1 px-2" colspan="10">No se han agregado conceptos a este contrato</td>
                 </tr>
                 @endif
             </table>
