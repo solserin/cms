@@ -100,10 +100,10 @@ class InventarioController extends ApiController
                         'fecha_registro' => now(),
                         'registro_id' => (int) $request->user()->id,
                         'tipo_movimientos_id' => 2,
-                        'subtotal' => 0,
-                        'descuento' => 0,
-                        'impuestos' => 0,
-                        'total' => 0
+                        //'subtotal' => 0,
+                        //'descuento' => 0,
+                        //'impuestos' => 0,
+                        //'total' => 0
                         /**entrada de lostes por ajuste */
                     ]
                 );
@@ -145,10 +145,10 @@ class InventarioController extends ApiController
                         'fecha_registro' => now(),
                         'registro_id' => (int) $request->user()->id,
                         'tipo_movimientos_id' => 1,
-                        'subtotal' => 0,
-                        'descuento' => 0,
-                        'impuestos' => 0,
-                        'total' => 0
+                        //'subtotal' => 0,
+                        //'descuento' => 0,
+                        //'impuestos' => 0,
+                        //'total' => 0
                         /**entrada de lostes por ajuste */
                     ]
                 );
