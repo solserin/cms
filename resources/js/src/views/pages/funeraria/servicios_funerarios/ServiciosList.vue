@@ -12,7 +12,7 @@
           <span class="texto-btn">Nuevo Servicio Funerario</span>
         </vs-button>
         <vs-button
-          class="float-right mr-12"
+          class="float-right mr-12 hidden"
           size="small"
           color="primary"
           @click="openPlanesVenta = true"
