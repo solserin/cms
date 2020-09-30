@@ -1733,7 +1733,7 @@ class FunerariaController extends ApiController
                         }
                     } else {
                         $pagos_programados_cubiertos++;
-                        $programado['fecha_a_pagar'] = $pagado['fecha_pago'];
+                        $programado['fecha_a_pagar'] = $fecha_ultimo_pago;
                         /**el pago programado ya fue cubierto */
                         $programado['status_pago'] = 2;
                         $programado['status_pago_texto'] = 'Pagado';
@@ -3627,41 +3627,46 @@ class FunerariaController extends ApiController
 
             /**actualizacion de la programacion de pagos */
             $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fechahora_contrato)))->add(0, 'day');
-            if (isset($datos_solicitud['operacion'])) {
-                if (count($datos_solicitud['operacion']['pagos_programados']) == 0) {
-                    /**si no existe lo vamos a crear */
-                    /**se registra la referencia para los pagos */
-                    $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
+
+
+
+            if ($datos_solicitud['operacion'] == null && !isset($datos_solicitud['operacion']['pagos_programados'])) {
+
+                /**si no existe lo vamos a crear */
+                /**se registra la referencia para los pagos */
+                $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
+                    [
+                        /**utilizo la referencia de pago 004 para servicios funerarios */
+                        'num_pago' => 1, //numero 1, pues es unico
+                        'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
+                        'fecha_programada' => $fecha_maxima, //fecha de la venta
+                        'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
+                        'monto_programado' => $total,
+                        'operaciones_id' => $id_operacion,
+                        'status' => 1
+                    ]
+                );
+            } else {
+                if ($datos_solicitud['operacion']['total_cubierto'] <= $total) {
+                    DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
                         [
                             /**utilizo la referencia de pago 004 para servicios funerarios */
-                            'num_pago' => 1, //numero 1, pues es unico
-                            'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
+                            //'num_pago' => 1, //numero 1, pues es unico
+                            //'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
                             'fecha_programada' => $fecha_maxima, //fecha de la venta
-                            'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
+                            //'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
                             'monto_programado' => $total,
-                            'operaciones_id' => $id_operacion,
+                            //'operaciones_id' => $id_operacion,
                             'status' => 1
                         ]
                     );
                 } else {
-                    if ($datos_solicitud['operacion']['total_cubierto'] <= $total) {
-                        DB::table('pagos_programados')->where('operaciones_id', '=', $id_operacion)->update(
-                            [
-                                /**utilizo la referencia de pago 004 para servicios funerarios */
-                                //'num_pago' => 1, //numero 1, pues es unico
-                                //'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
-                                'fecha_programada' => $fecha_maxima, //fecha de la venta
-                                //'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
-                                'monto_programado' => $total,
-                                //'operaciones_id' => $id_operacion,
-                                'status' => 1
-                            ]
-                        );
-                    } else {
-                        return $this->errorResponse('Error, Este contrato tiene pagado $' . number_format($datos_solicitud['operacion']['total_cubierto'], 2) . '.', 409);
-                    }
+                    return $this->errorResponse('Error, Este contrato tiene pagado $' . number_format($datos_solicitud['operacion']['total_cubierto'], 2) . '.', 409);
                 }
             }
+
+
+
 
             /* $datos['subtotal'] = $subtotal;
             $datos['descuento'] = $descuento;
@@ -4313,7 +4318,8 @@ class FunerariaController extends ApiController
                             $programado['status_pago_texto'] = 'Pendiente';
                         } else {
                             $pagos_programados_cubiertos++;
-                            $programado['fecha_a_pagar'] = $pagado['fecha_pago'];
+                            $programado['fecha_a_pagar']
+                                = $fecha_ultimo_pago;
                             /**el pago programado ya fue cubierto */
                             $programado['status_pago'] = 2;
                             $programado['status_pago_texto'] = 'Pagado';
