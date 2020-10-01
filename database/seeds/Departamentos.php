@@ -17,7 +17,7 @@ class Departamentos extends Seeder
             [
                 'departamento' => 'Artículos Funerarios',
                 'categorias' => [
-                    'Ataudes', 'Urnas'
+                    'Ataudes', 'Urnas', 'Relicarios'
                 ]
             ],
             [

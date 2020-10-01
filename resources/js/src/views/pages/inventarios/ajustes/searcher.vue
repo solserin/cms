@@ -1,14 +1,16 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="searcher_clientes forms-popups-75 normal-forms inline-header-forms"
+      class="searcher_clientes forms-popups-85 normal-forms inline-header-forms"
       fullscreen
       title="Catálogo de articulos registrados"
       :active.sync="showVentana"
       ref="buscador_articulo"
     >
       <div class="flex flex-wrap my-2">
-        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
+        <div
+          class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
+        >
           <vs-button
             color="success"
             size="small"
@@ -22,12 +24,21 @@
       </div>
       <!--inicio de buscador-->
       <div class="py-3">
-        <vx-card no-radius title="Filtros de selección" refresh-content-action @refresh="reset">
+        <vx-card
+          no-radius
+          title="Filtros de selección"
+          refresh-content-action
+          @refresh="reset"
+        >
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
-                <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Núm. articulo</label>
+                <div
+                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold"
+                    >Núm. articulo</label
+                  >
                   <vs-input
                     name="num_articulo"
                     data-vv-as=" "
@@ -41,15 +52,17 @@
                   />
                   <div>
                     <span class="text-danger text-sm">
-                      {{
-                      errors.first("num_articulo")
-                      }}
+                      {{ errors.first("num_articulo") }}
                     </span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Código de Barras</label>
+                <div
+                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold"
+                    >Código de Barras</label
+                  >
                   <vs-input
                     name="codigo_barras"
                     data-vv-as=" "
@@ -63,15 +76,17 @@
                   />
                   <div>
                     <span class="text-danger text-sm">
-                      {{
-                      errors.first("codigo_barras")
-                      }}
+                      {{ errors.first("codigo_barras") }}
                     </span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Nombre del Artículo</label>
+                <div
+                  class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold"
+                    >Nombre del Artículo</label
+                  >
                   <vs-input
                     ref="nombre_articulo"
                     name="nombre_articulo"
@@ -86,9 +101,7 @@
                   />
                   <div>
                     <span class="text-danger text-sm">
-                      {{
-                      errors.first("nombre_articulo")
-                      }}
+                      {{ errors.first("nombre_articulo") }}
                     </span>
                   </div>
                   <div class="mt-2"></div>
@@ -97,6 +110,41 @@
             </div>
           </template>
         </vx-card>
+
+        <vs-table multiple v-model="ok" :data="users">
+          <template slot="header">
+            <h3>Users</h3>
+          </template>
+          <template slot="thead">
+            <vs-th> Email </vs-th>
+            <vs-th> Name </vs-th>
+            <vs-th> Website </vs-th>
+            <vs-th> Nro </vs-th>
+          </template>
+
+          <template slot-scope="{ data }">
+            <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+              <vs-td :data="data[indextr].email">
+                {{ data[indextr].email }}
+              </vs-td>
+
+              <vs-td :data="data[indextr].username">
+                {{ data[indextr].username }}
+              </vs-td>
+
+              <vs-td :data="data[indextr].website">
+                {{ data[indextr].id }}
+              </vs-td>
+
+              <vs-td :data="data[indextr].id">
+                {{ data[indextr].id }}
+              </vs-td>
+            </vs-tr>
+          </template>
+        </vs-table>
+
+        <pre>{{ selected }}</pre>
+
         <div class="resultados_articulos mt-10">
           <vs-table
             :sst="true"
@@ -104,6 +152,8 @@
             :data="articulos"
             stripe
             noDataText="0 Resultados"
+            multiple
+            v-model="selected"
           >
             <template slot="header">
               <h3>Lista actualizada de artículos registrados</h3>
@@ -124,19 +174,24 @@
                 </vs-td>
                 <vs-td :data="data[indextr].codigo_barras">
                   <span class="font-semibold">
-                    {{
-                    data[indextr].codigo_barras
-                    }}
+                    {{ data[indextr].codigo_barras }}
                   </span>
                 </vs-td>
                 <vs-td :data="data[indextr].descripcion">
                   <span class="uppercase">{{ data[indextr].descripcion }}</span>
                 </vs-td>
                 <vs-td hidden :data="data[indextr].caduca_texto">
-                  <span class="uppercase">{{ data[indextr].caduca_texto }}</span>
+                  <span class="uppercase">{{
+                    data[indextr].caduca_texto
+                  }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].precio_venta">
-                  <span class="uppercase">$ {{ data[indextr].precio_venta | numFormat("0,000.00") }}</span>
+                  <span class="uppercase"
+                    >$
+                    {{
+                      data[indextr].precio_venta | numFormat("0,000.00")
+                    }}</span
+                  >
                 </vs-td>
                 <vs-td :data="data[indextr].existencia">
                   <span class="uppercase">{{ data[indextr].existencia }}</span>
@@ -155,7 +210,12 @@
             </template>
           </vs-table>
           <div>
-            <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-3"></vs-pagination>
+            <vs-pagination
+              v-if="verPaginado"
+              :total="this.total"
+              v-model="actual"
+              class="mt-3"
+            ></vs-pagination>
           </div>
         </div>
       </div>
@@ -180,22 +240,22 @@ export default {
   components: {
     "v-select": vSelect,
     Datepicker,
-    FormularioArticulos
+    FormularioArticulos,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    "serverOptions.nacionalidad": function(newVal, previousVal) {
+    "serverOptions.nacionalidad": function (newVal, previousVal) {
       this.get_data("", 1);
     },
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       this.get_data("", this.actual);
     },
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$nextTick(() =>
           this.$refs["nombre_articulo"].$el.querySelector("input").focus()
@@ -214,7 +274,7 @@ export default {
         this.serverOptions.celular = "";
         this.serverOptions.nacionalidad = this.nacionalidades[0];
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -223,30 +283,103 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
+      users: [
+        {
+          id: 1,
+          name: "Leanne Graham",
+          username: "Bret",
+          email: "Sincere@april.biz",
+          website: "hildegard.org",
+        },
+        {
+          id: 2,
+          name: "Ervin Howell",
+          username: "Antonette",
+          email: "Shanna@melissa.tv",
+          website: "anastasia.net",
+        },
+        {
+          id: 3,
+          name: "Clementine Bauch",
+          username: "Samantha",
+          email: "Nathan@yesenia.net",
+          website: "ramiro.info",
+        },
+        {
+          id: 4,
+          name: "Patricia Lebsack",
+          username: "Karianne",
+          email: "Julianne.OConner@kory.org",
+          website: "kale.biz",
+        },
+        {
+          id: 5,
+          name: "Chelsey Dietrich",
+          username: "Kamren",
+          email: "Lucio_Hettinger@annie.ca",
+          website: "demarco.info",
+        },
+        {
+          id: 6,
+          name: "Mrs. Dennis Schulist",
+          username: "Leopoldo_Corkery",
+          email: "Karley_Dach@jasper.info",
+          website: "ola.org",
+        },
+        {
+          id: 7,
+          name: "Kurtis Weissnat",
+          username: "Elwyn.Skiles",
+          email: "Telly.Hoeger@billy.biz",
+          website: "elvis.io",
+        },
+        {
+          id: 8,
+          name: "Nicholas Runolfsdottir V",
+          username: "Maxime_Nienow",
+          email: "Sherwood@rosamond.me",
+          website: "jacynthe.com",
+        },
+        {
+          id: 9,
+          name: "Glenna Reichert",
+          username: "Delphine",
+          email: "Chaim_McDermott@dana.io",
+          website: "conrad.com",
+        },
+        {
+          id: 10,
+          name: "Clementina DuBuque",
+          username: "Moriah.Stanton",
+          email: "Rey.Padberg@karina.biz",
+          website: "ambrose.net",
+        },
+      ],
+      ok: [],
       verFormularioArticulos: false,
       selected: [],
       nacionalidades: [],
       disabledDates: {
-        from: new Date()
+        from: new Date(),
       },
       articulos: [],
       serverOptions: {
         page: "",
-        per_page: "25",
+        per_page: "150",
         id_articulo: "",
         codigo_barras: "",
         celular: "",
-        articulo: ""
+        articulo: "",
       },
       verPaginado: true,
       total: 0,
       actual: 1,
-      spanishDatepicker: es
+      spanishDatepicker: es,
     };
   },
   methods: {
@@ -293,18 +426,18 @@ export default {
       this.$vs.loading();
       this.verPaginado = false;
       this.serverOptions.page = page;
-      this.serverOptions.per_page = 25;
+      this.serverOptions.per_page = 150;
       this.serverOptions.status = 1;
       inventario
         .get_inventariable(this.serverOptions)
-        .then(res => {
+        .then((res) => {
           this.articulos = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
@@ -317,7 +450,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             }
           }
@@ -333,8 +466,8 @@ export default {
     },
     retorno_id(dato) {
       this.get_data("", this.actual);
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>
