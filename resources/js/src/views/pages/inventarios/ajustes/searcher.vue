@@ -88,7 +88,6 @@
                     >Nombre del Artículo</label
                   >
                   <vs-input
-                    ref="nombre_articulo"
                     name="nombre_articulo"
                     data-vv-as=" "
                     type="text"
@@ -111,49 +110,31 @@
           </template>
         </vx-card>
 
-        <vs-table multiple v-model="ok" :data="users">
-          <template slot="header">
-            <h3>Users</h3>
-          </template>
-          <template slot="thead">
-            <vs-th> Email </vs-th>
-            <vs-th> Name </vs-th>
-            <vs-th> Website </vs-th>
-            <vs-th> Nro </vs-th>
-          </template>
-
-          <template slot-scope="{ data }">
-            <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-              <vs-td :data="data[indextr].email">
-                {{ data[indextr].email }}
-              </vs-td>
-
-              <vs-td :data="data[indextr].username">
-                {{ data[indextr].username }}
-              </vs-td>
-
-              <vs-td :data="data[indextr].website">
-                {{ data[indextr].id }}
-              </vs-td>
-
-              <vs-td :data="data[indextr].id">
-                {{ data[indextr].id }}
-              </vs-td>
-            </vs-tr>
-          </template>
-        </vs-table>
-
-        <pre>{{ selected }}</pre>
-
         <div class="resultados_articulos mt-10">
+          <div class="flex flex-wrap my-2">
+            <div
+              class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
+            >
+              <vs-button
+                color="primary"
+                size="small"
+                class="w-full ml-auto"
+                @click="SeleccionarTodos"
+              >
+                <img
+                  class="cursor-pointer img-btn"
+                  src="@assets/images/checked.svg"
+                />
+                <span class="texto-btn">Seleccionar Todos</span>
+              </vs-button>
+            </div>
+          </div>
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
             :data="articulos"
             stripe
             noDataText="0 Resultados"
-            multiple
-            v-model="selected"
           >
             <template slot="header">
               <h3>Lista actualizada de artículos registrados</h3>
@@ -265,6 +246,7 @@ export default {
         ).onclick = () => {
           this.cancelar();
         };
+
         this.get_data("", 1);
       } else {
         /**cerrar y limpiar el formulario */
@@ -288,79 +270,6 @@ export default {
   },
   data() {
     return {
-      users: [
-        {
-          id: 1,
-          name: "Leanne Graham",
-          username: "Bret",
-          email: "Sincere@april.biz",
-          website: "hildegard.org",
-        },
-        {
-          id: 2,
-          name: "Ervin Howell",
-          username: "Antonette",
-          email: "Shanna@melissa.tv",
-          website: "anastasia.net",
-        },
-        {
-          id: 3,
-          name: "Clementine Bauch",
-          username: "Samantha",
-          email: "Nathan@yesenia.net",
-          website: "ramiro.info",
-        },
-        {
-          id: 4,
-          name: "Patricia Lebsack",
-          username: "Karianne",
-          email: "Julianne.OConner@kory.org",
-          website: "kale.biz",
-        },
-        {
-          id: 5,
-          name: "Chelsey Dietrich",
-          username: "Kamren",
-          email: "Lucio_Hettinger@annie.ca",
-          website: "demarco.info",
-        },
-        {
-          id: 6,
-          name: "Mrs. Dennis Schulist",
-          username: "Leopoldo_Corkery",
-          email: "Karley_Dach@jasper.info",
-          website: "ola.org",
-        },
-        {
-          id: 7,
-          name: "Kurtis Weissnat",
-          username: "Elwyn.Skiles",
-          email: "Telly.Hoeger@billy.biz",
-          website: "elvis.io",
-        },
-        {
-          id: 8,
-          name: "Nicholas Runolfsdottir V",
-          username: "Maxime_Nienow",
-          email: "Sherwood@rosamond.me",
-          website: "jacynthe.com",
-        },
-        {
-          id: 9,
-          name: "Glenna Reichert",
-          username: "Delphine",
-          email: "Chaim_McDermott@dana.io",
-          website: "conrad.com",
-        },
-        {
-          id: 10,
-          name: "Clementina DuBuque",
-          username: "Moriah.Stanton",
-          email: "Rey.Padberg@karina.biz",
-          website: "ambrose.net",
-        },
-      ],
-      ok: [],
       verFormularioArticulos: false,
       selected: [],
       nacionalidades: [],
@@ -460,10 +369,18 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     retornarSeleccion(datos) {
+      let dato = [];
+      dato.push(datos);
       /**retorna los datos seleccionados a la venta que los solicita */
-      this.$emit("retornoArticulo", datos);
+      this.$emit("retornoArticulo", dato);
       this.$emit("closeBuscador");
     },
+    SeleccionarTodos() {
+      /**retorna todos los articulos que se listan los datos seleccionados */
+      this.$emit("retornoArticulo", this.articulos);
+      this.$emit("closeBuscador");
+    },
+
     retorno_id(dato) {
       this.get_data("", this.actual);
     },
