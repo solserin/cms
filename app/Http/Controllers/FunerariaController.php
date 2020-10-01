@@ -2488,7 +2488,6 @@ class FunerariaController extends ApiController
             }
 
 
-
             $get_funeraria = new EmpresaController();
             $empresa = $get_funeraria->get_empresa_data();
             $pdf = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);

@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Ajustes;
-use App\Ajustes as AppAjustes;
 use PDF;
+use App\Ajustes;
+use AjusteDetalle;
 use App\Articulos;
 use App\Categorias;
 use App\SatUnidades;
+use App\VentaDetalle;
 use App\Departamentos;
-use App\MovimientosInventario;
 use App\TipoArticulos;
 use Illuminate\Http\Request;
+use App\Ajustes as AppAjustes;
+use App\MovimientosInventario;
 use App\SATProductosServicios;
+use App\AjusteInventarioDetalle;
 use Illuminate\Support\Facades\DB;
 
 class InventarioController extends ApiController
@@ -320,6 +323,25 @@ class InventarioController extends ApiController
                     }
                 } else {
                     return $this->errorResponse('Este artículo no fue encontrado en la Base de Datos.', 409);
+                }
+
+                /**validando que nno se cambie el nombre ni tipo, categoria, departamento para cuidar la integridad de los contratos */
+                $ajuste = AjusteInventarioDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
+                $venta = VentaDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
+
+                $articulo = Articulos::where('id', $request->id_articulo_modificar)->first();
+                if (count($ajuste) > 0 || count($venta) > 0) {
+                    if ($articulo['tipo_articulos_id'] != $request->tipo_articulo['value']) {
+                        return $this->errorResponse('No se puede cambiar el tipo de artículos ya que se tienen movimientos registrados con este artículo.', 409);
+                    }
+
+                    if ($articulo['sat_productos_servicios_id'] != $request->unidad_sat['value']) {
+                        return $this->errorResponse('No se puede cambiar la clave del sat ya que se tienen movimientos registrados con este artículo.', 409);
+                    }
+
+                    if ($articulo['categorias_id'] != $request->categoria['value']) {
+                        return $this->errorResponse('No se puede cambiar la categoría ya que se tienen movimientos registrados con este artículo.', 409);
+                    }
                 }
 
                 /**verificar que no cambie el tipo de caducidad si ya fue vendido algo de ese producto */
@@ -759,7 +781,7 @@ class InventarioController extends ApiController
             $datos_request = json_decode($request->request_parent[0], true);
             $id_ajuste = $datos_request['id_ajuste'];
 
-            
+
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
