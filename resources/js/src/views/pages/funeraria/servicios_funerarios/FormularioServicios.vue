@@ -429,7 +429,7 @@
               <!--fin de contenido del informacion del fallecido-->
             </div>
           </div>
-          <div class="flex flex-wrap mt-4 px-2">
+          <div class="flex flex-wrap mt-4 px-2 hidden">
             <div class="w-full px-2 mt-2">
               <p class="texto-ojo">
                 <span class="text-danger font-medium">Ojo:</span>
@@ -874,7 +874,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-wrap mt-4 px-2">
+          <div class="flex flex-wrap mt-4 px-2 hidden">
             <div class="w-full px-2 mt-2">
               <p class="texto-ojo">
                 <span class="text-danger font-medium">Ojo:</span>
@@ -2041,7 +2041,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-wrap mt-4 px-2">
+          <div class="flex flex-wrap mt-4 px-2 hidden">
             <div class="w-full px-2 mt-2">
               <p class="texto-ojo">
                 <span class="text-danger font-medium">Ojo:</span>
@@ -2183,7 +2183,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-wrap mt-4 px-2">
+          <div class="flex flex-wrap mt-4 px-2 hidden">
             <div class="w-full px-2 mt-2">
               <p class="texto-ojo">
                 <span class="text-danger font-medium">Ojo:</span>
@@ -2309,7 +2309,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-wrap mt-4 px-2">
+          <div class="flex flex-wrap mt-4 px-2 hidden">
             <div class="w-full px-2 mt-2">
               <p class="texto-ojo">
                 <span class="text-danger font-medium">Ojo:</span>
@@ -3439,7 +3439,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-wrap mt-4 px-2">
+          <div class="flex flex-wrap mt-4 px-2 hidden">
             <div class="w-full px-2 mt-2">
               <p class="texto-ojo">
                 <span class="text-danger font-medium">Ojo:</span>
