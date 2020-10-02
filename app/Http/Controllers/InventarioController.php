@@ -32,7 +32,12 @@ class InventarioController extends ApiController
 
     public function get_unidades()
     {
-        return SatUnidades::whereIn('id', [1, 2])->get();
+        $unidades = SatUnidades::get();
+        foreach ($unidades as $key => &$unidad) {
+            $unidad['unidad']
+                = $unidad['unidad'] . '(' . $unidad['clave'] . ')';
+        }
+        return $unidades;
     }
 
     public function get_sat_unidades()
@@ -206,6 +211,7 @@ class InventarioController extends ApiController
             'departamento.value' => 'numeric|required',
             'categoria.value' => 'numeric|required',
             'unidad_sat.value' => 'numeric|required',
+            'unidad.value' => 'numeric|required',
             'opcion_iva.value' => 'numeric|required',
             'opcion_caducidad.value' => 'numeric|required',
             'minimo_inventario' => 'integer|required|min:1',
@@ -263,18 +269,19 @@ class InventarioController extends ApiController
         );
 
 
-        $unidad_compra = '';
+        /*  $unidad_compra = '';
         $unidad_venta = '';
 
         if ($request->tipo_articulo['value'] == 1) {
-            /**unidad de pieza */
+            //unidad de pieza 
             $unidad_compra = 1;
             $unidad_venta = 1;
         } else {
-            /**unidad de servicio */
+            //unidad de servicio
             $unidad_compra = 2;
             $unidad_venta = 2;
         }
+        */
         $id_articulo = 0;
         try {
             DB::beginTransaction();
@@ -295,8 +302,8 @@ class InventarioController extends ApiController
                         'caduca_b' => $opcion_caducidad,
                         'grava_iva_b' => $request->opcion_iva['value'],
                         'categorias_id' => $request->categoria['value'],
-                        'sat_unidades_compra' => $unidad_compra,
-                        'sat_unidades_venta' => $unidad_venta,
+                        'sat_unidades_compra' => $request->unidad['value'],
+                        'sat_unidades_venta' => $request->unidad['value'],
                         'nota' => $request->nota
                     ]
                 );
@@ -330,7 +337,7 @@ class InventarioController extends ApiController
                 $venta = VentaDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
 
                 $articulo = Articulos::where('id', $request->id_articulo_modificar)->first();
-                if (count($ajuste) > 0 || count($venta) > 0) {
+                /*if (count($ajuste) > 0 || count($venta) > 0) {
                     if ($articulo['tipo_articulos_id'] != $request->tipo_articulo['value']) {
                         return $this->errorResponse('No se puede cambiar el tipo de artículos ya que se tienen movimientos registrados con este artículo.', 409);
                     }
@@ -342,7 +349,7 @@ class InventarioController extends ApiController
                     if ($articulo['categorias_id'] != $request->categoria['value']) {
                         return $this->errorResponse('No se puede cambiar la categoría ya que se tienen movimientos registrados con este artículo.', 409);
                     }
-                }
+                }*/
 
                 /**verificar que no cambie el tipo de caducidad si ya fue vendido algo de ese producto */
                 /**es modificar */
@@ -362,8 +369,8 @@ class InventarioController extends ApiController
                         'caduca_b' => $opcion_caducidad,
                         'grava_iva_b' => $request->opcion_iva['value'],
                         'categorias_id' => $request->categoria['value'],
-                        'sat_unidades_compra' => $unidad_compra,
-                        'sat_unidades_venta' => $unidad_venta,
+                        'sat_unidades_compra' => $request->unidad['value'],
+                        'sat_unidades_venta' => $request->unidad['value'],
                         'nota' => $request->nota
                     ]
                 );

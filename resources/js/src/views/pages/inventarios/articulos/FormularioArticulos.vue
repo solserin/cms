@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-pagos normal-forms venta-propiedades background-header-forms articulos"
+      class="forms-popups normal-forms venta-propiedades background-header-forms articulos"
       fullscreen
       close="cancelar"
       :title="title"
@@ -54,7 +54,7 @@
                   'w-full sm:w-12/12 px-2 mr-auto ml-auto mt-4',
                   verModificar
                     ? ' md:w-6/12 lg:w-6/12 xl:w-6/12'
-                    : ' md:w-5/12 lg:w-5/12 xl:w-5/12'
+                    : ' md:w-5/12 lg:w-5/12 xl:w-5/12',
                 ]"
               >
                 <vs-button
@@ -381,7 +381,38 @@
             </div>
           </div>
 
-          <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
+          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Categorias</span>
+              <span class="texto-importante">(*)</span>
+            </label>
+            <v-select
+              :options="unidades"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.unidad"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              v-validate:unidad_validacion_computed.immediate="'required'"
+              name="unidades_sat"
+              data-vv-as=" "
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+            <div>
+              <span class="mensaje-requerido">{{
+                errors.first("unidades_sat")
+              }}</span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="mensaje-requerido"
+                v-if="this.errores['unidad.value']"
+                >{{ errores["unidad.value"][0] }}</span
+              >
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               <span>Grava IVA</span>
               <span class="texto-importante">(*)</span>
@@ -584,25 +615,25 @@ export default {
     "v-select": vSelect,
     Password,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_articulo: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       this.limpiarValidation();
       if (newValue == true) {
         this.imagen_anterior = require("@assets/images/no-image-icon.png");
@@ -616,6 +647,7 @@ export default {
 
         (async () => {
           await this.get_sat_unidades();
+          await this.get_unidades();
           await this.get_categorias();
           if (this.getTipoformulario == "modificar") {
             this.title = "Modificar Artículo/Servicio del Inventario";
@@ -628,18 +660,18 @@ export default {
         })();
       }
     },
-    "form.departamento": function(newValue, oldValue) {
+    "form.departamento": function (newValue, oldValue) {
       if (newValue.value != "") {
         if (newValue.categorias) {
           this.categorias = [];
           this.categorias.push({
             value: "",
-            label: "Seleccione 1"
+            label: "Seleccione 1",
           });
-          newValue.categorias.forEach(element => {
+          newValue.categorias.forEach((element) => {
             this.categorias.push({
               value: element.id,
-              label: element.categoria
+              label: element.categoria,
             });
           });
 
@@ -651,7 +683,7 @@ export default {
         }
       }
     },
-    "form.tipo_articulo": function(newValue, oldValue) {
+    "form.tipo_articulo": function (newValue, oldValue) {
       if (newValue.value != "") {
         if (newValue.value != 1) {
           this.form.opcion_caducidad = { value: 0, label: "NO" };
@@ -662,7 +694,7 @@ export default {
           this.form.maximo_inventario = 1;
         }
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -671,7 +703,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -679,7 +711,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_articulo_id: {
       get() {
@@ -687,27 +719,31 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    tipo_articulo_validacion_computed: function() {
+    tipo_articulo_validacion_computed: function () {
       return this.form.tipo_articulo.value;
     },
-    departamento_validacion_computed: function() {
+    departamento_validacion_computed: function () {
       return this.form.departamento.value;
     },
-    categoria_validacion_computed: function() {
+
+    unidad_validacion_computed: function () {
+      return this.form.unidad.value;
+    },
+    categoria_validacion_computed: function () {
       return this.form.categoria.value;
     },
-    unidad_compra_validacion_computed: function() {
+    unidad_compra_validacion_computed: function () {
       return this.form.unidad_compra.value;
     },
-    unidad_venta_validacion_computed: function() {
+    unidad_venta_validacion_computed: function () {
       return this.form.unidad_venta.value;
     },
-    unidad_sat_validacion_computed: function() {
+    unidad_sat_validacion_computed: function () {
       return this.form.unidad_sat.value;
     },
-    verQuitarImagen: function() {
+    verQuitarImagen: function () {
       if (this.getTipoformulario == "agregar") {
         if (
           this.form.imagen != "" &&
@@ -729,13 +765,13 @@ export default {
         }
       }
     },
-    requiere_codigo_barras: function() {
+    requiere_codigo_barras: function () {
       if (this.form.tipo_articulo.value != 2) {
         return true;
       } else {
         return false;
       }
-    }
+    },
   },
   data() {
     return {
@@ -756,12 +792,12 @@ export default {
       tipo_articulos: [
         {
           value: "1",
-          label: "Artículo"
+          label: "Artículo",
         },
         {
           value: "2",
-          label: "Servicio"
-        }
+          label: "Servicio",
+        },
         /*
         {
           value: "3",
@@ -773,57 +809,69 @@ export default {
         {
           value: "",
           label: "Seleccione 1",
-          categorias: []
-        }
+          categorias: [],
+        },
       ],
       categorias: [
         {
           value: "",
-          label: "Seleccione 1"
-        }
+          label: "Seleccione 1",
+        },
       ],
       unidades_sat: [
         {
           value: "",
-          label: "Seleccione 1"
-        }
+          label: "Seleccione 1",
+        },
+      ],
+      unidades: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
       ],
       opciones_sino: [
         {
           value: 1,
-          label: "SI"
+          label: "SI",
         },
         {
           value: 0,
-          label: "NO"
-        }
+          label: "NO",
+        },
       ],
       form: {
         imagen: "",
         tipo_articulo: {
           value: "1",
-          label: "Artículo"
+          label: "Artículo",
         },
         departamento: {
           value: "",
           label: "Seleccione 1",
-          categorias: []
+          categorias: [],
         },
         categoria: {
           value: "",
-          label: "Seleccione 1"
+          label: "Seleccione 1",
         },
         unidad_sat: {
           value: "",
-          label: "Seleccione 1"
+          label: "Seleccione 1",
         },
+
+        unidad: {
+          value: "",
+          label: "Seleccione 1",
+        },
+
         opcion_iva: {
           value: "1",
-          label: "SI"
+          label: "SI",
         },
         opcion_caducidad: {
           value: 0,
-          label: "NO"
+          label: "NO",
         },
         descripcion: "",
         descripcion_ingles: "",
@@ -836,9 +884,9 @@ export default {
         nota: "",
         /**form */
         /**en caso de modificar */
-        id_articulo_modificar: 0
+        id_articulo_modificar: 0,
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
@@ -850,14 +898,14 @@ export default {
         this.departamentos.push({
           label: "Seleccione 1",
           value: "",
-          categorias: []
+          categorias: [],
         });
 
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.departamentos.push({
             label: element.departamento,
             value: element.id,
-            categorias: element.categorias
+            categorias: element.categorias,
           });
         });
 
@@ -879,9 +927,37 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
         this.$vs.loading.close();
+        this.cerrarVentana();
+      }
+    },
+
+    async get_unidades() {
+      try {
+        let res = await inventario.get_unidades();
+        //le agrego todos las unidades
+        this.unidades = [];
+        this.unidades.push({ label: "Seleccione 1", value: "" });
+        res.data.forEach((element) => {
+          this.unidades.push({
+            label: element.unidad,
+            value: element.id,
+          });
+        });
+      } catch (error) {
+        /**error al cargar */
+        this.$vs.notify({
+          title: "Error",
+          text:
+            "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "9000",
+        });
         this.cerrarVentana();
       }
     },
@@ -892,10 +968,10 @@ export default {
         //le agrego todos las unidades
         this.unidades_sat = [];
         this.unidades_sat.push({ label: "Seleccione 1", value: "" });
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.unidades_sat.push({
             label: element.descripcion + "(" + element.clave + ")",
-            value: element.id
+            value: element.id,
           });
         });
         if (this.getTipoformulario == "agregar") {
@@ -915,7 +991,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "9000"
+          time: "9000",
         });
         this.cerrarVentana();
       }
@@ -931,7 +1007,7 @@ export default {
     imagen() {
       this.$refs.fileImage.click();
     },
-    display: function(event) {
+    display: function (event) {
       // Reference to the DOM input element
       var input = event.target;
       // Ensure that you have a file before attempting to read it
@@ -944,7 +1020,7 @@ export default {
           // create a new FileReader to read this image and convert to base64 format
           var reader = new FileReader();
           // Define a callback function to run, when FileReader finishes its job
-          reader.onload = e => {
+          reader.onload = (e) => {
             // Note: arrow function used here, so that "this.imageData" refers to the imageData of Vue component
             // Read image as base64 and set to imageData
             this.form.imagen = e.target.result;
@@ -959,7 +1035,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
           return;
         }
@@ -974,40 +1050,48 @@ export default {
         //actualizo los datos en el formulario
         this.form.imagen = datos.imagen;
         /**seleccionando el departamentos */
-        this.tipo_articulos.forEach(tipo => {
+        this.tipo_articulos.forEach((tipo) => {
           if (tipo.value == datos.tipo_articulos_id) {
             this.form.tipo_articulo = tipo;
             return;
           }
         });
 
-        await this.departamentos.forEach(departamento => {
-          departamento.categorias.forEach(categoria => {
+        await this.departamentos.forEach((departamento) => {
+          departamento.categorias.forEach((categoria) => {
             if (categoria.id == datos.categorias_id) {
               this.form.departamento = departamento;
               return;
             }
           });
         });
-        this.categorias.forEach(categoria => {
+        this.categorias.forEach((categoria) => {
           if (categoria.value == datos.categorias_id) {
             this.form.categoria = categoria;
             return;
           }
         });
-        this.unidades_sat.forEach(unidad => {
+        this.unidades_sat.forEach((unidad) => {
           if (unidad.value == datos.sat_productos_servicios_id) {
             this.form.unidad_sat = unidad;
             return;
           }
         });
-        this.opciones_sino.forEach(opcion => {
+
+        this.unidades.forEach((unidad) => {
+          if (unidad.value == datos.sat_unidades_venta) {
+            this.form.unidad = unidad;
+            return;
+          }
+        });
+
+        this.opciones_sino.forEach((opcion) => {
           if (opcion.value == datos.grava_iva_b) {
             this.form.opcion_iva = opcion;
             return;
           }
         });
-        this.opciones_sino.forEach(opcion => {
+        this.opciones_sino.forEach((opcion) => {
           if (opcion.value == datos.caduca_b) {
             this.form.opcion_caducidad = opcion;
             return;
@@ -1034,7 +1118,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "4000"
+          time: "4000",
         });
         this.cerrarVentana();
       }
@@ -1042,7 +1126,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Guardar Artículo",
@@ -1051,7 +1135,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             this.errores = [];
@@ -1084,7 +1168,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("retornar_id", res.data);
           this.cerrarVentana();
@@ -1095,7 +1179,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
         }
         this.$vs.loading.close();
@@ -1109,7 +1193,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 12000
+              time: 12000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -1120,7 +1204,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 12000
+              time: 12000,
             });
           } else if (err.response.status == 409) {
             /**FORBIDDEN ERROR */
@@ -1130,7 +1214,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 15000
+              time: 15000,
             });
           }
         }
@@ -1152,7 +1236,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("retornar_id", res.data);
         } else {
@@ -1162,7 +1246,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 4000
+            time: 4000,
           });
         }
         this.cerrarVentana();
@@ -1177,7 +1261,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -1188,7 +1272,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             /**FORBIDDEN ERROR */
@@ -1198,7 +1282,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 15000
+              time: 15000,
             });
           }
         }
@@ -1225,28 +1309,32 @@ export default {
       this.form.imagen = "";
       this.form.tipo_articulo = {
         value: "1",
-        label: "Artículo"
+        label: "Artículo",
       };
       this.form.departamento = {
         value: "",
         label: "Seleccione 1",
-        categorias: []
+        categorias: [],
       };
       this.form.categoria = {
         value: "",
-        label: "Seleccione 1"
+        label: "Seleccione 1",
       };
       this.form.unidad_sat = {
         value: "",
-        label: "Seleccione 1"
+        label: "Seleccione 1",
+      };
+      this.form.unidad = {
+        value: "",
+        label: "Seleccione 1",
       };
       this.form.opcion_iva = {
         value: "1",
-        label: "SI"
+        label: "SI",
       };
       this.form.opcion_caducidad = {
         value: 0,
-        label: "NO"
+        label: "NO",
       };
       this.form.descripcion = "";
       this.form.descripcion_ingles = "";
@@ -1264,8 +1352,8 @@ export default {
       this.$validator.pause();
       this.$nextTick(() => {
         this.$validator.errors.clear();
-        this.$validator.fields.items.forEach(field => field.reset());
-        this.$validator.fields.items.forEach(field =>
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
           this.errors.remove(field)
         );
         this.$validator.resume();
@@ -1273,8 +1361,8 @@ export default {
     },
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>
