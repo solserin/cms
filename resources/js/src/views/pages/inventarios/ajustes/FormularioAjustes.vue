@@ -383,7 +383,7 @@ export default {
               fecha_caducidad: caducidad,
               lote: "N/A",
               existencia_sistema: 0,
-              existencia_fisica: 1,
+              existencia_fisica: 1000,
               nota: "",
             });
           }
