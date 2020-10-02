@@ -33,4 +33,9 @@ class MovimientosInventario extends Model
             )
             ->orderBy('articulos_id', 'asc');
     }
+
+    public function articulosserviciofunerario()
+    {
+        return $this->hasMany('App\VentaDetalle', 'movimientos_inventario_id', 'id');
+    }
 }

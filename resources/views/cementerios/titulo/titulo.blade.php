@@ -103,9 +103,6 @@
                     {{ $empresa->razon_social }}
                 </h1>
                 <p class="datos-header  size-16px capitalize line-small">
-                    r.f.c. {{ $empresa->rfc }}
-                </p>
-                <p class="datos-header  size-16px capitalize line-small">
                     {{ $empresa->calle }} Núm. Ext {{ $empresa->num_ext }}
                 </p>
                 <p class="datos-header  size-16px capitalize line-small">
@@ -201,10 +198,6 @@
             <td class="w-50"></td>
         </tr>
     </table>
-    <p class="justificar italic mt-20">
-        Esta impresión es solo una copia del título original emitido por la empresa y no es válido sin el membrete
-        oficial de la empresa.
-    </p>
 </body>
 
 </html>

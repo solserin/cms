@@ -2,6 +2,7 @@
   <div class="centerx">
     <vs-popup
       class="forms-popups clientes big-forms"
+      fullscreen
       close="cancelar"
       :title="title"
       :active.sync="showVentana"
@@ -12,14 +13,18 @@
       <div class="flex flex-wrap px-2">
         <div class="w-full pt-3 pb-3 px-2">
           <h3 class="text-xl">
-            <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Información del Cliente
+            <feather-icon
+              icon="UserCheckIcon"
+              class="mr-2"
+              svgClasses="w-5 h-5"
+            />Información del Cliente
           </h3>
           <div class="mt-3">
-            <label
-              class="text-sm opacity-75 font-bold uppercase text-primary"
-            >Seleccione el estado actual del cliente</label>
+            <label class="text-sm opacity-75 font-bold uppercase text-primary"
+              >Seleccione el estado actual del cliente</label
+            >
             <vs-switch
-              style="width:95px"
+              style="width: 95px;"
               color="success"
               class="font-bold mt-2"
               icon-pack="feather"
@@ -52,33 +57,37 @@
             v-model="form.nombre"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('nombre') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("nombre") }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.nombre">
+              {{ errores.nombre[0] }}
+            </span>
           </div>
         </div>
 
         <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Fecha de Nacimiento (Año-Mes-Dia)
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-
+          <label class="text-sm opacity-75 font-bold"
+            >Fecha de Nacimiento (Año-Mes-Dia)</label
+          >
           <flat-pickr
             name="fecha_nacimiento"
-            data-vv-as=" "
-            v-validate:fecha_nacimiento_validacion_computed.immediate="'required'"
             :config="configdateTimePicker"
             v-model="form.fecha_nac"
             placeholder="Seleccione una fecha"
             class="w-full my-1"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('fecha_nacimiento') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("fecha_nacimiento") }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.fecha_nac">{{errores.fecha_nac[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.fecha_nac">
+              {{ errores.fecha_nac[0] }}
+            </span>
           </div>
         </div>
 
@@ -100,13 +109,16 @@
             <div slot="no-options">Seleccione una opción</div>
           </v-select>
           <div>
-            <span class="text-danger text-sm">{{ errors.first('genero') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("genero") }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores['genero.value']"
-            >{{errores['genero.value'][0]}}</span>
+              >{{ errores["genero.value"][0] }}</span
+            >
           </div>
         </div>
 
@@ -127,10 +139,14 @@
             v-model="form.direccion"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('direccion') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("direccion") }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.direccion">{{errores.direccion[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.direccion">
+              {{ errores.direccion[0] }}
+            </span>
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
@@ -151,13 +167,16 @@
             <div slot="no-options">Seleccione una opción</div>
           </v-select>
           <div>
-            <span class="text-danger text-sm">{{ errors.first('nacionalidades_id') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("nacionalidades_id") }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores['nacionalidad.value']"
-            >{{errores['nacionalidad.value'][0]}}</span>
+              >{{ errores["nacionalidad.value"][0] }}</span
+            >
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
@@ -177,10 +196,14 @@
             v-model="form.ciudad"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('ciudad') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("ciudad") }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.ciudad">{{errores.ciudad[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.ciudad">
+              {{ errores.ciudad[0] }}
+            </span>
           </div>
         </div>
 
@@ -201,10 +224,14 @@
             v-model="form.estado"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('estado') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("estado") }}
+            </span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.estado">{{errores.estado[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.estado">
+              {{ errores.estado[0] }}
+            </span>
           </div>
         </div>
 
@@ -233,7 +260,9 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Tél. Extra (Trabajo)</label>
+          <label class="text-sm opacity-75 font-bold"
+            >Tél. Extra (Trabajo)</label
+          >
           <vs-input
             maxlength="25"
             type="text"
@@ -257,10 +286,12 @@
             v-model.trim="form.email"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('email') }}</span>
+            <span class="text-danger text-sm">{{ errors.first("email") }}</span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.email">{{errores.email[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.email">
+              {{ errores.email[0] }}
+            </span>
           </div>
         </div>
 
@@ -269,13 +300,21 @@
         <vs-divider />
         <div class="w-full pt-3 pb-3 px-2">
           <h3 class="text-xl">
-            <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Información Fiscal (Para aquellos que facturan)
+            <feather-icon
+              icon="UserCheckIcon"
+              class="mr-2"
+              svgClasses="w-5 h-5"
+            />Información Fiscal (Para aquellos que facturan)
           </h3>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
           <label class="text-sm opacity-75 font-bold">
             RFC
-            <span v-if="datos_fiscales_validacion_computed" class="text-danger text-sm">(*)</span>
+            <span
+              v-if="datos_fiscales_validacion_computed"
+              class="text-danger text-sm"
+              >(*)</span
+            >
           </label>
           <vs-input
             data-vv-as=" "
@@ -288,10 +327,12 @@
             v-validate:rfc_validacion_computed="'required'"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
+            <span class="text-danger text-sm">{{ errors.first("rfc") }}</span>
           </div>
           <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+            <span class="text-danger text-sm" v-if="this.errores.rfc">
+              {{ errores.rfc[0] }}
+            </span>
           </div>
         </div>
 
@@ -301,7 +342,8 @@
             <span
               v-if="datos_fiscales_validacion_computed"
               class="text-danger text-sm"
-            >(*)</span>
+              >(*)</span
+            >
           </label>
           <vs-input
             name="razon_social"
@@ -314,13 +356,16 @@
             v-model="form.razon_social"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('razon_social') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("razon_social") }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.razon_social"
-            >{{errores.razon_social[0]}}</span>
+              >{{ errores.razon_social[0] }}</span
+            >
           </div>
         </div>
 
@@ -330,7 +375,8 @@
             <span
               v-if="datos_fiscales_validacion_computed"
               class="text-danger text-sm"
-            >(*)</span>
+              >(*)</span
+            >
           </label>
           <vs-input
             name="direccion_fiscal"
@@ -343,13 +389,16 @@
             v-model="form.direccion_fiscal"
           />
           <div>
-            <span class="text-danger text-sm">{{ errors.first('direccion_fiscal') }}</span>
+            <span class="text-danger text-sm">
+              {{ errors.first("direccion_fiscal") }}
+            </span>
           </div>
           <div class="mt-2">
             <span
               class="text-danger text-sm"
               v-if="this.errores.direccion_fiscal"
-            >{{errores.direccion_fiscal[0]}}</span>
+              >{{ errores.direccion_fiscal[0] }}</span
+            >
           </div>
         </div>
 
@@ -357,11 +406,17 @@
 
         <div class="w-full pt-3 pb-3 px-2">
           <h3 class="text-xl">
-            <feather-icon icon="UserCheckIcon" class="mr-2" svgClasses="w-5 h-5" />Referencia de Contacto
+            <feather-icon
+              icon="UserCheckIcon"
+              class="mr-2"
+              svgClasses="w-5 h-5"
+            />Referencia de Contacto
           </h3>
         </div>
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Nombre de un contacto de referencia</label>
+          <label class="text-sm opacity-75 font-bold"
+            >Nombre de un contacto de referencia</label
+          >
           <vs-input
             name="nombre_contacto"
             maxlength="150"
@@ -373,7 +428,9 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Parentesco con el contacto</label>
+          <label class="text-sm opacity-75 font-bold"
+            >Parentesco con el contacto</label
+          >
           <vs-input
             name="parentesco_contacto"
             data-vv-as=" "
@@ -386,7 +443,9 @@
         </div>
 
         <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Teléfono del contacto</label>
+          <label class="text-sm opacity-75 font-bold"
+            >Teléfono del contacto</label
+          >
           <vs-input
             name="telefono_contacto"
             data-vv-as=" "
@@ -406,15 +465,25 @@
           <div class="mt-2">
             <p class="text-center">
               <span class="text-danger font-medium">Ojo:</span>
-              Por favor revise la información ingresada, si todo es correcto de click en "Botón de Abajo”.
+              Por favor revise la información ingresada, si todo es correcto de
+              click en "Botón de Abajo”.
             </p>
           </div>
         </div>
       </div>
-      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto">
+      <div
+        class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto"
+      >
         <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
-          <span class="texto-btn" v-if="this.getTipoformulario=='agregar'">Guardar Datos</span>
+          <img
+            width="25px"
+            class="cursor-pointer"
+            size="small"
+            src="@assets/images/save.svg"
+          />
+          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
+            >Guardar Datos</span
+          >
           <span class="texto-btn" v-else>Modificar Datos</span>
         </vs-button>
       </div>
@@ -430,7 +499,7 @@
     <ConfirmarDanger
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
-      @closeVerificar="openConfirmarSinPassword=false"
+      @closeVerificar="openConfirmarSinPassword = false"
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
     ></ConfirmarDanger>
@@ -438,7 +507,7 @@
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
-      @closeVerificar="openConfirmarAceptar=false"
+      @closeVerificar="openConfirmarAceptar = false"
       :accion="'He revisado la información y quiero registrar a este cliente'"
       :confirmarButton="'Guardar Cliente'"
     ></ConfirmarAceptar>
@@ -466,25 +535,25 @@ export default {
     Password,
     ConfirmarDanger,
     ConfirmarAceptar,
-    flatPickr
+    flatPickr,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_cliente: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         //cargo nacionalidades
         this.get_nacionalidades();
@@ -503,7 +572,7 @@ export default {
           this.title = "Registrar Nuevo Cliente";
         }
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -512,7 +581,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -520,7 +589,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_cliente_id: {
       get() {
@@ -528,19 +597,19 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
 
-    nacionalidad_computed: function() {
+    nacionalidad_computed: function () {
       return this.form.nacionalidad.value;
     },
-    genero_computed: function() {
+    genero_computed: function () {
       return this.form.genero.value;
     },
-    fecha_nacimiento_validacion_computed: function() {
+    fecha_nacimiento_validacion_computed: function () {
       return this.form.fecha_nac;
     },
-    datos_fiscales_validacion_computed: function() {
+    datos_fiscales_validacion_computed: function () {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
@@ -549,7 +618,7 @@ export default {
         return true;
       else return false;
     },
-    rfc_validacion_computed: function() {
+    rfc_validacion_computed: function () {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
@@ -558,7 +627,7 @@ export default {
         return this.form.rfc;
       else return true;
     },
-    razon_social_validacion_computed: function() {
+    razon_social_validacion_computed: function () {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
@@ -567,7 +636,7 @@ export default {
         return this.form.razon_social;
       else return true;
     },
-    direccion_fiscal_validacion_computed: function() {
+    direccion_fiscal_validacion_computed: function () {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
@@ -575,7 +644,7 @@ export default {
       )
         return this.form.direccion_fiscal;
       else return true;
-    }
+    },
   },
   data() {
     return {
@@ -584,7 +653,7 @@ export default {
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
       disabledDates: {
-        from: new Date()
+        from: new Date(),
       },
       operConfirmar: false,
       openConfirmarSinPassword: false,
@@ -597,12 +666,12 @@ export default {
       generos: [
         {
           value: "1",
-          label: "Hombre"
+          label: "Hombre",
         },
         {
           value: "2",
-          label: "Mujer"
-        }
+          label: "Mujer",
+        },
       ],
       form: {
         status_cliente: 1,
@@ -611,7 +680,7 @@ export default {
         /**datos del cliente personal */
         genero: {
           value: "1",
-          label: "Hombre"
+          label: "Hombre",
         },
         nombre: "",
         direccion: "",
@@ -619,7 +688,7 @@ export default {
         estado: "",
         nacionalidad: {
           value: "122",
-          label: "Mexicana"
+          label: "Mexicana",
         },
         telefono: "",
         celular: "",
@@ -635,11 +704,11 @@ export default {
         /**datos del contacto extra de referencia */
         nombre_contacto: "",
         parentesco_contacto: "",
-        telefono_contacto: ""
+        telefono_contacto: "",
 
         /**datos del cliente contacto de referencia */
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
@@ -648,7 +717,7 @@ export default {
       this.$vs.loading();
       clientes
         .get_cliente_id(this.get_cliente_id)
-        .then(res => {
+        .then((res) => {
           //actualizo los datos en el formulario
           this.form.nombre = res.data.nombre;
           this.form.direccion = res.data.direccion;
@@ -656,20 +725,24 @@ export default {
           this.form.estado = res.data.estado;
           this.form.nacionalidad = {
             value: res.data.nacionalidad["id"],
-            label: res.data.nacionalidad["nacionalidad"]
+            label: res.data.nacionalidad["nacionalidad"],
           };
           this.form.genero = {
             value: res.data.genero["id"],
-            label: res.data.genero["genero"]
+            label: res.data.genero["genero"],
           };
           this.form.telefono = res.data.telefono;
           this.form.celular = res.data.celular;
           this.form.telefono_extra = res.data.telefono_extra;
           this.form.email = res.data.email;
 
-          var partes = res.data.fecha_nac.split("-");
-          //yyyy-mm-dd
-          this.form.fecha_nac = new Date(partes[0], partes[1] - 1, partes[2]);
+          if (res.data.fecha_nac != null) {
+            var partes = res.data.fecha_nac.split("-");
+            //yyyy-mm-dd
+            this.form.fecha_nac = new Date(partes[0], partes[1] - 1, partes[2]);
+          } else {
+            this.form.fecha_nac = "";
+          }
 
           /**datos del cliente fiscal */
           this.form.rfc = res.data.rfc != null ? res.data.rfc : "";
@@ -685,7 +758,8 @@ export default {
           this.form.status_cliente = res.data.vivo_b_raw;
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
+          console.log("get_cliente_by_id -> err", err);
           this.$vs.loading.close();
           this.$vs.notify({
             title: "Modificar Cliente",
@@ -694,7 +768,7 @@ export default {
             icon: "icon-alert-circle",
             color: "danger",
             position: "bottom-right",
-            time: "4000"
+            time: "4000",
           });
           this.cerrarVentana();
         });
@@ -703,27 +777,27 @@ export default {
       this.$vs.loading();
       clientes
         .get_nacionalidades()
-        .then(res => {
+        .then((res) => {
           //le agrego las nacionalidades
           this.nacionalidades = [];
           this.nacionalidades.push({ label: "Seleccione 1", value: "" });
-          res.data.forEach(element => {
+          res.data.forEach((element) => {
             this.nacionalidades.push({
               label: element.nacionalidad,
-              value: element.id
+              value: element.id,
             });
           });
           this.form.nacionalidad = this.nacionalidades[122];
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
         });
     },
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Guardar Cliente",
@@ -732,7 +806,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             this.errores = [];
@@ -756,7 +830,7 @@ export default {
       this.$vs.loading();
       clientes
         .guardar_cliente(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -765,7 +839,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -776,12 +850,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
@@ -792,7 +866,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -803,7 +877,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
               //console.log(err.response);
             }
@@ -818,7 +892,7 @@ export default {
       this.$vs.loading();
       clientes
         .modificar_cliente(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -827,7 +901,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -838,12 +912,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
@@ -854,7 +928,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -865,7 +939,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
               //console.log(err.response);
             }
@@ -897,11 +971,11 @@ export default {
       this.form.estado = "";
       this.form.nacionalidad = {
         value: "122",
-        label: "Mexicana"
+        label: "Mexicana",
       };
       this.form.genero = {
         value: "1",
-        label: "Hombre"
+        label: "Hombre",
       };
       this.form.telefono = "";
       this.form.celular = "";
@@ -921,8 +995,8 @@ export default {
 
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

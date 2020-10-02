@@ -360,55 +360,70 @@ export default {
       /**aqui se agrega el articulo seleccionado */
       /**se verifica qur tipo de ajuste es */
       if (this.form.tipoAjuste.value == 1) {
-        /**es un ajuste de articulos fuera de inventario */
-        /**es caducable */
-        let caducidad = datos.caduca_b == 1 ? datos.fecha_caducidad : "N/A";
-        this.form.ajuste.push({
-          id: datos.id,
-          caduca_b: datos.caduca_b,
-          precio_compra: datos.precio_compra,
-          caduca_texto: datos.caduca_texto,
-          codigo_barras: datos.codigo_barras,
-          descripcion: datos.descripcion,
-          fecha_caducidad: caducidad,
-          lote: "N/A",
-          existencia_sistema: 0,
-          existencia_fisica: 1,
-          nota: "",
-        });
-      } else {
-        /**es un ajuste del inventario actual
-         * se debe de agregar todos los productos de cada lote que tiene activo el inventario
-         */
-        let caducidad = datos.caduca_b == 1 ? datos.fecha_caducidad : "N/A";
-        datos.inventario.forEach((element) => {
-          /**verificand que no este en el ajuste a mandar el concepto seleccionado */
+        datos.forEach((articulo) => {
+          /**es un ajuste de articulos fuera de inventario */
+          /**es caducable */
           let esta = 0;
           this.form.ajuste.forEach((ajuste) => {
-            if (
-              ajuste.id == element.articulos_id &&
-              ajuste.fecha_caducidad == element.fecha_caducidad &&
-              ajuste.lote == element.lotes_id
-            ) {
+            if (ajuste.id == articulo.id) {
               esta = 1;
               return;
             }
           });
           if (!esta) {
+            let caducidad =
+              articulo.caduca_b == 1 ? articulo.fecha_caducidad : "N/A";
             this.form.ajuste.push({
-              id: datos.id,
-              caduca_b: datos.caduca_b,
-              precio_compra: element.precio_compra_neto,
-              caduca_texto: datos.caduca_texto,
-              codigo_barras: datos.codigo_barras,
-              descripcion: datos.descripcion,
-              fecha_caducidad: element.fecha_caducidad,
-              lote: element.lotes_id,
-              existencia_sistema: element.existencia,
-              existencia_fisica: element.existencia,
+              id: articulo.id,
+              caduca_b: articulo.caduca_b,
+              precio_compra: articulo.precio_compra,
+              caduca_texto: articulo.caduca_texto,
+              codigo_barras: articulo.codigo_barras,
+              descripcion: articulo.descripcion,
+              fecha_caducidad: caducidad,
+              lote: "N/A",
+              existencia_sistema: 0,
+              existencia_fisica: 1000,
               nota: "",
             });
           }
+        });
+      } else {
+        datos.forEach((articulo) => {
+          /**es un ajuste del inventario actual
+           * se debe de agregar todos los productos de cada lote que tiene activo el inventario
+           */
+          let caducidad =
+            articulo.caduca_b == 1 ? articulo.fecha_caducidad : "N/A";
+          articulo.inventario.forEach((element) => {
+            /**verificand que no este en el ajuste a mandar el concepto seleccionado */
+            let esta = 0;
+            this.form.ajuste.forEach((ajuste) => {
+              if (
+                ajuste.id == element.articulos_id &&
+                ajuste.fecha_caducidad == element.fecha_caducidad &&
+                ajuste.lote == element.lotes_id
+              ) {
+                esta = 1;
+                return;
+              }
+            });
+            if (!esta) {
+              this.form.ajuste.push({
+                id: articulo.id,
+                caduca_b: articulo.caduca_b,
+                precio_compra: element.precio_compra_neto,
+                caduca_texto: articulo.caduca_texto,
+                codigo_barras: articulo.codigo_barras,
+                descripcion: articulo.descripcion,
+                fecha_caducidad: element.fecha_caducidad,
+                lote: element.lotes_id,
+                existencia_sistema: element.existencia,
+                existencia_fisica: element.existencia,
+                nota: "",
+              });
+            }
+          });
         });
       }
     },

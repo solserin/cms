@@ -109,7 +109,9 @@
         .word-spacing-{{$i}}{
           word-spacing: {{($i)}}px !important;
         }
-  
+   .w-{{$i}}-px{
+          width: {{($i)}}px !important;
+        }
         .w-{{$i}}{
           width: {{($i)}}% !important;
         }
@@ -252,6 +254,9 @@
 
     .line-base{
       line-height: 1.5em !important;
+    }
+.line-17{
+      line-height: 1.7em !important;
     }
 
     .line-small{

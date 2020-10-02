@@ -10,7 +10,7 @@
       x="0px"
       y="0px"
       viewBox="15 150 575 500"
-      style="enable-background:new 0 0 612 792;"
+      style="enable-background: new 0 0 612 792;"
       xml:space="preserve"
     >
       <g>
@@ -135,37 +135,61 @@
       <g>
         <!--NICHOS 8-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[24],id_area_activa==24 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[24],
+            id_area_activa == 24 ? 'activado' : '',
+          ]"
           d="M262.2,552.8l18.1-54.6c0,0,8.6,2.6,15.6,8L262.2,552.8z"
           @click="seleccionarArea(24)"
         />
         <!--NICHOS 11-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[27],id_area_activa==27 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[27],
+            id_area_activa == 27 ? 'activado' : '',
+          ]"
           d="M262.2,552.8l54.4-21.5c0,0,3.6,8.7,4.3,14.9L262.2,552.8z"
           @click="seleccionarArea(27)"
         />
         <!--NICHOS 7-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[23],id_area_activa==23 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[23],
+            id_area_activa == 23 ? 'activado' : '',
+          ]"
           d="M262.2,495.3c0,0,7.6-0.3,18.1,2.8l-18.1,54.6V495.3z"
           @click="seleccionarArea(23)"
         />
         <!--NICHOS 9-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[25],id_area_activa==25 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[25],
+            id_area_activa == 25 ? 'activado' : '',
+          ]"
           d="M295.9,506.2c0,0,7,3.5,12.2,11.1l-46,35.5L295.9,506.2z"
           @click="seleccionarArea(25)"
         />
         <!--NICHOS 10-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[26],id_area_activa==26 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[26],
+            id_area_activa == 26 ? 'activado' : '',
+          ]"
           d="M308.1,517.3l-46,35.5l54.4-21.5C316.6,531.3,314.5,525.4,308.1,517.3z"
           @click="seleccionarArea(26)"
         />
         <!--NICHOS 12-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[28],id_area_activa==28 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[28],
+            id_area_activa == 28 ? 'activado' : '',
+          ]"
           d="M262.2,552.8l58.3,10.9c0,0,1.4-6.8,0.3-17.4L262.2,552.8z"
           @click="seleccionarArea(28)"
         />
@@ -175,37 +199,61 @@
         />
         <!--NICHOS 5-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[21],id_area_activa==21 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[21],
+            id_area_activa == 21 ? 'activado' : '',
+          ]"
           d="M262.1,552.8L244,498.2c0,0-8.6,2.6-15.6,8L262.1,552.8z"
           @click="seleccionarArea(21)"
         />
         <!--NICHOS 2-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[18],id_area_activa==18 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[18],
+            id_area_activa == 18 ? 'activado' : '',
+          ]"
           d="M262.1,552.8l-54.4-21.5c0,0-3.6,8.7-4.3,14.9L262.1,552.8z"
           @click="seleccionarArea(18)"
         />
         <!--NICHOS 6-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[22],id_area_activa==22 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[22],
+            id_area_activa == 22 ? 'activado' : '',
+          ]"
           d="M262.1,495.3c0,0-7.6-0.3-18.1,2.8l18.1,54.6V495.3z"
           @click="seleccionarArea(22)"
         />
         <!--NICHOS 4-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[20],id_area_activa==20 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[20],
+            id_area_activa == 20 ? 'activado' : '',
+          ]"
           d="M228.4,506.2c0,0-7,3.5-12.2,11.1l46,35.5L228.4,506.2z"
           @click="seleccionarArea(20)"
         />
         <!--NICHOS 3-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[19],id_area_activa==19 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[19],
+            id_area_activa == 19 ? 'activado' : '',
+          ]"
           d="M216.2,517.3l46,35.5l-54.4-21.5C207.7,531.3,209.8,525.4,216.2,517.3z"
           @click="seleccionarArea(19)"
         />
         <!--NICHOS 1-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[17],id_area_activa==17 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[17],
+            id_area_activa == 17 ? 'activado' : '',
+          ]"
           d="M262.1,552.8l-58.3,10.9c0,0-1.4-6.8-0.3-17.4L262.1,552.8z"
           @click="seleccionarArea(17)"
         />
@@ -217,7 +265,11 @@
             x="98.2"
             y="348.6"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -259.0843 314.0718)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[10],id_area_activa==10 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[10],
+              id_area_activa == 10 ? 'activado' : '',
+            ]"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(10)"
@@ -231,7 +283,11 @@
             x="106.4"
             y="329.3"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -236.3726 309.7916)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[11],id_area_activa==11 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[11],
+              id_area_activa == 11 ? 'activado' : '',
+            ]"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(11)"
@@ -245,7 +301,11 @@
             x="114.5"
             y="310"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -213.5523 305.4909)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[12],id_area_activa==12 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[12],
+              id_area_activa == 12 ? 'activado' : '',
+            ]"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(12)"
@@ -259,7 +319,11 @@
             x="122.7"
             y="290.7"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -190.8407 301.2107)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[13],id_area_activa==13 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[13],
+              id_area_activa == 13 ? 'activado' : '',
+            ]"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(13)"
@@ -273,7 +337,11 @@
             x="130.8"
             y="271.3"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -168.0205 296.91)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[14],id_area_activa==14 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[14],
+              id_area_activa == 14 ? 'activado' : '',
+            ]"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(14)"
@@ -287,7 +355,11 @@
             x="139"
             y="252.1"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -145.3089 292.6298)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[15],id_area_activa==15 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[15],
+              id_area_activa == 15 ? 'activado' : '',
+            ]"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(15)"
@@ -301,7 +373,11 @@
             x="147"
             y="232.7"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -122.5091 288.2204)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[16],id_area_activa==16 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[16],
+              id_area_activa == 16 ? 'activado' : '',
+            ]"
             width="17.9"
             height="7.5"
             @click="seleccionarArea(16)"
@@ -315,7 +391,11 @@
             x="300.3"
             y="291"
             transform="matrix(0.6033 -0.7975 0.7975 0.6033 -118.576 361.4763)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[47],id_area_activa==47 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[47],
+              id_area_activa == 47 ? 'activado' : '',
+            ]"
             width="7.5"
             height="17.9"
             @click="seleccionarArea(47)"
@@ -329,7 +409,11 @@
             x="158"
             y="217.5"
             transform="matrix(0.3888 -0.9213 0.9213 0.3888 -104.5519 284.9159)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[5],id_area_activa==5 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[5],
+              id_area_activa == 5 ? 'activado' : '',
+            ]"
             width="9"
             height="7.5"
             @click="seleccionarArea(5)"
@@ -343,7 +427,11 @@
             x="164.7"
             y="205.9"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -100.1601 216.1504)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[6],id_area_activa==6 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[6],
+              id_area_activa == 6 ? 'activado' : '',
+            ]"
             width="9"
             height="7.5"
             @click="seleccionarArea(6)"
@@ -357,7 +445,11 @@
             x="180.4"
             y="203.6"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -93.0207 227.4189)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[7],id_area_activa==7 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[7],
+              id_area_activa == 7 ? 'activado' : '',
+            ]"
             width="7.5"
             height="9"
             @click="seleccionarArea(7)"
@@ -371,7 +463,11 @@
             x="189.8"
             y="210.8"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -95.0665 237.6387)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[8],id_area_activa==8 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[8],
+              id_area_activa == 8 ? 'activado' : '',
+            ]"
             width="7.5"
             height="9"
             @click="seleccionarArea(8)"
@@ -385,7 +481,11 @@
             x="208.4"
             y="213.3"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -99.1293 257.9475)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[48],id_area_activa==48 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[48],
+              id_area_activa == 48 ? 'activado' : '',
+            ]"
             width="7.5"
             height="32.5"
             @click="seleccionarArea(48)"
@@ -399,7 +499,11 @@
             x="276.3"
             y="265.4"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -113.84 332.2195)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[49],id_area_activa==49 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[49],
+              id_area_activa == 49 ? 'activado' : '',
+            ]"
             width="7.5"
             height="32.5"
             @click="seleccionarArea(49)"
@@ -413,7 +517,11 @@
             x="242.1"
             y="234.7"
             transform="matrix(0.6091 -0.7931 0.7931 0.6091 -106.7848 295.0168)"
-            :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[50],id_area_activa==50 ? 'activado':'']"
+            :class="[
+              status_propiedadades.length <= 1 ? 'loading' : '',
+              status_propiedadades[50],
+              id_area_activa == 50 ? 'activado' : '',
+            ]"
             width="7.5"
             height="42.3"
             @click="seleccionarArea(50)"
@@ -426,7 +534,11 @@
           x="92.2"
           y="380.7"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -299.47 369.6841)"
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[4],id_area_activa==4 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[4],
+            id_area_activa == 4 ? 'activado' : '',
+          ]"
           width="9"
           height="7.5"
           @click="seleccionarArea(4)"
@@ -438,7 +550,11 @@
           x="87.4"
           y="396.7"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -318.297 376.6368)"
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[3],id_area_activa==3 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[3],
+            id_area_activa == 3 ? 'activado' : '',
+          ]"
           width="9"
           height="7.5"
           @click="seleccionarArea(3)"
@@ -450,7 +566,11 @@
           x="77.7"
           y="417.1"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -341.6591 386.2634)"
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[9],id_area_activa==9 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[9],
+            id_area_activa == 9 ? 'activado' : '',
+          ]"
           width="17.9"
           height="7.5"
           @click="seleccionarArea(9)"
@@ -462,7 +582,11 @@
           x="74.7"
           y="440"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -368.9612 395.6353)"
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[2],id_area_activa==2 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[2],
+            id_area_activa == 2 ? 'activado' : '',
+          ]"
           width="9"
           height="7.5"
           @click="seleccionarArea(2)"
@@ -474,7 +598,11 @@
           x="70.2"
           y="455.9"
           transform="matrix(0.2798 -0.9601 0.9601 0.2798 -387.4639 402.7869)"
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[1],id_area_activa==1 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[1],
+            id_area_activa == 1 ? 'activado' : '',
+          ]"
           width="9"
           height="7.5"
           @click="seleccionarArea(1)"
@@ -483,7 +611,11 @@
       <g id="LWPOLYLINE_514_">
         <!--TERRAZA 1-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[29],id_area_activa==29 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[29],
+            id_area_activa == 29 ? 'activado' : '',
+          ]"
           points="243.2,404.8 199.6,412.5 200.1,415.8 206.3,450.7 249.9,443 	"
           @click="seleccionarArea(29)"
         />
@@ -491,7 +623,11 @@
       <g id="LWPOLYLINE_513_">
         <!--TERRAZA 2-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[30],id_area_activa==30 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[30],
+            id_area_activa == 30 ? 'activado' : '',
+          ]"
           points="193.4,413.5 149.9,421.2 150.5,424.5 156.6,459.4 200.2,451.8 	"
           @click="seleccionarArea(30)"
         />
@@ -499,7 +635,11 @@
       <g id="LWPOLYLINE_512_">
         <!--TERRAZA 6-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[34],id_area_activa==34 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[34],
+            id_area_activa == 34 ? 'activado' : '',
+          ]"
           points="240.4,388.8 239.8,385.5 236.5,366.6 192.8,374.2 193.4,377.6 196.2,393.2 196.7,396.5 199.6,412.5 
 		243.2,404.8 	"
           @click="seleccionarArea(34)"
@@ -508,7 +648,11 @@
       <g id="LWPOLYLINE_511_">
         <!--TERRAZA 5-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[33],id_area_activa==33 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[33],
+            id_area_activa == 33 ? 'activado' : '',
+          ]"
           points="190.6,397.6 190,394.3 186.7,375.3 143.1,383 143.7,386.3 146.5,401.9 147.1,405.3 149.9,421.2 
 		193.4,413.5 	"
           @click="seleccionarArea(33)"
@@ -517,7 +661,11 @@
       <g id="LWPOLYLINE_510_">
         <!--TERRAZA 10-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[38],id_area_activa==38 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[38],
+            id_area_activa == 38 ? 'activado' : '',
+          ]"
           points="233,346.9 189.4,354.6 189.9,357.9 192.8,374.2 236.5,366.6 	"
           @click="seleccionarArea(38)"
         />
@@ -525,7 +673,11 @@
       <g id="LWPOLYLINE_509_">
         <!--TERRAZA 9-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[37],id_area_activa==37 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[37],
+            id_area_activa == 37 ? 'activado' : '',
+          ]"
           points="183,355.7 139.2,364 139.7,367.3 142.8,382.7 186.7,375.3 	"
           @click="seleccionarArea(37)"
         />
@@ -533,7 +685,11 @@
       <g id="LWPOLYLINE_508_">
         <!--TERRAZA 14-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[42],id_area_activa==42 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[42],
+            id_area_activa == 42 ? 'activado' : '',
+          ]"
           points="229.6,327.3 185.9,335 186.5,338.3 189.4,354.6 233,346.9 	"
           @click="seleccionarArea(42)"
         />
@@ -541,7 +697,11 @@
       <g id="LWPOLYLINE_507_">
         <!--TERRAZA 13-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[41],id_area_activa==41 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[41],
+            id_area_activa == 41 ? 'activado' : '',
+          ]"
           points="179.8,336.1 135,344 138.4,363.7 140,363.4 183.2,355.7 	"
           @click="seleccionarArea(41)"
         />
@@ -552,16 +712,25 @@
           x="132.5"
           y="320.3"
           transform="matrix(0.9848 -0.1735 0.1735 0.9848 -54.942 31.9743)"
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[44],id_area_activa==44 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[44],
+            id_area_activa == 44 ? 'activado' : '',
+          ]"
           width="45.9"
           height="19.9"
           @click="seleccionarArea(44)"
-        />/>
+        />
+        />
       </g>
       <g id="LWPOLYLINE_505_">
         <!--TERRAZA 17-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[45],id_area_activa==45 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[45],
+            id_area_activa == 45 ? 'activado' : '',
+          ]"
           points="226.1,307.7 182.4,315.4 183,318.7 185.9,335 229.6,327.3 	"
           @click="seleccionarArea(45)"
         />
@@ -569,7 +738,11 @@
       <g id="LWPOLYLINE_504_">
         <!--TERRAZA 3-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[31],id_area_activa==31 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[31],
+            id_area_activa == 31 ? 'activado' : '',
+          ]"
           d="M144.3,425.6l-0.6-3.3l-46.4,8.2l-2.2,8.4c4.4,1,7.5,4.9,7.5,9.4l8.5-2.9l25.3,18l14-3l-2.6-14.9l-0.6-3.3
 		L144.3,425.6z"
           @click="seleccionarArea(31)"
@@ -578,7 +751,11 @@
       <g id="LWPOLYLINE_503_">
         <!--TERRAZA 4-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[32],id_area_activa==32 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[32],
+            id_area_activa == 32 ? 'activado' : '',
+          ]"
           points="140.9,406.3 140.3,403 137.6,387.4 137,384.1 108.5,389.1 97.3,430.5 143.7,422.3 	"
           @click="seleccionarArea(32)"
         />
@@ -586,7 +763,11 @@
       <g id="LWPOLYLINE_502_">
         <!--TERRAZA 8-->
         <polygon
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[36],id_area_activa==36 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[36],
+            id_area_activa == 36 ? 'activado' : '',
+          ]"
           points="134.1,367.8 133.6,364.5 114.3,367.8 108.5,389.1 137,384.1 	"
           @click="seleccionarArea(36)"
         />
@@ -594,7 +775,11 @@
       <g id="LWPOLYLINE_501_">
         <!--TERRAZA 7-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[35],id_area_activa==35 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[35],
+            id_area_activa == 35 ? 'activado' : '',
+          ]"
           d="M271.8,402.8c-7.5-0.9-15.1-0.6-22.5,0.9l0.6,3.3l2.9,16.7l0.3,1.7l18.1-3.2L271.8,402.8z"
           @click="seleccionarArea(35)"
         />
@@ -602,7 +787,11 @@
       <g id="LWPOLYLINE_500_">
         <!--TERRAZA 15-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[43],id_area_activa==43 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[43],
+            id_area_activa == 43 ? 'activado' : '',
+          ]"
           d="M274.1,323.1c-12.9-0.2-25.7,0.8-38.4,3.1l0.6,3.4l2.9,16.3v0.2c11.4-1.4,22.9-2.5,34.4-3L274.1,323.1z"
           @click="seleccionarArea(43)"
         />
@@ -610,7 +799,11 @@
       <g id="LWPOLYLINE_499_">
         <!--TERRAZA 18-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[46],id_area_activa==46 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[46],
+            id_area_activa == 46 ? 'activado' : '',
+          ]"
           d="M274.7,303.1c-14.2-0.2-28.4,0.9-42.5,3.4l0.6,3.4l2.9,16.3c12.7-2.3,25.5-3.3,38.4-3.1
 		C274.1,323.1,274.7,303.1,274.7,303.1z"
           @click="seleccionarArea(46)"
@@ -624,11 +817,17 @@
       </g>
       <g id="LWPOLYLINE_489_">
         <!--TERRAZA 22-->
-        <polygon class="bloqueado" points="189,228 184.8,228.7 190.7,264.4 227,257.9 	" />
+        <polygon
+          class="bloqueado"
+          points="189,228 184.8,228.7 190.7,264.4 227,257.9 	"
+        />
       </g>
       <g id="LWPOLYLINE_487_">
         <!--TERRAZA 21-->
-        <polygon class="bloqueado" points="179.3,230.1 173.1,231 157.1,270.2 185,265.6 	" />
+        <polygon
+          class="bloqueado"
+          points="179.3,230.1 173.1,231 157.1,270.2 185,265.6 	"
+        />
       </g>
       <g id="LWPOLYLINE_486_">
         <!--TERRAZA 32-->
@@ -780,7 +979,11 @@
       <g id="LWPOLYLINE_445_">
         <!--TERRAZA 11-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[39],id_area_activa==39 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[39],
+            id_area_activa == 39 ? 'activado' : '',
+          ]"
           d="M273,362.9c-10.2-0.1-20.4,0.7-30.4,2.5l0.6,3.4l2.8,15.6l0.6,3.3l2.8,16c7.4-1.5,15-1.8,22.5-0.9L273,362.9z"
           @click="seleccionarArea(39)"
         />
@@ -801,7 +1004,11 @@
       <g id="LWPOLYLINE_391_">
         <!--TERRAZA 12-->
         <path
-          :class="[status_propiedadades.length<=1?'loading':'',status_propiedadades[40],id_area_activa==40 ? 'activado':'']"
+          :class="[
+            status_propiedadades.length <= 1 ? 'loading' : '',
+            status_propiedadades[40],
+            id_area_activa == 40 ? 'activado' : '',
+          ]"
           d="M273.5,343c-11.5,0.6-23,1.6-34.4,3l0.6,3.2l2.9,16.3c10-1.8,20.2-2.6,30.4-2.5L273.5,343z"
           @click="seleccionarArea(40)"
         />
@@ -1288,7 +1495,10 @@
           class="st7"
           d="M202.3,326.8l-1.2-6.6l-1.2,1.8l-1.3-1l2.4-3.4l1.7-0.3l1.6,9.1L202.3,326.8z"
         />
-        <path class="st7" d="M206.8,326l2-8l-4.6,0.8l-0.3-1.7l6.8-1.2l0.2,1.3l-2,8.3L206.8,326z" />
+        <path
+          class="st7"
+          d="M206.8,326l2-8l-4.6,0.8l-0.3-1.7l6.8-1.2l0.2,1.3l-2,8.3L206.8,326z"
+        />
       </g>
       <g>
         <path
@@ -1386,7 +1596,10 @@
 		c-0.4,1.5-1.6,2.2-2.7,1.8C43.3,454,42.9,453.6,42.7,453z M45.4,451.9c0.2-0.8-0.1-1.5-0.8-1.7c-0.4-0.1-0.9,0-1.2,0.2l-0.5,1.6
 		c0.1,0.4,0.5,0.7,0.9,0.8C44.5,453.1,45.1,452.7,45.4,451.9z"
         />
-        <path class="st7" d="M46.8,454.9l1.8-6.4l1.2,0.4l-1.8,6.4L46.8,454.9z" />
+        <path
+          class="st7"
+          d="M46.8,454.9l1.8-6.4l1.2,0.4l-1.8,6.4L46.8,454.9z"
+        />
         <path
           class="st7"
           d="M49.6,453.2c0.4-1.3,1.7-2.1,3.1-1.7c1.4,0.4,2,1.7,1.6,3.2l-0.1,0.3l-3.4-1c-0.1,0.6,0.2,1.2,1,1.4
@@ -1426,7 +1639,10 @@
 		c-0.4,1.5-1.6,2.2-2.7,1.8C59.8,394.3,59.4,393.9,59.2,393.3z M61.9,392.2c0.2-0.8-0.1-1.5-0.8-1.7c-0.4-0.1-0.9,0-1.2,0.2
 		l-0.5,1.6c0.1,0.4,0.5,0.7,0.9,0.8C61,393.4,61.6,393,61.9,392.2z"
         />
-        <path class="st7" d="M63.3,395.1l1.8-6.4l1.2,0.4l-1.8,6.4L63.3,395.1z" />
+        <path
+          class="st7"
+          d="M63.3,395.1l1.8-6.4l1.2,0.4l-1.8,6.4L63.3,395.1z"
+        />
         <path
           class="st7"
           d="M66.1,393.4c0.4-1.3,1.7-2.1,3.1-1.7s2,1.7,1.6,3.2l-0.1,0.3l-3.4-1c-0.1,0.6,0.2,1.2,1,1.4
@@ -1466,7 +1682,10 @@
 		c-0.4,1.5-1.6,2.2-2.7,1.8C64.6,378.4,64.2,378,63.9,377.4z M66.6,376.4c0.2-0.8-0.1-1.5-0.8-1.7c-0.4-0.1-0.9,0-1.2,0.2l-0.5,1.6
 		c0.1,0.4,0.5,0.7,0.9,0.8C65.8,377.6,66.4,377.2,66.6,376.4z"
         />
-        <path class="st7" d="M68.1,379.3l1.8-6.4l1.2,0.4l-1.8,6.4L68.1,379.3z" />
+        <path
+          class="st7"
+          d="M68.1,379.3l1.8-6.4l1.2,0.4l-1.8,6.4L68.1,379.3z"
+        />
         <path
           class="st7"
           d="M70.9,377.6c0.4-1.3,1.7-2.1,3.1-1.7s2,1.7,1.6,3.2l-0.1,0.3l-3.4-1c-0.1,0.6,0.2,1.2,1,1.4
@@ -1547,7 +1766,10 @@
 		c-0.6,1.5-1.7,2-2.9,1.6C129.3,212.3,128.9,211.8,128.7,211.2z M131.5,210.4c0.3-0.8,0-1.5-0.6-1.7c-0.4-0.1-0.9-0.1-1.2,0.1
 		l-0.6,1.6c0.1,0.4,0.4,0.8,0.8,0.9C130.5,211.5,131.2,211.2,131.5,210.4z"
         />
-        <path class="st7" d="M132.7,213.4l2.4-6.2l1.2,0.5l-2.4,6.2L132.7,213.4z" />
+        <path
+          class="st7"
+          d="M132.7,213.4l2.4-6.2l1.2,0.5l-2.4,6.2L132.7,213.4z"
+        />
         <path
           class="st7"
           d="M135.6,212c0.5-1.3,1.9-2,3.2-1.5s1.9,1.9,1.3,3.3l-0.1,0.3l-3.3-1.3c-0.1,0.6,0.1,1.2,0.9,1.5
@@ -1587,7 +1809,10 @@
 		s-2.1,1.6-3.2,0.9C140.8,194.5,140.5,194,140.4,193.4z M143.3,193.1c0.5-0.7,0.4-1.4-0.3-1.8c-0.3-0.2-0.8-0.3-1.2-0.1l-0.9,1.4
 		c0,0.4,0.3,0.8,0.6,1.1C142.1,194,142.9,193.8,143.3,193.1z"
         />
-        <path class="st7" d="M143.9,196.4l3.6-5.5l1.1,0.7l-3.6,5.5L143.9,196.4z" />
+        <path
+          class="st7"
+          d="M143.9,196.4l3.6-5.5l1.1,0.7l-3.6,5.5L143.9,196.4z"
+        />
         <path
           class="st7"
           d="M147,195.6c0.8-1.2,2.2-1.5,3.5-0.7c1.2,0.8,1.4,2.2,0.6,3.5l-0.2,0.2l-3-2c-0.2,0.5-0.1,1.2,0.6,1.7
@@ -1661,7 +1886,10 @@
 		c-0.4,1.5-1.6,2.2-2.7,1.8C54.1,414.9,53.7,414.6,53.4,414z M56.1,412.9c0.2-0.8-0.1-1.5-0.8-1.7c-0.4-0.1-0.9,0-1.2,0.2l-0.5,1.6
 		c0.1,0.4,0.5,0.7,0.9,0.8C55.3,414.1,55.9,413.7,56.1,412.9z"
         />
-        <path class="st7" d="M57.6,415.8l1.8-6.4l1.2,0.4l-1.8,6.4L57.6,415.8z" />
+        <path
+          class="st7"
+          d="M57.6,415.8l1.8-6.4l1.2,0.4l-1.8,6.4L57.6,415.8z"
+        />
         <path
           class="st7"
           d="M60.4,414.1c0.4-1.3,1.7-2.1,3.1-1.7s2,1.7,1.6,3.2l-0.1,0.3l-3.4-1c-0.1,0.6,0.2,1.2,1,1.4
@@ -1697,7 +1925,10 @@
 		s-1.7,2.1-2.9,1.6C76,344.1,75.6,343.7,75.4,343.1z M78.2,342.2c0.3-0.8,0-1.5-0.7-1.7c-0.4-0.1-0.9-0.1-1.2,0.1l-0.6,1.6
 		c0.1,0.4,0.4,0.8,0.8,0.9C77.3,343.3,77.9,343,78.2,342.2z"
         />
-        <path class="st7" d="M79.5,345.2l2.3-6.2l1.2,0.4l-2.3,6.2L79.5,345.2z" />
+        <path
+          class="st7"
+          d="M79.5,345.2l2.3-6.2l1.2,0.4l-2.3,6.2L79.5,345.2z"
+        />
         <path
           class="st7"
           d="M82.4,343.7c0.5-1.3,1.8-2,3.2-1.5c1.4,0.5,1.9,1.8,1.4,3.3l-0.1,0.3l-3.4-1.2c-0.1,0.6,0.2,1.2,0.9,1.5
@@ -1731,7 +1962,10 @@
 		s-1.7,2.1-2.8,1.7C82,325.3,81.6,324.9,81.4,324.3z M84.2,323.3c0.3-0.8,0-1.5-0.7-1.7c-0.4-0.1-0.9-0.1-1.2,0.2l-0.6,1.6
 		c0.1,0.4,0.5,0.7,0.8,0.9C83.3,324.5,83.9,324.1,84.2,323.3z"
         />
-        <path class="st7" d="M85.5,326.3l2.2-6.3l1.2,0.4l-2.2,6.3L85.5,326.3z" />
+        <path
+          class="st7"
+          d="M85.5,326.3l2.2-6.3l1.2,0.4l-2.2,6.3L85.5,326.3z"
+        />
         <path
           class="st7"
           d="M88.4,324.8c0.5-1.3,1.8-2,3.2-1.6c1.4,0.5,1.9,1.8,1.4,3.3l-0.1,0.3l-3.4-1.2c-0.1,0.6,0.2,1.2,1,1.5
@@ -1767,7 +2001,10 @@
 		c-0.6,1.5-1.8,2-2.9,1.5C89.7,303,89.3,302.6,89.1,302z M91.9,301.2c0.3-0.8,0.1-1.5-0.6-1.8c-0.4-0.2-0.9-0.1-1.2,0.1l-0.6,1.6
 		c0.1,0.4,0.4,0.8,0.8,0.9C90.9,302.3,91.6,302,91.9,301.2z"
         />
-        <path class="st7" d="M93.1,304.3l2.5-6.1l1.2,0.5l-2.5,6.1L93.1,304.3z" />
+        <path
+          class="st7"
+          d="M93.1,304.3l2.5-6.1l1.2,0.5l-2.5,6.1L93.1,304.3z"
+        />
         <path
           class="st7"
           d="M96,302.9c0.5-1.3,1.9-1.9,3.3-1.4c1.3,0.5,1.8,1.9,1.2,3.3l-0.1,0.3l-3.3-1.4c-0.1,0.6,0.1,1.2,0.9,1.5
@@ -1802,7 +2039,10 @@
 		c-0.6,1.5-1.8,2-2.9,1.5C100.9,285.3,100.6,284.9,100.4,284.2z M103.2,283.5c0.3-0.8,0.1-1.5-0.6-1.8c-0.4-0.2-0.9-0.1-1.2,0.1
 		l-0.6,1.6c0.1,0.4,0.4,0.8,0.8,0.9C102.2,284.6,102.9,284.2,103.2,283.5z"
         />
-        <path class="st7" d="M104.3,286.5l2.5-6.1l1.2,0.5l-2.5,6.1L104.3,286.5z" />
+        <path
+          class="st7"
+          d="M104.3,286.5l2.5-6.1l1.2,0.5l-2.5,6.1L104.3,286.5z"
+        />
         <path
           class="st7"
           d="M107.3,285.2c0.5-1.3,1.9-1.9,3.3-1.4c1.3,0.6,1.8,1.9,1.2,3.3l-0.1,0.3l-3.3-1.4c-0.1,0.6,0.1,1.2,0.9,1.5
@@ -1814,7 +2054,10 @@
           d="M114.5,290.7l-0.4-1.9l-1.6,1.1l-1.3-0.5l2.5-1.6l-0.6-2.8l1.3,0.5l0.4,1.7l1.5-1l1.3,0.5l-2.4,1.5l0.6,2.9
 		L114.5,290.7z"
         />
-        <path class="st7" d="M118.7,292.5l2.5-6.1l1.3,0.5L120,293L118.7,292.5z" />
+        <path
+          class="st7"
+          d="M118.7,292.5l2.5-6.1l1.3,0.5L120,293L118.7,292.5z"
+        />
       </g>
       <g>
         <path
@@ -1833,7 +2076,10 @@
 		c-0.6,1.5-1.8,2-2.9,1.5C108.8,265.2,108.4,264.8,108.2,264.2z M111,263.4c0.3-0.8,0.1-1.5-0.6-1.8c-0.4-0.2-0.9-0.1-1.2,0.1
 		l-0.6,1.6c0.1,0.4,0.4,0.8,0.8,0.9C110,264.5,110.7,264.2,111,263.4z"
         />
-        <path class="st7" d="M112.2,266.5l2.5-6.1l1.2,0.5l-2.5,6.1L112.2,266.5z" />
+        <path
+          class="st7"
+          d="M112.2,266.5l2.5-6.1l1.2,0.5l-2.5,6.1L112.2,266.5z"
+        />
         <path
           class="st7"
           d="M115.1,265.1c0.5-1.3,1.9-1.9,3.3-1.4c1.3,0.5,1.8,1.9,1.2,3.3l-0.1,0.3l-3.3-1.4c-0.1,0.6,0.1,1.2,0.9,1.5
@@ -1868,7 +2114,10 @@
 		c-0.6,1.5-1.8,2-2.9,1.5C116.2,245.9,115.8,245.5,115.6,244.9z M118.4,244.1c0.3-0.8,0.1-1.5-0.6-1.8c-0.4-0.2-0.9-0.1-1.2,0.1
 		L116,244c0.1,0.4,0.4,0.8,0.8,0.9C117.4,245.2,118.1,244.9,118.4,244.1z"
         />
-        <path class="st7" d="M119.6,247.2l2.5-6.1l1.2,0.5l-2.5,6.1L119.6,247.2z" />
+        <path
+          class="st7"
+          d="M119.6,247.2l2.5-6.1l1.2,0.5l-2.5,6.1L119.6,247.2z"
+        />
         <path
           class="st7"
           d="M122.5,245.8c0.5-1.3,1.9-1.9,3.3-1.4c1.3,0.5,1.8,1.9,1.2,3.3l-0.1,0.3l-3.3-1.4c-0.1,0.6,0.1,1.2,0.9,1.5
@@ -1903,7 +2152,10 @@
 		c-0.6,1.5-1.8,2-2.9,1.5C125,227.1,124.6,226.7,124.5,226.1z M127.3,225.3c0.3-0.8,0.1-1.5-0.6-1.8c-0.4-0.2-0.9-0.1-1.2,0.1
 		l-0.6,1.6c0.1,0.4,0.4,0.8,0.8,0.9C126.3,226.4,127,226.1,127.3,225.3z"
         />
-        <path class="st7" d="M128.4,228.4l2.5-6.1l1.2,0.5l-2.5,6.1L128.4,228.4z" />
+        <path
+          class="st7"
+          d="M128.4,228.4l2.5-6.1l1.2,0.5l-2.5,6.1L128.4,228.4z"
+        />
         <path
           class="st7"
           d="M131.4,227c0.5-1.3,1.9-1.9,3.3-1.4c1.3,0.5,1.8,1.9,1.2,3.3l-0.1,0.3l-3.3-1.4c-0.1,0.6,0.1,1.2,0.9,1.5
@@ -1915,7 +2167,10 @@
           d="M138.6,232.6l-0.4-1.9l-1.6,1.1l-1.3-0.5l2.5-1.6l-0.6-2.8l1.3,0.5l0.4,1.7l1.5-1l1.3,0.5l-2.4,1.5l0.6,2.9
 		L138.6,232.6z"
         />
-        <path class="st7" d="M142.8,234.3l2.5-6.1l1.3,0.5l-2.1,5l2.6,1.1l-0.5,1.1L142.8,234.3z" />
+        <path
+          class="st7"
+          d="M142.8,234.3l2.5-6.1l1.3,0.5l-2.1,5l2.6,1.1l-0.5,1.1L142.8,234.3z"
+        />
       </g>
       <g class="parque-funerario">
         <path
@@ -1938,14 +2193,20 @@
           d="M458.9,170.9v-14.2h5.1v14.1c0,3.3,1.9,5.6,5.6,5.6s5.5-2.3,5.5-5.6v-14.1h5.1v14.2c0,5.9-3.5,9.9-10.7,9.9
 		S458.9,176.8,458.9,170.9z"
         />
-        <path d="M484.9,180.4v-23.7h16.8v4.4H490v5h11.5v4.4H490v5.4h11.7v4.4h-16.8V180.4z" />
+        <path
+          d="M484.9,180.4v-23.7h16.8v4.4H490v5h11.5v4.4H490v5.4h11.7v4.4h-16.8V180.4z"
+        />
         <path d="M365,214.7V191h16.8v4.4h-11.7v5h11.4v4.4H370v9.8h-5V214.7z" />
         <path
           d="M385.3,205.3v-14.2h5.1v14.1c0,3.3,1.9,5.6,5.6,5.6s5.5-2.3,5.5-5.6v-14.1h5.1v14.2c0,5.9-3.5,9.9-10.7,9.9
 		S385.3,211.1,385.3,205.3z"
         />
-        <path d="M427.7,214.7l-11.3-15.4v15.4h-5V191h5.2l11,14.9V191h5v23.7H427.7z" />
-        <path d="M437.2,214.7V191H454v4.4h-11.7v5h11.5v4.4h-11.5v5.4H454v4.4h-16.8V214.7z" />
+        <path
+          d="M427.7,214.7l-11.3-15.4v15.4h-5V191h5.2l11,14.9V191h5v23.7H427.7z"
+        />
+        <path
+          d="M437.2,214.7V191H454v4.4h-11.7v5h11.5v4.4h-11.5v5.4H454v4.4h-16.8V214.7z"
+        />
         <path
           d="M471.3,214.7l-4.7-8.4h-3.7v8.4h-5V191H469c4.9,0,8,3.2,8,7.6c0,4.2-2.7,6.4-5.2,7l5.4,9L471.3,214.7L471.3,214.7z
 		 M471.8,198.7c0-2-1.5-3.2-3.5-3.2H463v6.4h5.3C470.3,201.9,471.8,200.7,471.8,198.7z"
@@ -2027,7 +2288,10 @@
       <g>
         <g>
           <g id="LWPOLYLINE_571_">
-            <path class="st8" d="M295,558.4l-28.9-5.4c-0.1,0.7-0.5,1.5-1.1,2l15.6,15.3L295,558.4z" />
+            <path
+              class="st8"
+              d="M295,558.4l-28.9-5.4c-0.1,0.7-0.5,1.5-1.1,2l15.6,15.3L295,558.4z"
+            />
           </g>
           <g id="LWPOLYLINE_570_">
             <path
@@ -2044,7 +2308,10 @@
             />
           </g>
           <g id="LWPOLYLINE_557_">
-            <path class="st8" d="M217,561.9l-12.9,2.7c0.7,3.5,1.8,6.9,3.1,10L217,561.9z" />
+            <path
+              class="st8"
+              d="M217,561.9l-12.9,2.7c0.7,3.5,1.8,6.9,3.1,10L217,561.9z"
+            />
           </g>
         </g>
         <g>
@@ -2081,7 +2348,10 @@
         </g>
       </g>
       <g>
-        <path class="st7" d="M206.7,560.3v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H206.7z" />
+        <path
+          class="st7"
+          d="M206.7,560.3v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H206.7z"
+        />
       </g>
       <g>
         <path
@@ -2122,7 +2392,10 @@
         />
       </g>
       <g>
-        <path class="st7" d="M265.8,502.3l1.8-4h-2.5v-1h3.7v0.7l-1.9,4.2L265.8,502.3L265.8,502.3z" />
+        <path
+          class="st7"
+          d="M265.8,502.3l1.8-4h-2.5v-1h3.7v0.7l-1.9,4.2L265.8,502.3L265.8,502.3z"
+        />
       </g>
       <g>
         <path
@@ -2142,7 +2415,10 @@
         />
       </g>
       <g>
-        <path class="st7" d="M303.3,528v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H303.3z" />
+        <path
+          class="st7"
+          d="M303.3,528v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H303.3z"
+        />
         <path
           class="st7"
           d="M305.1,525.6c0-1.3,0.6-2.5,2.1-2.5s2.1,1.3,2.1,2.5s-0.6,2.5-2.1,2.5S305.1,526.8,305.1,525.6z M308.1,525.6
@@ -2150,11 +2426,20 @@
         />
       </g>
       <g>
-        <path class="st7" d="M310.5,540.5v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H310.5z" />
-        <path class="st7" d="M313.5,540.5v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H313.5z" />
+        <path
+          class="st7"
+          d="M310.5,540.5v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H310.5z"
+        />
+        <path
+          class="st7"
+          d="M313.5,540.5v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H313.5z"
+        />
       </g>
       <g>
-        <path class="st7" d="M312.6,554.4v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H312.6z" />
+        <path
+          class="st7"
+          d="M312.6,554.4v-3.6l-0.8,0.8l-0.6-0.6l1.6-1.6h1v5H312.6z"
+        />
         <path
           class="st7"
           d="M314.5,554.4v-0.8c2-1.5,2.6-2,2.6-2.6c0-0.4-0.4-0.6-0.8-0.6c-0.5,0-1,0.2-1.4,0.5l-0.6-0.7
@@ -2431,6 +2716,96 @@
           />
         </g>
       </g>
+      <g>
+        <path
+          d="M431.734,440.941l-1.762,1.238l-1.465-1.201l7.035-4.686l1.855,1.521l-3.186,7.84l-1.521-1.246l0.832-2L431.734,440.941z
+		 M434.187,441.184l0.698-1.646c0.192-0.461,0.461-1.018,0.672-1.465l-0.018-0.014c-0.396,0.295-0.878,0.691-1.276,0.969
+		l-1.458,1.023L434.187,441.184z M439.293,436.902l-2.066,0.213l-1.132-0.928l1.714-0.502L439.293,436.902z"
+        />
+        <path
+          d="M437.441,443.215c0.548-0.666,0.887-1.117,1.188-1.523l1.215,0.996l-0.639,0.873l0.037,0.031
+		c0.772-0.469,1.557-0.291,1.994,0.066c0.129,0.105,0.193,0.158,0.281,0.262l-1.088,1.326c-0.087-0.104-0.191-0.219-0.35-0.35
+		c-0.52-0.426-1.1-0.436-1.55-0.076c-0.095,0.078-0.195,0.182-0.286,0.293l-1.886,2.301l-1.41-1.156L437.441,443.215z"
+        />
+        <path
+          d="M440.976,448.16c-0.433,0.621-0.085,1.371,0.573,1.91c0.481,0.396,0.925,0.65,1.404,0.842l-0.598,1.107
+		c-0.616-0.195-1.258-0.566-1.869-1.066c-1.541-1.264-1.692-2.875-0.529-4.295c0.943-1.15,2.699-1.836,4.276-0.543
+		c1.466,1.201,1.087,2.799,0.167,3.92c-0.197,0.242-0.401,0.432-0.503,0.52L440.976,448.16z M443.427,448.555
+		c0.281-0.342,0.604-1.039-0.046-1.57c-0.594-0.486-1.275-0.146-1.623,0.203L443.427,448.555z"
+        />
+        <path
+          d="M445.879,455.219l0.289-0.523l-0.027-0.023c-0.594,0.119-1.217-0.066-1.755-0.508c-0.919-0.752-0.919-1.869-0.325-2.592
+		c0.966-1.178,2.486-0.877,4.084,0.447l0.053-0.064c0.198-0.242,0.35-0.691-0.346-1.262c-0.464-0.381-1.085-0.625-1.533-0.684
+		l0.484-1.121c0.461,0.082,1.264,0.369,2.089,1.045c1.513,1.24,1.265,2.525,0.391,3.592l-1.292,1.576
+		c-0.357,0.438-0.682,0.869-0.84,1.158L445.879,455.219z M447.468,452.938c-0.733-0.617-1.454-0.912-1.901-0.365
+		c-0.297,0.361-0.2,0.736,0.115,0.994c0.352,0.289,0.83,0.295,1.158,0.082c0.08-0.059,0.156-0.135,0.225-0.219L447.468,452.938z"
+        />
+        <path
+          d="M459.869,455.676l-4.287,5.23c-0.419,0.512-0.84,1.064-1.072,1.387l-1.252-1.027l0.482-0.721l-0.02-0.016
+		c-0.705,0.273-1.466,0.086-2.051-0.395c-1.076-0.881-1.186-2.506-0.029-3.916c1.244-1.539,2.922-1.637,4.008-0.746
+		c0.557,0.455,0.832,1.008,0.777,1.49l0.02,0.016l2.016-2.459L459.869,455.676z M455.207,458.49
+		c0.061-0.074,0.133-0.184,0.186-0.266c0.229-0.449,0.181-1.016-0.256-1.373c-0.639-0.523-1.445-0.223-2.029,0.492
+		c-0.632,0.77-0.646,1.563-0.063,2.043c0.408,0.334,0.961,0.322,1.371-0.008c0.111-0.08,0.205-0.174,0.304-0.295L455.207,458.49z"
+        />
+        <path
+          d="M458.182,462.264c-0.432,0.621-0.086,1.371,0.573,1.912c0.481,0.395,0.925,0.648,1.405,0.84l-0.599,1.107
+		c-0.616-0.195-1.258-0.566-1.869-1.066c-1.54-1.264-1.692-2.875-0.528-4.295c0.943-1.15,2.699-1.836,4.275-0.543
+		c1.465,1.201,1.087,2.799,0.167,3.92c-0.198,0.242-0.401,0.434-0.503,0.52L458.182,462.264z M460.633,462.66
+		c0.281-0.344,0.604-1.041-0.045-1.572c-0.594-0.486-1.275-0.146-1.624,0.203L460.633,462.66z"
+        />
+        <path
+          d="M469.677,470.723c0.587-0.773,1.305-1.705,2.05-2.615l-0.027-0.021c-0.85,0.637-1.838,1.316-2.681,1.85l-2.76,1.816
+		l-1.104-0.904l1.315-2.969c0.396-0.9,0.914-1.965,1.434-2.902l-0.018-0.016c-0.729,0.814-1.547,1.756-2.232,2.496l-2.058,2.283
+		l-1.308-1.072l5.522-5.924l1.884,1.543l-1.1,2.588c-0.397,0.885-0.842,1.822-1.303,2.67l0.027,0.023
+		c0.77-0.58,1.66-1.23,2.434-1.758l2.371-1.531l1.846,1.514l-4.781,6.533l-1.381-1.133L469.677,470.723z"
+        />
+        <path
+          d="M472.84,477.316l0.289-0.521l-0.027-0.023c-0.594,0.119-1.218-0.066-1.756-0.508c-0.918-0.752-0.918-1.869-0.324-2.592
+		c0.965-1.18,2.486-0.879,4.083,0.447l0.054-0.064c0.197-0.242,0.35-0.691-0.346-1.262c-0.465-0.381-1.086-0.625-1.534-0.684
+		l0.485-1.121c0.46,0.082,1.264,0.367,2.089,1.045c1.512,1.238,1.265,2.525,0.391,3.592l-1.292,1.576
+		c-0.357,0.438-0.682,0.869-0.84,1.158L472.84,477.316z M474.429,475.037c-0.733-0.617-1.454-0.912-1.902-0.365
+		c-0.297,0.361-0.2,0.736,0.115,0.994c0.353,0.289,0.831,0.293,1.158,0.082c0.08-0.059,0.157-0.135,0.226-0.219L474.429,475.037z"
+        />
+        <path
+          d="M480.631,481.27c-0.486,0.594-0.863,1.09-1.156,1.486l-1.225-1.004l0.459-0.693l-0.027-0.023
+		c-0.404,0.135-1.211,0.248-2.027-0.42c-0.918-0.754-1.123-1.883,0.024-3.283l2.183-2.662l1.418,1.162l-1.999,2.439
+		c-0.54,0.66-0.653,1.232-0.162,1.635c0.39,0.32,0.833,0.234,1.108,0.088c0.105-0.053,0.206-0.158,0.297-0.268l2.213-2.699
+		l1.419,1.162L480.631,481.27z"
+        />
+        <path
+          d="M481.573,482.414c0.13,0.371,0.517,0.996,0.934,1.338c0.427,0.35,0.724,0.346,0.915,0.115
+		c0.189-0.232,0.143-0.457-0.242-1.068c-0.68-1.082-0.623-1.889-0.172-2.42c0.691-0.844,1.939-0.891,3.063,0.029
+		c0.529,0.434,0.902,0.941,1.066,1.309l-1.049,0.77c-0.112-0.279-0.381-0.746-0.77-1.066c-0.344-0.281-0.652-0.301-0.842-0.07
+		c-0.176,0.215-0.091,0.469,0.307,1.121c0.619,1.004,0.623,1.736,0.085,2.412c-0.692,0.844-1.868,0.918-3.167-0.146
+		c-0.594-0.486-1.016-1.051-1.207-1.518L481.573,482.414z"
+        />
+        <path
+          d="M490.98,488.309c-1.361,1.66-3.164,1.457-4.379,0.461c-1.326-1.088-1.631-2.797-0.43-4.262s2.934-1.611,4.391-0.418
+		C491.953,485.23,492.098,486.945,490.98,488.309z M487.658,485.664c-0.639,0.779-0.793,1.631-0.189,2.125
+		c0.547,0.447,1.348,0.189,2.018-0.627c0.555-0.678,0.857-1.576,0.218-2.102C489.026,484.506,488.205,484.996,487.658,485.664z"
+        />
+        <path
+          d="M495.352,484.76l1.41,1.156l-5.398,6.586l-1.41-1.156L495.352,484.76z"
+        />
+        <path
+          d="M495.082,492.51c-0.434,0.621-0.086,1.371,0.572,1.912c0.482,0.395,0.926,0.648,1.404,0.84l-0.598,1.107
+		c-0.615-0.195-1.258-0.564-1.869-1.066c-1.54-1.262-1.691-2.875-0.528-4.295c0.942-1.15,2.699-1.836,4.276-0.543
+		c1.465,1.201,1.086,2.799,0.166,3.922c-0.197,0.24-0.4,0.432-0.502,0.518L495.082,492.51z M497.533,492.906
+		c0.281-0.344,0.604-1.041-0.046-1.572c-0.593-0.486-1.275-0.146-1.624,0.203L497.533,492.906z"
+        />
+        <path
+          d="M503.787,498.809c-1.361,1.66-3.162,1.455-4.377,0.459c-1.327-1.088-1.633-2.797-0.432-4.262s2.936-1.611,4.391-0.418
+		C504.761,495.729,504.904,497.445,503.787,498.809z M500.466,496.162c-0.639,0.779-0.794,1.631-0.19,2.125
+		c0.547,0.447,1.349,0.189,2.018-0.627c0.555-0.676,0.858-1.576,0.219-2.1C501.834,495.004,501.013,495.494,500.466,496.162z"
+        />
+        <path
+          d="M503.764,500.602c0.131,0.371,0.516,0.998,0.934,1.34c0.427,0.35,0.725,0.346,0.914,0.115
+		c0.19-0.232,0.143-0.459-0.241-1.068c-0.679-1.082-0.622-1.891-0.172-2.42c0.691-0.844,1.94-0.891,3.063,0.029
+		c0.528,0.434,0.903,0.941,1.066,1.309l-1.048,0.77c-0.113-0.279-0.381-0.746-0.771-1.066c-0.342-0.281-0.65-0.303-0.842-0.07
+		c-0.174,0.213-0.09,0.469,0.307,1.121c0.619,1.004,0.624,1.736,0.086,2.41c-0.691,0.844-1.869,0.918-3.167-0.145
+		c-0.594-0.488-1.017-1.051-1.208-1.518L503.764,500.602z"
+        />
+      </g>
     </svg>
   </div>
 </template>
@@ -2440,17 +2815,17 @@ export default {
   props: {
     idAreaInicial: {
       type: Number,
-      default: 0
+      default: 0,
     },
     disabled: {
       required: false,
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   watch: {
-    idAreaInicial: function(newValue, oldValue) {
+    idAreaInicial: function (newValue, oldValue) {
       if (newValue > 0) {
         this.id_area_activa = newValue;
       } else {
@@ -2458,13 +2833,13 @@ export default {
         this.id_area_activa = 0;
       }
     },
-    id_area_activa: function(newValue, oldValue) {
+    id_area_activa: function (newValue, oldValue) {
       if (newValue > 0) {
         (async () => {
           await this.get_cementerio();
         })();
       }
-    }
+    },
   },
   components: {},
   data() {
@@ -2473,7 +2848,7 @@ export default {
       //todas las status_propiedadades
       status_propiedadades: [],
       id_area_activa: 0,
-      datosAreaSeleccionada: []
+      datosAreaSeleccionada: [],
     };
   },
   computed: {
@@ -2483,7 +2858,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     deshabilitado: {
       get() {
@@ -2491,8 +2866,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     async get_cementerio() {
@@ -2507,7 +2882,7 @@ export default {
           ];
         }
         this.status_propiedadades.push("dato vacio");
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           if (element.status == 1) {
             this.status_propiedadades.push("disponible");
           } else {
@@ -2532,11 +2907,11 @@ export default {
       } else {
         this.$emit("respuestaDeshabilitado");
       }
-    }
+    },
   },
   created() {
     // this.id_area_activa = this.area_inicial;
-  }
+  },
 };
 </script>
 

@@ -38,4 +38,10 @@ class Funeraria extends Model
     {
         return $this->hasOne('App\Localidades', 'id', 'localidades_id');
     }
+
+
+    public function terreno()
+    {
+        return $this->belongsTo('App\VentasTerrenos', 'id', 'ventas_terrenos_id');
+    }
 }

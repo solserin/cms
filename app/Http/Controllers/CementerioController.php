@@ -208,6 +208,7 @@ class CementerioController extends ApiController
 
         /**aqui comienzan a gurdar los datos */
         $subtotal = $request->subtotal; //sin iva
+        $tasa_iva = $request->tasa_iva; //sin iva
         $iva = $request->impuestos; //solo el iva
         $descuento = $request->descuento;
         $costo_neto = $request->costo_neto;
@@ -237,7 +238,10 @@ class CementerioController extends ApiController
             /**id del cliente */
             'id_cliente' => 'required',
             //info del plan de venta y pagos
-            'planVenta.value' => 'numeric|required',
+            //'planVenta.value' => 'numeric|required',
+            /**nuevos datos a requerir */
+            'financiamiento' => '',
+            'tasa_iva' => 'numeric|required|min:1|max:25',
             'subtotal' => 'numeric|required|min:1',
             'descuento' => 'required|numeric|min:0|max:' . $request->subtotal,
             'impuestos' => 'numeric|required|min:0',
@@ -257,7 +261,7 @@ class CementerioController extends ApiController
             ],
             'beneficiarios.*.telefono' => [
                 'required',
-            ],
+            ]
         ];
 
         /**verificando si es tipo modificar para validar que venga el id a modificar */
@@ -278,27 +282,19 @@ class CementerioController extends ApiController
         /**solo en caso de modificaciones */
 
         /**validando el pago inicial */
-        if ($request->planVenta['value'] == 1) {
+        if ($request->financiamiento == 1) {
             /**cuando es a contado */
             /**es un solo pago de inicio */
             $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
         } else {
-            /**cuando es a credito */
-            if ($request->costo_neto > $request->planVenta['pago_inicial']) {
-                /**minimo el pago inicial y maximo un 70% del costo neto */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->planVenta['pago_inicial'] . '|max:' . ($request->costo_neto) * .7;
-            } else {
-                /**si el descuento es menor al pago inicial se forza al usuario a ingresa como pago inicial minmo un 10% del totoa a pagar y un 70% de maximo 
-                 * de pago inicial y el resto liquidarlo con los abonos
-                 */
-                $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
-            }
+            //cuando es a credito
+            $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
         }
 
 
         /**validando de manera manual si la ubicacion enviada ya esta registrada y esta activa */
         $ubicacion_enviada = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-            ->where('ubicacion', '=', $request->ubicacion)->where('operaciones.status', 1)->first();
+            ->where('ubicacion', '=', $request->ubicacion)->where('operaciones.status', '<>', 0)->first();
         if (!empty($ubicacion_enviada)) {
             if ($tipo_servicio == 'modificar') {
                 if ($ubicacion_enviada->id != $request->id_venta)
@@ -323,7 +319,7 @@ class CementerioController extends ApiController
             $validaciones['titulo'] = 'required';
             /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
             $titulo = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+                ->where('numero_titulo', $request->titulo)->where('operaciones.status', '<>', 0)->first();
             if (!empty($titulo)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($titulo->id != $request->id_venta)
@@ -335,6 +331,15 @@ class CementerioController extends ApiController
             }
         }
 
+        if ($request->tipo_financiamiento == 1) {
+            /**cuando es a contado */
+            /**es un solo pago de inicio */
+            $validaciones['financiamiento'] = 'numeric|required|min:' . 1 . '|max:' . 1;
+        } else {
+            //cuando es a credito
+            $validaciones['financiamiento'] = 'numeric|required|min:' . 1 . '|max:' . 120;
+        }
+
         //validnado en caso de que sea de uso futuro
         if ($request->tipo_financiamiento == 2) {
             //venta de uso inmediato
@@ -342,7 +347,7 @@ class CementerioController extends ApiController
 
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $solicitud = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', 1)->first();
+                ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', '<>', 0)->first();
             if (!empty($solicitud)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($solicitud->id != $request->id_venta)
@@ -360,7 +365,7 @@ class CementerioController extends ApiController
             $validaciones['convenio'] = 'required';
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', 1)->first();
+                ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($convenio->id != $request->id_venta)
@@ -376,7 +381,7 @@ class CementerioController extends ApiController
 
             /**validando de manera manual si la solicitud enviado ya esta registrado y esto activa */
             $convenio = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_convenio', $request->convenio)->where('operaciones.status', 1)->first();
+                ->where('numero_convenio', $request->convenio)->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($convenio->id != $request->id_venta)
@@ -387,7 +392,7 @@ class CementerioController extends ApiController
             }
             /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
             $titulo = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
-                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+                ->where('numero_titulo', $request->titulo)->where('operaciones.status', '<>', 0)->first();
             if (!empty($titulo)) {
                 if ($tipo_servicio == 'modificar') {
                     if ($titulo->id != $request->id_venta)
@@ -418,6 +423,7 @@ class CementerioController extends ApiController
             '*.telefono.required' => 'ingrese este dato',
             'lte' => 'verifique la cantidad',
             'unique.num_operacion' => 'Este número de operación ya fue registrado.',
+            'pago_inicial.min' => 'El pago inicial debe ser al menos :min '
         ];
         request()->validate(
             $validaciones,
@@ -447,6 +453,7 @@ class CementerioController extends ApiController
             /**verificando que no hay modificado nada relativo a precios */
 
             if (
+                $request->financiamiento != $datos_venta['financiamiento'] ||
                 $request->fecha_venta != $datos_venta['fecha_operacion'] ||
                 (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
                     round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
@@ -493,7 +500,6 @@ class CementerioController extends ApiController
                         'salarios_minimos' => $request->salarios_minimos
                     ]
                 );
-
                 /**a partir de la venta se crea la operaicon */
                 $id_operacion = DB::table('operaciones')->insertGetId(
                     [
@@ -506,19 +512,20 @@ class CementerioController extends ApiController
                         'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
                         'empresa_operaciones_id' => 1, //venta de terrenos
                         'subtotal' => $subtotal,
+                        'tasa_iva' => $tasa_iva,
                         'descuento' => $descuento,
                         'impuestos' => $iva,
                         'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'descuento_pronto_pago_b' => 1,
                         'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto' => $request->titular_sustituto,
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->planVenta['value'],
+                        'financiamiento' => $request->financiamiento,
                         'aplica_devolucion_b' => 0,
-                        'costo_neto_financiamiento_normal' => round($request->planVenta['costo_neto_financiamiento_normal'], 2, PHP_ROUND_HALF_UP),
+                        'costo_neto_financiamiento_normal' => $costo_neto,
                         'comision_venta_neto' => 0,
                         'fecha_registro' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
@@ -566,18 +573,19 @@ class CementerioController extends ApiController
                         'numero_convenio' => trim($request->convenio),
                         'numero_titulo' => trim($request->titulo),
                         'subtotal' => $subtotal,
+                        'tasa_iva' => $tasa_iva,
                         'descuento' => $descuento,
                         'impuestos' => $iva,
                         'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => $request->planVenta['descuento_pronto_pago_b'],
+                        'descuento_pronto_pago_b' => 1,
                         'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
                         'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto' => $request->titular_sustituto,
                         'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
                         'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->planVenta['value'],
-                        'costo_neto_financiamiento_normal' => $request->planVenta['costo_neto_financiamiento_normal'],
+                        'financiamiento' => $request->financiamiento,
+                        'costo_neto_financiamiento_normal' => $costo_neto,
                         'status' => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
                         'fecha_modificacion' => now(),
                         'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
@@ -799,7 +807,7 @@ class CementerioController extends ApiController
 
         //puede que venga con descuento pero no es del 100%
         //determinamos que tipo de ventas
-        if ($request->tipo_financiamiento == 1 || (int) $request->planVenta['value'] == 1) {
+        if ($request->tipo_financiamiento == 1 || (int) $request->financiamiento == 1) {
             //de uso inmediato sin importar si es seleccionado a futuro o inmediato ya que selecciono pagarlo de contado
             /**se crea un solo pago */
             //se agregan 0 dias a los enganches y a las liquidaciones para ser capturadas
@@ -845,12 +853,12 @@ class CementerioController extends ApiController
             );
 
 
-            //$monto_abono = round(($costo_neto - $pago_inicial) / $request->planVenta['value'], 2, PHP_ROUND_HALF_UP);
+            //$monto_abono = round(($costo_neto - $pago_inicial) / $request->financiamiento, 2, PHP_ROUND_HALF_UP);
 
             //a futuro y a meses
-            for ($i = 1; $i <= ((int) $request->planVenta['value']); $i++) {
+            for ($i = 1; $i <= ((int) $request->financiamiento); $i++) {
                 /**calculando el abono en bruto */
-                $monto_abono = ($costo_neto - $pago_inicial) / $request->planVenta['value'];
+                $monto_abono = ($costo_neto - $pago_inicial) / $request->financiamiento;
 
                 $numero_pago_para_referencia = '';
                 if ($i < 9) {
@@ -868,7 +876,7 @@ class CementerioController extends ApiController
                     $decimales = $monto_abono - intval($monto_abono);
                     if ($decimales > 0) {
                         /**tiene decimales */
-                        $abono = ($costo_neto - $request->pago_inicial - (intval($monto_abono) * $request->planVenta['value']));
+                        $abono = ($costo_neto - $request->pago_inicial - (intval($monto_abono) * $request->financiamiento));
                         $monto_abono = $abono + intval($monto_abono);
                     }
                 } else {
@@ -1332,7 +1340,7 @@ class CementerioController extends ApiController
         $name_pdf = __('cementerio/lista_precios.titulo_reporte')  . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.planes_venta.footer'),
+            'footer-html' => view('cementerios.planes_venta.footer', ['empresa' => $empresa]),
         ]);
 
         $pdf->setOptions([
@@ -1345,7 +1353,7 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 12.4);
         $pdf->setOption('margin-top', 12.4);
         $pdf->setOption('margin-bottom', 12.4);
-        $pdf->setOption('page-size', 'a4');
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -1533,6 +1541,7 @@ class CementerioController extends ApiController
                 'antiguedad_operacion_id',
                 'empresa_operaciones_id',
                 'subtotal',
+                'tasa_iva',
                 'descuento',
                 'impuestos',
                 'total',
@@ -1953,10 +1962,7 @@ class CementerioController extends ApiController
                 $venta['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
                 $venta['pagos_vencidos'] = $vencidos;
                 $venta['dias_vencidos'] = $dias_vencido_primer_pago_vencido;
-
-
                 /**areegloe de todos los pagos limpios(no repetidos) */
-
                 //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
             } else {
                 /**la venta no tiene pagos programados debido a que fue 100% "GRATIS" */
@@ -2131,7 +2137,7 @@ class CementerioController extends ApiController
 
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('cementerios.acuse_cancelacion.footer'),
+                'footer-html' => view('cementerios.acuse_cancelacion.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] != 0) {
                 $pdf->setOptions([
@@ -2148,7 +2154,7 @@ class CementerioController extends ApiController
             $pdf->setOption('margin-right', 13.4);
             $pdf->setOption('margin-top', 9.4);
             $pdf->setOption('margin-bottom', 13.4);
-            $pdf->setOption('page-size', 'A4');
+            $pdf->setOption('page-size', 'Letter');
 
             if ($email == true) {
                 /**email */
@@ -2214,7 +2220,7 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.titulo.footer'),
+            'footer-html' => view('cementerios.titulo.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2230,8 +2236,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 14.4);
         $pdf->setOption('margin-right', 14.4);
         $pdf->setOption('margin-top', 24.4);
-        $pdf->setOption('margin-bottom', 24.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-bottom', 30.4);
+        $pdf->setOption('page-size', 'Letter');
 
         if ($email == true) {
             /**email */
@@ -2308,7 +2314,7 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-right', 13.4);
         $pdf->setOption('margin-top', 9.4);
         $pdf->setOption('margin-bottom', 13.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('page-size', 'Letter');
 
         if ($email == true) {
             /**email */
@@ -2340,8 +2346,8 @@ class CementerioController extends ApiController
     /**pdf del convenio plan de cementerio */
     public function documento_convenio(Request $request)
     {
-        /*
-        $id_venta = 38;
+
+        /* $id_venta = 136;
         $email = false;
         $email_to = 'hector@gmail.com';
 */
@@ -2377,7 +2383,7 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.convenio.footer'),
+            'footer-html' => view('cementerios.convenio.footer', ['empresa' => $empresa])
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2389,8 +2395,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 20.4);
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 15.4);
-        $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'legal');
+        $pdf->setOption('margin-bottom', 30.4);
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -2460,7 +2466,7 @@ class CementerioController extends ApiController
         $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.solicitud.footer'),
+            'footer-html' => view('cementerios.solicitud.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2473,8 +2479,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 5.4);
         $pdf->setOption('margin-right', 5.4);
         $pdf->setOption('margin-top', 5.4);
-        $pdf->setOption('margin-bottom', 10.4);
-        $pdf->setOption('page-size', 'a4');
+        $pdf->setOption('margin-bottom', 35.4);
+        $pdf->setOption('page-size', 'letter');
 
         if ($email == true) {
             /**email */
@@ -2568,7 +2574,7 @@ class CementerioController extends ApiController
             $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['nombre']) . '.pdf';
             $pdf->setOptions([
                 'title' => $name_pdf,
-                'footer-html' => view('cementerios.estado_cuenta.footer'),
+                'footer-html' => view('cementerios.estado_cuenta.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
@@ -2582,8 +2588,8 @@ class CementerioController extends ApiController
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 12.4);
-            $pdf->setOption('margin-bottom', 12.4);
-            $pdf->setOption('page-size', 'a4');
+            $pdf->setOption('margin-bottom', 30.4);
+            $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
                 /**email */
@@ -2657,7 +2663,7 @@ class CementerioController extends ApiController
 
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('cementerios.reglamento_pago.footer'),
+            'footer-html' => view('cementerios.reglamento_pago.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['operacion_status'] == 0) {
             $pdf->setOptions([
@@ -2669,8 +2675,8 @@ class CementerioController extends ApiController
         $pdf->setOption('margin-left', 20.4);
         $pdf->setOption('margin-right', 20.4);
         $pdf->setOption('margin-top', 10.4);
-        $pdf->setOption('margin-bottom', 25.4);
-        $pdf->setOption('page-size', 'A4');
+        $pdf->setOption('margin-bottom', 35.4);
+        $pdf->setOption('page-size', 'Letter');
         if ($email == true) {
             /**email */
             /**
@@ -2733,7 +2739,7 @@ class CementerioController extends ApiController
         $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['cliente_nombre']) . '.pdf';
         $pdf->setOptions([
             'title' => $name_pdf,
-            'footer-html' => view('inventarios.cementerios.estado_cuenta.footer'),
+            'footer-html' => view('inventarios.cementerios.estado_cuenta.footer', ['empresa' => $empresa]),
         ]);
         if ($datos_venta['status'] == 0) {
             $pdf->setOptions([

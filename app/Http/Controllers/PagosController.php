@@ -85,6 +85,7 @@ class PagosController extends ApiController
             $resultado = Operaciones::select(
                 'ventas_planes_id',
                 'ventas_terrenos_id',
+                'servicios_funerarios_id',
                 'operaciones.id as operacion_id',
                 'operaciones.status as operacion_status',
                 'total',
@@ -538,7 +539,7 @@ class PagosController extends ApiController
 
         /**verificando que la operaicon no este cancelada */
         $datos_operacion = $referencias_adeudos[0];
-
+        $datos_venta = [];
         $cementerio_controller = new CementerioController();
         /**verificando que tipo de operacion_empresa es */
         if ($datos_operacion['empresa_operaciones_id'] == 1) {
@@ -573,13 +574,38 @@ class PagosController extends ApiController
                 /**deshabilitando numero de titulo */
                 //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
             }
+        } else  if ($datos_operacion['empresa_operaciones_id'] == 3) {
+            /**servicios funerarios */
+            $funeraria_controller = new FunerariaController();
+            $datos_venta = $funeraria_controller->get_solicitudes_servicios($request, $datos_operacion['servicios_funerarios_id'], '')[0];
+
+            if (round($datos_venta['operacion']['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
+                /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                DB::table('operaciones')->where('id', $datos_venta['operacion']['operacion_id'])->update(
+                    [
+                        /**status de ya liquidada */
+                        'status' => 2
+                    ]
+                );
+                /**generando el numero de titulo de la venta de propiedad */
+                /**deshabilitando numero de titulo */
+                //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+            }
+        }
+
+        if ($datos_operacion['empresa_operaciones_id'] == 3) {
+            /**verificnado si la operacion no esta cancelada o pagada */
+            if ($datos_venta['operacion']['operacion_status'] == 0) {
+                return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
+            }
+        } else {
+            /**verificnado si la operacion no esta cancelada o pagada */
+            if ($datos_venta['operacion_status'] == 0) {
+                return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
+            }
         }
 
 
-        /**verificnado si la operacion no esta cancelada o pagada */
-        if ($datos_venta['operacion_status'] == 0) {
-            return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
-        }
 
 
         /**checar si el pago no esta siendo hecho antes de la fecha de la venta */
@@ -920,6 +946,23 @@ class PagosController extends ApiController
                     /**deshabilitando numero de titulo */
                     //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
                 }
+            } else  if ($datos_operacion['empresa_operaciones_id'] == 3) {
+                /**servicios funerarios */
+                $funeraria_controller = new FunerariaController();
+                $datos_venta = $funeraria_controller->get_solicitudes_servicios($request, $datos_operacion['servicios_funerarios_id'], '')[0];
+
+                if (round($datos_venta['operacion']['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
+                    /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                    DB::table('operaciones')->where('id', $datos_venta['operacion']['operacion_id'])->update(
+                        [
+                            /**status de ya liquidada */
+                            'status' => 2
+                        ]
+                    );
+                    /**generando el numero de titulo de la venta de propiedad */
+                    /**deshabilitando numero de titulo */
+                    //$cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+                }
             }
 
 
@@ -1004,7 +1047,7 @@ class PagosController extends ApiController
                 ->whereHas('referencias_cubiertas', function ($q) {
                     //$q->where('referencia_pago', '=', '00120200101025');
                 })
-                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status,ventas_terrenos_id,ventas_planes_id', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre,email')
+                ->with('referencias_cubiertas.operacion_del_pago:id,clientes_id,total,empresa_operaciones_id,status,ventas_terrenos_id,ventas_planes_id,servicios_funerarios_id', 'referencias_cubiertas.operacion_del_pago.cliente:id,nombre,email')
                 ->whereHas('referencias_cubiertas.operacion_del_pago', function ($q) use ($request) {
                     if (($request->operacion_id)) {
                         $q->where('id', '=', $request->operacion_id);

@@ -1,19 +1,21 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="searcher_clientes forms-popups-75 normal-forms inline-header-forms"
+      class="searcher_clientes forms-popups normal-forms inline-header-forms"
       fullscreen
       title="Catálogo de clientes registrados"
       :active.sync="showVentana"
       ref="buscador_cliente"
     >
       <div class="flex flex-wrap my-2">
-        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
+        <div
+          class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
+        >
           <vs-button
             color="success"
             size="small"
             class="w-full ml-auto"
-            @click="verFormularioClientes=true"
+            @click="verFormularioClientes = true"
           >
             <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
             <span class="texto-btn">Registrar Cliente</span>
@@ -22,11 +24,18 @@
       </div>
       <!--inicio de buscador-->
       <div class="py-3">
-        <vx-card no-radius title="Filtros de selección" refresh-content-action @refresh="reset">
+        <vx-card
+          no-radius
+          title="Filtros de selección"
+          refresh-content-action
+          @refresh="reset"
+        >
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
-                <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                >
                   <label class="text-sm opacity-75 font-bold">Nombre</label>
                   <vs-input
                     ref="nombre_cliente"
@@ -37,16 +46,22 @@
                     placeholder="Ej. Juan Pérez"
                     maxlength="12"
                     v-model.trim="serverOptions.cliente"
-                    v-on:keyup.enter="get_data('cliente',1)"
-                    v-on:blur="get_data('cliente',1,'blur')"
+                    v-on:keyup.enter="get_data('cliente', 1)"
+                    v-on:blur="get_data('cliente', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{ errors.first('nombre_cliente') }}</span>
+                    <span class="text-danger text-sm">{{
+                      errors.first("nombre_cliente")
+                    }}</span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Núm. Cliente</label>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold"
+                    >Núm. Cliente</label
+                  >
                   <vs-input
                     name="num_cliente"
                     data-vv-as=" "
@@ -55,15 +70,19 @@
                     placeholder="Ej. 1258"
                     maxlength="6"
                     v-model.trim="serverOptions.id_cliente"
-                    v-on:keyup.enter="get_data('id_cliente',1)"
-                    v-on:blur="get_data('id_cliente',1,'blur')"
+                    v-on:keyup.enter="get_data('id_cliente', 1)"
+                    v-on:blur="get_data('id_cliente', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{ errors.first('num_cliente') }}</span>
+                    <span class="text-danger text-sm">{{
+                      errors.first("num_cliente")
+                    }}</span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
-                <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 hidden">
+                <div
+                  class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 hidden"
+                >
                   <label class="text-sm opacity-75 font-bold">RFC</label>
                   <vs-input
                     name="rfc"
@@ -73,11 +92,13 @@
                     placeholder="ej. DIS961210RG9"
                     maxlength="13"
                     v-model.trim="serverOptions.rfc"
-                    v-on:keyup.enter="get_data('rfc',1)"
-                    v-on:blur="get_data('rfc',1,'blur')"
+                    v-on:keyup.enter="get_data('rfc', 1)"
+                    v-on:blur="get_data('rfc', 1, 'blur')"
                   />
                   <div>
-                    <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
+                    <span class="text-danger text-sm">{{
+                      errors.first("rfc")
+                    }}</span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
@@ -101,7 +122,9 @@
                     <div slot="no-options">Seleccione una opción</div>
                   </v-select>
                   <div>
-                    <span class="text-danger text-sm">{{ errors.first('nacionalidad') }}</span>
+                    <span class="text-danger text-sm">{{
+                      errors.first("nacionalidad")
+                    }}</span>
                   </div>
                   <div class="mt-2"></div>
                 </div>
@@ -128,33 +151,44 @@
               <vs-th>Nacionalidad</vs-th>
               <vs-th>Seleccionar</vs-th>
             </template>
-            <template slot-scope="{data}">
+            <template slot-scope="{ data }">
               <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
                 <vs-td :data="data[indextr].id">
-                  <span class="font-semibold">{{data[indextr].id}}</span>
+                  <span class="font-semibold">{{ data[indextr].id }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
-                <vs-td :data="data[indextr].direccion">{{data[indextr].direccion}}</vs-td>
+                <vs-td :data="data[indextr].nombre">{{
+                  data[indextr].nombre
+                }}</vs-td>
+                <vs-td :data="data[indextr].direccion">{{
+                  data[indextr].direccion
+                }}</vs-td>
                 <vs-td :data="data[indextr].celular">
-                  <span class="font-medium">{{data[indextr].celular}}</span>
+                  <span class="font-medium">{{ data[indextr].celular }}</span>
                 </vs-td>
 
-                <vs-td
-                  :data="data[indextr].nacionalidad['id']"
-                >{{data[indextr].nacionalidad['nacionalidad']}}</vs-td>
+                <vs-td :data="data[indextr].nacionalidad['id']">{{
+                  data[indextr].nacionalidad["nacionalidad"]
+                }}</vs-td>
                 <vs-td :data="data[indextr].id_user">
                   <img
                     width="25"
                     class="cursor-pointer"
                     src="@assets/images/checked.svg"
-                    @click="retornarSeleccion(data[indextr].nombre,data[indextr].id)"
+                    @click="
+                      retornarSeleccion(data[indextr].nombre, data[indextr].id)
+                    "
                   />
                 </vs-td>
               </vs-tr>
             </template>
           </vs-table>
           <div>
-            <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-3"></vs-pagination>
+            <vs-pagination
+              v-if="verPaginado"
+              :total="this.total"
+              v-model="actual"
+              class="mt-3"
+            ></vs-pagination>
           </div>
         </div>
       </div>
@@ -179,22 +213,22 @@ export default {
   components: {
     "v-select": vSelect,
     Datepicker,
-    FormularioClientes
+    FormularioClientes,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    "serverOptions.nacionalidad": function(newVal, previousVal) {
+    "serverOptions.nacionalidad": function (newVal, previousVal) {
       this.get_data("", 1);
     },
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       this.get_data("", this.actual);
     },
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$nextTick(() =>
           this.$refs["nombre_cliente"].$el.querySelector("input").focus()
@@ -213,7 +247,7 @@ export default {
         this.serverOptions.celular = "";
         this.serverOptions.nacionalidad = this.nacionalidades[0];
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -222,8 +256,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -231,7 +265,7 @@ export default {
       selected: [],
       nacionalidades: [],
       disabledDates: {
-        from: new Date()
+        from: new Date(),
       },
       clientes: [],
       serverOptions: {
@@ -243,14 +277,14 @@ export default {
         cliente: "",
         nacionalidad: {
           value: "122",
-          label: "Mexicana"
+          label: "Mexicana",
         },
-        nacionalidad_id: ""
+        nacionalidad_id: "",
       },
       verPaginado: true,
       total: 0,
       actual: 1,
-      spanishDatepicker: es
+      spanishDatepicker: es,
     };
   },
   methods: {
@@ -270,19 +304,19 @@ export default {
     get_nacionalidades() {
       clientes
         .get_nacionalidades()
-        .then(res => {
+        .then((res) => {
           //le agrego las nacionalidades
           this.nacionalidades = [];
           this.nacionalidades.push({ label: "Seleccione 1", value: "" });
-          res.data.forEach(element => {
+          res.data.forEach((element) => {
             this.nacionalidades.push({
               label: element.nacionalidad,
-              value: element.id
+              value: element.id,
             });
           });
           this.serverOptions.nacionalidad = this.nacionalidades[0];
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     get_data(origen = "", page, evento = "") {
       if (evento == "blur") {
@@ -291,7 +325,7 @@ export default {
         /**checando el origen */
         if (origen == "cliente") {
           if (this.serverOptions.cliente.trim() == "") {
-            return;
+            //return;
           }
         } else if (origen == "id_cliente") {
           if (this.serverOptions.id_cliente.trim() == "") {
@@ -315,19 +349,19 @@ export default {
       this.$vs.loading();
       this.verPaginado = false;
       this.serverOptions.page = page;
-      this.serverOptions.per_page = 5;
+      this.serverOptions.per_page = 12;
       this.serverOptions.status = 1;
       this.serverOptions.nacionalidad_id = this.serverOptions.nacionalidad.value;
       clientes
         .get_clientes(this.serverOptions)
-        .then(res => {
+        .then((res) => {
           this.clientes = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
@@ -340,7 +374,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             }
           }
@@ -356,10 +390,10 @@ export default {
     },
     retorno_id(dato) {
       this.get_data("", this.actual);
-    }
+    },
   },
   created() {
     this.get_nacionalidades();
-  }
+  },
 };
 </script>
