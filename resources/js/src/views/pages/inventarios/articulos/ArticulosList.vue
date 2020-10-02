@@ -145,7 +145,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         <vs-th>Código Barras</vs-th>
         <vs-th>Descripción</vs-th>
         <vs-th>Tipo Artículo</vs-th>
-        <vs-th>Caduca</vs-th>
+        <vs-th hidden>Caduca</vs-th>
         <vs-th>($) Precio Compra</vs-th>
         <vs-th>($) Precio Venta</vs-th>
         <vs-th>Existencias</vs-th>
@@ -168,7 +168,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               data[indextr].tipo_articulo.tipo
             }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].caduca_texto">
+          <vs-td hidden :data="data[indextr].caduca_texto">
             <span class="uppercase">{{ data[indextr].caduca_texto }}</span>
           </vs-td>
           <vs-td :data="data[indextr].precio_compra">
