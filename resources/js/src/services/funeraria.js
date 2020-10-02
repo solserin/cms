@@ -82,7 +82,7 @@ export default {
     },
 
     get_material_velacion(param) {
-        return axios.get("/funeraria/get_material_velacion/all/false/3/0/0/1", {
+        return axios.get("/funeraria/get_material_velacion/all/false/3/0/0/0", {
             cancelToken: new CancelToken(c => {
                 self.cancel = c;
             }),
