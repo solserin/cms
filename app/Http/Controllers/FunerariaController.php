@@ -3182,7 +3182,7 @@ class FunerariaController extends ApiController
                                                                     /**si se puede aplicar descuento */
                                                                     if ($articulo_servicio_index['facturable_b'] == 1) {
                                                                         /**se desglosa el IVA */
-                                                                        $subtotal += (($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                        $subtotal += (($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
                                                                         $impuestos += ((($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
                                                                         $descuento += ((($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
                                                                     } else {
@@ -3253,7 +3253,7 @@ class FunerariaController extends ApiController
                                                             /**si se puede aplicar descuento */
                                                             if ($articulo_servicio_index['facturable_b'] == 1) {
                                                                 /**se desglosa el IVA */
-                                                                $subtotal += (($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
+                                                                $subtotal += (($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
                                                                 $impuestos += ((($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio_index['cantidad']);
                                                                 $descuento += ((($articulo_servicio_index['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio_index['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio_index['cantidad']);
                                                             } else {
@@ -3387,7 +3387,7 @@ class FunerariaController extends ApiController
                                                     /**si se puede aplicar descuento */
                                                     if ($articulo_servicio['facturable_b'] == 1) {
                                                         /**se desglosa el IVA */
-                                                        $subtotal += (($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                        $subtotal += (($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
                                                         $impuestos += ((($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
                                                         $descuento += ((($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
                                                     } else {
@@ -3458,7 +3458,7 @@ class FunerariaController extends ApiController
                                             /**si se puede aplicar descuento */
                                             if ($articulo_servicio['facturable_b'] == 1) {
                                                 /**se desglosa el IVA */
-                                                $subtotal += (($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
+                                                $subtotal += (($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
                                                 $impuestos += ((($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100))) * (($request->tasa_iva / 100))) * $articulo_servicio['cantidad']);
                                                 $descuento += ((($articulo_servicio['costo_neto_normal'] / (1 + ($request->tasa_iva / 100))) - ($articulo_servicio['costo_neto_descuento'] / (1 + ($request->tasa_iva / 100)))) * $articulo_servicio['cantidad']);
                                             } else {
@@ -3950,7 +3950,7 @@ class FunerariaController extends ApiController
                                             if ($articulo['facturable_b'] == 1) {
 
                                                 /**se desglosa el IVA */
-                                                $articulo['subtotal'] = round((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                                $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
                                                 $articulo['impuestos'] = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
                                                 $articulo['descuento'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
                                                 $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
@@ -3995,7 +3995,7 @@ class FunerariaController extends ApiController
                                         if ($articulo['facturable_b'] == 1) {
 
                                             /**se desglosa el IVA */
-                                            $articulo['subtotal'] = round((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
                                             $articulo['impuestos'] = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
                                             $articulo['descuento'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
                                             $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
