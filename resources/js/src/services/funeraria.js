@@ -33,6 +33,24 @@ export default {
             params: param
         });
     },
+    get_solicitudes_servicios_id_uso_plan_funerario_futuro(param) {
+        return axios.get("/funeraria/get_solicitudes_servicios/all/false/" + param, {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+    get_solicitudes_servicios_id_uso_terreno(param) {
+        return axios.get("/funeraria/get_solicitudes_servicios/all/false/0/" + param, {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
+
 
     get_solicitudes_servicios_id(param) {
         return axios.get("/funeraria/get_solicitudes_servicios/" + param, {

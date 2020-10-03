@@ -3685,7 +3685,7 @@ class FunerariaController extends ApiController
 
 
     /**obtiene los servicios funerarios */
-    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false)
+    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false,$uso_plan_funerario_futuro=0,$uso_terreno_id=0)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
         $fallecido = $request->fallecido;
@@ -3882,6 +3882,18 @@ class FunerariaController extends ApiController
             ->with('operacion.pagosProgramados.pagados')
             ->with('operacion.cliente')
             ->with('operacion.cancelador')
+            /**validnado si se hace filtrado de algun plan funerario de uso inmediato */
+            ->where(function ($q) use ($uso_plan_funerario_futuro) {
+                if (trim($uso_plan_funerario_futuro) != '' && $uso_plan_funerario_futuro > 0) {
+                        $q->where('servicios_funerarios.ventas_planes_id', '=', $uso_plan_funerario_futuro);
+                }
+            })
+            ->where(function ($q) use ($uso_terreno_id) {
+                if (trim($uso_terreno_id) != '' && $uso_terreno_id > 0) {
+                        $q->where('servicios_funerarios.ventas_terrenos_id', '=', $uso_terreno_id);
+                }
+            })
+            
             ->where(function ($q) use ($id_servicio) {
                 if (trim($id_servicio) == 'all' || $id_servicio > 0) {
                     if (trim($id_servicio) == 'all') {
@@ -4205,6 +4217,9 @@ class FunerariaController extends ApiController
                     $pagos_vigentes = 0;
                     $pagos_cancelados = 0;
                     $pagos_realizados = 0;
+                    
+
+                    $solicitud['operacion']['fecha_operacion_texto'] = fecha_abr($solicitud['operacion']['fecha_operacion']);
 
                     $arreglo_de_pagos_realizados = [];
 
@@ -4386,6 +4401,7 @@ class FunerariaController extends ApiController
         return $resultado_query;
         /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
     }
+
 
 
     /**CANCELAR LA VENTA */

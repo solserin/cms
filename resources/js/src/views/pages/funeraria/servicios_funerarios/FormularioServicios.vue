@@ -24,8 +24,8 @@
           <vs-tab label="DESTINOS DEL SERVICIO" icon="location_on"></vs-tab>
           <vs-tab label="MATERIAL DE VELACIÓN" icon="event_seat"></vs-tab>
           <vs-tab label="ACTA DE DEFUNCIÓN" icon="local_hotel"></vs-tab>
+          <vs-tab label="USO DE CONVENIOS " icon="folder_open"></vs-tab>
           <vs-tab label="CONTRATO " icon="attach_file"></vs-tab>
-
           <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
         </vs-tabs>
         <div class="tab-content mt-1" v-show="activeTab == 0">
@@ -2325,6 +2325,237 @@
         <div class="tab-content mt-1" v-show="activeTab == 5">
           <div class="flex flex-wrap">
             <div
+              v-if="verUsoConvenios"
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mt-5"
+            >
+              <div class="flex flex-wrap">
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mb-6"
+                  v-if="
+                    form.id_convenio_plan > 0 && form.id_convenio_plan != ''
+                  "
+                >
+                  <div
+                    class="w-full"
+                    v-if="
+                      contratos_con_uso_plan_funerario_futuro_seleccionado.length >
+                      0
+                    "
+                  >
+                    <div class="float-left pb-5 px-2">
+                      <img width="36px" src="@assets/images/warning.svg" />
+                      <h3
+                        class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                      >
+                        El plan funerario de uso a futuro seleccionado ya ha
+                        sido utilizado anteriormente
+                      </h3>
+                    </div>
+                    <div class="w-full px-2">
+                      <vs-divider />
+                    </div>
+                    <vx-card no-radius>
+                      <vs-table
+                        class="w-full"
+                        :data="
+                          contratos_con_uso_plan_funerario_futuro_seleccionado
+                        "
+                        noDataText="No se han registrado contratos asociados a este plan funerario a futuro seleccionado"
+                      >
+                        <template slot="header">
+                          <h3>
+                            Contratos que hicieron uso del plan funerario a
+                            futuro seleccionado
+                          </h3>
+                        </template>
+                        <template slot="thead">
+                          <vs-th>#</vs-th>
+                          <vs-th>Fallecido</vs-th>
+                          <vs-th>Contratante</vs-th>
+                          <vs-th>Fecha de Uso</vs-th>
+                        </template>
+                        <template slot-scope="{ data }">
+                          <vs-tr
+                            :data="tr"
+                            :key="indextr"
+                            v-for="(tr, indextr) in data"
+                          >
+                            <vs-td class="w-1/12">
+                              <div class="capitalize">
+                                <span class="lowercase"
+                                  >{{ indextr + 1 }})</span
+                                >
+                              </div>
+                            </vs-td>
+                            <vs-td class="w-7/12">
+                              <div
+                                class="capitalize"
+                                v-if="get_id_solicitud == tr.id"
+                              >
+                                {{
+                                  tr.nombre_afectado +
+                                  " (Finado de este contrato)"
+                                }}
+                              </div>
+                              <div class="capitalize" v-else>
+                                {{ tr.nombre_afectado }}
+                              </div>
+                            </vs-td>
+                            <vs-td class="w-2/12">
+                              <div class="capitalize">
+                                {{ tr.operacion.cliente.nombre }}
+                              </div>
+                            </vs-td>
+                            <vs-td class="w-2/12">
+                              <div class="capitalize">
+                                {{ tr.operacion.fecha_operacion_texto }}
+                              </div>
+                            </vs-td>
+                          </vs-tr>
+                        </template>
+                      </vs-table>
+                    </vx-card>
+                  </div>
+
+                    <div v-else class="w-full">
+                <div class="float-left pb-5 px-2">
+                  <img width="36px" src="@assets/images/checked.svg" />
+                  <h3
+                    class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                  >
+                    El plan funerario de uso a futuro seleccionado no ha sido
+                    utilizado anteriormente
+                  </h3>
+                </div>
+                <div class="w-full px-2">
+                  <vs-divider />
+                </div>
+              </div>
+               
+
+                  <!--fin de contenido del plan funerario-->
+                </div>
+              </div>
+
+              <div
+                class="w-full mt-10"
+                v-if="contratos_con_uso_terreno_seleccionado.length > 0"
+              >
+                <div class="float-left pb-5 px-2">
+                  <img width="36px" src="@assets/images/warning.svg" />
+                  <h3
+                    class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                  >
+                    La ubicación que seleccionó para inhumar ya ha sido
+                    utilizada anteriormente
+                  </h3>
+                </div>
+                <div class="w-full px-2">
+                  <vs-divider />
+                </div>
+                <vx-card no-radius>
+                  <vs-table
+                    class="w-full"
+                    :data="contratos_con_uso_terreno_seleccionado"
+                    noDataText="No se han registrado contratos asociados a este plan funerario a futuro seleccionado"
+                  >
+                    <template slot="header">
+                      <h3>
+                        Contratos que hicieron uso de la ubicación seleccionada
+                      </h3>
+                    </template>
+                    <template slot="thead">
+                      <vs-th>#</vs-th>
+                      <vs-th>Fallecido</vs-th>
+                      <vs-th>Contratante</vs-th>
+                      <vs-th>Fecha de Uso</vs-th>
+                    </template>
+                    <template slot-scope="{ data }">
+                      <vs-tr
+                        :data="tr"
+                        :key="indextr"
+                        v-for="(tr, indextr) in data"
+                      >
+                        <vs-td class="w-1/12">
+                          <div class="capitalize">
+                            <span class="lowercase">{{ indextr + 1 }})</span>
+                          </div>
+                        </vs-td>
+                        <vs-td class="w-7/12">
+                          <div
+                            class="capitalize"
+                            v-if="get_id_solicitud == tr.id"
+                          >
+                            {{
+                              tr.nombre_afectado + " (Finado de este contrato)"
+                            }}
+                          </div>
+                          <div class="capitalize" v-else>
+                            {{ tr.nombre_afectado }}
+                          </div>
+                        </vs-td>
+                        <vs-td class="w-2/12">
+                          <div class="capitalize">
+                            {{ tr.operacion.cliente.nombre }}
+                          </div>
+                        </vs-td>
+                        <vs-td class="w-2/12">
+                          <div class="capitalize">
+                            {{ tr.operacion.fecha_operacion_texto }}
+                          </div>
+                        </vs-td>
+                      </vs-tr>
+                    </template>
+                  </vs-table>
+                </vx-card>
+              </div>
+                 <div v-else class="w-full">
+                    <div class="float-left pb-5 px-2">
+                      <img width="36px" src="@assets/images/checked.svg" />
+                      <h3
+                        class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                      >
+                        La ubicación del cementerio que ha seleccionado no ha
+                        sido utilizado anteriormente
+                      </h3>
+                    </div>
+                    <div class="w-full px-2">
+                      <vs-divider />
+                    </div>
+                  </div>
+            
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mb-6"
+              v-else
+            >
+              <div class="float-left pb-5 px-2">
+                <img width="36px" src="@assets/images/checked.svg" />
+                <h3
+                  class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                >
+                  No se tiene registrado el uso de propiedades de cementerio ni
+                  planes funerarios para este contrato
+                </h3>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap mt-4 px-2 hidden">
+            <div class="w-full px-2 mt-2">
+              <p class="texto-ojo">
+                <span class="text-danger font-medium">Ojo:</span>
+                Debe seleccionar la modalidad de la venta que se esté
+                registrando en caso de que haya sido realizada fuera del control
+                del sistema, ya que ese tipo de ventas cuenta con un control
+                especial de números de órden.
+              </p>
+              <vs-divider />
+            </div>
+          </div>
+        </div>
+        <div class="tab-content mt-1" v-show="activeTab == 6">
+          <div class="flex flex-wrap">
+            <div
               class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
             >
               <div class="float-left pb-5 px-2">
@@ -3647,8 +3878,79 @@ export default {
         this.secciones = [];
       }
     },
+    /**aqui estoy */
+    "form.id_convenio_plan": function (newValue, oldValue) {
+      if (newValue != "" && newValue > 0) {
+        /**buscar servicios que hayan usado este plan funerario */
+        this.$vs.loading();
+        (async () => {
+          await funeraria
+            .get_solicitudes_servicios_id_uso_plan_funerario_futuro(newValue)
+            .then((res) => {
+              if (res.data.length > 0) {
+                this.contratos_con_uso_plan_funerario_futuro_seleccionado =
+                  res.data;
+              } else {
+                this.contratos_con_uso_plan_funerario_futuro_seleccionado = [];
+                /**no hay datos que mostrar*/
+              }
+              /**aqui cargo los datos obtenidos */
+              this.$vs.loading.close();
+            })
+            .catch((err) => {
+              this.contratos_con_uso_plan_funerario_futuro_seleccionado = [];
+              this.$vs.loading.close();
+            });
+        })();
+      } else {
+        /**limpiar los datos */
+      }
+    },
+    "form.ventas_terrenos_id": function (newValue, oldValue) {
+      if (newValue != "" && newValue > 0) {
+        /**buscar servicios que hayan usado este terreno */
+        this.$vs.loading();
+        (async () => {
+          await funeraria
+            .get_solicitudes_servicios_id_uso_terreno(newValue)
+            .then((res) => {
+              if (res.data.length > 0) {
+                this.contratos_con_uso_terreno_seleccionado = res.data;
+              } else {
+                this.contratos_con_uso_terreno_seleccionado = [];
+                /**no hay datos que mostrar*/
+              }
+              /**aqui cargo los datos obtenidos */
+              this.$vs.loading.close();
+            })
+            .catch((err) => {
+              this.contratos_con_uso_terreno_seleccionado = [];
+              this.$vs.loading.close();
+            });
+        })();
+      } else {
+        /**limpiar los datos */
+      }
+    },
   },
   computed: {
+    verUsoConvenios: function () {
+      if(this.form.inhumacion_b==0 && this.form.plan_funerario_futuro_b.value==0){
+        return false
+      }else{
+         if (
+        (this.form.id_convenio_plan > 0 && this.form.id_convenio_plan != "") ||
+        (this.form.ventas_terrenos_id != 0 &&
+          this.form.ventas_terrenos_id != "")
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+      }
+     
+    },
+
     /**validaciones de los selects */
     nacionalidad_validacion_computed: function () {
       return this.form.nacionalidad.value;
@@ -4019,6 +4321,8 @@ export default {
   },
   data() {
     return {
+      contratos_con_uso_terreno_seleccionado: [],
+      contratos_con_uso_plan_funerario_futuro_seleccionado: [],
       saldo_neto_terreno: 0,
       datosPlanFunerario: [],
       secciones_original: [],
