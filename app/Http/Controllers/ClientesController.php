@@ -92,7 +92,7 @@ class ClientesController extends ApiController
                     }
                 })
                 /**descartando el cliente publico en general */
-                ->where('clientes.id', '>', 1)
+                ->whereNotIn('clientes.id',[1,193])
                 ->orderBy('clientes.id', 'desc')
                 ->get()
         );
