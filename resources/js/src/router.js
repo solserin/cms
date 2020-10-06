@@ -213,6 +213,30 @@ const router = new Router({
                         authRequired: true
                     }
                 },
+                {
+                    path: "/cobranza/facturacion",
+                    name: "cobranza_facturacion",
+                    component: () =>
+                        import("@/views/pages/facturacion/ListaFacturas.vue"),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Control de Facturación"
+                            },
+                            {
+                                title: "Módulo de Facturación",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Facturación Electrónica",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
                 // =============================================================================
                 // Application Routes
                 // =============================================================================

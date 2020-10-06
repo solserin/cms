@@ -14,6 +14,8 @@ class ConceptosCfdi extends Migration
     public function up()
     {
         Schema::create('conceptos_cfdi', function (Blueprint $table) {
+            $table->string('cfdis_uuid');
+            $table->foreign('cfdis_uuid')->references('uuid')->on('cfdis');
             $table->unsignedBigInteger('sat_productos_servicios_id')->unsigned();
             $table->foreign('sat_productos_servicios_id')->references('id')->on('sat_productos_servicios');
             $table->unsignedBigInteger('articulos_id')->unsigned()->nullable();
@@ -23,8 +25,6 @@ class ConceptosCfdi extends Migration
             $table->unsignedDecimal('valor_unitario', 10, 2);
             $table->unsignedDecimal('importe', 10, 2);
             $table->unsignedDecimal('descuento', 10, 2);
-            $table->unsignedBigInteger('cfdis_id')->unsigned();
-            $table->foreign('cfdis_id')->references('id')->on('cfdis');
             $table->unsignedBigInteger('sat_unidades_id')->unsigned();
             $table->foreign('sat_unidades_id')->references('id')->on('sat_unidades');
             $table->unsignedBigInteger('concepto_operacion_id')->unsigned()->nullable();

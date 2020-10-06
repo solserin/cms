@@ -14,12 +14,12 @@ class Cfdis extends Migration
     public function up()
     {
         Schema::create('cfdis', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->string('uuid', 36)->primary();
+            $table->bigInteger('folio');
             $table->unsignedBigInteger('clientes_id')->unsigned()->nullable();
             $table->foreign('clientes_id')->references('id')->on('clientes');
             $table->string('version', 3)->nullable();
             $table->string('serie', 25)->nullable();
-            $table->string('folio', 40)->nullable();
             $table->dateTime('fecha')->nullable();
             $table->unsignedBigInteger('sat_formas_pago_id')->unsigned();
             $table->foreign('sat_formas_pago_id')->references('id')->on('sat_formas_pago');
@@ -45,7 +45,6 @@ class Cfdis extends Migration
             $table->string('residencia_fiscal_receptor', 150)->nullable();
             $table->unsignedBigInteger('sat_usos_cfdi_id')->unsigned();
             $table->foreign('sat_usos_cfdi_id')->references('id')->on('sat_usos_cfdi');
-            $table->string('uuid', 36)->unique();
             $table->dateTime('fecha_timbrado')->nullable();
             $table->string('num_certificado_sat', 20)->nullable();
             $table->string('rfc_proveedor_certificado', 13);
@@ -55,6 +54,16 @@ class Cfdis extends Migration
             $table->unsignedBigInteger('cancelo_id')->unsigned()->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
             $table->dateTime('fecha_cancelacion')->nullable();
+            $table->mediumText('nota')->nullable();
+            $table->string('num_operacion')->nullable();
+            $table->string('rfc_emisor_cta_ordenante')->nullable();
+            $table->string('nombre_banco_ordenante')->nullable();
+            $table->string('cta_ordenante')->nullable();
+            $table->string('rfc_emisor_cta_benericiario')->nullable();
+            $table->string('cta_beneficiario')->nullable();
+            $table->string('tipos_cadena_pago_clave')->nullable();
+            $table->foreign('tipos_cadena_pago_clave')->references('clave')->on('tipos_cadena_pago');
+            $table->tinyInteger('status')->default(1);
         });
     }
 

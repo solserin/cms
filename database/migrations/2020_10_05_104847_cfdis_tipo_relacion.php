@@ -16,8 +16,8 @@ class CfdisTipoRelacion extends Migration
         Schema::create('cfdis_tipo_relacion', function (Blueprint $table) {
             $table->unsignedBigInteger('sat_tipo_relacion_id')->unsigned();
             $table->foreign('sat_tipo_relacion_id')->references('id')->on('sat_tipo_relacion');
-            $table->unsignedBigInteger('cfdis_id')->unsigned();
-            $table->foreign('cfdis_id')->references('id')->on('cfdis');
+            $table->string('cfdis_uuid');
+            $table->foreign('cfdis_uuid')->references('uuid')->on('cfdis');
         });
     }
 
