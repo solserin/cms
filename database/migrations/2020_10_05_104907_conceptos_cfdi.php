@@ -29,6 +29,7 @@ class ConceptosCfdi extends Migration
             $table->foreign('sat_unidades_id')->references('id')->on('sat_unidades');
             $table->unsignedBigInteger('concepto_operacion_id')->unsigned()->nullable();
             $table->foreign('concepto_operacion_id')->references('id')->on('operaciones');
+            $table->tinyInteger('concepto_operacion_ver_b')->unsigned();
         });
     }
 

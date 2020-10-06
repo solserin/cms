@@ -14,10 +14,17 @@ class CfdisTipoRelacion extends Migration
     public function up()
     {
         Schema::create('cfdis_tipo_relacion', function (Blueprint $table) {
-            $table->unsignedBigInteger('sat_tipo_relacion_id')->unsigned();
+            $table->unsignedBigInteger('sat_tipo_relacion_id')->unsigned()->nullable();
             $table->foreign('sat_tipo_relacion_id')->references('id')->on('sat_tipo_relacion');
             $table->string('cfdis_uuid');
             $table->foreign('cfdis_uuid')->references('uuid')->on('cfdis');
+            $table->unsignedDecimal('importe_pagado', 10, 2)->nullable();
+            $table->unsignedDecimal('importe_saldo_anterior', 10, 2)->nullable();
+            $table->unsignedDecimal('importe_saldo_insoluto', 10, 2)->nullable();
+            $table->integer('numero_parcialidad')->nullable();
+            $table->unsignedBigInteger('sat_metodos_pago_id')->unsigned();
+            $table->foreign('sat_metodos_pago_id')->references('id')->on('sat_metodos_pago');
+            $table->unsignedDecimal('monto_nota_credito', 10, 2)->nullable();
         });
     }
 

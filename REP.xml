@@ -39,7 +39,15 @@
                 MonedaP="MXN" 
                 Monto="8506.68"
                 >
-                    <pago10:DoctoRelacionado Folio="232" IdDocumento="ED735BC9-92D1-4C6A-B746-6F26E8C5DCB5" ImpPagado="4253.34" ImpSaldoAnt="4253.34" ImpSaldoInsoluto="0.00" MetodoDePagoDR="PUE" MonedaDR="MXN" NumParcialidad="1"></pago10:DoctoRelacionado>
+                    <pago10:DoctoRelacionado 
+                    Folio="232" 
+                    IdDocumento="ED735BC9-92D1-4C6A-B746-6F26E8C5DCB5" 
+                    ImpPagado="4253.34" 
+                    ImpSaldoAnt="4253.34" 
+                    ImpSaldoInsoluto="0.00" 
+                    MetodoDePagoDR="PUE" 
+                    MonedaDR="MXN" 
+                    NumParcialidad="1"></pago10:DoctoRelacionado>
                     <pago10:DoctoRelacionado Folio="251" IdDocumento="4CC3071B-1C31-4534-B712-D13296936BB6" ImpPagado="4253.34" ImpSaldoAnt="4253.34" ImpSaldoInsoluto="0.00" MetodoDePagoDR="PUE" MonedaDR="MXN" NumParcialidad="1"></pago10:DoctoRelacionado>
                 </pago10:Pago>
             </pago10:Pagos>
