@@ -12,6 +12,90 @@
       :active.sync="showVentana"
       ref="formulario"
     >
+      <div class="cfdi-contenido">
+        <div>
+          <div class="float-left pb-2 px-2">
+            <img width="36px" src="@assets/images/businessman.svg" />
+            <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+              Información del Receptor
+            </h3>
+          </div>
+        </div>
+        <div class="w-full px-2">
+          <vs-divider />
+        </div>
+        <div class="flex flex-wrap">
+          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              Seleccione al Contratante
+              <span class="texto-importante">(*)</span>
+            </label>
+
+            <div class="flex flex-wrap">
+              <div class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
+                <img
+                  v-if="form.id_cliente == ''"
+                  width="46px"
+                  class="cursor-pointer p-2"
+                  src="@assets/images/search.svg"
+                  title="Buscar Cliente"
+                />
+                <img
+                  v-else
+                  width="46px"
+                  class="cursor-pointer p-2"
+                  src="@assets/images/minus.svg"
+                />
+              </div>
+              <div
+                class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
+              >
+                <vs-input
+                  readonly
+                  v-validate.disabled="'required'"
+                  name="id_cliente"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full py-1 cursor-pointer texto-bold"
+                  placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
+                  v-model="form.cliente"
+                  maxlength="100"
+                  ref="cliente_ref"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Tipo de RFC</span>
+              <span class="texto-importante">(*)</span>
+            </label>
+            <v-select
+              :options="sino"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.plan_funerario_futuro_b"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              name="plan_funerario_futuro_b"
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+            <div>
+              <span class="text-danger">
+                {{ errors.first("plan_funerario_futuro_b") }}
+              </span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger"
+                v-if="this.errores['plan_funerario_futuro_b.value']"
+                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
     </vs-popup>
     <ConfirmarDanger
       :show="openConfirmarSinPassword"
@@ -120,6 +204,12 @@ export default {
       botonConfirmarSinPassword: "",
       accionConfirmarSinPassword: "",
       callBackConfirmar: Function,
+
+      /**DATOS DEL FORMULARIO */
+      form: {
+        id_cliente: "",
+      },
+      errores: [],
     };
   },
   methods: {

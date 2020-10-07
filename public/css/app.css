@@ -6358,6 +6358,8 @@ th .vs-table-text {
   max-height: 70vh !important;
 }
 
+/**cfdi contenido*/
+
 /**medias queries para el popup de captura de datos */
 
 @media (min-width: 576px) {
