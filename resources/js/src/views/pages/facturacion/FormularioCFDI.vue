@@ -45,6 +45,7 @@
                   width="46px"
                   class="cursor-pointer p-2"
                   src="@assets/images/minus.svg"
+                  @click="quitarCliente()"
                 />
               </div>
               <div class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12">
@@ -101,9 +102,12 @@
             </div>
           </div>
 
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+            v-if="form.tipo_rfc.value == 1"
+          >
             <label class="text-sm opacity-75 font-bold"
-              >RFC <span class="texto-importante">(*)</span></label
+              >RFC del Cliente <span class="texto-importante">(*)</span></label
             >
             <vs-input
               name="rfc"
@@ -124,7 +128,66 @@
               }}</span>
             </div>
           </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+            v-else-if="form.tipo_rfc.value == 2"
+          >
+            <label class="text-sm opacity-75 font-bold"
+              >RFC Púb. En General
+              <span class="texto-importante">(*)</span></label
+            >
+            <vs-input
+              :disabled="true"
+              name="rfc"
+              maxlength="150"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el RFC"
+              value="XAXX010101000"
+            />
+            <div>
+              <span class="text-danger">
+                {{ errors.first("rfc") }}
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger" v-if="this.errores.rfc">{{
+                errores.rfc[0]
+              }}</span>
+            </div>
+          </div>
+          <div
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
+            v-else
+          >
+            <label class="text-sm opacity-75 font-bold"
+              >RFC Púb. En General Extranjero
+              <span class="texto-importante">(*)</span></label
+            >
+            <vs-input
+              :disabled="true"
+              name="rfc"
+              maxlength="150"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Ingrese el RFC"
+              value="XEX010101000"
+            />
+            <div>
+              <span class="text-danger">
+                {{ errors.first("rfc") }}
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger" v-if="this.errores.rfc">{{
+                errores.rfc[0]
+              }}</span>
+            </div>
+          </div>
+          <div
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+            v-if="form.tipo_rfc.value == 1"
+          >
             <label class="text-sm opacity-75 font-bold"
               >Razón Social <span class="texto-importante">(*)</span></label
             >
@@ -147,7 +210,37 @@
               }}</span>
             </div>
           </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+            v-else
+          >
+            <label class="text-sm opacity-75 font-bold"
+              >Razón Social <span class="texto-importante">(*)</span></label
+            >
+            <vs-input
+              :disabled="true"
+              name="razon_social"
+              maxlength="150"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Razón social del contribuyente"
+              value="Público en General"
+            />
+            <div>
+              <span class="text-danger">
+                {{ errors.first("razon_social") }}
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger" v-if="this.errores.razon_social">{{
+                errores.razon_social[0]
+              }}</span>
+            </div>
+          </div>
+          <div
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+            v-if="form.tipo_rfc.value == 1"
+          >
             <label class="text-sm opacity-75 font-bold">Dirección Fiscal</label>
             <vs-input
               name="direccion_fiscal"
@@ -168,30 +261,57 @@
               }}</span>
             </div>
           </div>
+          <div
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+            v-else
+          >
+            <label class="text-sm opacity-75 font-bold">Dirección Fiscal</label>
+            <vs-input
+              :disabled="true"
+              name="direccion_fiscal"
+              maxlength="150"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Dirección fiscal del contribuyente"
+              value="N/A"
+            />
+            <div>
+              <span class="text-danger">
+                {{ errors.first("direccion_fiscal") }}
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger" v-if="this.errores.direccion_fiscal">{{
+                errores.direccion_fiscal[0]
+              }}</span>
+            </div>
+          </div>
 
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               <span>País de Residencia</span>
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="paises"
+              :disabled="form.tipo_rfc.value < 3"
+              :options="sat_paises"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.pais"
+              v-model="form.sat_pais"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="pais"
+              name="sat_pais"
+              v-validate:sat_pais_validacion_computed.immediate="'required'"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger">
-                {{ errors.first("pais") }}
+              <span class="text-danger" v-if="errors.first('sat_pais')">
+                Seleccione el país de residencia
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores['pais.value']">{{
-                errores["pais.value"][0]
+              <span class="text-danger" v-if="this.errores['sat_pais.value']">{{
+                errores["sat_pais.value"][0]
               }}</span>
             </div>
           </div>
@@ -217,6 +337,9 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              v-validate:tipo_comprobante_validacion_computed.immediate="
+                'required'
+              "
               :options="tipos_comprobante"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -227,8 +350,8 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger">
-                {{ errors.first("tipo_comprobante") }}
+              <span class="text-danger" v-if="errors.first('tipo_comprobante')">
+                Ingrese este dato
               </span>
             </div>
             <div class="mt-2">
@@ -245,6 +368,8 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              v-validate:metodo_pago_validacion_computed.immediate="'required'"
+              :disabled="form.tipo_comprobante.value > 1"
               :options="metodos_pago"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -255,8 +380,8 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger">
-                {{ errors.first("metodo_pago") }}
+              <span class="text-danger" v-if="errors.first('metodo_pago')">
+                Ingrese el método de pago
               </span>
             </div>
             <div class="mt-2">
@@ -273,6 +398,8 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              v-validate:forma_pago_validacion_computed.immediate="'required'"
+              :disabled="form.metodo_pago.value == 2"
               :options="formas_pago"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -283,8 +410,8 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger">
-                {{ errors.first("forma_pago") }}
+              <span class="text-danger" v-if="errors.first('forma_pago')">
+                Ingrese la forma de pago
               </span>
             </div>
             <div class="mt-2">
@@ -296,7 +423,10 @@
             </div>
           </div>
 
-          <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+            v-if="form.tipo_comprobante.value == 5"
+          >
             <label class="text-sm opacity-75 font-bold">
               Fecha del Pago
               <span class="texto-importante">(*)</span>
@@ -305,9 +435,7 @@
             <flat-pickr
               name="fecha_pago"
               data-vv-as=" "
-              v-validate:fechahora_contrato_validacion_computed.immediate="
-                'required'
-              "
+              v-validate:fechapago_validacion_computed.immediate="'required'"
               :config="configdateTimePicker"
               v-model="form.fecha_pago"
               placeholder="Fecha del Pago"
@@ -324,7 +452,54 @@
               }}</span>
             </div>
           </div>
-          <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+            v-else
+          >
+            <label class="text-sm opacity-75 font-bold"> Fecha del Pago </label>
+            <vs-input
+              :disabled="true"
+              value="N/A"
+              maxlength="150"
+              type="text"
+              class="w-full pb-1 pt-1"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Uso del CFDI</span>
+              <span
+                class="texto-importante"
+                v-if="form.tipo_comprobante.value == 1"
+                >(*)</span
+              >
+            </label>
+            <v-select
+              v-validate:uso_cfdi_validacion_computed.immediate="'required'"
+              :disabled="form.tipo_comprobante.value > 1"
+              :options="usos_cfdi"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.uso_cfdi"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              name="usos_cfdi"
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+            <div>
+              <span class="text-danger" v-if="errors.first('usos_cfdi')">
+                Seleccione el uso del CFDI
+              </span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger"
+                v-if="this.errores['usos_cfdi.value']"
+                >{{ errores["usos_cfdi.value"][0] }}</span
+              >
+            </div>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               <span>Tipo de Relación</span>
               <span class="texto-importante">(*)</span>
@@ -545,7 +720,6 @@
         <div class="w-full px-2">
           <vs-divider />
         </div>
-
         <div class="flex flex-wrap">
           <div
             class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
@@ -586,18 +760,24 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="conceptos"
               :options="claves_sat"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="form.clave_sat"
               class="mb-4 sm:mb-0 pb-1 pt-1"
               name="clave_sat"
+              v-validate.disable="'required'"
+              v-validate:clave_sat_validacion_computed.immediate="'required'"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger">
-                {{ errors.first("clave_sat") }}
+              <span
+                class="text-danger"
+                v-if="errors.first('conceptos.clave_sat')"
+              >
+                Seleccione una clave del Sat
               </span>
             </div>
             <div class="mt-2">
@@ -614,18 +794,23 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="conceptos"
               :options="unidades_sat"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="form.unidad_sat"
               class="mb-4 sm:mb-0 pb-1 pt-1"
               name="unidad_sat"
+              v-validate:unidad_sat_validacion_computed.immediate="'required'"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger">
-                {{ errors.first("unidad_sat") }}
+              <span
+                class="text-danger"
+                v-if="errors.first('conceptos.unidad_sat')"
+              >
+                Seleccione la unidad del concepto
               </span>
             </div>
             <div class="mt-2">
@@ -641,16 +826,19 @@
               >Cantidad <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              data-vv-as="cantidad"
+              data-vv-scope="conceptos"
               name="cantidad"
-              maxlength="150"
+              maxlength="6"
               type="text"
               class="w-full pb-1 pt-1"
               placeholder="Cantidad a agregar"
               v-model="form.cantidad"
+              v-validate="'required|integer|min_value:' + 1"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("cantidad") }}
+                {{ errors.first("conceptos.cantidad") }}
               </span>
             </div>
             <div class="mt-2">
@@ -664,16 +852,19 @@
               >Descripción <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              data-vv-as="Descripción"
+              data-vv-scope="conceptos"
               name="descripcion"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
               placeholder="Descripción del concepto"
+              v-validate="'required'"
               v-model="form.descripcion"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion") }}
+                {{ errors.first("conceptos.descripcion") }}
               </span>
             </div>
             <div class="mt-2">
@@ -687,16 +878,19 @@
               >$ Precio Neto <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              data-vv-as="Precio Neto"
+              data-vv-scope="conceptos"
               name="precio_neto"
-              maxlength="150"
+              maxlength="10"
               type="text"
               class="w-full pb-1 pt-1"
               placeholder="Ingrese el precio neto"
               v-model="form.precio_neto"
+              v-validate="'required|decimal:2|min_value:' + 0"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("precio_neto") }}
+                {{ errors.first("conceptos.precio_neto") }}
               </span>
             </div>
             <div class="mt-2">
@@ -711,6 +905,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="conceptos"
               :options="sino"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -722,7 +917,7 @@
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("descuento_b") }}
+                {{ errors.first("conceptos.descuento_b") }}
               </span>
             </div>
             <div class="mt-2">
@@ -733,22 +928,33 @@
               >
             </div>
           </div>
-          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+          <div
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+            v-if="form.descuento_b.value == 1"
+          >
             <label class="text-sm opacity-75 font-bold"
               >$ Precio con Descuento
               <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              data-vv-as="Precio con descuento"
+              data-vv-scope="conceptos"
               name="precio_descuento"
-              maxlength="150"
+              maxlength="10"
               type="text"
               class="w-full pb-1 pt-1"
               placeholder="Precio con el descuento"
               v-model="form.precio_descuento"
+              v-validate="
+                'required|decimal:2|min_value:' +
+                0 +
+                '|max_value:' +
+                form.precio_neto
+              "
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("precio_descuento") }}
+                {{ errors.first("conceptos.precio_descuento") }}
               </span>
             </div>
             <div class="mt-2">
@@ -758,13 +964,32 @@
             </div>
           </div>
           <div
+            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
+            v-else
+          >
+            <label class="text-sm opacity-75 font-bold"
+              >$ Precio con Descuento
+            </label>
+            <vs-input
+              :disabled="true"
+              data-vv-as="Precio con descuento"
+              data-vv-scope="conceptos"
+              name="precio_descuento"
+              maxlength="10"
+              type="text"
+              class="w-full pb-1 pt-1"
+              placeholder="Precio con el descuento"
+              value="N/A"
+            />
+          </div>
+          <div
             class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 md:text-right"
           >
             <vs-button
               class="mt-4"
               size="small"
               color="success"
-              @click="openBuscadorArticulos = true"
+              @click="AgregarConcepto"
             >
               <img
                 class="cursor-pointer img-btn"
@@ -775,11 +1000,12 @@
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
             <div class="flex flex-wrap">
+              {{ conceptos }}
               <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
                 <div class="w-full mt-5">
                   <vs-table
                     class="w-full"
-                    :data="form.articulos_servicios"
+                    :data="form.conceptos"
                     noDataText="No se han agregado conceptos a facturar"
                   >
                     <template slot="header">
@@ -809,7 +1035,17 @@
                         </vs-td>
                         <vs-td>
                           <div class="capitalize">
-                            {{ data[indextr].tipo }}
+                            {{ data[indextr].clave_sat.label }}
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="capitalize">
+                            {{ data[indextr].unidad_sat.label }}
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="capitalize">
+                            {{ data[indextr].precio_neto }}
                           </div>
                         </vs-td>
                         <vs-td>
@@ -819,87 +1055,17 @@
                         </vs-td>
                         <vs-td>
                           <div class="capitalize">
-                            {{ data[indextr].lote }}
+                            {{ data[indextr].descripcion }}
                           </div>
                         </vs-td>
                         <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
+                          <div class="capitalize">
+                            {{ data[indextr].descripcion }}
                           </div>
                         </vs-td>
                         <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
+                          <div class="capitalize">
+                            {{ data[indextr].concepto_operacion_ver_b }}
                           </div>
                         </vs-td>
                         <vs-td>
@@ -996,11 +1162,7 @@
                           <span class="texto-importante">(*)</span>
                         </label>
                         <vs-input
-                          :disabled="
-                            tiene_pagos_realizados ||
-                            ventaLiquidada ||
-                            fueCancelada
-                          "
+                          :disabled="true"
                           size="large"
                           name="tasa_iva"
                           data-vv-as=" "
@@ -1157,14 +1319,99 @@ export default {
             await this.get_tipos_relacion();
             await this.get_claves_productos_sat();
             await this.get_sat_unidades();
+            await this.get_usos_cfdi();
+            await this.get_sat_paises();
           }
         })();
       } else {
         /**acciones al cerrar el formulario */
       }
     },
+
+    "form.tipo_rfc": function (newValue, oldValue) {
+      if (newValue.value < 3) {
+        this.form.sat_pais = this.sat_paises[151];
+      } else {
+        this.form.sat_pais = this.sat_paises[0];
+      }
+    },
+
+    "form.tipo_comprobante": function (newValue, oldValue) {
+      if (newValue.value > 1) {
+        this.form.metodo_pago = this.metodos_pago[1];
+        if (this.form.metodo_pago.value > 1) {
+          this.form.forma_pago = this.formas_pago[0];
+        }
+
+        this.form.uso_cfdi = this.usos_cfdi[0];
+      } else {
+        this.form.metodo_pago = this.metodos_pago[0];
+      }
+    },
+
+    /**cambiando a por definir la forma de pago cuando el metodo es ppd */
+    "form.metodo_pago": function (newValue, oldValue) {
+      if (newValue.value == 2) {
+        this.form.forma_pago = this.formas_pago[this.formas_pago.length - 1];
+      } else {
+        this.form.forma_pago = this.formas_pago[0];
+      }
+    },
+
+    "form.forma_pago": function (newValue, oldValue) {
+      if (this.form.tipo_comprobante.value > 1) {
+        /**si es de tipo pago o egreso no puede ser de tipo por definir */
+        if (newValue == this.formas_pago[this.formas_pago.length - 1]) {
+          //lo regreso a elegir una nueva forma de pago
+          this.form.forma_pago = this.formas_pago[0];
+          this.$vs.notify({
+            title: "Error en forma de pago",
+            text:
+              "Debe seleccionar una forma de pago diferente a 'Por Definir' cuando se trata de un comprobante de Pago o Egreso.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
+        }
+      }
+    },
   },
   computed: {
+    sat_pais_validacion_computed: function () {
+      return this.form.sat_pais.value;
+    },
+    tipo_comprobante_validacion_computed: function () {
+      return this.form.tipo_comprobante.value;
+    },
+
+    metodo_pago_validacion_computed: function () {
+      return this.form.metodo_pago.value;
+    },
+
+    forma_pago_validacion_computed: function () {
+      return this.form.forma_pago.value;
+    },
+
+    uso_cfdi_validacion_computed: function () {
+      if (this.form.tipo_comprobante.value == 1) {
+        /**si es de ingreso */
+        return this.form.uso_cfdi.value;
+      } else {
+        return true;
+      }
+    },
+
+    clave_sat_validacion_computed: function () {
+      return this.form.clave_sat.value;
+    },
+    unidad_sat_validacion_computed: function () {
+      return this.form.unidad_sat.value;
+    },
+    fechapago_validacion_computed: function () {
+      return this.form.fecha_pago;
+    },
+
     showVentana: {
       get() {
         return this.show;
@@ -1201,11 +1448,8 @@ export default {
       botonConfirmarSinPassword: "",
       accionConfirmarSinPassword: "",
       callBackConfirmar: Function,
+      datos_cliente: [],
       tipos_rfc: [
-        {
-          value: "",
-          label: "Seleccione 1",
-        },
         {
           value: "1",
           label: "Cliente con RFC",
@@ -1217,12 +1461,6 @@ export default {
         {
           value: "3",
           label: "Púb. General Extranjero",
-        },
-      ],
-      paises: [
-        {
-          value: "",
-          label: "Seleccione 1",
         },
       ],
       tipos_comprobante: [
@@ -1246,7 +1484,7 @@ export default {
       tipos_relacion: [
         {
           value: "",
-          label: "Seleccione 1",
+          label: "N/A",
         },
       ],
       claves_sat: [
@@ -1256,6 +1494,18 @@ export default {
         },
       ],
       unidades_sat: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      usos_cfdi: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      sat_paises: [
         {
           value: "",
           label: "Seleccione 1",
@@ -1277,16 +1527,12 @@ export default {
         id_cliente: "",
         cliente: "",
         tipo_rfc: {
-          value: "",
-          label: "Seleccione 1",
+          value: "1",
+          label: "Cliente con RFC",
         },
         rfc: "",
         razon_social: "",
         direccion_fiscal: "",
-        pais: {
-          value: "",
-          label: "Seleccione 1",
-        },
         /**FIN DE datos del cliente */
 
         /**TIPO DE COMPROBANTE */
@@ -1304,6 +1550,14 @@ export default {
         },
         fecha_pago: "",
         tipo_relacion: {
+          value: "",
+          label: "N/A",
+        },
+        uso_cfdi: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        sat_pais: {
           value: "",
           label: "Seleccione 1",
         },
@@ -1338,6 +1592,53 @@ export default {
     };
   },
   methods: {
+    /**metodo para agregar articulos manualmente */
+    AgregarConcepto() {
+      this.$validator
+        .validateAll("conceptos")
+        .then((result) => {
+          if (!result) {
+            this.$vs.notify({
+              title: "Agregar Artículos/Servicios al CFDI",
+              text: "Verifique que todos los datos han sido capturados",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "4000",
+            });
+          } else {
+            this.form.conceptos.push({
+              clave_sat: this.form.clave_sat,
+              unidad_sat: this.form.unidad_sat,
+              cantidad: this.form.cantidad,
+              descripcion: this.form.descripcion,
+              precio_neto: this.form.precio_neto,
+              descuento_b: this.form.descuento_b.value,
+              modifica_b: 1,
+              concepto_operacion_ver_b: 1,
+              concepto_operacion_id: 0,
+            });
+            /**reseteando el concepto */
+            /*this.form.seccion = {
+              value: "incluye",
+              label: "plan funerario",
+            };
+            this.index_concepto = "";
+            this.index_seccion = "";
+            this.form.concepto = "";
+            this.form.concepto_ingles = "";
+            this.limpiarValidation();
+            */
+            this.$nextTick(
+              () => {}
+              //this.$refs["concepto"].$el.querySelector("input").focus()
+            );
+          }
+        })
+        .catch(() => {});
+    },
+
     async get_tipos_comprobante() {
       this.$vs.loading();
       await facturacion
@@ -1405,7 +1706,7 @@ export default {
         .get_tipos_relacion()
         .then((res) => {
           this.tipos_relacion = [];
-          this.tipos_relacion.push({ label: "Seleccione 1", value: "" });
+          this.tipos_relacion.push({ label: "N/A", value: "" });
           res.data.forEach((element) => {
             this.tipos_relacion.push({
               label: element.tipo,
@@ -1461,20 +1762,81 @@ export default {
         });
     },
 
+    async get_usos_cfdi() {
+      this.$vs.loading();
+      await facturacion
+        .get_usos_cfdi()
+        .then((res) => {
+          this.usos_cfdi = [];
+          this.usos_cfdi.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.usos_cfdi.push({
+              label: element.uso,
+              value: element.id,
+            });
+          });
+          this.form.uso_cfdi = this.usos_cfdi[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
+    async get_sat_paises() {
+      this.$vs.loading();
+      await facturacion
+        .get_sat_paises()
+        .then((res) => {
+          this.sat_paises = [];
+          this.sat_paises.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.sat_paises.push({
+              label: element.pais,
+              value: element.id,
+            });
+          });
+          this.form.sat_pais = this.sat_paises[151];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
     clienteSeleccionado(datos) {
       /**obtiene los datos retornados del buscar cliente */
       this.form.cliente = datos.nombre;
       this.form.id_cliente = datos.id_cliente;
+      this.datos_cliente = datos;
+
+      if (datos.datos.rfc != "" && datos.datos.rfc != "N/A") {
+        this.form.rfc = datos.datos.rfc;
+      }
+      if (datos.datos.razon_social != "" && datos.datos.razon_social != "N/A") {
+        this.form.razon_social = datos.datos.razon_social;
+      }
+
+      if (
+        datos.datos.direccion_fiscal != "" &&
+        datos.datos.direccion_fiscal != "N/A"
+      ) {
+        this.form.direccion_fiscal = datos.datos.direccion_fiscal;
+      }
       //alert(datos.id_cliente);
     },
     limpiarCliente() {
       this.form.id_cliente = "";
       this.form.cliente = "";
+      this.form.tipo_rfc = this.tipos_rfc[0];
+      this.form.rfc = "";
+      this.form.razon_social = "";
+      this.form.direccion_fiscal = "";
     },
     quitarCliente() {
       this.botonConfirmarSinPassword = "Cambiar cliente";
       this.accionConfirmarSinPassword =
-        "¿Desea cambiar de cliente para este contrato?";
+        "¿Desea cambiar de cliente para esta factura?";
       this.callBackConfirmar = this.limpiarCliente;
       this.openConfirmarSinPassword = true;
     },

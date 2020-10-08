@@ -38,6 +38,8 @@ class ClientesController extends ApiController
                 'email',
                 'rfc as rfc_raw',
                 'status',
+                'razon_social',
+                'direccion_fiscal',
                 'vivo_b as vivo_b_raw',
                 DB::Raw('IFNULL( clientes.rfc , "N/A" ) as rfc'),
                 DB::Raw('IFNULL( clientes.celular , "No registrado" ) as celular'),
@@ -92,7 +94,7 @@ class ClientesController extends ApiController
                     }
                 })
                 /**descartando el cliente publico en general */
-                ->whereNotIn('clientes.id',[1,193])
+                ->whereNotIn('clientes.id', [1, 193])
                 ->orderBy('clientes.id', 'desc')
                 ->get()
         );

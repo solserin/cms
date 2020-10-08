@@ -72,6 +72,8 @@ Route::get('facturacion/get_sat_formas_pago', 'FacturacionController@get_sat_for
 Route::get('facturacion/get_tipos_relacion', 'FacturacionController@get_tipos_relacion');
 Route::get('facturacion/get_claves_productos_sat', 'FacturacionController@get_claves_productos_sat');
 Route::get('facturacion/get_sat_unidades', 'FacturacionController@get_sat_unidades');
+Route::get('facturacion/get_usos_cfdi', 'FacturacionController@get_usos_cfdi');
+Route::get('facturacion/get_sat_paises', 'FacturacionController@get_sat_paises');
 
 
 

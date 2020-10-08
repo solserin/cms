@@ -105,7 +105,7 @@
 
                 <div
                   class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
-                  style="z-index: 52002 !important;"
+                  style="z-index: 52002 !important"
                 >
                   <label class="text-sm opacity-75 font-bold">
                     <span>Nacionalidad</span>
@@ -175,7 +175,11 @@
                     class="cursor-pointer"
                     src="@assets/images/checked.svg"
                     @click="
-                      retornarSeleccion(data[indextr].nombre, data[indextr].id)
+                      retornarSeleccion(
+                        data[indextr].nombre,
+                        data[indextr].id,
+                        data[indextr]
+                      )
                     "
                   />
                 </vs-td>
@@ -383,9 +387,13 @@ export default {
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
-    retornarSeleccion(nombre = "", id = "") {
+    retornarSeleccion(nombre = "", id = "", todos_los_datos = []) {
       /**retorna los datos seleccionados a la venta que los solicita */
-      this.$emit("retornoCliente", { id_cliente: id, nombre: nombre });
+      this.$emit("retornoCliente", {
+        id_cliente: id,
+        nombre: nombre,
+        datos: todos_los_datos,
+      });
       this.$emit("closeBuscador");
     },
     retorno_id(dato) {
