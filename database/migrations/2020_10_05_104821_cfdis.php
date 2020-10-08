@@ -63,6 +63,7 @@ class Cfdis extends Migration
             $table->string('cta_beneficiario')->nullable();
             $table->string('tipos_cadena_pago_clave')->nullable();
             $table->foreign('tipos_cadena_pago_clave')->references('clave')->on('tipos_cadena_pago');
+            $table->tinyInteger('tasa_iva_porcentaje');
             $table->tinyInteger('status')->default(1);
         });
     }

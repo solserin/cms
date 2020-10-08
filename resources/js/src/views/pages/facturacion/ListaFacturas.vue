@@ -11,15 +11,6 @@
           <img class="cursor-pointer img-btn" src="@assets/images/cfdi.svg" />
           <span class="texto-btn">Crear CFDI</span>
         </vs-button>
-        <vs-button
-          class="float-right mr-12 hidden"
-          size="small"
-          color="primary"
-          @click="openPlanesVenta = true"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/shovel.svg" />
-          <span class="texto-btn">Servicio de Exhumación</span>
-        </vs-button>
       </div>
     </div>
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">

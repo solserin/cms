@@ -23,7 +23,8 @@
 		ClaveProdServ="43232804" 
 		ClaveUnidad="E48" 
 		Cantidad="1.00" 
-		Unidad="SERVICIO" NoIdentificacion="001" 
+		Unidad="SERVICIO" 
+		NoIdentificacion="001" 
 		Descripcion="SERVICIOS DE DESARROLLO DE SISTEMAS" 
 		ValorUnitario="19965.52" 
 		Importe="19965.52">
