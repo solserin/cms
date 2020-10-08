@@ -38,6 +38,7 @@
                   class="cursor-pointer p-2"
                   src="@assets/images/search.svg"
                   title="Buscar Cliente"
+                  @click="openBuscadorCliente = true"
                 />
                 <img
                   v-else
@@ -54,11 +55,21 @@
                   data-vv-as=" "
                   type="text"
                   class="w-full py-1 cursor-pointer texto-bold"
-                  placeholder="INGRESE EL NOMBRE DEL CLIENTE"
+                  placeholder="SELECCIONE UN CLIENTE PARA LA FACTURA"
                   v-model="form.cliente"
                   maxlength="100"
                   ref="cliente_ref"
                 />
+                <div>
+                  <span class="text-danger">
+                    {{ errors.first("id_cliente") }}
+                  </span>
+                </div>
+                <div class="mt-2">
+                  <span class="text-danger" v-if="this.errores['id_cliente']">{{
+                    errores["id_cliente"][0]
+                  }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -69,26 +80,24 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="tipos_rfc"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.tipo_rfc"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="tipo_rfc"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("tipo_rfc") }}
               </span>
             </div>
             <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
-              >
+              <span class="text-danger" v-if="this.errores['tipo_rfc.value']">{{
+                errores["tipo_rfc.value"][0]
+              }}</span>
             </div>
           </div>
 
@@ -97,21 +106,21 @@
               >RFC <span class="texto-importante">(*)</span></label
             >
             <vs-input
-              name="descripcion_urna"
+              name="rfc"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
               placeholder="Ingrese el RFC"
-              v-model="form.descripcion_urna"
+              v-model="form.rfc"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion_urna") }}
+                {{ errors.first("rfc") }}
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.descripcion_urna">{{
-                errores.descripcion_urna[0]
+              <span class="text-danger" v-if="this.errores.rfc">{{
+                errores.rfc[0]
               }}</span>
             </div>
           </div>
@@ -120,44 +129,42 @@
               >Razón Social <span class="texto-importante">(*)</span></label
             >
             <vs-input
-              name="descripcion_urna"
+              name="razon_social"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
-              placeholder="Descripción de urna"
-              v-model="form.descripcion_urna"
+              placeholder="Razón social del contribuyente"
+              v-model="form.razon_social"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion_urna") }}
+                {{ errors.first("razon_social") }}
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.descripcion_urna">{{
-                errores.descripcion_urna[0]
+              <span class="text-danger" v-if="this.errores.razon_social">{{
+                errores.razon_social[0]
               }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-            <label class="text-sm opacity-75 font-bold"
-              >Dirección Fiscal <span class="texto-importante">(*)</span></label
-            >
+            <label class="text-sm opacity-75 font-bold">Dirección Fiscal</label>
             <vs-input
-              name="descripcion_urna"
+              name="direccion_fiscal"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
-              placeholder="Descripción de urna"
-              v-model="form.descripcion_urna"
+              placeholder="Dirección fiscal del contribuyente"
+              v-model="form.direccion_fiscal"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion_urna") }}
+                {{ errors.first("direccion_fiscal") }}
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.descripcion_urna">{{
-                errores.descripcion_urna[0]
+              <span class="text-danger" v-if="this.errores.direccion_fiscal">{{
+                errores.direccion_fiscal[0]
               }}</span>
             </div>
           </div>
@@ -168,26 +175,24 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="paises"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.pais"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="pais"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("pais") }}
               </span>
             </div>
             <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
-              >
+              <span class="text-danger" v-if="this.errores['pais.value']">{{
+                errores["pais.value"][0]
+              }}</span>
             </div>
           </div>
         </div>
@@ -212,25 +217,25 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="tipos_comprobante"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.tipo_comprobante"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="tipo_comprobante"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("tipo_comprobante") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                v-if="this.errores['tipo_comprobante.value']"
+                >{{ errores["tipo_comprobante.value"][0] }}</span
               >
             </div>
           </div>
@@ -240,25 +245,25 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="metodos_pago"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.metodo_pago"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="metodo_pago"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("metodo_pago") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                v-if="this.errores['metodo_pago.value']"
+                >{{ errores["metodo_pago.value"][0] }}</span
               >
             </div>
           </div>
@@ -268,25 +273,25 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="formas_pago"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.forma_pago"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="forma_pago"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("forma_pago") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                v-if="this.errores['forma_pago.value']"
+                >{{ errores["forma_pago.value"][0] }}</span
               >
             </div>
           </div>
@@ -298,27 +303,25 @@
             </label>
 
             <flat-pickr
-              name="fechahora_contrato"
+              name="fecha_pago"
               data-vv-as=" "
               v-validate:fechahora_contrato_validacion_computed.immediate="
                 'required'
               "
-              :config="configdateTimePickerWithTime"
-              v-model="form.fechahora_contrato"
-              placeholder="Fecha y Hora del Contrato"
+              :config="configdateTimePicker"
+              v-model="form.fecha_pago"
+              placeholder="Fecha del Pago"
               class="w-full my-1"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("fechahora_contrato") }}
+                {{ errors.first("fecha_pago") }}
               </span>
             </div>
             <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores.fechahora_contrato"
-                >{{ errores.fechahora_contrato[0] }}</span
-              >
+              <span class="text-danger" v-if="this.errores.fecha_pago">{{
+                errores.fecha_pago[0]
+              }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2">
@@ -327,25 +330,25 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="tipos_relacion"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.tipo_relacion"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="tipo_relacion"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("tipo_relacion") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                v-if="this.errores['tipo_relacion.value']"
+                >{{ errores["tipo_relacion.value"][0] }}</span
               >
             </div>
           </div>
@@ -583,25 +586,25 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="claves_sat"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.clave_sat"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="clave_sat"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("clave_sat") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                v-if="this.errores['clave_sat.value']"
+                >{{ errores["clave_sat.value"][0] }}</span
               >
             </div>
           </div>
@@ -611,25 +614,25 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
-              :options="sino"
+              :options="unidades_sat"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.unidad_sat"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="unidad_sat"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("unidad_sat") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                v-if="this.errores['unidad_sat.value']"
+                >{{ errores["unidad_sat.value"][0] }}</span
               >
             </div>
           </div>
@@ -638,21 +641,21 @@
               >Cantidad <span class="texto-importante">(*)</span></label
             >
             <vs-input
-              name="descripcion_urna"
+              name="cantidad"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
-              placeholder="Ingrese el RFC"
-              v-model="form.descripcion_urna"
+              placeholder="Cantidad a agregar"
+              v-model="form.cantidad"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion_urna") }}
+                {{ errors.first("cantidad") }}
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.descripcion_urna">{{
-                errores.descripcion_urna[0]
+              <span class="text-danger" v-if="this.errores.cantidad">{{
+                errores.cantidad[0]
               }}</span>
             </div>
           </div>
@@ -661,44 +664,44 @@
               >Descripción <span class="texto-importante">(*)</span></label
             >
             <vs-input
-              name="descripcion_urna"
+              name="descripcion"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
-              placeholder="Ingrese el RFC"
-              v-model="form.descripcion_urna"
+              placeholder="Descripción del concepto"
+              v-model="form.descripcion"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion_urna") }}
+                {{ errors.first("descripcion") }}
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.descripcion_urna">{{
-                errores.descripcion_urna[0]
+              <span class="text-danger" v-if="this.errores.descripcion">{{
+                errores.descripcion[0]
               }}</span>
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
             <label class="text-sm opacity-75 font-bold"
-              >Precio Neto <span class="texto-importante">(*)</span></label
+              >$ Precio Neto <span class="texto-importante">(*)</span></label
             >
             <vs-input
-              name="descripcion_urna"
+              name="precio_neto"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
-              placeholder="Ingrese el RFC"
-              v-model="form.descripcion_urna"
+              placeholder="Ingrese el precio neto"
+              v-model="form.precio_neto"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion_urna") }}
+                {{ errors.first("precio_neto") }}
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.descripcion_urna">{{
-                errores.descripcion_urna[0]
+              <span class="text-danger" v-if="this.errores.precio_neto">{{
+                errores.precio_neto[0]
               }}</span>
             </div>
           </div>
@@ -711,46 +714,46 @@
               :options="sino"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.plan_funerario_futuro_b"
+              v-model="form.descuento_b"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="plan_funerario_futuro_b"
+              name="descuento_b"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("plan_funerario_futuro_b") }}
+                {{ errors.first("descuento_b") }}
               </span>
             </div>
             <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['plan_funerario_futuro_b.value']"
-                >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                v-if="this.errores['descuento_b.value']"
+                >{{ errores["descuento_b.value"][0] }}</span
               >
             </div>
           </div>
           <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
             <label class="text-sm opacity-75 font-bold"
-              >Precio con Descuento
+              >$ Precio con Descuento
               <span class="texto-importante">(*)</span></label
             >
             <vs-input
-              name="descripcion_urna"
+              name="precio_descuento"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
-              placeholder="Ingrese el RFC"
-              v-model="form.descripcion_urna"
+              placeholder="Precio con el descuento"
+              v-model="form.precio_descuento"
             />
             <div>
               <span class="text-danger">
-                {{ errors.first("descripcion_urna") }}
+                {{ errors.first("precio_descuento") }}
               </span>
             </div>
             <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.descripcion_urna">{{
-                errores.descripcion_urna[0]
+              <span class="text-danger" v-if="this.errores.precio_descuento">{{
+                errores.precio_descuento[0]
               }}</span>
             </div>
           </div>
@@ -931,7 +934,7 @@
                   <div class="w-full px-2">
                     <vs-divider />
                   </div>
-                  <div class="w-full sm:w-12/12 md:w-8/12 lg:9/12 px-2">
+                  <div class="w-full sm:w-12/12 md:w-8/12 lg:9/12">
                     <div class="flex flex-wrap">
                       <div class="w-full pt-3 pb-3 px-2">
                         <div class="float-left">
@@ -1002,7 +1005,7 @@
                           name="tasa_iva"
                           data-vv-as=" "
                           v-validate="
-                            'required|decimal:2|min_value:14|max_value:25'
+                            'required|decimal:2|min_value:16|max_value:16'
                           "
                           type="text"
                           class="w-full pb-1 pt-1 texto-bold cantidad"
@@ -1063,7 +1066,7 @@
                               class="cursor-pointer img-btn"
                               src="@assets/images/save.svg"
                             />
-                            <span class="texto-btn">Guardar Contrato</span>
+                            <span class="texto-btn">Timbrar CFDI</span>
                           </vs-button>
                         </div>
                       </div>
@@ -1085,6 +1088,11 @@
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
     ></ConfirmarDanger>
+    <ClientesBuscador
+      :show="openBuscadorCliente"
+      @closeBuscador="openBuscadorCliente = false"
+      @retornoCliente="clienteSeleccionado"
+    ></ClientesBuscador>
   </div>
 </template>
 <script>
@@ -1100,6 +1108,7 @@ import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 
 import clientes from "@services/clientes";
+import ClientesBuscador from "@pages/clientes/searcher.vue";
 
 /**VARIABLES GLOBALES */
 import {
@@ -1112,6 +1121,7 @@ export default {
     "v-select": vSelect,
     flatPickr,
     ConfirmarDanger,
+    ClientesBuscador,
   },
   props: {
     show: {
@@ -1140,8 +1150,13 @@ export default {
           this.cancelar();
         };
         (async () => {
-          if (this.getTipoformulario == "agregar") {
-          } else {
+          if (this.getTipoformulario == "facturar") {
+            await this.get_tipos_comprobante();
+            await this.get_metodos_pago();
+            await this.get_sat_formas_pago();
+            await this.get_tipos_relacion();
+            await this.get_claves_productos_sat();
+            await this.get_sat_unidades();
           }
         })();
       } else {
@@ -1179,21 +1194,291 @@ export default {
     return {
       /**variables para el control del formulario */
       tipo: "",
-
+      /**buscador del cliente */
+      openBuscadorCliente: false,
       /**control del popup de confirmar accion */
       openConfirmarSinPassword: false,
       botonConfirmarSinPassword: "",
       accionConfirmarSinPassword: "",
       callBackConfirmar: Function,
-
+      tipos_rfc: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+        {
+          value: "1",
+          label: "Cliente con RFC",
+        },
+        {
+          value: "2",
+          label: "Púb. General",
+        },
+        {
+          value: "3",
+          label: "Púb. General Extranjero",
+        },
+      ],
+      paises: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      tipos_comprobante: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      metodos_pago: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      formas_pago: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      tipos_relacion: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      claves_sat: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      unidades_sat: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
+      sino: [
+        {
+          value: "1",
+          label: "SI",
+        },
+        {
+          value: "0",
+          label: "NO",
+        },
+      ],
       /**DATOS DEL FORMULARIO */
       form: {
+        /**datos del cliente */
         id_cliente: "",
+        cliente: "",
+        tipo_rfc: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        rfc: "",
+        razon_social: "",
+        direccion_fiscal: "",
+        pais: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        /**FIN DE datos del cliente */
+
+        /**TIPO DE COMPROBANTE */
+        tipo_comprobante: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        metodo_pago: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        forma_pago: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        fecha_pago: "",
+        tipo_relacion: {
+          value: "",
+          label: "Seleccione 1",
+        },
+
+        /**CFDIS RELACIONADOS */
+        cfdis_relacionados: [],
+        operaciones_relacionadas: [],
+        conceptos: [],
+        /**articulos a agregar fuera de operacion */
+        clave_sat: {
+          value: "",
+          label: "Seleccione 1",
+        },
+
+        unidad_sat: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        cantidad: "",
+        descripcion: "",
+        precio_neto: "",
+        descuento_b: {
+          value: "0",
+          label: "NO",
+        },
+        precio_descuento: "",
+        /**FIN DE articulos a agregar fuera de operacion */
+        nota: "",
+        tasa_iva: 16,
       },
       errores: [],
     };
   },
   methods: {
+    async get_tipos_comprobante() {
+      this.$vs.loading();
+      await facturacion
+        .get_tipos_comprobante()
+        .then((res) => {
+          this.tipos_comprobante = [];
+          this.tipos_comprobante.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.tipos_comprobante.push({
+              label: element.tipo,
+              value: element.id,
+            });
+          });
+          this.form.tipo_comprobante = this.tipos_comprobante[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+    async get_metodos_pago() {
+      this.$vs.loading();
+      await facturacion
+        .get_metodos_pago()
+        .then((res) => {
+          this.metodos_pago = [];
+          this.metodos_pago.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.metodos_pago.push({
+              label: element.metodo,
+              value: element.id,
+            });
+          });
+          this.form.metodo_pago = this.metodos_pago[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+    async get_sat_formas_pago() {
+      this.$vs.loading();
+      await facturacion
+        .get_sat_formas_pago()
+        .then((res) => {
+          this.formas_pago = [];
+          this.formas_pago.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.formas_pago.push({
+              label: element.forma,
+              value: element.id,
+            });
+          });
+          this.form.forma_pago = this.formas_pago[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
+    async get_tipos_relacion() {
+      this.$vs.loading();
+      await facturacion
+        .get_tipos_relacion()
+        .then((res) => {
+          this.tipos_relacion = [];
+          this.tipos_relacion.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.tipos_relacion.push({
+              label: element.tipo,
+              value: element.id,
+            });
+          });
+          this.form.tipo_relacion = this.tipos_relacion[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+    async get_claves_productos_sat() {
+      this.$vs.loading();
+      await facturacion
+        .get_claves_productos_sat()
+        .then((res) => {
+          this.claves_sat = [];
+          this.claves_sat.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.claves_sat.push({
+              label: element.clave,
+              value: element.id,
+            });
+          });
+          this.form.clave_sat = this.claves_sat[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
+    async get_sat_unidades() {
+      this.$vs.loading();
+      await facturacion
+        .get_sat_unidades()
+        .then((res) => {
+          this.unidades_sat = [];
+          this.unidades_sat.push({ label: "Seleccione 1", value: "" });
+          res.data.forEach((element) => {
+            this.unidades_sat.push({
+              label: element.clave,
+              value: element.id,
+            });
+          });
+          this.form.unidad_sat = this.unidades_sat[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
+
+    clienteSeleccionado(datos) {
+      /**obtiene los datos retornados del buscar cliente */
+      this.form.cliente = datos.nombre;
+      this.form.id_cliente = datos.id_cliente;
+      //alert(datos.id_cliente);
+    },
+    limpiarCliente() {
+      this.form.id_cliente = "";
+      this.form.cliente = "";
+    },
+    quitarCliente() {
+      this.botonConfirmarSinPassword = "Cambiar cliente";
+      this.accionConfirmarSinPassword =
+        "¿Desea cambiar de cliente para este contrato?";
+      this.callBackConfirmar = this.limpiarCliente;
+      this.openConfirmarSinPassword = true;
+    },
+
     cancel() {
       this.$emit("closeVentana");
     },

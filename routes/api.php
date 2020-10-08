@@ -64,6 +64,17 @@ Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{solo_existenci
 Route::get('funeraria/get_categorias_servicio', 'FunerariaController@get_categorias_servicio');
 
 
+
+/**RUTAS PARA FACTURACION */
+Route::get('facturacion/get_tipos_comprobante', 'FacturacionController@get_tipos_comprobante');
+Route::get('facturacion/get_metodos_pago', 'FacturacionController@get_metodos_pago');
+Route::get('facturacion/get_sat_formas_pago', 'FacturacionController@get_sat_formas_pago');
+Route::get('facturacion/get_tipos_relacion', 'FacturacionController@get_tipos_relacion');
+Route::get('facturacion/get_claves_productos_sat', 'FacturacionController@get_claves_productos_sat');
+Route::get('facturacion/get_sat_unidades', 'FacturacionController@get_sat_unidades');
+
+
+
 Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
