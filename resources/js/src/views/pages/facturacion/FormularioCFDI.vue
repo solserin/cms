@@ -700,7 +700,7 @@
                         <vs-td>
                           <div
                             class=""
-                            @click="remover_articulo(indextr)"
+                            @click="remover_concepto(indextr)"
                             v-if="!fueCancelada"
                           >
                             <img
@@ -826,6 +826,7 @@
               >Cantidad <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              ref="cantidad_agregar"
               data-vv-as="cantidad"
               data-vv-scope="conceptos"
               name="cantidad"
@@ -990,6 +991,7 @@
               size="small"
               color="success"
               @click="AgregarConcepto"
+              v-if="!ModificandoArticulo"
             >
               <img
                 class="cursor-pointer img-btn"
@@ -997,10 +999,37 @@
               />
               <span class="texto-btn">Agregar Concepto</span>
             </vs-button>
+
+            <vs-button
+              class="mt-4 mr-6"
+              size="small"
+              color="danger"
+              @click="CancelarModificacion"
+              v-if="ModificandoArticulo"
+            >
+              <img
+                class="cursor-pointer img-btn"
+                src="@assets/images/cancel.svg"
+              />
+              <span class="texto-btn">Cancelar Modificación</span>
+            </vs-button>
+
+            <vs-button
+              class="mt-4"
+              size="small"
+              color="success"
+              @click="ActualizarModificacion"
+              v-if="ModificandoArticulo"
+            >
+              <img
+                class="cursor-pointer img-btn"
+                src="@assets/images/edit.svg"
+              />
+              <span class="texto-btn">Modificar Concepto</span>
+            </vs-button>
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
             <div class="flex flex-wrap">
-              {{ conceptos }}
               <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
                 <div class="w-full mt-5">
                   <vs-table
@@ -1016,10 +1045,10 @@
                       <vs-th>Prod/Servicio SAT</vs-th>
                       <vs-th>Unidad</vs-th>
                       <vs-th>$ Costo Neto</vs-th>
-                      <vs-th>Descuento</vs-th>
+                      <vs-th>$ Descuento</vs-th>
                       <vs-th>Cantidad</vs-th>
-                      <vs-th>Importe</vs-th>
-                      <vs-th>Facturar</vs-th>
+                      <vs-th>$ Importe</vs-th>
+                      <vs-th>Modificar</vs-th>
                       <vs-th>Quitar</vs-th>
                     </template>
                     <template slot-scope="{ data }">
@@ -1045,35 +1074,70 @@
                         </vs-td>
                         <vs-td>
                           <div class="capitalize">
-                            {{ data[indextr].precio_neto }}
+                            <span v-if="data[indextr].descuento_b.value == 0">
+                              {{
+                                data[indextr].precio_neto
+                                  | numFormat("0,000.00")
+                              }}
+                            </span>
+                            <span v-else>
+                              {{
+                                data[indextr].precio_descuento
+                                  | numFormat("0,000.00")
+                              }}
+                            </span>
                           </div>
                         </vs-td>
                         <vs-td>
                           <div class="capitalize">
-                            {{ data[indextr].descripcion }}
+                            <span v-if="data[indextr].descuento_b.value == 0">
+                              {{ 0 | numFormat("0,000.00") }}
+                            </span>
+                            <span v-else>
+                              {{
+                                (data[indextr].precio_neto -
+                                  data[indextr].precio_descuento)
+                                  | numFormat("0,000.00")
+                              }}
+                            </span>
                           </div>
                         </vs-td>
                         <vs-td>
                           <div class="capitalize">
-                            {{ data[indextr].descripcion }}
+                            {{ data[indextr].cantidad }}
                           </div>
                         </vs-td>
                         <vs-td>
                           <div class="capitalize">
-                            {{ data[indextr].descripcion }}
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <div class="capitalize">
-                            {{ data[indextr].concepto_operacion_ver_b }}
+                            <span v-if="data[indextr].descuento_b.value == 0">
+                              {{
+                                (data[indextr].precio_neto *
+                                  data[indextr].cantidad)
+                                  | numFormat("0,000.00")
+                              }}
+                            </span>
+                            <span v-else>
+                              {{
+                                (data[indextr].precio_descuento *
+                                  data[indextr].cantidad)
+                                  | numFormat("0,000.00")
+                              }}
+                            </span>
                           </div>
                         </vs-td>
                         <vs-td>
                           <div
                             class=""
-                            @click="remover_articulo(indextr)"
-                            v-if="!fueCancelada"
+                            @click="CargarModificarConcepto(indextr)"
                           >
+                            <img
+                              class="cursor-pointer img-btn"
+                              src="@assets/images/edit.svg"
+                            />
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="" @click="remover_concepto(indextr)">
                             <img
                               class="cursor-pointer img-btn"
                               src="@assets/images/minus.svg"
@@ -1198,7 +1262,7 @@
                         <div class="mt-3 text-center">
                           <span class="total_contrato text-3xl font-bold">
                             $
-                            {{ totalContrato | numFormat("0,000.00") }}
+                            {{ total_facturar | numFormat("0,000.00") }}
                           </span>
                         </div>
                       </div>
@@ -1378,6 +1442,19 @@ export default {
     },
   },
   computed: {
+    total_facturar: function () {
+      let total = 0;
+      this.form.conceptos.forEach((element) => {
+        if (element.descuento_b.value == 0) {
+          total += Number(element.precio_neto) * Number(element.cantidad);
+        } else {
+          total += Number(element.precio_descuento) * Number(element.cantidad);
+        }
+      });
+
+      return total;
+    },
+
     sat_pais_validacion_computed: function () {
       return this.form.sat_pais.value;
     },
@@ -1439,6 +1516,9 @@ export default {
   },
   data() {
     return {
+      /**modificando articulo */
+      ModificandoArticulo: false,
+      indextrArticuloModificando: "",
       /**variables para el control del formulario */
       tipo: "",
       /**buscador del cliente */
@@ -1614,11 +1694,13 @@ export default {
               cantidad: this.form.cantidad,
               descripcion: this.form.descripcion,
               precio_neto: this.form.precio_neto,
-              descuento_b: this.form.descuento_b.value,
+              descuento_b: this.form.descuento_b,
+              precio_descuento: this.form.precio_descuento,
               modifica_b: 1,
               concepto_operacion_ver_b: 1,
               concepto_operacion_id: 0,
             });
+            this.LimpiarAddArticulo();
             /**reseteando el concepto */
             /*this.form.seccion = {
               value: "incluye",
@@ -1630,13 +1712,96 @@ export default {
             this.form.concepto_ingles = "";
             this.limpiarValidation();
             */
-            this.$nextTick(
-              () => {}
-              //this.$refs["concepto"].$el.querySelector("input").focus()
-            );
           }
         })
         .catch(() => {});
+    },
+
+    CargarModificarConcepto(indextr) {
+      this.ModificandoArticulo = true;
+      this.indextrArticuloModificando = indextr;
+      if (this.form.conceptos[indextr].modifica_b != 0) {
+        this.form.clave_sat = this.form.conceptos[indextr].clave_sat;
+        this.form.unidad_sat = this.form.conceptos[indextr].unidad_sat;
+        this.form.cantidad = this.form.conceptos[indextr].cantidad;
+        this.form.descripcion = this.form.conceptos[indextr].descripcion;
+        this.form.precio_neto = this.form.conceptos[indextr].precio_neto;
+        this.form.descuento_b = this.form.conceptos[indextr].descuento_b;
+        this.form.precio_descuento = this.form.conceptos[
+          indextr
+        ].precio_descuento;
+        this.$nextTick(() => {
+          this.$refs["cantidad_agregar"].$el.querySelector("input").focus();
+        });
+      } else {
+        alert("no modifica");
+      }
+    },
+
+    CancelarModificacion() {
+      this.LimpiarAddArticulo();
+    },
+
+    ActualizarModificacion() {
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].clave_sat = this.form.clave_sat;
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].unidad_sat = this.form.unidad_sat;
+      (this.form.conceptos[
+        this.indextrArticuloModificando
+      ].cantidad = this.form.cantidad),
+        (this.form.conceptos[
+          this.indextrArticuloModificando
+        ].descripcion = this.form.descripcion);
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].precio_neto = this.form.precio_neto;
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].descuento_b = this.form.descuento_b;
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].precio_descuento = this.form.precio_descuento;
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].descripcion = this.form.descripcion;
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].descripcion = this.form.descripcion;
+      this.form.conceptos[
+        this.indextrArticuloModificando
+      ].descripcion = this.form.descripcion;
+      this.LimpiarAddArticulo();
+    },
+
+    LimpiarAddArticulo() {
+      this.ModificandoArticulo = false;
+      this.indextrArticuloModificando = "";
+      this.form.clave_sat = this.claves_sat[0];
+      this.form.unidad_sat = this.unidades_sat[0];
+      this.form.cantidad = "";
+      this.form.descripcion = "";
+      this.form.precio_neto = "";
+      this.form.descuento_b = this.sino[1];
+      this.form.precio_descuento = "";
+      this.limpiarValidation();
+    },
+
+    //remover beneficiario
+    remover_concepto(indextr) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea eliminar este concepto? Los datos quedarán eliminados del CFDI?";
+      this.indextrArticuloModificando = indextr;
+      this.callBackConfirmar = this.remover_concepto_callback;
+      this.openConfirmarSinPassword = true;
+    },
+    //remover el concepto seleccionado
+    remover_concepto_callback() {
+      this.LimpiarAddArticulo();
+      this.form.conceptos.splice(this.indextrArticuloModificando, 1);
     },
 
     async get_tipos_comprobante() {
