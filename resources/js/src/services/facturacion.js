@@ -29,5 +29,9 @@ export default {
     },
     get_sat_paises() {
         return axios.get("/facturacion/get_sat_paises");
+    },
+
+     get_empresa_tipo_operaciones() {
+        return axios.get("/facturacion/get_empresa_tipo_operaciones");
     }
 };

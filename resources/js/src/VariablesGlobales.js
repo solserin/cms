@@ -1,6 +1,7 @@
 import {
     Spanish
 } from "flatpickr/dist/l10n/es.js";
+import { range } from "lodash";
 export const configdateTimePickerWithTime = {
     enableTime: true,
     dateFormat: "Y-m-d H:i",
@@ -15,6 +16,14 @@ export const configdateTimePicker = {
     locale: Spanish,
     shorthandCurrentMonth: false,
     maxDate: new Date(new Date().setDate(new Date().getDate() + 25))
+};
+
+export const configdateTimePickerRange = {
+    mode:"range",
+    dateFormat: "Y-m-d",
+    locale: Spanish,
+    shorthandCurrentMonth: false,
+    maxDate: new Date(new Date().setDate(new Date().getDate())),
 };
 
 export const configdateTimePickerFechasCaducidad = {

@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms background-header-forms normal"
+      class="normal-forms background-header-forms normal servicios_funerarios"
       fullscreen
       close="cancelar"
       :title="
@@ -751,7 +751,7 @@
               class="mt-4"
               size="small"
               color="primary"
-              @click="openBuscadorArticulos = true"
+              @click="openBuscadorOperacion = true"
             >
               <img
                 class="cursor-pointer img-btn"
@@ -1338,6 +1338,11 @@
       @closeBuscador="openBuscadorCliente = false"
       @retornoCliente="clienteSeleccionado"
     ></ClientesBuscador>
+    <SearchOperacion
+      :show="openBuscadorOperacion"
+      @closeBuscador="openBuscadorOperacion = false"
+      @LoteSeleccionado="LoteSeleccionado"
+    ></SearchOperacion>
   </div>
 </template>
 <script>
@@ -1351,7 +1356,7 @@ import Password from "@pages/confirmar_password";
 import facturacion from "@services/facturacion";
 import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
-
+import SearchOperacion from "@pages/facturacion/search_operacion.vue";
 import clientes from "@services/clientes";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
 
@@ -1367,6 +1372,7 @@ export default {
     flatPickr,
     ConfirmarDanger,
     ClientesBuscador,
+    SearchOperacion,
   },
   props: {
     show: {
@@ -1535,6 +1541,8 @@ export default {
   },
   data() {
     return {
+      /**control del componente de operaciones */
+      openBuscadorOperacion: false,
       /**modificando articulo */
       ModificandoArticulo: false,
       indextrArticuloModificando: "",
@@ -1692,6 +1700,11 @@ export default {
     };
   },
   methods: {
+    /**retorno de la operacion selecciona para cargar */
+    LoteSeleccionado(datos) {
+      console.log("LoteSeleccionado -> datos", datos);
+    },
+
     /**metodo para agregar articulos manualmente */
     AgregarConcepto() {
       this.$validator
@@ -1839,14 +1852,22 @@ export default {
             });
           });
           this.form.tipo_comprobante = this.tipos_comprobante[0];
-          this.$vs.loading.close();
+          //this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de tipo de comprobantes",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },
     async get_metodos_pago() {
-      this.$vs.loading();
+      //this.$vs.loading();
       await facturacion
         .get_metodos_pago()
         .then((res) => {
@@ -1859,14 +1880,22 @@ export default {
             });
           });
           this.form.metodo_pago = this.metodos_pago[0];
-          this.$vs.loading.close();
+          //this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de métodos de pago",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },
     async get_sat_formas_pago() {
-      this.$vs.loading();
+      //this.$vs.loading();
       await facturacion
         .get_sat_formas_pago()
         .then((res) => {
@@ -1879,15 +1908,23 @@ export default {
             });
           });
           this.form.forma_pago = this.formas_pago[0];
-          this.$vs.loading.close();
+          // this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de formas de pago",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },
 
     async get_tipos_relacion() {
-      this.$vs.loading();
+      //  this.$vs.loading();
       await facturacion
         .get_tipos_relacion()
         .then((res) => {
@@ -1900,14 +1937,22 @@ export default {
             });
           });
           this.form.tipo_relacion = this.tipos_relacion[0];
-          this.$vs.loading.close();
+          //this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de tipo de relación",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },
     async get_claves_productos_sat() {
-      this.$vs.loading();
+      //this.$vs.loading();
       await facturacion
         .get_claves_productos_sat()
         .then((res) => {
@@ -1920,15 +1965,23 @@ export default {
             });
           });
           this.form.clave_sat = this.claves_sat[0];
-          this.$vs.loading.close();
+          //this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de claves y productos del sat",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },
 
     async get_sat_unidades() {
-      this.$vs.loading();
+      //this.$vs.loading();
       await facturacion
         .get_sat_unidades()
         .then((res) => {
@@ -1941,15 +1994,23 @@ export default {
             });
           });
           this.form.unidad_sat = this.unidades_sat[0];
-          this.$vs.loading.close();
+          //this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de unidades del sat",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },
 
     async get_usos_cfdi() {
-      this.$vs.loading();
+      //this.$vs.loading();
       await facturacion
         .get_usos_cfdi()
         .then((res) => {
@@ -1962,15 +2023,23 @@ export default {
             });
           });
           this.form.uso_cfdi = this.usos_cfdi[0];
-          this.$vs.loading.close();
+          //this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de usos del cfdi del sat",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },
 
     async get_sat_paises() {
-      this.$vs.loading();
+      //this.$vs.loading();
       await facturacion
         .get_sat_paises()
         .then((res) => {
@@ -1986,6 +2055,14 @@ export default {
           this.$vs.loading.close();
         })
         .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 3.3",
+            text: "Error al cargar el catálogo de países del sat",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
           this.$vs.loading.close();
         });
     },

@@ -90,4 +90,52 @@ class FacturacionController extends ApiController
         }
         return $datos;
     }
+
+        public function get_empresa_tipo_operaciones()
+    {
+        /**los diferentes tipos de operaciones que maneja la empresa */
+        $datos = [
+            [
+                'id'=>1,
+            'tipo'=>'Venta de terrenos',
+            'ver_b'=>1
+            ],
+            [
+                'id'=>2,
+            'tipo'=>'Mantenimiento en cementerio',
+            'ver_b'=>0
+            ],
+            [
+                'id'=>3,
+            'tipo'=>'Servicios funerarios',
+            'ver_b'=>1
+            ],
+            [
+                'id'=>4,
+            'tipo'=>'Venta de plan funerario a futuro',
+            'ver_b'=>1
+            ],
+            [
+                'id'=>5,
+            'tipo'=>'Servicios con extremidadades',
+            'ver_b'=>0
+            ],
+            [
+                'id'=>6,
+            'tipo'=>'Ventas en general',
+            'ver_b'=>0
+            ]
+        ];
+
+        $operaciones=[];
+        foreach ($datos as $key => $value) {
+        if($value['ver_b']==1){
+            array_push($operaciones,$value);
+        }
+        }
+        return $operaciones;
+    }
+
+
+    
 }
