@@ -532,194 +532,207 @@
         <div class="w-full px-2">
           <vs-divider />
         </div>
+        <div
+          class="contenido-cfdis-relacionados"
+          v-if="form.tipo_relacion.value != ''"
+        >
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
+            >
+              <div class="float-left pb-2 px-2 mt-6">
+                <img width="36px" src="@assets/images/clip.svg" />
+                <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+                  CFDIS Relacionados
+                </h3>
+              </div>
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
+            >
+              <vs-button
+                class="mt-4"
+                size="small"
+                color="primary"
+                @click="openBuscadorArticulos = true"
+              >
+                <img
+                  class="cursor-pointer img-btn"
+                  src="@assets/images/cfdi.svg"
+                />
+                <span class="texto-btn">Buscar CFDI</span>
+              </vs-button>
+            </div>
 
-        <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
-          >
-            <div class="float-left pb-2 px-2 mt-6">
-              <img width="36px" src="@assets/images/clip.svg" />
-              <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
-                CFDIS Relacionados
-              </h3>
+            <div class="w-full px-2">
+              <vs-divider />
             </div>
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
-          >
-            <vs-button
-              class="mt-4"
-              size="small"
-              color="primary"
-              @click="openBuscadorArticulos = true"
-            >
-              <img
-                class="cursor-pointer img-btn"
-                src="@assets/images/cfdi.svg"
-              />
-              <span class="texto-btn">Buscar CFDI</span>
-            </vs-button>
-          </div>
 
+          <div class="flex flex-wrap">
+            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+              <div class="flex flex-wrap">
+                <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+                  <div class="w-full mt-5">
+                    <vs-table
+                      class="w-full"
+                      :data="form.articulos_servicios"
+                      noDataText="No se han agregado documentos a relacionar"
+                    >
+                      <template slot="header">
+                        <h3>Facturas Relacionadas al CFDI</h3>
+                      </template>
+                      <template slot="thead">
+                        <vs-th>#</vs-th>
+                        <vs-th>Folio</vs-th>
+                        <vs-th>UUID</vs-th>
+                        <vs-th>Razón Social</vs-th>
+                        <vs-th>Fecha Timbrado</vs-th>
+                        <vs-th>$ Saldo Anterior</vs-th>
+                        <vs-th>$ Monto a Pagar</vs-th>
+                        <vs-th>$ Saldo Insoluto</vs-th>
+                        <vs-th>Núm. Parcialidad</vs-th>
+                        <vs-th>Quitar</vs-th>
+                      </template>
+                      <template slot-scope="{ data }">
+                        <vs-tr
+                          :data="tr"
+                          :key="indextr"
+                          v-for="(tr, indextr) in data"
+                        >
+                          <vs-td>
+                            <div class="capitalize">
+                              <span class="lowercase">{{ indextr + 1 }}</span>
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].tipo }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].descripcion }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].lote }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <vs-input
+                              :name="'cantidad_articulos_servicios' + indextr"
+                              data-vv-as=" "
+                              data-vv-validate-on="blur"
+                              v-validate="'required|integer|min_value:' + 1"
+                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
+                              maxlength="4"
+                              v-model="
+                                form.articulos_servicios[indextr].cantidad
+                              "
+                            />
+                            <div>
+                              <span class="text-danger text-xs">
+                                {{
+                                  errors.first(
+                                    "cantidad_articulos_servicios" + indextr
+                                  )
+                                }}
+                              </span>
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <vs-input
+                              :name="'cantidad_articulos_servicios' + indextr"
+                              data-vv-as=" "
+                              data-vv-validate-on="blur"
+                              v-validate="'required|integer|min_value:' + 1"
+                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
+                              maxlength="4"
+                              v-model="
+                                form.articulos_servicios[indextr].cantidad
+                              "
+                            />
+                            <div>
+                              <span class="text-danger text-xs">
+                                {{
+                                  errors.first(
+                                    "cantidad_articulos_servicios" + indextr
+                                  )
+                                }}
+                              </span>
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <vs-input
+                              :name="'cantidad_articulos_servicios' + indextr"
+                              data-vv-as=" "
+                              data-vv-validate-on="blur"
+                              v-validate="'required|integer|min_value:' + 1"
+                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
+                              maxlength="4"
+                              v-model="
+                                form.articulos_servicios[indextr].cantidad
+                              "
+                            />
+                            <div>
+                              <span class="text-danger text-xs">
+                                {{
+                                  errors.first(
+                                    "cantidad_articulos_servicios" + indextr
+                                  )
+                                }}
+                              </span>
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <vs-input
+                              :name="'cantidad_articulos_servicios' + indextr"
+                              data-vv-as=" "
+                              data-vv-validate-on="blur"
+                              v-validate="'required|integer|min_value:' + 1"
+                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
+                              maxlength="4"
+                              v-model="
+                                form.articulos_servicios[indextr].cantidad
+                              "
+                            />
+                            <div>
+                              <span class="text-danger text-xs">
+                                {{
+                                  errors.first(
+                                    "cantidad_articulos_servicios" + indextr
+                                  )
+                                }}
+                              </span>
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div
+                              class=""
+                              @click="remover_concepto(indextr)"
+                              v-if="!fueCancelada"
+                            >
+                              <img
+                                class="cursor-pointer img-btn"
+                                src="@assets/images/minus.svg"
+                              />
+                            </div>
+                          </vs-td>
+                        </vs-tr>
+                      </template>
+                    </vs-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="w-full px-2">
             <vs-divider />
           </div>
         </div>
 
-        <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
-            <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
-                <div class="w-full mt-5">
-                  <vs-table
-                    class="w-full"
-                    :data="form.articulos_servicios"
-                    noDataText="No se han agregado documentos a relacionar"
-                  >
-                    <template slot="header">
-                      <h3>Facturas Relacionadas al CFDI</h3>
-                    </template>
-                    <template slot="thead">
-                      <vs-th>#</vs-th>
-                      <vs-th>Folio</vs-th>
-                      <vs-th>UUID</vs-th>
-                      <vs-th>Razón Social</vs-th>
-                      <vs-th>Fecha Timbrado</vs-th>
-                      <vs-th>$ Saldo Anterior</vs-th>
-                      <vs-th>$ Monto a Pagar</vs-th>
-                      <vs-th>$ Saldo Insoluto</vs-th>
-                      <vs-th>Núm. Parcialidad</vs-th>
-                      <vs-th>Quitar</vs-th>
-                    </template>
-                    <template slot-scope="{ data }">
-                      <vs-tr
-                        :data="tr"
-                        :key="indextr"
-                        v-for="(tr, indextr) in data"
-                      >
-                        <vs-td>
-                          <div class="capitalize">
-                            <span class="lowercase">{{ indextr + 1 }}</span>
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <div class="capitalize">
-                            {{ data[indextr].tipo }}
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <div class="capitalize">
-                            {{ data[indextr].descripcion }}
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <div class="capitalize">
-                            {{ data[indextr].lote }}
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <vs-input
-                            :name="'cantidad_articulos_servicios' + indextr"
-                            data-vv-as=" "
-                            data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
-                            class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                            maxlength="4"
-                            v-model="form.articulos_servicios[indextr].cantidad"
-                          />
-                          <div>
-                            <span class="text-danger text-xs">
-                              {{
-                                errors.first(
-                                  "cantidad_articulos_servicios" + indextr
-                                )
-                              }}
-                            </span>
-                          </div>
-                        </vs-td>
-                        <vs-td>
-                          <div
-                            class=""
-                            @click="remover_concepto(indextr)"
-                            v-if="!fueCancelada"
-                          >
-                            <img
-                              class="cursor-pointer img-btn"
-                              src="@assets/images/minus.svg"
-                            />
-                          </div>
-                        </vs-td>
-                      </vs-tr>
-                    </template>
-                  </vs-table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="w-full px-2">
-          <vs-divider />
-        </div>
         <div class="flex flex-wrap">
           <div
             class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
@@ -1044,6 +1057,7 @@
                       <vs-th>#</vs-th>
                       <vs-th>Prod/Servicio SAT</vs-th>
                       <vs-th>Unidad</vs-th>
+                      <vs-th>Descripcion</vs-th>
                       <vs-th>$ Costo Neto</vs-th>
                       <vs-th>$ Descuento</vs-th>
                       <vs-th>Cantidad</vs-th>
@@ -1070,6 +1084,11 @@
                         <vs-td>
                           <div class="capitalize">
                             {{ data[indextr].unidad_sat.label }}
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="capitalize">
+                            {{ data[indextr].descripcion }}
                           </div>
                         </vs-td>
                         <vs-td>
@@ -1519,6 +1538,7 @@ export default {
       /**modificando articulo */
       ModificandoArticulo: false,
       indextrArticuloModificando: "",
+      indextrArticuloRemoviendo: "",
       /**variables para el control del formulario */
       tipo: "",
       /**buscador del cliente */
@@ -1641,7 +1661,7 @@ export default {
           value: "",
           label: "Seleccione 1",
         },
-
+        monto_pago: {},
         /**CFDIS RELACIONADOS */
         cfdis_relacionados: [],
         operaciones_relacionadas: [],
@@ -1786,6 +1806,7 @@ export default {
       this.form.precio_neto = "";
       this.form.descuento_b = this.sino[1];
       this.form.precio_descuento = "";
+      this.indextrArticuloRemoviendo = "";
       this.limpiarValidation();
     },
 
@@ -1794,14 +1815,14 @@ export default {
       this.botonConfirmarSinPassword = "eliminar";
       this.accionConfirmarSinPassword =
         "¿Desea eliminar este concepto? Los datos quedarán eliminados del CFDI?";
-      this.indextrArticuloModificando = indextr;
+      this.indextrArticuloRemoviendo = indextr;
       this.callBackConfirmar = this.remover_concepto_callback;
       this.openConfirmarSinPassword = true;
     },
     //remover el concepto seleccionado
     remover_concepto_callback() {
+      this.form.conceptos.splice(this.indextrArticuloRemoviendo, 1);
       this.LimpiarAddArticulo();
-      this.form.conceptos.splice(this.indextrArticuloModificando, 1);
     },
 
     async get_tipos_comprobante() {
