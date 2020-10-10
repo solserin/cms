@@ -2,35 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use PDF;
-use App\User;
-use App\Generos;
-use App\Titulos;
-use App\Clientes;
-use App\Articulos;
-use Carbon\Carbon;
-use App\Categorias;
-use App\Operaciones;
 use App\Afiliaciones;
-use App\SitiosMuerte;
-use App\VentasPlanes;
+use App\Articulos;
+use App\Categorias;
+use App\Clientes;
 use App\Escolaridades;
-use App\PreciosPlanes;
-use App\TiposContrato;
-use App\EstadosCiviles;
 use App\EstadosAfectado;
-use App\LugaresServicio;
-use App\RegistroPublico;
-use App\PlanesFunerarios;
-use App\TiposContratante;
-use App\LugaresInhumacion;
-use App\ServiciosFunerarios;
-use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\Foreach_;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\App;
-use App\PlanConceptosServicioOriginal;
+use App\EstadosCiviles;
 use App\Http\Controllers\CementerioController;
+use App\LugaresInhumacion;
+use App\LugaresServicio;
+use App\Operaciones;
+use App\PlanConceptosServicioOriginal;
+use App\PlanesFunerarios;
+use App\PreciosPlanes;
+use App\RegistroPublico;
+use App\ServiciosFunerarios;
+use App\SitiosMuerte;
+use App\TiposContratante;
+use App\Titulos;
+use App\User;
+use App\VentasPlanes;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
+use PDF;
 
 class FunerariaController extends ApiController
 {
@@ -45,20 +42,19 @@ class FunerariaController extends ApiController
 
         //validaciones directas sin condicionales
         $validaciones = [
-            'descripcion' => 'required',
-            'descripcion_ingles' => 'required',
+            'descripcion'           => 'required',
+            'descripcion_ingles'    => 'required',
             'conceptos.0.conceptos' => [
-                'required'
+                'required',
             ],
         ];
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
-            'descripcion.required' => 'Ingrese el nombre del plan funerario.',
-            'descripcion_ingles.required' => 'Ingrese el nombre del plan funerario(en inglés).',
+            'descripcion.required'           => 'Ingrese el nombre del plan funerario.',
+            'descripcion_ingles.required'    => 'Ingrese el nombre del plan funerario(en inglés).',
             'conceptos.0.conceptos.required' => 'Debe ingresar al menos 1 Artículo/Servicio que aplique en la sección "Plan Funerario".',
         ];
-
 
         request()->validate(
             $validaciones,
@@ -82,14 +78,14 @@ class FunerariaController extends ApiController
             if ($tipo_servicio == 'agregar') {
                 $id_plan = DB::table('planes_funerarios')->insertGetId(
                     [
-                        'plan' => $request->descripcion,
-                        'plan_ingles' => $request->descripcion_ingles,
-                        'nota' => $request->nota != '' ? $request->nota : '',
-                        'nota_ingles' => $request->nota_ingles != '' ? $request->nota_ingles : '',
-                        'registro_id' => (int) $request->user()->id,
-                        'modifico_id' => (int) $request->user()->id,
-                        'fecha_registro' => now(),
-                        'fecha_modificacion' => now()
+                        'plan'               => $request->descripcion,
+                        'plan_ingles'        => $request->descripcion_ingles,
+                        'nota'               => $request->nota != '' ? $request->nota : '',
+                        'nota_ingles'        => $request->nota_ingles != '' ? $request->nota_ingles : '',
+                        'registro_id'        => (int) $request->user()->id,
+                        'modifico_id'        => (int) $request->user()->id,
+                        'fecha_registro'     => now(),
+                        'fecha_modificacion' => now(),
                     ]
                 );
                 /**al registrar el plan, se procede a registrar los conceptos */
@@ -97,10 +93,10 @@ class FunerariaController extends ApiController
                     foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
                         DB::table('plan_conceptos')->insert(
                             [
-                                'seccion_id' => ($key_seccion + 1),
-                                'concepto' => $concepto['concepto'],
-                                'concepto_ingles' => $concepto['concepto_ingles'],
-                                'planes_funerarios_id' => $id_plan
+                                'seccion_id'           => ($key_seccion + 1),
+                                'concepto'             => $concepto['concepto'],
+                                'concepto_ingles'      => $concepto['concepto_ingles'],
+                                'planes_funerarios_id' => $id_plan,
                             ]
                         );
                     }
@@ -111,12 +107,12 @@ class FunerariaController extends ApiController
                 /**es modificar */
                 DB::table('planes_funerarios')->where('id', $request->id_plan_modificar)->update(
                     [
-                        'plan' => $request->descripcion,
-                        'plan_ingles' => $request->descripcion_ingles,
-                        'nota' => $request->nota != '' ? $request->nota : '',
-                        'nota_ingles' => $request->nota_ingles != '' ? $request->nota_ingles : '',
-                        'modifico_id' => (int) $request->user()->id,
-                        'fecha_modificacion' => now()
+                        'plan'               => $request->descripcion,
+                        'plan_ingles'        => $request->descripcion_ingles,
+                        'nota'               => $request->nota != '' ? $request->nota : '',
+                        'nota_ingles'        => $request->nota_ingles != '' ? $request->nota_ingles : '',
+                        'modifico_id'        => (int) $request->user()->id,
+                        'fecha_modificacion' => now(),
                     ]
                 );
                 /**eliminamos los coceptos originales */
@@ -127,10 +123,10 @@ class FunerariaController extends ApiController
                     foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
                         DB::table('plan_conceptos')->insert(
                             [
-                                'seccion_id' => ($key_seccion + 1),
-                                'concepto' => $concepto['concepto'],
-                                'concepto_ingles' => $concepto['concepto_ingles'],
-                                'planes_funerarios_id' => $request->id_plan_modificar
+                                'seccion_id'           => ($key_seccion + 1),
+                                'concepto'             => $concepto['concepto'],
+                                'concepto_ingles'      => $concepto['concepto_ingles'],
+                                'planes_funerarios_id' => $request->id_plan_modificar,
                             ]
                         );
                     }
@@ -154,7 +150,6 @@ class FunerariaController extends ApiController
             'id_plan' => 'required',
         ];
 
-
         $mensajes = [
             'required' => 'Dese ingresar la clave del plan funerario',
         ];
@@ -162,7 +157,6 @@ class FunerariaController extends ApiController
             $validaciones,
             $mensajes
         );
-
 
         /**validar si el precio existe */
         $plan = PlanesFunerarios::where('id', $request->id_plan)
@@ -182,7 +176,7 @@ class FunerariaController extends ApiController
             $res = DB::table('planes_funerarios')->where('id', $request->id_plan)->update(
                 [
 
-                    'status' =>  $status
+                    'status' => $status,
                 ]
             );
             /**todo salio bien y se debe de modificar */
@@ -193,8 +187,6 @@ class FunerariaController extends ApiController
             return $th;
         }
     }
-
-
 
     /**obtiene todos los planes registrados */
     public function get_planes($solo_a_futuro = false, $id_plan = 0)
@@ -215,21 +207,21 @@ class FunerariaController extends ApiController
             $agregar = false;
             foreach ($plan['precios'] as $key_precio => &$precio) {
                 if ($precio['financiamiento'] == 1) {
-                    $precio['tipo_financiamiento'] = "Pago Único/Uso Inmediato";
+                    $precio['tipo_financiamiento']        = "Pago Único/Uso Inmediato";
                     $precio['tipo_financiamiento_ingles'] = "Spot Price";
-                    $precio['pago_mensual'] = 0;
+                    $precio['pago_mensual']               = 0;
                 } else {
-                    $agregar = true;
-                    $precio['tipo_financiamiento'] = "Pago a " . $precio['financiamiento'] . " Meses/A Futuro";
+                    $agregar                              = true;
+                    $precio['tipo_financiamiento']        = "Pago a " . $precio['financiamiento'] . " Meses/A Futuro";
                     $precio['tipo_financiamiento_ingles'] = $precio['financiamiento'] . "-Month Payment";
-                    $precio['pago_mensual'] = ($precio['costo_neto'] - $precio['pago_inicial']) / $precio['financiamiento'];
+                    $precio['pago_mensual']               = ($precio['costo_neto'] - $precio['pago_inicial']) / $precio['financiamiento'];
                 }
                 /**sacando los descuentos en caso de que tenga pronto pago */
                 if ($precio['descuento_pronto_pago_b'] == 1) {
-                    $precio['descuento_x_pago'] = round(($precio['costo_neto'] - $precio['costo_neto_pronto_pago']) / $precio['financiamiento'], 2);
+                    $precio['descuento_x_pago']       = round(($precio['costo_neto'] - $precio['costo_neto_pronto_pago']) / $precio['financiamiento'], 2);
                     $precio['porcentaje_pronto_pago'] = round(100 - (($precio['costo_neto_financiamiento_normal'] * 100) / $precio['costo_neto']), 2);
                 } else {
-                    $precio['descuento_x_pago'] = ' 0';
+                    $precio['descuento_x_pago']       = ' 0';
                     $precio['porcentaje_pronto_pago'] = ' 0';
                 }
             }
@@ -239,36 +231,36 @@ class FunerariaController extends ApiController
             }
 
             $plan_funerario = [
-                'id' => $plan['id'],
-                'plan' => $plan['plan'],
+                'id'          => $plan['id'],
+                'plan'        => $plan['plan'],
                 'plan_ingles' => $plan['plan_ingles'],
-                'nota' => $plan['nota'],
+                'nota'        => $plan['nota'],
                 'nota_ingles' => $plan['nota_ingles'],
-                'status' => $plan['status'],
-                'precios' => $plan['precios']
+                'status'      => $plan['status'],
+                'precios'     => $plan['precios'],
             ];
             $secciones = array();
             $secciones = [
                 [
-                    'seccion' => 'incluye',
+                    'seccion'        => 'incluye',
                     'seccion_ingles' => 'include',
-                    'conceptos' => []
+                    'conceptos'      => [],
                 ],
                 [
-                    'seccion' => 'inhumacion',
+                    'seccion'        => 'inhumacion',
                     'seccion_ingles' => 'inhumation',
-                    'conceptos' => []
+                    'conceptos'      => [],
                 ],
                 [
-                    'seccion' => 'cremacion',
+                    'seccion'        => 'cremacion',
                     'seccion_ingles' => 'cremation',
-                    'conceptos' => []
+                    'conceptos'      => [],
                 ],
                 [
-                    'seccion' => 'velacion',
+                    'seccion'        => 'velacion',
                     'seccion_ingles' => 'wakefulness',
-                    'conceptos' => []
-                ]
+                    'conceptos'      => [],
+                ],
             ];
             foreach ($plan['conceptos'] as $key_seccion => $seccion) {
                 /**agregando los conceptos segun su seccion */
@@ -277,10 +269,10 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[0]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'plan funerario',
-                            'seccion' => 'incluye'
+                            'aplicar_en'      => 'plan funerario',
+                            'seccion'         => 'incluye',
                         ]
                     );
                 } elseif ($seccion['seccion_id'] == 2) {
@@ -288,10 +280,10 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[1]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'caso de inhumación',
-                            'seccion' => 'inhumacion'
+                            'aplicar_en'      => 'caso de inhumación',
+                            'seccion'         => 'inhumacion',
                         ]
                     );
                 } elseif ($seccion['seccion_id'] == 3) {
@@ -299,10 +291,10 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[2]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'caso de cremación',
-                            'seccion' => 'cremacion'
+                            'aplicar_en'      => 'caso de cremación',
+                            'seccion'         => 'cremacion',
                         ]
                     );
                 } elseif ($seccion['seccion_id'] == 4) {
@@ -310,17 +302,16 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[3]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'caso de velación',
-                            'seccion' => 'velacion'
+                            'aplicar_en'      => 'caso de velación',
+                            'seccion'         => 'velacion',
                         ]
                     );
                 }
             }
             /**push al array padre */
             $plan_funerario['secciones'] = $secciones;
-
 
             if ($agregar == true) {
                 array_push($data, $plan_funerario);
@@ -329,47 +320,43 @@ class FunerariaController extends ApiController
         return $data;
     }
 
-
-
     /**GUARDAR PRECIO*/
     public function registrar_precio(Request $request)
     {
         //validaciones directas sin condicionales
         $validaciones = [
-            'descripcion' => 'required',
-            'descripcion_ingles' => 'required',
-            'contado_b.value' => 'required|integer|min:0|max:1',
-            'financiamiento' => '',
-            'pago_inicial' => '',
-            'costo_neto' => 'required|numeric|min:1|gte:costo_neto_financiamiento_normal',
+            'descripcion'                      => 'required',
+            'descripcion_ingles'               => 'required',
+            'contado_b.value'                  => 'required|integer|min:0|max:1',
+            'financiamiento'                   => '',
+            'pago_inicial'                     => '',
+            'costo_neto'                       => 'required|numeric|min:1|gte:costo_neto_financiamiento_normal',
             'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
-            'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
-            'costo_neto_pronto_pago' => '',
-            'tipo_plan.value' => 'required',
+            'descuento_pronto_pago_b.value'    => 'required|min:0|max:1|numeric',
+            'costo_neto_pronto_pago'           => '',
+            'tipo_plan.value'                  => 'required',
         ];
 
-
         $mensaje_financiamiento = '';
-        $mensaje_pago_inicial = '';
+        $mensaje_pago_inicial   = '';
         /**validando si es a contado o credito */
         if ($request->contado_b['value'] == 1) {
             //es a contado
             $validaciones['financiamiento'] = 'required|integer|max:1';
-            $mensaje_financiamiento = ' Este dato debe ser "1" Máximo';
+            $mensaje_financiamiento         = ' Este dato debe ser "1" Máximo';
 
             /**forzando en pago inicial a ser igual al costo neto de la propiedad */
             $validaciones['pago_inicial'] = 'required|numeric|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
-            $mensaje_pago_inicial = 'Este valor debe ser igual al costo neto, debido a que es precio de contado';
+            $mensaje_pago_inicial         = 'Este valor debe ser igual al costo neto, debido a que es precio de contado';
         } else {
             /**es a credito */
             $validaciones['financiamiento'] = 'required|integer|min:2|max:64';
-            $mensaje_financiamiento = ' Este dato debe ser "2" Mínimo y "64" Máximo';
+            $mensaje_financiamiento         = ' Este dato debe ser "2" Mínimo y "64" Máximo';
 
             /**se puede mantener el pago inicial por debajo del costo neto */
             $validaciones['pago_inicial'] = 'required|numeric|min:1|lte:costo_neto';
-            $mensaje_pago_inicial = 'Este valor debe ser "1.00" Mínimo';
+            $mensaje_pago_inicial         = 'Este valor debe ser "1.00" Mínimo';
         }
-
 
         /**validando si aplica descuento */
         if ($request->descuento_pronto_pago_b['value'] == 1) {
@@ -382,28 +369,25 @@ class FunerariaController extends ApiController
             $request->costo_neto_pronto_pago = $request->costo_neto;
         }
 
-
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'pago_inicial.min' => $mensaje_pago_inicial,
-            'pago_inicial.lte' => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
-            'pago_inicial.max' => 'Este valor debe ser igual al costo neto, debido a que es precio de contado',
-            'financiamiento.min' =>  $mensaje_financiamiento,
-            'required' => 'Ingrese este dato',
-            'numeric' => 'Este dato debe ser un número',
+            'pago_inicial.min'                     => $mensaje_pago_inicial,
+            'pago_inicial.lte'                     => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
+            'pago_inicial.max'                     => 'Este valor debe ser igual al costo neto, debido a que es precio de contado',
+            'financiamiento.min'                   => $mensaje_financiamiento,
+            'required'                             => 'Ingrese este dato',
+            'numeric'                              => 'Este dato debe ser un número',
             'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
-            'costo_neto.min' => 'Esta cantidad debe mayor a cero',
-            'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
-            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
-            'costo_neto_pronto_pago.lt' => 'Este valor debe ser menor al costo neto'
+            'costo_neto.min'                       => 'Esta cantidad debe mayor a cero',
+            'costo_neto.gte'                       => 'Esta cantidad debe mayor o igual al costo neto de contado',
+            'costo_neto_pronto_pago.gte'           => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
+            'costo_neto_pronto_pago.lt'            => 'Este valor debe ser menor al costo neto',
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
-
-
 
         /**validar si el precio existe */
         $precio = PreciosPlanes::where('planes_funerarios_id', $request->tipo_plan['value'])
@@ -421,28 +405,28 @@ class FunerariaController extends ApiController
         }
 
         try {
-            $subtotal = (float) (($request->costo_neto / (1 + config('globales.iva_decimal'))));
-            $iva = $subtotal * (config('globales.iva_decimal'));
+            $subtotal   = (float) (($request->costo_neto / (1 + config('globales.iva_decimal'))));
+            $iva        = $subtotal * (config('globales.iva_decimal'));
             $costo_neto = $subtotal + $iva;
             DB::beginTransaction();
             $id_precio = 0;
             $id_precio = DB::table('precios_planes')->insertGetId(
                 [
-                    'pago_inicial' => (float) $request->pago_inicial,
-                    'subtotal' => $subtotal,
-                    'impuestos' => $iva,
-                    'costo_neto' => $costo_neto,
+                    'pago_inicial'                     => (float) $request->pago_inicial,
+                    'subtotal'                         => $subtotal,
+                    'impuestos'                        => $iva,
+                    'costo_neto'                       => $costo_neto,
                     'costo_neto_financiamiento_normal' => (float) ($request->costo_neto_financiamiento_normal),
-                    'descuento_pronto_pago_b' => (int) ($request->descuento_pronto_pago_b['value']),
-                    'costo_neto_pronto_pago' => (float) ($request->costo_neto_pronto_pago),
-                    'planes_funerarios_id' => (int) ($request->tipo_plan['value']),
-                    'fecha_registro' => now(),
-                    'fecha_actualizacion' => now(),
-                    'actualizo_id' => (int) $request->user()->id,
-                    'financiamiento' => (int) ($request->financiamiento),
-                    'contado_b' => (int) ($request->contado_b['value']),
-                    'descripcion' =>  $request->descripcion,
-                    'descripcion_ingles' =>  $request->descripcion_ingles
+                    'descuento_pronto_pago_b'          => (int) ($request->descuento_pronto_pago_b['value']),
+                    'costo_neto_pronto_pago'           => (float) ($request->costo_neto_pronto_pago),
+                    'planes_funerarios_id'             => (int) ($request->tipo_plan['value']),
+                    'fecha_registro'                   => now(),
+                    'fecha_actualizacion'              => now(),
+                    'actualizo_id'                     => (int) $request->user()->id,
+                    'financiamiento'                   => (int) ($request->financiamiento),
+                    'contado_b'                        => (int) ($request->contado_b['value']),
+                    'descripcion'                      => $request->descripcion,
+                    'descripcion_ingles'               => $request->descripcion_ingles,
                 ]
             );
 
@@ -465,49 +449,45 @@ class FunerariaController extends ApiController
         return $resultado;
     }
 
-
-
     /**MODIFICAR PRECIO*/
     public function update_precio(Request $request)
     {
 
         //validaciones directas sin condicionales
         $validaciones = [
-            'id_precio_modificar' => 'required',
-            'descripcion' => 'required',
-            'descripcion_ingles' => 'required',
-            'contado_b.value' => 'required|integer|min:0|max:1',
-            'financiamiento' => '',
-            'pago_inicial' => '',
-            'costo_neto' => 'required|numeric|min:0|gte:costo_neto_financiamiento_normal',
+            'id_precio_modificar'              => 'required',
+            'descripcion'                      => 'required',
+            'descripcion_ingles'               => 'required',
+            'contado_b.value'                  => 'required|integer|min:0|max:1',
+            'financiamiento'                   => '',
+            'pago_inicial'                     => '',
+            'costo_neto'                       => 'required|numeric|min:0|gte:costo_neto_financiamiento_normal',
             'costo_neto_financiamiento_normal' => 'required|numeric|lte:costo_neto',
-            'descuento_pronto_pago_b.value' => 'required|min:0|max:1|numeric',
-            'costo_neto_pronto_pago' => '',
-            'tipo_plan.value' => 'required',
+            'descuento_pronto_pago_b.value'    => 'required|min:0|max:1|numeric',
+            'costo_neto_pronto_pago'           => '',
+            'tipo_plan.value'                  => 'required',
         ];
 
-
         $mensaje_financiamiento = '';
-        $mensaje_pago_inicial = '';
+        $mensaje_pago_inicial   = '';
         /**validando si es a contado o credito */
         if ($request->contado_b['value'] == 1) {
             //es a contado
             $validaciones['financiamiento'] = 'required|integer|max:1';
-            $mensaje_financiamiento = ' Este dato debe ser "1" Máximo';
+            $mensaje_financiamiento         = ' Este dato debe ser "1" Máximo';
 
             /**forzando en pago inicial a ser igual al costo neto de la propiedad */
             $validaciones['pago_inicial'] = 'required|numeric|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
-            $mensaje_pago_inicial = 'Este valor debe ser igual al costo neto, debido a que es precio de contado';
+            $mensaje_pago_inicial         = 'Este valor debe ser igual al costo neto, debido a que es precio de contado';
         } else {
             /**es a credito */
             $validaciones['financiamiento'] = 'required|integer|min:2|max:64';
-            $mensaje_financiamiento = ' Este dato debe ser "2" Mínimo y "64" Máximo';
+            $mensaje_financiamiento         = ' Este dato debe ser "2" Mínimo y "64" Máximo';
 
             /**se puede mantener el pago inicial por debajo del costo neto */
             $validaciones['pago_inicial'] = 'required|numeric|min:1|lte:costo_neto';
-            $mensaje_pago_inicial = 'Este valor debe ser "1.00" Mínimo';
+            $mensaje_pago_inicial         = 'Este valor debe ser "1.00" Mínimo';
         }
-
 
         /**validando si aplica descuento */
         if ($request->descuento_pronto_pago_b['value'] == 1) {
@@ -520,28 +500,25 @@ class FunerariaController extends ApiController
             $request->costo_neto_pronto_pago = $request->costo_neto;
         }
 
-
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'pago_inicial.min' => $mensaje_pago_inicial,
-            'pago_inicial.lte' => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
-            'pago_inicial.max' => 'Este valor debe ser igual al costo neto, debido a que es precio de contado',
-            'financiamiento.min' =>  $mensaje_financiamiento,
-            'required' => 'Ingrese este dato',
-            'numeric' => 'Este dato debe ser un número',
+            'pago_inicial.min'                     => $mensaje_pago_inicial,
+            'pago_inicial.lte'                     => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
+            'pago_inicial.max'                     => 'Este valor debe ser igual al costo neto, debido a que es precio de contado',
+            'financiamiento.min'                   => $mensaje_financiamiento,
+            'required'                             => 'Ingrese este dato',
+            'numeric'                              => 'Este dato debe ser un número',
             'costo_neto_financiamiento_normal.lte' => 'Esta cantidad debe menor o igual al costo neto',
-            'costo_neto.gte' => 'Esta cantidad debe mayor o igual al costo neto de contado',
-            'costo_neto.min' => 'Esta cantidad debe mayor a cero',
-            'costo_neto_pronto_pago.gte' => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
-            'costo_neto_pronto_pago.lt' => 'Este valor debe ser menor al costo neto'
+            'costo_neto.gte'                       => 'Esta cantidad debe mayor o igual al costo neto de contado',
+            'costo_neto.min'                       => 'Esta cantidad debe mayor a cero',
+            'costo_neto_pronto_pago.gte'           => 'Esta cantidad debe ser mayor o igual al costo neto a precio de contado',
+            'costo_neto_pronto_pago.lt'            => 'Este valor debe ser menor al costo neto',
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
-
-
 
         /**validar si el precio existe */
         $precio = PreciosPlanes::where('planes_funerarios_id', $request->tipo_plan['value'])
@@ -565,34 +542,32 @@ class FunerariaController extends ApiController
             }
         }
 
-
-
         try {
-            $subtotal = (float) (($request->costo_neto / (1 + config('globales.iva_decimal'))));
-            $iva = $subtotal * (config('globales.iva_decimal'));
+            $subtotal   = (float) (($request->costo_neto / (1 + config('globales.iva_decimal'))));
+            $iva        = $subtotal * (config('globales.iva_decimal'));
             $costo_neto = $subtotal + $iva;
             DB::beginTransaction();
             $res = DB::table('precios_planes')->where('id', $request->id_precio_modificar)->update(
                 [
-                    'pago_inicial' => (float) $request->pago_inicial,
-                    'subtotal' =>  $subtotal,
-                    'impuestos' => $iva,
-                    'costo_neto' =>  $costo_neto,
+                    'pago_inicial'                     => (float) $request->pago_inicial,
+                    'subtotal'                         => $subtotal,
+                    'impuestos'                        => $iva,
+                    'costo_neto'                       => $costo_neto,
                     'costo_neto_financiamiento_normal' => (float) ($request->costo_neto_financiamiento_normal),
-                    'descuento_pronto_pago_b' => (int) ($request->descuento_pronto_pago_b['value']),
-                    'costo_neto_pronto_pago' => (float) ($request->costo_neto_pronto_pago),
-                    'planes_funerarios_id' => (int) ($request->tipo_plan['value']),
-                    'fecha_actualizacion' => now(),
-                    'actualizo_id' => (int) $request->user()->id,
-                    'financiamiento' => (int) ($request->financiamiento),
-                    'contado_b' => (int) ($request->contado_b['value']),
-                    'descripcion' =>  $request->descripcion,
-                    'descripcion_ingles' =>  $request->descripcion_ingles
+                    'descuento_pronto_pago_b'          => (int) ($request->descuento_pronto_pago_b['value']),
+                    'costo_neto_pronto_pago'           => (float) ($request->costo_neto_pronto_pago),
+                    'planes_funerarios_id'             => (int) ($request->tipo_plan['value']),
+                    'fecha_actualizacion'              => now(),
+                    'actualizo_id'                     => (int) $request->user()->id,
+                    'financiamiento'                   => (int) ($request->financiamiento),
+                    'contado_b'                        => (int) ($request->contado_b['value']),
+                    'descripcion'                      => $request->descripcion,
+                    'descripcion_ingles'               => $request->descripcion_ingles,
                 ]
             );
             /**todo salio bien y se debe de guardar */
             DB::commit();
-            return  $res > 0 ? $request->id_precio_modificar : 0;
+            return $res > 0 ? $request->id_precio_modificar : 0;
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
@@ -629,7 +604,7 @@ class FunerariaController extends ApiController
             $res = DB::table('precios_planes')->where('id', $request->id_precio)->update(
                 [
 
-                    'status' =>  $status
+                    'status' => $status,
                 ]
             );
             /**todo salio bien y se debe de modificar */
@@ -641,9 +616,6 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
-
     public function pdf_plan_funerario(Request $request, $idioma = 'es')
     {
         if (!($idioma == 'en' || $idioma == 'es')) {
@@ -654,16 +626,15 @@ class FunerariaController extends ApiController
         /* $id_plan = 1;
         $email = false;
         $email_to = 'hector@gmail.com';
-*/
+         */
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $email =  $request->email_send === 'true' ? true : false;
-        $email_to = $request->email_address;
+        $email             = $request->email_send === 'true' ? true : false;
+        $email_to          = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
-        $id_plan = $requestVentasList['id_plan'];
-
+        $id_plan           = $requestVentasList['id_plan'];
 
         //obtengo la informacion de esa venta
         $datos_plan = $this->get_planes(false, $id_plan)[0];
@@ -674,22 +645,22 @@ class FunerariaController extends ApiController
 
         /**verificando si el documento aplica para esta solictitud */
         /*if ($datos_venta['numero_convenio_raw'] == null) {
-            return 0;
+        return 0;
         }*/
 
         $get_funeraria = new EmpresaController();
-        $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('funeraria/plan_funerario/plan_funerario', ['datos' => $datos_plan, 'empresa' => $empresa]);
+        $empresa       = $get_funeraria->get_empresa_data();
+        $pdf           = PDF::loadView('funeraria/plan_funerario/plan_funerario', ['datos' => $datos_plan, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = strtoupper($datos_plan['plan']) . '.pdf';
 
         $pdf->setOptions([
-            'title' => $name_pdf,
+            'title'       => $name_pdf,
             'footer-html' => view('funeraria.plan_funerario.footer'),
         ]);
         if ($datos_plan['status'] == 0) {
             $pdf->setOptions([
-                'header-html' => view('funeraria.plan_funerario.header')
+                'header-html' => view('funeraria.plan_funerario.header'),
             ]);
         }
         //$pdf->setOption('grayscale', true);
@@ -711,7 +682,7 @@ class FunerariaController extends ApiController
              */
             /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
             $email_controller = new EmailController();
-            $enviar_email = $email_controller->pdf_email(
+            $enviar_email     = $email_controller->pdf_email(
                 $email_to,
                 $request->destinatario,
                 $datos_plan['plan'],
@@ -725,7 +696,6 @@ class FunerariaController extends ApiController
         }
     }
 
-
     public function planes_funerarios(Request $request, $idioma = 'es')
     {
         if (!($idioma == 'en' || $idioma == 'es')) {
@@ -736,16 +706,15 @@ class FunerariaController extends ApiController
         $id_plan = 0;
         $email = false;
         $email_to = 'hector@gmail.com';
-*/
+         */
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $email =  $request->email_send === 'true' ? true : false;
-        $email_to = $request->email_address;
+        $email             = $request->email_send === 'true' ? true : false;
+        $email_to          = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         //$id_plan = $requestVentasList['id_plan'];
-
 
         //obtengo la informacion de esa venta
         $planes = $this->get_planes(false, '');
@@ -756,17 +725,17 @@ class FunerariaController extends ApiController
 
         /**verificando si el documento aplica para esta solictitud */
         /*if ($datos_venta['numero_convenio_raw'] == null) {
-            return 0;
+        return 0;
         }*/
 
         $get_funeraria = new EmpresaController();
-        $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('funeraria/planes_funerarios/planes_funerarios', ['datos' => $planes, 'empresa' => $empresa]);
+        $empresa       = $get_funeraria->get_empresa_data();
+        $pdf           = PDF::loadView('funeraria/planes_funerarios/planes_funerarios', ['datos' => $planes, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = 'PLANES FUNERARIOS' . '.pdf';
 
         $pdf->setOptions([
-            'title' => $name_pdf,
+            'title'       => $name_pdf,
             'footer-html' => view('funeraria.planes_funerarios.footer'),
         ]);
         //$pdf->setOption('grayscale', true);
@@ -788,7 +757,7 @@ class FunerariaController extends ApiController
              */
             /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
             $email_controller = new EmailController();
-            $enviar_email = $email_controller->pdf_email(
+            $enviar_email     = $email_controller->pdf_email(
                 $email_to,
                 $request->destinatario,
                 'PLANES FUNERARIOS',
@@ -802,7 +771,6 @@ class FunerariaController extends ApiController
         }
     }
 
-
     /**GUARDAR LA VENTA */
     public function control_ventas(Request $request, $tipo_servicio = '')
     {
@@ -813,61 +781,60 @@ class FunerariaController extends ApiController
         /**procede la peticion */
 
         /**aqui comienzan a gurdar los datos */
-        $subtotal = $request->subtotal; //sin iva
-        $iva = $request->impuestos; //solo el iva
-        $tasa_iva = $request->tasa_iva; //sin iva
-        $descuento = $request->descuento;
+        $subtotal   = $request->subtotal; //sin iva
+        $iva        = $request->impuestos; //solo el iva
+        $tasa_iva   = $request->tasa_iva; //sin iva
+        $descuento  = $request->descuento;
         $costo_neto = $request->costo_neto;
-
 
         /**valdiando que cuadren las cantidades de la venta */
         //validaciones directas sin condicionales
         $validaciones = [
             //datos de la propiedad
-            'id_venta' => '',
+            'id_venta'                                               => '',
             /**solo para modificaciones */
             //datos de la venta
-            'plan_funerario.value' => 'required',
-            'plan_funerario.plan' => 'required',
+            'plan_funerario.value'                                   => 'required',
+            'plan_funerario.plan'                                    => 'required',
             /**plan en español */
-            'plan_funerario.plan_ingles' => 'required',
-            'plan_funerario.secciones.*.conceptos.*.seccion' => 'required',
-            'plan_funerario.secciones.*.conceptos.*.concepto' => 'required',
+            'plan_funerario.plan_ingles'                             => 'required',
+            'plan_funerario.secciones.*.conceptos.*.seccion'         => 'required',
+            'plan_funerario.secciones.*.conceptos.*.concepto'        => 'required',
             'plan_funerario.secciones.*.conceptos.*.concepto_ingles' => 'required',
 
-            'ventaAntiguedad.value' => 'required',
-            'id_cliente' => 'required',
-            'vendedor.value' => 'required',
-            'fecha_venta' => 'required|date',
-            'tipo_financiamiento' => 'required',
+            'ventaAntiguedad.value'                                  => 'required',
+            'id_cliente'                                             => 'required',
+            'vendedor.value'                                         => 'required',
+            'fecha_venta'                                            => 'required|date',
+            'tipo_financiamiento'                                    => 'required',
             /**viene directo del frontend con el valor 2 que es solo a futuro */
-            'solicitud' => '',
-            'convenio' => '',
-            'titulo' => '',
+            'solicitud'                                              => '',
+            'convenio'                                               => '',
+            'titulo'                                                 => '',
             /**titular_sustituto */
-            'titular_sustituto' => 'required',
-            'parentesco_titular_sustituto' => 'required',
-            'telefono_titular_sustituto' => 'required',
+            'titular_sustituto'                                      => 'required',
+            'parentesco_titular_sustituto'                           => 'required',
+            'telefono_titular_sustituto'                             => 'required',
             /**beneficiarios */
-            'beneficiarios.*.nombre' => [
+            'beneficiarios.*.nombre'                                 => [
                 'required',
             ],
-            'beneficiarios.*.parentesco' => [
+            'beneficiarios.*.parentesco'                             => [
                 'required',
             ],
-            'beneficiarios.*.telefono' => [
+            'beneficiarios.*.telefono'                               => [
                 'required',
             ],
             //info del plan de venta y pagos
             //'planVenta.value' => 'numeric|required',
-            'financiamiento' => '',
-            'tasa_iva' => 'numeric|required|min:1|max:25',
-            'subtotal' => 'numeric|required|min:1',
-            'descuento' => 'required|numeric|min:0|max:' . $request->subtotal,
-            'impuestos' => 'numeric|required|min:0',
-            'costo_neto' => 'numeric|required|min:0',
-            'costo_neto_pronto_pago' => 'required|min:1|lte:' . $costo_neto,
-            'pago_inicial' => ''
+            'financiamiento'                                         => '',
+            'tasa_iva'                                               => 'numeric|required|min:1|max:25',
+            'subtotal'                                               => 'numeric|required|min:1',
+            'descuento'                                              => 'required|numeric|min:0|max:' . $request->subtotal,
+            'impuestos'                                              => 'numeric|required|min:0',
+            'costo_neto'                                             => 'numeric|required|min:0',
+            'costo_neto_pronto_pago'                                 => 'required|min:1|lte:' . $costo_neto,
+            'pago_inicial'                                           => '',
         ];
 
         /**verificando si es tipo modificar para validar que venga el id a modificar */
@@ -887,8 +854,6 @@ class FunerariaController extends ApiController
         /**si pasan estas condicones podemos continuar */
         /**solo en caso de modificaciones */
 
-
-
         /**validando el pago inicial */
 
         /**validando el pago inicial */
@@ -901,27 +866,26 @@ class FunerariaController extends ApiController
             $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
         }
 
-
         /**VALIDACIONES CONDICIONADAS*/
         /**deshabilitnado numero de titulo */
         //validnado en caso de que sea de uso inmediato y de venta antes del sistema.
         /* if ($request->ventaAntiguedad['value'] == 3) {
-            //venta de uso inmediato
-            $validaciones['titulo'] = 'required';
-            //validando de manera manual si el titulo enviado ya esta registrado y esto activa 
-            $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
-                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
-            if (!empty($titulo)) {
-                if ($tipo_servicio == 'modificar') {
-                    if ($titulo->id != $request->id_venta)
-                        return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
-                } else {
+        //venta de uso inmediato
+        $validaciones['titulo'] = 'required';
+        //validando de manera manual si el titulo enviado ya esta registrado y esto activa
+        $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
+        ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+        if (!empty($titulo)) {
+        if ($tipo_servicio == 'modificar') {
+        if ($titulo->id != $request->id_venta)
+        return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
+        } else {
 
-                    return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
-                }
-            }
+        return $this->errorResponse('El número de título seleccionado ya ha sido registrado.', 409);
         }
-*/
+        }
+        }
+         */
 
         if ($request->tipo_financiamiento == 1) {
             /**cuando es a contado */
@@ -931,7 +895,6 @@ class FunerariaController extends ApiController
             //cuando es a credito
             $validaciones['financiamiento'] = 'numeric|required|min:' . 1 . '|max:' . 120;
         }
-
 
         //validnado en caso de que sea de uso futuro
         if ($request->tipo_financiamiento == 2) {
@@ -943,14 +906,15 @@ class FunerariaController extends ApiController
                 ->where('numero_solicitud', trim($request->solicitud))->where('operaciones.status', '<>', 0)->first();
             if (!empty($solicitud)) {
                 if ($tipo_servicio == 'modificar') {
-                    if ($solicitud->id != $request->id_venta)
+                    if ($solicitud->id != $request->id_venta) {
                         return $this->errorResponse('El número de solicitud ingresado ya ha sido registrado.', 409);
+                    }
+
                 } else {
                     return $this->errorResponse('El número de solicitud ingresado ya ha sido registrado.', 409);
                 }
             }
         }
-
 
         //valido si es de venta antes del sistema
         if ($request->ventaAntiguedad['value'] == 2) {
@@ -961,8 +925,10 @@ class FunerariaController extends ApiController
                 ->where('numero_convenio', trim($request->convenio))->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
-                    if ($convenio->id != $request->id_venta)
+                    if ($convenio->id != $request->id_venta) {
                         return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                    }
+
                 } else {
                     return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
                 }
@@ -977,8 +943,10 @@ class FunerariaController extends ApiController
                 ->where('numero_convenio', $request->convenio)->where('operaciones.status', '<>', 0)->first();
             if (!empty($convenio)) {
                 if ($tipo_servicio == 'modificar') {
-                    if ($convenio->id != $request->id_venta)
+                    if ($convenio->id != $request->id_venta) {
                         return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
+                    }
+
                 } else {
                     return $this->errorResponse('El número de convenio ingresado ya ha sido registrado.', 409);
                 }
@@ -986,45 +954,42 @@ class FunerariaController extends ApiController
             /**validando de manera manual si el titulo enviado ya esta registrado y esto activa */
             /**deshabilitnado numero de titulo */
             /* $titulo = VentasPlanes::select('ventas_planes.id')->join('operaciones', 'operaciones.ventas_planes_id', '=', 'ventas_planes.id')
-                ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
-            if (!empty($titulo)) {
-                if ($tipo_servicio == 'modificar') {
-                    if ($titulo->id != $request->id_venta)
-                        return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
-                } else {
-                    return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
-                }
-            }*/
+        ->where('numero_titulo', $request->titulo)->where('operaciones.status', 1)->first();
+        if (!empty($titulo)) {
+        if ($tipo_servicio == 'modificar') {
+        if ($titulo->id != $request->id_venta)
+        return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
+        } else {
+        return $this->errorResponse('El número de título ingresado ya ha sido registrado.', 409);
         }
-
-
+        }*/
+        }
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'id_venta.required' => 'Ingrese un la clave única de la venta para continuar',
-            'max' => 'verifique la cantidad',
-            'required' => 'Ingrese este dato',
-            'numeric' => 'Este dato debe ser un número',
-            'ubicacion.unique' => 'Este terreno ya fue vendido',
-            'solicitud.unique' => 'Esta solicitud ya fue registrada en otra venta',
-            'convenio.unique' => 'Este convenio ya fue registrado en otra venta',
-            'titulo.unique' => 'Este título ya fue registrado en otra venta',
-            'num_operacion.unique' => 'Este número de operación ya fue capturado',
+            'id_venta.required'     => 'Ingrese un la clave única de la venta para continuar',
+            'max'                   => 'verifique la cantidad',
+            'required'              => 'Ingrese este dato',
+            'numeric'               => 'Este dato debe ser un número',
+            'ubicacion.unique'      => 'Este terreno ya fue vendido',
+            'solicitud.unique'      => 'Esta solicitud ya fue registrada en otra venta',
+            'convenio.unique'       => 'Este convenio ya fue registrado en otra venta',
+            'titulo.unique'         => 'Este título ya fue registrado en otra venta',
+            'num_operacion.unique'  => 'Este número de operación ya fue capturado',
             //beneficiarios
-            '*.nombre.required' => 'ingrese este dato',
+            '*.nombre.required'     => 'ingrese este dato',
             '*.parentesco.required' => 'ingrese este dato',
-            '*.telefono.required' => 'ingrese este dato',
-            'lte' => 'verifique la cantidad',
-            'unique.num_operacion' => 'Este número de operación ya fue registrado.',
-            'pago_inicial.min' => 'El valor del pago inicial debe ser mínimo :min'
+            '*.telefono.required'   => 'ingrese este dato',
+            'lte'                   => 'verifique la cantidad',
+            'unique.num_operacion'  => 'Este número de operación ya fue registrado.',
+            'pago_inicial.min'      => 'El valor del pago inicial debe ser mínimo :min',
 
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
-
 
         if ($tipo_servicio == 'agregar') {
             /**revisar si el cliente esta vigente para proceder con la venta */
@@ -1038,7 +1003,7 @@ class FunerariaController extends ApiController
         /**haciendo las validaciones necesarias para saber si se puede proceder con la modificacion de los datos */
         $reprogramar_pagos = false;
         if ($tipo_servicio == 'modificar') {
-            /**tiene pagos vigentes, se debe validar lo que no puede modifcar. 
+            /**tiene pagos vigentes, se debe validar lo que no puede modifcar.
              * todo aquello que altere los precios y totales de la venta, pues al tener pagos realizados vigentes se alteria
              * el contrato y la programacion de pagos
              * solo puede modificar lo que no altere el contrato como cliente,vendedor, cliente
@@ -1048,12 +1013,12 @@ class FunerariaController extends ApiController
             /**verificando que no hay modificado nada relativo a precios */
             /**verificando si cambio algo relativo al plan funerario */
             $plan_original = [
-                'plan' => $datos_venta['venta_plan']['nombre_original'],
+                'plan'        => $datos_venta['venta_plan']['nombre_original'],
                 'plan_ingles' => $datos_venta['venta_plan']['nombre_original_ingles'],
-                'nota' => $datos_venta['venta_plan']['nota_original'],
+                'nota'        => $datos_venta['venta_plan']['nota_original'],
                 'nota_ingles' => $datos_venta['venta_plan']['nota_original_ingles'],
-                'value' => $datos_venta['venta_plan']['planes_funerarios_id'],
-                'secciones' => $datos_venta['venta_plan']['secciones_original']
+                'value'       => $datos_venta['venta_plan']['planes_funerarios_id'],
+                'secciones'   => $datos_venta['venta_plan']['secciones_original'],
             ];
             /**checando si cambio algo del nombre del plan de venta */
             $es_igual = true;
@@ -1094,14 +1059,14 @@ class FunerariaController extends ApiController
                 if ($datos_venta['total'] > 0) {
                     /**si la venta no fue gratis */
                     if ($datos_venta['pagos_realizados'] > 0) {
-                        return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, tipo de venta, tipo de plan funerario, tipo de 
+                        return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, tipo de venta, tipo de plan funerario, tipo de
                 financiamiento, etc. Esto se debe a que existen pagos relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
                     } else {
                         $reprogramar_pagos = true;
                     }
                 } else {
                     /**la venta no fue gratis */
-                    return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de 
+                    return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de
                 financiamiento, etc. Esto se debe a que la venta tiene un saldo de $0.00 pesos(está liquidada).', 409);
                 }
             }
@@ -1116,13 +1081,13 @@ class FunerariaController extends ApiController
                 //captura de la venta
                 $id_venta = DB::table('ventas_planes')->insertGetId(
                     [
-                        'tipo_financiamiento' => $request->tipo_financiamiento,
-                        'vendedor_id' => (int) $request->vendedor['value'],
-                        'planes_funerarios_id' => $request->plan_funerario['value'],
-                        'nombre_original' => $request->plan_funerario['plan'],
+                        'tipo_financiamiento'    => $request->tipo_financiamiento,
+                        'vendedor_id'            => (int) $request->vendedor['value'],
+                        'planes_funerarios_id'   => $request->plan_funerario['value'],
+                        'nombre_original'        => $request->plan_funerario['plan'],
                         'nombre_original_ingles' => $request->plan_funerario['plan_ingles'],
-                        'nota_original' => trim($request->plan_funerario['nota']) != '' ? $request->plan_funerario['nota'] : 'N/A',
-                        'nota_original_ingles' => trim($request->plan_funerario['nota_ingles']) != '' ? $request->plan_funerario['nota_ingles'] : 'N/A'
+                        'nota_original'          => trim($request->plan_funerario['nota']) != '' ? $request->plan_funerario['nota'] : 'N/A',
+                        'nota_original_ingles'   => trim($request->plan_funerario['nota_ingles']) != '' ? $request->plan_funerario['nota_ingles'] : 'N/A',
                     ]
                 );
 
@@ -1144,48 +1109,47 @@ class FunerariaController extends ApiController
                         }
                         DB::table('plan_conceptos_original')->insert(
                             [
-                                'seccion_id' => $seccion,
+                                'seccion_id'       => $seccion,
                                 'ventas_planes_id' => $id_venta,
-                                'concepto' => $concepto['concepto'],
-                                'concepto_ingles' => $concepto['concepto_ingles']
+                                'concepto'         => $concepto['concepto'],
+                                'concepto_ingles'  => $concepto['concepto_ingles'],
                             ]
                         );
                     }
                 }
 
-
                 /**a partir de la venta se crea la operaicon */
                 $id_operacion = DB::table('operaciones')->insertGetId(
                     [
-                        'clientes_id' => (int) $request->id_cliente,
-                        'ventas_planes_id' => $id_venta,
+                        'clientes_id'                      => (int) $request->id_cliente,
+                        'ventas_planes_id'                 => $id_venta,
                         /**venta a futuro solamente */
-                        'numero_solicitud' => ($request->tipo_financiamiento == 2) ? $request->solicitud : null,
+                        'numero_solicitud'                 => ($request->tipo_financiamiento == 2) ? $request->solicitud : null,
                         /**venta  liquidada solamente */
-                        'numero_convenio' =>  $CementerioController->generarNumeroConvenio($request),
+                        'numero_convenio'                  => $CementerioController->generarNumeroConvenio($request),
                         //'numero_titulo' => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
-                        'empresa_operaciones_id' => 4, //venta de planes a futuro
-                        'subtotal' => $subtotal,
-                        'tasa_iva' => $tasa_iva,
-                        'descuento' => $descuento,
-                        'impuestos' => $iva,
-                        'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => 1,
-                        'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
-                        'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
+                        'empresa_operaciones_id'           => 4, //venta de planes a futuro
+                        'subtotal'                         => $subtotal,
+                        'tasa_iva'                         => $tasa_iva,
+                        'descuento'                        => $descuento,
+                        'impuestos'                        => $iva,
+                        'total'                            => $costo_neto,
+                        'descuento_pronto_pago_b'          => 1,
+                        'costo_neto_pronto_pago'           => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
+                        'antiguedad_operacion_id'          => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
-                        'titular_sustituto' => $request->titular_sustituto,
-                        'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
-                        'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->financiamiento,
-                        'aplica_devolucion_b' => 0,
+                        'titular_sustituto'                => $request->titular_sustituto,
+                        'parentesco_titular_sustituto'     => $request->parentesco_titular_sustituto,
+                        'telefono_titular_sustituto'       => $request->telefono_titular_sustituto,
+                        'financiamiento'                   => $request->financiamiento,
+                        'aplica_devolucion_b'              => 0,
                         'costo_neto_financiamiento_normal' => $costo_neto,
-                        'comision_venta_neto' => 0,
-                        'fecha_registro' => now(),
-                        'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
-                        'registro_id' => (int) $request->user()->id,
-                        'nota' => $request->nota,
-                        'status' => $costo_neto > 0 ? 1 : '2',
+                        'comision_venta_neto'              => 0,
+                        'fecha_registro'                   => now(),
+                        'fecha_operacion'                  => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                        'registro_id'                      => (int) $request->user()->id,
+                        'nota'                             => $request->nota,
+                        'status'                           => $costo_neto > 0 ? 1 : '2',
                     ]
                 );
                 /**guardando los datos de la tasa para intereses */
@@ -1209,13 +1173,13 @@ class FunerariaController extends ApiController
                 /**es modificar */
                 DB::table('ventas_planes')->where('id', '=', $request->id_venta)->update(
                     [
-                        'tipo_financiamiento' => $request->tipo_financiamiento,
-                        'vendedor_id' => (int) $request->vendedor['value'],
-                        'planes_funerarios_id' => $request->plan_funerario['value'],
-                        'nombre_original' => $request->plan_funerario['plan'],
+                        'tipo_financiamiento'    => $request->tipo_financiamiento,
+                        'vendedor_id'            => (int) $request->vendedor['value'],
+                        'planes_funerarios_id'   => $request->plan_funerario['value'],
+                        'nombre_original'        => $request->plan_funerario['plan'],
                         'nombre_original_ingles' => $request->plan_funerario['plan_ingles'],
-                        'nota_original' => trim($request->plan_funerario['nota']) != '' ? $request->plan_funerario['nota'] : 'N/A',
-                        'nota_original_ingles' => trim($request->plan_funerario['nota_ingles']) != '' ? $request->plan_funerario['nota_ingles'] : 'N/A'
+                        'nota_original'          => trim($request->plan_funerario['nota']) != '' ? $request->plan_funerario['nota'] : 'N/A',
+                        'nota_original_ingles'   => trim($request->plan_funerario['nota_ingles']) != '' ? $request->plan_funerario['nota_ingles'] : 'N/A',
                     ]
                 );
 
@@ -1238,43 +1202,42 @@ class FunerariaController extends ApiController
                         }
                         DB::table('plan_conceptos_original')->insert(
                             [
-                                'seccion_id' => $seccion,
+                                'seccion_id'       => $seccion,
                                 'ventas_planes_id' => $request->id_venta,
-                                'concepto' => $concepto['concepto'],
-                                'concepto_ingles' => $concepto['concepto_ingles']
+                                'concepto'         => $concepto['concepto'],
+                                'concepto_ingles'  => $concepto['concepto_ingles'],
                             ]
                         );
                     }
                 }
 
-
                 DB::table('operaciones')->where('id', '=', $datos_venta['operacion_id'])->update(
                     [
-                        'clientes_id' => (int) $request->id_cliente,
+                        'clientes_id'                      => (int) $request->id_cliente,
                         /**venta a futuro solamente */
-                        'numero_solicitud' => ($request->tipo_financiamiento == 2) ? trim($request->solicitud) : null,
+                        'numero_solicitud'                 => ($request->tipo_financiamiento == 2) ? trim($request->solicitud) : null,
                         /**venta  liquidada solamente */
-                        'numero_convenio' => trim($request->convenio),
+                        'numero_convenio'                  => trim($request->convenio),
                         //'numero_titulo' => trim($request->titulo),
-                        'subtotal' => $subtotal,
-                        'tasa_iva' => $tasa_iva,
-                        'descuento' => $descuento,
-                        'impuestos' => $iva,
-                        'total' => $costo_neto,
-                        'descuento_pronto_pago_b' => 1,
-                        'costo_neto_pronto_pago' => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
-                        'antiguedad_operacion_id' => (int) $request->ventaAntiguedad['value'],
+                        'subtotal'                         => $subtotal,
+                        'tasa_iva'                         => $tasa_iva,
+                        'descuento'                        => $descuento,
+                        'impuestos'                        => $iva,
+                        'total'                            => $costo_neto,
+                        'descuento_pronto_pago_b'          => 1,
+                        'costo_neto_pronto_pago'           => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
+                        'antiguedad_operacion_id'          => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
-                        'titular_sustituto' => $request->titular_sustituto,
-                        'parentesco_titular_sustituto' => $request->parentesco_titular_sustituto,
-                        'telefono_titular_sustituto' => $request->telefono_titular_sustituto,
-                        'financiamiento' => $request->financiamiento,
+                        'titular_sustituto'                => $request->titular_sustituto,
+                        'parentesco_titular_sustituto'     => $request->parentesco_titular_sustituto,
+                        'telefono_titular_sustituto'       => $request->telefono_titular_sustituto,
+                        'financiamiento'                   => $request->financiamiento,
                         'costo_neto_financiamiento_normal' => $costo_neto,
-                        'status' => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
-                        'fecha_modificacion' => now(),
-                        'fecha_operacion' => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
-                        'modifico_id' => (int) $request->user()->id,
-                        'nota' => $request->nota,
+                        'status'                           => ($costo_neto > 0 && $datos_venta['saldo_neto'] > 0) ? '1' : '2',
+                        'fecha_modificacion'               => now(),
+                        'fecha_operacion'                  => date('Y-m-d H:i:s', strtotime($request->fecha_venta)),
+                        'modifico_id'                      => (int) $request->user()->id,
+                        'nota'                             => $request->nota,
                     ]
                 );
 
@@ -1309,7 +1272,7 @@ class FunerariaController extends ApiController
 
             DB::commit();
             return
-                $tipo_servicio == 'agregar' ? $id_venta : $request->id_venta;
+            $tipo_servicio == 'agregar' ? $id_venta : $request->id_venta;
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
@@ -1318,16 +1281,14 @@ class FunerariaController extends ApiController
         /**********FIN DE CASOS DE VENTA 1 - NUEVA VENTA "SISTEMATIZADA" */
     }
 
-
-
     /**obtiene todas las ventas para el paginado de ventas de cementerio */
     public function get_ventas(Request $request, $id_venta = 'all', $paginated = false)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $titular = $request->titular;
-        $numero_control = $request->numero_control;
-        $status = $request->status;
-        $fecha_operacion = $request->fecha_operacion;
+        $titular                  = $request->titular;
+        $numero_control           = $request->numero_control;
+        $status                   = $request->status;
+        $fecha_operacion          = $request->fecha_operacion;
 
         $resultado_query = Operaciones::with('pagosProgramados.pagados')
             ->with('venta_plan.vendedor')
@@ -1338,7 +1299,7 @@ class FunerariaController extends ApiController
             ->with('cancelador:id,nombre')
             ->with('registro:id,nombre')
             ->where('empresa_operaciones_id', '=', 4)
-            /**solo ventas de planes funerarios */
+        /**solo ventas de planes funerarios */
             ->select(
                 /**venta operacion */
                 'operaciones.id as operacion_id',
@@ -1437,23 +1398,23 @@ class FunerariaController extends ApiController
                     '(0) AS pagos_cancelados'
                 ),
                 DB::raw(
-                    '(CASE 
+                    '(CASE
                         WHEN operaciones.numero_solicitud <> "" THEN operaciones.numero_solicitud
-                        ELSE "N/A" 
+                        ELSE "N/A"
                         END) AS numero_solicitud_texto'
                 ),
                 DB::raw(
-                    '(CASE 
+                    '(CASE
                         WHEN operaciones.numero_titulo <> "" THEN operaciones.numero_titulo
-                        ELSE "Pendiente" 
+                        ELSE "Pendiente"
                         END) AS numero_titulo_texto'
                 ),
                 DB::raw(
                     '(NULL) AS status_texto'
                 ),
                 /*DB::raw(
-                    '(NULL) AS pagos_realizados_arreglo'
-                ),*/
+            '(NULL) AS pagos_realizados_arreglo'
+            ),*/
                 'operaciones.registro_id',
                 'operaciones.cancelo_id',
                 'operaciones.modifico_id',
@@ -1477,13 +1438,13 @@ class FunerariaController extends ApiController
                 if (trim($numero_control) != '') {
                     if ($filtro_especifico_opcion == 1) {
                         /**filtro por numero de solicitud */
-                        $q->where('operaciones.numero_solicitud', '=',  $numero_control);
+                        $q->where('operaciones.numero_solicitud', '=', $numero_control);
                     } else if ($filtro_especifico_opcion == 2) {
                         /**filtro por numero de solicitud */
-                        $q->where('operaciones.numero_convenio', '=',  $numero_control);
+                        $q->where('operaciones.numero_convenio', '=', $numero_control);
                     } else if ($filtro_especifico_opcion == 3) {
                         /**filtro por numero de solicitud */
-                        $q->where('operaciones.numero_titulo', '=',  $numero_control);
+                        $q->where('operaciones.numero_titulo', '=', $numero_control);
                     } else {
                         /**filtro por numero de solicitud */
                         // $q->where('ventas_terrenos.id', $numero_control);
@@ -1504,10 +1465,10 @@ class FunerariaController extends ApiController
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado = &$resultado_query['data'];
+            $resultado       = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado = &$resultado_query;
+            $resultado       = &$resultado_query;
         }
 
         foreach ($resultado as $index_venta => &$venta) {
@@ -1532,9 +1493,7 @@ class FunerariaController extends ApiController
                 $venta['status_texto'] = 'Pagada';
             }
 
-
             $venta['fecha_operacion_texto'] = fecha_abr($venta['fecha_operacion']);
-
 
             /**aqui se saca el porcentaje para ver cuanto seria el descuento por pago en cada pronto pago */
             $porcentaje_descuento_pronto_pago = 0;
@@ -1550,23 +1509,21 @@ class FunerariaController extends ApiController
                     . $venta['financiamiento'] . ' Mes(s)';
             }
 
-
-
             $venta['num_pagos_programados'] = count($venta['pagos_programados']);
             $num_pagos_programados_vigentes = 0;
             if ($venta['num_pagos_programados'] > 0) {
                 /**si tiene pagos programados, eso quiere decir que la venta no tuvo 100 de descuento */
                 /**recorriendo arreglo de pagos programados */
-                $vencidos = 0;
-                $pagos_programados_cubiertos = 0;
+                $vencidos                         = 0;
+                $pagos_programados_cubiertos      = 0;
                 $dias_vencido_primer_pago_vencido = '';
-                $pagos_vigentes = 0;
-                $pagos_cancelados = 0;
-                $pagos_realizados = 0;
+                $pagos_vigentes                   = 0;
+                $pagos_cancelados                 = 0;
+                $pagos_realizados                 = 0;
 
                 $arreglo_de_pagos_realizados = [];
                 /**guardo los dias que lleva vencido el pago vencido mas antiguo */
-                foreach ($venta['pagos_programados']  as $index_programado => &$programado) {
+                foreach ($venta['pagos_programados'] as $index_programado => &$programado) {
                     /**actualizando el concepto del pago */
                     if ($programado['conceptos_pagos_id'] == 1) {
                         $programado['concepto_texto'] = 'Enganche';
@@ -1579,7 +1536,6 @@ class FunerariaController extends ApiController
                     /**actualizando fecha de pago abre con helper de fechas */
                     $programado['fecha_programada_abr'] = fecha_abr($programado['fecha_programada']);
 
-
                     //if ($programado['status'] == 1) {
                     if ($programado['status'] == 1) {
                         $num_pagos_programados_vigentes++;
@@ -1587,15 +1543,15 @@ class FunerariaController extends ApiController
                     /**aumento el pago programado vigente */
                     /**haciendo sumatoria de los montos que se han destinado a un pago programado segun el tipo de movimiento */
                     /**montos segun su tipo de movimiento */
-                    $abonado_intereses = 0;
-                    $abonado_capital = 0;
-                    $descontado_pronto_pago = 0;
-                    $descontado_capital = 0;
+                    $abonado_intereses       = 0;
+                    $abonado_capital         = 0;
+                    $descontado_pronto_pago  = 0;
+                    $descontado_capital      = 0;
                     $complemento_cancelacion = 0;
-                    $total_cubierto = 0;
-                    $fecha_ultimo_pago = '';
+                    $total_cubierto          = 0;
+                    $fecha_ultimo_pago       = '';
 
-                    foreach ($programado['pagados']  as $index_pagados => &$pagado) {
+                    foreach ($programado['pagados'] as $index_pagados => &$pagado) {
                         /**haciendo el arreglo de pagos realizados limpio(no repetidos) */
                         array_push(
                             $arreglo_de_pagos_realizados,
@@ -1614,10 +1570,10 @@ class FunerariaController extends ApiController
                                  */
                                 // $pago_total += $pagado['monto'];
                                 $abonado_capital += $pagado['pagos_cubiertos']['monto'];
-                            } else  if ($pagado['movimientos_pagos_id'] == 4) {
+                            } else if ($pagado['movimientos_pagos_id'] == 4) {
                                 /**fue descuento al capital */
                                 $descontado_capital += $pagado['pagos_cubiertos']['monto'];
-                            } else  if ($pagado['movimientos_pagos_id'] == 5) {
+                            } else if ($pagado['movimientos_pagos_id'] == 5) {
                                 /**fue complemento por cancelacion */
                                 $complemento_cancelacion += $pagado['pagos_cubiertos']['monto'];
                             } else if ($pagado['movimientos_pagos_id'] == 2) {
@@ -1651,27 +1607,25 @@ class FunerariaController extends ApiController
                     } //fin foreach pagado
 
                     /** al final del ciclo se actualizan los valores en el pago programado*/
-                    $programado['abonado_capital'] = round($abonado_capital, 2, PHP_ROUND_HALF_UP);
-                    $programado['abonado_intereses'] =   $abonado_intereses;
-                    $programado['descontado_pronto_pago'] =  $descontado_pronto_pago;
-                    $programado['descontado_capital'] =   $descontado_capital;
-                    $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2, PHP_ROUND_HALF_UP);
-
-
+                    $programado['abonado_capital']           = round($abonado_capital, 2, PHP_ROUND_HALF_UP);
+                    $programado['abonado_intereses']         = $abonado_intereses;
+                    $programado['descontado_pronto_pago']    = $descontado_pronto_pago;
+                    $programado['descontado_capital']        = $descontado_capital;
+                    $programado['complementado_cancelacion'] = round($complemento_cancelacion, 2, PHP_ROUND_HALF_UP);
 
                     $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
 
                     $programado['saldo_neto'] = round($saldo_pago_programado, 2, PHP_ROUND_HALF_UP);
                     /**asignando la fecha del pago que liquidado el pago programado */
                     if ($programado['saldo_neto'] <= 0) {
-                        $programado['fecha_ultimo_pago'] = $fecha_ultimo_pago;
+                        $programado['fecha_ultimo_pago']     = $fecha_ultimo_pago;
                         $programado['fecha_ultimo_pago_abr'] = fecha_abr($fecha_ultimo_pago);
                     }
                     /**verificando el estado del pago programado*/
                     /**verificando si la fecha sigue vigente o esta vencida */
                     /**variables para controlar el incremento por intereses */
                     $dias_retrasados_del_pago = 0;
-                    $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
+                    $fecha_programada_pago    = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
 
                     /**aqui verifico que si la operacion esta activa genere los intereses acorde al dia de hoy, si esta cancelada que tomen intereses a partir de la fecha de cancelacion */
                     $fecha_para_intereses = date('Y-m-d');
@@ -1681,10 +1635,9 @@ class FunerariaController extends ApiController
                         }
                     }
 
-
                     $fecha_hoy = Carbon::createFromFormat('Y-m-d', $fecha_para_intereses);
 
-                    $interes_generado = 0;
+                    $interes_generado                = 0;
                     $programado['fecha_a_pagar_abr'] = fecha_abr($programado['fecha_programada']);
                     /**fin varables por intereses */
                     /**verificando que el pago programado tiene un saldo de capital que cobrar para saber si aplica o no intereses */
@@ -1693,12 +1646,11 @@ class FunerariaController extends ApiController
                         if (date('Y-m-d', strtotime($programado['fecha_programada'])) < date('Y-m-d')) {
                             /**esto me dara los dias que se retraso en el el pago la persona, que debe coincidir la suma de los * intereses cobrados */
 
-
                             $dias_retrasados_del_pago = $fecha_programada_pago->diffInDays($fecha_hoy);
                             if ($dias_vencido_primer_pago_vencido == '') {
                                 $dias_vencido_primer_pago_vencido = $dias_retrasados_del_pago;
                             }
-                            $programado['fecha_a_pagar'] = date('Y-m-d');
+                            $programado['fecha_a_pagar']     = date('Y-m-d');
                             $programado['fecha_a_pagar_abr'] = fecha_abr(date('Y-m-d'));
                             /**
                              * Los intereses moratorios se calcularán
@@ -1720,51 +1672,50 @@ class FunerariaController extends ApiController
                             /**aqui actualizamos el saldo neto del pago con todo e intereses, quitando los intereses que ya se han pagado previamente */
                             $programado['saldo_neto'] = round($saldo_pago_programado + $interes_generado, 2, PHP_ROUND_HALF_UP);
                             /**la fecha qui es mayor que la fecha programada del pago */
-                            $programado['status_pago'] = 0;
+                            $programado['status_pago']       = 0;
                             $programado['status_pago_texto'] = 'Vencido';
                             $vencidos++;
                             $programado['dias_vencido'] = $dias_retrasados_del_pago;
-                            $programado['intereses'] = $interes_generado;
+                            $programado['intereses']    = $interes_generado;
                         } else {
                             /**la fecha aun no vence */
-                            $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-                            $programado['status_pago'] = 1;
+                            $programado['fecha_a_pagar']     = $programado['fecha_programada'];
+                            $programado['status_pago']       = 1;
                             $programado['status_pago_texto'] = 'Pendiente';
                         }
                     } else {
                         $pagos_programados_cubiertos++;
                         $programado['fecha_a_pagar'] = $fecha_ultimo_pago;
                         /**el pago programado ya fue cubierto */
-                        $programado['status_pago'] = 2;
+                        $programado['status_pago']       = 2;
                         $programado['status_pago_texto'] = 'Pagado';
                     }
 
                     /**monto con pronto pago de cada abono */
                     $programado['monto_pronto_pago'] = round(($porcentaje_descuento_pronto_pago * $programado['monto_programado']) / 100, 0, PHP_ROUND_HALF_UP);
-                    $programado['total_cubierto'] = $abonado_capital + $descontado_pronto_pago + $descontado_capital + $complemento_cancelacion;
+                    $programado['total_cubierto']    = $abonado_capital + $descontado_pronto_pago + $descontado_capital + $complemento_cancelacion;
 
                     /**actualizando los totales de montos en la venta */
-                    $venta['intereses'] +=  $interes_generado;
-                    $venta['abonado_capital'] +=  $abonado_capital;
-                    $venta['abonado_intereses'] +=  $abonado_intereses;
-                    $venta['descontado_pronto_pago'] +=  $descontado_pronto_pago;
-                    $venta['descontado_capital'] +=  $descontado_capital;
-                    $venta['complementado_cancelacion'] +=  $complemento_cancelacion;
+                    $venta['intereses'] += $interes_generado;
+                    $venta['abonado_capital'] += $abonado_capital;
+                    $venta['abonado_intereses'] += $abonado_intereses;
+                    $venta['descontado_pronto_pago'] += $descontado_pronto_pago;
+                    $venta['descontado_capital'] += $descontado_capital;
+                    $venta['complementado_cancelacion'] += $complemento_cancelacion;
                     $venta['saldo_neto'] += $saldo_pago_programado + $interes_generado;
-
 
                     /**calculando el total cubierto de la venta, sin intereses pagados, solo lo que ya esta cubierto */
                     $venta['total_cubierto'] += $programado['total_cubierto'];
                     /**verificado el monto que seria con pronnto pago  */
-                    //} //fin foreach if status 1 programado 
+                    //} //fin foreach if status 1 programado
                 } //fin foreach programados
-                $venta['pagos_realizados'] = $pagos_realizados;
-                $venta['pagos_vigentes'] = $pagos_vigentes;
+                $venta['pagos_realizados']               = $pagos_realizados;
+                $venta['pagos_vigentes']                 = $pagos_vigentes;
                 $venta['num_pagos_programados_vigentes'] = $num_pagos_programados_vigentes;
-                $venta['pagos_cancelados'] = $pagos_cancelados;
-                $venta['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
-                $venta['pagos_vencidos'] = $vencidos;
-                $venta['dias_vencidos'] = $dias_vencido_primer_pago_vencido;
+                $venta['pagos_cancelados']               = $pagos_cancelados;
+                $venta['pagos_programados_cubiertos']    = $pagos_programados_cubiertos;
+                $venta['pagos_vencidos']                 = $vencidos;
+                $venta['dias_vencidos']                  = $dias_vencido_primer_pago_vencido;
                 /**areegloe de todos los pagos limpios(no repetidos) */
                 //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
             } else {
@@ -1781,25 +1732,25 @@ class FunerariaController extends ApiController
             /**agregando los conceptos originales del plan */
             $secciones = [
                 [
-                    'seccion' => 'incluye',
+                    'seccion'        => 'incluye',
                     'seccion_ingles' => 'include',
-                    'conceptos' => []
+                    'conceptos'      => [],
                 ],
                 [
-                    'seccion' => 'inhumacion',
+                    'seccion'        => 'inhumacion',
                     'seccion_ingles' => 'inhumation',
-                    'conceptos' => []
+                    'conceptos'      => [],
                 ],
                 [
-                    'seccion' => 'cremacion',
+                    'seccion'        => 'cremacion',
                     'seccion_ingles' => 'cremation',
-                    'conceptos' => []
+                    'conceptos'      => [],
                 ],
                 [
-                    'seccion' => 'velacion',
+                    'seccion'        => 'velacion',
                     'seccion_ingles' => 'wakefulness',
-                    'conceptos' => []
-                ]
+                    'conceptos'      => [],
+                ],
             ];
             foreach ($venta['venta_plan']['conceptos_originales'] as $key_seccion => $seccion) {
                 /**agregando los conceptos segun su seccion */
@@ -1808,10 +1759,10 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[0]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'plan funerario',
-                            'seccion' => 'incluye'
+                            'aplicar_en'      => 'plan funerario',
+                            'seccion'         => 'incluye',
                         ]
                     );
                 } elseif ($seccion['seccion_id'] == 2) {
@@ -1819,10 +1770,10 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[1]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'caso de inhumación',
-                            'seccion' => 'inhumacion'
+                            'aplicar_en'      => 'caso de inhumación',
+                            'seccion'         => 'inhumacion',
                         ]
                     );
                 } elseif ($seccion['seccion_id'] == 3) {
@@ -1830,10 +1781,10 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[2]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'caso de cremación',
-                            'seccion' => 'cremacion'
+                            'aplicar_en'      => 'caso de cremación',
+                            'seccion'         => 'cremacion',
                         ]
                     );
                 } elseif ($seccion['seccion_id'] == 4) {
@@ -1841,10 +1792,10 @@ class FunerariaController extends ApiController
                     array_push(
                         $secciones[3]['conceptos'],
                         [
-                            'concepto' => $seccion['concepto'],
+                            'concepto'        => $seccion['concepto'],
                             'concepto_ingles' => $seccion['concepto_ingles'],
-                            'aplicar_en' => 'caso de velación',
-                            'seccion' => 'velacion'
+                            'aplicar_en'      => 'caso de velación',
+                            'seccion'         => 'velacion',
                         ]
                     );
                 }
@@ -1857,24 +1808,22 @@ class FunerariaController extends ApiController
         /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
     }
 
-
-
     public function documento_solicitud(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['venta_id'];
+            $id_venta          = $requestVentasList['venta_id'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$id_venta = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
 
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
@@ -1886,23 +1835,22 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_solicitud_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.solicitud.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.solicitud.header')
+                    'header-html' => view('funeraria.solicitud.header'),
                 ]);
             }
 
@@ -1926,7 +1874,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'SOLICITUD DE PLAN A FUTURO / FUNERARIA AETERNUS',
@@ -1943,24 +1891,22 @@ class FunerariaController extends ApiController
         }
     }
 
-
     public function documento_convenio(Request $request)
     {
         try {
             /*  $id_venta = 3;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['venta_id'];
-
+            $id_venta          = $requestVentasList['venta_id'];
 
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
@@ -1972,22 +1918,21 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_convenio_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONVENIO TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.convenio.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.convenio.header')
+                    'header-html' => view('funeraria.convenio.header'),
                 ]);
             }
             //$pdf->setOption('grayscale', true);
@@ -2010,7 +1955,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'COPIA DEL CONVENIO / CEMENTERIO AETERNUS',
@@ -2027,22 +1972,21 @@ class FunerariaController extends ApiController
         }
     }
 
-
     public function documento_finiquitado(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['venta_id'];
+            $id_venta          = $requestVentasList['venta_id'];
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /* $id_venta = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
             if (empty($datos_venta)) {
@@ -2051,23 +1995,23 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/finiquitado/finiquitado', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/finiquitado/finiquitado', ['datos' => $datos_venta, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONSTANCIA DE FINIQUITO DE PLAN FUNERARIO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.finiquitado.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['saldo_neto'] > 0 && $datos_venta['operacion_status'] != 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.finiquitado.no_finiquitado_header')
+                    'header-html' => view('funeraria.finiquitado.no_finiquitado_header'),
                 ]);
             }
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.finiquitado.header')
+                    'header-html' => view('funeraria.finiquitado.header'),
                 ]);
             }
 
@@ -2091,7 +2035,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'CONSTANCIA DE FINIQUITO DE PLAN FUNERARIO',
@@ -2108,25 +2052,22 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
     public function documento_estado_de_cuenta_planes(Request $request)
     {
         try {
             $id_venta = 1;
-            $email = false;
+            $email    = false;
             $email_to = 'hector@gmail.com';
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
 
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['venta_id'];
+            $id_venta          = $requestVentasList['venta_id'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
-
 
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
@@ -2135,15 +2076,15 @@ class FunerariaController extends ApiController
                 return $this->errorResponse('Error al cargar los datos.', 409);
             }
             $pagos_operacion = [];
-            $client = new \GuzzleHttp\Client();
+            $client          = new \GuzzleHttp\Client();
             try {
                 /**TRAYENDO EL TOKEN PARA CONSUMIR EL SERVICE */
                 $response = $client->request('POST', config('services.passport.login_endpoint'), [
                     'form_params' => [
-                        'grant_type' => 'client_credentials',
-                        'client_id' => config('services.passport.client_backend_id'),
-                        'client_secret' => config('services.passport.client_backend_secret')
-                    ]
+                        'grant_type'    => 'client_credentials',
+                        'client_id'     => config('services.passport.client_backend_id'),
+                        'client_secret' => config('services.passport.client_backend_secret'),
+                    ],
                 ]);
                 $token = json_decode((string) $response->getBody(), true)['access_token'];
                 if ($token == '') {
@@ -2151,14 +2092,14 @@ class FunerariaController extends ApiController
                 }
                 $pagos_operacion =
                     json_decode($client->request(
-                        'GET',
-                        env('APP_URL') . 'pagos/get_pagos_backend/all/false/false?operacion_id=' . $datos_venta['operacion_id'],
-                        [
-                            'headers' => [
-                                'Authorization' => 'Bearer ' . $token,
-                            ],
-                        ]
-                    )->getBody(), true);
+                    'GET',
+                    env('APP_URL') . 'pagos/get_pagos_backend/all/false/false?operacion_id=' . $datos_venta['operacion_id'],
+                    [
+                        'headers' => [
+                            'Authorization' => 'Bearer ' . $token,
+                        ],
+                    ]
+                )->getBody(), true);
             } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                 return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
             }
@@ -2166,21 +2107,20 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_solicitud_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/estado_cuenta/estado_cuenta', ['pagos_operacion' => $pagos_operacion, 'datos' => $datos_venta, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/estado_cuenta/estado_cuenta', ['pagos_operacion' => $pagos_operacion, 'datos' => $datos_venta, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ESTADO CUENTA " . strtoupper($datos_venta['nombre']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.estado_cuenta.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.estado_cuenta.header')
+                    'header-html' => view('funeraria.estado_cuenta.header'),
                 ]);
             }
 
@@ -2205,7 +2145,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'ESTADO DE CUENTA / PLAN FUNERARIO',
@@ -2222,7 +2162,6 @@ class FunerariaController extends ApiController
         }
     }
 
-
     public function referencias_de_pago(Request $request, $id_pago = '')
     {
         try {
@@ -2231,15 +2170,14 @@ class FunerariaController extends ApiController
              */
 
             $id_venta = 1;
-            $email = false;
+            $email    = false;
             $email_to = 'hector@gmail.com';
 
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['venta_id'];
-
+            $id_venta          = $requestVentasList['venta_id'];
 
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
             if (empty($datos_venta)) {
@@ -2248,22 +2186,20 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/pagos/referencias', ['id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/pagos/referencias', ['id_pago' => $id_pago, 'datos' => $datos_venta, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "REFERENCIA DE PAGOS TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.pagos.footer'),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.pagos.header')
+                    'header-html' => view('funeraria.pagos.header'),
                 ]);
             }
-
-
 
             //$pdf->setOption('grayscale', true);
             $pdf->setOption('orientation', 'landscape');
@@ -2285,7 +2221,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'REFERENCIAS DE PAGO PLAN FUNERARIO',
@@ -2302,23 +2238,21 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
     /**pdf del convenio plan de cementerio */
     public function reglamento_pago(Request $request)
     {
         try {
             $id_venta = 1;
-            $email = false;
+            $email    = false;
             $email_to = 'hector@gmail.com';
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['venta_id'];
+            $id_venta          = $requestVentasList['venta_id'];
 
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
@@ -2330,22 +2264,21 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_convenio_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "REGLAMENTO DE PAGO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.reglamento_pago.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_venta['operacion_status'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.reglamento_pago.header')
+                    'header-html' => view('funeraria.reglamento_pago.header'),
                 ]);
             }
             //$pdf->setOption('grayscale', true);
@@ -2367,7 +2300,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'REGLAMENTO DE PAGO / FUNERARIA AETERNUS',
@@ -2391,12 +2324,12 @@ class FunerariaController extends ApiController
             $id_venta = 4;
             $email = false;
             $email_to = 'hector@gmail.com';
-            */
+             */
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['venta_id'];
+            $id_venta          = $requestVentasList['venta_id'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
@@ -2409,21 +2342,19 @@ class FunerariaController extends ApiController
                 return $this->errorResponse('Error al cargar los datos.', 409);
             }
 
-
-
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['nombre']) . '.pdf';
 
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.acuse_cancelacion.footer'),
             ]);
             if ($datos_venta['operacion_status'] != 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.acuse_cancelacion.header')
+                    'header-html' => view('funeraria.acuse_cancelacion.header'),
                 ]);
             }
             //$pdf->setOption('grayscale', true);
@@ -2445,7 +2376,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'ACUSE DE CANCELACIÓN',
@@ -2467,14 +2398,14 @@ class FunerariaController extends ApiController
 
         try {
             $id_venta = 1;
-            $email = false;
+            $email    = false;
             $email_to = 'hector@gmail.com';
 
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_venta = $requestVentasList['id_servicio'];
+            $id_venta          = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
@@ -2487,20 +2418,19 @@ class FunerariaController extends ApiController
                 return $this->errorResponse('Error al cargar los datos.', 409);
             }
 
-
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['operacion']['cliente']['nombre']) . '.pdf';
 
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.acuse_cancelacion_servicio.footer'),
             ]);
             if ($datos_venta['operacion']['operacion_status'] != 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.acuse_cancelacion_servicio.header')
+                    'header-html' => view('funeraria.acuse_cancelacion_servicio.header'),
                 ]);
             }
             //$pdf->setOption('grayscale', true);
@@ -2522,7 +2452,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_venta['nombre']),
                     'ACUSE DE CANCELACIÓN',
@@ -2539,11 +2469,6 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
-
-
-
     /**CANCELAR LA VENTA */
     public function cancelar_venta(Request $request)
     {
@@ -2558,17 +2483,16 @@ class FunerariaController extends ApiController
 
         /**unicamente puede regresarse lo que  se ha cubierto de capital */
         $validaciones = [
-            'venta_id' => 'required',
+            'venta_id'     => 'required',
             'motivo.value' => 'required',
-            'cantidad' => 'numeric|min:0|' . 'max:' . $datos_venta['abonado_capital'],
+            'cantidad'     => 'numeric|min:0|' . 'max:' . $datos_venta['abonado_capital'],
         ];
-
 
         $mensajes = [
             'required' => 'Ingrese este dato',
-            'numeric' => 'Este dato debe ser un número',
-            'max' => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($datos_venta['abonado_capital'], 2),
-            'min' => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN'
+            'numeric'  => 'Este dato debe ser un número',
+            'max'      => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($datos_venta['abonado_capital'], 2),
+            'min'      => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN',
         ];
         request()->validate(
             $validaciones,
@@ -2588,18 +2512,17 @@ class FunerariaController extends ApiController
             return $this->errorResponse('Esta venta ya habia sido dada de baja.', 409);
         }
 
-
         try {
             DB::beginTransaction();
 
             DB::table('operaciones')->where('ventas_planes_id', $request->venta_id)->update(
                 [
-                    'motivos_cancelacion_id' => $request['motivo.value'],
-                    'fecha_cancelacion' => now(),
+                    'motivos_cancelacion_id'          => $request['motivo.value'],
+                    'fecha_cancelacion'               => now(),
                     'cantidad_a_regresar_cancelacion' => (float) $request->cantidad,
-                    'cancelo_id' => (int) $request->user()->id,
-                    'nota_cancelacion' => $request->comentario,
-                    'status' => 0
+                    'cancelo_id'                      => (int) $request->user()->id,
+                    'nota_cancelacion'                => $request->comentario,
+                    'status'                          => 0,
                 ]
             );
             DB::commit();
@@ -2623,7 +2546,6 @@ class FunerariaController extends ApiController
             ->get();
     }
 
-
     public function control_solicitud(Request $request, $tipo_servicio = '')
     {
 
@@ -2633,24 +2555,23 @@ class FunerariaController extends ApiController
 
         //validaciones directas sin condicionales
         $validaciones = [
-            'llamada_b' => 'required',
-            'nombre_afectado' => 'required',
-            'fecha_solicitud' => 'required',
-            'causa_muerte' => 'required',
+            'llamada_b'              => 'required',
+            'nombre_afectado'        => 'required',
+            'fecha_solicitud'        => 'required',
+            'causa_muerte'           => 'required',
             'muerte_natural_b.value' => 'required',
-            'contagioso_b.value' => 'required',
-            'nombre_informante' => 'required',
-            'telefono_informante' => 'required',
-            'parentesco_informante' => 'required',
-            'recogio.value' => 'required',
-            'id_solicitud' => ''
+            'contagioso_b.value'     => 'required',
+            'nombre_informante'      => 'required',
+            'telefono_informante'    => 'required',
+            'parentesco_informante'  => 'required',
+            'recogio.value'          => 'required',
+            'id_solicitud'           => '',
         ];
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
-            'required' => 'Ingrese este dato'
+            'required' => 'Ingrese este dato',
         ];
-
 
         request()->validate(
             $validaciones,
@@ -2675,21 +2596,21 @@ class FunerariaController extends ApiController
             if ($tipo_servicio == 'agregar') {
                 $id_servicio = DB::table('servicios_funerarios')->insertGetId(
                     [
-                        'tipo_solicitud_id' => 1,
-                        'llamada_b' => $request->llamada_b,
-                        'nombre_afectado' => $request->nombre_afectado,
-                        'fechahora_solicitud' => $request->fecha_solicitud,
-                        'causa_muerte' => $request->causa_muerte,
-                        'muerte_natural_b' => $request->muerte_natural_b['value'],
-                        'contagioso_b' => $request->contagioso_b['value'],
-                        'nombre_informante' => $request->nombre_informante,
-                        'telefono_informante' => $request->telefono_informante,
+                        'tipo_solicitud_id'     => 1,
+                        'llamada_b'             => $request->llamada_b,
+                        'nombre_afectado'       => $request->nombre_afectado,
+                        'fechahora_solicitud'   => $request->fecha_solicitud,
+                        'causa_muerte'          => $request->causa_muerte,
+                        'muerte_natural_b'      => $request->muerte_natural_b['value'],
+                        'contagioso_b'          => $request->contagioso_b['value'],
+                        'nombre_informante'     => $request->nombre_informante,
+                        'telefono_informante'   => $request->telefono_informante,
                         'parentesco_informante' => $request->parentesco_informante,
-                        'ubicacion_recoger' => $request->ubicacion_recoger,
-                        'recogio_id' => $request->recogio['value'],
-                        'nota_al_recoger' => $request->nota_al_recoger,
-                        'registro_id' => (int) $request->user()->id,
-                        'fechahora_registro' => now()
+                        'ubicacion_recoger'     => $request->ubicacion_recoger,
+                        'recogio_id'            => $request->recogio['value'],
+                        'nota_al_recoger'       => $request->nota_al_recoger,
+                        'registro_id'           => (int) $request->user()->id,
+                        'fechahora_registro'    => now(),
                     ]
                 );
                 $id_return = $id_servicio;
@@ -2698,20 +2619,20 @@ class FunerariaController extends ApiController
                 /**es modificar */
                 DB::table('servicios_funerarios')->where('id', $request->id_solicitud)->update(
                     [
-                        'llamada_b' => $request->llamada_b,
-                        'nombre_afectado' => $request->nombre_afectado,
-                        'fechahora_solicitud' => $request->fecha_solicitud,
-                        'causa_muerte' => $request->causa_muerte,
-                        'muerte_natural_b' => $request->muerte_natural_b['value'],
-                        'contagioso_b' => $request->contagioso_b['value'],
-                        'nombre_informante' => $request->nombre_informante,
-                        'telefono_informante' => $request->telefono_informante,
+                        'llamada_b'             => $request->llamada_b,
+                        'nombre_afectado'       => $request->nombre_afectado,
+                        'fechahora_solicitud'   => $request->fecha_solicitud,
+                        'causa_muerte'          => $request->causa_muerte,
+                        'muerte_natural_b'      => $request->muerte_natural_b['value'],
+                        'contagioso_b'          => $request->contagioso_b['value'],
+                        'nombre_informante'     => $request->nombre_informante,
+                        'telefono_informante'   => $request->telefono_informante,
                         'parentesco_informante' => $request->parentesco_informante,
-                        'ubicacion_recoger' => $request->ubicacion_recoger,
-                        'recogio_id' => $request->recogio['value'],
-                        'nota_al_recoger' => $request->nota_al_recoger,
-                        'modifico_id' => (int) $request->user()->id,
-                        'fecha_modificacion' => now()
+                        'ubicacion_recoger'     => $request->ubicacion_recoger,
+                        'recogio_id'            => $request->recogio['value'],
+                        'nota_al_recoger'       => $request->nota_al_recoger,
+                        'modifico_id'           => (int) $request->user()->id,
+                        'fecha_modificacion'    => now(),
                     ]
                 );
                 $id_return = $request->id_solicitud;
@@ -2732,89 +2653,85 @@ class FunerariaController extends ApiController
 
         //validaciones directas sin condicionales
         $validaciones = [
-            'id_servicio' => 'required',
+            'id_servicio'                                => 'required',
             /**DATOS DEL FALLECIDO */
-            'titulo.value' => 'required',
-            'nombre_afectado' => 'required',
-            'fecha_nacimiento' => 'required',
-            'genero.value' => 'required',
-            'nacionalidad.value' => 'required',
-            'estado_civil.value' => 'required',
-            'escolaridad.value' => 'required',
-            'afiliacion.value' => 'required',
+            'titulo.value'                               => 'required',
+            'nombre_afectado'                            => 'required',
+            'fecha_nacimiento'                           => 'required',
+            'genero.value'                               => 'required',
+            'nacionalidad.value'                         => 'required',
+            'estado_civil.value'                         => 'required',
+            'escolaridad.value'                          => 'required',
+            'afiliacion.value'                           => 'required',
 
             /**DATOS DEL CERTIFICADO MEDICO */
-            'fechahora_defuncion' => 'required',
-            'causa_muerte' => 'required',
-            'muerte_natural_b.value' => 'required',
-            'contagioso_b.value' => 'required',
-            'sitio_muerte.value' => 'required',
-            'atencion_medica_b.value' => 'required',
-            'estado_cuerpo.value' => 'required',
+            'fechahora_defuncion'                        => 'required',
+            'causa_muerte'                               => 'required',
+            'muerte_natural_b.value'                     => 'required',
+            'contagioso_b.value'                         => 'required',
+            'sitio_muerte.value'                         => 'required',
+            'atencion_medica_b.value'                    => 'required',
+            'estado_cuerpo.value'                        => 'required',
 
             /**DESTINOS DEL SERVICIO */
-            'embalsamar_b' => 'required|numeric|min:0|max:1',
-            'preparador' => '',
+            'embalsamar_b'                               => 'required|numeric|min:0|max:1',
+            'preparador'                                 => '',
 
+            'velacion_b'                                 => 'required|numeric|min:0|max:1',
+            'lugar_servicio.value'                       => '',
+            'direccion_velacion'                         => '',
 
-            'velacion_b' => 'required|numeric|min:0|max:1',
-            'lugar_servicio.value' => '',
-            'direccion_velacion' => '',
+            'cremacion_b'                                => 'required|numeric|min:0|max:1',
+            'fechahora_cremacion'                        => '',
+            'fechahora_entrega_cenizas'                  => '',
 
-            'cremacion_b' => 'required|numeric|min:0|max:1',
-            'fechahora_cremacion' => '',
-            'fechahora_entrega_cenizas' => '',
+            'inhumacion_b'                               => 'required|numeric|min:0|max:1',
+            'cementerio_servicio.value'                  => '',
+            'fechahora_inhumacion'                       => '',
+            'ubicacion'                                  => '',
+            'ventas_terrenos_id'                         => '',
 
-            'inhumacion_b' => 'required|numeric|min:0|max:1',
-            'cementerio_servicio.value' => '',
-            'fechahora_inhumacion' => '',
-            'ubicacion' => '',
-            'ventas_terrenos_id' => '',
+            'traslado_b'                                 => 'required|numeric|min:0|max:1',
+            'fechahora_traslado'                         => '',
+            'destino_traslado'                           => '',
 
+            'aseguradora_b'                              => 'required|numeric|min:0|max:1',
+            'aseguradora'                                => '',
 
-            'traslado_b' => 'required|numeric|min:0|max:1',
-            'fechahora_traslado' => '',
-            'destino_traslado' => '',
+            'misa_b'                                     => 'required|numeric|min:0|max:1',
+            'fechahora_misa'                             => '',
+            'iglesia_misa'                               => '',
 
-            'aseguradora_b' => 'required|numeric|min:0|max:1',
-            'aseguradora' => '',
+            'custodia_b'                                 => 'required|numeric|min:0|max:1',
 
-            'misa_b' => 'required|numeric|min:0|max:1',
-            'fechahora_misa' => '',
-            'iglesia_misa' => '',
+            'material_velacion_b'                        => 'required|numeric|min:0|max:1',
+            'material_velacion'                          => '',
 
-            'custodia_b' => 'required|numeric|min:0|max:1',
-
-            'material_velacion_b' => 'required|numeric|min:0|max:1',
-            'material_velacion' => '',
-
-            'acta_b' => 'required|numeric|min:0|max:1',
-            'folio_acta' => '',
-            'fecha_acta' => '',
-
+            'acta_b'                                     => 'required|numeric|min:0|max:1',
+            'folio_acta'                                 => '',
+            'fecha_acta'                                 => '',
 
             /**DATOS DEL CONTRATO */
-            'fechahora_contrato' => 'required',
-            'id_cliente' => 'required|numeric|min:1',
-            'tasa_iva' => 'required|numeric|min:14|max:25',
+            'fechahora_contrato'                         => 'required',
+            'id_cliente'                                 => 'required|numeric|min:1',
+            'tasa_iva'                                   => 'required|numeric|min:14|max:25',
 
+            'plan_funerario_futuro_b.value'              => 'required|numeric|min:0|max:1',
+            'id_convenio_plan'                           => '',
+            'tipo_contratante.value'                     => '',
 
-            'plan_funerario_futuro_b.value' => 'required|numeric|min:0|max:1',
-            'id_convenio_plan' => '',
-            'tipo_contratante.value' => '',
-
-            'plan_funerario_inmediato_b.value' => 'required|numeric|min:0|max:1',
-            'plan_funerario.value' => '',
+            'plan_funerario_inmediato_b.value'           => 'required|numeric|min:0|max:1',
+            'plan_funerario.value'                       => '',
 
             /**ARTICULOS DEL SERVICIO FUNERARIO */
             //'articulos_servicios' => 'required',
-            'articulos_servicios.*.id' => 'integer|min:1',
-            'articulos_servicios.*.cantidad' => 'integer|min:1',
-            'articulos_servicios.*.costo_neto_normal' => 'numeric|min:0',
+            'articulos_servicios.*.id'                   => 'integer|min:1',
+            'articulos_servicios.*.cantidad'             => 'integer|min:1',
+            'articulos_servicios.*.costo_neto_normal'    => 'numeric|min:0',
             'articulos_servicios.*.costo_neto_descuento' => 'numeric|min:0',
-            'articulos_servicios.*.plan_b' => 'boolean',
-            'articulos_servicios.*.descuento_b' => 'boolean',
-            'articulos_servicios.*.facturable_b' => 'boolean'
+            'articulos_servicios.*.plan_b'               => 'boolean',
+            'articulos_servicios.*.descuento_b'          => 'boolean',
+            'articulos_servicios.*.facturable_b'         => 'boolean',
         ];
 
         /**VALIDACIONES CONDICIONADAS */
@@ -2824,17 +2741,17 @@ class FunerariaController extends ApiController
 
         if ($request->velacion_b == 1) {
             $validaciones['lugar_servicio.value'] = 'required|numeric|min:0';
-            $validaciones['direccion_velacion'] = 'required';
+            $validaciones['direccion_velacion']   = 'required';
         }
 
         if ($request->cremacion_b == 1) {
-            $validaciones['fechahora_cremacion'] = 'required';
+            $validaciones['fechahora_cremacion']       = 'required';
             $validaciones['fechahora_entrega_cenizas'] = 'required';
         }
 
         if ($request->inhumacion_b == 1) {
             $validaciones['cementerio_servicio.value'] = 'required|numeric|min:0|max:3';
-            $validaciones['fechahora_inhumacion'] = 'required';
+            $validaciones['fechahora_inhumacion']      = 'required';
             if ($request->cementerio_servicio['value'] == 1) {
                 $validaciones['ventas_terrenos_id'] = 'required|numeric|min:0';
             } else {
@@ -2842,10 +2759,9 @@ class FunerariaController extends ApiController
             }
         }
 
-
         if ($request->traslado_b == 1) {
             $validaciones['fechahora_traslado'] = 'required';
-            $validaciones['destino_traslado'] = 'required';
+            $validaciones['destino_traslado']   = 'required';
         }
 
         if ($request->aseguradora_b == 1) {
@@ -2854,11 +2770,11 @@ class FunerariaController extends ApiController
 
         if ($request->misa_b == 1) {
             $validaciones['fechahora_misa'] = 'required';
-            $validaciones['iglesia_misa'] = 'required';
+            $validaciones['iglesia_misa']   = 'required';
         }
 
         if ($request->material_velacion_b == 1) {
-            $validaciones['material_velacion.*.id'] = 'required|integer|min:1';
+            $validaciones['material_velacion.*.id']       = 'required|integer|min:1';
             $validaciones['material_velacion.*.cantidad'] = 'required|integer|min:0';
         }
 
@@ -2873,22 +2789,20 @@ class FunerariaController extends ApiController
         } else {
             /**NO TIENE PLAN DE USO A FUTURO Y SE VERIFICA SI TIENE UNO DE USO INMEDIATO */
             if ($request->plan_funerario_inmediato_b['value'] == 1) {
-                $validaciones['plan_funerario.value'] = 'required|integer|min:1';
-                $validaciones['plan_funerario.label'] = 'required';
+                $validaciones['plan_funerario.value']      = 'required|integer|min:1';
+                $validaciones['plan_funerario.label']      = 'required';
                 $validaciones['plan_funerario.costo_neto'] = 'required|numeric|min:0';
-                $validaciones['plan_funerario.secciones'] = 'required';
+                $validaciones['plan_funerario.secciones']  = 'required';
             }
         }
         /**VALIDANDO LOS DATOS EN CASO DE QUE USE UN SERVICIO FUNERARIO*/
 
-
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
-            'material_velacion.*.cantidad.min' => 'La cantidad debe ser mínimo 0',
+            'material_velacion.*.cantidad.min'     => 'La cantidad debe ser mínimo 0',
             'material_velacion.*.cantidad.integer' => 'La cantidad debe ser un número entero',
-            'required' => 'Ingrese este dato'
+            'required'                             => 'Ingrese este dato',
         ];
-
 
         request()->validate(
             $validaciones,
@@ -2914,88 +2828,87 @@ class FunerariaController extends ApiController
             DB::table('servicios_funerarios')->where('id', $request->id_servicio)->update(
                 [
                     /**ACTUALIZANDO LA PARTE DEL FALLECIDO */
-                    'titulos_id' => $request->titulo['value'],
-                    'nombre_afectado' => strtoupper($request->nombre_afectado),
-                    'fecha_nacimiento' => $request->fecha_nacimiento,
-                    'generos_id' => $request->genero['value'],
-                    'nacionalidades_id' => $request->nacionalidad['value'],
-                    'lugar_nacimiento' => $request->lugar_nacimiento != NULL ? strtoupper($request->lugar_nacimiento) : NULL,
-                    'ocupacion' => $request->ocupacion != NULL ? strtoupper($request->ocupacion) : NULL,
-                    'direccion_fallecido' => $request->direccion_fallecido != NULL ? strtoupper($request->direccion_fallecido) : NULL,
-                    'estados_civiles_id' => $request->estado_civil['value'],
-                    'escolaridades_id' => $request->escolaridad['value'],
-                    'afiliaciones_id' => $request->afiliacion['value'],
-                    'afiliacion_nota' => $request->afiliacion_nota != NULL ? strtoupper($request->afiliacion_nota) : NULL,
+                    'titulos_id'                        => $request->titulo['value'],
+                    'nombre_afectado'                   => strtoupper($request->nombre_afectado),
+                    'fecha_nacimiento'                  => $request->fecha_nacimiento,
+                    'generos_id'                        => $request->genero['value'],
+                    'nacionalidades_id'                 => $request->nacionalidad['value'],
+                    'lugar_nacimiento'                  => $request->lugar_nacimiento != null ? strtoupper($request->lugar_nacimiento) : null,
+                    'ocupacion'                         => $request->ocupacion != null ? strtoupper($request->ocupacion) : null,
+                    'direccion_fallecido'               => $request->direccion_fallecido != null ? strtoupper($request->direccion_fallecido) : null,
+                    'estados_civiles_id'                => $request->estado_civil['value'],
+                    'escolaridades_id'                  => $request->escolaridad['value'],
+                    'afiliaciones_id'                   => $request->afiliacion['value'],
+                    'afiliacion_nota'                   => $request->afiliacion_nota != null ? strtoupper($request->afiliacion_nota) : null,
                     /**ACTUALIZANDO EL CERTIFICADO DE DEFUNCION */
-                    'folio_certificado' => $request->acta_b == 1 ?  strtoupper($request->folio_certificado) : NULL,
-                    'fechahora_defuncion' => $request->fechahora_defuncion,
-                    'causa_muerte' => strtoupper($request->causa_muerte),
-                    'muerte_natural_b' => $request->muerte_natural_b['value'],
-                    'contagioso_b' => $request->contagioso_b['value'],
-                    'sitios_muerte_id' => $request->sitio_muerte['value'],
-                    'lugar_muerte' => $request->lugar_muerte != NULL ? strtoupper($request->lugar_muerte) : NULL,
-                    'atencion_medica_b' => $request->atencion_medica_b['value'],
-                    'enfermedades_padecidas' => $request->enfermedades_padecidas != NULL ? strtoupper($request->enfermedades_padecidas) : NULL,
-                    'certificado_informante' => $request->certificado_informante != NULL ? strtoupper($request->certificado_informante) : NULL,
-                    'certificado_informante_telefono' => $request->certificado_informante_telefono != NULL ? strtoupper($request->certificado_informante_telefono) : NULL,
-                    'certificado_informante_parentesco' => $request->certificado_informante_parentesco != NULL ? strtoupper($request->certificado_informante_parentesco) : NULL,
-                    'medico_legista' => $request->medico_legista != NULL ? strtoupper($request->medico_legista) : NULL,
-                    'estado_afectado_id' => $request->estado_cuerpo['value'],
+                    'folio_certificado'                 => $request->acta_b == 1 ? strtoupper($request->folio_certificado) : null,
+                    'fechahora_defuncion'               => $request->fechahora_defuncion,
+                    'causa_muerte'                      => strtoupper($request->causa_muerte),
+                    'muerte_natural_b'                  => $request->muerte_natural_b['value'],
+                    'contagioso_b'                      => $request->contagioso_b['value'],
+                    'sitios_muerte_id'                  => $request->sitio_muerte['value'],
+                    'lugar_muerte'                      => $request->lugar_muerte != null ? strtoupper($request->lugar_muerte) : null,
+                    'atencion_medica_b'                 => $request->atencion_medica_b['value'],
+                    'enfermedades_padecidas'            => $request->enfermedades_padecidas != null ? strtoupper($request->enfermedades_padecidas) : null,
+                    'certificado_informante'            => $request->certificado_informante != null ? strtoupper($request->certificado_informante) : null,
+                    'certificado_informante_telefono'   => $request->certificado_informante_telefono != null ? strtoupper($request->certificado_informante_telefono) : null,
+                    'certificado_informante_parentesco' => $request->certificado_informante_parentesco != null ? strtoupper($request->certificado_informante_parentesco) : null,
+                    'medico_legista'                    => $request->medico_legista != null ? strtoupper($request->medico_legista) : null,
+                    'estado_afectado_id'                => $request->estado_cuerpo['value'],
                     /**ACTUALIZANDO LOS DESTINOS DEL SERVICIO */
-                    'embalsamar_b' => $request->embalsamar_b != 1 ? 0 : 1,
-                    'preparador' => $request->preparador != NULL ? ($request->embalsamar_b == 1 ? strtoupper($request->preparador) : NULL) : NULL,
-                    'medico_responsable_embalsamado' => $request->embalsamar_b != 1 ?  NULL : ($request->embalsamar_b == 1 ? strtoupper($request->medico_responsable_embalsamado) : NULL),
-                    'velacion_b' => $request->velacion_b != 1 ? 0 : 1,
-                    'lugares_servicios_id' => $request->velacion_b != 1 ?  NULL : strtoupper($request->lugar_servicio['value']),
-                    'direccion_velacion' => $request->velacion_b != 1 ?  NULL : strtoupper($request->direccion_velacion),
-                    'cremacion_b' => $request->cremacion_b != 1 ? 0 : 1,
-                    'fechahora_cremacion' => $request->cremacion_b != 1 ?  NULL : $request->fechahora_cremacion,
-                    'fechahora_entrega_cenizas' => $request->cremacion_b != 1 ?  NULL : $request->fechahora_entrega_cenizas,
-                    'descripcion_urna' => $request->cremacion_b != 1 ?  NULL : strtoupper($request->descripcion_urna),
-                    'inhumacion_b' => $request->inhumacion_b != 1 ? 0 : 1,
-                    'fechahora_inhumacion' => $request->inhumacion_b != 1 ?  NULL : $request->fechahora_inhumacion,
-                    'cementerios_servicio_id' => $request->inhumacion_b != 1 ?  NULL : $request->cementerio_servicio['value'],
-                    'ventas_terrenos_id' => $request->inhumacion_b != 1 ?  NULL : ($request->cementerio_servicio['value'] == 1 ? $request->ventas_terrenos_id : NULL),
-                    'nota_ubicacion' => $request->inhumacion_b != 1 ?  NULL : ($request->cementerio_servicio['value'] != 1 ? strtoupper($request->ubicacion) : NULL),
-                    'traslado_b' => $request->traslado_b != 1 ? 0 : 1,
-                    'fechahora_traslado' => $request->traslado_b != 1 ?  NULL : $request->fechahora_traslado,
-                    'destino_traslado' => $request->traslado_b != 1 ?  NULL : strtoupper($request->destino_traslado),
-                    'aseguradora_b' => $request->aseguradora_b != 1 ? 0 : 1,
-                    'numero_convenio_aseguradora' => $request->aseguradora_b != 1 ?  NULL : $request->numero_convenio_aseguradora,
-                    'aseguradora' => $request->aseguradora_b != 1 ?  NULL : strtoupper($request->aseguradora),
-                    'telefono_aseguradora' => $request->aseguradora_b != 1 ?  NULL : $request->telefono_aseguradora,
-                    'misa_b' => $request->misa_b != 1 ? 0 : 1,
-                    'iglesia_misa' => $request->misa_b != 1 ?  NULL : strtoupper($request->iglesia_misa),
-                    'direccion_iglesia' => $request->misa_b != 1 ?  NULL : strtoupper($request->direccion_iglesia),
-                    'fechahora_misa' => $request->misa_b != 1 ?  NULL : $request->fechahora_misa,
-                    'custodia_b' => $request->custodia_b != 1 ? 0 : 1,
-                    'responsable_custodia' => $request->custodia_b != 1 ?  NULL : strtoupper($request->responsable_custodia),
-                    'folio_custodia' => $request->custodia_b != 1 ?  NULL : $request->folio_custodia,
-                    'folio_liberacion' => $request->custodia_b != 1 ?  NULL : $request->folio_liberacion,
+                    'embalsamar_b'                      => $request->embalsamar_b != 1 ? 0 : 1,
+                    'preparador'                        => $request->preparador != null ? ($request->embalsamar_b == 1 ? strtoupper($request->preparador) : null) : null,
+                    'medico_responsable_embalsamado'    => $request->embalsamar_b != 1 ? null : ($request->embalsamar_b == 1 ? strtoupper($request->medico_responsable_embalsamado) : null),
+                    'velacion_b'                        => $request->velacion_b != 1 ? 0 : 1,
+                    'lugares_servicios_id'              => $request->velacion_b != 1 ? null : strtoupper($request->lugar_servicio['value']),
+                    'direccion_velacion'                => $request->velacion_b != 1 ? null : strtoupper($request->direccion_velacion),
+                    'cremacion_b'                       => $request->cremacion_b != 1 ? 0 : 1,
+                    'fechahora_cremacion'               => $request->cremacion_b != 1 ? null : $request->fechahora_cremacion,
+                    'fechahora_entrega_cenizas'         => $request->cremacion_b != 1 ? null : $request->fechahora_entrega_cenizas,
+                    'descripcion_urna'                  => $request->cremacion_b != 1 ? null : strtoupper($request->descripcion_urna),
+                    'inhumacion_b'                      => $request->inhumacion_b != 1 ? 0 : 1,
+                    'fechahora_inhumacion'              => $request->inhumacion_b != 1 ? null : $request->fechahora_inhumacion,
+                    'cementerios_servicio_id'           => $request->inhumacion_b != 1 ? null : $request->cementerio_servicio['value'],
+                    'ventas_terrenos_id'                => $request->inhumacion_b != 1 ? null : ($request->cementerio_servicio['value'] == 1 ? $request->ventas_terrenos_id : null),
+                    'nota_ubicacion'                    => $request->inhumacion_b != 1 ? null : ($request->cementerio_servicio['value'] != 1 ? strtoupper($request->ubicacion) : null),
+                    'traslado_b'                        => $request->traslado_b != 1 ? 0 : 1,
+                    'fechahora_traslado'                => $request->traslado_b != 1 ? null : $request->fechahora_traslado,
+                    'destino_traslado'                  => $request->traslado_b != 1 ? null : strtoupper($request->destino_traslado),
+                    'aseguradora_b'                     => $request->aseguradora_b != 1 ? 0 : 1,
+                    'numero_convenio_aseguradora'       => $request->aseguradora_b != 1 ? null : $request->numero_convenio_aseguradora,
+                    'aseguradora'                       => $request->aseguradora_b != 1 ? null : strtoupper($request->aseguradora),
+                    'telefono_aseguradora'              => $request->aseguradora_b != 1 ? null : $request->telefono_aseguradora,
+                    'misa_b'                            => $request->misa_b != 1 ? 0 : 1,
+                    'iglesia_misa'                      => $request->misa_b != 1 ? null : strtoupper($request->iglesia_misa),
+                    'direccion_iglesia'                 => $request->misa_b != 1 ? null : strtoupper($request->direccion_iglesia),
+                    'fechahora_misa'                    => $request->misa_b != 1 ? null : $request->fechahora_misa,
+                    'custodia_b'                        => $request->custodia_b != 1 ? 0 : 1,
+                    'responsable_custodia'              => $request->custodia_b != 1 ? null : strtoupper($request->responsable_custodia),
+                    'folio_custodia'                    => $request->custodia_b != 1 ? null : $request->folio_custodia,
+                    'folio_liberacion'                  => $request->custodia_b != 1 ? null : $request->folio_liberacion,
                     /**MATERIAL DE VELACION */
-                    'material_velacion_b' => $request->material_velacion_b != 1 ?  0 : 1,
+                    'material_velacion_b'               => $request->material_velacion_b != 1 ? 0 : 1,
                     /**PENDIENTE DE BORRAR MATERIAL EN CASO DE QUE NO LLEVE MATERIAL EL SERVICIO */
                     /**ACTA DE DEFUNCION */
-                    'acta_b' => $request->acta_b != 1 ? 0 : 1,
-                    'fechahora_acta' => $request->acta_b != 1 ?  NULL : $request->fecha_acta,
-                    'folio_acta' => $request->acta_b != 1 ?  NULL : $request->folio_acta,
+                    'acta_b'                            => $request->acta_b != 1 ? 0 : 1,
+                    'fechahora_acta'                    => $request->acta_b != 1 ? null : $request->fecha_acta,
+                    'folio_acta'                        => $request->acta_b != 1 ? null : $request->folio_acta,
                     /**DATOS DEL CONTRATO */
-                    'fechahora_contrato' => $request->fechahora_contrato,
-                    'parentesco_contratante' => strtoupper($request->parentesco_contratante),
-                    'plan_funerario_futuro_b' => $request->plan_funerario_futuro_b['value'] != 1 ? 0 : 1,
-                    'ventas_planes_id' => $request->plan_funerario_futuro_b['value'] != 1 ? NULL : $request->id_convenio_plan,
-                    'tipos_contratante_id' => $request->plan_funerario_futuro_b['value'] != 1 ? NULL : $request->tipo_contratante['value'],
-                    'plan_funerario_inmediato_b' => ($request->plan_funerario_futuro_b['value'] == 1) ? 0 : $request->plan_funerario_inmediato_b['value'],
-                    'planes_funerarios_id' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['value'],
-                    'plan_funerario_original' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['plan'],
-                    'costo_plan_original' => ($request->plan_funerario_inmediato_b['value'] != 1 ||  $request->plan_funerario_futuro_b['value'] == 1) ? NULL : $request->plan_funerario['costo_neto'],
-                    'modifico_id' => (int) $request->user()->id,
-                    'fecha_modificacion' => now(),
-                    'registro_contrato_id' => $datos_solicitud['registro_contrato_id'] == NULL ? (int) $request->user()->id : $datos_solicitud['registro_contrato_id'],
-                    'nota_servicio' => strtoupper($request->nota)
+                    'fechahora_contrato'                => $request->fechahora_contrato,
+                    'parentesco_contratante'            => strtoupper($request->parentesco_contratante),
+                    'plan_funerario_futuro_b'           => $request->plan_funerario_futuro_b['value'] != 1 ? 0 : 1,
+                    'ventas_planes_id'                  => $request->plan_funerario_futuro_b['value'] != 1 ? null : $request->id_convenio_plan,
+                    'tipos_contratante_id'              => $request->plan_funerario_futuro_b['value'] != 1 ? null : $request->tipo_contratante['value'],
+                    'plan_funerario_inmediato_b'        => ($request->plan_funerario_futuro_b['value'] == 1) ? 0 : $request->plan_funerario_inmediato_b['value'],
+                    'planes_funerarios_id'              => ($request->plan_funerario_inmediato_b['value'] != 1 || $request->plan_funerario_futuro_b['value'] == 1) ? null : $request->plan_funerario['value'],
+                    'plan_funerario_original'           => ($request->plan_funerario_inmediato_b['value'] != 1 || $request->plan_funerario_futuro_b['value'] == 1) ? null : $request->plan_funerario['plan'],
+                    'costo_plan_original'               => ($request->plan_funerario_inmediato_b['value'] != 1 || $request->plan_funerario_futuro_b['value'] == 1) ? null : $request->plan_funerario['costo_neto'],
+                    'modifico_id'                       => (int) $request->user()->id,
+                    'fecha_modificacion'                => now(),
+                    'registro_contrato_id'              => $datos_solicitud['registro_contrato_id'] == null ? (int) $request->user()->id : $datos_solicitud['registro_contrato_id'],
+                    'nota_servicio'                     => strtoupper($request->nota),
                 ]
             );
-
 
             /**ELIMINANDO EL MATERIAL DE VELACION ANTERIOR */
             DB::table('material_rentado')->where('servicios_funerarios_id', '=', $request->id_servicio)->delete();
@@ -3004,14 +2917,13 @@ class FunerariaController extends ApiController
                     DB::table('material_rentado')->insert(
                         [
                             'servicios_funerarios_id' => $request->id_servicio,
-                            'articulos_id' => $material['id'],
-                            'cantidad' => $material['cantidad'],
-                            'nota' => $material['nota']
+                            'articulos_id'            => $material['id'],
+                            'cantidad'                => $material['cantidad'],
+                            'nota'                    => $material['nota'],
                         ]
                     );
                 }
             }
-
 
             /**ACTUALIZANDO LOS CONCEPTOS ORIGINALES DEL PLAN FUNERARIO DE USO INMEDIATO */
             DB::table('plan_conceptos_servicio_original')->where('servicios_funerarios_id', '=', $request->id_servicio)->delete();
@@ -3034,10 +2946,10 @@ class FunerariaController extends ApiController
                         }
                         DB::table('plan_conceptos_servicio_original')->insert(
                             [
-                                'seccion_id' => $seccion,
+                                'seccion_id'              => $seccion,
                                 'servicios_funerarios_id' => $request->id_servicio,
-                                'concepto' => $concepto['concepto'],
-                                'concepto_ingles' => $concepto['concepto_ingles']
+                                'concepto'                => $concepto['concepto'],
+                                'concepto_ingles'         => $concepto['concepto_ingles'],
                             ]
                         );
                     }
@@ -3045,10 +2957,10 @@ class FunerariaController extends ApiController
             }
 
             /**ACTUALIZANDO EL LA TABLA DE OPERACION */
-            $subtotal = 0;
+            $subtotal  = 0;
             $descuento = 0;
             $impuestos = 0;
-            $total = 0;
+            $total     = 0;
 
             //CARGANDO EL INVENTARIO PARA COMPARAR DISPONIBILIDAD
             $r = new \Illuminate\Http\Request();
@@ -3056,44 +2968,44 @@ class FunerariaController extends ApiController
             $inventario_lotes = $this->get_inventario($r);
 
             /**se inicializan los valores para el id de la operacion y el movimiento en el inventario */
-            $id_operacion = null;
+            $id_operacion             = null;
             $id_movimiento_inventario = null;
             if ($datos_solicitud['operacion'] == null && !isset($datos_solicitud['operacion']['movimientoinventario'])) {
                 /**LA OPERACION NIO EXISTE Y SE DEBE DE REGISTRAR */
                 /**UNA VEZ ARRIBA CALCULADO LOS MONTOS SE PROCEDE A ACTUALIZAR TABLAS */
                 $id_operacion = DB::table('operaciones')->insertGetId(
                     [
-                        'financiamiento' => 1,
-                        'clientes_id' => $request->id_cliente,
-                        'empresa_operaciones_id' => 3,
-                        'aplica_devolucion_b' => 0,
-                        'fecha_operacion' => $request->fechahora_contrato,
-                        'fecha_registro' => now(),
+                        'financiamiento'          => 1,
+                        'clientes_id'             => $request->id_cliente,
+                        'empresa_operaciones_id'  => 3,
+                        'aplica_devolucion_b'     => 0,
+                        'fecha_operacion'         => $request->fechahora_contrato,
+                        'fecha_registro'          => now(),
                         'servicios_funerarios_id' => $request->id_servicio,
-                        'subtotal' => $subtotal,
-                        'descuento' => 0,
-                        'impuestos' => $impuestos,
-                        'total' => $total,
-                        'tasa_iva' => $request->tasa_iva,
+                        'subtotal'                => $subtotal,
+                        'descuento'               => 0,
+                        'impuestos'               => $impuestos,
+                        'total'                   => $total,
+                        'tasa_iva'                => $request->tasa_iva,
                         'antiguedad_operacion_id' => 1,
-                        'registro_id' =>  (int) $request->user()->id,
-                        'status' => 1
+                        'registro_id'             => (int) $request->user()->id,
+                        'status'                  => 1,
                     ]
                 );
                 /**se registra el movimiento en el inventario */
                 $id_movimiento_inventario = DB::table('movimientos_inventario')->insertGetId(
                     [
-                        'fecha_movimiento' => $request->fechahora_contrato,
-                        'fecha_registro' => now(),
-                        'operaciones_id' => $id_operacion,
+                        'fecha_movimiento'    => $request->fechahora_contrato,
+                        'fecha_registro'      => now(),
+                        'operaciones_id'      => $id_operacion,
                         'tipo_movimientos_id' => 9, //venta de mercancia
-                        'registro_id' =>  (int) $request->user()->id,
-                        'status' => 1
+                        'registro_id'         => (int) $request->user()->id,
+                        'status'              => 1,
                     ]
                 );
             } else {
                 /**se toman los ids de la operacion existente */
-                $id_operacion = $datos_solicitud['operacion']['id'];
+                $id_operacion             = $datos_solicitud['operacion']['id'];
                 $id_movimiento_inventario = $datos_solicitud['operacion']['movimientoinventario']['id'];
             }
 
@@ -3101,16 +3013,16 @@ class FunerariaController extends ApiController
             $operacion_existia = isset($datos_solicitud['operacion']['movimientoinventario']) ? true : false;
             /**VERIFICANDO PRIMERO LA EXISTENCIA DE ARTICULOS EN INVENTARIO */
             /**consultas para detalle venta y actualizacion del inventario */
-            $detalle_venta = [];
+            $detalle_venta      = [];
             $detalle_inventario = [];
             //CARGANDO EL INVENTARIO PARA COMPARAR DISPONIBILIDAD
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
-            $inventario = $this->get_inventario($r);
-            $subtotal = 0;
-            $descuento = 0;
-            $impuestos = 0;
-            $total = 0;
+            $inventario                     = $this->get_inventario($r);
+            $subtotal                       = 0;
+            $descuento                      = 0;
+            $impuestos                      = 0;
+            $total                          = 0;
             $articulos_servicios_recorridos = [];
             /**arreglo vacio para que cada que se encuentre en la lista de artivulos enviados se descarte en la proxima vuelta */
             foreach ($request->articulos_servicios as $index_articulo_servicio => $articulo_servicio) {
@@ -3135,7 +3047,7 @@ class FunerariaController extends ApiController
                                 foreach ($articulo['inventario'] as $lote) {
                                     if ($lote['lotes_id'] == $articulo_servicio['lote']) {
                                         /**el lote existe */
-                                        $existe_lote = true;
+                                        $existe_lote     = true;
                                         $tenia_articulos = false;
                                         if (isset($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
                                             if (count($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario']) > 0) {
@@ -3164,15 +3076,15 @@ class FunerariaController extends ApiController
                                                         if ($articulo_servicio_index['plan_b'] == 1) {
                                                             /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                                             array_push($detalle_venta, [
-                                                                'cantidad' => $articulo_servicio_index['cantidad'],
-                                                                'lotes_id' => $articulo_servicio_index['lote'],
+                                                                'cantidad'                  => $articulo_servicio_index['cantidad'],
+                                                                'lotes_id'                  => $articulo_servicio_index['lote'],
                                                                 'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                                'articulos_id' => $articulo_servicio_index['id'],
-                                                                'costo_neto_normal' => 0,
-                                                                'costo_neto_descuento' => 0,
-                                                                'descuento_b' => 0,
-                                                                'plan_b' => 1,
-                                                                'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                                'articulos_id'              => $articulo_servicio_index['id'],
+                                                                'costo_neto_normal'         => 0,
+                                                                'costo_neto_descuento'      => 0,
+                                                                'descuento_b'               => 0,
+                                                                'plan_b'                    => 1,
+                                                                'facturable_b'              => $articulo_servicio_index['facturable_b'],
                                                             ]);
                                                         } else {
                                                             /**no es parte del plan funerario */
@@ -3199,15 +3111,15 @@ class FunerariaController extends ApiController
                                                                 /**el registro con descuento_b */
                                                                 /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                                                 array_push($detalle_venta, [
-                                                                    'cantidad' => $articulo_servicio_index['cantidad'],
-                                                                    'lotes_id' => $articulo_servicio_index['lote'],
+                                                                    'cantidad'                  => $articulo_servicio_index['cantidad'],
+                                                                    'lotes_id'                  => $articulo_servicio_index['lote'],
                                                                     'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                                    'articulos_id' => $articulo_servicio_index['id'],
-                                                                    'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
-                                                                    'costo_neto_descuento' =>  $articulo_servicio_index['costo_neto_descuento'],
-                                                                    'descuento_b' => 1,
-                                                                    'plan_b' => 0,
-                                                                    'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                                    'articulos_id'              => $articulo_servicio_index['id'],
+                                                                    'costo_neto_normal'         => $articulo_servicio_index['costo_neto_normal'],
+                                                                    'costo_neto_descuento'      => $articulo_servicio_index['costo_neto_descuento'],
+                                                                    'descuento_b'               => 1,
+                                                                    'plan_b'                    => 0,
+                                                                    'facturable_b'              => $articulo_servicio_index['facturable_b'],
                                                                 ]);
                                                             } else {
                                                                 /**fueron puros precios sin descuento */
@@ -3222,15 +3134,15 @@ class FunerariaController extends ApiController
                                                                 //sumando el total
                                                                 $total += $articulo_servicio_index['costo_neto_normal'] * $articulo_servicio_index['cantidad'];
                                                                 array_push($detalle_venta, [
-                                                                    'cantidad' => $articulo_servicio_index['cantidad'],
-                                                                    'lotes_id' => $articulo_servicio_index['lote'],
+                                                                    'cantidad'                  => $articulo_servicio_index['cantidad'],
+                                                                    'lotes_id'                  => $articulo_servicio_index['lote'],
                                                                     'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                                    'articulos_id' => $articulo_servicio_index['id'],
-                                                                    'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
-                                                                    'costo_neto_descuento' => 0,
-                                                                    'descuento_b' => 0,
-                                                                    'plan_b' => 0,
-                                                                    'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                                    'articulos_id'              => $articulo_servicio_index['id'],
+                                                                    'costo_neto_normal'         => $articulo_servicio_index['costo_neto_normal'],
+                                                                    'costo_neto_descuento'      => 0,
+                                                                    'descuento_b'               => 0,
+                                                                    'plan_b'                    => 0,
+                                                                    'facturable_b'              => $articulo_servicio_index['facturable_b'],
                                                                 ]);
                                                             }
                                                         }
@@ -3270,15 +3182,15 @@ class FunerariaController extends ApiController
                                                         /**el registro con descuento_b */
                                                         /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                                         array_push($detalle_venta, [
-                                                            'cantidad' => $articulo_servicio_index['cantidad'],
-                                                            'lotes_id' => $articulo_servicio_index['lote'],
+                                                            'cantidad'                  => $articulo_servicio_index['cantidad'],
+                                                            'lotes_id'                  => $articulo_servicio_index['lote'],
                                                             'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                            'articulos_id' => $articulo_servicio_index['id'],
-                                                            'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
-                                                            'costo_neto_descuento' =>  $articulo_servicio_index['costo_neto_descuento'],
-                                                            'descuento_b' => 1,
-                                                            'plan_b' => $articulo_servicio_index['plan_b'],
-                                                            'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                            'articulos_id'              => $articulo_servicio_index['id'],
+                                                            'costo_neto_normal'         => $articulo_servicio_index['costo_neto_normal'],
+                                                            'costo_neto_descuento'      => $articulo_servicio_index['costo_neto_descuento'],
+                                                            'descuento_b'               => 1,
+                                                            'plan_b'                    => $articulo_servicio_index['plan_b'],
+                                                            'facturable_b'              => $articulo_servicio_index['facturable_b'],
                                                         ]);
                                                     } else {
                                                         /**fueron puros precios sin descuento */
@@ -3293,15 +3205,15 @@ class FunerariaController extends ApiController
                                                         //sumando el total
                                                         $total += $articulo_servicio_index['costo_neto_normal'] * $articulo_servicio_index['cantidad'];
                                                         array_push($detalle_venta, [
-                                                            'cantidad' => $articulo_servicio_index['cantidad'],
-                                                            'lotes_id' => $articulo_servicio_index['lote'],
+                                                            'cantidad'                  => $articulo_servicio_index['cantidad'],
+                                                            'lotes_id'                  => $articulo_servicio_index['lote'],
                                                             'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                            'articulos_id' => $articulo_servicio_index['id'],
-                                                            'costo_neto_normal' => $articulo_servicio_index['costo_neto_normal'],
-                                                            'costo_neto_descuento' => 0,
-                                                            'descuento_b' => 0,
-                                                            'plan_b' => $articulo_servicio_index['plan_b'],
-                                                            'facturable_b' => $articulo_servicio_index['facturable_b']
+                                                            'articulos_id'              => $articulo_servicio_index['id'],
+                                                            'costo_neto_normal'         => $articulo_servicio_index['costo_neto_normal'],
+                                                            'costo_neto_descuento'      => 0,
+                                                            'descuento_b'               => 0,
+                                                            'plan_b'                    => $articulo_servicio_index['plan_b'],
+                                                            'facturable_b'              => $articulo_servicio_index['facturable_b'],
                                                         ]);
                                                     }
                                                 }
@@ -3326,21 +3238,21 @@ class FunerariaController extends ApiController
                                         if ($existencia_inventario_tomando_en_cuenta_el_contrato < $cantidad_lote_solicitado) {
                                             return $this->errorResponse('No se tiene suficiente cantidad del artículo ' . $articulo_servicio['descripcion'] . ' en el lote ' . $lote['lotes_id'], 409);
                                         } else {
-                                            /**aqui comienzo a agregar el detalle de como quedara actualizado la parte del inventario 
+                                            /**aqui comienzo a agregar el detalle de como quedara actualizado la parte del inventario
                                              * con la actualizacion de la nueva demanda de
                                              * articulos
                                              */
                                             array_push($detalle_inventario, [
-                                                'lotes_id' => $lote['lotes_id'],
+                                                'lotes_id'     => $lote['lotes_id'],
                                                 'articulos_id' => $lote['articulos_id'],
-                                                'existencia' => $existencia_inventario_tomando_en_cuenta_el_contrato - $cantidad_lote_solicitado
+                                                'existencia'   => $existencia_inventario_tomando_en_cuenta_el_contrato - $cantidad_lote_solicitado,
                                             ]);
                                         }
                                         break;
                                     } //fin if existe lote
                                 }
-                                /**en 
-                                 * caso de 
+                                /**en
+                                 * caso de
                                  * que no tenga
                                  * lote
                                  */
@@ -3369,15 +3281,15 @@ class FunerariaController extends ApiController
                                         if ($articulo_servicio['plan_b'] == 1) {
                                             /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                             array_push($detalle_venta, [
-                                                'cantidad' => $articulo_servicio['cantidad'],
-                                                'lotes_id' => NULL,
+                                                'cantidad'                  => $articulo_servicio['cantidad'],
+                                                'lotes_id'                  => null,
                                                 'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                'articulos_id' => $articulo_servicio['id'],
-                                                'costo_neto_normal' => 0,
-                                                'costo_neto_descuento' => 0,
-                                                'descuento_b' => 0,
-                                                'plan_b' => 1,
-                                                'facturable_b' => $articulo_servicio['facturable_b']
+                                                'articulos_id'              => $articulo_servicio['id'],
+                                                'costo_neto_normal'         => 0,
+                                                'costo_neto_descuento'      => 0,
+                                                'descuento_b'               => 0,
+                                                'plan_b'                    => 1,
+                                                'facturable_b'              => $articulo_servicio['facturable_b'],
                                             ]);
                                         } else {
                                             /**no es parte del plan funerario */
@@ -3404,15 +3316,15 @@ class FunerariaController extends ApiController
                                                 /**el registro con descuento_b */
                                                 /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                                 array_push($detalle_venta, [
-                                                    'cantidad' => $articulo_servicio['cantidad'],
-                                                    'lotes_id' => NULL,
+                                                    'cantidad'                  => $articulo_servicio['cantidad'],
+                                                    'lotes_id'                  => null,
                                                     'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                    'articulos_id' => $articulo_servicio['id'],
-                                                    'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
-                                                    'costo_neto_descuento' =>  $articulo_servicio['costo_neto_descuento'],
-                                                    'descuento_b' => 1,
-                                                    'plan_b' => 0,
-                                                    'facturable_b' => $articulo_servicio['facturable_b']
+                                                    'articulos_id'              => $articulo_servicio['id'],
+                                                    'costo_neto_normal'         => $articulo_servicio['costo_neto_normal'],
+                                                    'costo_neto_descuento'      => $articulo_servicio['costo_neto_descuento'],
+                                                    'descuento_b'               => 1,
+                                                    'plan_b'                    => 0,
+                                                    'facturable_b'              => $articulo_servicio['facturable_b'],
                                                 ]);
                                             } else {
                                                 /**fueron puros precios sin descuento */
@@ -3427,15 +3339,15 @@ class FunerariaController extends ApiController
                                                 //sumando el total
                                                 $total += $articulo_servicio['costo_neto_normal'] * $articulo_servicio['cantidad'];
                                                 array_push($detalle_venta, [
-                                                    'cantidad' => $articulo_servicio['cantidad'],
-                                                    'lotes_id' => NULL,
+                                                    'cantidad'                  => $articulo_servicio['cantidad'],
+                                                    'lotes_id'                  => null,
                                                     'movimientos_inventario_id' => $id_movimiento_inventario,
-                                                    'articulos_id' => $articulo_servicio['id'],
-                                                    'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
-                                                    'costo_neto_descuento' => 0,
-                                                    'descuento_b' => 0,
-                                                    'plan_b' => 0,
-                                                    'facturable_b' => $articulo_servicio['facturable_b']
+                                                    'articulos_id'              => $articulo_servicio['id'],
+                                                    'costo_neto_normal'         => $articulo_servicio['costo_neto_normal'],
+                                                    'costo_neto_descuento'      => 0,
+                                                    'descuento_b'               => 0,
+                                                    'plan_b'                    => 0,
+                                                    'facturable_b'              => $articulo_servicio['facturable_b'],
                                                 ]);
                                             }
                                         }
@@ -3475,15 +3387,15 @@ class FunerariaController extends ApiController
                                         /**el registro con descuento_b */
                                         /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                         array_push($detalle_venta, [
-                                            'cantidad' => $articulo_servicio['cantidad'],
-                                            'lotes_id' => NULL,
+                                            'cantidad'                  => $articulo_servicio['cantidad'],
+                                            'lotes_id'                  => null,
                                             'movimientos_inventario_id' => $id_movimiento_inventario,
-                                            'articulos_id' => $articulo_servicio['id'],
-                                            'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
-                                            'costo_neto_descuento' =>  $articulo_servicio['costo_neto_descuento'],
-                                            'descuento_b' => 1,
-                                            'plan_b' => $articulo_servicio['plan_b'],
-                                            'facturable_b' => $articulo_servicio['facturable_b']
+                                            'articulos_id'              => $articulo_servicio['id'],
+                                            'costo_neto_normal'         => $articulo_servicio['costo_neto_normal'],
+                                            'costo_neto_descuento'      => $articulo_servicio['costo_neto_descuento'],
+                                            'descuento_b'               => 1,
+                                            'plan_b'                    => $articulo_servicio['plan_b'],
+                                            'facturable_b'              => $articulo_servicio['facturable_b'],
                                         ]);
                                     } else {
                                         /**fueron puros precios sin descuento */
@@ -3498,15 +3410,15 @@ class FunerariaController extends ApiController
                                         //sumando el total
                                         $total += $articulo_servicio['costo_neto_normal'] * $articulo_servicio['cantidad'];
                                         array_push($detalle_venta, [
-                                            'cantidad' => $articulo_servicio['cantidad'],
-                                            'lotes_id' => NULL,
+                                            'cantidad'                  => $articulo_servicio['cantidad'],
+                                            'lotes_id'                  => null,
                                             'movimientos_inventario_id' => $id_movimiento_inventario,
-                                            'articulos_id' => $articulo_servicio['id'],
-                                            'costo_neto_normal' => $articulo_servicio['costo_neto_normal'],
-                                            'costo_neto_descuento' => 0,
-                                            'descuento_b' => 0,
-                                            'plan_b' => $articulo_servicio['plan_b'],
-                                            'facturable_b' => $articulo_servicio['facturable_b']
+                                            'articulos_id'              => $articulo_servicio['id'],
+                                            'costo_neto_normal'         => $articulo_servicio['costo_neto_normal'],
+                                            'costo_neto_descuento'      => 0,
+                                            'descuento_b'               => 0,
+                                            'plan_b'                    => $articulo_servicio['plan_b'],
+                                            'facturable_b'              => $articulo_servicio['facturable_b'],
                                         ]);
                                     }
                                 }
@@ -3558,18 +3470,18 @@ class FunerariaController extends ApiController
                         foreach ($detalle_inventario as $index_detalle => &$detalle) {
                             if ($detalle['lotes_id'] == $articulo_contrato['lotes_id'] && $detalle['articulos_id'] == $articulo_contrato['articulos_id']) {
                                 $esta_row = true;
-                                $detalle['existencia'] +=  $suma_quitado;
+                                $detalle['existencia'] += $suma_quitado;
                             }
                         }
                         if ($esta_row == false) {
                             foreach ($inventario as $articulo) {
                                 foreach ($articulo['inventario'] as &$lote) {
                                     if ($lote['lotes_id'] == $articulo_contrato['lotes_id'] && $lote['articulos_id'] == $articulo_contrato['articulos_id']) {
-                                        $lote['existencia'] +=   $suma_quitado;
+                                        $lote['existencia'] += $suma_quitado;
                                         array_push($detalle_inventario, [
-                                            'lotes_id' => $articulo_contrato['lotes_id'],
+                                            'lotes_id'     => $articulo_contrato['lotes_id'],
                                             'articulos_id' => $articulo_contrato['articulos_id'],
-                                            'existencia' => $lote['existencia']
+                                            'existencia'   => $lote['existencia'],
                                         ]);
                                     }
                                 }
@@ -3585,10 +3497,10 @@ class FunerariaController extends ApiController
                 DB::table('inventario')
                     ->where('articulos_id', '=', $detalle['articulos_id'])
                     ->where('lotes_id', '=', $detalle['lotes_id'])->update(
-                        [
-                            'existencia' => $detalle['existencia']
-                        ]
-                    );
+                    [
+                        'existencia' => $detalle['existencia'],
+                    ]
+                );
             }
 
             /**eliminando los articulos y servicios anteriores */
@@ -3597,37 +3509,34 @@ class FunerariaController extends ApiController
             foreach ($detalle_venta as $index_detalle => $detalle) {
                 DB::table('venta_detalle')->insert(
                     [
-                        'cantidad' => $detalle['cantidad'],
-                        'lotes_id' => $detalle['lotes_id'],
+                        'cantidad'                  => $detalle['cantidad'],
+                        'lotes_id'                  => $detalle['lotes_id'],
                         'movimientos_inventario_id' => $detalle['movimientos_inventario_id'],
-                        'articulos_id' => $detalle['articulos_id'],
-                        'costo_neto_normal' => $detalle['costo_neto_normal'],
-                        'costo_neto_descuento' => $detalle['costo_neto_descuento'],
-                        'descuento_b' => $detalle['descuento_b'],
-                        'plan_b' => $detalle['plan_b'],
-                        'facturable_b' => $detalle['facturable_b']
+                        'articulos_id'              => $detalle['articulos_id'],
+                        'costo_neto_normal'         => $detalle['costo_neto_normal'],
+                        'costo_neto_descuento'      => $detalle['costo_neto_descuento'],
+                        'descuento_b'               => $detalle['descuento_b'],
+                        'plan_b'                    => $detalle['plan_b'],
+                        'facturable_b'              => $detalle['facturable_b'],
                     ]
                 );
             }
 
-
             /**actualizando totales de la operacion */
             DB::table('operaciones')->where('servicios_funerarios_id', $request->id_servicio)->update(
                 [
-                    'clientes_id' => $request->id_cliente,
+                    'clientes_id'     => $request->id_cliente,
                     'fecha_operacion' => $request->fechahora_contrato,
-                    'subtotal' => $subtotal,
-                    'descuento' => $descuento,
-                    'impuestos' => $impuestos,
-                    'total' => $total,
-                    'tasa_iva' => $request->tasa_iva
+                    'subtotal'        => $subtotal,
+                    'descuento'       => $descuento,
+                    'impuestos'       => $impuestos,
+                    'total'           => $total,
+                    'tasa_iva'        => $request->tasa_iva,
                 ]
             );
 
             /**actualizacion de la programacion de pagos */
             $fecha_maxima = Carbon::createFromformat('Y-m-d', date('Y-m-d', strtotime($request->fechahora_contrato)))->add(0, 'day');
-
-
 
             if ($datos_solicitud['operacion'] == null && !isset($datos_solicitud['operacion']['pagos_programados'])) {
 
@@ -3636,13 +3545,13 @@ class FunerariaController extends ApiController
                 $id_pago_programado_unico = DB::table('pagos_programados')->insertGetId(
                     [
                         /**utilizo la referencia de pago 004 para servicios funerarios */
-                        'num_pago' => 1, //numero 1, pues es unico
-                        'referencia_pago' => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
-                        'fecha_programada' => $fecha_maxima, //fecha de la venta
+                        'num_pago'           => 1, //numero 1, pues es unico
+                        'referencia_pago'    => '004' . date('Ymd', strtotime($request->fechahora_contrato)) . '01' . $request->id_servicio, //se crea una referencia para saber a que pago pertenece
+                        'fecha_programada'   => $fecha_maxima, //fecha de la venta
                         'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
-                        'monto_programado' => $total,
-                        'operaciones_id' => $id_operacion,
-                        'status' => 1
+                        'monto_programado'   => $total,
+                        'operaciones_id'     => $id_operacion,
+                        'status'             => 1,
                     ]
                 );
             } else {
@@ -3656,7 +3565,7 @@ class FunerariaController extends ApiController
                             //'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
                             'monto_programado' => $total,
                             //'operaciones_id' => $id_operacion,
-                            'status' => 1
+                            'status'           => 1,
                         ]
                     );
                 } else {
@@ -3664,15 +3573,12 @@ class FunerariaController extends ApiController
                 }
             }
 
-
-
-
             /* $datos['subtotal'] = $subtotal;
             $datos['descuento'] = $descuento;
             $datos['impuestos'] = $impuestos;
             $datos['total'] = $total;
             return $this->errorResponse($datos, 409);
-            */
+             */
 
             $id_return = $request->id_servicio;
             DB::commit();
@@ -3683,16 +3589,15 @@ class FunerariaController extends ApiController
         }
     }
 
-
     /**obtiene los servicios funerarios */
-    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false,$uso_plan_funerario_futuro=0,$uso_terreno_id=0)
+    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false, $uso_plan_funerario_futuro = 0, $uso_terreno_id = 0)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $fallecido = $request->fallecido;
-        $numero_control = $request->numero_control;
-        $status = $request->status;
-        $fecha_operacion = $request->fecha_operacion;
-        $resultado_query = ServiciosFunerarios::select(
+        $fallecido                = $request->fallecido;
+        $numero_control           = $request->numero_control;
+        $status                   = $request->status;
+        $fecha_operacion          = $request->fecha_operacion;
+        $resultado_query          = ServiciosFunerarios::select(
             'id',
             'registro_contrato_id',
             'nota_servicio',
@@ -3882,18 +3787,18 @@ class FunerariaController extends ApiController
             ->with('operacion.pagosProgramados.pagados')
             ->with('operacion.cliente')
             ->with('operacion.cancelador')
-            /**validnado si se hace filtrado de algun plan funerario de uso inmediato */
+        /**validnado si se hace filtrado de algun plan funerario de uso inmediato */
             ->where(function ($q) use ($uso_plan_funerario_futuro) {
                 if (trim($uso_plan_funerario_futuro) != '' && $uso_plan_funerario_futuro > 0) {
-                        $q->where('servicios_funerarios.ventas_planes_id', '=', $uso_plan_funerario_futuro);
+                    $q->where('servicios_funerarios.ventas_planes_id', '=', $uso_plan_funerario_futuro);
                 }
             })
             ->where(function ($q) use ($uso_terreno_id) {
                 if (trim($uso_terreno_id) != '' && $uso_terreno_id > 0) {
-                        $q->where('servicios_funerarios.ventas_terrenos_id', '=', $uso_terreno_id);
+                    $q->where('servicios_funerarios.ventas_terrenos_id', '=', $uso_terreno_id);
                 }
             })
-            
+
             ->where(function ($q) use ($id_servicio) {
                 if (trim($id_servicio) == 'all' || $id_servicio > 0) {
                     if (trim($id_servicio) == 'all') {
@@ -3907,7 +3812,7 @@ class FunerariaController extends ApiController
                 if (trim($numero_control) != '') {
                     if ($filtro_especifico_opcion == 1) {
                         /**filtro por numero de solicitud */
-                        $q->where('servicios_funerarios.id', '=',  $numero_control);
+                        $q->where('servicios_funerarios.id', '=', $numero_control);
                     }
                 }
             })
@@ -3916,8 +3821,8 @@ class FunerariaController extends ApiController
                     $q->where('servicios_funerarios.status', '=', $status);
                 }
             })
-            //->join('operaciones', 'operaciones.servicios_funerarios_id', '=', 'servicios_funerarios.id')
-            //->join('clientes', 'clientes.id', '=', 'operaciones.clientes_id')
+        //->join('operaciones', 'operaciones.servicios_funerarios_id', '=', 'servicios_funerarios.id')
+        //->join('clientes', 'clientes.id', '=', 'operaciones.clientes_id')
             ->where('nombre_afectado', 'like', '%' . $fallecido . '%')
             ->orderBy('servicios_funerarios.id', 'desc')
             ->get();
@@ -3926,10 +3831,10 @@ class FunerariaController extends ApiController
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado = &$resultado_query['data'];
+            $resultado       = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado = &$resultado_query;
+            $resultado       = &$resultado_query;
         }
 
         /**traigo el inventario para llenar los datos de los conceptos del contrato */
@@ -3942,18 +3847,18 @@ class FunerariaController extends ApiController
                 foreach ($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_articulo => &$articulo) {
                     foreach ($articulos as $index_inventario => $inventario) {
                         if ($articulo['articulos_id'] == $inventario['id']) {
-                            $articulo['descripcion'] = $inventario['descripcion'];
-                            $articulo['categoria'] = $inventario['categoria']['categoria'];
-                            $articulo['tipo'] = $inventario['tipo_articulo']['tipo'];
+                            $articulo['descripcion']   = $inventario['descripcion'];
+                            $articulo['categoria']     = $inventario['categoria']['categoria'];
+                            $articulo['tipo']          = $inventario['tipo_articulo']['tipo'];
                             $articulo['codigo_barras'] = $inventario['codigo_barras'];
                             /**importa para cuando es con plan funerario a futuro  */
                             if ($solicitud['plan_funerario_futuro_b'] == 1 && $solicitud['ventas_planes_id'] > 0) {
                                 if ($articulo['plan_b'] == 1) {
-                                    $articulo['subtotal'] = 0;
-                                    $articulo['descuento'] = 0;
-                                    $articulo['impuestos'] = 0;
+                                    $articulo['subtotal']   = 0;
+                                    $articulo['descuento']  = 0;
+                                    $articulo['impuestos']  = 0;
                                     $articulo['costo_neto'] = 0;
-                                    $articulo['importe'] = 0;
+                                    $articulo['importe']    = 0;
                                 } else {
                                     if ($articulo['descuento_b'] == 1) {
                                         //se toma el precio de descuento, verificnado que el precio de descuento es menor o igual al precio de costo neto real
@@ -3962,18 +3867,18 @@ class FunerariaController extends ApiController
                                             if ($articulo['facturable_b'] == 1) {
 
                                                 /**se desglosa el IVA */
-                                                $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                                $articulo['impuestos'] = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                                $articulo['descuento'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
+                                                $articulo['subtotal']   = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                                $articulo['impuestos']  = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                                $articulo['descuento']  = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
                                                 $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
-                                                $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                                $articulo['importe']    = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
                                             } else {
                                                 /**no grava IVA */
-                                                $articulo['subtotal'] = $articulo['costo_neto_normal'];
-                                                $articulo['impuestos'] = 0;
-                                                $articulo['descuento'] = $articulo['costo_neto_normal'] - $articulo['costo_neto_descuento'];
+                                                $articulo['subtotal']   = $articulo['costo_neto_normal'];
+                                                $articulo['impuestos']  = 0;
+                                                $articulo['descuento']  = $articulo['costo_neto_normal'] - $articulo['costo_neto_descuento'];
                                                 $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
-                                                $articulo['importe'] = $articulo['costo_neto'] * $articulo['cantidad'];
+                                                $articulo['importe']    = $articulo['costo_neto'] * $articulo['cantidad'];
                                             }
                                         } else {
                                             /**no se puede proceder por que el precio de descuento no es correcto */
@@ -3982,18 +3887,18 @@ class FunerariaController extends ApiController
                                     } else {
                                         /**fueron puros precios sin descuento */
                                         if ($articulo['facturable_b'] == 1) {
-                                            $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                            $articulo['impuestos'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                            $articulo['descuento'] = 0;
+                                            $articulo['subtotal']   = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['impuestos']  = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['descuento']  = 0;
                                             $articulo['costo_neto'] = $articulo['costo_neto_normal'];
-                                            $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                            $articulo['importe']    = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
                                         } else {
                                             /**no grava IVA */
-                                            $articulo['subtotal'] = $articulo['costo_neto_normal'];
-                                            $articulo['impuestos'] = 0;
-                                            $articulo['descuento'] = 0;
+                                            $articulo['subtotal']   = $articulo['costo_neto_normal'];
+                                            $articulo['impuestos']  = 0;
+                                            $articulo['descuento']  = 0;
                                             $articulo['costo_neto'] = $articulo['costo_neto_normal'];
-                                            $articulo['importe'] =
+                                            $articulo['importe']    =
                                                 round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
                                         }
                                     }
@@ -4007,18 +3912,18 @@ class FunerariaController extends ApiController
                                         if ($articulo['facturable_b'] == 1) {
 
                                             /**se desglosa el IVA */
-                                            $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                            $articulo['impuestos'] = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                            $articulo['descuento'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['subtotal']   = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['impuestos']  = round(((($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                            $articulo['descuento']  = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) - ($articulo['costo_neto_descuento'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))))), 2, PHP_ROUND_HALF_UP);
                                             $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
-                                            $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                            $articulo['importe']    = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
                                         } else {
                                             /**no grava IVA */
-                                            $articulo['subtotal'] = $articulo['costo_neto_normal'];
-                                            $articulo['impuestos'] = 0;
-                                            $articulo['descuento'] = $articulo['costo_neto_normal'] - $articulo['costo_neto_descuento'];
+                                            $articulo['subtotal']   = $articulo['costo_neto_normal'];
+                                            $articulo['impuestos']  = 0;
+                                            $articulo['descuento']  = $articulo['costo_neto_normal'] - $articulo['costo_neto_descuento'];
                                             $articulo['costo_neto'] = $articulo['costo_neto_descuento'];
-                                            $articulo['importe'] = $articulo['costo_neto'] * $articulo['cantidad'];
+                                            $articulo['importe']    = $articulo['costo_neto'] * $articulo['cantidad'];
                                         }
                                     } else {
                                         /**no se puede proceder por que el precio de descuento no es correcto */
@@ -4027,18 +3932,18 @@ class FunerariaController extends ApiController
                                 } else {
                                     /**fueron puros precios sin descuento */
                                     if ($articulo['facturable_b'] == 1) {
-                                        $articulo['subtotal'] = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                        $articulo['impuestos'] = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
-                                        $articulo['descuento'] = 0;
+                                        $articulo['subtotal']   = round((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                        $articulo['impuestos']  = round(((($articulo['costo_neto_normal'] / (1 + ($solicitud['operacion']['tasa_iva'] / 100))) * (($solicitud['operacion']['tasa_iva'] / 100)))), 2, PHP_ROUND_HALF_UP);
+                                        $articulo['descuento']  = 0;
                                         $articulo['costo_neto'] = $articulo['costo_neto_normal'];
-                                        $articulo['importe'] = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
+                                        $articulo['importe']    = round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
                                     } else {
                                         /**no grava IVA */
-                                        $articulo['subtotal'] = $articulo['costo_neto_normal'];
-                                        $articulo['impuestos'] = 0;
-                                        $articulo['descuento'] = 0;
+                                        $articulo['subtotal']   = $articulo['costo_neto_normal'];
+                                        $articulo['impuestos']  = 0;
+                                        $articulo['descuento']  = 0;
                                         $articulo['costo_neto'] = $articulo['costo_neto_normal'];
-                                        $articulo['importe'] =
+                                        $articulo['importe']    =
                                             round($articulo['costo_neto'] * $articulo['cantidad'], 2, PHP_ROUND_HALF_UP);
                                     }
                                 }
@@ -4052,9 +3957,6 @@ class FunerariaController extends ApiController
                 }
             }
 
-
-
-
             /**definiendo si fue por llamada la solicitud */
 
             if ($solicitud['llamada_b'] == 1) {
@@ -4062,8 +3964,6 @@ class FunerariaController extends ApiController
             } else {
                 $solicitud['llamada_texto'] = 'Solicitud en Sucursal';
             }
-
-
 
             /**tipo de solicitud */
             if ($solicitud['tipo_solicitud_id'] == 1) {
@@ -4083,7 +3983,7 @@ class FunerariaController extends ApiController
             } elseif ($solicitud['muerte_natural_b'] == 1) {
                 $solicitud['muerte_natural_texto'] = 'SI';
             }
-            $solicitud['fecha_solicitud_texto'] = fecha_abr($solicitud['fecha_solicitud']);
+            $solicitud['fecha_solicitud_texto']  = fecha_abr($solicitud['fecha_solicitud']);
             $solicitud['fecha_nacimiento_texto'] = fecha_abr($solicitud['fecha_nacimiento']);
             if ($solicitud['generos_id'] == 1) {
                 $solicitud['genero_texto'] = 'HOMBRE';
@@ -4100,29 +4000,29 @@ class FunerariaController extends ApiController
 
             /**agregando la ubicacion del servicio cuando es en el cementerio de la empresa, id 1(cementerio aeternus) */
             $cementerio_controller = new CementerioController();
-            $datos_cementerio = $cementerio_controller->get_cementerio();
+            $datos_cementerio      = $cementerio_controller->get_cementerio();
             /**verificando que tipo de operacion_empresa es */
             if ($solicitud['inhumacion_b'] == 1 && $solicitud['cementerios_servicio_id'] == 1) {
                 if (!is_null($solicitud['terreno'])) {
-                    $datos_venta_propiedad = $cementerio_controller->get_ventas($request, $solicitud['terreno']['ventas_terrenos_id'], '')[0];
-                    $solicitud['terreno']['status_operacion'] = $datos_venta_propiedad['operacion_status'];
-                    $solicitud['terreno']['saldo_neto'] = $datos_venta_propiedad['saldo_neto'];
+                    $datos_venta_propiedad                          = $cementerio_controller->get_ventas($request, $solicitud['terreno']['ventas_terrenos_id'], '')[0];
+                    $solicitud['terreno']['status_operacion']       = $datos_venta_propiedad['operacion_status'];
+                    $solicitud['terreno']['saldo_neto']             = $datos_venta_propiedad['saldo_neto'];
                     $solicitud['terreno']['status_operacion_texto'] = $datos_venta_propiedad['status_texto'];
-                    $solicitud['terreno']['ubicacion_servicio'] = strtoupper($cementerio_controller->ubicacion_texto($solicitud['terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . '(' . $datos_venta_propiedad['venta_terreno']['tipo_propiedad']['tipo'] . ' convenio ' . $datos_venta_propiedad['numero_convenio'] . ')');
+                    $solicitud['terreno']['ubicacion_servicio']     = strtoupper($cementerio_controller->ubicacion_texto($solicitud['terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . '(' . $datos_venta_propiedad['venta_terreno']['tipo_propiedad']['tipo'] . ' convenio ' . $datos_venta_propiedad['numero_convenio'] . ')');
                 }
             }
 
             /**verificando si la operacion esta lleva anexado un plan funerario de venta a futuro para usar */
             if ($solicitud['plan_funerario_futuro_b'] == 1 && trim($solicitud['ventas_planes_id']) != '') {
                 /**cargar los datos de la venta de este plan para mandar al frontend */
-                $datos_plan = $this->get_ventas($request, $solicitud['ventas_planes_id'])[0];
-                $solicitud['plan_funerario_futuro'] = strtoupper($datos_plan['venta_plan']['nombre_original'] . '(' . $datos_plan['numero_convenio'] . ')');
-                $solicitud['plan_funerario_secciones_originales'] = $datos_plan['venta_plan']['secciones_original'];
-                $solicitud['nombre_titular_plan_funerario_futuro'] = $datos_plan['nombre'];
-                $solicitud['plan_funerario_futuro_status'] = $datos_plan['operacion_status'];
-                $solicitud['plan_funerario_futuro_status_texto'] = $datos_plan['status_texto'];
+                $datos_plan                                           = $this->get_ventas($request, $solicitud['ventas_planes_id'])[0];
+                $solicitud['plan_funerario_futuro']                   = strtoupper($datos_plan['venta_plan']['nombre_original'] . '(' . $datos_plan['numero_convenio'] . ')');
+                $solicitud['plan_funerario_secciones_originales']     = $datos_plan['venta_plan']['secciones_original'];
+                $solicitud['nombre_titular_plan_funerario_futuro']    = $datos_plan['nombre'];
+                $solicitud['plan_funerario_futuro_status']            = $datos_plan['operacion_status'];
+                $solicitud['plan_funerario_futuro_status_texto']      = $datos_plan['status_texto'];
                 $solicitud['plan_funerario_futuro_fecha_venta_texto'] = $datos_plan['fecha_operacion_texto'];
-                $solicitud['plan_funerario_futuro_saldo_restante'] = $datos_plan['saldo_neto'];
+                $solicitud['plan_funerario_futuro_saldo_restante']    = $datos_plan['saldo_neto'];
             } else {
                 /**verificnado si tiene un plan de servicios de uso inmediato */
                 if ($solicitud['plan_funerario_inmediato_b'] == 1 && trim($solicitud['planes_funerarios_id']) != '') {
@@ -4131,25 +4031,25 @@ class FunerariaController extends ApiController
                     /**agregando los conceptos originales del plan */
                     $secciones = [
                         [
-                            'seccion' => 'incluye',
+                            'seccion'        => 'incluye',
                             'seccion_ingles' => 'include',
-                            'conceptos' => []
+                            'conceptos'      => [],
                         ],
                         [
-                            'seccion' => 'inhumacion',
+                            'seccion'        => 'inhumacion',
                             'seccion_ingles' => 'inhumation',
-                            'conceptos' => []
+                            'conceptos'      => [],
                         ],
                         [
-                            'seccion' => 'cremacion',
+                            'seccion'        => 'cremacion',
                             'seccion_ingles' => 'cremation',
-                            'conceptos' => []
+                            'conceptos'      => [],
                         ],
                         [
-                            'seccion' => 'velacion',
+                            'seccion'        => 'velacion',
                             'seccion_ingles' => 'wakefulness',
-                            'conceptos' => []
-                        ]
+                            'conceptos'      => [],
+                        ],
                     ];
                     foreach ($conceptos as $key_seccion => $seccion) {
                         /**agregando los conceptos segun su seccion */
@@ -4158,10 +4058,10 @@ class FunerariaController extends ApiController
                             array_push(
                                 $secciones[0]['conceptos'],
                                 [
-                                    'concepto' => $seccion['concepto'],
+                                    'concepto'        => $seccion['concepto'],
                                     'concepto_ingles' => $seccion['concepto_ingles'],
-                                    'aplicar_en' => 'plan funerario',
-                                    'seccion' => 'incluye'
+                                    'aplicar_en'      => 'plan funerario',
+                                    'seccion'         => 'incluye',
                                 ]
                             );
                         } elseif ($seccion['seccion_id'] == 2) {
@@ -4169,10 +4069,10 @@ class FunerariaController extends ApiController
                             array_push(
                                 $secciones[1]['conceptos'],
                                 [
-                                    'concepto' => $seccion['concepto'],
+                                    'concepto'        => $seccion['concepto'],
                                     'concepto_ingles' => $seccion['concepto_ingles'],
-                                    'aplicar_en' => 'caso de inhumación',
-                                    'seccion' => 'inhumacion'
+                                    'aplicar_en'      => 'caso de inhumación',
+                                    'seccion'         => 'inhumacion',
                                 ]
                             );
                         } elseif ($seccion['seccion_id'] == 3) {
@@ -4180,10 +4080,10 @@ class FunerariaController extends ApiController
                             array_push(
                                 $secciones[2]['conceptos'],
                                 [
-                                    'concepto' => $seccion['concepto'],
+                                    'concepto'        => $seccion['concepto'],
                                     'concepto_ingles' => $seccion['concepto_ingles'],
-                                    'aplicar_en' => 'caso de cremación',
-                                    'seccion' => 'cremacion'
+                                    'aplicar_en'      => 'caso de cremación',
+                                    'seccion'         => 'cremacion',
                                 ]
                             );
                         } elseif ($seccion['seccion_id'] == 4) {
@@ -4191,10 +4091,10 @@ class FunerariaController extends ApiController
                             array_push(
                                 $secciones[3]['conceptos'],
                                 [
-                                    'concepto' => $seccion['concepto'],
+                                    'concepto'        => $seccion['concepto'],
                                     'concepto_ingles' => $seccion['concepto_ingles'],
-                                    'aplicar_en' => 'caso de velación',
-                                    'seccion' => 'velacion'
+                                    'aplicar_en'      => 'caso de velación',
+                                    'seccion'         => 'velacion',
                                 ]
                             );
                         }
@@ -4206,25 +4106,23 @@ class FunerariaController extends ApiController
                 }
             }
 
-
             if (isset($solicitud['operacion'])) {
                 $solicitud['operacion']['num_pagos_programados'] = count($solicitud['operacion']['pagos_programados']);
-                $num_pagos_programados_vigentes = 0;
+                $num_pagos_programados_vigentes                  = 0;
                 if ($solicitud['operacion']['num_pagos_programados'] > 0) {
                     /**si tiene pagos programados, eso quiere decir que la venta no tuvo 100 de descuento */
                     /**recorriendo arreglo de pagos programados */
                     $pagos_programados_cubiertos = 0;
-                    $pagos_vigentes = 0;
-                    $pagos_cancelados = 0;
-                    $pagos_realizados = 0;
-                    
+                    $pagos_vigentes              = 0;
+                    $pagos_cancelados            = 0;
+                    $pagos_realizados            = 0;
 
                     $solicitud['operacion']['fecha_operacion_texto'] = fecha_abr($solicitud['operacion']['fecha_operacion']);
 
                     $arreglo_de_pagos_realizados = [];
 
                     /**guardo los dias que lleva vencido el pago vencido mas antiguo */
-                    foreach ($solicitud['operacion']['pagos_programados']  as $index_programado => &$programado) {
+                    foreach ($solicitud['operacion']['pagos_programados'] as $index_programado => &$programado) {
                         /**actualizando el concepto del pago */
                         if ($programado['conceptos_pagos_id'] == 1) {
                             $programado['concepto_texto'] = 'Enganche';
@@ -4244,15 +4142,14 @@ class FunerariaController extends ApiController
                         /**aumento el pago programado vigente */
                         /**haciendo sumatoria de los montos que se han destinado a un pago programado segun el tipo de movimiento */
                         /**montos segun su tipo de movimiento */
-                        $abonado_capital = 0;
-                        $descontado_pronto_pago = 0;
-                        $descontado_capital = 0;
+                        $abonado_capital         = 0;
+                        $descontado_pronto_pago  = 0;
+                        $descontado_capital      = 0;
                         $complemento_cancelacion = 0;
-                        $total_cubierto = 0;
-                        $fecha_ultimo_pago = '';
+                        $total_cubierto          = 0;
+                        $fecha_ultimo_pago       = '';
 
-
-                        foreach ($programado['pagados']  as $index_pagados => &$pagado) {
+                        foreach ($programado['pagados'] as $index_pagados => &$pagado) {
                             /**haciendo el arreglo de pagos realizados limpio(no repetidos) */
                             array_push(
                                 $arreglo_de_pagos_realizados,
@@ -4271,10 +4168,10 @@ class FunerariaController extends ApiController
                                      */
                                     // $pago_total += $pagado['monto'];
                                     $abonado_capital += $pagado['pagos_cubiertos']['monto'];
-                                } else  if ($pagado['movimientos_pagos_id'] == 4) {
+                                } else if ($pagado['movimientos_pagos_id'] == 4) {
                                     /**fue descuento al capital */
                                     $descontado_capital += $pagado['pagos_cubiertos']['monto'];
-                                } else  if ($pagado['movimientos_pagos_id'] == 5) {
+                                } else if ($pagado['movimientos_pagos_id'] == 5) {
                                     /**fue complemento por cancelacion */
                                     $complemento_cancelacion += $pagado['pagos_cubiertos']['monto'];
                                 }
@@ -4295,23 +4192,23 @@ class FunerariaController extends ApiController
                         } //fin foreach pagado
 
                         /** al final del ciclo se actualizan los valores en el pago programado*/
-                        $programado['abonado_capital'] = round($abonado_capital, 2, PHP_ROUND_HALF_UP);
-                        $programado['descontado_capital'] =   $descontado_capital;
-                        $programado['complementado_cancelacion'] =   round($complemento_cancelacion, 2, PHP_ROUND_HALF_UP);
+                        $programado['abonado_capital']           = round($abonado_capital, 2, PHP_ROUND_HALF_UP);
+                        $programado['descontado_capital']        = $descontado_capital;
+                        $programado['complementado_cancelacion'] = round($complemento_cancelacion, 2, PHP_ROUND_HALF_UP);
 
                         $saldo_pago_programado = $programado['monto_programado'] - $abonado_capital - $descontado_pronto_pago - $descontado_capital - $complemento_cancelacion;
 
                         $programado['saldo_neto'] = round($saldo_pago_programado, 2, PHP_ROUND_HALF_UP);
                         /**asignando la fecha del pago que liquidado el pago programado */
                         if ($programado['saldo_neto'] <= 0) {
-                            $programado['fecha_ultimo_pago'] = $fecha_ultimo_pago;
+                            $programado['fecha_ultimo_pago']     = $fecha_ultimo_pago;
                             $programado['fecha_ultimo_pago_abr'] = fecha_abr($fecha_ultimo_pago);
                         }
                         /**verificando el estado del pago programado*/
                         /**verificando si la fecha sigue vigente o esta vencida */
                         /**variables para controlar el incremento por intereses */
                         $dias_retrasados_del_pago = 0;
-                        $fecha_programada_pago = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
+                        $fecha_programada_pago    = Carbon::createFromFormat('Y-m-d', $programado['fecha_programada']);
 
                         /**aqui verifico que si la operacion esta activa genere los intereses acorde al dia de hoy, si esta cancelada que tomen intereses a partir de la fecha de cancelacion */
                         if ($solicitud['operacion']['operacion_status'] == 0) {
@@ -4320,52 +4217,48 @@ class FunerariaController extends ApiController
                             }
                         }
 
-
-
-                        $interes_generado = 0;
+                        $interes_generado                = 0;
                         $programado['fecha_a_pagar_abr'] = fecha_abr($programado['fecha_programada']);
                         /**fin varables por intereses */
                         /**verificando que el pago programado tiene un saldo de capital que cobrar para saber si aplica o no intereses */
                         if (round($saldo_pago_programado, 2, PHP_ROUND_HALF_UP) > 0) {
-                            $programado['fecha_a_pagar'] = $programado['fecha_programada'];
-                            $programado['status_pago'] = 1;
+                            $programado['fecha_a_pagar']     = $programado['fecha_programada'];
+                            $programado['status_pago']       = 1;
                             $programado['status_pago_texto'] = 'Pendiente';
                         } else {
                             $pagos_programados_cubiertos++;
                             $programado['fecha_a_pagar']
-                                = $fecha_ultimo_pago;
+                            = $fecha_ultimo_pago;
                             /**el pago programado ya fue cubierto */
-                            $programado['status_pago'] = 2;
+                            $programado['status_pago']       = 2;
                             $programado['status_pago_texto'] = 'Pagado';
                         }
 
                         /**monto con pronto pago de cada abono */
                         $programado['total_cubierto'] = $abonado_capital + $descontado_pronto_pago + $descontado_capital + $complemento_cancelacion;
                         /**actualizando los totales de montos en la venta */
-                        $solicitud['operacion']['abonado_capital'] +=  $abonado_capital;
-                        $solicitud['operacion']['descontado_capital'] +=  $descontado_capital;
-                        $solicitud['operacion']['complementado_cancelacion'] +=  $complemento_cancelacion;
+                        $solicitud['operacion']['abonado_capital'] += $abonado_capital;
+                        $solicitud['operacion']['descontado_capital'] += $descontado_capital;
+                        $solicitud['operacion']['complementado_cancelacion'] += $complemento_cancelacion;
                         $solicitud['operacion']['saldo_neto'] += $saldo_pago_programado + $interes_generado;
                         /**calculando el total cubierto de la venta, sin intereses pagados, solo lo que ya esta cubierto */
                         $solicitud['operacion']['total_cubierto'] += $programado['total_cubierto'];
                     }
-                    $solicitud['operacion']['pagos_realizados'] = $pagos_realizados;
-                    $solicitud['operacion']['pagos_vigentes'] = $pagos_vigentes;
+                    $solicitud['operacion']['pagos_realizados']               = $pagos_realizados;
+                    $solicitud['operacion']['pagos_vigentes']                 = $pagos_vigentes;
                     $solicitud['operacion']['num_pagos_programados_vigentes'] = $num_pagos_programados_vigentes;
-                    $solicitud['operacion']['pagos_cancelados'] = $pagos_cancelados;
-                    $solicitud['operacion']['pagos_programados_cubiertos'] = $pagos_programados_cubiertos;
+                    $solicitud['operacion']['pagos_cancelados']               = $pagos_cancelados;
+                    $solicitud['operacion']['pagos_programados_cubiertos']    = $pagos_programados_cubiertos;
                     /**areegloe de todos los pagos limpios(no repetidos) */
                     //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
                 }
             }
 
-
-
             if (isset($solicitud['operacion']['saldo_neto'])) {
                 /**DEFINIENDO EL STATUS DE LA OPERACION*/
                 if ($solicitud['operacion']['status'] == 0) {
                     $solicitud['operacion']['status_texto'] = 'Cancelada';
-                    $solicitud['status_texto'] = 'Cancelada';
+                    $solicitud['status_texto']              = 'Cancelada';
 
                     if ($solicitud['operacion']['motivos_cancelacion_id'] == 1) {
                         /**fue por fal de pago */
@@ -4381,10 +4274,10 @@ class FunerariaController extends ApiController
                     /**actualizando el motivo de cancelacion */
                 } elseif ($solicitud['operacion']['saldo_neto'] == 0) {
                     $solicitud['operacion']['status_texto'] = 'Pagada';
-                    $solicitud['status_texto'] = 'Pagada';
+                    $solicitud['status_texto']              = 'Pagada';
                 } else {
                     $solicitud['operacion']['status_texto'] = 'Por pagar';
-                    $solicitud['status_texto'] = 'Por pagar';
+                    $solicitud['status_texto']              = 'Por pagar';
                 }
             } else {
                 /**ESTATUS D ELA  SOLICITUD */
@@ -4402,8 +4295,6 @@ class FunerariaController extends ApiController
         /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
     }
 
-
-
     /**CANCELAR LA VENTA */
     public function cancelar_solicitud(Request $request)
     {
@@ -4415,20 +4306,20 @@ class FunerariaController extends ApiController
             /**unicamente puede regresarse lo que  se ha cubierto de capital */
             $validaciones = [
                 'solicitud_id' => 'required',
-                'motivo.value' => 'required'
+                'motivo.value' => 'required',
             ];
 
             $total_cubierto = 0;
             if ($datos_solicitud['operacion'] != null) {
                 $validaciones['cantidad'] = 'numeric|min:0|' . 'max:' . $datos_solicitud['operacion']['total_cubierto'];
-                $total_cubierto = $datos_solicitud['operacion']['total_cubierto'];
+                $total_cubierto           = $datos_solicitud['operacion']['total_cubierto'];
             }
 
             $mensajes = [
                 'required' => 'Ingrese este dato',
-                'numeric' => 'Este dato debe ser un número',
-                'max' => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($total_cubierto, 2),
-                'min' => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN'
+                'numeric'  => 'Este dato debe ser un número',
+                'max'      => 'La cantidad a devolver no debe superar a la cantidad abonada hasta la fecha: $ ' . number_format($total_cubierto, 2),
+                'min'      => 'La cantidad a devolver debe ser mínimo: $ 00.00 Pesos MXN',
             ];
 
             request()->validate(
@@ -4453,19 +4344,19 @@ class FunerariaController extends ApiController
 
             DB::table('operaciones')->where('servicios_funerarios_id', $request->solicitud_id)->update(
                 [
-                    'motivos_cancelacion_id' => $request['motivo.value'],
-                    'fecha_cancelacion' => now(),
+                    'motivos_cancelacion_id'          => $request['motivo.value'],
+                    'fecha_cancelacion'               => now(),
                     'cantidad_a_regresar_cancelacion' => (float) $request->cantidad,
-                    'cancelo_id' => (int) $request->user()->id,
-                    'nota_cancelacion' => $request->comentario,
-                    'status' => 0
+                    'cancelo_id'                      => (int) $request->user()->id,
+                    'nota_cancelacion'                => $request->comentario,
+                    'status'                          => 0,
                 ]
             );
 
             DB::table('servicios_funerarios')->where('id', $request->solicitud_id)->update(
                 [
                     //'cancelo_id' => (int) $request->user()->id,
-                    'status' => 0
+                    'status' => 0,
                 ]
             );
 
@@ -4477,24 +4368,22 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
     public function get_hoja_solicitud(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
 
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
@@ -4506,23 +4395,22 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_solicitud_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/hoja_solicitud_servicio_funerario/hoja_solicitud', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "HOJA DE SERVICIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.hoja_solicitud_servicio_funerario.footer'),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.hoja_solicitud_servicio_funerario.header')
+                    'header-html' => view('funeraria.hoja_solicitud_servicio_funerario.header'),
                 ]);
             }
 
@@ -4546,7 +4434,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'HOJA DE SERVICIO',
@@ -4563,24 +4451,22 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
     public function hoja_preautorizacion(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
 
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
@@ -4592,23 +4478,22 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_solicitud_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/hoja_preautorizacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "HOJA DE PREAUTORIZACIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.hoja_preautorizacion.footer'),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.hoja_preautorizacion.header')
+                    'header-html' => view('funeraria.hoja_preautorizacion.header'),
                 ]);
             }
 
@@ -4632,7 +4517,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'HOJA DE PREAUTORIZACIÓN',
@@ -4649,15 +4534,14 @@ class FunerariaController extends ApiController
         }
     }
 
-
     public function certificado_defuncion(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
@@ -4665,7 +4549,7 @@ class FunerariaController extends ApiController
             /*$id_servicio = 1;
             $email = false;
             $email_to = 'hector@gmail.com';
-*/
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -4674,7 +4558,7 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
@@ -4683,13 +4567,12 @@ class FunerariaController extends ApiController
             /*$pdf->setOptions([
             'title' => $name_pdf,
             'footer-html' => view('funeraria.certificado_defuncion.footer'),
-        ]);*/
+            ]);*/
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.certificado_defuncion.header')
+                    'header-html' => view('funeraria.certificado_defuncion.header'),
                 ]);
             }
-
 
             //$pdf->setOption('grayscale', true);
             //$pdf->setOption('header-right', 'dddd');
@@ -4711,7 +4594,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'CERTIFICADO DE DEFUNCION',
@@ -4728,16 +4611,14 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
     public function instrucciones_servicio_funerario(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
@@ -4745,7 +4626,7 @@ class FunerariaController extends ApiController
             /*$id_servicio = 1;
             $email = false;
             $email_to = 'hector@gmail.com';
-*/
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -4754,19 +4635,19 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/instrucciones_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "GUÍA DEL CLIENTE PARA SERVICIOS FUNERARIOS " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.instrucciones_servicio_funerario.footer'),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.instrucciones_servicio_funerario.header')
+                    'header-html' => view('funeraria.instrucciones_servicio_funerario.header'),
                 ]);
             }
 
@@ -4790,7 +4671,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'GUÍA DEL CLIENTE PARA SERVICIOS FUNERARIOS',
@@ -4807,25 +4688,22 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
-
     public function contrato_servicio_funerario(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el rep orte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$id_servicio = 3;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -4834,20 +4712,20 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $registro = RegistroPublico::first();
+            $empresa       = $get_funeraria->get_empresa_data();
+            $registro      = RegistroPublico::first();
 
             $pdf = PDF::loadView('funeraria/contrato_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'registro' => $registro]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONTRATO DE SERVICIO FUNERARIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.contrato_servicio_funerario.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.contrato_servicio_funerario.header')
+                    'header-html' => view('funeraria.contrato_servicio_funerario.header'),
                 ]);
             }
 
@@ -4870,7 +4748,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'CONTRATO DE SERVICIO FUNERARIO',
@@ -4891,18 +4769,18 @@ class FunerariaController extends ApiController
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-        */
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -4911,23 +4789,23 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/embalsamiento/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONSTANCIA DE EMBALSAMIENTO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.embalsamiento.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.embalsamiento.header')
+                    'header-html' => view('funeraria.embalsamiento.header'),
                 ]);
             } elseif ($datos_solicitud['embalsamar_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.embalsamiento.nohabilitado')
+                    'header-html' => view('funeraria.embalsamiento.nohabilitado'),
                 ]);
             }
 
@@ -4951,7 +4829,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'CONSTANCIA DE EMBALSAMIENTO',
@@ -4972,18 +4850,18 @@ class FunerariaController extends ApiController
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-        */
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -4992,23 +4870,23 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/materialvelacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "EQUIPO DE VELACIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.materialvelacion.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.materialvelacion.header')
+                    'header-html' => view('funeraria.materialvelacion.header'),
                 ]);
             } elseif ($datos_solicitud['material_velacion_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.materialvelacion.nohabilitado')
+                    'header-html' => view('funeraria.materialvelacion.nohabilitado'),
                 ]);
             }
 
@@ -5030,7 +4908,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'EQUIPO DE VELACIÓN',
@@ -5047,23 +4925,22 @@ class FunerariaController extends ApiController
         }
     }
 
-
     public function entrega_acta_defuncion(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /* $id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-        */
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -5074,27 +4951,26 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_solicitud_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/entrega_acta/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ENTREGA DE ACTA DE DEFUNCIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.entrega_acta.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.entrega_acta.header')
+                    'header-html' => view('funeraria.entrega_acta.header'),
                 ]);
             } elseif ($datos_solicitud['acta_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.entrega_acta.nohabilitado')
+                    'header-html' => view('funeraria.entrega_acta.nohabilitado'),
                 ]);
             }
 
@@ -5118,7 +4994,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'ENTREGA DE ACTA DE DEFUNCIÓN',
@@ -5139,18 +5015,18 @@ class FunerariaController extends ApiController
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /* $id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-        */
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -5161,27 +5037,26 @@ class FunerariaController extends ApiController
             /**verificando si el documento aplica para esta solictitud */
             /*if ($datos_venta['numero_solicitud_raw'] == null) {
             return 0;
-        }*/
-
+            }*/
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
+            $empresa       = $get_funeraria->get_empresa_data();
 
             $pdf = PDF::loadView('funeraria/entrega_cenizas/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ENTREGA DE CENIZAS " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.entrega_cenizas.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.entrega_cenizas.header')
+                    'header-html' => view('funeraria.entrega_cenizas.header'),
                 ]);
             } elseif ($datos_solicitud['cremacion_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.entrega_cenizas.nohabilitado')
+                    'header-html' => view('funeraria.entrega_cenizas.nohabilitado'),
                 ]);
             }
 
@@ -5205,7 +5080,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'ENTREGA DE CENIZAS',
@@ -5222,24 +5097,22 @@ class FunerariaController extends ApiController
         }
     }
 
-
-
     public function orden_servicio(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
-            $email_to = $request->email_address;
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
-            $id_servicio = $requestVentasList['id_servicio'];
+            $id_servicio       = $requestVentasList['id_servicio'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /* $id_servicio = 1;
-        $email = false;
-        $email_to = 'hector@gmail.com';
-        */
+            $email = false;
+            $email_to = 'hector@gmail.com';
+             */
             //obtengo la informacion de esa venta
             $datos_solicitud = $this->get_solicitudes_servicios($request, $id_servicio, '')[0];
             if (empty($datos_solicitud)) {
@@ -5248,21 +5121,21 @@ class FunerariaController extends ApiController
             }
 
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('funeraria/orden_servicio/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('funeraria/orden_servicio/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ÓRDEN DE SERVICIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('funeraria.orden_servicio.footer', ['empresa' => $empresa]),
             ]);
             if ($datos_solicitud['status_b'] == 0) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.orden_servicio.header')
+                    'header-html' => view('funeraria.orden_servicio.header'),
                 ]);
-            } elseif ($datos_solicitud['operacion'] == NULL) {
+            } elseif ($datos_solicitud['operacion'] == null) {
                 $pdf->setOptions([
-                    'header-html' => view('funeraria.orden_servicio.nohabilitado')
+                    'header-html' => view('funeraria.orden_servicio.nohabilitado'),
                 ]);
             }
             $pdf->setOption('margin-left', 18.4);
@@ -5283,7 +5156,7 @@ class FunerariaController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     strtoupper($datos_solicitud['nombre_afectado']),
                     'ÓRDEN DE SERVICIO',
@@ -5299,12 +5172,6 @@ class FunerariaController extends ApiController
             return $this->errorResponse('Error al solicitar los datos', 409);
         }
     }
-
-
-
-
-
-
 
     public function get_estados_civiles()
     {
@@ -5396,7 +5263,6 @@ class FunerariaController extends ApiController
         )->orderBy('id', 'asc')->get();
     }
 
-
     public function get_tipos_contratante()
     {
         return TiposContratante::select(
@@ -5412,10 +5278,10 @@ class FunerariaController extends ApiController
     /**obteniendo los articulos y servicios para la venta y servicios */
     public function get_inventario(Request $request, $id_articulo = 'all', $paginated = '', $solo_con_existencia = 0, $material_velacion = 0)
     {
-        $descripcion = $request->descripcion;
-        $numero_control = $request->numero_control;
-        $categoria_id = $request->categorias_id;
-        $resultado_query =  Articulos::select(
+        $descripcion     = $request->descripcion;
+        $numero_control  = $request->numero_control;
+        $categoria_id    = $request->categorias_id;
+        $resultado_query = Articulos::select(
             '*',
             DB::raw(
                 '(NULL) AS existencia'
@@ -5448,12 +5314,11 @@ class FunerariaController extends ApiController
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado = &$resultado_query['data'];
+            $resultado       = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado = &$resultado_query;
+            $resultado       = &$resultado_query;
         }
-
 
         foreach ($resultado as $key_articulo => &$articulo) {
             if ($articulo['status'] == 1) {
@@ -5486,35 +5351,28 @@ class FunerariaController extends ApiController
                 }
                 $articulo['existencia'] = $existencia;
 
-
                 if ($existencia < $articulo['minimo']) {
-                    $articulo['estatus_inventario_b'] = '0';
+                    $articulo['estatus_inventario_b']     = '0';
                     $articulo['estatus_inventario_texto'] = 'Desabastecido';
                 } elseif ($existencia <= $articulo['maximo']) {
-                    $articulo['estatus_inventario_b'] = '1';
+                    $articulo['estatus_inventario_b']     = '1';
                     $articulo['estatus_inventario_texto'] = 'Abastecido';
                 } else {
-                    $articulo['estatus_inventario_b'] = '2';
+                    $articulo['estatus_inventario_b']     = '2';
                     $articulo['estatus_inventario_texto'] = 'Sobrestock';
                 }
             } else {
                 $articulo['existencia'] = 'N/A';
 
-
-                $articulo['estatus_inventario_b'] = '1';
+                $articulo['estatus_inventario_b']     = '1';
                 $articulo['estatus_inventario_texto'] = 'N/A';
             }
-
-
 
             /**veirifanco los estatus del inventario */
         }
 
         return $resultado_query;
     }
-
-
-
 
     /**categorias para filtrar los articulos en la venta en el servicio funerario */
     public function get_categorias_servicio()

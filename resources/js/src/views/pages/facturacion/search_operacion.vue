@@ -15,6 +15,7 @@
           refresh-content-action
           @refresh="reset"
         >
+          <span>{{ new Date() | moment("YYYY-MM-DD") }}</span>
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
@@ -121,7 +122,7 @@
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
-            :data="lotes"
+            :data="operaciones"
             stripe
             noDataText="0 Resultados"
           >
@@ -129,10 +130,11 @@
               <h3>Lista de Artículos y Servicios por Lotes</h3>
             </template>
             <template slot="thead">
-              <vs-th>Cód. Barras</vs-th>
+              <vs-th>#</vs-th>
+              <vs-th>Núm. Operación</vs-th>
               <vs-th>Tipo</vs-th>
-              <vs-th>Categoría</vs-th>
-              <vs-th>Descripción</vs-th>
+              <vs-th>Fecha</vs-th>
+              <vs-th>Cliente</vs-th>
               <vs-th>Lote</vs-th>
               <vs-th>$ Costo</vs-th>
               <vs-th>Existencia</vs-th>
@@ -140,31 +142,39 @@
             </template>
             <template slot-scope="{ data }">
               <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-                <vs-td :data="data[indextr].codigo_barras">
-                  <span class="font-semibold">{{
-                    data[indextr].codigo_barras
-                  }}</span>
+                <vs-td :data="data[indextr].id">
+                  <span class="font-semibold">{{ indextr + 1 }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].tipo">{{
-                  data[indextr].tipo
+                <vs-td :data="data[indextr].id">
+                  <span
+                    class="font-semibold"
+                    v-if="data[indextr].empresa_operaciones_id == 1"
+                    >{{ data[indextr].ventas_terrenos_id }}</span
+                  >
+                  <span
+                    class="font-semibold"
+                    v-else-if="data[indextr].empresa_operaciones_id == 3"
+                    >{{ data[indextr].servicios_funerarios_id }}</span
+                  >
+                  <span
+                    class="font-semibold"
+                    v-else-if="data[indextr].empresa_operaciones_id == 4"
+                    >{{ data[indextr].ventas_planes_id }}</span
+                  >
+                </vs-td>
+                <vs-td :data="data[indextr].tipo_operacion_texto">{{
+                  data[indextr].tipo_operacion_texto
                 }}</vs-td>
 
-                <vs-td :data="data[indextr].categoria">{{
-                  data[indextr].categoria
+                <vs-td :data="data[indextr].fecha_operacion_texto">{{
+                  data[indextr].fecha_operacion_texto
                 }}</vs-td>
-                <vs-td :data="data[indextr].descripcion">{{
-                  data[indextr].descripcion
+                <vs-td :data="data[indextr].nombre">{{
+                  data[indextr].nombre
                 }}</vs-td>
-                <vs-td :data="data[indextr].lote">{{
-                  data[indextr].lote
-                }}</vs-td>
-                <vs-td :data="data[indextr].costo_neto_normal">
-                  $
-                  {{ data[indextr].costo_neto_normal | numFormat("0,000.00") }}
-                </vs-td>
-                <vs-td :data="data[indextr].existencia">{{
-                  data[indextr].existencia
-                }}</vs-td>
+                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
+                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
+                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
                     width="25"
@@ -201,6 +211,7 @@ import funeraria from "@services/funeraria";
 import vSelect from "vue-select";
 
 import { configdateTimePickerRange } from "@/VariablesGlobales";
+const moment = require("moment");
 
 export default {
   components: {
@@ -214,7 +225,7 @@ export default {
     },
   },
   watch: {
-    "serverOptions.categoria": function (newVal, previousVal) {
+    "serverOptions.tipo_operacion": function (newVal, previousVal) {
       this.get_data("", 1);
     },
     actual: function (newValue, oldValue) {
@@ -238,57 +249,6 @@ export default {
         /**cerrar y limpiar el formulario */
         this.serverOptions.numero_control = "";
         this.serverOptions.titular = "";
-      }
-    },
-    articulos: function (newValue, oldValue) {
-      /**se limpian los lotes */
-      this.lotes = [];
-      if (newValue.length > 0) {
-        /**tiene datos el arreglo */
-        newValue.forEach((articulo) => {
-          if (articulo.tipo_articulos_id == 2) {
-            /**es de tipo servicio */
-            this.lotes.push({
-              id: articulo.id,
-              codigo_barras: articulo.codigo_barras,
-              tipo: "Servicio",
-              categoria: articulo.categoria.categoria,
-              descripcion: articulo.descripcion,
-              lote: "N/A",
-              cantidad: 1,
-              costo_neto_normal: articulo.precio_venta,
-              descuento_b: 0,
-              costo_neto_descuento: articulo.precio_venta,
-              importe: 0,
-              facturable_b: articulo.grava_iva_b,
-              existencia: articulo.existencia,
-              plan_b: 0,
-            });
-          } else if (articulo.tipo_articulos_id == 1) {
-            /**es de tipo articulo */
-            /**checando que haya existencia para poder mostrarlo */
-            if (articulo.inventario.length > 0) {
-              articulo.inventario.forEach((lote) => {
-                this.lotes.push({
-                  id: articulo.id,
-                  codigo_barras: articulo.codigo_barras,
-                  tipo: "Artículo",
-                  categoria: articulo.categoria.categoria,
-                  descripcion: articulo.descripcion,
-                  lote: lote.lotes_id,
-                  cantidad: 1,
-                  costo_neto_normal: articulo.precio_venta,
-                  descuento_b: 0,
-                  costo_neto_descuento: 0,
-                  importe: 0,
-                  facturable_b: articulo.grava_iva_b,
-                  existencia: articulo.existencia,
-                  plan_b: 0,
-                });
-              });
-            }
-          }
-        });
       }
     },
   },
@@ -322,6 +282,8 @@ export default {
         },
         tipo_operacion_id: "",
         fecha_operacion: [],
+        fecha_inicio: "",
+        fecha_fin: "",
         page: "",
         per_page: "",
         numero_control: "",
@@ -336,7 +298,7 @@ export default {
         },
       ],
       selected: [],
-      articulos: [],
+      operaciones: [],
       lotes: [],
 
       verPaginado: true,
@@ -346,8 +308,39 @@ export default {
   },
   methods: {
     onCloseDate(selectedDates, dateStr, instance) {
-      console.log("onCloseDate -> selectedDates", selectedDates);
-      this.get_data("fecha_operacion", 1, "select");
+      /**se valdiad que se busque la informacion solo en los casos donde la fechas cambien */
+      let buscar = false;
+      if (selectedDates.length == 0) {
+        /**no hay fechas que buscar */
+        if (
+          this.serverOptions.fecha_inicio != "" ||
+          this.serverOptions.fecha_fin != ""
+        ) {
+          buscar = true;
+        }
+        this.serverOptions.fecha_inicio = "";
+        this.serverOptions.fecha_fin = "";
+      } else {
+        /**hay fechas que buscar */
+        if (
+          this.serverOptions.fecha_inicio !=
+            moment(selectedDates[0]).format("YYYY-MM-DD") ||
+          this.serverOptions.fecha_fin !=
+            moment(selectedDates[1]).format("YYYY-MM-DD")
+        ) {
+          buscar = true;
+          /**agreggo la fecha 1 */
+          this.serverOptions.fecha_inicio = moment(selectedDates[0]).format(
+            "YYYY-MM-DD"
+          );
+          this.serverOptions.fecha_fin = moment(selectedDates[1]).format(
+            "YYYY-MM-DD"
+          );
+        }
+      }
+      if (buscar) {
+        this.get_data("fecha_operacion", 1, "select");
+      }
     },
     async get_empresa_tipo_operaciones() {
       this.$vs.loading();
@@ -375,6 +368,8 @@ export default {
       this.serverOptions.numero_control = "";
       this.serverOptions.cliente = "";
       this.serverOptions.fecha_operacion = "";
+      this.serverOptions.fecha_fin = "";
+      this.serverOptions.fecha_fin = "";
       this.serverOptions.tipo_operacion = this.tipo_operaciones[0];
       this.get_data("", this.actual);
     },
@@ -403,18 +398,18 @@ export default {
       }
 
       let self = this;
-      if (funeraria.cancel) {
-        funeraria.cancel("Operation canceled by the user.");
+      if (facturacion.cancel) {
+        facturacion.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
       this.serverOptions.page = page;
       this.serverOptions.per_page = 24;
       this.serverOptions.tipo_operacion_id = this.serverOptions.tipo_operacion.value;
-      funeraria
-        .get_inventario_servicios(this.serverOptions)
+      facturacion
+        .get_operaciones(this.serverOptions)
         .then((res) => {
-          this.articulos = res.data.data;
+          this.operaciones = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;

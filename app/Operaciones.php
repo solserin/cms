@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Operaciones extends Model
 {
@@ -112,12 +112,10 @@ class Operaciones extends Model
         //return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
     }
 
-
     public function AjustesPoliticas()
     {
         return $this->hasOne('App\AjustesPoliticasOperacion', 'operaciones_id', 'operacion_id');
     }
-
 
     /**pagos programados para relacion al consultar pagos  desde pagos controller get_pagos*/
     public function get_pagos_pagos_programados()
@@ -190,15 +188,10 @@ class Operaciones extends Model
             ->orderBy('id', 'asc');
     }
 
-
-
     public function cliente()
     {
         return $this->belongsTo('App\Clientes', 'clientes_id', 'id');
     }
-
-
-
 
     public function registro()
     {
@@ -227,9 +220,14 @@ class Operaciones extends Model
             );
     }
 
-
     public function movimientoinventario()
     {
         return $this->belongsTo('App\MovimientosInventario', 'id', 'operaciones_id');
     }
+
+    public function movimiento_operacion_inventario()
+    {
+        return $this->hasOne('App\MovimientosInventario', 'operaciones_id', 'operacion_id')->select('operaciones_id', 'id');
+    }
+
 }

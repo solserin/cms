@@ -2417,21 +2417,20 @@
                     </vx-card>
                   </div>
 
-                    <div v-else class="w-full">
-                <div class="float-left pb-5 px-2">
-                  <img width="36px" src="@assets/images/checked.svg" />
-                  <h3
-                    class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-                  >
-                    El plan funerario de uso a futuro seleccionado no ha sido
-                    utilizado anteriormente
-                  </h3>
-                </div>
-                <div class="w-full px-2">
-                  <vs-divider />
-                </div>
-              </div>
-               
+                  <div v-else class="w-full">
+                    <div class="float-left pb-5 px-2">
+                      <img width="36px" src="@assets/images/checked.svg" />
+                      <h3
+                        class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                      >
+                        El plan funerario de uso a futuro seleccionado no ha
+                        sido utilizado anteriormente
+                      </h3>
+                    </div>
+                    <div class="w-full px-2">
+                      <vs-divider />
+                    </div>
+                  </div>
 
                   <!--fin de contenido del plan funerario-->
                 </div>
@@ -2509,21 +2508,20 @@
                   </vs-table>
                 </vx-card>
               </div>
-                 <div v-else class="w-full">
-                    <div class="float-left pb-5 px-2">
-                      <img width="36px" src="@assets/images/checked.svg" />
-                      <h3
-                        class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-                      >
-                        La ubicación del cementerio que ha seleccionado no ha
-                        sido utilizado anteriormente
-                      </h3>
-                    </div>
-                    <div class="w-full px-2">
-                      <vs-divider />
-                    </div>
-                  </div>
-            
+              <div v-else class="w-full">
+                <div class="float-left pb-5 px-2">
+                  <img width="36px" src="@assets/images/checked.svg" />
+                  <h3
+                    class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                  >
+                    La ubicación del cementerio que ha seleccionado no ha sido
+                    utilizado anteriormente
+                  </h3>
+                </div>
+                <div class="w-full px-2">
+                  <vs-divider />
+                </div>
+              </div>
             </div>
             <div
               class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 mb-6"
@@ -3935,20 +3933,23 @@ export default {
   },
   computed: {
     verUsoConvenios: function () {
-      if(this.form.inhumacion_b==0 && this.form.plan_funerario_futuro_b.value==0){
-        return false
-      }else{
-         if (
-        (this.form.id_convenio_plan > 0 && this.form.id_convenio_plan != "") ||
-        (this.form.ventas_terrenos_id != 0 &&
-          this.form.ventas_terrenos_id != "")
+      if (
+        this.form.inhumacion_b == 0 &&
+        this.form.plan_funerario_futuro_b.value == 0
       ) {
-        return true;
-      } else {
         return false;
+      } else {
+        if (
+          (this.form.id_convenio_plan > 0 &&
+            this.form.id_convenio_plan != "") ||
+          (this.form.ventas_terrenos_id != 0 &&
+            this.form.ventas_terrenos_id != "")
+        ) {
+          return true;
+        } else {
+          return false;
+        }
       }
-      }
-     
     },
 
     /**validaciones de los selects */

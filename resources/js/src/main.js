@@ -101,7 +101,14 @@ import numeral from "numeral";
 import numFormat from "vue-filter-number-format";
 
 Vue.filter("numFormat", numFormat(numeral));
-
+Vue.use(require('vue-moment'));
+const moment = require('moment')
+require('moment/locale/es')
+ 
+Vue.use(require('vue-moment'), {
+    moment
+})
+ 
 /**con esta funcion valido si el usuario tiene cierto permiso sobre algun modulo, tomand
  * con parametros la url del modulo y el id del permiso
  */

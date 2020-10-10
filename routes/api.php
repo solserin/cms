@@ -75,7 +75,7 @@ Route::get('facturacion/get_sat_unidades', 'FacturacionController@get_sat_unidad
 Route::get('facturacion/get_usos_cfdi', 'FacturacionController@get_usos_cfdi');
 Route::get('facturacion/get_sat_paises', 'FacturacionController@get_sat_paises');
 Route::get('facturacion/get_empresa_tipo_operaciones', 'FacturacionController@get_empresa_tipo_operaciones');
-
+Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'FacturacionController@get_operaciones');
 
 Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
 

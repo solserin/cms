@@ -26,6 +26,7 @@ export const configdateTimePickerRange = {
     maxDate: new Date(new Date().setDate(new Date().getDate())),
 };
 
+
 export const configdateTimePickerFechasCaducidad = {
     enableTime: false,
     dateFormat: "Y-m-d",
@@ -73,6 +74,8 @@ export const estadosOptions = [{
         value: "0"
     }
 ];
+
+
 
 export const generosOptions = [{
         label: "Hombre",
