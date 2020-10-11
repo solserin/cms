@@ -243,19 +243,20 @@ class FacturacionController extends ApiController
                 /**es servicio funerario */
                 if (isset($operacion['movimiento_operacion_inventario']['articulos_operacion'])) {
                     foreach ($operacion['movimiento_operacion_inventario']['articulos_operacion'] as $id => $concepto) {
-
-                        /**solo los que  */
-                        array_push($conceptos, [
-                            'clave_sat'             => ['value' => $concepto['sat_producto_servicio_id'], 'label' => $concepto['sat_producto_servicio_descripcion'] . ' (' . $concepto['sat_producto_servicio_clave'] . ')'],
-                            'unidad_sat'            => ['value' => $concepto['sat_unidad_id'], 'label' => $concepto['sat_unidad'] . ' (' . $concepto['sat_unidad_clave'] . ')'],
-                            "cantidad"              => $concepto['cantidad'],
-                            "descripcion"           => $concepto['articulo_descripcion'],
-                            'descuento_b'           => $concepto['descuento_b'] == 1 ? ['value' => 1, 'label' => 'SI'] : ['value' => 0, 'label' => 'NO'],
-                            'modifica_b'            => 0,
-                            'concepto_operacion_id' => $operacion['operacion_id'],
-                            'precio_neto'           => $concepto['costo_neto_normal'],
-                            'precio_descuento'      => $concepto['costo_neto_descuento'],
-                        ]);
+                        if ($concepto['facturable_b'] == 1) {
+                            /**solo los que  */
+                            array_push($conceptos, [
+                                'clave_sat'             => ['value' => $concepto['sat_producto_servicio_id'], 'label' => $concepto['sat_producto_servicio_descripcion'] . ' (' . $concepto['sat_producto_servicio_clave'] . ')'],
+                                'unidad_sat'            => ['value' => $concepto['sat_unidad_id'], 'label' => $concepto['sat_unidad'] . ' (' . $concepto['sat_unidad_clave'] . ')'],
+                                "cantidad"              => $concepto['cantidad'],
+                                "descripcion"           => $concepto['articulo_descripcion'],
+                                'descuento_b'           => $concepto['descuento_b'] == 1 ? ['value' => 1, 'label' => 'SI'] : ['value' => 0, 'label' => 'NO'],
+                                'modifica_b'            => 0,
+                                'concepto_operacion_id' => $operacion['operacion_id'],
+                                'precio_neto'           => $concepto['costo_neto_normal'],
+                                'precio_descuento'      => $concepto['costo_neto_descuento'],
+                            ]);
+                        }
 
                     }
                 }

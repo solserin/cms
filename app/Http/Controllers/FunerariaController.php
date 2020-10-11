@@ -3263,6 +3263,7 @@ class FunerariaController extends ApiController
                                 //return $this->errorResponse('si existia', 409);
                                 /**termina existia   if ($operacion_existia) {*/
                             } else {
+
                                 /**
                                  * hasta
                                  * aqui
@@ -3274,11 +3275,14 @@ class FunerariaController extends ApiController
                                 /**es de tipo servicio y pasa directo sin tener en cuenta lote ni caducidad */
                                 /**verificando los costos para saber si aplicar costo de plan funeario*/
                                 if ($request->plan_funerario_futuro_b['value'] == 1) {
+
                                     /**maneja plan funerario de uso a futuro */
                                     /**checando que exista el id de un plan funerario de uso a futuro */
                                     if (trim($request->id_convenio_plan) != '') {
                                         /**si se capturo el id del plan funerario a futuro vendido */
                                         if ($articulo_servicio['plan_b'] == 1) {
+                                            //return $this->errorResponse('aqui', 409);
+
                                             /**lleva descuento, por lo tanto el costo_neto_normal es 0 y lo demas queda sin ser tomando en cuenta ... no causa ningun iva ni descuentos*/
                                             array_push($detalle_venta, [
                                                 'cantidad'                  => $articulo_servicio['cantidad'],
@@ -3289,8 +3293,9 @@ class FunerariaController extends ApiController
                                                 'costo_neto_descuento'      => 0,
                                                 'descuento_b'               => 0,
                                                 'plan_b'                    => 1,
-                                                'facturable_b'              => $articulo_servicio['facturable_b'],
+                                                'facturable_b'              => 0,
                                             ]);
+
                                         } else {
                                             /**no es parte del plan funerario */
                                             if ($articulo_servicio['descuento_b'] == 1) {
@@ -3434,6 +3439,8 @@ class FunerariaController extends ApiController
                     return $this->errorResponse('No se encontró el articulo ' . $articulo_servicio['descripcion'], 409);
                 }
             } //fin foreach articulos servicios
+
+            //return $this->errorResponse('aqui ya paso todo', 409);
 
             /**buscamos los articulos que ya estan en el contrato pero que se quitaron y se deben devolver al inventario */
             if (isset($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {

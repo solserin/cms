@@ -1839,6 +1839,39 @@ export default {
             concepto_operacion_id: datos.operacion_id,
           });
         });
+
+        if (datos.conceptos.length > 0) {
+          this.$vs.notify({
+            title: "Operaciones relacionadas al CFDI",
+            text: "Se han agregado los conceptos facturables al CFDI",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            position: "bottom-right",
+            time: "12000",
+          });
+        } else {
+          this.$vs.notify({
+            title: "Operaciones relacionadas al CFDI",
+            text:
+              "La operación fue agregada al CFDI pero no se encontraron conceptos facturables en esta operación.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "warning",
+            position: "bottom-right",
+            time: "12000",
+          });
+        }
+      } else {
+        this.$vs.notify({
+          title: "Operaciones relacionadas al CFDI",
+          text: "Ya se encuentra agregada esta operación",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "12000",
+        });
       }
     },
 
