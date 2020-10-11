@@ -3084,7 +3084,7 @@ class FunerariaController extends ApiController
                                                                 'costo_neto_descuento'      => 0,
                                                                 'descuento_b'               => 0,
                                                                 'plan_b'                    => 1,
-                                                                'facturable_b'              => $articulo_servicio_index['facturable_b'],
+                                                                'facturable_b'              => 0,
                                                             ]);
                                                         } else {
                                                             /**no es parte del plan funerario */

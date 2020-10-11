@@ -3460,7 +3460,13 @@
                                     <vs-td v-else>
                                       <div class="capitalize">N/A</div>
                                     </vs-td>
-                                    <vs-td>
+                                    <vs-td
+                                      v-if="
+                                        form.plan_funerario_futuro_b.value!=1 || (form.plan_funerario_futuro_b.value==1 && form.articulos_servicios[indextr]
+                                          .plan_b != 1)
+                                       
+                                      "
+                                    >
                                       <vs-switch
                                         class="ml-auto mr-auto"
                                         color="success"
@@ -3474,6 +3480,7 @@
                                         <span slot="off">NO</span>
                                       </vs-switch>
                                     </vs-td>
+                                    <vs-td v-else> N/A </vs-td>
 
                                     <vs-td>
                                       <div
