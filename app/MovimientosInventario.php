@@ -2,13 +2,12 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class MovimientosInventario extends Model
 {
     protected $table = 'movimientos_inventario';
-
 
     public function registro()
     {
@@ -37,5 +36,14 @@ class MovimientosInventario extends Model
     public function articulosserviciofunerario()
     {
         return $this->hasMany('App\VentaDetalle', 'movimientos_inventario_id', 'id');
+    }
+
+    public function articulos_operacion()
+    {
+        return $this->hasMany('App\VentaDetalle', 'movimientos_inventario_id', 'id')
+            ->join('articulos', 'articulos.id', '=', 'venta_detalle.articulos_id')
+            ->join('sat_productos_servicios', 'articulos.sat_productos_servicios_id', '=', 'sat_productos_servicios.id')
+            ->join('sat_unidades', 'articulos.sat_unidades_venta', '=', 'sat_unidades.id')
+        ;
     }
 }

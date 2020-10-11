@@ -438,7 +438,7 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     retornarSeleccion(datos) {
-      this.$emit("LoteSeleccionado", datos);
+      this.$emit("OperacionSeleccionada", datos);
       this.$emit("closeBuscador");
     },
   },

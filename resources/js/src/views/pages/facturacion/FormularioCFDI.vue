@@ -738,9 +738,9 @@
             class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
           >
             <div class="float-left pb-2 px-2 mt-6">
-              <img width="36px" src="@assets/images/articulos.svg" />
+              <img width="36px" src="@assets/images/contrato.svg" />
               <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
-                Conceptos a Facturar
+                Operaciones Relacionadas al CFDI
               </h3>
             </div>
           </div>
@@ -764,6 +764,98 @@
           <div class="w-full px-2">
             <vs-divider />
           </div>
+
+          <div
+            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12"
+            v-if="form.operaciones_relacionadas.length > 0"
+          >
+            <div class="flex flex-wrap">
+              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+                <div class="w-full mt-5">
+                  <vs-table
+                    class="w-full"
+                    :data="form.operaciones_relacionadas"
+                    noDataText="No se han agregado conceptos a facturar"
+                  >
+                    <template slot="header">
+                      <h3>Lista de Operaciones a Facturar</h3>
+                    </template>
+                    <template slot="thead">
+                      <vs-th>#</vs-th>
+                      <vs-th>Número de operacion</vs-th>
+                      <vs-th>Tipo</vs-th>
+                      <vs-th>Cliente</vs-th>
+                      <vs-th>Fecha</vs-th>
+                      <vs-th>Quitar</vs-th>
+                    </template>
+                    <template slot-scope="{ data }">
+                      <vs-tr
+                        :data="tr"
+                        :key="indextr"
+                        v-for="(tr, indextr) in data"
+                      >
+                        <vs-td>
+                          <div class="capitalize">
+                            <span class="lowercase">{{ indextr + 1 }}</span>
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="capitalize">
+                            {{ data[indextr].clave_operacion_por_tipo }}
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="capitalize">
+                            {{ data[indextr].tipo_operacion_texto }}
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="capitalize">
+                            {{ data[indextr].cliente }}
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="capitalize">
+                            {{ data[indextr].fecha_operacion_texto }}
+                          </div>
+                        </vs-td>
+
+                        <vs-td>
+                          <div class="" @click="remover_operacion(indextr)">
+                            <img
+                              class="cursor-pointer img-btn"
+                              src="@assets/images/minus.svg"
+                            />
+                          </div>
+                        </vs-td>
+                      </vs-tr>
+                    </template>
+                  </vs-table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="w-full px-2"
+            v-if="form.operaciones_relacionadas.length > 0"
+          >
+            <vs-divider />
+          </div>
+        </div>
+
+        <div
+          class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
+        >
+          <div class="float-left pb-2 px-2 mt-6">
+            <img width="36px" src="@assets/images/articulos.svg" />
+            <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+              Conceptos del CFDI
+            </h3>
+          </div>
+        </div>
+
+        <div class="w-full px-2">
+          <vs-divider />
         </div>
 
         <div class="flex flex-wrap">
@@ -1146,6 +1238,7 @@
                         </vs-td>
                         <vs-td>
                           <div
+                            v-if="data[indextr].modifica_b == 1"
                             class=""
                             @click="CargarModificarConcepto(indextr)"
                           >
@@ -1154,6 +1247,7 @@
                               src="@assets/images/edit.svg"
                             />
                           </div>
+                          <div v-else>N/A</div>
                         </vs-td>
                         <vs-td>
                           <div class="" @click="remover_concepto(indextr)">
@@ -1341,7 +1435,7 @@
     <SearchOperacion
       :show="openBuscadorOperacion"
       @closeBuscador="openBuscadorOperacion = false"
-      @LoteSeleccionado="LoteSeleccionado"
+      @OperacionSeleccionada="OperacionSeleccionada"
     ></SearchOperacion>
   </div>
 </template>
@@ -1547,6 +1641,7 @@ export default {
       ModificandoArticulo: false,
       indextrArticuloModificando: "",
       indextrArticuloRemoviendo: "",
+      indextrOperacionRemoviendo: "",
       /**variables para el control del formulario */
       tipo: "",
       /**buscador del cliente */
@@ -1701,8 +1796,50 @@ export default {
   },
   methods: {
     /**retorno de la operacion selecciona para cargar */
-    LoteSeleccionado(datos) {
-      console.log("LoteSeleccionado -> datos", datos);
+    OperacionSeleccionada(datos) {
+      console.log("OperacionSeleccionada -> datos", datos);
+      /**primero hacemos el agregado de las operaciones relacionadas */
+      let esta_operacion = false;
+      this.form.operaciones_relacionadas.forEach((element) => {
+        if (element.operacion_id == datos.operacion_id) {
+          esta_operacion = true;
+        }
+      });
+
+      if (esta_operacion == false) {
+        let clave_operacion_por_tipo = 0;
+        if (datos.empresa_operaciones_id == 1) {
+          clave_operacion_por_tipo = datos.ventas_terrenos_id;
+        } else if (datos.empresa_operaciones_id == 3) {
+          clave_operacion_por_tipo = datos.servicios_funerarios_id;
+        } else if (datos.empresa_operaciones_id == 4) {
+          clave_operacion_por_tipo = datos.ventas_planes_id;
+        }
+
+        this.form.operaciones_relacionadas.push({
+          clave_operacion_por_tipo: clave_operacion_por_tipo,
+          operacion_id: datos.operacion_id,
+          cliente: datos.nombre,
+          fecha_operacion_texto: datos.fecha_operacion_texto,
+          tipo_operacion_texto: datos.tipo_operacion_texto,
+        });
+
+        /**agregando los conceptops */
+        datos.conceptos.forEach((concepto) => {
+          this.form.conceptos.push({
+            clave_sat: concepto.clave_sat,
+            unidad_sat: concepto.unidad_sat,
+            cantidad: concepto.cantidad,
+            descripcion: concepto.descripcion,
+            precio_neto: concepto.precio_neto,
+            descuento_b: concepto.descuento_b,
+            precio_descuento: concepto.precio_descuento,
+            modifica_b: concepto.modifica_b,
+            concepto_operacion_ver_b: 1,
+            concepto_operacion_id: datos.operacion_id,
+          });
+        });
+      }
     },
 
     /**metodo para agregar articulos manualmente */
@@ -1734,26 +1871,15 @@ export default {
               concepto_operacion_id: 0,
             });
             this.LimpiarAddArticulo();
-            /**reseteando el concepto */
-            /*this.form.seccion = {
-              value: "incluye",
-              label: "plan funerario",
-            };
-            this.index_concepto = "";
-            this.index_seccion = "";
-            this.form.concepto = "";
-            this.form.concepto_ingles = "";
-            this.limpiarValidation();
-            */
           }
         })
         .catch(() => {});
     },
 
     CargarModificarConcepto(indextr) {
-      this.ModificandoArticulo = true;
-      this.indextrArticuloModificando = indextr;
       if (this.form.conceptos[indextr].modifica_b != 0) {
+        this.ModificandoArticulo = true;
+        this.indextrArticuloModificando = indextr;
         this.form.clave_sat = this.form.conceptos[indextr].clave_sat;
         this.form.unidad_sat = this.form.conceptos[indextr].unidad_sat;
         this.form.cantidad = this.form.conceptos[indextr].cantidad;
@@ -1834,7 +1960,75 @@ export default {
     },
     //remover el concepto seleccionado
     remover_concepto_callback() {
+      /**antes de remover verifica si este era el ultimo concepto de alguna operacion asociada y la remueve junto con la operacion */
+
+      if (
+        Number(
+          this.form.conceptos[this.indextrArticuloRemoviendo]
+            .concepto_operacion_id
+        ) > 0
+      ) {
+        /**tiene asociada una operacion y se debe de revisar si quedan conceptos */
+        let conceptos_de_la_operacion = 0;
+        for (let index = 0; index < this.form.conceptos.length; index++) {
+          if (
+            this.form.conceptos[index].concepto_operacion_id ==
+            this.form.conceptos[this.indextrArticuloRemoviendo]
+              .concepto_operacion_id
+          ) {
+            conceptos_de_la_operacion++;
+          }
+        }
+
+        if (conceptos_de_la_operacion == 1) {
+          /**remueve tambien la operacion pues no quedaran conceptos que relacionar */
+          for (
+            let index = 0;
+            index < this.form.operaciones_relacionadas.length;
+            index++
+          ) {
+            if (
+              this.form.operaciones_relacionadas[index].operacion_id ==
+              this.form.conceptos[this.indextrArticuloRemoviendo]
+                .concepto_operacion_id
+            ) {
+              /**remueve la operacion */
+              this.form.operaciones_relacionadas.splice(index, 1);
+              break;
+            }
+          }
+        }
+      }
       this.form.conceptos.splice(this.indextrArticuloRemoviendo, 1);
+      this.LimpiarAddArticulo();
+    },
+
+    remover_operacion(indextr) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea eliminar esta operación? Los datos quedarán eliminados del CFDI?";
+      this.indextrOperacionRemoviendo = indextr;
+      this.callBackConfirmar = this.remover_operacion_callback;
+      this.openConfirmarSinPassword = true;
+    },
+
+    remover_operacion_callback() {
+      /**antes de remover remueve todos los conceptos que pertenecen a la operacion */
+      for (let index = 0; index < this.form.conceptos.length; index++) {
+        if (
+          this.form.conceptos[index].concepto_operacion_id ==
+          this.form.operaciones_relacionadas[this.indextrOperacionRemoviendo]
+            .operacion_id
+        ) {
+          //remueve el concepto
+          this.form.conceptos.splice(index, 1);
+          index--;
+        }
+      }
+      this.form.operaciones_relacionadas.splice(
+        this.indextrOperacionRemoviendo,
+        1
+      );
       this.LimpiarAddArticulo();
     },
 
@@ -2126,14 +2320,12 @@ export default {
     limpiarVentana() {},
 
     limpiarValidation() {
-      this.$validator.pause();
       this.$nextTick(() => {
-        this.$validator.errors.clear();
-        this.$validator.fields.items.forEach((field) => field.reset());
-        this.$validator.fields.items.forEach((field) =>
-          this.errors.remove(field)
-        );
-        this.$validator.resume();
+        let matcher = {
+          scope: "conceptos",
+          vmId: this.$validator.id,
+        };
+        this.$validator.reset(matcher);
       });
     },
   },
