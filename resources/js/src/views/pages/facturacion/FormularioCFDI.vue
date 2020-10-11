@@ -51,6 +51,7 @@
               <div class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12">
                 <vs-input
                   readonly
+                  data-vv-scope="form"
                   v-validate.disabled="'required'"
                   name="id_cliente"
                   data-vv-as=" "
@@ -62,8 +63,11 @@
                   ref="cliente_ref"
                 />
                 <div>
-                  <span class="text-danger">
-                    {{ errors.first("id_cliente") }}
+                  <span
+                    class="text-danger"
+                    v-if="errors.first('form.id_cliente')"
+                  >
+                    Seleccione un cliente
                   </span>
                 </div>
                 <div class="mt-2">
@@ -92,7 +96,7 @@
             </v-select>
             <div>
               <span class="text-danger">
-                {{ errors.first("tipo_rfc") }}
+                {{ errors.first("form.tipo_rfc") }}
               </span>
             </div>
             <div class="mt-2">
@@ -110,16 +114,18 @@
               >RFC del Cliente <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              data-vv-scope="form"
+              v-validate.disabled="'required'"
               name="rfc"
-              maxlength="150"
+              maxlength="13"
               type="text"
               class="w-full pb-1 pt-1"
               placeholder="Ingrese el RFC"
               v-model="form.rfc"
             />
             <div>
-              <span class="text-danger">
-                {{ errors.first("rfc") }}
+              <span class="text-danger" v-if="errors.first('form.rfc')">
+                Ingrese un RFC
               </span>
             </div>
             <div class="mt-2">
@@ -145,11 +151,6 @@
               placeholder="Ingrese el RFC"
               value="XAXX010101000"
             />
-            <div>
-              <span class="text-danger">
-                {{ errors.first("rfc") }}
-              </span>
-            </div>
             <div class="mt-2">
               <span class="text-danger" v-if="this.errores.rfc">{{
                 errores.rfc[0]
@@ -173,11 +174,6 @@
               placeholder="Ingrese el RFC"
               value="XEX010101000"
             />
-            <div>
-              <span class="text-danger">
-                {{ errors.first("rfc") }}
-              </span>
-            </div>
             <div class="mt-2">
               <span class="text-danger" v-if="this.errores.rfc">{{
                 errores.rfc[0]
@@ -192,7 +188,9 @@
               >Razón Social <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              data-vv-scope="form"
               name="razon_social"
+              v-validate.disabled="'required'"
               maxlength="150"
               type="text"
               class="w-full pb-1 pt-1"
@@ -200,8 +198,11 @@
               v-model="form.razon_social"
             />
             <div>
-              <span class="text-danger">
-                {{ errors.first("razon_social") }}
+              <span
+                class="text-danger"
+                v-if="errors.first('form.razon_social')"
+              >
+                Ingrese la razón social
               </span>
             </div>
             <div class="mt-2">
@@ -226,11 +227,6 @@
               placeholder="Razón social del contribuyente"
               value="Público en General"
             />
-            <div>
-              <span class="text-danger">
-                {{ errors.first("razon_social") }}
-              </span>
-            </div>
             <div class="mt-2">
               <span class="text-danger" v-if="this.errores.razon_social">{{
                 errores.razon_social[0]
@@ -250,16 +246,6 @@
               placeholder="Dirección fiscal del contribuyente"
               v-model="form.direccion_fiscal"
             />
-            <div>
-              <span class="text-danger">
-                {{ errors.first("direccion_fiscal") }}
-              </span>
-            </div>
-            <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.direccion_fiscal">{{
-                errores.direccion_fiscal[0]
-              }}</span>
-            </div>
           </div>
           <div
             class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
@@ -275,16 +261,6 @@
               placeholder="Dirección fiscal del contribuyente"
               value="N/A"
             />
-            <div>
-              <span class="text-danger">
-                {{ errors.first("direccion_fiscal") }}
-              </span>
-            </div>
-            <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.direccion_fiscal">{{
-                errores.direccion_fiscal[0]
-              }}</span>
-            </div>
           </div>
 
           <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
@@ -293,6 +269,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="form"
               :disabled="form.tipo_rfc.value < 3"
               :options="sat_paises"
               :clearable="false"
@@ -305,7 +282,7 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger" v-if="errors.first('sat_pais')">
+              <span class="text-danger" v-if="errors.first('form.sat_pais')">
                 Seleccione el país de residencia
               </span>
             </div>
@@ -337,6 +314,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="form"
               v-validate:tipo_comprobante_validacion_computed.immediate="
                 'required'
               "
@@ -350,7 +328,10 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger" v-if="errors.first('tipo_comprobante')">
+              <span
+                class="text-danger"
+                v-if="errors.first('form.tipo_comprobante')"
+              >
                 Ingrese este dato
               </span>
             </div>
@@ -368,6 +349,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="form"
               v-validate:metodo_pago_validacion_computed.immediate="'required'"
               :disabled="form.tipo_comprobante.value > 1"
               :options="metodos_pago"
@@ -380,7 +362,7 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger" v-if="errors.first('metodo_pago')">
+              <span class="text-danger" v-if="errors.first('form.metodo_pago')">
                 Ingrese el método de pago
               </span>
             </div>
@@ -398,6 +380,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="form"
               v-validate:forma_pago_validacion_computed.immediate="'required'"
               :disabled="form.metodo_pago.value == 2"
               :options="formas_pago"
@@ -410,7 +393,7 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger" v-if="errors.first('forma_pago')">
+              <span class="text-danger" v-if="errors.first('form.forma_pago')">
                 Ingrese la forma de pago
               </span>
             </div>
@@ -433,6 +416,7 @@
             </label>
 
             <flat-pickr
+              data-vv-scope="form"
               name="fecha_pago"
               data-vv-as=" "
               v-validate:fechapago_validacion_computed.immediate="'required'"
@@ -442,8 +426,8 @@
               class="w-full my-1"
             />
             <div>
-              <span class="text-danger">
-                {{ errors.first("fecha_pago") }}
+              <span class="text-danger" v-if="errors.first('form.fecha_pago')">
+                Fecha de pago
               </span>
             </div>
             <div class="mt-2">
@@ -475,6 +459,7 @@
               >
             </label>
             <v-select
+              data-vv-scope="form"
               v-validate:uso_cfdi_validacion_computed.immediate="'required'"
               :disabled="form.tipo_comprobante.value > 1"
               :options="usos_cfdi"
@@ -487,7 +472,7 @@
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger" v-if="errors.first('usos_cfdi')">
+              <span class="text-danger" v-if="errors.first('form.usos_cfdi')">
                 Seleccione el uso del CFDI
               </span>
             </div>
@@ -514,18 +499,6 @@
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
-            <div>
-              <span class="text-danger">
-                {{ errors.first("tipo_relacion") }}
-              </span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores['tipo_relacion.value']"
-                >{{ errores["tipo_relacion.value"][0] }}</span
-              >
-            </div>
           </div>
         </div>
 
@@ -1339,6 +1312,7 @@
                           <span class="texto-importante">(*)</span>
                         </label>
                         <vs-input
+                          data-vv-scope="form"
                           :disabled="true"
                           size="large"
                           name="tasa_iva"
@@ -1353,8 +1327,11 @@
                           maxlength="2"
                         />
                         <div>
-                          <span class="mensaje-requerido">
-                            {{ errors.first("tasa_iva") }}
+                          <span
+                            class="mensaje-requerido"
+                            v-if="errors.first('form.tasa_iva')"
+                          >
+                            Ingrese la tasa del IVA (%)
                           </span>
                         </div>
                         <div class="mt-2">
@@ -1394,7 +1371,6 @@
                       >
                         <div class="flex flex-wrap">
                           <vs-button
-                            v-if="!fueCancelada"
                             class="w-full ml-auto mr-auto mt-1"
                             @click="acceptAlert()"
                             color="success"
@@ -1437,6 +1413,12 @@
       @closeBuscador="openBuscadorOperacion = false"
       @OperacionSeleccionada="OperacionSeleccionada"
     ></SearchOperacion>
+    <Password
+      :show="openPassword"
+      :callback-on-success="callback"
+      @closeVerificar="closePassword"
+      :accion="accionNombre"
+    ></Password>
   </div>
 </template>
 <script>
@@ -1467,6 +1449,7 @@ export default {
     ConfirmarDanger,
     ClientesBuscador,
     SearchOperacion,
+    Password,
   },
   props: {
     show: {
@@ -1590,12 +1573,7 @@ export default {
     },
 
     uso_cfdi_validacion_computed: function () {
-      if (this.form.tipo_comprobante.value == 1) {
-        /**si es de ingreso */
-        return this.form.uso_cfdi.value;
-      } else {
-        return true;
-      }
+      return this.form.uso_cfdi.value;
     },
 
     clave_sat_validacion_computed: function () {
@@ -1648,9 +1626,12 @@ export default {
       openBuscadorCliente: false,
       /**control del popup de confirmar accion */
       openConfirmarSinPassword: false,
+      openPassword: false,
+      accionNombre: "Timbrar CFDI",
       botonConfirmarSinPassword: "",
       accionConfirmarSinPassword: "",
       callBackConfirmar: Function,
+      callback: Function,
       datos_cliente: [],
       tipos_rfc: [
         {
@@ -1795,6 +1776,116 @@ export default {
     };
   },
   methods: {
+    acceptAlert() {
+      this.$validator
+        .validateAll("form")
+        .then((result) => {
+          if (!result) {
+            this.$vs.notify({
+              title: "Error",
+              text: "Verifique que todos los datos han sido capturados",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "12000",
+            });
+            return;
+          } else {
+            //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
+            (async () => {
+              if (this.getTipoformulario == "facturar") {
+                if (this.form.conceptos.length > 0) {
+                  this.callback = await this.timbrar_cfdi;
+                  this.openPassword = true;
+                } else {
+                  /**agregue al menos un concepto */
+                  this.$vs.notify({
+                    title: "Error",
+                    text: "Ingrese al menos un concepto a facturar",
+                    iconPack: "feather",
+                    icon: "icon-alert-circle",
+                    color: "danger",
+                    position: "bottom-right",
+                    time: "8000",
+                  });
+                }
+              }
+            })();
+          }
+        })
+        .catch(() => {});
+    },
+
+    async timbrar_cfdi() {
+      //aqui mando guardar los datos
+      this.errores = [];
+      this.$vs.loading();
+      try {
+        let res = await facturacion.timbrar_cfdi(this.form);
+        console.log("timbrar_cfdi -> res", res);
+        if (res.data >= 1) {
+          //success
+          this.$vs.notify({
+            title: "Timbrar CFDI 3.3",
+            text: "Se ha timbrado el CFDI correctamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000,
+          });
+          //this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.cerrarVentana();
+        } else {
+          this.$vs.notify({
+            title: "Timbrar CFDI 3.3",
+            text: "Error al timbrar el CFDI, por favor reintente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 4000,
+          });
+        }
+
+        this.$vs.loading.close();
+      } catch (err) {
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          } else if (err.response.status == 422) {
+            //checo si existe cada error
+            this.errores = err.response.data.error;
+            this.$vs.notify({
+              title: "Timbrar CFDI 3.3",
+              text: "Verifique los errores encontrados en los datos.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 5000,
+            });
+          } else if (err.response.status == 409) {
+            this.$vs.notify({
+              title: "Timbrar CFDI 3.3",
+              text: err.response.data.error,
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 30000,
+            });
+          }
+        }
+        this.$vs.loading.close();
+      }
+    },
+
     /**retorno de la operacion selecciona para cargar */
     OperacionSeleccionada(datos) {
       console.log("OperacionSeleccionada -> datos", datos);
@@ -2347,6 +2438,10 @@ export default {
       this.openConfirmarSinPassword = false;
       this.limpiarVentana();
       this.$emit("closeVentana");
+    },
+
+    closePassword() {
+      this.openPassword = false;
     },
 
     //regresa los datos a su estado inicial

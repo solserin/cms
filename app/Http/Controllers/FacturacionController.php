@@ -302,4 +302,9 @@ class FacturacionController extends ApiController
 
         return $resultado_query;
     }
+
+    public function timbrar_cfdi(Request $request)
+    {
+        return $request;
+    }
 }

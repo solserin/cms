@@ -40,5 +40,10 @@ export default {
             }),
             params: param
         });
-    }
+    },
+
+      timbrar_cfdi(datos) {
+        let call = "/facturacion/timbrar_cfdi";
+        return axios.post(call, datos);
+    },
 };
