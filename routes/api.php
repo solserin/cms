@@ -70,6 +70,7 @@ Route::get('facturacion/get_usos_cfdi', 'FacturacionController@get_usos_cfdi');
 Route::get('facturacion/get_sat_paises', 'FacturacionController@get_sat_paises');
 Route::get('facturacion/get_empresa_tipo_operaciones', 'FacturacionController@get_empresa_tipo_operaciones');
 Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'FacturacionController@get_operaciones');
+Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi');
 
 Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
 
@@ -241,7 +242,6 @@ Route::middleware(['auth:api'])->group(function () {
     /**fin de rutas del cementerio */
 
     /**rutas de timbrado de cfdi */
-    Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi');
 
 });
 

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Cfdis;
+use App\cfdi\ClienteFormasDigitales;
+use App\Funeraria;
 use App\MetodosPago;
 use App\Operaciones;
 use App\SatFormasPago;
@@ -13,6 +16,8 @@ use App\TipoComprobantes;
 use App\TiposRelacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Spatie\ArrayToXml\ArrayToXml;
 
 class FacturacionController extends ApiController
 {
@@ -53,7 +58,8 @@ class FacturacionController extends ApiController
         $datos = SATProductosServicios::whereNotIn('clave', ['84111506', '42262102'])->get();
 
         foreach ($datos as $key => &$dato) {
-            $dato['clave'] = $dato['descripcion'] . ' (' . $dato['clave'] . ')';
+            $dato['clave_original'] = $dato['clave'];
+            $dato['clave']          = $dato['descripcion'] . ' (' . $dato['clave'] . ')';
         }
         return $datos;
     }
@@ -64,6 +70,8 @@ class FacturacionController extends ApiController
         $datos = SatUnidades::get();
 
         foreach ($datos as $key => &$dato) {
+            $dato['clave_original'] = $dato['clave'];
+
             $dato['clave'] = $dato['unidad'] . ' (' . $dato['clave'] . ')';
         }
         return $datos;
@@ -143,7 +151,6 @@ class FacturacionController extends ApiController
      */
     public function get_operaciones(Request $request, $id_operacion_local = 'all', $paginated = false)
     {
-
         $cliente           = $request->cliente;
         $numero_control    = $request->numero_control;
         $fecha_inicio      = $request->fecha_inicio;
@@ -303,8 +310,313 @@ class FacturacionController extends ApiController
         return $resultado_query;
     }
 
+    public function GenerarXmlCfdi(Request $request)
+    {
+        date_default_timezone_set("America/Mazatlan");
+        $folio_para_asignar = Cfdis::select('folio')->orderBy('folio', 'desc')->first() + 1;
+        /**obteniendo claves de los catalogos */
+        $forma_pago = SatFormasPago::where('id', '=', $request->forma_pago['value'])->first();
+        if (is_null($forma_pago)) {
+            return $this->errorResponse('No se encontró la forma de pago que se está utilizando.', 409);
+        }
+
+        $tipo_comprobante = TipoComprobantes::where('id', '=', $request->tipo_comprobante['value'])->first();
+        if (is_null($tipo_comprobante)) {
+            return $this->errorResponse('No se encontró el tipo de comprobanteque se está utilizando.', 409);
+        }
+        $metodo_pago = MetodosPago::where('id', '=', $request->metodo_pago['value'])->first();
+        if (is_null($metodo_pago)) {
+            return $this->errorResponse('No se encontró el método de pago que se está utilizando.', 409);
+        }
+        $uso_cfdi = SatUsosCfdi::where('id', '=', $request->uso_cfdi['value'])->first();
+        if (is_null($uso_cfdi)) {
+            return $this->errorResponse('No se encontró el uso de cfdi que se está utilizando.', 409);
+        }
+
+        $datos_funeraria = Funeraria::first();
+
+        /**checabndo que tipo de comprobante es */
+        $subtotal       = 0;
+        $descuento      = 0;
+        $iva_trasladado = 0;
+        $total          = 0;
+
+        $conceptos = [];
+
+        $claves_productos_servicios_sat = $this->get_claves_productos_sat();
+        $get_sat_unidades               = $this->get_sat_unidades();
+
+        foreach ($request->conceptos as $key => $concepto) {
+
+            //cargo la clave del sat
+            $esta_clave_sat = false;
+            $clave_sat      = '';
+            foreach ($claves_productos_servicios_sat as $key => $clave) {
+                if ($clave->id == $concepto['clave_sat']['value']) {
+                    $esta_clave_sat = true;
+                    $clave_sat      = $clave['clave_original'];
+                    break;
+                }
+            }
+            if (!$esta_clave_sat) {
+                return $this->errorResponse('No se encontró la clave de producto del Sat.', 409);
+            }
+            //cargo la unidad
+            $esta_clave_unidad = false;
+            $clave_unidad      = '';
+            foreach ($get_sat_unidades as $key => $clave) {
+                if ($clave->id == $concepto['unidad_sat']['value']) {
+                    $esta_clave_unidad = true;
+                    $clave_unidad      = $clave['clave_original'];
+                    break;
+                }
+            }
+
+            if (!$esta_clave_unidad) {
+                return $this->errorResponse('No se encontró la clave de unidad del Sat.', 409);
+            }
+
+            $ValorUnitarioPrecioNeto      = round((($concepto['precio_neto']) / (1 + ($request->tasa_iva / 100))), 2, PHP_ROUND_HALF_UP);
+            $ValorUnitarioPrecioDescuento = round($concepto['precio_descuento'] / (1 + ($request->tasa_iva / 100)), 2, PHP_ROUND_HALF_UP);
+            $descuento_concepto           = $concepto['descuento_b']['value'] == 1 ? ($ValorUnitarioPrecioNeto - $ValorUnitarioPrecioDescuento) : 0;
+
+            $tasa_iva = $request->tasa_iva / 100;
+
+            $subtotal += $ValorUnitarioPrecioNeto;
+            $descuento += $descuento_concepto;
+            $iva_trasladado += ($ValorUnitarioPrecioNeto - $descuento_concepto) * $tasa_iva * $concepto['cantidad'];
+            $total += $subtotal - $descuento + $iva_trasladado;
+            array_push($conceptos,
+                ['cfdi:Concepto' => [
+                    '_attributes'    =>
+                    [
+                        'ClaveProdServ' => $clave_sat,
+                        'Cantidad'      => $concepto['cantidad'],
+                        'ClaveUnidad'   => $clave_unidad,
+                        'Descripcion'   => (($concepto['descripcion'])),
+                        'ValorUnitario' => number_format($ValorUnitarioPrecioNeto, 2),
+                        'Importe'       => number_format($concepto['cantidad'] * $ValorUnitarioPrecioNeto, 2),
+                        'Descuento'     => number_format($descuento_concepto, 2),
+                    ],
+                    'cfdi:Impuestos' => [
+                        'cfdi:Traslados' => [
+                            'cfdi:Traslado' => [
+                                '_attributes' => [
+                                    'Base'       => number_format($ValorUnitarioPrecioNeto - $descuento_concepto, 2),
+                                    'Impuesto'   => "002", //IVA
+                                    'TipoFactor' => "Tasa",
+                                    'TasaOCuota' => "0.160000",
+                                    'Importe'    => number_format(($ValorUnitarioPrecioNeto - $descuento_concepto) * $tasa_iva * $concepto['cantidad'], 2),
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                ]
+            );
+            /**verificando si se debe de quitar el nodo de Descuento */
+            if ($concepto['descuento_b']['value'] != 1) {
+                /**no hay descuento y debe quitarse */
+                unset($conceptos[count($conceptos) - 1]['cfdi:Concepto']['_attributes']['Descuento']);
+            }
+
+        }
+
+        if ($request->tipo_comprobante['value'] == '1') {
+            /**ingreso */
+        } else if ($request->tipo_comprobante['value'] == '2') {
+            /**egreso */
+        } else if ($request->tipo_comprobante['value'] == '5') {
+            /**pago */
+        } else {
+            /**error */
+            return $this->errorResponse('No se encontró tipo de comprobante que se está utilizando.', 409);
+
+        }
+
+        $array = [
+            'cfdi:Emisor'    => [
+                '_attributes' => [
+                    //'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
+                    'Rfc'           => ENV('APP_ENV') == 'local' ? 'LAN7008173R5' : strtoupper($datos_funeraria['rfc']),
+                    'RegimenFiscal' => '601',
+                ],
+            ],
+            'cfdi:Receptor'  => [
+                '_attributes' => [
+                    //'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
+                    'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
+                    'UsoCFDI' => $uso_cfdi['clave'],
+                ],
+            ],
+            'cfdi:Conceptos' => $conceptos,
+            'cfdi:Impuestos' => [
+                '_attributes'    => [
+                    'TotalImpuestosTrasladados' => number_format($iva_trasladado, 2),
+                ],
+                'cfdi:Traslados' => [
+                    'cfdi:Traslado' => [
+                        '_attributes' => [
+                            'Importe'    => number_format($iva_trasladado, 2),
+                            'Impuesto'   => "002", //IVA
+                            'TasaOCuota' => "0.160000",
+                            'TipoFactor' => "Tasa",
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = ArrayToXml::convert($array, [
+            'rootElementName' => 'cfdi:Comprobante',
+            '_attributes'     => [
+                'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
+                'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
+                'Certificado'        => '',
+                'Fecha'              => str_replace(" ", "T", date("Y-m-d H:i:s")),
+                'Folio'              => $folio_para_asignar,
+                'FormaPago'          => $forma_pago['clave'],
+                'LugarExpedicion'    => $datos_funeraria['cp'],
+                'MetodoPago'         => $metodo_pago['clave'],
+                'Moneda'             => "MXN",
+                'NoCertificado'      => '',
+                'Sello'              => '',
+                'SubTotal'           => number_format($subtotal, 2),
+                'Descuento'          => number_format($descuento, 2),
+                'TipoCambio'         => '1',
+                'TipoDeComprobante'  => $tipo_comprobante['clave'],
+                'Total'              => number_format($total, 2),
+                'Version'            => '3.3',
+                'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd',
+            ],
+        ], true, 'UTF-8');
+
+        //$nombre_temporal = rand(0, 100000) . '.xml';
+        $nombre_temporal = 'tmpxml.xml';
+
+        Storage::disk('cfdis')->put($nombre_temporal, $result);
+
+        return $nombre_temporal;
+
+        //return $request;
+    }
+
     public function timbrar_cfdi(Request $request)
     {
-        return $request;
+        $cfdi_a_timbrar = $this->GenerarXmlCfdi($request);
+        //phpinfo();
+        header('Content-type: text/html; charset=utf-8');
+        set_time_limit(0);
+/* carga archivo xml */
+        $certFile = Storage::disk('local')->path('cer/CSD_Pruebas_CFDI_LAN7008173R5.cer');
+        $keyFile  = Storage::disk('local')->path('key/CSD_Pruebas_CFDI_LAN7008173R5.key.pem');
+
+        $contents = Storage::disk('cfdis')->path($cfdi_a_timbrar);
+
+        $clienteFD = new ClienteFormasDigitales($contents);
+        /* se le pasan los datos de acceso */
+        $autentica           = new Autenticar();
+        $autentica->usuario  = "pruebasWS";
+        $autentica->password = "pruebasWS";
+
+        $parametros = new Parametros();
+
+        $parametros->accesos     = $autentica;
+        $parametros->comprobante = $clienteFD->sellarXML($certFile, $keyFile);
+
+        /* se manda el xml a timbrar */
+        $responseTimbre = $clienteFD->timbrar($parametros);
+
+        if (isset($responseTimbre->acuseCFDI->error)) {
+            return $this->errorResponse(utf8_decode(utf8_encode(($responseTimbre->acuseCFDI->error))), 409);
+        }
+        if (isset($responseTimbre->acuseCFDI->xmlTimbrado)) {
+
+            Storage::disk('cfdis')->put('file.xml', $responseTimbre->acuseCFDI->xmlTimbrado);
+
+            //$file = Storage::disk('cfdis')->path('file.xml');
+
+            //echo 'XML TMIBRADO:<BR> <textarea>' . $responseTimbre->acuseCFDI->xmlTimbrado . '</textarea>';
+            return $this->leer_xml($cfdi_a_timbrar);
+
+        } else {
+            return $this->errorResponse(utf8_decode(utf8_encode(($responseTimbre->acuseCFDI->codigoError))), 409);
+        }
+
     }
+
+    /**leo los datos del xml para guardar en la base de datos */
+    public function leer_xml($path_xml = '')
+    {
+//EMPIEZO A LEER LA INFORMACION DEL CFDI E IMPRIMIRLA
+        if (trim($path_xml) == '') {
+            $path_xml = Storage::disk('cfdis')->path('file.xml');
+        }
+
+        $xml = simplexml_load_file($path_xml);
+        $ns  = $xml->getNamespaces(true);
+        $xml->registerXPathNamespace('c', $ns['cfdi']);
+        $xml->registerXPathNamespace('t', $ns['tfd']);
+
+        foreach ($xml->xpath('//cfdi:Comprobante') as $cfdiComprobante) {
+            // echo $cfdiComprobante['MetodoPago'];
+        }
+
+        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor') as $Emisor) {
+            //echo $Emisor['Rfc'];
+        }
+
+        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor//cfdi:DomicilioFiscal') as $DomicilioFiscal) {
+            //echo $DomicilioFiscal['Pais'];
+        }
+
+        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor//cfdi:ExpedidoEn') as $ExpedidoEn) {
+            //echo $ExpedidoEn['Pais'];
+        }
+
+        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Conceptos//cfdi:Concepto') as $Concepto) {
+            /*echo $Concepto['ClaveUnidad'];
+        echo $Concepto['Importe'];
+        echo $Concepto['Cantidad'];
+        echo $Concepto['Descripcion'];
+        echo $Concepto['ValorUnitario'];
+         */
+        }
+
+        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Impuestos//cfdi:Traslados//cfdi:Traslado') as $Traslado) {
+            /*echo $Traslado['Tasa'];
+        echo $Traslado['Importe'];
+        echo $Traslado['Impuesto'];
+         */
+        }
+
+        $uuid = '';
+        //ESTA ULTIMA PARTE ES LA QUE GENERABA EL ERROR
+        foreach ($xml->xpath('//t:TimbreFiscalDigital') as $tfd) {
+            //echo $tfd['SelloCFD'];
+            //echo $tfd['FechaTimbrado'];
+            $uuid = $tfd['UUID'];
+            //echo $tfd['NoCertificadoSAT'];
+            //echo $tfd['Version'];
+            //echo $tfd['SelloSAT'];
+        }
+
+        //retorno el uuid del cfdi
+
+        return $uuid;
+
+    }
+
+}
+
+class Autenticar
+{
+    public $usuario;
+    public $password;
+}
+
+class Parametros
+{
+    public $accesos;
+    public $comprobante;
 }
