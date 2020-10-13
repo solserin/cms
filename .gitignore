@@ -10,6 +10,7 @@
 /public/js/app.js
 /storage/*.key
 /storage/cfdis/*
+/storage/app/*
 /vendor
 .env
 .env.backup

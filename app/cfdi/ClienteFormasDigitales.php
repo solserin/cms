@@ -19,7 +19,7 @@ class ClienteFormasDigitales
     {
         $this->xml = new DOMDocument();
         $this->xml->load($xmlPath) or die("XML invalido");
-        $this->cadena_original_xslt = Storage::disk('local')->path('cadenaoriginal_3_3.xslt');
+        $this->cadena_original_xslt = Storage::disk(ENV('STORAGE_DISK_CREDENTIALS'))->path(ENV('CADENA_ORIGNAL_FILE'));
     }
 
     public function timbrar($parametros)
