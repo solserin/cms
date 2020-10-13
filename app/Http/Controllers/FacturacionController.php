@@ -486,7 +486,7 @@ class FacturacionController extends ApiController
         ];
         if ($descuento == 0) {
             /**no hay descuento y debe quitarse */
-            //unset($comprobante['Descuento']);
+            unset($comprobante['Descuento']);
         }
 
         $result = ArrayToXml::convert($array, [
