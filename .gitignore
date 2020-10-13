@@ -9,6 +9,7 @@
 /public/js/chunks
 /public/js/app.js
 /storage/*.key
+/storage/cfdis/*
 /vendor
 .env
 .env.backup

@@ -31,31 +31,24 @@ class ClienteFormasDigitales
 
     public function sellarXML($certFile, $keyFile)
     {
-
-        $private = openssl_pkey_get_private(file_get_contents($keyFile));
-
-        $cert = file_get_contents($certFile);
-
-        $certificado = str_replace(array('\n', '\r'), '', base64_encode($cert));
-
-        $data = openssl_x509_parse(file_get_contents($certFile . '.pem'), true);
-
-        $serial_number = $data['serialNumberHex'];
-
+        $private        = openssl_pkey_get_private(file_get_contents($keyFile));
+        $cert           = file_get_contents($certFile);
+        $certificado    = str_replace(array('\n', '\r'), '', base64_encode($cert));
+        $data           = openssl_x509_parse(file_get_contents($certFile . '.pem'), true);
+        $serial_number  = $data['serialNumberHex'];
         $no_certificado = $this->getNoCertificado($serial_number);
         $fecha_actual   = substr(date('c'), 0, 19);
         $comprobante    = $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', 'Comprobante')->item(0);
         $comprobante->setAttribute('Fecha', $fecha_actual);
         $cadena_original = $this->generarCadenaOriginal();
         openssl_sign($cadena_original, $signature, $private, "sha256WithRSAEncryption");
-
         $sello = base64_encode($signature);
-
         $comprobante->setAttribute('Sello', $sello);
         $comprobante->setAttribute('NoCertificado', $no_certificado);
         $comprobante->setAttribute('Certificado', $certificado);
-
-        return $this->xml->saveXML();
+        $ok = $this->xml->saveXML();
+        return $ok;
+        //return $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', 'Comprobante')->item(0)->getAttribute('NoCertificado');
 
     }
 
@@ -66,12 +59,10 @@ class ClienteFormasDigitales
         if ((strlen($serial) % 2) == 1) {
             $serial = " " . $serial;
         }
-
         for ($i = 0; $i < strlen($serial) / 2; $i++) {
             $aux = substr($serial, $i * 2, ($i * 2) + 2);
             $noCertificado .= substr($aux, 1, 1);
         }
-
         return $noCertificado;
     }
 
