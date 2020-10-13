@@ -14,8 +14,8 @@ class Cfdis extends Migration
     public function up()
     {
         Schema::create('cfdis', function (Blueprint $table) {
-            $table->string('uuid', 36)->primary();
-            $table->bigInteger('folio');
+            $table->bigIncrements('id');
+            $table->string('uuid', 36)->nullable();
             $table->unsignedBigInteger('clientes_id')->unsigned()->nullable();
             $table->foreign('clientes_id')->references('id')->on('clientes');
             $table->string('version', 3)->nullable();

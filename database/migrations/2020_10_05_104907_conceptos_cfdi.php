@@ -14,8 +14,8 @@ class ConceptosCfdi extends Migration
     public function up()
     {
         Schema::create('conceptos_cfdi', function (Blueprint $table) {
-            $table->string('cfdis_uuid');
-            $table->foreign('cfdis_uuid')->references('uuid')->on('cfdis');
+            $table->unsignedBigInteger('cfdis_id')->unsigned();
+            $table->foreign('cfdis_id')->references('id')->on('cfdis');
             $table->unsignedBigInteger('sat_productos_servicios_id')->unsigned();
             $table->foreign('sat_productos_servicios_id')->references('id')->on('sat_productos_servicios');
             $table->unsignedBigInteger('articulos_id')->unsigned()->nullable();

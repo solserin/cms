@@ -16,8 +16,8 @@ class CfdisOperaciones extends Migration
         Schema::create('cfdis_operaciones', function (Blueprint $table) {
             $table->unsignedBigInteger('operaciones_id')->unsigned();
             $table->foreign('operaciones_id')->references('id')->on('operaciones');
-            $table->string('cfdis_uuid');
-            $table->foreign('cfdis_uuid')->references('uuid')->on('cfdis');
+            $table->unsignedBigInteger('cfdis_id')->unsigned();
+            $table->foreign('cfdis_id')->references('id')->on('cfdis');
         });
     }
 
