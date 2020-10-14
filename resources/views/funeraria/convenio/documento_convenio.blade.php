@@ -268,7 +268,7 @@ $mostrar=false;
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Segunda.- </span>
-            A fin de recibir el servicio de <span
+            A fin de recibir el <span
                 class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> motivo de este
             convenio. “El Cliente” entregará en las
             instalaciones de “La
@@ -281,14 +281,14 @@ $mostrar=false;
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">a) </span>
                 <span class="ml-2">
-                    El convenio original que ampara dicho servicio de <span
+                    El convenio original que ampara dicho <span
                         class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span>.
                 </span>
             </p>
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">b) </span>
                 <span class="ml-2">
-                    El certificado de defunción de la persona que recibirá el servicio de <span
+                    El certificado de defunción de la persona que recibirá el <span
                         class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> amparado
                     por el
                     convenio en
@@ -298,7 +298,7 @@ $mostrar=false;
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">c) </span>
                 <span class="ml-2">
-                    La autorización de para llevar a cabo el servicio de <span
+                    La autorización de para llevar a cabo el <span
                         class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> de la
                     persona fallecida, firmada por
                     el familiar
@@ -320,7 +320,7 @@ $mostrar=false;
             <span class="uppercase bold texto-sm underline pr-2">Tercera.- </span>
             En caso de que “El Cliente” solicite a “La Empresa” servicios adicionales a los ofrecidos por este convenio,
             el importe
-            de los mismos deberá ser cubierto en su totalidad al momento de concluir el servicio de <span
+            de los mismos deberá ser cubierto en su totalidad al momento de concluir el <span
                 class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> amparado
             por este
             convenio.
@@ -329,7 +329,7 @@ $mostrar=false;
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Cuarta.- </span>
-            “La Empresa” programará los servicios para llevar a cabo el servicio de <span
+            “La Empresa” programará los servicios para llevar a cabo el <span
                 class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> de acuerdo al orden
             en
             que hayan sido
@@ -344,7 +344,7 @@ $mostrar=false;
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">sexta.- </span>
-            “La Empresa” se reserva el derecho de no otorgar el servicio de <span
+            “La Empresa” se reserva el derecho de no otorgar el <span
                 class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> cuando existan
             impedimentos
             legales, físicos
@@ -353,7 +353,7 @@ $mostrar=false;
 
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
-            Ambas partes acuerdan que en caso de imposibilidad de efectuar el servicio de <span
+            Ambas partes acuerdan que en caso de imposibilidad de efectuar el <span
                 class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> por causas ajenas a
             la voluntad
             de ambos, como son: fallas de energía eléctrica, combustible o fallas mecánicas en el equipo, el <span
