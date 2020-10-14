@@ -12,12 +12,16 @@ class ClienteFormasDigitales
 
     private $xml;
     private $autentica;
-
     public $cadena_original_xslt;
 
-    public function __construct($xmlPath)
+    public $xml_a_timbrar;
+    public $xmlPath;
+
+    public function __construct($xmlPath, $xml_a_timbrar)
     {
-        $this->xml = new DOMDocument();
+        $this->xml_a_timbrar = $xml_a_timbrar;
+        $this->xmlPath       = $xml_a_timbrar;
+        $this->xml           = new DOMDocument();
         $this->xml->load($xmlPath) or die("XML invalido");
         $this->cadena_original_xslt = Storage::disk(ENV('STORAGE_DISK_CREDENTIALS'))->path(ENV('CADENA_ORIGINAL_FILE'));
     }
@@ -46,7 +50,7 @@ class ClienteFormasDigitales
         $comprobante->setAttribute('Sello', $sello);
         $comprobante->setAttribute('NoCertificado', $no_certificado);
         $comprobante->setAttribute('Certificado', $certificado);
-        return $this->xml->saveXML();
+        return $this->xml->saveXML($this->xml->documentElement);
         //return $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', 'Comprobante')->item(0)->getAttribute('NoCertificado');
     }
 

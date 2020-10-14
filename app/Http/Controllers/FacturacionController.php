@@ -657,7 +657,7 @@ class FacturacionController extends ApiController
             $keyFile                 = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
             $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar);
             /**mandamos llamar la clase del PAC*/
-            $clienteFD = new ClienteFormasDigitales($contenido_xml_a_timbrar);
+            $clienteFD = new ClienteFormasDigitales($contenido_xml_a_timbrar, $xml_a_timbrar);
             /* se le pasan los datos de acceso */
             $autentica           = new Autenticar();
             $autentica->usuario  = $usuario;
@@ -667,6 +667,7 @@ class FacturacionController extends ApiController
             //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
             /**SE MANDA SELLAR EL XML */
             // $clienteFD->sellarXML($certFile, $keyFile);
+            //return $this->errorResponse(, 409);
             $parametros->comprobante = $clienteFD->sellarXML($certFile, $keyFile);
             /* se manda el xml a TIMBRAR */
             $responseTimbre = $clienteFD->timbrar($parametros);
