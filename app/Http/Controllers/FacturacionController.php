@@ -615,13 +615,16 @@ class FacturacionController extends ApiController
             }
         }
 
-        $folio_para_asignar = Cfdis::select('folio')->orderBy('folio', 'desc')->first() + 1;
+        $folio_para_asignar = Cfdis::select('id')->orderBy('id', 'desc')->first() + 1;
 
         /**COMENZANDO A GUARDAR EL CFDI EN LA BASE DE DATOS */
 
         header('Content-type: text/html; charset=utf-8');
         try {
             set_time_limit(0);
+            ini_set('display_errors', true);
+            ini_set("soap.wsdl_cache_enabled", "0");
+
             date_default_timezone_set("America/Mazatlan");
             /**mandamos crear el XML */
             $xml_a_timbrar = $this->GenerarXmlCfdi($request, $folio_para_asignar);
@@ -663,6 +666,7 @@ class FacturacionController extends ApiController
             $parametros->accesos = $autentica;
             //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
             /**SE MANDA SELLAR EL XML */
+            // $clienteFD->sellarXML($certFile, $keyFile);
             $parametros->comprobante = $clienteFD->sellarXML($certFile, $keyFile);
             /* se manda el xml a TIMBRAR */
             $responseTimbre = $clienteFD->timbrar($parametros);
@@ -674,10 +678,8 @@ class FacturacionController extends ApiController
             }
             if (isset($responseTimbre->acuseCFDI->xmlTimbrado)) {
                 /**EL XML SE TIMBRO CORRECTAMENTE */
-                $xml_a_timbrar;
                 Storage::disk($storage_disk_xmls)->put($xml_a_timbrar, $responseTimbre->acuseCFDI->xmlTimbrado);
                 /**se comiezna a guardar el resultado en la base de datos */
-
                 //$clienteFD = new ClienteFormasDigitales($contents = Storage::disk($storage_disk_xmls)->path($file_guardar));
                 //return $clienteFD->generarCadenaOriginal();
                 return $this->leer_xml($xml_a_timbrar);

@@ -19,13 +19,13 @@ class ClienteFormasDigitales
     {
         $this->xml = new DOMDocument();
         $this->xml->load($xmlPath) or die("XML invalido");
-        $this->cadena_original_xslt = Storage::disk(ENV('STORAGE_DISK_CREDENTIALS'))->path(ENV('CADENA_ORIGNAL_FILE'));
+        $this->cadena_original_xslt = Storage::disk(ENV('STORAGE_DISK_CREDENTIALS'))->path(ENV('CADENA_ORIGINAL_FILE'));
     }
 
     public function timbrar($parametros)
     {
         /* conexion al web service */
-        $client = new SoapClient(ENV('WEB_SERVICE_CFDI'));
+        $client = new SoapClient(ENV('WEB_SERVICE_DEVELOP'), array('encoding' => 'UTF-8'));
         return $client->TimbrarCFDI($parametros);
     }
 
@@ -46,10 +46,8 @@ class ClienteFormasDigitales
         $comprobante->setAttribute('Sello', $sello);
         $comprobante->setAttribute('NoCertificado', $no_certificado);
         $comprobante->setAttribute('Certificado', $certificado);
-        $ok = $this->xml->saveXML();
-        return $ok;
+        return $this->xml->saveXML();
         //return $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', 'Comprobante')->item(0)->getAttribute('NoCertificado');
-
     }
 
     public function getNoCertificado($serial)
