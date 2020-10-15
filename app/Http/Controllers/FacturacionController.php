@@ -624,7 +624,6 @@ class FacturacionController extends ApiController
             set_time_limit(0);
             ini_set('display_errors', true);
             ini_set("soap.wsdl_cache_enabled", "0");
-
             date_default_timezone_set("America/Mazatlan");
             /**mandamos crear el XML */
             $xml_a_timbrar = $this->GenerarXmlCfdi($request, $folio_para_asignar);
@@ -657,7 +656,7 @@ class FacturacionController extends ApiController
             $keyFile                 = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
             $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar);
             /**mandamos llamar la clase del PAC*/
-            $clienteFD = new ClienteFormasDigitales($contenido_xml_a_timbrar, $xml_a_timbrar);
+            $clienteFD = new ClienteFormasDigitales($contenido_xml_a_timbrar);
             /* se le pasan los datos de acceso */
             $autentica           = new Autenticar();
             $autentica->usuario  = $usuario;
@@ -666,8 +665,7 @@ class FacturacionController extends ApiController
             $parametros->accesos = $autentica;
             //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
             /**SE MANDA SELLAR EL XML */
-            // $clienteFD->sellarXML($certFile, $keyFile);
-            //return $this->errorResponse(, 409);
+            $clienteFD->sellarXML($certFile, $keyFile);
             $parametros->comprobante = $clienteFD->sellarXML($certFile, $keyFile);
             /* se manda el xml a TIMBRAR */
             $responseTimbre = $clienteFD->timbrar($parametros);
