@@ -79,7 +79,7 @@
             <thead>
                 <tr>
                     <th class="w-25">
-                        <img class="logo logos -mt-6" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
+                        <img class="logo logos -mt-6" src="{{public_path(env('LOGOJPG'))}}" alt="">
                     </th>
                     <th class="w-40">
 
