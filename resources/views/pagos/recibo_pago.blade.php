@@ -79,7 +79,7 @@
             <thead>
                 <tr>
                     <th class="w-25">
-                        <img class="logo logos -mt-6" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
+                        <img class="logo logos -mt-6" src="{{public_path(env('LOGOJPG'))}}" alt="">
                     </th>
                     <th class="w-40">
 
@@ -150,8 +150,6 @@
                 </tr>
             </table>
         </div>
-
-
         <div class="py-3 ">
             <span class="uppercase bold size-15px">desgloce de pagos cubiertos:</span>
         </div>
@@ -185,11 +183,12 @@
                         <td class="py-1 center"><span
                                 class="px-2 uppercase">{{ $referencia_subpago['parent_pago_id'] }}>{{ $referencia_subpago['id'] }}</span>
                         </td>
+
                         <td class="py-1"><span class="px-2 capitalize pl-6">
                                 @if ($referencia_subpago['movimientos_pagos_id']==2)
-                                <img class="w-6" src="{{asset('images/increase.png')}}" alt="">
+                                <img class="w-6" src="{{public_path('images/increase.png')}}" alt="">
                                 @else
-                                <img class="w-5" src="{{asset('images/decrease.png')}}" alt="">
+                                <img class="w-5" src="{{public_path('images/decrease.png')}}" alt="">
                                 @endif
                                 {{ $referencia_subpago['movimientos_pagos_texto'] }}
                             </span></td>
@@ -260,7 +259,7 @@
                     <tr>
                         <td class="py-1 capitalize center">
                             <span class="px-2 uppercase size-12px bold">
-                                <img class="w-10" src="{{asset('images/increase.png')}}" alt="">
+                                <img class="w-10" src="{{public_path('images/increase.png')}}" alt="">
                                 intereses aplicados
                             </span>
                         </td>
@@ -273,7 +272,7 @@
                     <tr>
                         <td class="py-1 capitalize center">
                             <span class="px-2 uppercase size-12px bold">
-                                <img class="w-8" src="{{asset('images/decrease.png')}}" alt="">
+                                <img class="w-8" src="{{public_path('images/decrease.png')}}" alt="">
                                 descuento x pronto pago
                             </span>
                         </td>

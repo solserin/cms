@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap"
-        rel="stylesheet">
     <title>Reportes</title>
     <style>
         .logos {
@@ -82,7 +79,7 @@
             <thead>
                 <tr>
                     <th class="w-25">
-                        <img class="logo logos -mt-6" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
+                        <img src="{{ public_path(env('LOGOJPG')) }}" alt="" class="logo logos -mt-6">
                     </th>
                     <th class="w-50">
 
@@ -163,7 +160,8 @@
                 <tbody>
                     <tr>
                         <td width="20%">
-                            <img class="logo logos ml-auto mr-auto" src="{{asset('images/santander.png')}}" alt="">
+                            <img class="logo logos ml-auto mr-auto" src="{{public_path('images/santander.png')}}"
+                                alt="">
                         </td>
 
                         <td width="40%">

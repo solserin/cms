@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap"
-        rel="stylesheet">
     <title>Reportes</title>
     <style>
         .logos {
@@ -72,7 +69,7 @@
         <thead>
             <tr>
                 <th class="w-10">
-                    <img class="logo logos -mt-6" src="{{asset('images/aeternus/LogoEmp.jpg')}}" alt="">
+                    <img class="logo logos -mt-6" src="{{public_path(env('LOGOJPG'))}}" alt="">
                 </th>
                 <th class="w-80">
                     <div class="center uppercase -mt-3">

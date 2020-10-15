@@ -79,7 +79,7 @@
             <table class="w-100">
                 <tr>
                     <td width="70%">
-                        <img src="{{ url('/images/logopng.png') }}" class="w-60 mr-8">
+                        <img src="{{ public_path(env('LOGOJPG')) }}" class="w-60 mr-8">
                     </td>
                     <td width="30%">
                         <div class="numeros-contrato">
