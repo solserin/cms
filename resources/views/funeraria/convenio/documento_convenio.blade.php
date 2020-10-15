@@ -298,7 +298,7 @@ $mostrar=false;
             <p class="texto-base justificar line-base">
                 <span class="lowercase bold texto-sm -ml-6">c) </span>
                 <span class="ml-2">
-                    La autorización de para llevar a cabo el <span
+                    La autorización para llevar a cabo el <span
                         class="uppercase bold texto-sm">{{ $datos['venta_plan']['nombre_original'] }}</span> de la
                     persona fallecida, firmada por
                     el familiar
