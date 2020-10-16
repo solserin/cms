@@ -10,12 +10,14 @@ use App\Operaciones;
 use App\SatFormasPago;
 use App\SatPais;
 use App\SATProductosServicios;
+use App\SATRegimenes;
 use App\SatUnidades;
 use App\SatUsosCfdi;
 use App\TipoComprobantes;
 use App\TiposRelacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Spatie\ArrayToXml\ArrayToXml;
 
@@ -453,13 +455,13 @@ class FacturacionController extends ApiController
                 '_attributes' => [
                     'RegimenFiscal' => '601',
                     'Rfc'           => ENV('APP_ENV') == 'local' ? 'LAN7008173R5' : strtoupper($datos_funeraria['rfc']),
-                    //'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
+                    'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
                 ],
             ],
             'cfdi:Receptor'  => [
                 '_attributes' => [
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
-                    //'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
+                    'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
                     'UsoCFDI' => $uso_cfdi['clave'],
                 ],
             ],
@@ -514,8 +516,12 @@ class FacturacionController extends ApiController
         //$nombre_temporal = 'ok.xml';
         $nombre_temporal = $folio_para_asignar . '.xml';
         Storage::disk('cfdis')->put($nombre_temporal, $result);
-        return $nombre_temporal;
 
+        $arreglo_de_datos_a_retornar['nombre_xml'] = $nombre_temporal;
+        $arreglo_de_datos_a_retornar['subtotal']   = $subtotal;
+        $arreglo_de_datos_a_retornar['descuento']  = $descuento;
+        $arreglo_de_datos_a_retornar['total']      = $total;
+        return $arreglo_de_datos_a_retornar;
         //return $request;
     }
 
@@ -615,96 +621,253 @@ class FacturacionController extends ApiController
             }
         }
 
-        $folio_para_asignar = Cfdis::select('id')->orderBy('id', 'desc')->first() + 1;
+        /**procede con las validaciones y se hace la insercion de la transanccion en la base de datos */
+        $datos_funeraria = Funeraria::first();
+/**COMENZANDO A GUARDAR EL CFDI EN LA BASE DE DATOS */
 
-        /**COMENZANDO A GUARDAR EL CFDI EN LA BASE DE DATOS */
-
-        header('Content-type: text/html; charset=utf-8');
         try {
-            set_time_limit(0);
-            ini_set('display_errors', true);
-            ini_set("soap.wsdl_cache_enabled", "0");
-            date_default_timezone_set("America/Mazatlan");
-            /**mandamos crear el XML */
-            $xml_a_timbrar = $this->GenerarXmlCfdi($request, $folio_para_asignar);
-            /**verificando que el xml se haya genrado sin errores */
-            if ($xml_a_timbrar != $folio_para_asignar . '.xml') {
-                /**el xml no se creo */
-                return $this->errorResponse($xml_a_timbrar, 409);
-            }
-            /* carga archivo xml */
-            $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
-            $storage_disk_xmls        = ENV('STORAGE_DISK_XML');
-            if (ENV('APP_ENV') == 'local') {
-                $certificado_path = ENV('CER_PAC');
-                $key_path         = ENV('KEY_PAC');
-                $usuario          = ENV('USER_PAC');
-                $password         = ENV('PASSWORD_PAC');
-                $root_path_cer    = ENV('ROOT_CER_DEV');
-                $root_path_key    = ENV('ROOT_KEY_DEV');
-            } else {
-                /**data from DB */
-                $certificado_path = ENV('CER_PAC'); //sistema
-                $key_path         = ENV('KEY_PAC'); //sistema
-                $usuario          = ENV('USER_PAC');
-                $password         = ENV('PASSWORD_PAC');
-                $root_path_cer    = ENV('ROOT_CER_PROD');
-                $root_path_key    = ENV('ROOT_KEY_PROD');
+            DB::beginTransaction();
+            /**GUARDAMOS LA INFO INICIAL DEL  */
+            $folio_para_asignar = DB::table('cfdis')->insertGetId(
+                [
+                    'uuid'                        => null,
+                    'tasa_iva'                    => $request->tasa_iva,
+                    'clientes_id'                 => $request->id_cliente,
+                    'serie'                       => null,
+                    'fecha'                       => null,
+                    'sat_formas_pago_id'          => $request->forma_pago['value'],
+                    'subtotal'                    => 0,
+                    'descuento'                   => 0,
+                    'sat_monedas_id'              => 1, //peso mxn
+                    'tipo_cambio'                 => 1,
+                    'total'                       => 0,
+                    'sat_tipo_comprobante_id'     => $request->tipo_comprobante['value'],
+                    'sat_metodos_pago_id'         => $request->metodo_pago['value'],
+                    'rfc_emisor'                  => $datos_funeraria->rfc,
+                    'nombre_emisor'               => $datos_funeraria->nombre_comercial,
+                    'sat_regimenes_id'            => 1, //personas morales
+                    'sat_pais_id'                 => $request->sat_pais['value'],
+                    'rfc_receptor'                => $request->rfc,
+                    'nombre_receptor'             => $request->razon_social,
+                    'residencia_fiscal_receptor'  => $request->direccion_fiscal,
+                    'sat_usos_cfdi_id'            => $request->uso_cfdi['value'],
+                    'fecha_timbrado'              => null,
+                    'rfc_proveedor_certificado'   => null,
+                    'fecha_registro'              => now(),
+                    'nota'                        => $request->nota,
+                    'timbro_id'                   => (int) $request->user()->id,
+                    'num_operacion'               => null,
+                    'rfc_emisor_cta_ordenante'    => null,
+                    'nombre_banco_ordenante'      => null,
+                    'rfc_emisor_cta_beneficiario' => null,
+                    'cta_beneficiario'            => null,
+                    'tipos_cadena_pago_clave'     => null,
+                ]
+            );
+
+            /**GUARDANDO OPERACIONES RELACIONADAS */
+            if (isset($request->operaciones_relacionadas)) {
+                if (count($request->operaciones_relacionadas) > 0) {
+                    /**tiene operaciones relacionadas */
+                    foreach ($request->operaciones_relacionadas as $key => $operacion) {
+                        //return $this->errorResponse($operacion['operacion_id'], 409);
+
+                        DB::table('cfdis_operaciones')->insert(
+                            [
+                                'cfdis_id'       => $folio_para_asignar,
+                                'operaciones_id' => $operacion['operacion_id'],
+                            ]
+                        );
+                    }
+                }
             }
 
-            $certFile                = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
-            $keyFile                 = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
-            $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar);
-            /**mandamos llamar la clase del PAC*/
-            $clienteFD = new ClienteFormasDigitales($contenido_xml_a_timbrar);
-            /* se le pasan los datos de acceso */
-            $autentica           = new Autenticar();
-            $autentica->usuario  = $usuario;
-            $autentica->password = $password;
-            $parametros          = new Parametros();
-            $parametros->accesos = $autentica;
-            //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
-            /**SE MANDA SELLAR EL XML */
-            $clienteFD->sellarXML($certFile, $keyFile);
-            $parametros->comprobante = $clienteFD->sellarXML($certFile, $keyFile);
-            /* se manda el xml a TIMBRAR */
-            $responseTimbre = $clienteFD->timbrar($parametros);
+            header('Content-type: text/html; charset=utf-8');
+            try {
+                set_time_limit(0);
+                ini_set('display_errors', true);
+                ini_set("soap.wsdl_cache_enabled", "0");
+                date_default_timezone_set("America/Mazatlan");
+                /**mandamos crear el XML, con el nombre temporal del folio registrado en la parte superior */
+                $xml_a_timbrar = $this->GenerarXmlCfdi($request, $folio_para_asignar);
 
-            if (isset($responseTimbre->acuseCFDI->error)) {
-                /**OCURRIO UN ERROR */
-                //return $this->errorResponse(utf8_decode(utf8_encode(($responseTimbre->acuseCFDI->codigoError))), 409);
-                return $this->errorResponse(utf8_decode(utf8_encode(($responseTimbre->acuseCFDI->error))), 409);
+                /**verificando que el xml se haya genrado sin errores */
+                if ($xml_a_timbrar['nombre_xml'] != $folio_para_asignar . '.xml') {
+                    /**el xml no se creo */
+                    return $this->errorResponse('Ocurrió un error al generar el XML, reintente por favor.', 409);
+                }
+
+                /* carga archivo xml */
+                $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
+                $storage_disk_xmls        = ENV('STORAGE_DISK_XML');
+                if (ENV('APP_ENV') == 'local') {
+                    $certificado_path = ENV('CER_PAC');
+                    $key_path         = ENV('KEY_PAC');
+                    $usuario          = ENV('USER_PAC');
+                    $password         = ENV('PASSWORD_PAC');
+                    $root_path_cer    = ENV('ROOT_CER_DEV');
+                    $root_path_key    = ENV('ROOT_KEY_DEV');
+                } else {
+                    /**data from DB */
+                    $certificado_path = ENV('CER_PAC'); //sistema
+                    $key_path         = ENV('KEY_PAC'); //sistema
+                    $usuario          = ENV('USER_PAC');
+                    $password         = ENV('PASSWORD_PAC');
+                    $root_path_cer    = ENV('ROOT_CER_PROD');
+                    $root_path_key    = ENV('ROOT_KEY_PROD');
+                }
+                $certFile                = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
+                $keyFile                 = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
+                $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar['nombre_xml']);
+                /**mandamos llamar la clase del PAC*/
+                $clienteFD = new ClienteFormasDigitales($contenido_xml_a_timbrar);
+                /* se le pasan los datos de acceso */
+                $autentica           = new Autenticar();
+                $autentica->usuario  = $usuario;
+                $autentica->password = $password;
+                $parametros          = new Parametros();
+                $parametros->accesos = $autentica;
+                //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
+                /**SE MANDA SELLAR EL XML */
+                $clienteFD->sellarXML($certFile, $keyFile);
+                $parametros->comprobante = $clienteFD->sellarXML($certFile, $keyFile);
+                /* se manda el xml a TIMBRAR */
+                $responseTimbre = $clienteFD->timbrar($parametros);
+
+                if (isset($responseTimbre->acuseCFDI->error)) {
+                    /**al no timbrar el xml revierto la inserccion en la base de datos y regreso al ultimo id el incremento de la tabla */
+                    DB::rollBack();
+                    $maxId = DB::table($storage_disk_xmls)->max('id');
+                    DB::statement("ALTER TABLE cfdis AUTO_INCREMENT=$maxId");
+                    /**OCURRIO UN ERROR */
+                    //return $this->errorResponse(utf8_decode(utf8_encode(($responseTimbre->acuseCFDI->codigoError))), 409);
+                    /**eliminar el xml ya que no se timbro*/
+                    Storage::disk($storage_disk_xmls)->delete($xml_a_timbrar['nombre_xml']);
+                    return $this->errorResponse($responseTimbre->acuseCFDI->error, 409);
+                }
+                /**verificando si esta timbrado el cfdi */
+                if (isset($responseTimbre->acuseCFDI->xmlTimbrado)) {
+                    DB::commit();
+                    /**EL XML SE TIMBRO CORRECTAMENTE */
+                    Storage::disk($storage_disk_xmls)->put($xml_a_timbrar['nombre_xml'], $responseTimbre->acuseCFDI->xmlTimbrado);
+                    /**se comiezna a guardar el resultado en la base de datos */
+                    //$clienteFD = new ClienteFormasDigitales($contents = Storage::disk($storage_disk_xmls)->path($file_guardar));
+                    //return $clienteFD->generarCadenaOriginal();
+                    return $this->leer_xml($folio_para_asignar);
+                }
+            } catch (SoapFault $e) {
+                print("Auth Error:::: $e");
             }
-            if (isset($responseTimbre->acuseCFDI->xmlTimbrado)) {
-                /**EL XML SE TIMBRO CORRECTAMENTE */
-                Storage::disk($storage_disk_xmls)->put($xml_a_timbrar, $responseTimbre->acuseCFDI->xmlTimbrado);
-                /**se comiezna a guardar el resultado en la base de datos */
-                //$clienteFD = new ClienteFormasDigitales($contents = Storage::disk($storage_disk_xmls)->path($file_guardar));
-                //return $clienteFD->generarCadenaOriginal();
-                return $this->leer_xml($xml_a_timbrar);
-            }
-        } catch (SoapFault $e) {
-            print("Auth Error:::: $e");
+
+            /**SE MANDA REGISTRAR LA TRANSACCIOEN LA BASE DE DATOS */
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
         }
 
     }
 
     /**leo los datos del xml para guardar en la base de datos */
-    public function leer_xml($path_xml = '')
+    public function leer_xml($folio_xml = '')
     {
         //EMPIEZO A LEER LA INFORMACION DEL CFDI
-        if (trim($path_xml) == '') {
-            $path_xml = Storage::disk('cfdis')->path('file.xml');
+        if (trim($folio_xml) == '') {
+            return $this->errorResponse('Debe especificar una ruta del archivo .xml', 409);
         } else {
-            $path_xml = Storage::disk('cfdis')->path($path_xml);
+/* carga archivo xml */
+            $storage_disk_xmls = ENV('STORAGE_DISK_XML');
+            $folio_xml         = Storage::disk($storage_disk_xmls)->path($folio_xml . '.xml');
         }
-        $xml = simplexml_load_file($path_xml);
-        $ns  = $xml->getNamespaces(true);
+        if (File::exists($folio_xml)) {
+            $xml = simplexml_load_file($folio_xml);
+        } else {
+            return $this->errorResponse('El xml que indicó no existe.', 409);
+        }
+
+        /**se trae la informacion del cfdi de la bd */
+
+        $cfdi = Cfdis::where('id', $folio_xml)->first();
+
+        $ns = $xml->getNamespaces(true);
         $xml->registerXPathNamespace('c', $ns['cfdi']);
         $xml->registerXPathNamespace('t', $ns['tfd']);
+        $comprobante = $xml->xpath('//cfdi:Comprobante')[0];
+
+        $emisor   = $xml->xpath('//cfdi:Emisor')[0];
+        $receptor = $xml->xpath('//cfdi:Receptor')[0];
+        /**determinando el regimen */
+        $regimen  = SATRegimenes::select('regimen')->where('clave', (string) $emisor['RegimenFiscal'])->first();
+        $uso_cfdi = SatUsosCfdi::select('uso')->where('clave', (string) $receptor['UsoCFDI'])->first();
+
+        /**agregando conceptos */
+        $conceptos = [];
+        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Conceptos//cfdi:Concepto') as $concepto) {
+            $traslado = [];
+
+            /**agregando traslado */
+            array_push($traslado, [
+                'Base'       => number_format((float) round(((string) $concepto['ValorUnitario'] - (string) $concepto['Descuento']) * ((string) $concepto['Cantidad']), 2), 2, '.', ''),
+                'Importe'    => number_format((float) round((((string) $concepto['ValorUnitario'] - (string) $concepto['Descuento']) * (string) $concepto['Cantidad']) * .16, 2), 2, '.', ''),
+                'Impuesto'   => '002',
+                'TasaOCuota' => '0.160000',
+                'TipoFactor' => 'Tasa',
+            ]);
+
+            array_push($conceptos, [
+                'ClaveProdServ' => (string) $concepto['ClaveProdServ'],
+                'ClaveUnidad'   => (string) $concepto['ClaveUnidad'],
+                'Importe'       => (string) $concepto['Importe'],
+                'Cantidad'      => (string) $concepto['Cantidad'],
+                'Descripcion'   => (string) $concepto['Descripcion'],
+                'ValorUnitario' => (string) $concepto['ValorUnitario'],
+                'Descuento'     => (string) $concepto['Descuento'],
+                'Impuestos'     => [
+                    'Traslados' => $traslado,
+                ],
+            ]);
+        }
+
+        /**se crea el arreglo con la informacion del xml */
+        $comprobante_cfdi = [
+            'Comprobante' => [
+                'xmlns:cfdi'         => 'http: //www.sat.gob.mx/cfd/3',
+                'xmlns:xsi'          => 'http: //www.w3.org/2001/XMLSchema-instance',
+                'Certificado'        => (string) $comprobante['Certificado'],
+                'Fecha'              => (string) $comprobante['Fecha'],
+                'Folio'              => (string) $comprobante['Folio'],
+                'FormaPago'          => (string) $comprobante['FormaPago'],
+                'LugarExpedicion'    => (string) $comprobante['LugarExpedicion'],
+                'MetodoPago'         => (string) $comprobante['MetodoPago'],
+                'Moneda'             => (string) $comprobante['Moneda'],
+                'NoCertificado'      => (string) $comprobante['NoCertificado'],
+                'Sello'              => (string) $comprobante['Sello'],
+                'Serie'              => (string) $comprobante['Serie'],
+                'SubTotal'           => (string) $comprobante['SubTotal'],
+                'Descuento'          => (string) $comprobante['Descuento'],
+                'TipoCambio'         => (string) $comprobante['TipoCambio'],
+                'TipoDeComprobante'  => (string) $comprobante['TipoDeComprobante'],
+                'Total'              => (string) $comprobante['Total'],
+                'Version'            => (string) $comprobante['Version'],
+                'xsi:schemaLocation' => 'http: //www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd',
+            ],
+            'Emisor'      => [
+                'Rfc'           => (string) $emisor['Rfc'],
+                'Nombre'        => (string) $emisor['Nombre'],
+                'RegimenFiscal' => $regimen != null ? (string) $emisor['RegimenFiscal'] . ' (' . $regimen['regimen'] . ')' : '',
+            ],
+            'Receptor'    => [
+                'Rfc'     => (string) $receptor['Rfc'],
+                'Nombre'  => (string) $receptor['Nombre'],
+                'UsoCFDI' => $uso_cfdi != null ? (string) $receptor['UsoCFDI'] . ' (' . $uso_cfdi['uso'] . ')' : '',
+            ],
+            'Conceptos'   => $conceptos,
+        ];
+
+        // return $xml->xpath('//cfdi:Comprobante')[0];
+        return ($comprobante_cfdi);
 
         foreach ($xml->xpath('//cfdi:Comprobante') as $cfdiComprobante) {
-            // echo $cfdiComprobante['MetodoPago'];
+            return $cfdiComprobante;
         }
         foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor') as $Emisor) {
             //echo $Emisor['Rfc'];

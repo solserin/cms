@@ -56,7 +56,7 @@ return [
         ],
         'cfdis'  => [
             'driver'     => 'local',
-            'root'       => storage_path(ENV('XML_ROOT')),
+            'root'       => ENV('APP_ENV') == 'local' ? storage_path(ENV('XML_ROOT_DEVELOP')) : storage_path(ENV('XML_ROOT_PRODUCTION')),
             'url'        => env('APP_URL') . '/cfdis',
             'visibility' => 'public',
         ],
