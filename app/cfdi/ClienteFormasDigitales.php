@@ -45,7 +45,11 @@ class ClienteFormasDigitales
         $comprobante->setAttribute('Sello', $sello);
         $comprobante->setAttribute('NoCertificado', $no_certificado);
         $comprobante->setAttribute('Certificado', $certificado);
-        return $this->xml->saveXML($this->xml->documentElement);
+
+
+        $retorno['cadena_original']=$cadena_original;
+        $retorno['xml']=$this->xml->saveXML($this->xml->documentElement);
+        return $retorno;
         //return $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', 'Comprobante')->item(0)->getAttribute('NoCertificado');
     }
 

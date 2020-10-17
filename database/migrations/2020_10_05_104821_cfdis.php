@@ -62,6 +62,8 @@ class Cfdis extends Migration
             $table->foreign('timbro_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('cancelo_id')->unsigned()->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
+            $table->longText('cadena_original')->nullable();
+            $table->longText('xml_timbrado')->nullable();
             $table->tinyInteger('status')->default(1);
         });
     }

@@ -394,10 +394,10 @@ class FacturacionController extends ApiController
                     return 'No se encontró la clave de unidad del Sat.';
                 }
 
-                $ValorUnitarioPrecioNeto      = $concepto['precio_neto'] / (1 + ($request->tasa_iva / 100));
+                $ValorUnitarioPrecioNeto      = (float)($concepto['precio_neto'] / (1 + ($request->tasa_iva / 100)));
                 $ValorUnitarioPrecioDescuento = $concepto['precio_descuento'] / (1 + ($request->tasa_iva / 100));
                 $descuento_concepto           = $concepto['descuento_b']['value'] == 1 ? ($ValorUnitarioPrecioNeto - $ValorUnitarioPrecioDescuento) : 0;
-
+               
                 $subtotal += $ValorUnitarioPrecioNeto * $concepto['cantidad'];
                 $descuento += $descuento_concepto * $concepto['cantidad'];
                 $iva_trasladado += (($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad']) * $tasa_iva;
@@ -482,6 +482,8 @@ class FacturacionController extends ApiController
                 ],
             ],
         ];
+
+
         $comprobante = [
             'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
             'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
@@ -690,10 +692,10 @@ class FacturacionController extends ApiController
                 date_default_timezone_set("America/Mazatlan");
                 /**mandamos crear el XML, con el nombre temporal del folio registrado en la parte superior */
                 $xml_a_timbrar = $this->GenerarXmlCfdi($request, $folio_para_asignar);
-
                 /**verificando que el xml se haya genrado sin errores */
                 if ($xml_a_timbrar['nombre_xml'] != $folio_para_asignar . '.xml') {
                     /**el xml no se creo */
+                    
                     return $this->errorResponse('Ocurrió un error al generar el XML, reintente por favor.', 409);
                 }
 
@@ -730,30 +732,60 @@ class FacturacionController extends ApiController
                 //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
                 /**SE MANDA SELLAR EL XML */
                 $clienteFD->sellarXML($certFile, $keyFile);
-                $parametros->comprobante = $clienteFD->sellarXML($certFile, $keyFile);
+                $retorno_del_sellado = $clienteFD->sellarXML($certFile, $keyFile);
+                $parametros->comprobante=$retorno_del_sellado['xml'];
+                $cadena_original_cfdi=$retorno_del_sellado['cadena_original'];
                 /* se manda el xml a TIMBRAR */
                 $responseTimbre = $clienteFD->timbrar($parametros);
+ 
 
                 if (isset($responseTimbre->acuseCFDI->error)) {
                     /**al no timbrar el xml revierto la inserccion en la base de datos y regreso al ultimo id el incremento de la tabla */
                     DB::rollBack();
-                    $maxId = DB::table($storage_disk_xmls)->max('id');
+                    /**regreso el id de la base de datos que se iba consumir */
+                    $maxId = DB::table('cfdis')->max('id');
                     DB::statement("ALTER TABLE cfdis AUTO_INCREMENT=$maxId");
-                    /**OCURRIO UN ERROR */
-                    //return $this->errorResponse(utf8_decode(utf8_encode(($responseTimbre->acuseCFDI->codigoError))), 409);
+                    //return $this->errorResponse(($responseTimbre->acuseCFDI->codigoError), 409);
                     /**eliminar el xml ya que no se timbro*/
                     Storage::disk($storage_disk_xmls)->delete($xml_a_timbrar['nombre_xml']);
                     return $this->errorResponse($responseTimbre->acuseCFDI->error, 409);
                 }
                 /**verificando si esta timbrado el cfdi */
                 if (isset($responseTimbre->acuseCFDI->xmlTimbrado)) {
-                    DB::commit();
                     /**EL XML SE TIMBRO CORRECTAMENTE */
-                    Storage::disk($storage_disk_xmls)->put($xml_a_timbrar['nombre_xml'], $responseTimbre->acuseCFDI->xmlTimbrado);
                     /**se comiezna a guardar el resultado en la base de datos */
+
+                    /**se actualiza el xml */
+                    Storage::disk($storage_disk_xmls)->put($xml_a_timbrar['nombre_xml'], $responseTimbre->acuseCFDI->xmlTimbrado);
+                    $xml_timbrado_file=Storage::disk($storage_disk_xmls)->get($xml_a_timbrar['nombre_xml']);
+                    $xml_timbrado=$this->leer_xml($folio_para_asignar);
+                      DB::table('cfdis')->where('id','=',$folio_para_asignar)->update(
+                      [
+                      'uuid' => $xml_timbrado['Complemento']['TimbreFiscalDigital']['UUID'],
+                                         'version' => $xml_timbrado['Comprobante']['Version'],
+                      'serie' => $xml_timbrado['Comprobante']['Serie'],
+                      'fecha' => $xml_timbrado['Comprobante']['Fecha'],
+                      'subtotal' => $xml_timbrado['Comprobante']['SubTotal'],
+                      'descuento' => $xml_timbrado['Comprobante']['Descuento'],
+                      'total' => $xml_timbrado['Comprobante']['Total'],
+                      'fecha_timbrado' => $xml_timbrado['Complemento']['TimbreFiscalDigital']['FechaTimbrado'],
+                      'rfc_proveedor_certificado' => $xml_timbrado['Complemento']['TimbreFiscalDigital']['RfcProvCertif'],
+                      'num_operacion' => null,
+                      'rfc_emisor_cta_ordenante' => null,
+                      'nombre_banco_ordenante' => null,
+                      'rfc_emisor_cta_beneficiario' => null,
+                      'cta_beneficiario' => null,
+                      'tipos_cadena_pago_clave' => null,
+                      'cadena_original'=>$cadena_original_cfdi,
+                      'xml_timbrado'=>$xml_timbrado_file
+                      ]
+                      );
+                     DB::commit();
+                     return $folio_para_asignar;
+                    
                     //$clienteFD = new ClienteFormasDigitales($contents = Storage::disk($storage_disk_xmls)->path($file_guardar));
                     //return $clienteFD->generarCadenaOriginal();
-                    return $this->leer_xml($folio_para_asignar);
+
                 }
             } catch (SoapFault $e) {
                 print("Auth Error:::: $e");
@@ -770,12 +802,14 @@ class FacturacionController extends ApiController
     /**leo los datos del xml para guardar en la base de datos */
     public function leer_xml($folio_xml = '')
     {
+        $id_folio_cfdi=0;
         //EMPIEZO A LEER LA INFORMACION DEL CFDI
         if (trim($folio_xml) == '') {
             return $this->errorResponse('Debe especificar una ruta del archivo .xml', 409);
         } else {
 /* carga archivo xml */
             $storage_disk_xmls = ENV('STORAGE_DISK_XML');
+            $id_folio_cfdi=$folio_xml;
             $folio_xml         = Storage::disk($storage_disk_xmls)->path($folio_xml . '.xml');
         }
         if (File::exists($folio_xml)) {
@@ -786,11 +820,13 @@ class FacturacionController extends ApiController
 
         /**se trae la informacion del cfdi de la bd */
 
-        $cfdi = Cfdis::where('id', $folio_xml)->first();
+       $cfdi = Cfdis::where('id','=', $id_folio_cfdi)->first();
+
+        $tasa_iva = number_format((float) round($cfdi->tasa_iva / 100, 2), 6, '.', '');
 
         $ns = $xml->getNamespaces(true);
-        $xml->registerXPathNamespace('c', $ns['cfdi']);
-        $xml->registerXPathNamespace('t', $ns['tfd']);
+        $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/3');
+        $xml->registerXPathNamespace('tfd', 'http://www.sat.gob.mx/TimbreFiscalDigital');
         $comprobante = $xml->xpath('//cfdi:Comprobante')[0];
 
         $emisor   = $xml->xpath('//cfdi:Emisor')[0];
@@ -803,13 +839,15 @@ class FacturacionController extends ApiController
         $conceptos = [];
         foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Conceptos//cfdi:Concepto') as $concepto) {
             $traslado = [];
-
             /**agregando traslado */
+
+            $descuento=!empty((string) $concepto['Descuento'])?(string) $concepto['Descuento']:0;
+    
             array_push($traslado, [
-                'Base'       => number_format((float) round(((string) $concepto['ValorUnitario'] - (string) $concepto['Descuento']) * ((string) $concepto['Cantidad']), 2), 2, '.', ''),
-                'Importe'    => number_format((float) round((((string) $concepto['ValorUnitario'] - (string) $concepto['Descuento']) * (string) $concepto['Cantidad']) * .16, 2), 2, '.', ''),
+                'Base'       => number_format((float) round(((string) $concepto['ValorUnitario'] - ($descuento/$concepto['Cantidad'])) * ((string) $concepto['Cantidad']), 2), 2, '.', ''),
+                'Importe' => number_format((float) round((((string) $concepto['ValorUnitario'] - ($descuento/$concepto['Cantidad'])) * (string) $concepto['Cantidad']) * .16, 2), 2, '.', ''),
                 'Impuesto'   => '002',
-                'TasaOCuota' => '0.160000',
+                'TasaOCuota' => $tasa_iva,
                 'TipoFactor' => 'Tasa',
             ]);
 
@@ -820,12 +858,32 @@ class FacturacionController extends ApiController
                 'Cantidad'      => (string) $concepto['Cantidad'],
                 'Descripcion'   => (string) $concepto['Descripcion'],
                 'ValorUnitario' => (string) $concepto['ValorUnitario'],
-                'Descuento'     => (string) $concepto['Descuento'],
+                'Descuento'     => $descuento,
                 'Impuestos'     => [
                     'Traslados' => $traslado,
                 ],
             ]);
         }
+
+         $ultimo_nodo_de_impuestos=count($xml->xpath('//cfdi:Comprobante//cfdi:Impuestos//cfdi:Traslados//cfdi:Traslado'));
+
+         /**impuestos trasladados */
+        $impuestos_trasladados=[];
+        $total_impuestos_trasladados=0;
+    
+         /**verificando si tiene nodos de Impuestos Traslados */
+         if($ultimo_nodo_de_impuestos>0){
+             $impuestos =$xml->xpath('//cfdi:Comprobante//cfdi:Impuestos//cfdi:Traslados//cfdi:Traslado')[$ultimo_nodo_de_impuestos-1];
+             $total_impuestos_trasladados=(string) $impuestos['Importe'];
+             array_push($impuestos_trasladados,[
+             'Importe'=> (string) $impuestos['Importe'],
+             'Impuesto'=>"002",
+             'TasaOCuota'=>$tasa_iva,
+             'TipoFactor'=>"Tasa"
+             ]);
+         }
+
+        $complemento = $xml->xpath('//tfd:TimbreFiscalDigital')[0];
 
         /**se crea el arreglo con la informacion del xml */
         $comprobante_cfdi = [
@@ -843,7 +901,7 @@ class FacturacionController extends ApiController
                 'Sello'              => (string) $comprobante['Sello'],
                 'Serie'              => (string) $comprobante['Serie'],
                 'SubTotal'           => (string) $comprobante['SubTotal'],
-                'Descuento'          => (string) $comprobante['Descuento'],
+                'Descuento' => !empty((string) $comprobante['Descuento'])?(string) $comprobante['Descuento']:0,
                 'TipoCambio'         => (string) $comprobante['TipoCambio'],
                 'TipoDeComprobante'  => (string) $comprobante['TipoDeComprobante'],
                 'Total'              => (string) $comprobante['Total'],
@@ -861,52 +919,30 @@ class FacturacionController extends ApiController
                 'UsoCFDI' => $uso_cfdi != null ? (string) $receptor['UsoCFDI'] . ' (' . $uso_cfdi['uso'] . ')' : '',
             ],
             'Conceptos'   => $conceptos,
+            'Impuestos'=>[
+                'TotalImpuestosTrasladados'=>$total_impuestos_trasladados,
+                'Traslados'=>[
+                    'Traslado'=>$impuestos_trasladados
+                ]
+                ],
+                'Complemento'=>[
+                    'TimbreFiscalDigital'=>[
+                        'xmlns:tfd'=> 'http://www.sat.gob.mx/TimbreFiscalDigital',
+                        'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
+                        'FechaTimbrado'=>(string) $complemento['FechaTimbrado'],
+                        'NoCertificadoSAT'=>(string) $complemento['NoCertificadoSAT'],
+                        'RfcProvCertif'=>(string) $complemento['RfcProvCertif'],
+                        'SelloCFD'=>(string) $complemento['SelloCFD'],
+                        'SelloSAT'=>(string) $complemento['SelloSAT'],
+                        'UUID'=>(string) $complemento['UUID'],
+                        'Version'=>(string) $complemento['Version'],
+                        'xsi:schemaLocation'=>'http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd',
+                    ]
+                    ],
+                    'CadenaOriginal'=>$cfdi->cadena_original
         ];
 
-        // return $xml->xpath('//cfdi:Comprobante')[0];
-        return ($comprobante_cfdi);
-
-        foreach ($xml->xpath('//cfdi:Comprobante') as $cfdiComprobante) {
-            return $cfdiComprobante;
-        }
-        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor') as $Emisor) {
-            //echo $Emisor['Rfc'];
-        }
-        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor//cfdi:DomicilioFiscal') as $DomicilioFiscal) {
-            //echo $DomicilioFiscal['Pais'];
-        }
-        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor//cfdi:ExpedidoEn') as $ExpedidoEn) {
-            //echo $ExpedidoEn['Pais'];
-        }
-        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Conceptos//cfdi:Concepto') as $Concepto) {
-            /*echo $Concepto['ClaveUnidad'];
-        echo $Concepto['Importe'];
-        echo $Concepto['Cantidad'];
-        echo $Concepto['Descripcion'];
-        echo $Concepto['ValorUnitario'];
-         */
-        }
-        foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Impuestos//cfdi:Traslados//cfdi:Traslado') as $Traslado) {
-            /*echo $Traslado['Tasa'];
-        echo $Traslado['Importe'];
-        echo $Traslado['Impuesto'];
-         */
-        }
-        $uuid = '';
-        //ESTA ULTIMA PARTE ES LA QUE GENERABA EL ERROR
-        foreach ($xml->xpath('//t:TimbreFiscalDigital') as $tfd) {
-            //echo $tfd['SelloCFD'];
-            //echo $tfd['FechaTimbrado'];
-            $uuid = $tfd['UUID'];
-            //echo $tfd['NoCertificadoSAT'];
-            //echo $tfd['Version'];
-            //echo $tfd['SelloSAT'];
-        }
-
-        //retorno el uuid del cfdi
-
-        return $uuid;
-
+        return $comprobante_cfdi;
     }
 
 }
