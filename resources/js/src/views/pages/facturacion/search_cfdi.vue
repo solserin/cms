@@ -3,9 +3,9 @@
     <vs-popup
       class="forms-popups-100 normal-forms inline-header-forms searcher_terrenos"
       fullscreen
-      title="Catálogo de operaciones atendidas"
+      title="Catálogo de CFDIs Timbrados"
       :active.sync="showVentana"
-      ref="buscador_operaciones"
+      ref="buscar_cfdi"
     >
       <!--inicio de buscador-->
       <div class="py-3">
@@ -22,14 +22,14 @@
                   class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                 >
                   <label class="text-sm opacity-75 font-bold">
-                    <span>Tipo de Operación</span>
+                    <span>Tipo de Comprobante</span>
                     <span class="texto-importante">(*)</span>
                   </label>
                   <v-select
-                    :options="tipo_operaciones"
+                    :options="tipos_comprobante"
                     :clearable="false"
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                    v-model="serverOptions.tipo_operacion"
+                    v-model="serverOptions.tipo_comprobante"
                     class="mb-4 sm:mb-0 pb-1 pt-1"
                     name="categoria"
                     data-vv-as=" "
@@ -76,20 +76,20 @@
                   </label>
 
                   <flat-pickr
-                    name="fecha_operacion"
+                    name="fecha_timbrado"
                     data-vv-as=" "
-                    v-validate:fechapago_validacion_computed.immediate="
+                    v-validate:fechatimbrado_validacion_computed.immediate="
                       'required'
                     "
                     :config="configdateTimePickerRange"
-                    v-model="serverOptions.fecha_operacion"
-                    placeholder="Fecha(s) de la operación"
+                    v-model="serverOptions.fecha_timbrado"
+                    placeholder="Fecha(s) de timbrado"
                     class="w-full my-1"
                     @on-close="onCloseDate"
                   />
                 </div>
                 <div
-                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
                 >
                   <label class="text-sm opacity-75 font-bold"
                     >Nombre del cliente</label
@@ -113,6 +113,29 @@
                   </div>
                   <div class="mt-2"></div>
                 </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
+                >
+                  <label class="text-sm opacity-75 font-bold">Rfc</label>
+                  <vs-input
+                    ref="rfc"
+                    name="rfc"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="Ej. XAXX010101000"
+                    maxlength="13"
+                    v-model.trim="serverOptions.rfc"
+                    v-on:keyup.enter="get_data('rfc', 1)"
+                    v-on:blur="get_data('rfc', 1, 'blur')"
+                  />
+                  <div>
+                    <span class="text-danger text-sm">{{
+                      errors.first("rfc")
+                    }}</span>
+                  </div>
+                  <div class="mt-2"></div>
+                </div>
               </div>
             </div>
           </template>
@@ -121,7 +144,7 @@
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
-            :data="operaciones"
+            :data="cfdis"
             stripe
             noDataText="0 Resultados"
           >
@@ -130,13 +153,14 @@
             </template>
             <template slot="thead">
               <vs-th>#</vs-th>
-              <vs-th>Núm. Operación</vs-th>
-              <vs-th>Tipo</vs-th>
+              <vs-th>Folio</vs-th>
+              <vs-th>UUID</vs-th>
               <vs-th>Fecha</vs-th>
               <vs-th>Cliente</vs-th>
-              <vs-th>Lote</vs-th>
-              <vs-th>$ Costo</vs-th>
-              <vs-th>Existencia</vs-th>
+              <vs-th>RFC</vs-th>
+              <vs-th>Tipo</vs-th>
+              <vs-th>Método de Pago</vs-th>
+              <vs-th>Estatus</vs-th>
               <vs-th>Seleccionar</vs-th>
             </template>
             <template slot-scope="{ data }">
@@ -145,35 +169,29 @@
                   <span class="font-semibold">{{ indextr + 1 }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].id">
-                  <span
-                    class="font-semibold"
-                    v-if="data[indextr].empresa_operaciones_id == 1"
-                    >{{ data[indextr].ventas_terrenos_id }}</span
-                  >
-                  <span
-                    class="font-semibold"
-                    v-else-if="data[indextr].empresa_operaciones_id == 3"
-                    >{{ data[indextr].servicios_funerarios_id }}</span
-                  >
-                  <span
-                    class="font-semibold"
-                    v-else-if="data[indextr].empresa_operaciones_id == 4"
-                    >{{ data[indextr].ventas_planes_id }}</span
-                  >
+                  <span class="font-semibold">{{ data[indextr].id }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].tipo_operacion_texto">{{
-                  data[indextr].tipo_operacion_texto
+                <vs-td :data="data[indextr].uuid">{{
+                  data[indextr].uuid
                 }}</vs-td>
-
-                <vs-td :data="data[indextr].fecha_operacion_texto">{{
-                  data[indextr].fecha_operacion_texto
+                <vs-td :data="data[indextr].fecha_timbrado_texto">{{
+                  data[indextr].fecha_timbrado_texto
                 }}</vs-td>
-                <vs-td :data="data[indextr].nombre">{{
-                  data[indextr].nombre
+                <vs-td :data="data[indextr].cliente_nombre">{{
+                  data[indextr].cliente_nombre
                 }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
+                <vs-td :data="data[indextr].rfc_receptor">{{
+                  data[indextr].rfc_receptor
+                }}</vs-td>
+                <vs-td :data="data[indextr].tipo_comprobante_texto">{{
+                  data[indextr].tipo_comprobante_texto
+                }}</vs-td>
+                <vs-td :data="data[indextr].sat_metodos_pago_texto">{{
+                  data[indextr].sat_metodos_pago_texto
+                }}</vs-td>
+                <vs-td :data="data[indextr].status">{{
+                  data[indextr].status
+                }}</vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
                     width="25"
@@ -224,7 +242,7 @@ export default {
     },
   },
   watch: {
-    "serverOptions.tipo_operacion": function (newVal, previousVal) {
+    "serverOptions.tipo_comprobante": function (newVal, previousVal) {
       this.get_data("", 1);
     },
     actual: function (newValue, oldValue) {
@@ -235,13 +253,13 @@ export default {
         this.$nextTick(() =>
           this.$refs["descripcion"].$el.querySelector("input").focus()
         );
-        this.$refs["buscador_operaciones"].$el.querySelector(
+        this.$refs["buscar_cfdi"].$el.querySelector(
           ".vs-icon"
         ).onclick = () => {
           this.cancelar();
         };
         (async () => {
-          await this.get_empresa_tipo_operaciones();
+          await this.get_tipos_comprobante();
         })();
         this.get_data("", 1);
       } else {
@@ -260,33 +278,35 @@ export default {
         return newValue;
       },
     },
-    fechapago_validacion_computed: function () {
-      return this.serverOptions.fecha_operacion;
+    fechatimbrado_validacion_computed: function () {
+      return this.serverOptions.fecha_timbrado;
     },
   },
   data() {
     return {
       configdateTimePickerRange: configdateTimePickerRange,
       /**VARIAVLES DEL MODULO */
-      tipo_operaciones: [
+      tipos_comprobante: [
         {
-          label: "Ver todas",
+          label: "Ver todos",
           value: "",
         },
       ],
       serverOptions: {
-        tipo_operacion: {
-          label: "Ver todas",
+        tipo_comprobante: {
+          label: "Ver todos",
           value: "",
         },
-        tipo_operacion_id: "",
-        fecha_operacion: [],
+
+        tipo_comprobante_id: "",
+        fecha_timbrado: [],
         fecha_inicio: "",
         fecha_fin: "",
         page: "",
         per_page: "",
         numero_control: "",
         cliente: "",
+        rfc: "",
       },
       /**FIN DE VARIABLES DEL MODULO */
 
@@ -297,7 +317,7 @@ export default {
         },
       ],
       selected: [],
-      operaciones: [],
+      cfdis: [],
       lotes: [],
 
       verPaginado: true,
@@ -338,23 +358,23 @@ export default {
         }
       }
       if (buscar) {
-        this.get_data("fecha_operacion", 1, "select");
+        this.get_data("fecha_timbrado", 1, "select");
       }
     },
-    async get_empresa_tipo_operaciones() {
+    async get_tipos_comprobante() {
       this.$vs.loading();
       await facturacion
-        .get_empresa_tipo_operaciones()
+        .get_tipos_comprobante()
         .then((res) => {
-          this.tipo_operaciones = [];
-          this.tipo_operaciones.push({ label: "Ver todas", value: "" });
+          this.tipos_comprobante = [];
+          this.tipos_comprobante.push({ label: "Ver todos", value: "" });
           res.data.forEach((element) => {
-            this.tipo_operaciones.push({
+            this.tipos_comprobante.push({
               label: element.tipo,
               value: element.id,
             });
           });
-          this.serverOptions.tipo_operacion = this.tipo_operaciones[0];
+          this.serverOptions.tipo_comprobante = this.tipos_comprobante[0];
           this.$vs.loading.close();
         })
         .catch((err) => {
@@ -366,10 +386,11 @@ export default {
       card.removeRefreshAnimation(500);
       this.serverOptions.numero_control = "";
       this.serverOptions.cliente = "";
-      this.serverOptions.fecha_operacion = "";
+      this.serverOptions.fecha_timbrado = "";
       this.serverOptions.fecha_fin = "";
       this.serverOptions.fecha_fin = "";
-      this.serverOptions.tipo_operacion = this.tipo_operaciones[0];
+      this.serverOptions.tipo_comprobante = this.tipos_comprobante[0];
+      this.serverOptions.rfc = "";
       this.get_data("", this.actual);
     },
     cancelar() {
@@ -389,8 +410,12 @@ export default {
           if (this.serverOptions.numero_control.trim() == "") {
             //return;
           }
-        } else if (origen == "fecha_operacion") {
-          if (this.serverOptions.fecha_operacion.trim() == "") {
+        } else if (origen == "fecha_timbrado") {
+          if (this.serverOptions.fecha_timbrado.trim() == "") {
+            //return;
+          }
+        } else if (origen == "rfc") {
+          if (this.serverOptions.rfc.trim() == "") {
             //return;
           }
         }
@@ -404,11 +429,11 @@ export default {
       this.verPaginado = false;
       this.serverOptions.page = page;
       this.serverOptions.per_page = 24;
-      this.serverOptions.tipo_operacion_id = this.serverOptions.tipo_operacion.value;
+      this.serverOptions.tipo_comprobante_id = this.serverOptions.tipo_comprobante.value;
       facturacion
-        .get_operaciones(this.serverOptions)
+        .get_cfdis_timbrados(this.serverOptions)
         .then((res) => {
-          this.operaciones = res.data.data;
+          this.cfdis = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
@@ -437,7 +462,7 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     retornarSeleccion(datos) {
-      this.$emit("OperacionSeleccionada", datos);
+      this.$emit("CfdiSeleccionado", datos);
       this.$emit("closeBuscador");
     },
   },

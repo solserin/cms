@@ -995,7 +995,7 @@ class FacturacionController extends ApiController
         $rfc                 = $request->rfc;
         $numero_control      = isset($request->numero_control) ? $request->numero_control : $folio_id;
         $metodo_pago_id      = isset($request->metodo_pago['value']) ? $request->metodo_pago['value'] : $metodo_pago_id;
-        $tipo_comprobante_id = isset($request->tipo_comprobante['value']) ? $request->tipo_comprobante['value'] : $tipo_comprobante_id;
+        $tipo_comprobante_id = isset($request->tipo_comprobante_id) ? $request->tipo_comprobante_id : $tipo_comprobante_id;
         $fecha_inicio        = $request->fecha_inicio;
         $fecha_fin           = $request->fecha_fin;
         //$tipo_operacion_id   = $request->tipo_operacion_id;
@@ -1046,9 +1046,6 @@ class FacturacionController extends ApiController
             ),
             DB::raw(
                 '(NULL) as fecha_timbrado_texto'
-            ),
-            DB::raw(
-                '(NULL) as descripcion_operacion'
             )
         )
 
@@ -1057,6 +1054,16 @@ class FacturacionController extends ApiController
             ->with('cliente:id,nombre')
             ->whereHas('cliente', function ($query) use ($cliente) {
                 $query->where('nombre', 'like', '%' . $cliente . '%');
+            })
+            ->where(function ($q) use ($fecha_inicio, $fecha_fin) {
+                if (trim($fecha_inicio) != '' && trim($fecha_fin) != '') {
+                    if ($fecha_fin != $fecha_inicio) {
+                        $q->whereDate('fecha_timbrado', '>=', $fecha_inicio);
+                        $q->whereDate('fecha_timbrado', '<=', $fecha_fin);
+                    } else {
+                        $q->whereDate('fecha_timbrado', '=', $fecha_inicio);
+                    }
+                }
             })
         /**en caso de que sea filtrado por operacion */
         //->with('cfdis_operaciones.operaciones.cliente')
@@ -1086,22 +1093,13 @@ class FacturacionController extends ApiController
                 }
             })
             ->where(function ($q) use ($rfc) {
-                if (((trim($rfc))) > 0) {
+                if (((trim($rfc))) != '') {
                     $q->where('cfdis.rfc_receptor', '=', $rfc);
                 }
             })
             ->where(function ($q) use ($status) {
                 if (trim($status) != '') {
                     $q->where('cfdis.status', '=', $status);
-                }
-            })
-            ->where(function ($q) use ($fecha_inicio, $fecha_fin) {
-                if (trim($fecha_inicio) != '' && trim($fecha_fin) != '') {
-                    if ($fecha_fin != $fecha_inicio) {
-                        $q->whereBetween('fecha_timbrado', [$fecha_inicio, $fecha_fin]);
-                    } else {
-                        $q->whereDate('fecha_timbrado', '=', $fecha_inicio);
-                    }
                 }
             })
             ->get();
@@ -1142,7 +1140,7 @@ class FacturacionController extends ApiController
             /**sat_formas_pago_id */
             foreach ($metodos_pago as $key => $metodo) {
                 if ($cfdi['sat_metodos_pago_id'] == $metodo->id) {
-                    $cfdi['sat_metodos_pago_texto'] = $metodo->metodo . ' (' . $metodo->clave . ')';
+                    $cfdi['sat_metodos_pago_texto'] = $metodo->clave;
                     break;
                 }
             }

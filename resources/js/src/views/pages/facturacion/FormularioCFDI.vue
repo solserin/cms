@@ -524,7 +524,7 @@
                 class="mt-4"
                 size="small"
                 color="primary"
-                @click="openBuscadorArticulos = true"
+                @click="openBuscadorCfdi = true"
               >
                 <img
                   class="cursor-pointer img-btn"
@@ -538,7 +538,6 @@
               <vs-divider />
             </div>
           </div>
-
           <div class="flex flex-wrap">
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
               <div class="flex flex-wrap">
@@ -546,7 +545,7 @@
                   <div class="w-full mt-5">
                     <vs-table
                       class="w-full"
-                      :data="form.articulos_servicios"
+                      :data="form.cfdis_a_pagar"
                       noDataText="No se han agregado documentos a relacionar"
                     >
                       <template slot="header">
@@ -556,12 +555,13 @@
                         <vs-th>#</vs-th>
                         <vs-th>Folio</vs-th>
                         <vs-th>UUID</vs-th>
-                        <vs-th>Razón Social</vs-th>
-                        <vs-th>Fecha Timbrado</vs-th>
+                        <vs-th hidden>Cliente</vs-th>
+                        <vs-th hidden>Fecha Timbrado</vs-th>
+                        <vs-th>RFC</vs-th>
+                        <vs-th>$ Total</vs-th>
                         <vs-th>$ Saldo Anterior</vs-th>
                         <vs-th>$ Monto a Pagar</vs-th>
                         <vs-th>$ Saldo Insoluto</vs-th>
-                        <vs-th>Núm. Parcialidad</vs-th>
                         <vs-th>Quitar</vs-th>
                       </template>
                       <template slot-scope="{ data }">
@@ -577,111 +577,80 @@
                           </vs-td>
                           <vs-td>
                             <div class="capitalize">
-                              {{ data[indextr].tipo }}
+                              {{ data[indextr].id }}
                             </div>
                           </vs-td>
                           <vs-td>
                             <div class="capitalize">
-                              {{ data[indextr].descripcion }}
+                              {{ data[indextr].uuid }}
+                            </div>
+                          </vs-td>
+                          <vs-td hidden>
+                            <div class="capitalize">
+                              {{ data[indextr].cliente_nombre }}
+                            </div>
+                          </vs-td>
+                          <vs-td hidden>
+                            <div class="capitalize">
+                              {{ data[indextr].fecha_timbrado_texto }}
                             </div>
                           </vs-td>
                           <vs-td>
                             <div class="capitalize">
-                              {{ data[indextr].lote }}
+                              {{ data[indextr].rfc_receptor }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].total | numFormat("0,000.00") }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{
+                                (data[indextr].total -
+                                  data[indextr].total_pagado)
+                                  | numFormat("0,000.00")
+                              }}
                             </div>
                           </vs-td>
                           <vs-td>
                             <vs-input
-                              :name="'cantidad_articulos_servicios' + indextr"
+                              data-vv-scope="form"
+                              :name="'pago_cfdi' + indextr"
                               data-vv-as=" "
                               data-vv-validate-on="blur"
-                              v-validate="'required|integer|min_value:' + 1"
-                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                              maxlength="4"
-                              v-model="
-                                form.articulos_servicios[indextr].cantidad
+                              v-validate="
+                                'required|decimal:2|min_value:' +
+                                0.01 +
+                                '|max_value:' +
+                                (form.cfdis_a_pagar[indextr].total -
+                                  form.cfdis_a_pagar[indextr].total_pagado)
                               "
+                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
+                              maxlength="8"
+                              v-model="form.cfdis_a_pagar[indextr].monto_pago"
                             />
                             <div>
                               <span class="text-danger text-xs">
-                                {{
-                                  errors.first(
-                                    "cantidad_articulos_servicios" + indextr
-                                  )
-                                }}
+                                {{ errors.first("form.pago_cfdi" + indextr) }}
                               </span>
                             </div>
                           </vs-td>
                           <vs-td>
-                            <vs-input
-                              :name="'cantidad_articulos_servicios' + indextr"
-                              data-vv-as=" "
-                              data-vv-validate-on="blur"
-                              v-validate="'required|integer|min_value:' + 1"
-                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                              maxlength="4"
-                              v-model="
-                                form.articulos_servicios[indextr].cantidad
-                              "
-                            />
-                            <div>
-                              <span class="text-danger text-xs">
-                                {{
-                                  errors.first(
-                                    "cantidad_articulos_servicios" + indextr
-                                  )
-                                }}
-                              </span>
-                            </div>
-                          </vs-td>
-                          <vs-td>
-                            <vs-input
-                              :name="'cantidad_articulos_servicios' + indextr"
-                              data-vv-as=" "
-                              data-vv-validate-on="blur"
-                              v-validate="'required|integer|min_value:' + 1"
-                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                              maxlength="4"
-                              v-model="
-                                form.articulos_servicios[indextr].cantidad
-                              "
-                            />
-                            <div>
-                              <span class="text-danger text-xs">
-                                {{
-                                  errors.first(
-                                    "cantidad_articulos_servicios" + indextr
-                                  )
-                                }}
-                              </span>
-                            </div>
-                          </vs-td>
-                          <vs-td>
-                            <vs-input
-                              :name="'cantidad_articulos_servicios' + indextr"
-                              data-vv-as=" "
-                              data-vv-validate-on="blur"
-                              v-validate="'required|integer|min_value:' + 1"
-                              class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
-                              maxlength="4"
-                              v-model="
-                                form.articulos_servicios[indextr].cantidad
-                              "
-                            />
-                            <div>
-                              <span class="text-danger text-xs">
-                                {{
-                                  errors.first(
-                                    "cantidad_articulos_servicios" + indextr
-                                  )
-                                }}
-                              </span>
+                            <div class="capitalize">
+                              {{
+                                (data[indextr].total -
+                                  data[indextr].total_pagado -
+                                  data[indextr].monto_pago)
+                                  | numFormat("0,000.00")
+                              }}
                             </div>
                           </vs-td>
                           <vs-td>
                             <div
                               class=""
-                              @click="remover_concepto(indextr)"
+                              @click="remover_cfdi_a_pagar(indextr)"
                               v-if="!fueCancelada"
                             >
                               <img
@@ -1411,6 +1380,12 @@
       @closeBuscador="openBuscadorOperacion = false"
       @OperacionSeleccionada="OperacionSeleccionada"
     ></SearchOperacion>
+
+    <SearchCfdi
+      :show="openBuscadorCfdi"
+      @closeBuscador="openBuscadorCfdi = false"
+      @CfdiSeleccionado="CfdiSeleccionado"
+    ></SearchCfdi>
     <Password
       :show="openPassword"
       :callback-on-success="callback"
@@ -1431,6 +1406,7 @@ import facturacion from "@services/facturacion";
 import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 import SearchOperacion from "@pages/facturacion/search_operacion.vue";
+import SearchCfdi from "@pages/facturacion/search_cfdi.vue";
 import clientes from "@services/clientes";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
 
@@ -1448,6 +1424,7 @@ export default {
     ClientesBuscador,
     SearchOperacion,
     Password,
+    SearchCfdi,
   },
   props: {
     show: {
@@ -1561,13 +1538,35 @@ export default {
   computed: {
     total_facturar: function () {
       let total = 0;
-      this.form.conceptos.forEach((element) => {
-        if (element.descuento_b.value == 0) {
-          total += Number(element.precio_neto) * Number(element.cantidad);
-        } else {
-          total += Number(element.precio_descuento) * Number(element.cantidad);
+
+      if (this.form.tipo_comprobante.value == 1) {
+        /**ingreso */
+        this.form.conceptos.forEach((element) => {
+          if (element.descuento_b.value == 0) {
+            total += Number(element.precio_neto) * Number(element.cantidad);
+          } else {
+            total +=
+              Number(element.precio_descuento) * Number(element.cantidad);
+          }
+        });
+      } else if (this.form.tipo_comprobante.value == 2) {
+        /**egreso */
+        this.form.conceptos.forEach((element) => {
+          if (element.descuento_b.value == 0) {
+            total += Number(element.precio_neto) * Number(element.cantidad);
+          } else {
+            total +=
+              Number(element.precio_descuento) * Number(element.cantidad);
+          }
+        });
+      } else {
+        if (this.form.tipo_comprobante.value == 5) {
+          /**pago*/
+          this.form.cfdis_a_pagar.forEach((element) => {
+            total += Number(element.monto_pago);
+          });
         }
-      });
+      }
 
       return total;
     },
@@ -1628,6 +1627,9 @@ export default {
   },
   data() {
     return {
+      /**control del buscador de cfdis */
+      openBuscadorCfdi: false,
+      indexCfdiaPagar: 0,
       /**control del componente de operaciones */
       openBuscadorOperacion: false,
       /**modificando articulo */
@@ -1761,6 +1763,7 @@ export default {
           label: "Seleccione 1",
         },
         monto_pago: {},
+        cfdis_a_pagar: [],
         /**CFDIS RELACIONADOS */
         cfdis_relacionados: [],
         operaciones_relacionadas: [],
@@ -1973,6 +1976,66 @@ export default {
         this.$vs.notify({
           title: "Operaciones relacionadas al CFDI",
           text: "Ya se encuentra agregada esta operación",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "12000",
+        });
+      }
+    },
+
+    CfdiSeleccionado(datos) {
+      console.log("CfdiSeleccionado -> datos", datos);
+      /**primero hacemos el agregado de los cfdis */
+      let esta_cfdi = false;
+      this.form.cfdis_a_pagar.forEach((element) => {
+        if (element.id == datos.id) {
+          esta_cfdi = true;
+        }
+      });
+
+      if (esta_cfdi == false) {
+        let agregado = false;
+        if (datos.sat_tipo_comprobante_id == 1) {
+          /**pago*/
+          if (datos.sat_metodos_pago_id == 2) {
+            /**es de ppd */
+            /**se agrega */
+            this.form.cfdis_a_pagar.push({
+              id: datos.id,
+              uuid: datos.uuid,
+              cliente_nombre: datos.cliente_nombre,
+              serie: datos.serie,
+              fecha_timbrado_texto: datos.fecha_timbrado_texto,
+              total: datos.total,
+              monto_pago: 0,
+              total_pagado: datos.total_pagado,
+              tipo_comprobante_texto: datos.tipo_comprobante_texto,
+              rfc_receptor: datos.rfc_receptor,
+              nombre_receptor: datos.nombre_receptor,
+              sat_metodos_pago_texto: datos.sat_metodos_pago_texto,
+              status: datos.status,
+            });
+            agregado = true;
+          }
+        }
+        if (!agregado) {
+          this.$vs.notify({
+            title: "CFDIs a pagar",
+            text:
+              "Verique que el CFDI a pagar sea de tipo ingreso y método de pago PPD",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "12000",
+          });
+        }
+      } else {
+        this.$vs.notify({
+          title: "CFDIs a pagar",
+          text: "Ya se encuentra agregado este CFDI para pagar",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -2458,6 +2521,20 @@ export default {
 
     closePassword() {
       this.openPassword = false;
+    },
+
+    //remover beneficiario
+    remover_cfdi_a_pagar(indextr) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea quitar este cfdi? no se registrarán los datos del CFDI?";
+      this.indexCfdiaPagar = indextr;
+      this.callBackConfirmar = this.remover_cfdi_a_pagar_callback;
+      this.openConfirmarSinPassword = true;
+    },
+    //remover el concepto seleccionado
+    remover_cfdi_a_pagar_callback() {
+      this.form.cfdis_a_pagar.splice(this.indexCfdiaPagar, 1);
     },
 
     //regresa los datos a su estado inicial

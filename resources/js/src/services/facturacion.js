@@ -46,4 +46,13 @@ export default {
         let call = "/facturacion/timbrar_cfdi";
         return axios.post(call, datos);
     },
+
+        get_cfdis_timbrados(param) {
+        return axios.get("/facturacion/get_cfdis_timbrados/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                this.cancel = c;
+            }),
+            params: param
+        });
+    },
 };
