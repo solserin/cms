@@ -989,6 +989,196 @@ class FacturacionController extends ApiController
         return $comprobante_cfdi;
     }
 
+    public function get_cfdis_timbrados(Request $request, $folio_id = 'all', $paginated = false, $metodo_pago_id = 'all', $tipo_comprobante_id = 'all')
+    {
+        $cliente             = $request->cliente;
+        $rfc                 = $request->rfc;
+        $numero_control      = isset($request->numero_control) ? $request->numero_control : $folio_id;
+        $metodo_pago_id      = isset($request->metodo_pago['value']) ? $request->metodo_pago['value'] : $metodo_pago_id;
+        $tipo_comprobante_id = isset($request->tipo_comprobante['value']) ? $request->tipo_comprobante['value'] : $tipo_comprobante_id;
+        $fecha_inicio        = $request->fecha_inicio;
+        $fecha_fin           = $request->fecha_fin;
+        //$tipo_operacion_id   = $request->tipo_operacion_id;
+        $status = $request->status;
+
+        $resultado_query = Cfdis::
+            select(
+            'id',
+            'uuid',
+            'clientes_id',
+            DB::raw(
+                '(NULL) as cliente_nombre'
+            ),
+            'serie',
+            'fecha',
+            'sat_formas_pago_id',
+            'subtotal',
+            'descuento',
+            'total',
+            DB::raw(
+                '(NULL) as total_pagado'
+            ),
+            'sat_tipo_comprobante_id',
+            'sat_metodos_pago_id',
+            'rfc_emisor',
+            'nombre_emisor',
+            'sat_pais_id',
+            'rfc_receptor',
+            'nombre_receptor',
+            'residencia_fiscal_receptor',
+            'sat_usos_cfdi_id',
+            'fecha_timbrado',
+            'status',
+            DB::raw(
+                '(NULL) as tipo_comprobante_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_uso_cfdi_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_formas_pago_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_metodos_pago_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_pais_texto'
+            ),
+            DB::raw(
+                '(NULL) as fecha_timbrado_texto'
+            ),
+            DB::raw(
+                '(NULL) as descripcion_operacion'
+            )
+        )
+
+            ->with('pagos_asociados')
+            ->with('cfdis_relacionados')
+            ->with('cliente:id,nombre')
+            ->whereHas('cliente', function ($query) use ($cliente) {
+                $query->where('nombre', 'like', '%' . $cliente . '%');
+            })
+        /**en caso de que sea filtrado por operacion */
+        //->with('cfdis_operaciones.operaciones.cliente')
+        //->with('cfdis_operaciones.operaciones.venta_terreno')
+            ->where(function ($q) use ($numero_control) {
+                if (((float) (trim($numero_control))) > 0) {
+                    /**filtro por numero de folio */
+                    $q->where('cfdis.id', '=', $numero_control);
+                }
+            })
+            ->where(function ($q) use ($numero_control) {
+                if (((float) (trim($numero_control))) > 0) {
+                    /**filtro por numero de folio */
+                    $q->where('cfdis.id', '=', $numero_control);
+                }
+            })
+            ->where(function ($q) use ($metodo_pago_id) {
+                if (((float) (trim($metodo_pago_id))) > 0) {
+                    /**filtro por numero de folio */
+                    $q->where('cfdis.sat_metodos_pago_id', '=', $metodo_pago_id);
+                }
+            })
+            ->where(function ($q) use ($tipo_comprobante_id) {
+                if (((float) (trim($tipo_comprobante_id))) > 0) {
+                    /**filtro por numero de folio */
+                    $q->where('cfdis.sat_tipo_comprobante_id', '=', $tipo_comprobante_id);
+                }
+            })
+            ->where(function ($q) use ($rfc) {
+                if (((trim($rfc))) > 0) {
+                    $q->where('cfdis.rfc_receptor', '=', $rfc);
+                }
+            })
+            ->where(function ($q) use ($status) {
+                if (trim($status) != '') {
+                    $q->where('cfdis.status', '=', $status);
+                }
+            })
+            ->where(function ($q) use ($fecha_inicio, $fecha_fin) {
+                if (trim($fecha_inicio) != '' && trim($fecha_fin) != '') {
+                    if ($fecha_fin != $fecha_inicio) {
+                        $q->whereBetween('fecha_timbrado', [$fecha_inicio, $fecha_fin]);
+                    } else {
+                        $q->whereDate('fecha_timbrado', '=', $fecha_inicio);
+                    }
+                }
+            })
+            ->get();
+
+        $resultado = array();
+        if ($paginated == 'paginated') {
+            /**queire el resultado paginado */
+            $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
+            $resultado       = &$resultado_query['data'];
+        } else {
+            $resultado_query = $resultado_query->toArray();
+            $resultado       = &$resultado_query;
+        }
+
+        $formas_pago  = SatFormasPago::select('*')->get();
+        $metodos_pago = MetodosPago::select('*')->get();
+        $sat_paises   = SatPais::select('*')->get();
+        $sat_usos     = SatUsosCfdi::select('*')->get();
+
+        foreach ($resultado as $index_cfdi => &$cfdi) {
+            /**tipo de comprobante */
+            if ($cfdi['sat_tipo_comprobante_id'] == 1) {
+                $cfdi['tipo_comprobante_texto'] = 'Ingreso (I)';
+            } elseif ($cfdi['sat_tipo_comprobante_id'] == 2) {
+                $cfdi['tipo_comprobante_texto'] = 'Egreso (E)';
+            } elseif ($cfdi['sat_tipo_comprobante_id'] == 5) {
+                $cfdi['tipo_comprobante_texto'] = 'Pago (P)';
+            } else {
+                return $this->errorResponse('Error al cargar los datos del cfdi.', 409);
+            }
+            /**sat_formas_pago_id */
+            foreach ($formas_pago as $key => $forma) {
+                if ($cfdi['sat_formas_pago_id'] == $forma->id) {
+                    $cfdi['sat_formas_pago_texto'] = $forma->forma . ' (' . $forma->id . ')';
+                    break;
+                }
+            }
+            /**sat_formas_pago_id */
+            foreach ($metodos_pago as $key => $metodo) {
+                if ($cfdi['sat_metodos_pago_id'] == $metodo->id) {
+                    $cfdi['sat_metodos_pago_texto'] = $metodo->metodo . ' (' . $metodo->clave . ')';
+                    break;
+                }
+            }
+            /**sat_formas_pago_id */
+            foreach ($sat_paises as $key => $pais) {
+                if ($cfdi['sat_pais_id'] == $pais->id) {
+                    $cfdi['sat_pais_texto'] = $pais->pais . ' (' . $pais->clave . ')';
+                    break;
+                }
+            }
+            /**sat_usos_cfdi_id */
+            foreach ($sat_usos as $key => $uso) {
+                if ($cfdi['sat_usos_cfdi_id'] == $uso->id) {
+                    $cfdi['sat_uso_cfdi_texto'] = $uso->uso . ' (' . $uso->clave . ')';
+                    break;
+                }
+            }
+
+            /**cliente */
+            if (isset($cfdi['cliente'])) {
+                $cfdi['cliente_nombre'] = $cfdi['cliente']['nombre'];
+            }
+
+            $cfdi['fecha_timbrado_texto'] = fecha_abr($cfdi['fecha_timbrado']);
+            /**limpiando datos innecesarios */
+            //unset($cfdi['sat_tipo_comprobante_id']);
+            unset($cfdi['sat_formas_pago_id']);
+            //unset($cfdi['sat_metodos_pago_id']);
+            unset($cfdi['sat_pais_id']);
+            unset($cfdi['sat_usos_cfdi_id']);
+            unset($cfdi['fecha_timbrado']);
+            unset($cfdi['cliente']);
+        }
+        return $resultado_query;
+    }
+
 }
 
 class Autenticar

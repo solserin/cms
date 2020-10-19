@@ -15,7 +15,6 @@
           refresh-content-action
           @refresh="reset"
         >
-          <span>{{ new Date() | moment("YYYY-MM-DD") }}</span>
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">

@@ -15,6 +15,212 @@
       <div class="cfdi-contenido">
         <div>
           <div class="float-left pb-2 px-2">
+            <img width="36px" src="@assets/images/qr.svg" />
+            <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+              Tipo de Comprobante
+            </h3>
+          </div>
+        </div>
+        <div class="w-full px-2">
+          <vs-divider />
+        </div>
+        <div class="flex flex-wrap">
+          <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Tipo de Comprobante</span>
+              <span class="texto-importante">(*)</span>
+            </label>
+            <v-select
+              data-vv-scope="form"
+              v-validate:tipo_comprobante_validacion_computed.immediate="
+                'required'
+              "
+              :options="tipos_comprobante"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.tipo_comprobante"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              name="tipo_comprobante"
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+            <div>
+              <span
+                class="text-danger"
+                v-if="errors.first('form.tipo_comprobante')"
+              >
+                Ingrese este dato
+              </span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger"
+                v-if="this.errores['tipo_comprobante.value']"
+                >{{ errores["tipo_comprobante.value"][0] }}</span
+              >
+            </div>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Método de Pago</span>
+              <span class="texto-importante">(*)</span>
+            </label>
+            <v-select
+              data-vv-scope="form"
+              v-validate:metodo_pago_validacion_computed.immediate="'required'"
+              :disabled="form.tipo_comprobante.value > 1"
+              :options="metodos_pago"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.metodo_pago"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              name="metodo_pago"
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+            <div>
+              <span class="text-danger" v-if="errors.first('form.metodo_pago')">
+                Ingrese el método de pago
+              </span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger"
+                v-if="this.errores['metodo_pago.value']"
+                >{{ errores["metodo_pago.value"][0] }}</span
+              >
+            </div>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Forma de Pago</span>
+              <span class="texto-importante">(*)</span>
+            </label>
+            <v-select
+              data-vv-scope="form"
+              v-validate:forma_pago_validacion_computed.immediate="'required'"
+              :disabled="form.metodo_pago.value == 2"
+              :options="formas_pago"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.forma_pago"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              name="forma_pago"
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+            <div>
+              <span class="text-danger" v-if="errors.first('form.forma_pago')">
+                Ingrese la forma de pago
+              </span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger"
+                v-if="this.errores['forma_pago.value']"
+                >{{ errores["forma_pago.value"][0] }}</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+            v-if="form.tipo_comprobante.value == 5"
+          >
+            <label class="text-sm opacity-75 font-bold">
+              Fecha del Pago
+              <span class="texto-importante">(*)</span>
+            </label>
+
+            <flat-pickr
+              data-vv-scope="form"
+              name="fecha_pago"
+              data-vv-as=" "
+              v-validate:fechapago_validacion_computed.immediate="'required'"
+              :config="configdateTimePicker"
+              v-model="form.fecha_pago"
+              placeholder="Fecha del Pago"
+              class="w-full my-1"
+            />
+            <div>
+              <span class="text-danger" v-if="errors.first('form.fecha_pago')">
+                Fecha de pago
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="text-danger" v-if="this.errores.fecha_pago">{{
+                errores.fecha_pago[0]
+              }}</span>
+            </div>
+          </div>
+          <div
+            class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+            v-else
+          >
+            <label class="text-sm opacity-75 font-bold"> Fecha del Pago </label>
+            <vs-input
+              :disabled="true"
+              value="N/A"
+              maxlength="150"
+              type="text"
+              class="w-full pb-1 pt-1"
+            />
+          </div>
+          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Uso del CFDI</span>
+              <span
+                class="texto-importante"
+                v-if="form.tipo_comprobante.value == 1"
+                >(*)</span
+              >
+            </label>
+            <v-select
+              data-vv-scope="form"
+              v-validate:uso_cfdi_validacion_computed.immediate="'required'"
+              :disabled="form.tipo_comprobante.value > 1"
+              :options="usos_cfdi"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.uso_cfdi"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              name="usos_cfdi"
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+            <div>
+              <span class="text-danger" v-if="errors.first('form.usos_cfdi')">
+                Seleccione el uso del CFDI
+              </span>
+            </div>
+            <div class="mt-2">
+              <span
+                class="text-danger"
+                v-if="this.errores['usos_cfdi.value']"
+                >{{ errores["usos_cfdi.value"][0] }}</span
+              >
+            </div>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
+            <label class="text-sm opacity-75 font-bold">
+              <span>Tipo de Relación</span>
+              <span class="texto-importante">(*)</span>
+            </label>
+            <v-select
+              :options="tipos_relacion"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              v-model="form.tipo_relacion"
+              class="mb-4 sm:mb-0 pb-1 pt-1"
+              name="tipo_relacion"
+            >
+              <div slot="no-options">Seleccione 1</div>
+            </v-select>
+          </div>
+        </div>
+
+        <div>
+          <div class="float-left pb-2 px-2 mt-6">
             <img width="36px" src="@assets/images/businessman.svg" />
             <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
               Información del Receptor
@@ -296,218 +502,9 @@
         <div class="w-full px-2">
           <vs-divider />
         </div>
-        <div>
-          <div class="float-left pb-2 px-2 mt-6">
-            <img width="36px" src="@assets/images/qr.svg" />
-            <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
-              Tipo de Comprobante
-            </h3>
-          </div>
-        </div>
-        <div class="w-full px-2">
-          <vs-divider />
-        </div>
-        <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              <span>Tipo de Comprobante</span>
-              <span class="texto-importante">(*)</span>
-            </label>
-            <v-select
-              data-vv-scope="form"
-              v-validate:tipo_comprobante_validacion_computed.immediate="
-                'required'
-              "
-              :options="tipos_comprobante"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.tipo_comprobante"
-              class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="tipo_comprobante"
-            >
-              <div slot="no-options">Seleccione 1</div>
-            </v-select>
-            <div>
-              <span
-                class="text-danger"
-                v-if="errors.first('form.tipo_comprobante')"
-              >
-                Ingrese este dato
-              </span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores['tipo_comprobante.value']"
-                >{{ errores["tipo_comprobante.value"][0] }}</span
-              >
-            </div>
-          </div>
-          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              <span>Método de Pago</span>
-              <span class="texto-importante">(*)</span>
-            </label>
-            <v-select
-              data-vv-scope="form"
-              v-validate:metodo_pago_validacion_computed.immediate="'required'"
-              :disabled="form.tipo_comprobante.value > 1"
-              :options="metodos_pago"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.metodo_pago"
-              class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="metodo_pago"
-            >
-              <div slot="no-options">Seleccione 1</div>
-            </v-select>
-            <div>
-              <span class="text-danger" v-if="errors.first('form.metodo_pago')">
-                Ingrese el método de pago
-              </span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores['metodo_pago.value']"
-                >{{ errores["metodo_pago.value"][0] }}</span
-              >
-            </div>
-          </div>
-          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              <span>Forma de Pago</span>
-              <span class="texto-importante">(*)</span>
-            </label>
-            <v-select
-              data-vv-scope="form"
-              v-validate:forma_pago_validacion_computed.immediate="'required'"
-              :disabled="form.metodo_pago.value == 2"
-              :options="formas_pago"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.forma_pago"
-              class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="forma_pago"
-            >
-              <div slot="no-options">Seleccione 1</div>
-            </v-select>
-            <div>
-              <span class="text-danger" v-if="errors.first('form.forma_pago')">
-                Ingrese la forma de pago
-              </span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores['forma_pago.value']"
-                >{{ errores["forma_pago.value"][0] }}</span
-              >
-            </div>
-          </div>
-
-          <div
-            class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
-            v-if="form.tipo_comprobante.value == 5"
-          >
-            <label class="text-sm opacity-75 font-bold">
-              Fecha del Pago
-              <span class="texto-importante">(*)</span>
-            </label>
-
-            <flat-pickr
-              data-vv-scope="form"
-              name="fecha_pago"
-              data-vv-as=" "
-              v-validate:fechapago_validacion_computed.immediate="'required'"
-              :config="configdateTimePicker"
-              v-model="form.fecha_pago"
-              placeholder="Fecha del Pago"
-              class="w-full my-1"
-            />
-            <div>
-              <span class="text-danger" v-if="errors.first('form.fecha_pago')">
-                Fecha de pago
-              </span>
-            </div>
-            <div class="mt-2">
-              <span class="text-danger" v-if="this.errores.fecha_pago">{{
-                errores.fecha_pago[0]
-              }}</span>
-            </div>
-          </div>
-          <div
-            class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
-            v-else
-          >
-            <label class="text-sm opacity-75 font-bold"> Fecha del Pago </label>
-            <vs-input
-              :disabled="true"
-              value="N/A"
-              maxlength="150"
-              type="text"
-              class="w-full pb-1 pt-1"
-            />
-          </div>
-          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              <span>Uso del CFDI</span>
-              <span
-                class="texto-importante"
-                v-if="form.tipo_comprobante.value == 1"
-                >(*)</span
-              >
-            </label>
-            <v-select
-              data-vv-scope="form"
-              v-validate:uso_cfdi_validacion_computed.immediate="'required'"
-              :disabled="form.tipo_comprobante.value > 1"
-              :options="usos_cfdi"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.uso_cfdi"
-              class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="usos_cfdi"
-            >
-              <div slot="no-options">Seleccione 1</div>
-            </v-select>
-            <div>
-              <span class="text-danger" v-if="errors.first('form.usos_cfdi')">
-                Seleccione el uso del CFDI
-              </span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="text-danger"
-                v-if="this.errores['usos_cfdi.value']"
-                >{{ errores["usos_cfdi.value"][0] }}</span
-              >
-            </div>
-          </div>
-          <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              <span>Tipo de Relación</span>
-              <span class="texto-importante">(*)</span>
-            </label>
-            <v-select
-              :options="tipos_relacion"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="form.tipo_relacion"
-              class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="tipo_relacion"
-            >
-              <div slot="no-options">Seleccione 1</div>
-            </v-select>
-          </div>
-        </div>
-
-        <div class="w-full px-2">
-          <vs-divider />
-        </div>
         <div
           class="contenido-cfdis-relacionados"
-          v-if="form.tipo_relacion.value != ''"
+          v-if="form.tipo_comprobante.value == 5"
         >
           <div class="flex flex-wrap">
             <div
@@ -516,7 +513,7 @@
               <div class="float-left pb-2 px-2 mt-6">
                 <img width="36px" src="@assets/images/clip.svg" />
                 <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
-                  CFDIS Relacionados
+                  CFDIS a Pagar
                 </h3>
               </div>
             </div>
@@ -706,7 +703,7 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap" v-if="form.tipo_comprobante.value == 1">
           <div
             class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
           >
@@ -818,6 +815,7 @@
 
         <div
           class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
+          v-if="form.tipo_comprobante.value == 1"
         >
           <div class="float-left pb-2 px-2 mt-6">
             <img width="36px" src="@assets/images/articulos.svg" />
@@ -827,11 +825,11 @@
           </div>
         </div>
 
-        <div class="w-full px-2">
+        <div class="w-full px-2" v-if="form.tipo_comprobante.value == 1">
           <vs-divider />
         </div>
 
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap" v-if="form.tipo_comprobante.value == 1">
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               <span>Clave de Producto o Servicio</span>
@@ -1238,7 +1236,7 @@
             </div>
           </div>
         </div>
-        <div class="w-full px-2">
+        <div class="w-full px-2" v-if="form.tipo_comprobante.value == 1">
           <vs-divider />
         </div>
         <div class="flex flex-wrap">
@@ -1504,12 +1502,12 @@ export default {
 
     "form.tipo_comprobante": function (newValue, oldValue) {
       if (newValue.value > 1) {
+        /**Al no ser de ingreso se marca automaticamente el metodo de pago PUE*/
         this.form.metodo_pago = this.metodos_pago[1];
         if (this.form.metodo_pago.value > 1) {
           this.form.forma_pago = this.formas_pago[0];
         }
-
-        this.form.uso_cfdi = this.usos_cfdi[0];
+        this.form.uso_cfdi = this.usos_cfdi[this.usos_cfdi.length - 1];
       } else {
         this.form.metodo_pago = this.metodos_pago[0];
       }
@@ -1539,6 +1537,23 @@ export default {
             color: "danger",
             time: 8000,
           });
+        }
+      } else {
+        if (this.form.metodo_pago.value == 1) {
+          /**si es de tipo ingreso y tiene como metodo de pago PUE */
+          if (newValue == this.formas_pago[this.formas_pago.length - 1]) {
+            //lo regreso a elegir una nueva forma de pago
+            this.form.forma_pago = this.formas_pago[0];
+            this.$vs.notify({
+              title: "Error en forma de pago",
+              text:
+                "Debe seleccionar una forma de pago diferente a 'Por Definir' cuando se trata de un comprobante de ingreso con método de pago PUE.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 8000,
+            });
+          }
         }
       }
     },
