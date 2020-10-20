@@ -562,6 +562,7 @@
                         <vs-th>$ Saldo Anterior</vs-th>
                         <vs-th>$ Monto a Pagar</vs-th>
                         <vs-th>$ Saldo Insoluto</vs-th>
+                        <vs-th>Ver PDF</vs-th>
                         <vs-th>Quitar</vs-th>
                       </template>
                       <template slot-scope="{ data }">
@@ -651,7 +652,17 @@
                             <div
                               class=""
                               @click="remover_cfdi_a_pagar(indextr)"
-                              v-if="!fueCancelada"
+                            >
+                              <img
+                                class="cursor-pointer img-btn"
+                                src="@assets/images/pdf.svg"
+                              />
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div
+                              class=""
+                              @click="remover_cfdi_a_pagar(indextr)"
                             >
                               <img
                                 class="cursor-pointer img-btn"
@@ -1813,20 +1824,40 @@ export default {
             //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
             (async () => {
               if (this.getTipoformulario == "facturar") {
-                if (this.form.conceptos.length > 0) {
-                  this.callback = await this.timbrar_cfdi;
-                  this.openPassword = true;
-                } else {
-                  /**agregue al menos un concepto */
-                  this.$vs.notify({
-                    title: "Error",
-                    text: "Ingrese al menos un concepto a facturar",
-                    iconPack: "feather",
-                    icon: "icon-alert-circle",
-                    color: "danger",
-                    position: "bottom-right",
-                    time: "8000",
-                  });
+                if (this.form.tipo_comprobante.value == 1) {
+                  /**ingreso */
+                  if (this.form.conceptos.length > 0) {
+                    this.callback = await this.timbrar_cfdi;
+                    this.openPassword = true;
+                  } else {
+                    /**agregue al menos un concepto */
+                    this.$vs.notify({
+                      title: "Error",
+                      text: "Ingrese al menos un concepto a facturar",
+                      iconPack: "feather",
+                      icon: "icon-alert-circle",
+                      color: "danger",
+                      position: "bottom-right",
+                      time: "8000",
+                    });
+                  }
+                } else if (this.form.tipo_comprobante.value == 5) {
+                  /**pago */
+                  if (this.form.cfdis_a_pagar.length > 0) {
+                    this.callback = await this.timbrar_cfdi;
+                    this.openPassword = true;
+                  } else {
+                    /**agregue al menos un concepto */
+                    this.$vs.notify({
+                      title: "Error",
+                      text: "Ingrese al menos un CFDI a pagar",
+                      iconPack: "feather",
+                      icon: "icon-alert-circle",
+                      color: "danger",
+                      position: "bottom-right",
+                      time: "8000",
+                    });
+                  }
                 }
               }
             })();

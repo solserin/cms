@@ -14,8 +14,8 @@ class CfdisTipoRelacion extends Migration
     public function up()
     {
         Schema::create('cfdis_tipo_relacion', function (Blueprint $table) {
-            $table->unsignedBigInteger('sat_tipo_relacion_id')->unsigned()->nullable();
-            $table->foreign('sat_tipo_relacion_id')->references('id')->on('sat_tipo_relacion');
+            $table->unsignedBigInteger('tipo_relacion_id')->unsigned();
+            $table->foreign('tipo_relacion_id')->references('id')->on('tipo_relacion');
             $table->unsignedBigInteger('cfdis_id')->unsigned();
             $table->foreign('cfdis_id')->references('id')->on('cfdis');
             $table->unsignedDecimal('importe_pagado', 10, 2)->nullable();
@@ -24,7 +24,7 @@ class CfdisTipoRelacion extends Migration
             $table->integer('numero_parcialidad')->nullable();
             $table->unsignedBigInteger('sat_metodos_pago_id')->unsigned();
             $table->foreign('sat_metodos_pago_id')->references('id')->on('sat_metodos_pago');
-            $table->unsignedDecimal('monto_nota_credito', 10, 2)->nullable();
+            $table->unsignedDecimal('monto_relacion', 10, 2)->nullable();
         });
     }
 

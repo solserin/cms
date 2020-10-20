@@ -594,6 +594,14 @@ class FacturacionController extends ApiController
         } else {
             /**es pago debe ser id 5 */
             $validaciones['fecha_pago'] = 'required';
+            /**metodo pago pue */
+            $request->merge([
+                'metodo_pago.value' => 1,
+            ]);
+            /**P01, por definir, por regla del sat */
+            $request->merge([
+                'uso_cfdi.value' => 22,
+            ]);
         }
         /**MENSAJES DE LAS VALIDACIONES*/
         $mensajes = [
@@ -621,7 +629,50 @@ class FacturacionController extends ApiController
                     return $this->errorResponse('La forma de pago debe ser por definir para este tipo de comprobante.', 409);
                 }
             }
+        } else if ($request->tipo_comprobante['value'] == '5') {
+            /**ES DE TIPO PAGO, REVISANDO QUE LOS CFDIS A PAGAR SEAN DE TIPO PAGO, QUE ESTEN VIGENTES Y EL MONTO SEA VALIDO */
+            $cfdis_a_pagar = [];
+
+            if (isset($request->cfdis_a_pagar)) {
+                if (count($request->cfdis_a_pagar) > 0) {
+                    foreach ($request->cfdis_a_pagar as $key => $cfdi) {
+                        if (isset($cfdi['id'])) {
+                            array_push($cfdis_a_pagar, $cfdi['id']);
+                        } else {
+                            return $this->errorResponse('El folio del cfdi que ingresó no es válido.', 409);
+                        }
+                    }
+                    $cfdis_de_bd = Cfdis::select(
+                        'status',
+                        'id',
+                        'total',
+                        'sat_tipo_comprobante_id',
+                        'sat_metodos_pago_id'
+                    )->with('pagos_asociados')
+                        ->whereIn('id', $cfdis_a_pagar)->get();
+                    return $this->errorResponse($cfdis_de_bd, 409);
+
+                    /**validamos que todo esté segun las validaciones del SAT */
+
+                    foreach ($cfdis_de_bd as $key => $cfdi) {
+                        if ($cfdi['sat_tipo_comprobante_id'] == 1 && $cfdi['sat_tipo_comprobante_id'] == 1) {
+                            /**pago */
+
+                        } else {
+                            return $this->errorResponse('Verifique que los CFDIs son de tipo ingreso y PPD', 409);
+                        }
+                    }
+
+                    return $this->errorResponse($cfdis_de_bd, 409);
+
+                } else {
+                    return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
+                }
+            } else {
+                return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
+            }
         }
+        return $this->errorResponse('aqui', 409);
 
         /**procede con las validaciones y se hace la insercion de la transanccion en la base de datos */
         $datos_funeraria = Funeraria::first();
@@ -712,7 +763,11 @@ class FacturacionController extends ApiController
                                 ]
                             );
                         }
+                    } else {
+                        return $this->errorResponse('Ingrese los conceptos a facturar.', 409);
                     }
+                } else {
+                    return $this->errorResponse('Ingrese los conceptos a facturar.', 409);
                 }
             }
 
