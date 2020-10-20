@@ -59,11 +59,11 @@ class Cfdis extends Migration
             $table->string('tipos_cadena_pago_clave')->nullable();
             $table->foreign('tipos_cadena_pago_clave')->references('clave')->on('tipos_cadena_pago');
             $table->tinyInteger('tasa_iva');
-            $table->unsignedBigInteger('sat_tipo_relacion_id')->unsigned();
+            $table->unsignedBigInteger('sat_tipo_relacion_id')->nullable();
             $table->foreign('sat_tipo_relacion_id')->references('id')->on('sat_tipo_relacion');
             $table->unsignedBigInteger('timbro_id')->unsigned();
             $table->foreign('timbro_id')->references('id')->on('usuarios');
-            $table->unsignedBigInteger('cancelo_id')->unsigned();
+            $table->unsignedBigInteger('cancelo_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
             $table->longText('cadena_original')->nullable();
             $table->longText('xml_timbrado')->nullable();

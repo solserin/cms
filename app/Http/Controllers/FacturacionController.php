@@ -642,6 +642,9 @@ class FacturacionController extends ApiController
                             return $this->errorResponse('El folio del cfdi que ingresó no es válido.', 409);
                         }
                     }
+                    /**una vez verificados que los cfdis existen, se mandan traer de la bd para verificar que el total pagado permite el monto
+                     * del abonos
+                     */
                     $cfdis_de_bd = Cfdis::select(
                         'status',
                         'id',
@@ -672,12 +675,11 @@ class FacturacionController extends ApiController
                 return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
             }
         }
-        return $this->errorResponse('aqui', 409);
+        //return $this->errorResponse('aqui', 409);
 
         /**procede con las validaciones y se hace la insercion de la transanccion en la base de datos */
         $datos_funeraria = Funeraria::first();
 /**COMENZANDO A GUARDAR EL CFDI EN LA BASE DE DATOS */
-
         try {
             DB::beginTransaction();
             /**GUARDAMOS LA INFO INICIAL DEL  */
@@ -691,6 +693,7 @@ class FacturacionController extends ApiController
                     'sat_formas_pago_id'          => $request->forma_pago['value'],
                     'subtotal'                    => 0,
                     'descuento'                   => 0,
+                    'fecha_pago'                  => $request->tipo_comprobante['value'] == 5 ? $request->fecha_pago : null,
                     'sat_monedas_id'              => 1, //peso mxn
                     'tipo_cambio'                 => 1,
                     'total'                       => 0,
@@ -715,6 +718,7 @@ class FacturacionController extends ApiController
                     'rfc_emisor_cta_beneficiario' => null,
                     'cta_beneficiario'            => null,
                     'tipos_cadena_pago_clave'     => null,
+                    'sat_tipo_relacion_id'        => $request->tipo_relacion['value'],
                 ]
             );
 
@@ -887,7 +891,10 @@ class FacturacionController extends ApiController
             DB::rollBack();
             /**regreso el id de la base de datos que se iba consumir */
             $maxId = DB::table('cfdis')->max('id');
-            DB::statement("ALTER TABLE cfdis AUTO_INCREMENT=$maxId");
+            if (trim($maxId) > 0) {
+                DB::statement("ALTER TABLE cfdis AUTO_INCREMENT=$maxId");
+            }
+
             return $th;
         }
     }
