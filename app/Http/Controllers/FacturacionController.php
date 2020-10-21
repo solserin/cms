@@ -829,6 +829,10 @@ class FacturacionController extends ApiController
                             return $this->errorResponse('No se han encontrado cfdis a pagar', 409);
                         }
 
+                        /**creo el array con los pagos relacionados del xml */
+                        $array_cfdis_a_pagar_xml = [];
+                        $o                       = 0;
+
                         /**validamos que todo esté segun las validaciones del SAT */
                         foreach ($cfdis_de_bd as $key => $cfdi_bd) {
                             if ($cfdi_bd['sat_tipo_comprobante_id'] == 1 && $cfdi_bd['sat_metodos_pago_id'] == 2) {
@@ -846,11 +850,10 @@ class FacturacionController extends ApiController
                                     }
                                 }
 
-                                /**creo el array con los pagos relacionados del xml */
-                                $array_cfdis_a_pagar_xml = [];
-
                                 foreach ($request->cfdis_a_pagar as $key_pagar => $cfdi_pagar) {
                                     if ($cfdi_pagar['id'] == $cfdi_bd['id']) {
+                                        $o++;
+
                                         if ($cfdi_pagar['monto_pago'] > 0) {
                                             if (($total_pagado + $cfdi_pagar['monto_pago']) <= $cfdi_bd['total']) {
                                                 /**procede la relacion del cfdi para pago */
@@ -870,7 +873,6 @@ class FacturacionController extends ApiController
                                                     return 'No se encontró el método de pago que se está utilizando.';
                                                 }
                                                 array_push($array_cfdis_a_pagar_xml, [
-
                                                     '_attributes' => [
                                                         'Folio'            => $cfdi_bd['id'],
                                                         'IdDocumento'      => $cfdi_bd['uuid'],
@@ -881,7 +883,9 @@ class FacturacionController extends ApiController
                                                         'MonedaDR'         => "MXN",
                                                         'NumParcialidad'   => $numero_parcialidad,
                                                     ],
+
                                                 ]);
+
                                             } else {
                                                 /**No aplica por que le pago es mayor a lo que resta de pagar */
                                                 $this->regresar_bd_folio();
@@ -905,6 +909,7 @@ class FacturacionController extends ApiController
                                 return $this->errorResponse('Verifique que los CFDIs son de tipo ingreso y PPD', 409);
                             }
                         }
+
                     } else {
                         /**regreso el id de la base de datos que se iba consumir */
                         $this->regresar_bd_folio();
@@ -1056,7 +1061,6 @@ class FacturacionController extends ApiController
     /**leo los datos del xml para guardar en la base de datos */
     public function leer_xml($folio_xml = '')
     {
-
         $id_folio_cfdi = 0;
         //EMPIEZO A LEER LA INFORMACION DEL CFDI
         if (trim($folio_xml) == '') {
@@ -1082,10 +1086,11 @@ class FacturacionController extends ApiController
         $ns = $xml->getNamespaces(true);
         $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/3');
         $xml->registerXPathNamespace('tfd', 'http://www.sat.gob.mx/TimbreFiscalDigital');
-        $comprobante = $xml->xpath('//cfdi:Comprobante')[0];
+        $xml->registerXPathNamespace('pago10', 'http://www.sat.gob.mx/Pagos');
 
-        $emisor   = $xml->xpath('//cfdi:Emisor')[0];
-        $receptor = $xml->xpath('//cfdi:Receptor')[0];
+        $comprobante = $xml->xpath('//cfdi:Comprobante')[0];
+        $emisor      = $xml->xpath('//cfdi:Emisor')[0];
+        $receptor    = $xml->xpath('//cfdi:Receptor')[0];
         /**determinando el regimen */
         $regimen  = SATRegimenes::select('regimen')->where('clave', (string) $emisor['RegimenFiscal'])->first();
         $uso_cfdi = SatUsosCfdi::select('uso')->where('clave', (string) $receptor['UsoCFDI'])->first();
@@ -1144,15 +1149,73 @@ class FacturacionController extends ApiController
         $cadena_codigo_qr = "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=" . (string) $complemento['UUID'] . "&tt=" . (string) $comprobante['Total'] . "&re=" . (string) $emisor['Rfc'] . "&rr=" . (string) $emisor['Rfc'] . "&fe=" . $ultimos_ocho_digitos_sello_cfdi;
         $codigo_qr        = DNS2D::getBarcodeHTML($cadena_codigo_qr, 'QRCODE', 10, 10);
 
+        /**DATOS DEL NODO DE PAGOS */
+        $pago_arreglo               = [];
+        $documentos_pagados_arreglo = [];
+
+        $forma_pago = null;
+
+        if ((string) $comprobante['TipoDeComprobante'] == 'I') {
+            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            /**obteniendo claves de los catalogos */
+            $forma_pago = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
+
+        } else if ((string) $comprobante['TipoDeComprobante'] == 'E') {
+            $schema_location = '';
+        } else {
+            if ((string) $comprobante['TipoDeComprobante'] == 'P') {
+                if (isset($xml->xpath('//pago10:Pago')[0])) {
+                    $pago         = $xml->xpath('//pago10:Pago')[0]->attributes();
+                    $forma_pago   = SatFormasPago::where('clave', '=', (string) $pago['FormaDePagoP'])->first();
+                    $pago_arreglo = [
+                        'FechaPago'    => fecha_abr((string) $pago['FechaPago']),
+                        'FormaDePagoP' => $forma_pago['forma'] . ' (' . (string) $pago['FormaDePagoP'] . ')',
+                        'MonedaP'      => (string) $pago['MonedaP'],
+                        'Monto'        => (string) $pago['Monto'],
+                    ];
+
+                    if (!isset($xml->xpath('//pago10:DoctoRelacionado')[0])) {
+                        return $this->errorResponse('Error al leer el xml, los documentos relacionados no existen', 409);
+                    }
+
+                    foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Complemento//pago10:Pagos//pago10:Pago//pago10:DoctoRelacionado') as $docto_relacionado) {
+                        /**documentos relacionados */
+                        array_push($documentos_pagados_arreglo,
+                            [
+                                'Folio'            => (String) $docto_relacionado['Folio'],
+                                'IdDocumento'      => (String) $docto_relacionado['IdDocumento'],
+                                'ImpPagado'        => (String) $docto_relacionado['ImpPagado'],
+                                'ImpSaldoAnt'      => (String) $docto_relacionado['ImpSaldoAnt'],
+                                'ImpSaldoInsoluto' => (String) $docto_relacionado['ImpSaldoInsoluto'],
+                                'MetodoDePagoDR'   => (String) $docto_relacionado['MetodoDePagoDR'],
+                                'MonedaDR'         => (String) $docto_relacionado['MonedaDR'],
+                                'NumParcialidad'   => (String) $docto_relacionado['NumParcialidad'],
+                            ]);
+                    }
+                } else {
+                    return $this->errorResponse('Error al leer el xml', 409);
+                }
+                $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd';
+            } else {
+                return $this->errorResponse('Error al leer el xml', 409);
+            }
+        }
+
+        if (is_null($forma_pago)) {
+            return 'No se encontró la forma de pago que se está utilizando.';
+        }
+
         /**se crea el arreglo con la informacion del xml */
         $comprobante_cfdi = [
             'Comprobante'    => [
-                'xmlns:cfdi'         => 'http: //www.sat.gob.mx/cfd/3',
-                'xmlns:xsi'          => 'http: //www.w3.org/2001/XMLSchema-instance',
+                'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
+                'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
+                'xmlns:pago10'       => 'http://www.sat.gob.mx/Pagos',
                 'Certificado'        => (string) $comprobante['Certificado'],
                 'Fecha'              => (string) $comprobante['Fecha'],
+                'FechaTexto'         => fecha_abr((string) $comprobante['Fecha']),
                 'Folio'              => (string) $comprobante['Folio'],
-                'FormaPago'          => (string) $comprobante['FormaPago'],
+                'FormaPago'          => $forma_pago['forma'],
                 'LugarExpedicion'    => (string) $comprobante['LugarExpedicion'],
                 'MetodoPago'         => (string) $comprobante['MetodoPago'],
                 'Moneda'             => (string) $comprobante['Moneda'],
@@ -1165,7 +1228,7 @@ class FacturacionController extends ApiController
                 'TipoDeComprobante'  => (string) $comprobante['TipoDeComprobante'],
                 'Total'              => (string) $comprobante['Total'],
                 'Version'            => (string) $comprobante['Version'],
-                'xsi:schemaLocation' => 'http: //www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd',
+                'xsi:schemaLocation' => $schema_location,
             ],
             'Emisor'         => [
                 'Rfc'           => (string) $emisor['Rfc'],
@@ -1201,6 +1264,21 @@ class FacturacionController extends ApiController
             'CadenaOriginal' => $cfdi->cadena_original,
             'CodigoQr'       => $codigo_qr,
         ];
+
+        if ((string) $comprobante['TipoDeComprobante'] == 'P') {
+            unset($comprobante_cfdi['Comprobante']['MetodoPago']);
+            unset($comprobante_cfdi['Comprobante']['FormaPago']);
+            //unset($comprobante_cfdi['Comprobante']['Descuento']);
+            unset($comprobante_cfdi['Comprobante']['TipoCambio']);
+            unset($comprobante_cfdi['Impuestos']);
+            unset($comprobante_cfdi['Conceptos'][0]['Impuestos']);
+            $comprobante_cfdi['Complemento']['Pago']                     = $pago_arreglo;
+            $comprobante_cfdi['Complemento']['Pago']['DoctoRelacionado'] = $documentos_pagados_arreglo;
+            /**agregando el nodo del pago */
+        } else {
+            unset($comprobante_cfdi['Comprobante']['xmlns:pago10']);
+            unset($comprobante_cfdi['Complemento']['Pago']);
+        }
 
         return $comprobante_cfdi;
     }
@@ -1322,6 +1400,7 @@ class FacturacionController extends ApiController
                     $q->where('cfdis.status', '=', $status);
                 }
             })
+            ->orderBy('id', 'desc')
             ->get();
 
         $resultado = array();
