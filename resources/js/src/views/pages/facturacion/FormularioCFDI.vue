@@ -533,12 +533,10 @@
                 <span class="texto-btn">Buscar CFDI</span>
               </vs-button>
             </div>
-
             <div class="w-full px-2">
               <vs-divider />
             </div>
           </div>
-          {{ form.cfdis_a_pagar }}
           <div class="flex flex-wrap">
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
               <div class="flex flex-wrap">
@@ -560,9 +558,9 @@
                         <vs-th hidden>Fecha Timbrado</vs-th>
                         <vs-th>RFC</vs-th>
                         <vs-th>$ Total</vs-th>
-                        <vs-th>$ Saldo Anterior</vs-th>
+                        <vs-th>$ Saldo Actual</vs-th>
                         <vs-th>$ Monto a Pagar</vs-th>
-                        <vs-th>$ Saldo Insoluto</vs-th>
+                        <vs-th>$ Nuevo Saldo</vs-th>
                         <vs-th>Ver PDF</vs-th>
                         <vs-th>Quitar</vs-th>
                       </template>

@@ -546,7 +546,7 @@ class FacturacionController extends ApiController
             'Moneda'             => $request->tipo_comprobante['value'] != '5' ? "MXN" : 'XXX',
             'NoCertificado'      => '',
             'Sello'              => '',
-            'Serie'              => $serie . ($numero_serie + 1),
+            'Serie'              => $serie . ($numero_serie),
             'SubTotal'           => $request->tipo_comprobante['value'] != '5' ? number_format((float) round($subtotal, 2), 2, '.', '') : '0',
             'Descuento'          => number_format((float) round($descuento, 2), 2, '.', ''),
             'TipoCambio'         => '1',
@@ -575,7 +575,6 @@ class FacturacionController extends ApiController
             'rootElementName' => 'cfdi:Comprobante',
             '_attributes'     => $comprobante,
         ], true, 'UTF-8');
-        //dd($result);
 
         //$nombre_temporal = rand(0, 100000) . '.xml';
         //$nombre_temporal = 'ok.xml';
@@ -835,15 +834,17 @@ class FacturacionController extends ApiController
                             if ($cfdi_bd['sat_tipo_comprobante_id'] == 1 && $cfdi_bd['sat_metodos_pago_id'] == 2) {
                                 /**se procede con el pago, al ser un cfdi de tipo ingreso y ppd */
                                 $total_pagado       = 0;
-                                $numero_parcialidad = 0;
+                                $numero_parcialidad = 1;
                                 foreach ($cfdi_bd['pagos_asociados'] as $key_pago => $pago) {
                                     if ($pago['status'] == 1) {
                                         /**pago activo */
                                         $total_pagado += $pago['monto_relacion'];
-                                        $numero_parcialidad += 1;
+                                        if ($pago['tipo_relacion_id'] == 2) {
+                                            /**solo para relacion de tipo pago */
+                                            $numero_parcialidad++;
+                                        }
                                     }
                                 }
-                                $numero_parcialidad = $numero_parcialidad == 0 ? 1 : 0;
 
                                 /**creo el array con los pagos relacionados del xml */
                                 $array_cfdis_a_pagar_xml = [];
@@ -851,7 +852,7 @@ class FacturacionController extends ApiController
                                 foreach ($request->cfdis_a_pagar as $key_pagar => $cfdi_pagar) {
                                     if ($cfdi_pagar['id'] == $cfdi_bd['id']) {
                                         if ($cfdi_pagar['monto_pago'] > 0) {
-                                            if ($total_pagado + $cfdi_pagar['monto_pago'] <= $cfdi_bd['total']) {
+                                            if (($total_pagado + $cfdi_pagar['monto_pago']) <= $cfdi_bd['total']) {
                                                 /**procede la relacion del cfdi para pago */
                                                 DB::table('cfdis_tipo_relacion')->insert(
                                                     [
@@ -867,7 +868,6 @@ class FacturacionController extends ApiController
                                                     $this->regresar_bd_folio();
                                                     return 'No se encontró el método de pago que se está utilizando.';
                                                 }
-
                                                 array_push($array_cfdis_a_pagar_xml, [
 
                                                     '_attributes' => [
@@ -880,8 +880,11 @@ class FacturacionController extends ApiController
                                                         'MonedaDR'         => "MXN",
                                                         'NumParcialidad'   => $numero_parcialidad,
                                                     ],
-
                                                 ]);
+                                            } else {
+                                                /**No aplica por que le pago es mayor a lo que resta de pagar */
+                                                $this->regresar_bd_folio();
+                                                return $this->errorResponse('El monto a pagar debe ser menor o igual a $ ' . number_format($cfdi_bd['total'] - $total_pagado, 2), 409);
                                             }
                                         } else {
                                             /**regreso el id de la base de datos que se iba consumir */
@@ -1258,10 +1261,14 @@ class FacturacionController extends ApiController
             ),
             DB::raw(
                 '(NULL) as fecha_timbrado_texto'
+            ),
+            DB::raw(
+                '(NULL) as situacion_pago_texto'
             )
         )
 
             ->with('pagos_asociados')
+            ->with('cfdis_pagados')
             ->with('cfdis_relacionados')
             ->with('cliente:id,nombre')
             ->whereHas('cliente', function ($query) use ($cliente) {
@@ -1343,12 +1350,22 @@ class FacturacionController extends ApiController
                     $pagado = 0;
                     foreach ($cfdi['pagos_asociados'] as $key_pago => $pago) {
                         if ($pago['status'] == 1) {
-                            $pagado += $pago['total'];
+                            $pagado += $pago['monto_relacion'];
                         }
                     }
                     $cfdi['total_pagado'] = $pagado;
-                }
 
+                    if ($cfdi['status'] == 1) {
+                        if ($pagado >= $cfdi['total']) {
+                            $cfdi['situacion_pago_texto'] = 'Pagado';
+                        } else {
+                            $cfdi['situacion_pago_texto'] = 'Por liquidar';
+                        }
+                    } else {
+                        $cfdi['situacion_pago_texto'] = 'CFDI no válido';
+                    }
+
+                }
             } elseif ($cfdi['sat_tipo_comprobante_id'] == 2) {
                 $cfdi['tipo_comprobante_texto'] = 'Egreso (E)';
             } elseif ($cfdi['sat_tipo_comprobante_id'] == 5) {
@@ -1399,6 +1416,7 @@ class FacturacionController extends ApiController
             unset($cfdi['sat_usos_cfdi_id']);
             unset($cfdi['fecha_timbrado']);
             unset($cfdi['cliente']);
+            unset($cfdi['sat_formas_pago_id']);
         }
         return $resultado_query;
     }
