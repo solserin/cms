@@ -25,6 +25,8 @@ class CfdisTipoRelacion extends Migration
             $table->unsignedBigInteger('sat_metodos_pago_id')->unsigned();
             $table->foreign('sat_metodos_pago_id')->references('id')->on('sat_metodos_pago');
             $table->unsignedDecimal('monto_relacion', 10, 2)->nullable();
+            $table->unsignedBigInteger('cfdis_id_relacionado')->unsigned();
+            $table->foreign('cfdis_id_relacionado')->references('id')->on('cfdis');
         });
     }
 

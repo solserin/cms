@@ -856,11 +856,12 @@ class FacturacionController extends ApiController
                                                 /**procede la relacion del cfdi para pago */
                                                 DB::table('cfdis_tipo_relacion')->insert(
                                                     [
-                                                        'numero_parcialidad'  => $numero_parcialidad,
-                                                        'sat_metodos_pago_id' => $cfdi_bd['sat_metodos_pago_id'],
-                                                        'monto_relacion'      => $cfdi_pagar['monto_pago'],
-                                                        'tipo_relacion_id'    => 2, //pago
-                                                        'cfdis_id'            => $cfdi_bd['id'],
+                                                        'numero_parcialidad'   => $numero_parcialidad,
+                                                        'sat_metodos_pago_id'  => $cfdi_bd['sat_metodos_pago_id'],
+                                                        'monto_relacion'       => $cfdi_pagar['monto_pago'],
+                                                        'tipo_relacion_id'     => 2, //pago
+                                                        'cfdis_id_relacionado' => $cfdi_bd['id'],
+                                                        'cfdis_id'             => $folio_para_asignar,
                                                     ]
                                                 );
                                                 $metodo_pago = MetodosPago::where('id', '=', $cfdi_bd['sat_metodos_pago_id'])->first();
