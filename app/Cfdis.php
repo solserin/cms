@@ -20,7 +20,8 @@ class Cfdis extends Model
 
     public function pagos_asociados()
     {
-        return $this->hasMany('App\CfdisTipoRelacion', 'cfdis_id', 'id');
+        /**relacion por pago */
+        return $this->hasMany('App\CfdisTipoRelacion', 'cfdis_id', 'id')->where('tipo_relacion_id', '=', 2);
     }
 
     public function cfdis_relacionados()

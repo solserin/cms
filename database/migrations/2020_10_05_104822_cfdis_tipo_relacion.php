@@ -18,9 +18,9 @@ class CfdisTipoRelacion extends Migration
             $table->foreign('tipo_relacion_id')->references('id')->on('tipo_relacion');
             $table->unsignedBigInteger('cfdis_id')->unsigned();
             $table->foreign('cfdis_id')->references('id')->on('cfdis');
-            $table->unsignedDecimal('importe_pagado', 10, 2)->nullable();
-            $table->unsignedDecimal('importe_saldo_anterior', 10, 2)->nullable();
-            $table->unsignedDecimal('importe_saldo_insoluto', 10, 2)->nullable();
+            //$table->unsignedDecimal('importe_pagado', 10, 2)->nullable();
+            //$table->unsignedDecimal('importe_saldo_anterior', 10, 2)->nullable();
+            //$table->unsignedDecimal('importe_saldo_insoluto', 10, 2)->nullable();
             $table->integer('numero_parcialidad')->nullable();
             $table->unsignedBigInteger('sat_metodos_pago_id')->unsigned();
             $table->foreign('sat_metodos_pago_id')->references('id')->on('sat_metodos_pago');

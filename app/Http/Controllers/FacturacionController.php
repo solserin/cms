@@ -429,22 +429,37 @@ class FacturacionController extends ApiController
                             ],
                         ],
                     ],
-
                 );
                 /**verificando si se debe de quitar el nodo de Descuento */
                 if ($concepto['descuento_b']['value'] != 1) {
-                    /**no hay descuento y debe quitarse */
+                    /**no hay descuento y debe quitarse*/
                     unset($conceptos['cfdi:Concepto'][count($conceptos['cfdi:Concepto']) - 1]['_attributes']['Descuento']);
                 }
             }
         } else if ($request->tipo_comprobante['value'] == '2') {
             /**egreso */
             $serie = 'E';
-
         } else if ($request->tipo_comprobante['value'] == '5') {
             /**pago */
             $serie = 'P';
 
+            foreach ($request->cfdis_a_pagar as $key => $cfdi) {
+                $total += $cfdi['monto_pago'];
+            }
+            array_push($conceptos['cfdi:Concepto'],
+                [
+                    '_attributes' =>
+                    [
+                        'Cantidad'      => 1,
+                        'ClaveProdServ' => '84111506',
+                        'ClaveUnidad'   => 'ACT',
+                        'Descripcion'   => 'Pago',
+                        'Importe'       => 0,
+                        'ValorUnitario' => 0,
+                    ],
+                ]
+            );
+            /**agregago los pagos relacionados */
         } else {
             /**error */
             return 'No se encontró tipo de comprobante que se está utilizando.';
@@ -452,22 +467,22 @@ class FacturacionController extends ApiController
 
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
-            'cfdi:Emisor'    => [
+            'cfdi:Emisor'      => [
                 '_attributes' => [
                     'RegimenFiscal' => '601',
                     'Rfc'           => ENV('APP_ENV') == 'local' ? 'LAN7008173R5' : strtoupper($datos_funeraria['rfc']),
                     'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
                 ],
             ],
-            'cfdi:Receptor'  => [
+            'cfdi:Receptor'    => [
                 '_attributes' => [
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
                     'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
                     'UsoCFDI' => $uso_cfdi['clave'],
                 ],
             ],
-            'cfdi:Conceptos' => $conceptos,
-            'cfdi:Impuestos' => [
+            'cfdi:Conceptos'   => $conceptos,
+            'cfdi:Impuestos'   => [
                 '_attributes'    => [
                     'TotalImpuestosTrasladados' => number_format((float) round($iva_trasladado, 2), 2, '.', ''),
                 ],
@@ -482,37 +497,85 @@ class FacturacionController extends ApiController
                     ],
                 ],
             ],
+            'cfdi:Complemento' => [
+                'pago10:Pagos' => [
+                    '_attributes' => [
+                        'Version' => '1.0',
+                    ],
+                    'pago10:Pago' => [
+                        '_attributes'             => [
+                            'FechaPago'    => $request->fecha_pago . 'T12:00:00',
+                            'FormaDePagoP' => $forma_pago['clave'],
+                            'MonedaP'      => 'MXN',
+                            'Monto'        => number_format((float) round($total, 2), 2, '.', ''),
+                        ],
+                        'pago10:DoctoRelacionado' => $request->array_cfdis_a_pagar_xml,
+                    ],
+                ],
+            ],
         ];
 
+        if ($request->tipo_comprobante['value'] == '5') {
+            /**pago */
+        }
+
+        /**AQUI AGREGO LOS PAGOS QUE SE GENERARON */
+        $numero_serie = 0;
+        if ($request->tipo_comprobante['value'] == 1) {
+            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 1)->count();
+        } else if ($request->tipo_comprobante['value'] == 2) {
+            $schema_location = '';
+            $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 2)->count();
+        } else {
+            if ($request->tipo_comprobante['value'] == 5) {
+                $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 5)->count();
+                $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd';
+            }
+        }
         $comprobante = [
             'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
             'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
+            'xmlns:pago10'       => 'http://www.sat.gob.mx/Pagos',
             'Certificado'        => '',
             'Fecha'              => str_replace(" ", "T", date("Y-m-d H:i:s")),
             'Folio'              => $folio_para_asignar,
             'FormaPago'          => $forma_pago['clave'],
             'LugarExpedicion'    => $datos_funeraria['cp'],
             'MetodoPago'         => $metodo_pago['clave'],
-            'Moneda'             => "MXN",
+            'Moneda'             => $request->tipo_comprobante['value'] != '5' ? "MXN" : 'XXX',
             'NoCertificado'      => '',
             'Sello'              => '',
-            'Serie'              => $serie . $folio_para_asignar,
-            'SubTotal'           => number_format((float) round($subtotal, 2), 2, '.', ''),
+            'Serie'              => $serie . ($numero_serie + 1),
+            'SubTotal'           => $request->tipo_comprobante['value'] != '5' ? number_format((float) round($subtotal, 2), 2, '.', '') : '0',
             'Descuento'          => number_format((float) round($descuento, 2), 2, '.', ''),
             'TipoCambio'         => '1',
             'TipoDeComprobante'  => $tipo_comprobante['clave'],
-            'Total'              => number_format((float) round($total, 2), 2, '.', ''),
+            'Total'              => $request->tipo_comprobante['value'] != '5' ? number_format((float) round($total, 2), 2, '.', '') : '0',
             'Version'            => '3.3',
-            'xsi:schemaLocation' => 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd',
+            'xsi:schemaLocation' => $schema_location,
         ];
+
+        if ($request->tipo_comprobante['value'] != '5') {
+            unset($comprobante['xmlns:pago10']);
+            unset($array['cfdi:Complemento']);
+        } else {
+            unset($comprobante['FormaPago']);
+            unset($comprobante['TipoCambio']);
+            unset($comprobante['MetodoPago']);
+            unset($array['cfdi:Impuestos']);
+        }
+
         if ($descuento == 0) {
             /**no hay descuento y debe quitarse */
             unset($comprobante['Descuento']);
         }
+
         $result = ArrayToXml::convert($array, [
             'rootElementName' => 'cfdi:Comprobante',
             '_attributes'     => $comprobante,
         ], true, 'UTF-8');
+        //dd($result);
 
         //$nombre_temporal = rand(0, 100000) . '.xml';
         //$nombre_temporal = 'ok.xml';
@@ -523,8 +586,8 @@ class FacturacionController extends ApiController
         $arreglo_de_datos_a_retornar['subtotal']   = $subtotal;
         $arreglo_de_datos_a_retornar['descuento']  = $descuento;
         $arreglo_de_datos_a_retornar['total']      = $total;
+
         return $arreglo_de_datos_a_retornar;
-        //return $request;
     }
 
     public function timbrar_cfdi(Request $request)
@@ -630,52 +693,8 @@ class FacturacionController extends ApiController
                 }
             }
         } else if ($request->tipo_comprobante['value'] == '5') {
-            /**ES DE TIPO PAGO, REVISANDO QUE LOS CFDIS A PAGAR SEAN DE TIPO PAGO, QUE ESTEN VIGENTES Y EL MONTO SEA VALIDO */
-            $cfdis_a_pagar = [];
 
-            if (isset($request->cfdis_a_pagar)) {
-                if (count($request->cfdis_a_pagar) > 0) {
-                    foreach ($request->cfdis_a_pagar as $key => $cfdi) {
-                        if (isset($cfdi['id'])) {
-                            array_push($cfdis_a_pagar, $cfdi['id']);
-                        } else {
-                            return $this->errorResponse('El folio del cfdi que ingresó no es válido.', 409);
-                        }
-                    }
-                    /**una vez verificados que los cfdis existen, se mandan traer de la bd para verificar que el total pagado permite el monto
-                     * del abonos
-                     */
-                    $cfdis_de_bd = Cfdis::select(
-                        'status',
-                        'id',
-                        'total',
-                        'sat_tipo_comprobante_id',
-                        'sat_metodos_pago_id'
-                    )->with('pagos_asociados')
-                        ->whereIn('id', $cfdis_a_pagar)->get();
-                    return $this->errorResponse($cfdis_de_bd, 409);
-
-                    /**validamos que todo esté segun las validaciones del SAT */
-
-                    foreach ($cfdis_de_bd as $key => $cfdi) {
-                        if ($cfdi['sat_tipo_comprobante_id'] == 1 && $cfdi['sat_tipo_comprobante_id'] == 1) {
-                            /**pago */
-
-                        } else {
-                            return $this->errorResponse('Verifique que los CFDIs son de tipo ingreso y PPD', 409);
-                        }
-                    }
-
-                    return $this->errorResponse($cfdis_de_bd, 409);
-
-                } else {
-                    return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
-                }
-            } else {
-                return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
-            }
         }
-        //return $this->errorResponse('aqui', 409);
 
         /**procede con las validaciones y se hace la insercion de la transanccion en la base de datos */
         $datos_funeraria = Funeraria::first();
@@ -750,7 +769,6 @@ class FacturacionController extends ApiController
                             $descuento_concepto           = $concepto['descuento_b']['value'] == 1 ? ($ValorUnitarioPrecioNeto - $ValorUnitarioPrecioDescuento) : 0;
 
                             $valor_unitario_real = $concepto['descuento_b']['value'] == 1 ? $ValorUnitarioPrecioDescuento : $ValorUnitarioPrecioNeto;
-
                             DB::table('conceptos_cfdi')->insert(
                                 [
                                     'sat_productos_servicios_id' => $concepto['clave_sat']['value'],
@@ -768,14 +786,132 @@ class FacturacionController extends ApiController
                             );
                         }
                     } else {
+                        /**regreso el id de la base de datos que se iba consumir */
+                        $this->regresar_bd_folio();
                         return $this->errorResponse('Ingrese los conceptos a facturar.', 409);
                     }
                 } else {
+                    /**regreso el id de la base de datos que se iba consumir */
+                    $this->regresar_bd_folio();
                     return $this->errorResponse('Ingrese los conceptos a facturar.', 409);
                 }
-            }
+            } else if ($request->tipo_comprobante['value'] == '5') {
+                /**ES DE TIPO PAGO, REVISANDO QUE LOS CFDIS A PAGAR SEAN DE TIPO PAGO, QUE ESTEN VIGENTES Y EL MONTO SEA VALIDO */
+                $cfdis_a_pagar          = [];
+                $total_comprobante_pago = 0;
+                if (isset($request->cfdis_a_pagar)) {
+                    if (count($request->cfdis_a_pagar) > 0) {
+                        foreach ($request->cfdis_a_pagar as $key => $cfdi) {
+                            if (isset($cfdi['id'])) {
+                                array_push($cfdis_a_pagar, $cfdi['id']);
+                                $total_comprobante_pago += $cfdi['monto_pago'];
+                            } else {
+                                /**regreso el id de la base de datos que se iba consumir */
+                                $this->regresar_bd_folio();
+                                return $this->errorResponse('El folio del cfdi que ingresó no es válido.', 409);
+                            }
+                        }
+                        /**una vez verificados que los cfdis existen, se mandan traer de la bd para verificar que el total pagado permite el monto
+                         * del abonos
+                         */
+                        $cfdis_de_bd = Cfdis::select(
+                            'status',
+                            'uuid',
+                            'id',
+                            'total',
+                            'sat_tipo_comprobante_id',
+                            'sat_metodos_pago_id'
+                        )->with('pagos_asociados')
+                            ->whereIn('id', $cfdis_a_pagar)->get();
 
-            //return $this->errorResponse('aqui', 409);
+                        if (count($cfdis_de_bd) == 0) {
+                            /**regreso el id de la base de datos que se iba consumir */
+                            $this->regresar_bd_folio();
+                            return $this->errorResponse('No se han encontrado cfdis a pagar', 409);
+                        }
+
+                        /**validamos que todo esté segun las validaciones del SAT */
+                        foreach ($cfdis_de_bd as $key => $cfdi_bd) {
+                            if ($cfdi_bd['sat_tipo_comprobante_id'] == 1 && $cfdi_bd['sat_metodos_pago_id'] == 2) {
+                                /**se procede con el pago, al ser un cfdi de tipo ingreso y ppd */
+                                $total_pagado       = 0;
+                                $numero_parcialidad = 0;
+                                foreach ($cfdi_bd['pagos_asociados'] as $key_pago => $pago) {
+                                    if ($pago['status'] == 1) {
+                                        /**pago activo */
+                                        $total_pagado += $pago['monto_relacion'];
+                                        $numero_parcialidad += 1;
+                                    }
+                                }
+                                $numero_parcialidad = $numero_parcialidad == 0 ? 1 : 0;
+
+                                /**creo el array con los pagos relacionados del xml */
+                                $array_cfdis_a_pagar_xml = [];
+
+                                foreach ($request->cfdis_a_pagar as $key_pagar => $cfdi_pagar) {
+                                    if ($cfdi_pagar['id'] == $cfdi_bd['id']) {
+                                        if ($cfdi_pagar['monto_pago'] > 0) {
+                                            if ($total_pagado + $cfdi_pagar['monto_pago'] <= $cfdi_bd['total']) {
+                                                /**procede la relacion del cfdi para pago */
+                                                DB::table('cfdis_tipo_relacion')->insert(
+                                                    [
+                                                        'numero_parcialidad'  => $numero_parcialidad,
+                                                        'sat_metodos_pago_id' => $cfdi_bd['sat_metodos_pago_id'],
+                                                        'monto_relacion'      => $cfdi_pagar['monto_pago'],
+                                                        'tipo_relacion_id'    => 2, //pago
+                                                        'cfdis_id'            => $cfdi_bd['id'],
+                                                    ]
+                                                );
+                                                $metodo_pago = MetodosPago::where('id', '=', $cfdi_bd['sat_metodos_pago_id'])->first();
+                                                if (is_null($metodo_pago)) {
+                                                    $this->regresar_bd_folio();
+                                                    return 'No se encontró el método de pago que se está utilizando.';
+                                                }
+
+                                                array_push($array_cfdis_a_pagar_xml, [
+
+                                                    '_attributes' => [
+                                                        'Folio'            => $cfdi_bd['id'],
+                                                        'IdDocumento'      => $cfdi_bd['uuid'],
+                                                        'ImpPagado'        => $cfdi_pagar['monto_pago'],
+                                                        'ImpSaldoAnt'      => $cfdi_bd['total'] - $total_pagado,
+                                                        'ImpSaldoInsoluto' => $cfdi_bd['total'] - $total_pagado - $cfdi_pagar['monto_pago'],
+                                                        'MetodoDePagoDR'   => $metodo_pago['clave'],
+                                                        'MonedaDR'         => "MXN",
+                                                        'NumParcialidad'   => $numero_parcialidad,
+                                                    ],
+
+                                                ]);
+                                            }
+                                        } else {
+                                            /**regreso el id de la base de datos que se iba consumir */
+                                            $this->regresar_bd_folio();
+                                            return $this->errorResponse('El monto a pagar de los comprobantes debe ser mayor a cero.', 409);
+                                        }
+                                        break;
+                                    }
+                                }
+                                $request->merge([
+                                    'array_cfdis_a_pagar_xml' => $array_cfdis_a_pagar_xml,
+                                ]);
+
+                            } else {
+                                /**regreso el id de la base de datos que se iba consumir */
+                                $this->regresar_bd_folio();
+                                return $this->errorResponse('Verifique que los CFDIs son de tipo ingreso y PPD', 409);
+                            }
+                        }
+                    } else {
+                        /**regreso el id de la base de datos que se iba consumir */
+                        $this->regresar_bd_folio();
+                        return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
+                    }
+                } else {
+                    /**regreso el id de la base de datos que se iba consumir */
+                    $this->regresar_bd_folio();
+                    return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
+                }
+            }
 
             /**GUARDANDO CFDIS RELACIONADOS PENDIENTES */
 
@@ -836,11 +972,8 @@ class FacturacionController extends ApiController
                 $responseTimbre = $clienteFD->timbrar($parametros);
 
                 if (isset($responseTimbre->acuseCFDI->error)) {
-                    /**al no timbrar el xml revierto la inserccion en la base de datos y regreso al ultimo id el incremento de la tabla */
-                    DB::rollBack();
                     /**regreso el id de la base de datos que se iba consumir */
-                    $maxId = DB::table('cfdis')->max('id');
-                    DB::statement("ALTER TABLE cfdis AUTO_INCREMENT=$maxId");
+                    $this->regresar_bd_folio();
                     //return $this->errorResponse(($responseTimbre->acuseCFDI->codigoError), 409);
                     /**eliminar el xml ya que no se timbro*/
                     Storage::disk($storage_disk_xmls)->delete($xml_a_timbrar['nombre_xml']);
@@ -850,11 +983,24 @@ class FacturacionController extends ApiController
                 if (isset($responseTimbre->acuseCFDI->xmlTimbrado)) {
                     /**EL XML SE TIMBRO CORRECTAMENTE */
                     /**se comiezna a guardar el resultado en la base de datos */
-
                     /**se actualiza el xml */
                     Storage::disk($storage_disk_xmls)->put($xml_a_timbrar['nombre_xml'], $responseTimbre->acuseCFDI->xmlTimbrado);
                     $xml_timbrado_file = Storage::disk($storage_disk_xmls)->get($xml_a_timbrar['nombre_xml']);
                     $xml_timbrado      = $this->leer_xml($folio_para_asignar);
+
+                    $total = 0;
+                    if ($request->tipo_comprobante['value'] == '1') {
+                        /**pago */
+                        $total = $xml_timbrado['Comprobante']['Total'];
+                    } else if ($request->tipo_comprobante['value'] == '2') {
+                        /**egregso */
+
+                    } else {
+                        if ($request->tipo_comprobante['value'] == '5') {
+                            /**pago */
+                            $total = $total_comprobante_pago;
+                        }
+                    }
                     DB::table('cfdis')->where('id', '=', $folio_para_asignar)->update(
                         [
                             'uuid'                        => $xml_timbrado['Complemento']['TimbreFiscalDigital']['UUID'],
@@ -863,7 +1009,7 @@ class FacturacionController extends ApiController
                             'fecha'                       => $xml_timbrado['Comprobante']['Fecha'],
                             'subtotal'                    => $xml_timbrado['Comprobante']['SubTotal'],
                             'descuento'                   => $xml_timbrado['Comprobante']['Descuento'],
-                            'total'                       => $xml_timbrado['Comprobante']['Total'],
+                            'total'                       => $total,
                             'fecha_timbrado'              => $xml_timbrado['Complemento']['TimbreFiscalDigital']['FechaTimbrado'],
                             'rfc_proveedor_certificado'   => $xml_timbrado['Complemento']['TimbreFiscalDigital']['RfcProvCertif'],
                             'num_operacion'               => null,
@@ -878,24 +1024,28 @@ class FacturacionController extends ApiController
                     );
                     DB::commit();
                     return $folio_para_asignar . 'ff';
-
                     //$clienteFD = new ClienteFormasDigitales($contents = Storage::disk($storage_disk_xmls)->path($file_guardar));
                     //return $clienteFD->generarCadenaOriginal();
-
                 }
             } catch (SoapFault $e) {
+                $this->regresar_bd_folio();
                 print("Auth Error:::: $e");
             }
             /**SE MANDA REGISTRAR LA TRANSACCIOEN LA BASE DE DATOS */
         } catch (\Throwable $th) {
-            DB::rollBack();
             /**regreso el id de la base de datos que se iba consumir */
-            $maxId = DB::table('cfdis')->max('id');
-            if (trim($maxId) > 0) {
-                DB::statement("ALTER TABLE cfdis AUTO_INCREMENT=$maxId");
-            }
-
+            $this->regresar_bd_folio();
             return $th;
+        }
+
+    }
+
+    public function regresar_bd_folio()
+    {
+        DB::rollBack();
+        $maxId = DB::table('cfdis')->max('id');
+        if (trim($maxId) > 0) {
+            DB::statement("ALTER TABLE cfdis AUTO_INCREMENT=$maxId");
         }
     }
 
@@ -1185,6 +1335,20 @@ class FacturacionController extends ApiController
             /**tipo de comprobante */
             if ($cfdi['sat_tipo_comprobante_id'] == 1) {
                 $cfdi['tipo_comprobante_texto'] = 'Ingreso (I)';
+                if ($cfdi['sat_metodos_pago_id'] == 1) {
+                    /**pue */
+                    $cfdi['total_pagado'] = $cfdi['total'];
+                } else {
+                    /**ppd */
+                    $pagado = 0;
+                    foreach ($cfdi['pagos_asociados'] as $key_pago => $pago) {
+                        if ($pago['status'] == 1) {
+                            $pagado += $pago['total'];
+                        }
+                    }
+                    $cfdi['total_pagado'] = $pagado;
+                }
+
             } elseif ($cfdi['sat_tipo_comprobante_id'] == 2) {
                 $cfdi['tipo_comprobante_texto'] = 'Egreso (E)';
             } elseif ($cfdi['sat_tipo_comprobante_id'] == 5) {

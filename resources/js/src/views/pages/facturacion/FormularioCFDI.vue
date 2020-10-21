@@ -538,6 +538,7 @@
               <vs-divider />
             </div>
           </div>
+          {{ form.cfdis_a_pagar }}
           <div class="flex flex-wrap">
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
               <div class="flex flex-wrap">

@@ -41,11 +41,13 @@
                              NoCertificadoSAT="00001000000404486074"
                              SelloSAT="IcvPUUBG2Ypk80hBh4AgeKIB0sZePksJXEqhTFbOP+rTnp22oeO8R4M9+7kFJMBKEQZYHU7ufJtax8IyaKlhDhu1DwUpFSFNaR4d0d528SDOF3APK2Tg6HFXoVsflARRwzKRE6pYoTZZnqWQtV6mlbfciP3SXgwsNMXubGV3Qv/Ai81wgIX8ji0/2Gk0GAWxFVqV8L75/TUes3LQ0QxVNGOHbvGhRIfARxwKnXILl1Z92lWPBt3/aEuiOi2Ay34Z1qr01lbteZW0w/P0AtbvoUUjcEXwj5xyS42JDXf25Txx5ziu26KP4w2Vi/BL6SZ+Hgd3HYI100HsCIQd4Jzn1Q==" />
             <pago10:Pagos Version="1.0">
-                <pago10:Pago FechaPago="2020-09-29T12:00:00"
+                <pago10:Pago 
+                FechaPago="2020-09-29T12:00:00"
                    FormaDePagoP="03"
                    MonedaP="MXN"
                    Monto="8506.68">
-                    <pago10:DoctoRelacionado Folio="232"
+                    <pago10:DoctoRelacionado 
+                    Folio="232"
                                  IdDocumento="ED735BC9-92D1-4C6A-B746-6F26E8C5DCB5"
                                  ImpPagado="4253.34"
                                  ImpSaldoAnt="4253.34"
