@@ -499,13 +499,175 @@
             </div>
           </div>
         </div>
-        <div class="w-full px-2">
-          <vs-divider />
+
+        <div
+          class="contenido-cfdis-relacionados"
+          v-if="form.tipo_relacion.value > 0"
+        >
+          <div class="w-full px-2">
+            <vs-divider />
+          </div>
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
+            >
+              <div class="float-left pb-2 px-2 mt-6">
+                <img width="36px" src="@assets/images/clip.svg" />
+                <h3 class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms">
+                  CFDIS relacionados con el documento a generar
+                </h3>
+              </div>
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
+            >
+              <vs-button
+                class="mt-4"
+                size="small"
+                color="primary"
+                @click="openBuscadorCfdiPagar('relacionar')"
+              >
+                <img
+                  class="cursor-pointer img-btn"
+                  src="@assets/images/cfdi.svg"
+                />
+                <span class="texto-btn">Buscar CFDI</span>
+              </vs-button>
+            </div>
+
+            <div class="w-full px-2">
+              <vs-divider />
+            </div>
+          </div>
+          <div class="flex flex-wrap">
+            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+              <div class="flex flex-wrap">
+                <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
+                  <div class="w-full mt-5">
+                    <vs-table
+                      class="w-full"
+                      :data="form.cfdis_relacionados"
+                      noDataText="No se han agregado documentos a relacionar"
+                    >
+                      <template slot="header">
+                        <h3>Facturas Relacionadas al CFDI</h3>
+                      </template>
+                      <template slot="thead">
+                        <vs-th>#</vs-th>
+                        <vs-th>Folio</vs-th>
+                        <vs-th>UUID</vs-th>
+                        <vs-th hidden>Cliente</vs-th>
+                        <vs-th hidden>Fecha Timbrado</vs-th>
+                        <vs-th>RFC</vs-th>
+                        <vs-th>$ Total</vs-th>
+                        <vs-th>$ Saldo Actual</vs-th>
+                        <vs-th>Tipo</vs-th>
+                        <vs-th>Método de Págo</vs-th>
+                        <vs-th>Ver PDF</vs-th>
+                        <vs-th>Quitar</vs-th>
+                      </template>
+                      <template slot-scope="{ data }">
+                        <vs-tr
+                          :data="tr"
+                          :key="indextr"
+                          v-for="(tr, indextr) in data"
+                        >
+                          <vs-td>
+                            <div class="capitalize">
+                              <span class="lowercase">{{ indextr + 1 }}</span>
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].id }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].uuid }}
+                            </div>
+                          </vs-td>
+                          <vs-td hidden>
+                            <div class="capitalize">
+                              {{ data[indextr].cliente_nombre }}
+                            </div>
+                          </vs-td>
+                          <vs-td hidden>
+                            <div class="capitalize">
+                              {{ data[indextr].fecha_timbrado_texto }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].rfc_receptor }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].total | numFormat("0,000.00") }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{
+                                (data[indextr].total -
+                                  data[indextr].total_pagado)
+                                  | numFormat("0,000.00")
+                              }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].tipo_comprobante_texto }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div class="capitalize">
+                              {{ data[indextr].sat_metodos_pago_texto }}
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div
+                              class=""
+                              @click="remover_cfdi_a_pagar(indextr)"
+                            >
+                              <img
+                                class="cursor-pointer img-btn"
+                                src="@assets/images/pdf.svg"
+                              />
+                            </div>
+                          </vs-td>
+                          <vs-td>
+                            <div
+                              class=""
+                              @click="remover_cfdi_a_relacionar(indextr)"
+                            >
+                              <img
+                                class="cursor-pointer img-btn"
+                                src="@assets/images/minus.svg"
+                              />
+                            </div>
+                          </vs-td>
+                        </vs-tr>
+                      </template>
+                    </vs-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-full px-2">
+            <vs-divider />
+          </div>
         </div>
+
         <div
           class="contenido-cfdis-relacionados"
           v-if="form.tipo_comprobante.value == 5"
         >
+          <div class="w-full px-2">
+            <vs-divider />
+          </div>
           <div class="flex flex-wrap">
             <div
               class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
@@ -524,7 +686,7 @@
                 class="mt-4"
                 size="small"
                 color="primary"
-                @click="openBuscadorCfdi = true"
+                @click="openBuscadorCfdiPagar('pagar')"
               >
                 <img
                   class="cursor-pointer img-btn"
@@ -533,10 +695,12 @@
                 <span class="texto-btn">Buscar CFDI</span>
               </vs-button>
             </div>
+
             <div class="w-full px-2">
               <vs-divider />
             </div>
           </div>
+
           <div class="flex flex-wrap">
             <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
               <div class="flex flex-wrap">
@@ -548,7 +712,7 @@
                       noDataText="No se han agregado documentos a relacionar"
                     >
                       <template slot="header">
-                        <h3>Facturas Relacionadas al CFDI</h3>
+                        <h3>Facturas Relacionadas al CFDI Para Pagar</h3>
                       </template>
                       <template slot="thead">
                         <vs-th>#</vs-th>
@@ -1393,8 +1557,10 @@
 
     <SearchCfdi
       :show="openBuscadorCfdi"
+      :tipo_search="tipo_search"
       @closeBuscador="openBuscadorCfdi = false"
-      @CfdiSeleccionado="CfdiSeleccionado"
+      @CfdiPagarSeleccionado="CfdiPagarSeleccionado"
+      @CfdiRelacionarSeleccionado="CfdiRelacionarSeleccionado"
     ></SearchCfdi>
     <Password
       :show="openPassword"
@@ -1638,8 +1804,9 @@ export default {
   data() {
     return {
       /**control del buscador de cfdis */
+      tipo_search: "",
       openBuscadorCfdi: false,
-      indexCfdiaPagar: 0,
+      indexCfdiSearch: 0,
       /**control del componente de operaciones */
       openBuscadorOperacion: false,
       /**modificando articulo */
@@ -1695,7 +1862,7 @@ export default {
       tipos_relacion: [
         {
           value: "",
-          label: "N/A",
+          label: "Sin documentos relacionados",
         },
       ],
       claves_sat: [
@@ -1762,7 +1929,7 @@ export default {
         fecha_pago: "",
         tipo_relacion: {
           value: "",
-          label: "N/A",
+          label: "Sin documentos relacionados",
         },
         uso_cfdi: {
           value: "",
@@ -1805,64 +1972,104 @@ export default {
   },
   methods: {
     acceptAlert() {
-      this.$validator
-        .validateAll("form")
-        .then((result) => {
-          if (!result) {
-            this.$vs.notify({
-              title: "Error",
-              text: "Verifique que todos los datos han sido capturados",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              position: "bottom-right",
-              time: "12000",
-            });
-            return;
-          } else {
-            //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
-            (async () => {
-              if (this.getTipoformulario == "facturar") {
-                if (this.form.tipo_comprobante.value == 1) {
-                  /**ingreso */
-                  if (this.form.conceptos.length > 0) {
-                    this.callback = await this.timbrar_cfdi;
-                    this.openPassword = true;
-                  } else {
-                    /**agregue al menos un concepto */
-                    this.$vs.notify({
-                      title: "Error",
-                      text: "Ingrese al menos un concepto a facturar",
-                      iconPack: "feather",
-                      icon: "icon-alert-circle",
-                      color: "danger",
-                      position: "bottom-right",
-                      time: "8000",
-                    });
+      try {
+        this.$validator
+          .validateAll("form")
+          .then((result) => {
+            if (!result) {
+              this.$vs.notify({
+                title: "Error",
+                text: "Verifique que todos los datos han sido capturados",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                position: "bottom-right",
+                time: "12000",
+              });
+              return;
+            } else {
+              //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
+              (async () => {
+                if (this.getTipoformulario == "facturar") {
+                  /**validando que tenga los cfdis_relacionados en caso de aplicar */
+                  if (this.form.tipo_relacion.value > 0) {
+                    if (this.form.cfdis_relacionados.length > 0) {
+                      /**validando que sean del tipo que es el nuevo documento */
+                      this.form.cfdis_relacionados.forEach((element) => {
+                        if (
+                          element.sat_tipo_comprobante_id !=
+                          this.form.tipo_comprobante.value
+                        ) {
+                          this.$vs.notify({
+                            title: "Error",
+                            text:
+                              "Los CFDIs que está relacionando deben ser del mismo tipo que este documento.",
+                            iconPack: "feather",
+                            icon: "icon-alert-circle",
+                            color: "danger",
+                            position: "bottom-right",
+                            time: "8000",
+                          });
+                          /**no aplica porque el cfdi relacionado debe ser del mismo tipo que el que se esta generando */
+                          throw "exit";
+                        }
+                      });
+                    } else {
+                      this.$vs.notify({
+                        title: "Error",
+                        text:
+                          "Ingrese al menos un cfdi para relacionar a este nuevo documento.",
+                        iconPack: "feather",
+                        icon: "icon-alert-circle",
+                        color: "danger",
+                        position: "bottom-right",
+                        time: "8000",
+                      });
+                      throw "exit";
+                    }
                   }
-                } else if (this.form.tipo_comprobante.value == 5) {
-                  /**pago */
-                  if (this.form.cfdis_a_pagar.length > 0) {
-                    this.callback = await this.timbrar_cfdi;
-                    this.openPassword = true;
-                  } else {
-                    /**agregue al menos un concepto */
-                    this.$vs.notify({
-                      title: "Error",
-                      text: "Ingrese al menos un CFDI a pagar",
-                      iconPack: "feather",
-                      icon: "icon-alert-circle",
-                      color: "danger",
-                      position: "bottom-right",
-                      time: "8000",
-                    });
+
+                  if (this.form.tipo_comprobante.value == 1) {
+                    /**ingreso */
+                    if (this.form.conceptos.length > 0) {
+                      this.callback = await this.timbrar_cfdi;
+                      this.openPassword = true;
+                    } else {
+                      /**agregue al menos un concepto */
+                      this.$vs.notify({
+                        title: "Error",
+                        text: "Ingrese al menos un concepto a facturar",
+                        iconPack: "feather",
+                        icon: "icon-alert-circle",
+                        color: "danger",
+                        position: "bottom-right",
+                        time: "8000",
+                      });
+                    }
+                  } else if (this.form.tipo_comprobante.value == 5) {
+                    /**pago */
+                    if (this.form.cfdis_a_pagar.length > 0) {
+                      this.callback = await this.timbrar_cfdi;
+                      this.openPassword = true;
+                    } else {
+                      /**agregue al menos un concepto */
+                      this.$vs.notify({
+                        title: "Error",
+                        text: "Ingrese al menos un CFDI a pagar",
+                        iconPack: "feather",
+                        icon: "icon-alert-circle",
+                        color: "danger",
+                        position: "bottom-right",
+                        time: "8000",
+                      });
+                    }
                   }
                 }
-              }
-            })();
-          }
-        })
-        .catch(() => {});
+              })();
+            }
+          })
+          .catch(() => {});
+      } catch (error) {}
     },
 
     async timbrar_cfdi() {
@@ -2015,8 +2222,13 @@ export default {
       }
     },
 
-    CfdiSeleccionado(datos) {
-      console.log("CfdiSeleccionado -> datos", datos);
+    openBuscadorCfdiPagar(tipo) {
+      this.tipo_search = tipo;
+      this.openBuscadorCfdi = true;
+    },
+
+    CfdiPagarSeleccionado(datos) {
+      console.log("CfdiPagarSeleccionado -> datos", datos);
       /**primero hacemos el agregado de los cfdis */
       let esta_cfdi = false;
       this.form.cfdis_a_pagar.forEach((element) => {
@@ -2066,6 +2278,48 @@ export default {
         this.$vs.notify({
           title: "CFDIs a pagar",
           text: "Ya se encuentra agregado este CFDI para pagar",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "12000",
+        });
+      }
+    },
+    CfdiRelacionarSeleccionado(datos) {
+      /**primero hacemos el agregado de los cfdis */
+      let esta_cfdi = false;
+      this.form.cfdis_relacionados.forEach((element) => {
+        if (element.id == datos.id) {
+          esta_cfdi = true;
+        }
+      });
+
+      if (esta_cfdi == false) {
+        let agregado = false;
+
+        /**se agrega */
+        this.form.cfdis_relacionados.push({
+          id: datos.id,
+          uuid: datos.uuid,
+          cliente_nombre: datos.cliente_nombre,
+          serie: datos.serie,
+          fecha_timbrado_texto: datos.fecha_timbrado_texto,
+          total: datos.total,
+          monto_pago: 0,
+          total_pagado: datos.total_pagado,
+          tipo_comprobante_texto: datos.tipo_comprobante_texto,
+          sat_tipo_comprobante_id: datos.sat_tipo_comprobante_id,
+          rfc_receptor: datos.rfc_receptor,
+          nombre_receptor: datos.nombre_receptor,
+          sat_metodos_pago_texto: datos.sat_metodos_pago_texto,
+          status: datos.status,
+        });
+        agregado = true;
+      } else {
+        this.$vs.notify({
+          title: "CFDIs a relacionar",
+          text: "Ya se encuentra agregado este CFDI para relacionar",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -2356,7 +2610,10 @@ export default {
         .get_tipos_relacion()
         .then((res) => {
           this.tipos_relacion = [];
-          this.tipos_relacion.push({ label: "N/A", value: "" });
+          this.tipos_relacion.push({
+            label: "Sin documentos relacionados",
+            value: "",
+          });
           res.data.forEach((element) => {
             this.tipos_relacion.push({
               label: element.tipo,
@@ -2558,13 +2815,27 @@ export default {
       this.botonConfirmarSinPassword = "eliminar";
       this.accionConfirmarSinPassword =
         "¿Desea quitar este cfdi? no se registrarán los datos del CFDI?";
-      this.indexCfdiaPagar = indextr;
+      this.indexCfdiSearch = indextr;
       this.callBackConfirmar = this.remover_cfdi_a_pagar_callback;
       this.openConfirmarSinPassword = true;
     },
-    //remover el concepto seleccionado
+    //remover el cfdi seleccionado
     remover_cfdi_a_pagar_callback() {
-      this.form.cfdis_a_pagar.splice(this.indexCfdiaPagar, 1);
+      this.form.cfdis_a_pagar.splice(this.indexCfdiSearch, 1);
+    },
+
+    remover_cfdi_a_relacionar(indextr) {
+      this.botonConfirmarSinPassword = "eliminar";
+      this.accionConfirmarSinPassword =
+        "¿Desea quitar este cfdi? no se registrarán los datos del CFDI?";
+      this.indexCfdiSearch = indextr;
+      this.callBackConfirmar = this.remover_cfdi_a_relacionar_callback;
+      this.openConfirmarSinPassword = true;
+    },
+
+    //remover el cfdi seleccionado
+    remover_cfdi_a_relacionar_callback() {
+      this.form.cfdis_relacionados.splice(this.indexCfdiSearch, 1);
     },
 
     //regresa los datos a su estado inicial

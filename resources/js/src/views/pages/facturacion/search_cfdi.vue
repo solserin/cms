@@ -240,6 +240,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    tipo_search: {
+      type: String,
+      required: true,
+    },
   },
   watch: {
     "serverOptions.tipo_comprobante": function (newVal, previousVal) {
@@ -273,6 +277,14 @@ export default {
     showVentana: {
       get() {
         return this.show;
+      },
+      set(newValue) {
+        return newValue;
+      },
+    },
+    getTipo: {
+      get() {
+        return this.tipo_search;
       },
       set(newValue) {
         return newValue;
@@ -462,7 +474,12 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     retornarSeleccion(datos) {
-      this.$emit("CfdiSeleccionado", datos);
+      if (this.getTipo == "pagar") {
+        this.$emit("CfdiPagarSeleccionado", datos);
+      } else if (this.getTipo == "relacionar") {
+        this.$emit("CfdiRelacionarSeleccionado", datos);
+      }
+
       this.$emit("closeBuscador");
     },
   },
