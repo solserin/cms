@@ -1126,37 +1126,32 @@
             </label>
             <v-select
               data-vv-scope="conceptos"
+              v-validate:descuento_b_validacion_computed.immediate="'required'"
+              name="descuento_b"
               :options="sino"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="form.descuento_b"
               class="mb-4 sm:mb-0 pb-1 pt-1"
-              name="descuento_b"
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
             <div>
-              <span class="text-danger">
-                {{ errors.first("conceptos.descuento_b") }}
-              </span>
-            </div>
-            <div class="mt-2">
               <span
                 class="text-danger"
-                v-if="this.errores['descuento_b.value']"
-                >{{ errores["descuento_b.value"][0] }}</span
+                v-if="errors.first('conceptos.descuento_b')"
               >
+                Seleccione una opción
+              </span>
             </div>
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
-            v-if="form.descuento_b.value == 1"
-          >
+          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
             <label class="text-sm opacity-75 font-bold"
               >$ Precio con Descuento
               <span class="texto-importante">(*)</span></label
             >
             <vs-input
+              :disabled="form.descuento_b.value == 1 ? false : true"
               data-vv-as="Precio con descuento"
               data-vv-scope="conceptos"
               name="precio_descuento"
@@ -1182,25 +1177,6 @@
                 errores.precio_descuento[0]
               }}</span>
             </div>
-          </div>
-          <div
-            class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2"
-            v-else
-          >
-            <label class="text-sm opacity-75 font-bold"
-              >$ Precio con Descuento
-            </label>
-            <vs-input
-              :disabled="true"
-              data-vv-as="Precio con descuento"
-              data-vv-scope="conceptos"
-              name="precio_descuento"
-              maxlength="10"
-              type="text"
-              class="w-full pb-1 pt-1"
-              placeholder="Precio con el descuento"
-              value="N/A"
-            />
           </div>
           <div
             class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 md:text-right"
@@ -1620,7 +1596,7 @@ export default {
   },
   watch: {
     show: function (newValue, oldValue) {
-      this.limpiarValidation();
+      this.limpiarValidationConcepto();
       if (newValue == true) {
         this.$nextTick(() => {
           //this.$refs["fallecido_ref"].$el.querySelector("input").focus();
@@ -1745,6 +1721,10 @@ export default {
       }
 
       return total;
+    },
+
+    descuento_b_validacion_computed: function () {
+      return this.form.descuento_b.value;
     },
 
     sat_pais_validacion_computed: function () {
@@ -2356,7 +2336,7 @@ export default {
               precio_descuento: this.form.precio_descuento,
               modifica_b: 1,
               concepto_operacion_ver_b: 1,
-              concepto_operacion_id: 0,
+              concepto_operacion_id: "",
             });
             this.LimpiarAddArticulo();
           }
@@ -2431,10 +2411,10 @@ export default {
       this.form.cantidad = "";
       this.form.descripcion = "";
       this.form.precio_neto = "";
-      this.form.descuento_b = this.sino[1];
       this.form.precio_descuento = "";
       this.indextrArticuloRemoviendo = "";
-      this.limpiarValidation();
+      this.form.descuento_b = this.sino[1];
+      this.limpiarValidationConcepto();
     },
 
     //remover beneficiario
@@ -2842,7 +2822,7 @@ export default {
     //regresa los datos a su estado inicial
     limpiarVentana() {},
 
-    limpiarValidation() {
+    limpiarValidationConcepto() {
       this.$nextTick(() => {
         let matcher = {
           scope: "conceptos",

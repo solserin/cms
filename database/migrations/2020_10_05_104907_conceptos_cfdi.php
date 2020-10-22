@@ -27,7 +27,7 @@ class ConceptosCfdi extends Migration
             $table->unsignedDecimal('descuento', 10, 2);
             $table->unsignedBigInteger('sat_unidades_id')->unsigned();
             $table->foreign('sat_unidades_id')->references('id')->on('sat_unidades');
-            $table->unsignedBigInteger('concepto_operacion_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('concepto_operacion_id')->nullable();
             $table->foreign('concepto_operacion_id')->references('id')->on('operaciones');
             $table->tinyInteger('concepto_operacion_ver_b')->unsigned();
             $table->tinyInteger('modifica_b')->unsigned();

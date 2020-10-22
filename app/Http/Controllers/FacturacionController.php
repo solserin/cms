@@ -766,6 +766,7 @@ class FacturacionController extends ApiController
                 }
                 /**GUARDANDO CONCEPTOS DEL CFDI */
                 if (isset($request->conceptos)) {
+                    //return $request->conceptos;
                     if (count($request->conceptos) > 0) {
                         /**tiene conceptos */
                         foreach ($request->conceptos as $key => $concepto) {
@@ -1064,7 +1065,6 @@ class FacturacionController extends ApiController
                         $total = $xml_timbrado['Comprobante']['Total'];
                     } else if ($request->tipo_comprobante['value'] == '2') {
                         /**egregso */
-
                     } else {
                         if ($request->tipo_comprobante['value'] == '5') {
                             /**pago */
@@ -1105,7 +1105,8 @@ class FacturacionController extends ApiController
         } catch (\Throwable $th) {
             /**regreso el id de la base de datos que se iba consumir */
             $this->regresar_bd_folio();
-            return $th;
+            return $this->errorResponse('Error al guardar en la base de datos.', 409);
+            //return $th;
         }
 
     }
@@ -1135,12 +1136,16 @@ class FacturacionController extends ApiController
         if (File::exists($folio_xml)) {
             $xml = simplexml_load_file($folio_xml);
         } else {
-            return $this->errorResponse('El xml que indicó no existe.', 409);
+            return $this->errorResponse('El xml que indicó no existe en la base de datos.', 409);
         }
 
         /**se trae la informacion del cfdi de la bd */
 
         $cfdi = Cfdis::where('id', '=', $id_folio_cfdi)->first();
+
+        if (is_null($cfdi)) {
+            return $this->errorResponse('El xml que indicó no existe.', 409);
+        }
 
         $tasa_iva = number_format((float) round($cfdi->tasa_iva / 100, 2), 6, '.', '');
 
