@@ -467,22 +467,23 @@ class FacturacionController extends ApiController
 
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
-            'cfdi:Emisor'      => [
+            'cfdi:CfdiRelacionados' => $request->array_cfdis_a_relacionar_xml,
+            'cfdi:Emisor'           => [
                 '_attributes' => [
                     'RegimenFiscal' => '601',
                     'Rfc'           => ENV('APP_ENV') == 'local' ? 'LAN7008173R5' : strtoupper($datos_funeraria['rfc']),
                     'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
                 ],
             ],
-            'cfdi:Receptor'    => [
+            'cfdi:Receptor'         => [
                 '_attributes' => [
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
                     'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
                     'UsoCFDI' => $uso_cfdi['clave'],
                 ],
             ],
-            'cfdi:Conceptos'   => $conceptos,
-            'cfdi:Impuestos'   => [
+            'cfdi:Conceptos'        => $conceptos,
+            'cfdi:Impuestos'        => [
                 '_attributes'    => [
                     'TotalImpuestosTrasladados' => number_format((float) round($iva_trasladado, 2), 2, '.', ''),
                 ],
@@ -497,7 +498,7 @@ class FacturacionController extends ApiController
                     ],
                 ],
             ],
-            'cfdi:Complemento' => [
+            'cfdi:Complemento'      => [
                 'pago10:Pagos' => [
                     '_attributes' => [
                         'Version' => '1.0',
@@ -555,6 +556,12 @@ class FacturacionController extends ApiController
             'Version'            => '3.3',
             'xsi:schemaLocation' => $schema_location,
         ];
+
+        /**removiendo cfdis relacionados en caso de no aplica */
+        if ($request->tipo_relacion['value'] <= 0) {
+            /**no hay relacioandos y se quita el nodo */
+            unset($array['cfdi:CfdiRelacionados']);
+        }
 
         if ($request->tipo_comprobante['value'] != '5') {
             unset($comprobante['xmlns:pago10']);
@@ -922,7 +929,61 @@ class FacturacionController extends ApiController
                 }
             }
 
-            /**GUARDANDO CFDIS RELACIONADOS PENDIENTES */
+            /**GUARDANDO CFDIS RELACIONADOS A ESTE NUEVO DOCUMENTO*/
+            /**aqui voy */
+            $array_cfdis_a_relacionar_xml = [];
+
+            if ($request->tipo_relacion['value'] > 0) {
+                if (count($request->cfdis_relacionados) > 0) {
+                    $tipo_relacion = TiposRelacion::where('id', '=', $request->tipo_relacion['value'])->first();
+                    if (is_null($tipo_relacion)) {
+                        return 'No se encontró el tipo de relación que se está utilizando.';
+                    }
+
+                    $array_cfdis_a_relacionar_xml = [
+                        '_attributes'          => [
+                            'TipoRelacion' => $tipo_relacion['clave'],
+                        ],
+                        'cfdi:CfdiRelacionado' => [],
+                    ];
+                    /**tiene cfdis relacionados */
+                    foreach ($request->cfdis_relacionados as $key => $cfdi_relacionado) {
+                        /**validando los documentos relacionados */
+                        if (isset($cfdi_relacionado['id']) && isset($cfdi_relacionado['uuid']) && isset($cfdi_relacionado['sat_tipo_comprobante_id'])) {
+                            if ($cfdi_relacionado['sat_tipo_comprobante_id'] == $request->tipo_comprobante['value']) {
+                                /**guardamos en la base de datos */
+                                DB::table('cfdis_tipo_relacion')->insert(
+                                    [
+                                        'cfdis_id'             => $folio_para_asignar,
+                                        'cfdis_id_relacionado' => $cfdi_relacionado['id'],
+                                        'tipo_relacion_id'     => 1, //de tipo relacion sat
+                                        'sat_metodos_pago_id'  => $cfdi_relacionado['sat_metodos_pago_id'],
+                                    ]
+                                );
+                                /**agregamos al array que mandaremos al generar el xml */
+                                array_push($array_cfdis_a_relacionar_xml['cfdi:CfdiRelacionado'], [
+                                    '_attributes' => [
+                                        'UUID' => $cfdi_relacionado['uuid'],
+                                    ],
+                                ]);
+                            } else {
+                                /**regreso el id de la base de datos que se iba consumir */
+                                $this->regresar_bd_folio();
+                                return $this->errorResponse('El tipo de cfdi a relacionar debe ser del mismo tipo que el nuevo documento.', 409);
+                            }
+                        } else {
+                            /**regreso el id de la base de datos que se iba consumir */
+                            $this->regresar_bd_folio();
+                            return $this->errorResponse('Ingrese el folio, uuid y tipo del cfdi a relacionar.', 409);
+                        }
+                    }
+                    /**mando el arreglo listo para push al array de generar xml */
+                    $request->merge([
+                        'array_cfdis_a_relacionar_xml' => $array_cfdis_a_relacionar_xml,
+                    ]);
+
+                }
+            }
 
             header('Content-type: text/html; charset=utf-8');
             try {
@@ -1091,6 +1152,25 @@ class FacturacionController extends ApiController
         $comprobante = $xml->xpath('//cfdi:Comprobante')[0];
         $emisor      = $xml->xpath('//cfdi:Emisor')[0];
         $receptor    = $xml->xpath('//cfdi:Receptor')[0];
+
+        $relacionados      = $xml->xpath('//cfdi:CfdiRelacionados');
+        $CfdisRelacionados = [];
+        if (isset($relacionados[0])) {
+            $tipo_relacion = TiposRelacion::where('clave', '=', (string) $relacionados[0]['TipoRelacion'])->first();
+            if (is_null($tipo_relacion)) {
+                return $this->errorResponse('No se encontró el tipo de relación que se está utilizando en el xml.', 409);
+            }
+            $CfdisRelacionados['TipoRelacion']      = (string) $relacionados[0]['TipoRelacion'];
+            $CfdisRelacionados['TipoRelacionTexto'] = $tipo_relacion['tipo'];
+            $CfdisRelacionados['CfdiRelacionado']   = [];
+
+            foreach ($xml->xpath('//cfdi:CfdiRelacionados//cfdi:CfdiRelacionado') as $relacionado) {
+                array_push($CfdisRelacionados['CfdiRelacionado'], [
+                    'UUID' => (string) $relacionado['UUID'],
+                ]);
+            }
+        }
+
         /**determinando el regimen */
         $regimen  = SATRegimenes::select('regimen')->where('clave', (string) $emisor['RegimenFiscal'])->first();
         $uso_cfdi = SatUsosCfdi::select('uso')->where('clave', (string) $receptor['UsoCFDI'])->first();
@@ -1207,7 +1287,7 @@ class FacturacionController extends ApiController
 
         /**se crea el arreglo con la informacion del xml */
         $comprobante_cfdi = [
-            'Comprobante'    => [
+            'Comprobante'       => [
                 'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
                 'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
                 'xmlns:pago10'       => 'http://www.sat.gob.mx/Pagos',
@@ -1230,24 +1310,25 @@ class FacturacionController extends ApiController
                 'Version'            => (string) $comprobante['Version'],
                 'xsi:schemaLocation' => $schema_location,
             ],
-            'Emisor'         => [
+            'CfdisRelacionados' => $CfdisRelacionados,
+            'Emisor'            => [
                 'Rfc'           => (string) $emisor['Rfc'],
                 'Nombre'        => (string) $emisor['Nombre'],
                 'RegimenFiscal' => $regimen != null ? (string) $emisor['RegimenFiscal'] . ' (' . $regimen['regimen'] . ')' : '',
             ],
-            'Receptor'       => [
+            'Receptor'          => [
                 'Rfc'     => (string) $receptor['Rfc'],
                 'Nombre'  => (string) $receptor['Nombre'],
                 'UsoCFDI' => $uso_cfdi != null ? (string) $receptor['UsoCFDI'] . ' (' . $uso_cfdi['uso'] . ')' : '',
             ],
-            'Conceptos'      => $conceptos,
-            'Impuestos'      => [
+            'Conceptos'         => $conceptos,
+            'Impuestos'         => [
                 'TotalImpuestosTrasladados' => $total_impuestos_trasladados,
                 'Traslados'                 => [
                     'Traslado' => $impuestos_trasladados,
                 ],
             ],
-            'Complemento'    => [
+            'Complemento'       => [
                 'TimbreFiscalDigital' => [
                     'xmlns:tfd'          => 'http://www.sat.gob.mx/TimbreFiscalDigital',
                     'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
@@ -1261,9 +1342,14 @@ class FacturacionController extends ApiController
                     'xsi:schemaLocation' => 'http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd',
                 ],
             ],
-            'CadenaOriginal' => $cfdi->cadena_original,
-            'CodigoQr'       => $codigo_qr,
+            'CadenaOriginal'    => $cfdi->cadena_original,
+            'CodigoQr'          => $codigo_qr,
         ];
+
+        /**removiendo el nodo de $CfdisRelacionados en cado de no llevar documentos relaciondos*/
+        if ($CfdisRelacionados == null) {
+            unset($comprobante_cfdi['CfdisRelacionados']);
+        }
 
         if ((string) $comprobante['TipoDeComprobante'] == 'P') {
             unset($comprobante_cfdi['Comprobante']['MetodoPago']);

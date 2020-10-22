@@ -2312,6 +2312,7 @@ export default {
           sat_tipo_comprobante_id: datos.sat_tipo_comprobante_id,
           rfc_receptor: datos.rfc_receptor,
           nombre_receptor: datos.nombre_receptor,
+          sat_metodos_pago_id: datos.sat_metodos_pago_id,
           sat_metodos_pago_texto: datos.sat_metodos_pago_texto,
           status: datos.status,
         });
