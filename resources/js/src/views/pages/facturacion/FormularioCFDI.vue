@@ -178,7 +178,7 @@
             <v-select
               data-vv-scope="form"
               v-validate:uso_cfdi_validacion_computed.immediate="'required'"
-              :disabled="form.tipo_comprobante.value > 1"
+              :disabled="form.tipo_comprobante.value == 5"
               :options="usos_cfdi"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -207,6 +207,10 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              data-vv-scope="form"
+              v-validate:tipo_relacion_validacion_computed.immediate="
+                'required'
+              "
               :options="tipos_relacion"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -216,6 +220,14 @@
             >
               <div slot="no-options">Seleccione 1</div>
             </v-select>
+            <div>
+              <span
+                class="text-danger"
+                v-if="errors.first('form.tipo_relacion')"
+              >
+                Seleccione el uso del CFDI
+              </span>
+            </div>
           </div>
         </div>
 
@@ -610,9 +622,7 @@
                           <vs-td>
                             <div class="capitalize">
                               {{
-                                (data[indextr].total -
-                                  data[indextr].total_pagado)
-                                  | numFormat("0,000.00")
+                                data[indextr].saldo_cfdi | numFormat("0,000.00")
                               }}
                             </div>
                           </vs-td>
@@ -773,7 +783,7 @@
                             <div class="capitalize">
                               {{
                                 (data[indextr].total -
-                                  data[indextr].total_pagado)
+                                  data[indextr].total_cubierto)
                                   | numFormat("0,000.00")
                               }}
                             </div>
@@ -789,7 +799,7 @@
                                 0.01 +
                                 '|max_value:' +
                                 (form.cfdis_a_pagar[indextr].total -
-                                  form.cfdis_a_pagar[indextr].total_pagado)
+                                  form.cfdis_a_pagar[indextr].total_cubierto)
                               "
                               class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
                               maxlength="8"
@@ -805,7 +815,7 @@
                             <div class="capitalize">
                               {{
                                 (data[indextr].total -
-                                  data[indextr].total_pagado -
+                                  data[indextr].total_cubierto -
                                   data[indextr].monto_pago)
                                   | numFormat("0,000.00")
                               }}
@@ -958,7 +968,9 @@
 
         <div
           class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 md:text-right"
-          v-if="form.tipo_comprobante.value == 1"
+          v-if="
+            form.tipo_comprobante.value != 5 && form.tipo_comprobante.value > 0
+          "
         >
           <div class="float-left pb-2 px-2 mt-6">
             <img width="36px" src="@assets/images/articulos.svg" />
@@ -968,11 +980,21 @@
           </div>
         </div>
 
-        <div class="w-full px-2" v-if="form.tipo_comprobante.value == 1">
+        <div
+          class="w-full px-2"
+          v-if="
+            form.tipo_comprobante.value != 5 && form.tipo_comprobante.value > 0
+          "
+        >
           <vs-divider />
         </div>
 
-        <div class="flex flex-wrap" v-if="form.tipo_comprobante.value == 1">
+        <div
+          class="flex flex-wrap"
+          v-if="
+            form.tipo_comprobante.value != 5 && form.tipo_comprobante.value > 0
+          "
+        >
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
             <label class="text-sm opacity-75 font-bold">
               <span>Clave de Producto o Servicio</span>
@@ -1125,6 +1147,7 @@
               <span class="texto-importante">(*)</span>
             </label>
             <v-select
+              :disabled="form.tipo_comprobante.value == 2"
               data-vv-scope="conceptos"
               v-validate:descuento_b_validacion_computed.immediate="'required'"
               name="descuento_b"
@@ -1355,9 +1378,15 @@
             </div>
           </div>
         </div>
-        <div class="w-full px-2" v-if="form.tipo_comprobante.value == 1">
+        <div
+          class="w-full px-2"
+          v-if="
+            form.tipo_comprobante.value != 5 && form.tipo_comprobante.value > 0
+          "
+        >
           <vs-divider />
         </div>
+        <div class="w-full px-2 mt-10" v-else></div>
         <div class="flex flex-wrap">
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
             <vx-card no-radius>
@@ -1637,6 +1666,11 @@ export default {
           this.form.forma_pago = this.formas_pago[0];
         }
         this.form.uso_cfdi = this.usos_cfdi[this.usos_cfdi.length - 1];
+
+        if (newValue.value == 2) {
+          /**egreso */
+          this.form.descuento_b = this.sino[1];
+        }
       } else {
         this.form.metodo_pago = this.metodos_pago[0];
       }
@@ -1744,6 +1778,15 @@ export default {
 
     uso_cfdi_validacion_computed: function () {
       return this.form.uso_cfdi.value;
+    },
+
+    tipo_relacion_validacion_computed: function () {
+      if (this.form.tipo_comprobante.value == 2) {
+        /**egreso */
+        return this.form.tipo_relacion.value;
+      } else {
+        return true;
+      }
     },
 
     clave_sat_validacion_computed: function () {
@@ -2232,7 +2275,7 @@ export default {
               fecha_timbrado_texto: datos.fecha_timbrado_texto,
               total: datos.total,
               monto_pago: 0,
-              total_pagado: datos.total_pagado,
+              total_cubierto: datos.total_cubierto,
               tipo_comprobante_texto: datos.tipo_comprobante_texto,
               rfc_receptor: datos.rfc_receptor,
               nombre_receptor: datos.nombre_receptor,
@@ -2287,7 +2330,7 @@ export default {
           fecha_timbrado_texto: datos.fecha_timbrado_texto,
           total: datos.total,
           monto_pago: 0,
-          total_pagado: datos.total_pagado,
+          total_cubierto: datos.total_cubierto,
           tipo_comprobante_texto: datos.tipo_comprobante_texto,
           sat_tipo_comprobante_id: datos.sat_tipo_comprobante_id,
           rfc_receptor: datos.rfc_receptor,

@@ -20,13 +20,24 @@ class Cfdis extends Model
 
     public function pagos_asociados()
     {
-        /**relacion por pago o nota de egreso*/
+        /**relacion por pago*/
         return $this
             ->hasMany('App\CfdisTipoRelacion', 'cfdis_id_relacionado', 'id')
             ->join('cfdis', 'cfdis.id', '=', 'cfdis_tipo_relacion.cfdis_id')
             ->select('cfdis_id', 'tipo_relacion_id', 'cfdis.uuid', 'tipo_relacion_id', 'cfdis_tipo_relacion.sat_metodos_pago_id', 'monto_relacion', 'cfdis.status', 'sat_tipo_comprobante_id', 'cfdis_tipo_relacion.cfdis_id_relacionado')
-            ->where('tipo_relacion_id', '<>', 1);
-        /**diferente de ingreso */
+            ->where('tipo_relacion_id', '=', 2);
+        /**solo pagos */
+    }
+
+    public function egresos_asociados()
+    {
+        /**relacion por nota de egreso*/
+        return $this
+            ->hasMany('App\CfdisTipoRelacion', 'cfdis_id_relacionado', 'id')
+            ->join('cfdis', 'cfdis.id', '=', 'cfdis_tipo_relacion.cfdis_id')
+            ->select('cfdis_id', 'tipo_relacion_id', 'cfdis.uuid', 'tipo_relacion_id', 'cfdis_tipo_relacion.sat_metodos_pago_id', 'monto_relacion', 'cfdis.status', 'sat_tipo_comprobante_id', 'cfdis_tipo_relacion.cfdis_id_relacionado')
+            ->where('tipo_relacion_id', '=', 3);
+        /**solo egresos */
     }
 
     public function cfdis_relacionados()
