@@ -782,9 +782,7 @@
                           <vs-td>
                             <div class="capitalize">
                               {{
-                                (data[indextr].total -
-                                  data[indextr].total_cubierto)
-                                  | numFormat("0,000.00")
+                                data[indextr].saldo_cfdi | numFormat("0,000.00")
                               }}
                             </div>
                           </vs-td>
@@ -798,8 +796,7 @@
                                 'required|decimal:2|min_value:' +
                                 0.01 +
                                 '|max_value:' +
-                                (form.cfdis_a_pagar[indextr].total -
-                                  form.cfdis_a_pagar[indextr].total_cubierto)
+                                form.cfdis_a_pagar[indextr].saldo_cfdi
                               "
                               class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto mt-1 cantidad"
                               maxlength="8"
@@ -814,8 +811,7 @@
                           <vs-td>
                             <div class="capitalize">
                               {{
-                                (data[indextr].total -
-                                  data[indextr].total_cubierto -
+                                (data[indextr].saldo_cfdi -
                                   data[indextr].monto_pago)
                                   | numFormat("0,000.00")
                               }}
@@ -1184,10 +1180,13 @@
               placeholder="Precio con el descuento"
               v-model="form.precio_descuento"
               v-validate="
-                'required|decimal:2|min_value:' +
-                0 +
-                '|max_value:' +
-                form.precio_neto
+                form.tipo_comprobante.value == 1 && form.descuento_b.value == 1
+                  ? 'required|'
+                  : '' +
+                    'decimal:2|min_value:' +
+                    0 +
+                    '|max_value:' +
+                    form.precio_neto
               "
             />
             <div>
@@ -2017,26 +2016,64 @@ export default {
                   /**validando que tenga los cfdis_relacionados en caso de aplicar */
                   if (this.form.tipo_relacion.value > 0) {
                     if (this.form.cfdis_relacionados.length > 0) {
-                      /**validando que sean del tipo que es el nuevo documento */
-                      this.form.cfdis_relacionados.forEach((element) => {
-                        if (
-                          element.sat_tipo_comprobante_id !=
-                          this.form.tipo_comprobante.value
-                        ) {
+                      if (
+                        this.form.tipo_comprobante.value == 1 ||
+                        this.form.tipo_comprobante.value == 5
+                      ) {
+                        /**es pago o ingreso */
+                        /**validando que sean del tipo que es el nuevo documento */
+                        this.form.cfdis_relacionados.forEach((element) => {
+                          if (
+                            element.sat_tipo_comprobante_id !=
+                            this.form.tipo_comprobante.value
+                          ) {
+                            this.$vs.notify({
+                              title: "Error",
+                              text:
+                                "Los CFDIs que está relacionando deben ser del mismo tipo que este documento.",
+                              iconPack: "feather",
+                              icon: "icon-alert-circle",
+                              color: "danger",
+                              position: "bottom-right",
+                              time: "8000",
+                            });
+                            /**no aplica porque el cfdi relacionado debe ser del mismo tipo que el que se esta generando */
+                            throw "exit";
+                          }
+                        });
+                      } else {
+                        /**es egreso y se debe validar que el documento relacionado sea de tipo ingreso y que sea solo un documento */
+                        if (this.form.cfdis_relacionados.length == 1) {
+                          if (
+                            this.form.cfdis_relacionados[0]
+                              .sat_tipo_comprobante_id != 1
+                          ) {
+                            this.$vs.notify({
+                              title: "Error",
+                              text:
+                                "Ingrese un cfdi de tipo ingreso para aplicar Egresos o Nota de Crédito.",
+                              iconPack: "feather",
+                              icon: "icon-alert-circle",
+                              color: "danger",
+                              position: "bottom-right",
+                              time: "8000",
+                            });
+                            throw "exit";
+                          }
+                        } else {
                           this.$vs.notify({
                             title: "Error",
                             text:
-                              "Los CFDIs que está relacionando deben ser del mismo tipo que este documento.",
+                              "Ingrese solo un cfdi para relacionar a este nuevo documento.",
                             iconPack: "feather",
                             icon: "icon-alert-circle",
                             color: "danger",
                             position: "bottom-right",
                             time: "8000",
                           });
-                          /**no aplica porque el cfdi relacionado debe ser del mismo tipo que el que se esta generando */
                           throw "exit";
                         }
-                      });
+                      }
                     } else {
                       this.$vs.notify({
                         title: "Error",
@@ -2052,7 +2089,10 @@ export default {
                     }
                   }
 
-                  if (this.form.tipo_comprobante.value == 1) {
+                  if (
+                    this.form.tipo_comprobante.value == 1 ||
+                    this.form.tipo_comprobante.value == 2
+                  ) {
                     /**ingreso */
                     if (this.form.conceptos.length > 0) {
                       this.callback = await this.timbrar_cfdi;
@@ -2275,7 +2315,7 @@ export default {
               fecha_timbrado_texto: datos.fecha_timbrado_texto,
               total: datos.total,
               monto_pago: 0,
-              total_cubierto: datos.total_cubierto,
+              saldo_cfdi: datos.saldo_cfdi,
               tipo_comprobante_texto: datos.tipo_comprobante_texto,
               rfc_receptor: datos.rfc_receptor,
               nombre_receptor: datos.nombre_receptor,
@@ -2330,7 +2370,7 @@ export default {
           fecha_timbrado_texto: datos.fecha_timbrado_texto,
           total: datos.total,
           monto_pago: 0,
-          total_cubierto: datos.total_cubierto,
+          saldo_cfdi: datos.saldo_cfdi,
           tipo_comprobante_texto: datos.tipo_comprobante_texto,
           sat_tipo_comprobante_id: datos.sat_tipo_comprobante_id,
           rfc_receptor: datos.rfc_receptor,

@@ -20,7 +20,7 @@
                   Descuento="0.00"
                   TipoCambio="1"
                   LugarExpedicion="45079">
-    <cfdi:CfdiRelacionados TipoRelacion="01">
+    <cfdi:CfdiRelacionados ="01">
         <cfdi:CfdiRelacionado UUID="5CB8D806-7BDF-4D24-AC4C-4C469EB4F57A" />
     </cfdi:CfdiRelacionados>
     <cfdi:Emisor Rfc="LAHH850905BZ4"

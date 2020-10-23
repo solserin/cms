@@ -356,16 +356,22 @@ class FacturacionController extends ApiController
         $conceptos['cfdi:Concepto'] = [];
 
         /**VERIFICANDO QUE TIPO DE COMPROBANTE SE VA A REALIZAR */
-        if ($request->tipo_comprobante['value'] == '1') {
-/**validnado que tenga conceptos si es de tipo ingreso */
+        if ($request->tipo_comprobante['value'] == '1' || $request->tipo_comprobante['value'] == '2') {
+/**validnado que tenga conceptos si es de tipo ingreso o egreso */
 
             if (count($request->conceptos) == 0) {
                 /**no hay conceptos y no se puede seguir con el timbrado */
                 return 'Se deben agregar conceptos para el CFDI.';
             }
 
-            $serie = 'I';
-            /**ingreso */
+            if ($request->tipo_comprobante['value'] == '1') {
+                /**ingreso */
+                $serie = 'I';
+            } else {
+                /**egreso */
+                $serie = 'E';
+            }
+
             /**CREANDO LOS NODOS DE CONCEPTO */
             foreach ($request->conceptos as $key => $concepto) {
                 //cargo la clave del sat
@@ -437,9 +443,6 @@ class FacturacionController extends ApiController
                     unset($conceptos['cfdi:Concepto'][count($conceptos['cfdi:Concepto']) - 1]['_attributes']['Descuento']);
                 }
             }
-        } else if ($request->tipo_comprobante['value'] == '2') {
-            /**egreso */
-            $serie = 'E';
         } else if ($request->tipo_comprobante['value'] == '5') {
             /**pago */
             $serie = 'P';
@@ -517,17 +520,13 @@ class FacturacionController extends ApiController
             ],
         ];
 
-        if ($request->tipo_comprobante['value'] == '5') {
-            /**pago */
-        }
-
         /**AQUI AGREGO LOS PAGOS QUE SE GENERARON */
         $numero_serie = 0;
         if ($request->tipo_comprobante['value'] == 1) {
             $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
             $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 1)->count();
         } else if ($request->tipo_comprobante['value'] == 2) {
-            $schema_location = '';
+            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
             $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 2)->count();
         } else {
             if ($request->tipo_comprobante['value'] == 5) {
@@ -700,7 +699,11 @@ class FacturacionController extends ApiController
                 }
             }
         } else if ($request->tipo_comprobante['value'] == '5') {
-
+            /**es pago */
+        } else if ($request->tipo_comprobante['value'] == '2') {
+            /**es egreso */
+        } else {
+            return $this->errorResponse('el tipo de comprobante no es válido', 409);
         }
 
         /**procede con las validaciones y se hace la insercion de la transanccion en la base de datos */
@@ -748,6 +751,9 @@ class FacturacionController extends ApiController
                 ]
             );
 
+            /**total a egresar en caso de aplicar */
+            $total_a_egresar = 0;
+
             if ($request->tipo_comprobante['value'] == 1) {
                 /**ingreso */
                 /**GUARDANDO OPERACIONES RELACIONADAS */
@@ -775,8 +781,7 @@ class FacturacionController extends ApiController
                             $ValorUnitarioPrecioNeto      = (float) ($concepto['precio_neto'] / (1 + ($request->tasa_iva / 100)));
                             $ValorUnitarioPrecioDescuento = $concepto['precio_descuento'] / (1 + ($request->tasa_iva / 100));
                             $descuento_concepto           = $concepto['descuento_b']['value'] == 1 ? ($ValorUnitarioPrecioNeto - $ValorUnitarioPrecioDescuento) : 0;
-
-                            $valor_unitario_real = $concepto['descuento_b']['value'] == 1 ? $ValorUnitarioPrecioDescuento : $ValorUnitarioPrecioNeto;
+                            $valor_unitario_real          = $concepto['descuento_b']['value'] == 1 ? $ValorUnitarioPrecioDescuento : $ValorUnitarioPrecioNeto;
                             DB::table('conceptos_cfdi')->insert(
                                 [
                                     'sat_productos_servicios_id' => $concepto['clave_sat']['value'],
@@ -813,6 +818,11 @@ class FacturacionController extends ApiController
                             if (isset($cfdi['id'])) {
                                 array_push($cfdis_a_pagar, $cfdi['id']);
                                 $total_comprobante_pago += $cfdi['monto_pago'];
+                                if ($cfdi['status'] != 1) {
+                                    /**no se puden pagar cfdis que no estan activos */
+                                    $this->regresar_bd_folio();
+                                    return $this->errorResponse('Revise que los cfdis que va a pagar no estén cancelados', 409);
+                                }
                             } else {
                                 /**regreso el id de la base de datos que se iba consumir */
                                 $this->regresar_bd_folio();
@@ -824,12 +834,14 @@ class FacturacionController extends ApiController
                          */
                         $cfdis_de_bd = Cfdis::select(
                             'status',
+                            'rfc_receptor',
                             'uuid',
                             'id',
                             'total',
                             'sat_tipo_comprobante_id',
                             'sat_metodos_pago_id'
                         )->with('pagos_asociados')
+                            ->with('egresos_asociados')
                             ->whereIn('id', $cfdis_a_pagar)->get();
 
                         if (count($cfdis_de_bd) == 0) {
@@ -840,31 +852,42 @@ class FacturacionController extends ApiController
 
                         /**creo el array con los pagos relacionados del xml */
                         $array_cfdis_a_pagar_xml = [];
-                        $o                       = 0;
 
                         /**validamos que todo esté segun las validaciones del SAT */
                         foreach ($cfdis_de_bd as $key => $cfdi_bd) {
                             if ($cfdi_bd['sat_tipo_comprobante_id'] == 1 && $cfdi_bd['sat_metodos_pago_id'] == 2) {
                                 /**se procede con el pago, al ser un cfdi de tipo ingreso y ppd */
-                                $total_cubierto     = 0;
+                                $total_pagado       = 0;
                                 $numero_parcialidad = 1;
                                 foreach ($cfdi_bd['pagos_asociados'] as $key_pago => $pago) {
                                     if ($pago['status'] == 1) {
                                         /**pago activo */
-                                        $total_cubierto += $pago['monto_relacion'];
+                                        $total_pagado += $pago['monto_relacion'];
                                         if ($pago['tipo_relacion_id'] == 2) {
                                             /**solo para relacion de tipo pago */
                                             $numero_parcialidad++;
                                         }
                                     }
                                 }
+                                $total_egresado = 0;
+                                foreach ($cfdi_bd['egresos_asociados'] as $key_egreso => $egreso) {
+                                    if ($egreso['status'] == 1) {
+                                        /**pago activo */
+                                        $total_egresado += $egreso['monto_relacion'];
+                                    }
+                                }
 
                                 foreach ($request->cfdis_a_pagar as $key_pagar => $cfdi_pagar) {
                                     if ($cfdi_pagar['id'] == $cfdi_bd['id']) {
-                                        $o++;
+                                        /**valido qie el rfc del receptor es igual al rfc del cfdi a pagar */
+                                        if ($cfdi_bd['rfc_receptor'] != $request->rfc) {
+                                            $this->regresar_bd_folio();
+                                            return $this->errorResponse('El RFC del receptor debe ser igual al CFDI a pagar.', 409);
+                                        }
 
                                         if ($cfdi_pagar['monto_pago'] > 0) {
-                                            if (($total_cubierto + $cfdi_pagar['monto_pago']) <= $cfdi_bd['total']) {
+                                            /**validando que el monto a abonar sea menor o igual al total menos el total pagado y egresado */
+                                            if (($total_pagado + $cfdi_pagar['monto_pago'] + $total_egresado) <= $cfdi_bd['total']) {
                                                 /**procede la relacion del cfdi para pago */
                                                 DB::table('cfdis_tipo_relacion')->insert(
                                                     [
@@ -879,26 +902,25 @@ class FacturacionController extends ApiController
                                                 $metodo_pago = MetodosPago::where('id', '=', $cfdi_bd['sat_metodos_pago_id'])->first();
                                                 if (is_null($metodo_pago)) {
                                                     $this->regresar_bd_folio();
-                                                    return 'No se encontró el método de pago que se está utilizando.';
+                                                    return $this->errorResponse('No se encontró el método de pago que se está utilizando.', 409);
                                                 }
                                                 array_push($array_cfdis_a_pagar_xml, [
                                                     '_attributes' => [
                                                         'Folio'            => $cfdi_bd['id'],
                                                         'IdDocumento'      => $cfdi_bd['uuid'],
                                                         'ImpPagado'        => $cfdi_pagar['monto_pago'],
-                                                        'ImpSaldoAnt'      => $cfdi_bd['total'] - $total_cubierto,
-                                                        'ImpSaldoInsoluto' => $cfdi_bd['total'] - $total_cubierto - $cfdi_pagar['monto_pago'],
+                                                        'ImpSaldoAnt'      => $cfdi_bd['total'] - $total_pagado,
+                                                        'ImpSaldoInsoluto' => $cfdi_bd['total'] - $total_pagado - $cfdi_pagar['monto_pago'],
                                                         'MetodoDePagoDR'   => $metodo_pago['clave'],
                                                         'MonedaDR'         => "MXN",
                                                         'NumParcialidad'   => $numero_parcialidad,
                                                     ],
 
                                                 ]);
-
                                             } else {
                                                 /**No aplica por que le pago es mayor a lo que resta de pagar */
                                                 $this->regresar_bd_folio();
-                                                return $this->errorResponse('El monto a pagar debe ser menor o igual a $ ' . number_format($cfdi_bd['total'] - $total_cubierto, 2), 409);
+                                                return $this->errorResponse('El monto a pagar debe ser menor o igual a $ ' . number_format($cfdi_bd['total'] - $total_pagado, 2), 409);
                                             }
                                         } else {
                                             /**regreso el id de la base de datos que se iba consumir */
@@ -929,6 +951,104 @@ class FacturacionController extends ApiController
                     $this->regresar_bd_folio();
                     return $this->errorResponse('Ingrese los cfdis a pagar.', 409);
                 }
+            } else if ($request->tipo_comprobante['value'] == '2') {
+                /**dejando todos los datos por defecto segun la regulacion para comprobantes de egresos */
+                /**egreso */
+                $request->merge([
+                    'metodo_pago.value' => 1, //pue
+                ]);
+                $myRequest = new Request();
+                $myRequest->request->add(['test' => 'test']);
+
+                if (isset($request->cfdis_relacionados)) {
+                    if (count($request->cfdis_relacionados) == 1) {
+                        /**se puede proceder */
+                        /**obteniendo los datos del cfdi a crear el egreso */
+                        if (isset($request->cfdis_relacionados[0]['id'])) {
+                            $cfdi_a_egresar = $this->get_cfdis_timbrados($myRequest, $request->cfdis_relacionados[0]['id']);
+                            if (!is_null($cfdi_a_egresar)) {
+                                $cfdi_a_egresar = $cfdi_a_egresar[0];
+
+                                if ($cfdi_a_egresar['status'] != 1) {
+                                    /**no se puden hacer egresos sobre cfdis que no estan activos */
+                                    $this->regresar_bd_folio();
+                                    return $this->errorResponse('Revise que los cfdis que va a relacionar no estén cancelados', 409);
+                                }
+
+                                /**validando que el rfc del cfdi relacionado sea el mismo que el del comprobante que se esta haciendo */
+                                if ($cfdi_a_egresar['rfc_receptor'] != $request->rfc) {
+                                    $this->regresar_bd_folio();
+                                    return $this->errorResponse('El rfc receptor del cfdi relacionado debe ser igual al rfc que está ingresando.', 409);
+                                }
+                                /**el cfdi esta en la base de datos, revisnado que sea de tipo ingreo */
+                                if ($cfdi_a_egresar['sat_tipo_comprobante_id'] == 1) {
+                                    /**revisando que haya conceptos que ingresar para sacar un total del egreso */
+                                    /**GUARDANDO CONCEPTOS DEL CFDI */
+                                    if (isset($request->conceptos)) {
+                                        //return $request->conceptos;
+                                        if (count($request->conceptos) > 0) {
+                                            /**tiene conceptos */
+                                            foreach ($request->conceptos as $key => $concepto) {
+                                                //return $this->errorResponse($concepto['clave_sat']['value'], 409);
+                                                $ValorUnitarioPrecioNeto      = (float) ($concepto['precio_neto'] / (1 + ($request->tasa_iva / 100)));
+                                                $ValorUnitarioPrecioDescuento = $concepto['precio_descuento'] / (1 + ($request->tasa_iva / 100));
+                                                $descuento_concepto           = $concepto['descuento_b']['value'] == 1 ? ($ValorUnitarioPrecioNeto - $ValorUnitarioPrecioDescuento) : 0;
+                                                $valor_unitario_real          = $concepto['descuento_b']['value'] == 1 ? $ValorUnitarioPrecioDescuento : $ValorUnitarioPrecioNeto;
+                                                DB::table('conceptos_cfdi')->insert(
+                                                    [
+                                                        'sat_productos_servicios_id' => $concepto['clave_sat']['value'],
+                                                        'cantidad'                   => $concepto['cantidad'],
+                                                        'descripcion'                => $concepto['descripcion'],
+                                                        'valor_unitario'             => $valor_unitario_real,
+                                                        'importe'                    => $valor_unitario_real * $concepto['cantidad'],
+                                                        'descuento'                  => $descuento_concepto,
+                                                        'sat_unidades_id'            => $concepto['unidad_sat']['value'],
+                                                        'concepto_operacion_id'      => $concepto['concepto_operacion_id'],
+                                                        'cfdis_id'                   => $folio_para_asignar,
+                                                        'concepto_operacion_ver_b'   => $concepto['concepto_operacion_ver_b'],
+                                                        'modifica_b'                 => $concepto['modifica_b'],
+                                                    ]
+                                                );
+                                                $total_a_egresar += (float) $concepto['precio_neto'];
+                                            }
+                                        } else {
+                                            /**regreso el id de la base de datos que se iba consumir */
+                                            $this->regresar_bd_folio();
+                                            return $this->errorResponse('Ingrese los conceptos a facturar.', 409);
+                                        }
+                                    } else {
+                                        /**regreso el id de la base de datos que se iba consumir */
+                                        $this->regresar_bd_folio();
+                                        return $this->errorResponse('Ingrese los conceptos a facturar.', 409);
+                                    }
+
+                                } else {
+                                    $this->regresar_bd_folio();
+                                    return $this->errorResponse('El cfdi a relacionar para egresos debe ser de tipo Ingreso.', 409);
+                                }
+                            } else {
+                                $this->regresar_bd_folio();
+                                return $this->errorResponse('El cfdi a relacionar no está en la base de datos', 409);
+                            }
+
+                            /**continuando despues de guardar los conceptos en la base de datos */
+                            /**verifianco que la cantidad a egresar no sobrepasa el limite a egresar dle cfdi */
+                            if ($cfdi_a_egresar['maximo_a_egresar'] < $total_a_egresar) {
+                                $this->regresar_bd_folio();
+                                return $this->errorResponse('Este cfdi solo puede tener egresos de máximo $ ' . number_format($cfdi_a_egresar['maximo_a_egresar'] . '.', 2), 409);
+                            }
+                        } else {
+                            $this->regresar_bd_folio();
+                            return $this->errorResponse('Ingrese el folio del cfdi a relacionar', 409);
+                        }
+                    } else {
+                        $this->regresar_bd_folio();
+                        return $this->errorResponse('Solo se puede relacionar un cfdi para egresos.', 409);
+                    }
+                } else {
+                    $this->regresar_bd_folio();
+                    return $this->errorResponse('Debe relacionar un cfdi para egresos.', 409);
+                }
             }
 
             /**GUARDANDO CFDIS RELACIONADOS A ESTE NUEVO DOCUMENTO*/
@@ -939,7 +1059,8 @@ class FacturacionController extends ApiController
                 if (count($request->cfdis_relacionados) > 0) {
                     $tipo_relacion = TiposRelacion::where('id', '=', $request->tipo_relacion['value'])->first();
                     if (is_null($tipo_relacion)) {
-                        return 'No se encontró el tipo de relación que se está utilizando.';
+                        $this->regresar_bd_folio();
+                        return $this->errorResponse('No se encontró el tipo de relación que se está utilizando.', 409);
                     }
 
                     $array_cfdis_a_relacionar_xml = [
@@ -952,27 +1073,39 @@ class FacturacionController extends ApiController
                     foreach ($request->cfdis_relacionados as $key => $cfdi_relacionado) {
                         /**validando los documentos relacionados */
                         if (isset($cfdi_relacionado['id']) && isset($cfdi_relacionado['uuid']) && isset($cfdi_relacionado['sat_tipo_comprobante_id'])) {
-                            if ($cfdi_relacionado['sat_tipo_comprobante_id'] == $request->tipo_comprobante['value']) {
-                                /**guardamos en la base de datos */
-                                DB::table('cfdis_tipo_relacion')->insert(
-                                    [
-                                        'cfdis_id'             => $folio_para_asignar,
-                                        'cfdis_id_relacionado' => $cfdi_relacionado['id'],
-                                        'tipo_relacion_id'     => 1, //de tipo relacion sat
-                                        'sat_metodos_pago_id'  => $cfdi_relacionado['sat_metodos_pago_id'],
-                                    ]
-                                );
-                                /**agregamos al array que mandaremos al generar el xml */
-                                array_push($array_cfdis_a_relacionar_xml['cfdi:CfdiRelacionado'], [
-                                    '_attributes' => [
-                                        'UUID' => $cfdi_relacionado['uuid'],
-                                    ],
-                                ]);
+                            if ($request->tipo_comprobante['value'] == 1 || $request->tipo_comprobante['value'] == 5) {
+                                if ($cfdi_relacionado['sat_tipo_comprobante_id'] != $request->tipo_comprobante['value']) {
+                                    /**regreso el id de la base de datos que se iba consumir */
+                                    $this->regresar_bd_folio();
+                                    return $this->errorResponse('El tipo de cfdi a relacionar debe ser del mismo tipo que el nuevo documento.', 409);
+                                }
                             } else {
-                                /**regreso el id de la base de datos que se iba consumir */
-                                $this->regresar_bd_folio();
-                                return $this->errorResponse('El tipo de cfdi a relacionar debe ser del mismo tipo que el nuevo documento.', 409);
+                                if ($request->tipo_comprobante['value'] == 2) {
+                                    /**egreso */
+                                    /**el cfdi a relacionar debe ser de ingreso */
+                                    if (!$cfdi_relacionado['sat_tipo_comprobante_id'] == 1) {
+                                        $this->regresar_bd_folio();
+                                        return $this->errorResponse('Ingrese un cfdi a relacionar de tipo ingreso.', 409);
+                                    }
+                                }
                             }
+
+                            /**guardamos en la base de datos */
+                            DB::table('cfdis_tipo_relacion')->insert(
+                                [
+                                    'cfdis_id'             => $folio_para_asignar,
+                                    'cfdis_id_relacionado' => $cfdi_relacionado['id'],
+                                    'tipo_relacion_id'     => $request->tipo_comprobante['value'] == 1 || $request->tipo_comprobante['value'] == 5 ? 1 : 3, //de tipo relacion sat
+                                    'sat_metodos_pago_id'  => $cfdi_relacionado['sat_metodos_pago_id'],
+                                    'monto_relacion'       => $request->tipo_comprobante['value'] == 1 || $request->tipo_comprobante['value'] == null ? 1 : $total_a_egresar, //de tipo relacion sat
+                                ]
+                            );
+                            /**agregamos al array que mandaremos al generar el xml */
+                            array_push($array_cfdis_a_relacionar_xml['cfdi:CfdiRelacionado'], [
+                                '_attributes' => [
+                                    'UUID' => $cfdi_relacionado['uuid'],
+                                ],
+                            ]);
                         } else {
                             /**regreso el id de la base de datos que se iba consumir */
                             $this->regresar_bd_folio();
@@ -1066,6 +1199,7 @@ class FacturacionController extends ApiController
                         $total = $xml_timbrado['Comprobante']['Total'];
                     } else if ($request->tipo_comprobante['value'] == '2') {
                         /**egregso */
+                        $total = $total_a_egresar;
                     } else {
                         if ($request->tipo_comprobante['value'] == '5') {
                             /**pago */
@@ -1106,8 +1240,8 @@ class FacturacionController extends ApiController
         } catch (\Throwable $th) {
             /**regreso el id de la base de datos que se iba consumir */
             $this->regresar_bd_folio();
-            return $this->errorResponse('Error al guardar en la base de datos.', 409);
-            //return $th;
+            //return $this->errorResponse('Error al guardar en la base de datos.', 409);
+            return $th;
         }
 
     }
@@ -1245,9 +1379,9 @@ class FacturacionController extends ApiController
             $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
             /**obteniendo claves de los catalogos */
             $forma_pago = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
-
         } else if ((string) $comprobante['TipoDeComprobante'] == 'E') {
-            $schema_location = '';
+            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $forma_pago      = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
         } else {
             if ((string) $comprobante['TipoDeComprobante'] == 'P') {
                 if (isset($xml->xpath('//pago10:Pago')[0])) {
@@ -1402,13 +1536,16 @@ class FacturacionController extends ApiController
             'descuento',
             'total',
             DB::raw(
-                '(NULL) as total_cubierto'
+                '(NULL) as total_pagado'
             ),
             DB::raw(
                 '(NULL) as total_egresos'
             ),
             DB::raw(
                 '(NULL) as saldo_cfdi'
+            ),
+            DB::raw(
+                '(NULL) as maximo_a_egresar'
             ),
             'sat_tipo_comprobante_id',
             'sat_metodos_pago_id',
@@ -1441,12 +1578,16 @@ class FacturacionController extends ApiController
             ),
             DB::raw(
                 '(NULL) as situacion_pago_texto'
+            ),
+            DB::raw(
+                '(NULL) as status_texto'
             )
         )
 
             ->with('pagos_asociados')
             ->with('egresos_asociados')
             ->with('cfdis_pagados')
+            ->with('cfdis_egresados')
             ->with('cfdis_relacionados')
             ->with('cliente:id,nombre')
             ->whereHas('cliente', function ($query) use ($cliente) {
@@ -1518,6 +1659,13 @@ class FacturacionController extends ApiController
         $sat_usos     = SatUsosCfdi::select('*')->get();
 
         foreach ($resultado as $index_cfdi => &$cfdi) {
+            /**status */
+            if ($cfdi['status'] == 1) {
+                $cfdi['status_texto'] = 'Vigente';
+            } else {
+                $cfdi['status_texto'] = 'Cancelado';
+            }
+
             /**tipo de comprobante */
             if ($cfdi['sat_tipo_comprobante_id'] == 1) {
                 $cfdi['tipo_comprobante_texto'] = 'Ingreso (I)';
@@ -1534,8 +1682,9 @@ class FacturacionController extends ApiController
 
                 if ($cfdi['sat_metodos_pago_id'] == 1) {
                     /**pue */
-                    $cfdi['total_cubierto'] = $cfdi['total'];
-                    $cfdi['saldo_cfdi']     = 0;
+                    $cfdi['total_pagado']     = $cfdi['total'];
+                    $cfdi['saldo_cfdi']       = 0;
+                    $cfdi['maximo_a_egresar'] = $cfdi['total'] - $total_egresado;
                     /**aunque tenga egresos asociados el documento quedo liquidado */
                 } else {
                     /**ppd */
@@ -1545,9 +1694,9 @@ class FacturacionController extends ApiController
                             $pagado += $pago['monto_relacion'];
                         }
                     }
-
-                    $cfdi['total_cubierto'] = $pagado + $total_egresado;
-                    $cfdi['saldo_cfdi']     = $cfdi['total'] - $cfdi['total_cubierto'];
+                    $cfdi['total_pagado']     = $pagado;
+                    $cfdi['saldo_cfdi']       = $cfdi['total'] - $cfdi['total_pagado'] - $cfdi['total_egresos'];
+                    $cfdi['maximo_a_egresar'] = $cfdi['total'] - $cfdi['total_pagado'] - $total_egresado;
 
                     if ($cfdi['status'] == 1) {
                         if ($pagado >= $cfdi['total']) {

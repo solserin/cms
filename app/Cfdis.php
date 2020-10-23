@@ -55,4 +55,14 @@ class Cfdis extends Model
             ->where('tipo_relacion_id', '=', 2);
         /**solo de tipo pago */
     }
+
+    public function cfdis_egresados()
+    {
+        /**relacion de cfdis que egresó este comprobante*/
+        return $this->hasMany('App\CfdisTipoRelacion', 'cfdis_id', 'id')
+            ->join('cfdis', 'cfdis.id', '=', 'cfdis_tipo_relacion.cfdis_id_relacionado')
+            ->select('tipo_relacion_id', 'uuid', 'tipo_relacion_id', 'cfdis_tipo_relacion.sat_metodos_pago_id', 'monto_relacion', 'cfdis.status', 'sat_tipo_comprobante_id', 'cfdis_tipo_relacion.cfdis_id', 'cfdis_tipo_relacion.cfdis_id_relacionado')
+            ->where('tipo_relacion_id', '=', 3);
+        /**solo de tipo egreso */
+    }
 }

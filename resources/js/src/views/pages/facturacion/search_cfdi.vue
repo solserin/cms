@@ -189,8 +189,8 @@
                 <vs-td :data="data[indextr].sat_metodos_pago_texto">{{
                   data[indextr].sat_metodos_pago_texto
                 }}</vs-td>
-                <vs-td :data="data[indextr].status">{{
-                  data[indextr].status
+                <vs-td :data="data[indextr].status_texto">{{
+                  data[indextr].status_texto
                 }}</vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
