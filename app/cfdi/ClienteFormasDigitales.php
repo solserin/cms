@@ -14,11 +14,46 @@ class ClienteFormasDigitales
     private $autentica;
     private $cadena_original_xslt;
 
+    private $_return = array();
+    public $_keyPem  = '';
+    public $_cerPem  = '';
+    public $_pfx     = '';
+
     public function __construct($xmlPath)
     {
         $this->xml = new DOMDocument();
         $this->xml->load($xmlPath) or die("XML invalido");
         $this->cadena_original_xslt = Storage::disk(ENV('STORAGE_DISK_CREDENTIALS'))->path(ENV('CADENA_ORIGINAL_FILE'));
+    }
+
+    private function _estableceError($result, $mensajeError = null, $arrayExtras = null)
+    {
+        $this->_return           = array();
+        $this->_return['result'] = $result;
+        if ($mensajeError != null) {
+            $this->_return['error'] = $mensajeError;
+        }
+        if ($arrayExtras != null) {
+            foreach ($arrayExtras as $key => $val) {
+                $this->_return[$key] = $val;
+            }
+        }
+    }
+
+    /**creando .pem files */
+    public function crear_pem_files($data = array())
+    {
+        $certFile = Storage::disk($data['disk'])->path($data['cer_root'] . $data['cer_name']);
+        $keyFile  = Storage::disk($data['disk'])->path($data['key_root'] . $data['key_name']);
+
+        //$result        = shell_exec("touch $keyPem | chmod 666 $keyPem");
+        return $result = shell_exec("openssl enc -in $certFile -out 'sello.txt' -base64 -A -K $keyFile");
+
+        $rutaCer = file_get_contents($certFile);
+        $rutaKey = file_get_contents($keyFile);
+        Storage::disk($data['disk'])->put($data['key_root'] . $data['key_name'] . '.pem', "-----BEGIN PRIVATE KEY-----\n" . chunk_split(base64_encode($rutaKey), 64, "\n") . "-----END PRIVATE KEY-----");
+        Storage::disk($data['disk'])->put($data['cer_root'] . $data['cer_name'] . '.pem', "-----BEGIN CERTIFICATE-----\n" . chunk_split(base64_encode($rutaCer), 64, "\n") . "-----END CERTIFICATE-----");
+        //return $result = shell_exec("openssl pkcs8 -inform DER -in $keyFile -passin pass:pruebasWS -out $keyPem");
     }
 
     public function timbrar($parametros)
@@ -46,9 +81,8 @@ class ClienteFormasDigitales
         $comprobante->setAttribute('NoCertificado', $no_certificado);
         $comprobante->setAttribute('Certificado', $certificado);
 
-
-        $retorno['cadena_original']=$cadena_original;
-        $retorno['xml']=$this->xml->saveXML($this->xml->documentElement);
+        $retorno['cadena_original'] = $cadena_original;
+        $retorno['xml']             = $this->xml->saveXML($this->xml->documentElement);
         return $retorno;
         //return $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', 'Comprobante')->item(0)->getAttribute('NoCertificado');
     }

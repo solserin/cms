@@ -13,149 +13,217 @@
         </vs-button>
       </div>
     </div>
-    <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
+
+    <!--inicio de buscador-->
+    <div class="py-3">
       <vx-card
         no-radius
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
       >
-        <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Mostrar</label>
-            <v-select
-              :options="mostrarOptions"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="mostrar"
-              class="mb-4 sm:mb-0"
-            />
-          </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Estado</label>
-            <v-select
-              :options="estadosOptions"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="estado"
-              class="mb-4 md:mb-0"
-            />
-          </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Filtrar Específico</label>
-            <v-select
-              :options="filtrosEspecificos"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="filtroEspecifico"
-              class="mb-4 md:mb-0"
-            />
-          </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
-          >
-            <label class="text-sm opacity-75">Número de Control</label>
-            <vs-input
-              class="w-full"
-              icon="search"
-              maxlength="14"
-              placeholder="Filtrar por Número de Control"
-              v-model="serverOptions.numero_control"
-              v-on:keyup.enter="get_data(1)"
-              v-on:blur="get_data(1, 'blur')"
-            />
-          </div>
-        </div>
-      </vx-card>
-    </div>
+        <template slot="no-body">
+          <div>
+            <div class="flex flex-wrap px-4 py-4">
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  <span>Tipo de Comprobante</span>
+                  <span class="texto-importante">(*)</span>
+                </label>
+                <v-select
+                  :options="tipos_comprobante"
+                  :clearable="false"
+                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                  v-model="serverOptions.tipo_comprobante"
+                  class="mb-4 sm:mb-0 pb-1 pt-1"
+                  name="categoria"
+                  data-vv-as=" "
+                >
+                  <div slot="no-options">Seleccione 1</div>
+                </v-select>
+                <div>
+                  <span class="text-danger">{{
+                    errors.first("categoria")
+                  }}</span>
+                </div>
+              </div>
+              <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
+                <label class="text-sm opacity-75 font-bold"
+                  >Número de operación</label
+                >
+                <vs-input
+                  name="numero_control"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Ej. 001"
+                  maxlength="15"
+                  v-model.trim="serverOptions.numero_control"
+                  v-on:keyup.enter="get_data('numero_control', 1)"
+                  v-on:blur="get_data('numero_control', 1, 'blur')"
+                />
+                <div>
+                  <span class="text-danger text-sm">{{
+                    errors.first("numero_control")
+                  }}</span>
+                </div>
+                <div class="mt-2"></div>
+              </div>
 
-    <br />
-    <vs-table
-      :sst="true"
-      :max-items="serverOptions.per_page.value"
-      :data="[]"
-      noDataText="0 Resultados"
-    >
-      <template slot="header">
-        <h3>Listado de Facturas Emitidad</h3>
-      </template>
-      <template slot="thead">
-        <vs-th>Núm. Servicio</vs-th>
-        <vs-th>Fallecido</vs-th>
-        <vs-th>Tipo Servicio</vs-th>
-        <vs-th>Fecha</vs-th>
+              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
+                <label class="text-sm opacity-75 font-bold">
+                  Rango de Fechas año/mes/dia
+                  <span class="texto-importante">(*)</span>
+                </label>
 
-        <vs-th>Estatus</vs-th>
-        <vs-th>Acciones</vs-th>
-      </template>
-      <template slot-scope="{ data }">
-        <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-          <vs-td :data="data[indextr].servicio_id">
-            <span class="font-semibold">{{ data[indextr].servicio_id }}</span>
-          </vs-td>
-          <vs-td :data="data[indextr].nombre_afectado">
-            {{ data[indextr].nombre_afectado }}
-          </vs-td>
-          <vs-td :data="data[indextr].tipo_solicitud_texto">
-            {{ data[indextr].tipo_solicitud_texto }}
-          </vs-td>
-          <vs-td :data="data[indextr].fecha_solicitud_texto">
-            <span class="font-medium">
-              {{ data[indextr].fecha_solicitud_texto }}
-            </span>
-          </vs-td>
-
-          <vs-td>
-            <p
-              v-if="data[indextr].status_texto == 'Cancelada'"
-              class="font-medium text-danger"
-            >
-              {{ data[indextr].status_texto }}
-            </p>
-            <p
-              v-else-if="data[indextr].status_texto == 'Por pagar'"
-              class="font-medium"
-            >
-              {{ data[indextr].status_texto }}
-            </p>
-            <p
-              v-else-if="data[indextr].status_texto == 'Pagada'"
-              class="text-success font-medium"
-            >
-              {{ data[indextr].status_texto }}
-            </p>
-            <p v-else class="font-medium">
-              {{ data[indextr].status_texto }}
-            </p>
-          </vs-td>
-          <vs-td :data="data[indextr].id">
-            <div class="flex flex-start py-1">
-              <img
-                class="cursor-pointer img-btn ml-auto mr-1"
-                src="@assets/images/folder.svg"
-                title="Expediente"
-              />
+                <flat-pickr
+                  name="fecha_timbrado"
+                  data-vv-as=" "
+                  v-validate:fechatimbrado_validacion_computed.immediate="
+                    'required'
+                  "
+                  :config="configdateTimePickerRange"
+                  v-model="serverOptions.fecha_timbrado"
+                  placeholder="Fecha(s) de timbrado"
+                  class="w-full my-1"
+                  @on-close="onCloseDate"
+                />
+              </div>
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold"
+                  >Nombre del cliente</label
+                >
+                <vs-input
+                  ref="cliente"
+                  name="cliente"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Ej. Juán Pérez"
+                  maxlength="150"
+                  v-model.trim="serverOptions.cliente"
+                  v-on:keyup.enter="get_data('cliente', 1)"
+                  v-on:blur="get_data('cliente', 1, 'blur')"
+                />
+                <div>
+                  <span class="text-danger text-sm">{{
+                    errors.first("cliente")
+                  }}</span>
+                </div>
+                <div class="mt-2"></div>
+              </div>
+              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
+                <label class="text-sm opacity-75 font-bold">Rfc</label>
+                <vs-input
+                  ref="rfc"
+                  name="rfc"
+                  data-vv-as=" "
+                  type="text"
+                  class="w-full pb-1 pt-1"
+                  placeholder="Ej. XAXX010101000"
+                  maxlength="13"
+                  v-model.trim="serverOptions.rfc"
+                  v-on:keyup.enter="get_data('rfc', 1)"
+                  v-on:blur="get_data('rfc', 1, 'blur')"
+                />
+                <div>
+                  <span class="text-danger text-sm">{{
+                    errors.first("rfc")
+                  }}</span>
+                </div>
+                <div class="mt-2"></div>
+              </div>
             </div>
-          </vs-td>
-          <template class="expand-user" slot="expand"></template>
-        </vs-tr>
-      </template>
-    </vs-table>
-    <div>
-      <vs-pagination
-        v-if="verPaginado"
-        :total="this.total"
-        v-model="actual"
-        class="mt-8"
-      ></vs-pagination>
+          </div>
+        </template>
+      </vx-card>
+      <div class="mt-10">
+        <vs-table
+          :sst="true"
+          :max-items="serverOptions.per_page"
+          :data="cfdis"
+          stripe
+          noDataText="0 Resultados"
+        >
+          <template slot="header">
+            <h3>Lista de Artículos y Servicios por Lotes</h3>
+          </template>
+          <template slot="thead">
+            <vs-th>Folio</vs-th>
+            <vs-th>UUID</vs-th>
+            <vs-th>Fecha</vs-th>
+            <vs-th>Cliente</vs-th>
+            <vs-th>RFC</vs-th>
+            <vs-th>Tipo</vs-th>
+            <vs-th>Método de Pago</vs-th>
+            <vs-th>Estatus</vs-th>
+            <vs-th>$ Saldo</vs-th>
+            <vs-th>Ver CFDI</vs-th>
+            <vs-th>Cancelar</vs-th>
+          </template>
+          <template slot-scope="{ data }">
+            <vs-tr
+              :data="tr"
+              :key="indextr"
+              v-for="(tr, indextr) in data"
+              :class="[tr.status == 0 ? 'text-danger' : '']"
+            >
+              <vs-td :data="data[indextr].id">
+                <span class="font-semibold">{{ data[indextr].id }}</span>
+              </vs-td>
+              <vs-td :data="data[indextr].uuid">{{ data[indextr].uuid }}</vs-td>
+              <vs-td :data="data[indextr].fecha_timbrado_texto">{{
+                data[indextr].fecha_timbrado_texto
+              }}</vs-td>
+              <vs-td :data="data[indextr].cliente_nombre">{{
+                data[indextr].cliente_nombre
+              }}</vs-td>
+              <vs-td :data="data[indextr].rfc_receptor">{{
+                data[indextr].rfc_receptor
+              }}</vs-td>
+              <vs-td :data="data[indextr].tipo_comprobante_texto">{{
+                data[indextr].tipo_comprobante_texto
+              }}</vs-td>
+              <vs-td :data="data[indextr].sat_metodos_pago_texto">{{
+                data[indextr].sat_metodos_pago_texto
+              }}</vs-td>
+              <vs-td :data="data[indextr].status_texto">{{
+                data[indextr].status_texto
+              }}</vs-td>
+              <vs-td :data="data[indextr].saldo_cfdi">
+                {{ data[indextr].saldo_cfdi | numFormat("0,000.00") }}</vs-td
+              >
+              <vs-td :data="data[indextr].id">
+                <img
+                  width="25"
+                  class="cursor-pointer"
+                  src="@assets/images/pdf.svg"
+                  @click="retornarSeleccion(data[indextr])"
+                />
+              </vs-td>
+              <vs-td :data="data[indextr].id">
+                <img
+                  width="25"
+                  class="cursor-pointer"
+                  src="@assets/images/cancel.svg"
+                  @click="retornarSeleccion(data[indextr])"
+                />
+              </vs-td>
+            </vs-tr>
+          </template>
+        </vs-table>
+        <div>
+          <vs-pagination
+            v-if="verPaginado"
+            :total="this.total"
+            v-model="actual"
+            class="mt-3"
+          ></vs-pagination>
+        </div>
+      </div>
     </div>
+
+    <!--fin de buscador-->
 
     <FormularioCFDI
       :id_cfdi="id_cfdi"
@@ -167,6 +235,9 @@
 </template>
 
 <script>
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+import "flatpickr/dist/themes/airbnb.css";
 //services para la facturacion
 import facturacion from "@services/facturacion";
 
@@ -174,73 +245,79 @@ import FormularioCFDI from "../facturacion/FormularioCFDI";
 
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
+import { configdateTimePickerRange } from "@/VariablesGlobales";
 import vSelect from "vue-select";
 export default {
   components: {
     "v-select": vSelect,
     FormularioCFDI,
+    flatPickr,
   },
   watch: {
+    "serverOptions.tipo_comprobante": function (newVal, previousVal) {
+      this.get_data("", 1);
+    },
     actual: function (newValue, oldValue) {
       (async () => {
         //await this.get_data(this.actual);
       })();
     },
-    mostrar: function (newValue, oldValue) {
-      (async () => {
-        //await this.get_data(1);
-      })();
-    },
-    estado: function (newVal, previousVal) {
-      (async () => {
-        //await this.get_data(1);
-      })();
-    },
   },
   data() {
     return {
-      //variable
-      mostrarOptions: mostrarOptions,
-      mostrar: { label: "15", value: "15" },
-      estado: { label: "Todas", value: "" },
-      estadosOptions: [
+      configdateTimePickerRange: configdateTimePickerRange,
+      /**VARIAVLES DEL MODULO */
+      verFormularioCFDI: false,
+      tipos_comprobante: [
         {
-          label: "Todas",
+          label: "Ver todos",
           value: "",
-        },
-        {
-          label: "Activas",
-          value: "1",
-        },
-        {
-          label: "Canceladas",
-          value: "0",
-        },
-      ],
-      filtroEspecifico: { label: "Núm. Factura", value: "1" },
-      filtrosEspecificos: [
-        {
-          label: "Núm. Factura",
-          value: "1",
         },
       ],
       serverOptions: {
+        tipo_comprobante: {
+          label: "Ver todos",
+          value: "",
+        },
+        tipo_comprobante_id: "",
+        fecha_timbrado: [],
+        fecha_inicio: "",
+        fecha_fin: "",
         page: "",
         per_page: "",
-        status: "",
-        filtro_especifico_opcion: "",
         numero_control: "",
+        cliente: "",
+        rfc: "",
       },
-
+      selected: [],
+      cfdis: [],
+      //variable
       verPaginado: true,
       total: 0,
       actual: 1,
-      TipodeFormulario: "",
-      verFormularioCFDI: false,
-      id_cfdi: 0,
     };
   },
   methods: {
+    async get_tipos_comprobante() {
+      this.$vs.loading();
+      await facturacion
+        .get_tipos_comprobante()
+        .then((res) => {
+          this.tipos_comprobante = [];
+          this.tipos_comprobante.push({ label: "Ver todos", value: "" });
+          res.data.forEach((element) => {
+            this.tipos_comprobante.push({
+              label: element.tipo,
+              value: element.id,
+            });
+          });
+          this.serverOptions.tipo_comprobante = this.tipos_comprobante[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+        });
+    },
     TipoFormulario(tipo) {
       this.TipodeFormulario = tipo;
       this.verFormularioCFDI = true;
@@ -253,59 +330,75 @@ export default {
       this.estado = { label: "Todas", value: "" };
       //this.get_data(this.actual);
     },
-    async get_data(page, evento = "") {
+    get_data(origen = "", page, evento = "") {
       if (evento == "blur") {
-        if (
-          this.serverOptions.numero_control == "" ||
-          this.serverOptions.numero_control != ""
-        ) {
-          //la funcion no avanza
-
-          return false;
+        return;
+      } else {
+        /**checando el origen */
+        if (origen == "cliente") {
+          if (this.serverOptions.cliente.trim() == "") {
+            //return;
+          }
+        } else if (origen == "numero_control") {
+          if (this.serverOptions.numero_control.trim() == "") {
+            //return;
+          }
+        } else if (origen == "fecha_timbrado") {
+          if (this.serverOptions.fecha_timbrado.trim() == "") {
+            //return;
+          }
+        } else if (origen == "rfc") {
+          if (this.serverOptions.rfc.trim() == "") {
+            //return;
+          }
         }
       }
+
       let self = this;
-      if (funeraria.cancel) {
-        funeraria.cancel("Operation canceled by the user.");
+      if (facturacion.cancel) {
+        facturacion.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
       this.serverOptions.page = page;
-      this.serverOptions.per_page = this.mostrar.value;
-      this.serverOptions.status = this.estado.value;
-      this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
-
-      try {
-        let res = await funeraria.get_solicitudes_servicios(this.serverOptions);
-        if (res.data.data) {
-          //this.ventas = res.data.data;
+      this.serverOptions.per_page = 24;
+      this.serverOptions.tipo_comprobante_id = this.serverOptions.tipo_comprobante.value;
+      facturacion
+        .get_cfdis_timbrados(this.serverOptions)
+        .then((res) => {
+          this.cfdis = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
-        }
-        this.verPaginado = true;
-        this.$vs.loading.close();
-      } catch (err) {
-        this.$vs.loading.close();
-        this.ver = true;
-        if (err.response) {
-          if (err.response.status == 403) {
-            /**FORBIDDEN ERROR */
-            this.$vs.notify({
-              title: "Permiso denegado",
-              text: "Verifique sus permisos con el administrador del sistema.",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "warning",
-              time: 4000,
-            });
+          this.verPaginado = true;
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+          this.ver = true;
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000,
+              });
+            }
           }
-        }
-      }
+        });
     },
+    handleSearch(searching) {},
+    handleChangePage(page) {},
+    handleSort(key, active) {},
   },
   created() {
     (async () => {
-      //await this.get_data(this.actual);
+      await this.get_tipos_comprobante();
+      await this.get_data(this.actual);
     })();
   },
 };

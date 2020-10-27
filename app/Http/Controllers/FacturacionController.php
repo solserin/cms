@@ -475,7 +475,7 @@ class FacturacionController extends ApiController
             'cfdi:Emisor'           => [
                 '_attributes' => [
                     'RegimenFiscal' => '601',
-                    'Rfc'           => ENV('APP_ENV') == 'local' ? 'LAN7008173R5' : strtoupper($datos_funeraria['rfc']),
+                    'Rfc'           => ENV('APP_ENV') == 'local' ? 'EKU9003173C9' : strtoupper($datos_funeraria['rfc']),
                     'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
                 ],
             ],
@@ -1126,6 +1126,7 @@ class FacturacionController extends ApiController
                 ini_set('display_errors', true);
                 ini_set("soap.wsdl_cache_enabled", "0");
                 date_default_timezone_set("America/Mazatlan");
+
                 /**mandamos crear el XML, con el nombre temporal del folio registrado en la parte superior */
                 $xml_a_timbrar = $this->GenerarXmlCfdi($request, $folio_para_asignar);
                 /**verificando que el xml se haya genrado sin errores */
@@ -1156,8 +1157,6 @@ class FacturacionController extends ApiController
                     $root_path_cer    = ENV('ROOT_CER_PROD');
                     $root_path_key    = ENV('ROOT_KEY_PROD');
                 }
-                $certFile                = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
-                $keyFile                 = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
                 $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar['nombre_xml']);
                 /**mandamos llamar la clase del PAC*/
                 $clienteFD = new ClienteFormasDigitales($contenido_xml_a_timbrar);
@@ -1169,10 +1168,22 @@ class FacturacionController extends ApiController
                 $parametros->accesos = $autentica;
                 //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
                 /**SE MANDA SELLAR EL XML */
-                $clienteFD->sellarXML($certFile, $keyFile);
-                $retorno_del_sellado     = $clienteFD->sellarXML($certFile, $keyFile);
-                $parametros->comprobante = $retorno_del_sellado['xml'];
-                $cadena_original_cfdi    = $retorno_del_sellado['cadena_original'];
+
+                $datos_credenciales = [
+                    'disk'     => $storage_disk_credentials,
+                    'cer_name' => $certificado_path,
+                    'key_name' => $key_path,
+                    'cer_root' => $root_path_cer,
+                    'key_root' => $root_path_key,
+                ];
+
+                $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
+                $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
+
+                //$clienteFD->sellarXML($certFile, $keyFile);
+                return $retorno_del_sellado = $clienteFD->sellarXML($certFile, $keyFile);
+                $parametros->comprobante    = $retorno_del_sellado['xml'];
+                $cadena_original_cfdi       = $retorno_del_sellado['cadena_original'];
                 /* se manda el xml a TIMBRAR */
                 $responseTimbre = $clienteFD->timbrar($parametros);
 
