@@ -14,11 +14,6 @@ class ClienteFormasDigitales
     private $autentica;
     private $cadena_original_xslt;
 
-    private $_return = array();
-    public $_keyPem  = '';
-    public $_cerPem  = '';
-    public $_pfx     = '';
-
     public function __construct($xmlPath)
     {
         $this->xml = new DOMDocument();
@@ -26,41 +21,22 @@ class ClienteFormasDigitales
         $this->cadena_original_xslt = Storage::disk(ENV('STORAGE_DISK_CREDENTIALS'))->path(ENV('CADENA_ORIGINAL_FILE'));
     }
 
-    private function _estableceError($result, $mensajeError = null, $arrayExtras = null)
-    {
-        $this->_return           = array();
-        $this->_return['result'] = $result;
-        if ($mensajeError != null) {
-            $this->_return['error'] = $mensajeError;
-        }
-        if ($arrayExtras != null) {
-            foreach ($arrayExtras as $key => $val) {
-                $this->_return[$key] = $val;
-            }
-        }
-    }
-
-    /**creando .pem files */
-    public function crear_pem_files($data = array())
-    {
-        $certFile = Storage::disk($data['disk'])->path($data['cer_root'] . $data['cer_name']);
-        $keyFile  = Storage::disk($data['disk'])->path($data['key_root'] . $data['key_name']);
-
-        //$result        = shell_exec("touch $keyPem | chmod 666 $keyPem");
-        return $result = shell_exec("openssl enc -in $certFile -out 'sello.txt' -base64 -A -K $keyFile");
-
-        $rutaCer = file_get_contents($certFile);
-        $rutaKey = file_get_contents($keyFile);
-        Storage::disk($data['disk'])->put($data['key_root'] . $data['key_name'] . '.pem', "-----BEGIN PRIVATE KEY-----\n" . chunk_split(base64_encode($rutaKey), 64, "\n") . "-----END PRIVATE KEY-----");
-        Storage::disk($data['disk'])->put($data['cer_root'] . $data['cer_name'] . '.pem', "-----BEGIN CERTIFICATE-----\n" . chunk_split(base64_encode($rutaCer), 64, "\n") . "-----END CERTIFICATE-----");
-        //return $result = shell_exec("openssl pkcs8 -inform DER -in $keyFile -passin pass:pruebasWS -out $keyPem");
-    }
-
     public function timbrar($parametros)
     {
         /* conexion al web service */
         $client = new SoapClient(ENV('WEB_SERVICE_DEVELOP'), array('encoding' => 'UTF-8'));
         return $client->TimbrarCFDI($parametros);
+    }
+
+    public function crear_pem_files($parametros = array())
+    {
+
+        $comando = 'openssl pkcs8 -inform DER -in ' . $parametros['key_name'] . ' -out ' . $parametros['key_name'] . '.pem -passin pass:' . ENV('PASSWORD_PAC');
+        return $comando;
+        return $result = shell_exec("type nul > " . $parametros['key_name'] . '.pem');
+        return $result = shell_exec("touch " . $parametros['key_name'] . " | chmod 666 " . $parametros['key_name']);
+        return $salida = shell_exec('openssl pkcs8 -inform DER -in ' . $parametros['key_name'] . ' -out ' . $parametros['key_name'] . '.pem -passin pass:' . ENV('PASSWORD_PAC') . ' 2>&1');
+        //return $parametros;
     }
 
     public function sellarXML($certFile, $keyFile)
@@ -80,7 +56,6 @@ class ClienteFormasDigitales
         $comprobante->setAttribute('Sello', $sello);
         $comprobante->setAttribute('NoCertificado', $no_certificado);
         $comprobante->setAttribute('Certificado', $certificado);
-
         $retorno['cadena_original'] = $cadena_original;
         $retorno['xml']             = $this->xml->saveXML($this->xml->documentElement);
         return $retorno;

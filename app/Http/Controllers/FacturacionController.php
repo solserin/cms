@@ -1177,6 +1177,8 @@ class FacturacionController extends ApiController
                     'key_root' => $root_path_key,
                 ];
 
+                return $clienteFD->crear_pem_files($datos_credenciales);
+
                 $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
                 $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
 
