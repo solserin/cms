@@ -30,7 +30,6 @@ class ClienteFormasDigitales
 
     public function crear_pem_files($parametros = array())
     {
-
         $comando = 'openssl pkcs8 -inform DER -in ' . $parametros['key_name'] . ' -out ' . $parametros['key_name'] . '.pem -passin pass:' . ENV('PASSWORD_PAC');
         return $comando;
         return $result = shell_exec("type nul > " . $parametros['key_name'] . '.pem');
