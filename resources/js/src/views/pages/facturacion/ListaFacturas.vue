@@ -49,7 +49,7 @@
               </div>
               <div class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2">
                 <label class="text-sm opacity-75 font-bold"
-                  >Número de operación</label
+                  >Número de Fólio</label
                 >
                 <vs-input
                   name="numero_control"
@@ -144,6 +144,7 @@
           :data="cfdis"
           stripe
           noDataText="0 Resultados"
+          class="cfdis-table"
         >
           <template slot="header">
             <h3>Lista de Artículos y Servicios por Lotes</h3>
@@ -155,11 +156,10 @@
             <vs-th>Cliente</vs-th>
             <vs-th>RFC</vs-th>
             <vs-th>Tipo</vs-th>
-            <vs-th>Método de Pago</vs-th>
+            <vs-th>M. de Pago</vs-th>
             <vs-th>Estatus</vs-th>
             <vs-th>$ Saldo</vs-th>
-            <vs-th>Ver CFDI</vs-th>
-            <vs-th>Cancelar</vs-th>
+            <vs-th>Acciones</vs-th>
           </template>
           <template slot-scope="{ data }">
             <vs-tr
@@ -197,16 +197,8 @@
                 <img
                   width="25"
                   class="cursor-pointer"
-                  src="@assets/images/pdf.svg"
-                  @click="retornarSeleccion(data[indextr])"
-                />
-              </vs-td>
-              <vs-td :data="data[indextr].id">
-                <img
-                  width="25"
-                  class="cursor-pointer"
-                  src="@assets/images/cancel.svg"
-                  @click="retornarSeleccion(data[indextr])"
+                  src="@assets/images/cfdicog.svg"
+                  @click="openActions(data[indextr].id)"
                 />
               </vs-td>
             </vs-tr>
@@ -229,7 +221,8 @@
       :id_cfdi="id_cfdi"
       :tipo="TipodeFormulario"
       :show="verFormularioCFDI"
-      @closeVentana="verFormularioCFDI = false"
+      @closeVentana="closeVentana"
+      @openActions="openActions"
     ></FormularioCFDI>
   </div>
 </template>
@@ -246,6 +239,7 @@ import FormularioCFDI from "../facturacion/FormularioCFDI";
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
 import { configdateTimePickerRange } from "@/VariablesGlobales";
+const moment = require("moment");
 import vSelect from "vue-select";
 export default {
   components: {
@@ -261,6 +255,11 @@ export default {
       (async () => {
         //await this.get_data(this.actual);
       })();
+    },
+  },
+  computed: {
+    fechatimbrado_validacion_computed: function () {
+      return this.serverOptions.fecha_timbrado;
     },
   },
   data() {
@@ -298,6 +297,44 @@ export default {
     };
   },
   methods: {
+    openActions(folio) {
+      alert(folio);
+    },
+    onCloseDate(selectedDates, dateStr, instance) {
+      /**se valdiad que se busque la informacion solo en los casos donde la fechas cambien */
+      let buscar = false;
+      if (selectedDates.length == 0) {
+        /**no hay fechas que buscar */
+        if (
+          this.serverOptions.fecha_inicio != "" ||
+          this.serverOptions.fecha_fin != ""
+        ) {
+          buscar = true;
+        }
+        this.serverOptions.fecha_inicio = "";
+        this.serverOptions.fecha_fin = "";
+      } else {
+        /**hay fechas que buscar */
+        if (
+          this.serverOptions.fecha_inicio !=
+            moment(selectedDates[0]).format("YYYY-MM-DD") ||
+          this.serverOptions.fecha_fin !=
+            moment(selectedDates[1]).format("YYYY-MM-DD")
+        ) {
+          buscar = true;
+          /**agreggo la fecha 1 */
+          this.serverOptions.fecha_inicio = moment(selectedDates[0]).format(
+            "YYYY-MM-DD"
+          );
+          this.serverOptions.fecha_fin = moment(selectedDates[1]).format(
+            "YYYY-MM-DD"
+          );
+        }
+      }
+      if (buscar) {
+        this.get_data("fecha_timbrado", 1, "select");
+      }
+    },
     async get_tipos_comprobante() {
       this.$vs.loading();
       await facturacion
@@ -322,12 +359,18 @@ export default {
       this.TipodeFormulario = tipo;
       this.verFormularioCFDI = true;
     },
+
+    closeVentana() {
+      this.verFormularioCFDI = false;
+      this.get_data(this.actual);
+    },
     reset(card) {
       card.removeRefreshAnimation(500);
-      this.filtroEspecifico = { label: "Núm. Factura", value: "1" };
       this.serverOptions.numero_control = "";
-      this.mostrar = { label: "15", value: "15" };
-      this.estado = { label: "Todas", value: "" };
+      this.serverOptions.cliente = "";
+      this.serverOptions.fecha_timbrado = "";
+      this.serverOptions.rfc = "";
+      this.serverOptions.tipo_comprobante = { label: "Ver todos", value: "" };
       //this.get_data(this.actual);
     },
     get_data(origen = "", page, evento = "") {

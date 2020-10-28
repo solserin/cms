@@ -2152,7 +2152,7 @@ export default {
             color: "success",
             time: 5000,
           });
-          //this.$emit("ver_pdfs_nueva_venta", res.data);
+          this.$emit("openActions", res.data);
           this.cerrarVentana();
         } else {
           this.$vs.notify({
@@ -2903,7 +2903,68 @@ export default {
     },
 
     //regresa los datos a su estado inicial
-    limpiarVentana() {},
+    limpiarVentana() {
+      this.form.id_cliente = "";
+      this.form.cliente = "";
+      this.form.tipo_rfc = {
+        value: "1",
+        label: "Cliente con RFC",
+      };
+      this.form.rfc = "";
+      this.form.razon_social = "";
+      this.form.direccion_fiscal = "";
+      this.form.tipo_comprobante = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.metodo_pago = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.forma_pago = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.fecha_pago = "";
+      this.form.tipo_relacion = {
+        value: "",
+        label: "Sin documentos relacionados",
+      };
+      this.form.uso_cfdi = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.sat_pais = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.monto_pago = {};
+      this.form.cfdis_a_pagar = [];
+      this.form.operaciones_relacionadas = [];
+      this.form.cfdis_relacionados = [];
+      this.form.conceptos = [];
+      this.form.clave_sat = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.unidad_sat = {
+        value: "",
+        label: "Seleccione 1",
+      };
+      this.form.cantidad = "";
+      this.form.descripcion = "";
+      this.form.precio_neto = "";
+      this.form.descuento_b = {
+        value: "0",
+        label: "NO",
+      };
+      this.form.precio_descuento = "";
+      this.form.nota = "";
+      this.form.tasa_iva = 16;
+      this.errores = [];
+      this.limpiarValidationComprobante();
+      this.limpiarValidationConcepto();
+    },
 
     limpiarValidationConcepto() {
       this.$nextTick(() => {
@@ -2912,6 +2973,18 @@ export default {
           vmId: this.$validator.id,
         };
         this.$validator.reset(matcher);
+      });
+    },
+
+    limpiarValidationComprobante() {
+      this.$validator.pause();
+      this.$nextTick(() => {
+        this.$validator.errors.clear();
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
+          this.errors.remove(field)
+        );
+        this.$validator.resume();
       });
     },
   },

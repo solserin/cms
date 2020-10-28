@@ -973,6 +973,11 @@ th .vs-table-text {
 .cfdi-contenido {
 }
 
+
+.cfdis-table table *{
+    font-size: 13px !important;
+}
+
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
 @media (min-width: 576px) {

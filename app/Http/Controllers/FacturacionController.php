@@ -1247,7 +1247,7 @@ class FacturacionController extends ApiController
                         ]
                     );
                     DB::commit();
-                    return $folio_para_asignar . 'ff';
+                    return $folio_para_asignar;
                     //$clienteFD = new ClienteFormasDigitales($contents = Storage::disk($storage_disk_xmls)->path($file_guardar));
                     //return $clienteFD->generarCadenaOriginal();
                 }
