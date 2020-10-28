@@ -435,7 +435,7 @@ class FacturacionController extends ApiController
                                 ],
                             ],
                         ],
-                    ],
+                    ]
                 );
                 /**verificando si se debe de quitar el nodo de Descuento */
                 if ($concepto['descuento_b']['value'] != 1) {
@@ -475,7 +475,7 @@ class FacturacionController extends ApiController
             'cfdi:Emisor'           => [
                 '_attributes' => [
                     'RegimenFiscal' => '601',
-                    'Rfc'           => ENV('APP_ENV') == 'local' ? 'EKU9003173C9' : strtoupper($datos_funeraria['rfc']),
+                    'Rfc'           => ENV('APP_ENV') == 'local' ? 'EWE1709045U0' : strtoupper($datos_funeraria['rfc']),
                     'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
                 ],
             ],
@@ -1142,20 +1142,23 @@ class FacturacionController extends ApiController
                 $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
                 $storage_disk_xmls        = ENV('STORAGE_DISK_XML');
                 if (ENV('APP_ENV') == 'local') {
-                    $certificado_path = ENV('CER_PAC');
-                    $key_path         = ENV('KEY_PAC');
-                    $usuario          = ENV('USER_PAC');
-                    $password         = ENV('PASSWORD_PAC');
-                    $root_path_cer    = ENV('ROOT_CER_DEV');
-                    $root_path_key    = ENV('ROOT_KEY_DEV');
+                    $certificado_path     = ENV('CER_PAC');
+                    $key_path             = ENV('KEY_PAC');
+                    $usuario              = ENV('USER_PAC');
+                    $password             = ENV('PASSWORD_PAC');
+                    $root_path_cer        = ENV('ROOT_CER_DEV');
+                    $root_path_key        = ENV('ROOT_KEY_DEV');
+                    $credentials_password = ENV('PASSWORD_LLAVES');
                 } else {
                     /**data from DB */
-                    $certificado_path = ENV('CER_PAC'); //sistema
-                    $key_path         = ENV('KEY_PAC'); //sistema
-                    $usuario          = ENV('USER_PAC');
-                    $password         = ENV('PASSWORD_PAC');
-                    $root_path_cer    = ENV('ROOT_CER_PROD');
-                    $root_path_key    = ENV('ROOT_KEY_PROD');
+                    $certificado_path     = ENV('CER_PAC'); //sistema
+                    $key_path             = ENV('KEY_PAC'); //sistema
+                    $usuario              = ENV('USER_PAC');
+                    $password             = ENV('PASSWORD_PAC');
+                    $root_path_cer        = ENV('ROOT_CER_PROD');
+                    $root_path_key        = ENV('ROOT_KEY_PROD');
+                    $root_path_key        = ENV('ROOT_KEY_PROD');
+                    $credentials_password = ENV('PASSWORD_LLAVES');
                 }
                 $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar['nombre_xml']);
                 /**mandamos llamar la clase del PAC*/
@@ -1175,17 +1178,20 @@ class FacturacionController extends ApiController
                     'key_name' => $key_path,
                     'cer_root' => $root_path_cer,
                     'key_root' => $root_path_key,
+                    'password' => $credentials_password,
                 ];
 
-                return $clienteFD->crear_pem_files($datos_credenciales);
+                if (ENV('GENERAR_PEMS') == true) {
+                    $clienteFD->crear_pem_files($datos_credenciales);
+                }
 
                 $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
                 $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
 
-                //$clienteFD->sellarXML($certFile, $keyFile);
-                return $retorno_del_sellado = $clienteFD->sellarXML($certFile, $keyFile);
-                $parametros->comprobante    = $retorno_del_sellado['xml'];
-                $cadena_original_cfdi       = $retorno_del_sellado['cadena_original'];
+                $clienteFD->sellarXML($certFile, $keyFile);
+                $retorno_del_sellado     = $clienteFD->sellarXML($certFile, $keyFile);
+                $parametros->comprobante = $retorno_del_sellado['xml'];
+                $cadena_original_cfdi    = $retorno_del_sellado['cadena_original'];
                 /* se manda el xml a TIMBRAR */
                 $responseTimbre = $clienteFD->timbrar($parametros);
 

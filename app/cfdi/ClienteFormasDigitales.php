@@ -30,12 +30,29 @@ class ClienteFormasDigitales
 
     public function crear_pem_files($parametros = array())
     {
-        $comando = 'openssl pkcs8 -inform DER -in ' . $parametros['key_name'] . ' -out ' . $parametros['key_name'] . '.pem -passin pass:' . ENV('PASSWORD_PAC');
-        return $comando;
-        return $result = shell_exec("type nul > " . $parametros['key_name'] . '.pem');
-        return $result = shell_exec("touch " . $parametros['key_name'] . " | chmod 666 " . $parametros['key_name']);
-        return $salida = shell_exec('openssl pkcs8 -inform DER -in ' . $parametros['key_name'] . ' -out ' . $parametros['key_name'] . '.pem -passin pass:' . ENV('PASSWORD_PAC') . ' 2>&1');
-        //return $parametros;
+        $key     = $parametros['key_name'];
+        $key_pem = $parametros['key_name'] . '.pem';
+        $cer     = $parametros['cer_name'];
+        $cer_pem = $parametros['cer_name'] . '.pem';
+
+        $password = $parametros['password'];
+
+        $path_key     = Storage::disk($parametros['disk'])->path($parametros['key_root'] . $parametros['key_name']);
+        $path_key_pem = Storage::disk($parametros['disk'])->path($parametros['key_root'] . $parametros['key_name'] . '.pem');
+
+        shell_exec("touch  $path_key_pem | chmod 666  $path_key_pem");
+        $crear_pem = "openssl pkcs8 -inform DER -in $path_key -passin pass:$password -out $path_key_pem";
+        shell_exec($crear_pem);
+        $path_cer     = Storage::disk($parametros['disk'])->path($parametros['cer_root'] . $parametros['cer_name']);
+        $path_cer_pem = Storage::disk($parametros['disk'])->path($parametros['cer_root'] . $parametros['cer_name'] . '.pem');
+        $crear_pem    = "openssl x509 -inform der -in $path_cer -out $path_cer_pem";
+        shell_exec($crear_pem);
+
+        if (!Storage::disk($parametros['disk'])->exists($parametros['key_root'] . $key) || !Storage::disk($parametros['disk'])->exists($parametros['key_root'] . $key_pem) ||
+            !Storage::disk($parametros['disk'])->exists($parametros['cer_root'] . $cer) || !Storage::disk($parametros['disk'])->exists($parametros['cer_root'] . $cer_pem)) {
+            /**algun archivo no existe */
+            return 'error';
+        }
     }
 
     public function sellarXML($certFile, $keyFile)
