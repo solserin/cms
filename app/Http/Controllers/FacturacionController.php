@@ -886,17 +886,22 @@ class FacturacionController extends ApiController
                                         }
 
                                         if ($cfdi_pagar['monto_pago'] > 0) {
+                                            $importe_saldo_anterior = $cfdi_bd['total'] - $total_pagado - $total_egresado;
+                                            $importe_saldo_insoluto = $cfdi_bd['total'] - $total_pagado - $total_egresado - $cfdi_pagar['monto_pago'];
+
                                             /**validando que el monto a abonar sea menor o igual al total menos el total pagado y egresado */
                                             if (($total_pagado + $cfdi_pagar['monto_pago'] + $total_egresado) <= $cfdi_bd['total']) {
                                                 /**procede la relacion del cfdi para pago */
                                                 DB::table('cfdis_tipo_relacion')->insert(
                                                     [
-                                                        'numero_parcialidad'   => $numero_parcialidad,
-                                                        'sat_metodos_pago_id'  => $cfdi_bd['sat_metodos_pago_id'],
-                                                        'monto_relacion'       => $cfdi_pagar['monto_pago'],
-                                                        'tipo_relacion_id'     => 2, //pago
-                                                        'cfdis_id_relacionado' => $cfdi_bd['id'],
-                                                        'cfdis_id'             => $folio_para_asignar,
+                                                        'importe_saldo_anterior' => $importe_saldo_anterior,
+                                                        'importe_saldo_insoluto' => $importe_saldo_insoluto,
+                                                        'numero_parcialidad'     => $numero_parcialidad,
+                                                        'sat_metodos_pago_id'    => $cfdi_bd['sat_metodos_pago_id'],
+                                                        'monto_relacion'         => $cfdi_pagar['monto_pago'],
+                                                        'tipo_relacion_id'       => 2, //pago
+                                                        'cfdis_id_relacionado'   => $cfdi_bd['id'],
+                                                        'cfdis_id'               => $folio_para_asignar,
                                                     ]
                                                 );
                                                 $metodo_pago = MetodosPago::where('id', '=', $cfdi_bd['sat_metodos_pago_id'])->first();
@@ -915,7 +920,6 @@ class FacturacionController extends ApiController
                                                         'MonedaDR'         => "MXN",
                                                         'NumParcialidad'   => $numero_parcialidad,
                                                     ],
-
                                                 ]);
                                             } else {
                                                 /**No aplica por que le pago es mayor a lo que resta de pagar */
