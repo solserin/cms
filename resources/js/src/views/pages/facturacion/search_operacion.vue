@@ -134,9 +134,6 @@
               <vs-th>Tipo</vs-th>
               <vs-th>Fecha</vs-th>
               <vs-th>Cliente</vs-th>
-              <vs-th>Lote</vs-th>
-              <vs-th>$ Costo</vs-th>
-              <vs-th>Existencia</vs-th>
               <vs-th>Seleccionar</vs-th>
             </template>
             <template slot-scope="{ data }">
@@ -171,9 +168,6 @@
                 <vs-td :data="data[indextr].nombre">{{
                   data[indextr].nombre
                 }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
-                <vs-td :data="data[indextr].id">{{ data[indextr].id }}</vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
                     width="25"

@@ -13,6 +13,11 @@ class Cfdis extends Model
         return $this->belongsTo('App\Clientes', 'clientes_id', 'id');
     }
 
+    public function timbro()
+    {
+        return $this->belongsTo('App\User', 'timbro_id', 'id');
+    }
+
     public function cfdis_operaciones()
     {
         return $this->hasMany('App\CfdisOperaciones', 'cfdis_id', 'id')->select('*')->distinct('operaciones_id');

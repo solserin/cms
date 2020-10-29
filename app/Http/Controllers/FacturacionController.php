@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Milon\Barcode\DNS2D;
+use PDF;
 use Spatie\ArrayToXml\ArrayToXml;
 
 class FacturacionController extends ApiController
@@ -402,14 +403,14 @@ class FacturacionController extends ApiController
                     return 'No se encontró la clave de unidad del Sat.';
                 }
 
-                $ValorUnitarioPrecioNeto      = (float) ($concepto['precio_neto'] / (1 + ($request->tasa_iva / 100)));
-                $ValorUnitarioPrecioDescuento = $concepto['precio_descuento'] / (1 + ($request->tasa_iva / 100));
-                $descuento_concepto           = $concepto['descuento_b']['value'] == 1 ? ($ValorUnitarioPrecioNeto - $ValorUnitarioPrecioDescuento) : 0;
+                $ValorUnitarioPrecioNeto      = round((float) ($concepto['precio_neto'] / (1 + ($request->tasa_iva / 100))), 2, PHP_ROUND_HALF_UP);
+                $ValorUnitarioPrecioDescuento = round((float) $concepto['precio_descuento'] / (1 + ($request->tasa_iva / 100)), 2, PHP_ROUND_HALF_UP);
+                $descuento_concepto           = $concepto['descuento_b']['value'] == 1 ? round(($ValorUnitarioPrecioNeto - $ValorUnitarioPrecioDescuento), 2) : 0;
 
                 $subtotal += $ValorUnitarioPrecioNeto * $concepto['cantidad'];
                 $descuento += $descuento_concepto * $concepto['cantidad'];
-                $iva_trasladado += (($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad']) * $tasa_iva;
-                $total += (($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad']) * (1 + $tasa_iva);
+                $iva_trasladado += round((($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad']) * $tasa_iva, 2);
+                $total += round((($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad']) * (1 + $tasa_iva), 2);
                 array_push($conceptos['cfdi:Concepto'],
                     [
                         '_attributes'    =>
@@ -1299,7 +1300,7 @@ class FacturacionController extends ApiController
 
         /**se trae la informacion del cfdi de la bd */
 
-        $cfdi = Cfdis::where('id', '=', $id_folio_cfdi)->first();
+        $cfdi = Cfdis::with('timbro')->with('cliente')->where('id', '=', $id_folio_cfdi)->first();
 
         if (is_null($cfdi)) {
             return $this->errorResponse('El xml que indicó no existe.', 409);
@@ -1390,7 +1391,7 @@ class FacturacionController extends ApiController
         $ultimos_ocho_digitos_sello_cfdi = $newstring = substr((string) $comprobante['Sello'], -8);
 
         $cadena_codigo_qr = "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=" . (string) $complemento['UUID'] . "&tt=" . (string) $comprobante['Total'] . "&re=" . (string) $emisor['Rfc'] . "&rr=" . (string) $emisor['Rfc'] . "&fe=" . $ultimos_ocho_digitos_sello_cfdi;
-        $codigo_qr        = DNS2D::getBarcodeHTML($cadena_codigo_qr, 'QRCODE', 10, 10);
+        $codigo_qr        = DNS2D::getBarcodeHTML($cadena_codigo_qr, 'QRCODE', 3, 3);
 
         /**DATOS DEL NODO DE PAGOS */
         $pago_arreglo               = [];
@@ -1398,15 +1399,20 @@ class FacturacionController extends ApiController
 
         $forma_pago = null;
 
+        $metodo_pago      = MetodosPago::where('clave', '=', (string) $comprobante['MetodoPago'])->first();
+        $tipo_comprobante = '';
         if ((string) $comprobante['TipoDeComprobante'] == 'I') {
-            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $tipo_comprobante = 'Ingreso';
+            $schema_location  = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
             /**obteniendo claves de los catalogos */
             $forma_pago = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
         } else if ((string) $comprobante['TipoDeComprobante'] == 'E') {
-            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
-            $forma_pago      = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
+            $tipo_comprobante = 'Egreso';
+            $schema_location  = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $forma_pago       = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
         } else {
             if ((string) $comprobante['TipoDeComprobante'] == 'P') {
+                $tipo_comprobante = 'Pago';
                 if (isset($xml->xpath('//pago10:Pago')[0])) {
                     $pago         = $xml->xpath('//pago10:Pago')[0]->attributes();
                     $forma_pago   = SatFormasPago::where('clave', '=', (string) $pago['FormaDePagoP'])->first();
@@ -1450,6 +1456,15 @@ class FacturacionController extends ApiController
 
         /**se crea el arreglo con la informacion del xml */
         $comprobante_cfdi = [
+            'Sistema'           => [
+                'total_letra'       => numeros_a_letras((string) $comprobante['Total']),
+                'cliente_id'        => $cfdi['cliente']['id'],
+                'cliente_nombre'    => $cfdi['cliente']['nombre'],
+                'cliente_direccion' => $cfdi['cliente']['direccion'],
+                'cliente_email'     => $cfdi['cliente']['email'],
+                'cliente_telefono'  => $cfdi['cliente']['celular'],
+                'timbro_nombre'     => $cfdi['timbro']['nombre'],
+            ],
             'Comprobante'       => [
                 'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
                 'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
@@ -1458,9 +1473,9 @@ class FacturacionController extends ApiController
                 'Fecha'              => (string) $comprobante['Fecha'],
                 'FechaTexto'         => fecha_abr((string) $comprobante['Fecha']),
                 'Folio'              => (string) $comprobante['Folio'],
-                'FormaPago'          => $forma_pago['forma'],
+                'FormaPago'          => $comprobante['FormaPago'] . ' (' . $forma_pago['forma'] . ')',
                 'LugarExpedicion'    => (string) $comprobante['LugarExpedicion'],
-                'MetodoPago'         => (string) $comprobante['MetodoPago'],
+                'MetodoPago'         => (string) $comprobante['MetodoPago'] . ' (' . $metodo_pago['metodo'] . ')',
                 'Moneda'             => (string) $comprobante['Moneda'],
                 'NoCertificado'      => (string) $comprobante['NoCertificado'],
                 'Sello'              => (string) $comprobante['Sello'],
@@ -1468,7 +1483,7 @@ class FacturacionController extends ApiController
                 'SubTotal'           => (string) $comprobante['SubTotal'],
                 'Descuento'          => !empty((string) $comprobante['Descuento']) ? (string) $comprobante['Descuento'] : 0,
                 'TipoCambio'         => (string) $comprobante['TipoCambio'],
-                'TipoDeComprobante'  => (string) $comprobante['TipoDeComprobante'],
+                'TipoDeComprobante'  => (string) $comprobante['TipoDeComprobante'] . ' (' . $tipo_comprobante . ')',
                 'Total'              => (string) $comprobante['Total'],
                 'Version'            => (string) $comprobante['Version'],
                 'xsi:schemaLocation' => $schema_location,
@@ -1784,6 +1799,77 @@ class FacturacionController extends ApiController
             unset($cfdi['sat_formas_pago_id']);
         }
         return $resultado_query;
+    }
+
+    public function get_cfdi_pdf(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /*$email             = $request->email_send === 'true' ? true : false;
+        $email_to          = $request->email_address;
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $folio_id          = $requestVentasList['folio_id'];
+         */
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        $folio_id = 4;
+        $email    = false;
+        $email_to = 'hector@gmail.com';
+
+        //obtengo la informacion de esa venta
+        $datos = $this->leer_xml($folio_id, '');
+        if (empty($datos)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos del xml.', 409);
+        }
+
+        $get_funeraria = new EmpresaController();
+        $empresa       = $get_funeraria->get_empresa_data();
+        $pdf           = PDF::loadView('facturacion/cfdi/cfdi', ['datos' => $datos, 'empresa' => $empresa]);
+        $name_pdf      = "FACTURA FOLIO " . strtoupper($datos['Comprobante']['Folio']) . '.pdf';
+
+        $pdf->setOptions([
+            'title'       => $name_pdf,
+            'footer-html' => view('facturacion.cfdi.footer', ['empresa' => $empresa]),
+        ]);
+        if (1 == 0) {
+            $pdf->setOptions([
+                'header-html' => view('facturacion.cfdi.header'),
+            ]);
+        }
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 12.4);
+        $pdf->setOption('margin-right', 12.4);
+        $pdf->setOption('margin-top', 8.4);
+        $pdf->setOption('margin-bottom', 12.4);
+        $pdf->setOption('page-size', 'Letter');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email     = $email_controller->pdf_email(
+                $email_to,
+                'Facturas Aeternus',
+                "FACTURA FOLIO " . strtoupper($datos['Comprobante']['Folio']),
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
     }
 
 }

@@ -226,6 +226,9 @@
       text-transform: lowercase;
     }
     /*transform**/
+ .texto-lg2{
+      font-size: 1.4em !important;
+    }
  .texto-lg{
       font-size: 1.2em !important;
     }
@@ -241,6 +244,13 @@
 
  .texto-xs2{
       font-size: .7em !important;
+    }
+
+ .texto-xs3{
+      font-size: .6em !important;
+    }
+ .texto-xs4{
+      font-size: .5em !important;
     }
 
 
