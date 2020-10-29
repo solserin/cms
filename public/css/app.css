@@ -5625,6 +5625,22 @@ button:focus {
   content: url(/images/tags.svg?fb74983c30004383414c5120437fc1f4);
 }
 
+[dir] .consultar_cfdi .vs-popup--title {
+  text-align: center !important;
+}
+
+[dir] .consultar_cfdi .vs-popup--close {
+  margin-top: 15px !important;
+}
+
+[dir=ltr] .consultar_cfdi .vs-popup--close {
+  margin-right: 12px !important;
+}
+
+[dir=rtl] .consultar_cfdi .vs-popup--close {
+  margin-left: 12px !important;
+}
+
 [dir] .pagos_forms .vs-popup--title h3 {
   padding-bottom: 0px !important;
   border-bottom: 0px !important;

@@ -224,6 +224,13 @@
       @closeVentana="closeVentana"
       @openActions="openActions"
     ></FormularioCFDI>
+
+    <ActionsForm
+      :id_cfdi="id_cfdi"
+      :tipo="TipodeFormulario"
+      :show="verConsultarCfdi"
+      @closeVentana="verConsultarCfdi = false"
+    ></ActionsForm>
   </div>
 </template>
 
@@ -235,7 +242,7 @@ import "flatpickr/dist/themes/airbnb.css";
 import facturacion from "@services/facturacion";
 
 import FormularioCFDI from "../facturacion/FormularioCFDI";
-
+import ActionsForm from "../facturacion/ActionsForm";
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
 import { configdateTimePickerRange } from "@/VariablesGlobales";
@@ -246,6 +253,7 @@ export default {
     "v-select": vSelect,
     FormularioCFDI,
     flatPickr,
+    ActionsForm,
   },
   watch: {
     "serverOptions.tipo_comprobante": function (newVal, previousVal) {
@@ -264,6 +272,10 @@ export default {
   },
   data() {
     return {
+      /**consultar cfdi */
+      id_cfdi: 0,
+      verConsultarCfdi: false,
+
       configdateTimePickerRange: configdateTimePickerRange,
       /**VARIAVLES DEL MODULO */
       verFormularioCFDI: false,
@@ -298,7 +310,8 @@ export default {
   },
   methods: {
     openActions(folio) {
-      alert(folio);
+      this.id_cfdi = folio;
+      this.verConsultarCfdi = true;
     },
     onCloseDate(selectedDates, dateStr, instance) {
       /**se valdiad que se busque la informacion solo en los casos donde la fechas cambien */

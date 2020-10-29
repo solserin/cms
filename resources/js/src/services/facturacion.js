@@ -55,4 +55,8 @@ export default {
             params: param
         });
     },
+
+      get_cfdi_id(folio) {
+        return axios.get("/facturacion/get_cfdis_timbrados/"+folio);
+    },
 };
