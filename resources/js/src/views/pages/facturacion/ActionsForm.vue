@@ -242,6 +242,7 @@ export default {
   },
   methods: {
     openReporte(nombre_reporte = "", link = "", parametro = "", tipo = "") {
+      this.ListaReportes = [];
       this.request.folio_id = this.cfdi.id;
       this.request.email = this.cfdi.cliente_email;
       this.request.destinatario = this.cfdi.cliente_nombre;

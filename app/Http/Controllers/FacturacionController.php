@@ -1162,7 +1162,6 @@ class FacturacionController extends ApiController
                     $password             = ENV('PASSWORD_PAC');
                     $root_path_cer        = ENV('ROOT_CER_PROD');
                     $root_path_key        = ENV('ROOT_KEY_PROD');
-                    $root_path_key        = ENV('ROOT_KEY_PROD');
                     $credentials_password = ENV('PASSWORD_LLAVES');
                 }
                 $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar['nombre_xml']);
@@ -1870,7 +1869,9 @@ class FacturacionController extends ApiController
                 'Facturas Aeternus',
                 "FACTURA FOLIO " . strtoupper($datos['Comprobante']['Folio']),
                 $name_pdf,
-                $pdf
+                $pdf,
+                'cfdi',
+                $datos['Comprobante']['Folio']
             );
             return $enviar_email;
             /**email fin */
