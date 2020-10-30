@@ -103,7 +103,7 @@
         }
 
         .conceptos-content {
-            min-height: 625px;
+            min-height: 600px;
             border: 1px solid #ddd;
         }
 

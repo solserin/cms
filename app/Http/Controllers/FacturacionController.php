@@ -1397,9 +1397,9 @@ class FacturacionController extends ApiController
         $pago_arreglo               = [];
         $documentos_pagados_arreglo = [];
 
-        $forma_pago = null;
+        $forma_pago  = null;
+        $metodo_pago = MetodosPago::where('clave', '=', (string) $comprobante['TipoDeComprobante'] == 'I' ? (string) $comprobante['MetodoPago'] : 'PUE')->first();
 
-        $metodo_pago      = MetodosPago::where('clave', '=', (string) $comprobante['MetodoPago'])->first();
         $tipo_comprobante = '';
         if ((string) $comprobante['TipoDeComprobante'] == 'I') {
             $tipo_comprobante = 'Ingreso';
@@ -1410,6 +1410,7 @@ class FacturacionController extends ApiController
             $tipo_comprobante = 'Egreso';
             $schema_location  = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
             $forma_pago       = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
+
         } else {
             if ((string) $comprobante['TipoDeComprobante'] == 'P') {
                 $tipo_comprobante = 'Pago';
@@ -1567,6 +1568,9 @@ class FacturacionController extends ApiController
             DB::raw(
                 '(NULL) as cliente_nombre'
             ),
+            DB::raw(
+                '(NULL) as cliente_email'
+            ),
             'serie',
             'fecha',
             'sat_formas_pago_id',
@@ -1627,7 +1631,7 @@ class FacturacionController extends ApiController
             ->with('cfdis_pagados')
             ->with('cfdis_egresados')
             ->with('cfdis_relacionados')
-            ->with('cliente:id,nombre')
+            ->with('cliente:id,nombre,email')
             ->whereHas('cliente', function ($query) use ($cliente) {
                 $query->where('nombre', 'like', '%' . $cliente . '%');
             })
@@ -1785,6 +1789,7 @@ class FacturacionController extends ApiController
             /**cliente */
             if (isset($cfdi['cliente'])) {
                 $cfdi['cliente_nombre'] = $cfdi['cliente']['nombre'];
+                $cfdi['cliente_email']  = $cfdi['cliente']['email'];
             }
 
             $cfdi['fecha_timbrado_texto'] = fecha_abr($cfdi['fecha_timbrado']);
@@ -1804,17 +1809,19 @@ class FacturacionController extends ApiController
     public function get_cfdi_pdf(Request $request)
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-        /*$email             = $request->email_send === 'true' ? true : false;
-        $email_to          = $request->email_address;
-        $requestVentasList = json_decode($request->request_parent[0], true);
-        $folio_id          = $requestVentasList['folio_id'];
-         */
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        $folio_id = 4;
-        $email    = false;
-        $email_to = 'hector@gmail.com';
+        if (isset($request->request_parent)) {
+            $email             = $request->email_send === 'true' ? true : false;
+            $email_to          = $request->email_address;
+            $requestVentasList = json_decode($request->request_parent[0], true);
+            $folio_id          = $requestVentasList['folio_id'];
+        } else {
+            $folio_id = 1;
+            $email    = false;
+            $email_to = 'hector@gmail.com';
+        }
 
         //obtengo la informacion de esa venta
         $datos = $this->leer_xml($folio_id, '');

@@ -117,7 +117,6 @@
                     width="36px"
                     src="@assets/images/pdf.svg"
                     class="cursor-pointer"
-                    @click="verCfdi"
                   />
                 </div>
               </vs-td>
@@ -127,7 +126,14 @@
                     width="36px"
                     src="@assets/images/qr.svg"
                     class="cursor-pointer"
-                    @click="verCfdi"
+                    @click="
+                      openReporte(
+                        'Ver CFDI',
+                        '/facturacion/get_cfdi_pdf/',
+                        cfdi.id,
+                        'cfdi'
+                      )
+                    "
                   />
                 </div>
               </vs-td>
@@ -137,7 +143,6 @@
                     width="36px"
                     src="@assets/images/downloadcfdi.svg"
                     class="cursor-pointer"
-                    @click="verCfdi"
                   />
                 </div>
               </vs-td>
@@ -147,7 +152,6 @@
                     width="36px"
                     src="@assets/images/cancel.svg"
                     class="cursor-pointer"
-                    @click="verCfdi"
                   /></div
               ></vs-td>
             </vs-tr>
@@ -161,15 +165,24 @@
       @closeVerificar="closePassword"
       :accion="accionNombre"
     ></Password>
+    <Reporteador
+      :header="'consultar CFDIs'"
+      :show="openReportesLista"
+      :listadereportes="ListaReportes"
+      :request="request"
+      @closeReportes="openReportesLista = false"
+    ></Reporteador>
   </div>
 </template>
 <script>
 //componente de password
 import Password from "@pages/confirmar_password";
 import facturacion from "@services/facturacion";
+import Reporteador from "@pages/Reporteador";
 export default {
   components: {
     Password,
+    Reporteador,
   },
   props: {
     show: {
@@ -217,13 +230,27 @@ export default {
   data() {
     return {
       cfdi: [],
+      openReportesLista: false,
+      folio_id: "",
+      ListaReportes: [],
+      request: {
+        folio_id: "",
+        email: "",
+        destinatario: "",
+      },
     };
   },
   methods: {
-    verCfdi() {
-      alert(this.cfdi.id);
+    openReporte(nombre_reporte = "", link = "", parametro = "", tipo = "") {
+      this.request.folio_id = this.cfdi.id;
+      this.request.email = this.cfdi.cliente_email;
+      this.request.destinatario = this.cfdi.cliente_nombre;
+      this.ListaReportes.push({
+        nombre: nombre_reporte,
+        url: link,
+      });
+      this.openReportesLista = true;
     },
-
     cerrarVentana() {
       this.$emit("closeVentana");
     },
