@@ -103,7 +103,7 @@
         }
 
         .conceptos-content {
-            min-height: 600px;
+            min-height: 550px;
             border: 1px solid #ddd;
         }
 
@@ -170,7 +170,7 @@
     </header>
 
 
-    <table class="w-100 mt-5 datos_tabla uppercase texto-xs2">
+    <table class="w-100 mt-5 datos_tabla uppercase texto-xs3">
         <tr>
             <td class="w-60 py-1 px-2 bg-gray"><span class="bold">cliente</span></td>
             <td class="w-20 px-1 px-2 center bg-gray"><span class="bold">Folio/Serie</span></td>
@@ -216,7 +216,7 @@
             <td colspan="2" class="center py-2">{{ $datos['Complemento']['TimbreFiscalDigital']['UUID'] }}</td>
         </tr>
     </table>
-    <table class="w-100 datos_tabla uppercase table-collapsed texto-xs2">
+    <table class="w-100 datos_tabla uppercase table-collapsed texto-xs3">
         <tr>
             <td class="w-40 py-1 px-2 center"><span class="bold">facturó: </span>
                 <span>{{ $datos['Sistema']['timbro_nombre'] }}</span></td>
@@ -226,30 +226,49 @@
                 <span>{{ $datos['Comprobante']['TipoDeComprobante'] }}</span></td>
         </tr>
     </table>
+    @if (isset($datos['CfdisRelacionados']))
+    <table class="w-100 datos_tabla uppercase table-collapsed texto-xs3 px-2">
+        <tr>
+            <td class="w-100 py-1 px-2 left">
+                <span class="bold">cfdis relacionados, tipo de relación:</span>
+                <span>{{ $datos['CfdisRelacionados']['TipoRelacionTexto'] }}</span>
+            </td>
+        </tr>
+        @foreach ($datos['CfdisRelacionados']['CfdiRelacionado'] as $relacionado)
+        <tr>
+            <td class="w-100 py-1 px-2 left">
+                <span class="bold">uuid:</span>
+                <span>{{ $relacionado['UUID'] }}</span>
+            </td>
+        </tr>
+        @endforeach
+    </table>
+    @endif
+
     <div class="conceptos-content">
         <table class="w-100 datos_tabla uppercase texto-xs3">
             <tr>
-                <td class="py-1 px-1 bg-gray center"><span class="bold">cant.</span></td>
-                <td class="px-1 px-1 center bg-gray"><span class="bold">u.m.</span></td>
-                <td class="px-1 px-1 center bg-gray"><span class="bold">descripción</span></td>
-                <td class="px-1 px-1 center bg-gray"><span class="bold">cód. sat</span></td>
-                <td class="px-1 px-1 center bg-gray"><span class="bold">$costo uni.</span></td>
-                <td class="px-1 px-1 center bg-gray"><span class="bold">$desc.</span></td>
-                <td class="px-1 px-1 center bg-gray"><span class="bold">$importe</span></td>
+                <td class="py-1 px-1 bg-gray center"><span class="bold">folio.</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">uuid</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">moneda</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">mét. pago</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">parcialidad</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">$saldo ant.</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">$pago</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">$saldo insoluto</span></td>
             </tr>
-            @foreach ($datos['Conceptos'] as $concepto)
+            @foreach ($datos['Complemento']['Pago']['DoctoRelacionado'] as $pago)
             <tr>
-                <td class="py-1 px-1 center"><span class="light">{{ $concepto['Cantidad'] }}</span></td>
-                <td class="px-1 px-1 center"><span class="light">{{ $concepto['ClaveUnidad'] }}</span></td>
-                <td class="px-1 px-1 center"><span class="light">{{ $concepto['Descripcion'] }}</span></td>
-                <td class="px-1 px-1 center"><span class="light">{{ $concepto['ClaveProdServ'] }}</span></td>
-                <td class="px-1 px-1 center"><span
-                        class="light">{{number_format( $concepto['ValorUnitario'],2) }}</span>
+                <td class="py-1 px-1 center"><span class="light">{{ $pago['Folio'] }}</span></td>
+                <td class="px-1 px-1 center"><span class="light">{{ $pago['IdDocumento'] }}</span></td>
+                <td class="px-1 px-1 center"><span class="light">{{ $pago['MonedaDR'] }}</span></td>
+                <td class="px-1 px-1 center"><span class="light">{{ $pago['MetodoDePagoDR'] }}</span></td>
+                <td class="px-1 px-1 center"><span class="light">{{ $pago['NumParcialidad'] }}</span></td>
+                <td class="px-1 px-1 center"><span class="light">{{number_format($pago['ImpSaldoAnt'],2) }}</span>
                 </td>
-                <td class="px-1 px-1 center"><span class="light">{{number_format( $concepto['Descuento'],2) }}</span>
+                <td class="px-1 px-1 center"><span class="light">{{number_format( $pago['ImpPagado'],2) }}</span>
                 </td>
-                <td class="px-1 px-1 center"><span
-                        class="light">{{ number_format($concepto['Impuestos']['Traslados'][0]['Importe']+$concepto['ValorUnitario']-$concepto['Descuento'],2) }}</span>
+                <td class="px-1 px-1 center"><span class="light">{{ number_format($pago['ImpSaldoInsoluto'],2) }}</span>
                 </td>
             </tr>
             @endforeach
@@ -264,21 +283,8 @@
             <td class="w-25 px-2 center" rowspan="2">
                 <table class="w-100  uppercase table-borderless">
                     <tr>
-                        <td class="w-50 left"><span class="bold">subtotal: </span></td>
-                        <td class="w-50 right">$ {{ number_format($datos['Comprobante']['SubTotal'],2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="w-50 left"><span class="bold">descuento: </span></td>
-                        <td class="w-50 right">$ {{ number_format($datos['Comprobante']['Descuento'],2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="w-50 left"><span class="bold">i.v.a: </span></td>
-                        <td class="w-50 right">$ {{ number_format($datos['Impuestos']['TotalImpuestosTrasladados'],2) }}
-                        </td>
-                    </tr>
-                    <tr>
                         <td class="w-50 left"><span class="bold">total: </span></td>
-                        <td class="w-50 right">$ {{ number_format($datos['Comprobante']['Total'],2) }}</td>
+                        <td class="w-50 right">$ {{ number_format($datos['Complemento']['Pago']['Monto'],2) }}</td>
                     </tr>
                 </table>
             </td>
@@ -290,11 +296,11 @@
                         <td class="w-70"><span class="bold">método de pago:
                             </span><span>{{ $datos['Comprobante']['MetodoPago'] }}</span></td>
                         <td class="w-30"><span class="bold">moneda: </span>
-                            <span>{{ $datos['Comprobante']['Moneda'] }}</span></td>
+                            <span>{{ $datos['Complemento']['Pago']['MonedaP'] }}</span></td>
                     </tr>
                     <tr>
                         <td class="w-70"><span class="bold" colspan='2'>forma de pago: </span>
-                            <span>{{ $datos['Comprobante']['FormaPago'] }}</span>
+                            <span>{{ $datos['Complemento']['Pago']['FormaDePagoP'] }}</span>
                         </td>
                     </tr>
                 </table>

@@ -256,10 +256,11 @@ export default {
       this.$emit("closeVentana");
     },
     async get_cfdi_id() {
+      this.$vs.loading();
       try {
         let res = await facturacion.get_cfdi_id(this.getFolio);
         this.cfdi = res.data[0];
-        console.log("get_cfdi_id -> this.cfdi", this.cfdi);
+        this.$vs.loading.close();
       } catch (error) {
         /**error al cargar vendedores */
         this.$vs.notify({
@@ -272,6 +273,7 @@ export default {
           position: "bottom-right",
           time: "9000",
         });
+        this.$vs.loading.close();
         this.cerrarVentana();
       }
     },

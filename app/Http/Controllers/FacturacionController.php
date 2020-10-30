@@ -915,8 +915,8 @@ class FacturacionController extends ApiController
                                                         'Folio'            => $cfdi_bd['id'],
                                                         'IdDocumento'      => $cfdi_bd['uuid'],
                                                         'ImpPagado'        => $cfdi_pagar['monto_pago'],
-                                                        'ImpSaldoAnt'      => $cfdi_bd['total'] - $total_pagado,
-                                                        'ImpSaldoInsoluto' => $cfdi_bd['total'] - $total_pagado - $cfdi_pagar['monto_pago'],
+                                                        'ImpSaldoAnt'      => $cfdi_bd['total'] - $total_pagado - $total_egresado,
+                                                        'ImpSaldoInsoluto' => $cfdi_bd['total'] - $total_pagado - $cfdi_pagar['monto_pago'] - $total_egresado,
                                                         'MetodoDePagoDR'   => $metodo_pago['clave'],
                                                         'MonedaDR'         => "MXN",
                                                         'NumParcialidad'   => $numero_parcialidad,
@@ -1298,7 +1298,6 @@ class FacturacionController extends ApiController
         }
 
         /**se trae la informacion del cfdi de la bd */
-
         $cfdi = Cfdis::with('timbro')->with('cliente')->where('id', '=', $id_folio_cfdi)->first();
 
         if (is_null($cfdi)) {
@@ -1457,13 +1456,14 @@ class FacturacionController extends ApiController
         /**se crea el arreglo con la informacion del xml */
         $comprobante_cfdi = [
             'Sistema'           => [
-                'total_letra'       => numeros_a_letras((string) $comprobante['Total']),
-                'cliente_id'        => $cfdi['cliente']['id'],
-                'cliente_nombre'    => $cfdi['cliente']['nombre'],
-                'cliente_direccion' => $cfdi['cliente']['direccion'],
-                'cliente_email'     => $cfdi['cliente']['email'],
-                'cliente_telefono'  => $cfdi['cliente']['celular'],
-                'timbro_nombre'     => $cfdi['timbro']['nombre'],
+                'total_letra'         => numeros_a_letras($cfdi['sat_tipo_comprobante_id'] != 5 ? (string) $comprobante['Total'] : (string) $pago['Monto']),
+                'cliente_id'          => $cfdi['cliente']['id'],
+                'cliente_nombre'      => $cfdi['cliente']['nombre'],
+                'cliente_direccion'   => $cfdi['cliente']['direccion'],
+                'cliente_email'       => $cfdi['cliente']['email'],
+                'cliente_telefono'    => $cfdi['cliente']['celular'],
+                'timbro_nombre'       => $cfdi['timbro']['nombre'],
+                'tipo_comprobante_id' => $cfdi['sat_tipo_comprobante_id'],
             ],
             'Comprobante'       => [
                 'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
@@ -1475,7 +1475,7 @@ class FacturacionController extends ApiController
                 'Folio'              => (string) $comprobante['Folio'],
                 'FormaPago'          => $comprobante['FormaPago'] . ' (' . $forma_pago['forma'] . ')',
                 'LugarExpedicion'    => (string) $comprobante['LugarExpedicion'],
-                'MetodoPago'         => (string) $comprobante['MetodoPago'] . ' (' . $metodo_pago['metodo'] . ')',
+                'MetodoPago'         => $metodo_pago['clave'] . ' (' . $metodo_pago['metodo'] . ')',
                 'Moneda'             => (string) $comprobante['Moneda'],
                 'NoCertificado'      => (string) $comprobante['NoCertificado'],
                 'Sello'              => (string) $comprobante['Sello'],
@@ -1530,10 +1530,10 @@ class FacturacionController extends ApiController
         }
 
         if ((string) $comprobante['TipoDeComprobante'] == 'P') {
-            unset($comprobante_cfdi['Comprobante']['MetodoPago']);
+            //unset($comprobante_cfdi['Comprobante']['MetodoPago']);
             unset($comprobante_cfdi['Comprobante']['FormaPago']);
             //unset($comprobante_cfdi['Comprobante']['Descuento']);
-            unset($comprobante_cfdi['Comprobante']['TipoCambio']);
+            //unset($comprobante_cfdi['Comprobante']['TipoCambio']);
             unset($comprobante_cfdi['Impuestos']);
             unset($comprobante_cfdi['Conceptos'][0]['Impuestos']);
             $comprobante_cfdi['Complemento']['Pago']                     = $pago_arreglo;
@@ -1805,7 +1805,7 @@ class FacturacionController extends ApiController
         return $resultado_query;
     }
 
-    public function get_cfdi_pdf(Request $request)
+    public function get_cfdi_pdf(Request $request, $folio = '')
     {
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
@@ -1817,9 +1817,16 @@ class FacturacionController extends ApiController
             $requestVentasList = json_decode($request->request_parent[0], true);
             $folio_id          = $requestVentasList['folio_id'];
         } else {
-            $folio_id = 1;
+            $folio_id = $folio;
             $email    = false;
             $email_to = 'hector@gmail.com';
+        }
+
+        $cfdi = Cfdis::where('id', $folio_id)->first();
+
+        if (empty($cfdi)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos del cfdi.', 409);
         }
 
         //obtengo la informacion de esa venta
@@ -1831,8 +1838,21 @@ class FacturacionController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa       = $get_funeraria->get_empresa_data();
-        $pdf           = PDF::loadView('facturacion/cfdi/cfdi', ['datos' => $datos, 'empresa' => $empresa]);
-        $name_pdf      = "FACTURA FOLIO " . strtoupper($datos['Comprobante']['Folio']) . '.pdf';
+
+/**determinando que tipo de formato se va utilizar */
+
+        $documento = '';
+
+        if ($datos['Sistema']['tipo_comprobante_id'] == 1 || $datos['Sistema']['tipo_comprobante_id'] == 2) {
+            /**ingreso o egreso */
+            $documento = 'facturacion/cfdi/cfdi_ingreso_egreso';
+        } else {
+            /**pago */
+            $documento = 'facturacion/cfdi/cfdi_pago';
+        }
+
+        $pdf      = PDF::loadView($documento, ['datos' => $datos, 'empresa' => $empresa]);
+        $name_pdf = "FACTURA FOLIO " . strtoupper($datos['Comprobante']['Folio']) . '.pdf';
 
         $pdf->setOptions([
             'title'       => $name_pdf,
@@ -1851,7 +1871,6 @@ class FacturacionController extends ApiController
         $pdf->setOption('margin-top', 8.4);
         $pdf->setOption('margin-bottom', 12.4);
         $pdf->setOption('page-size', 'Letter');
-
         if ($email == true) {
             /**email */
             /**
