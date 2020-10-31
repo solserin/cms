@@ -143,6 +143,7 @@
                     width="36px"
                     src="@assets/images/downloadcfdi.svg"
                     class="cursor-pointer"
+                    @click="DownloadCFDI(cfdi.id)"
                   />
                 </div>
               </vs-td>
@@ -251,6 +252,32 @@ export default {
         url: link,
       });
       this.openReportesLista = true;
+    },
+
+    DownloadCFDI(folio) {
+      (async () => {
+        this.$vs.loading();
+        try {
+          let res = await facturacion.get_cfdi_download(folio);
+          console.log("DownloadCFDI -> res", res);
+          this.$vs.loading.close();
+        } catch (error) {
+          console.log("DownloadCFDI -> error", error);
+          /**error al cargar vendedores */
+          this.$vs.notify({
+            title: "Error",
+            text:
+              "Ha ocurrido un error al tratar de descargar el CFDI seleccionado.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "9000",
+          });
+          this.$vs.loading.close();
+          this.cerrarVentana();
+        }
+      })();
     },
     cerrarVentana() {
       this.$emit("closeVentana");

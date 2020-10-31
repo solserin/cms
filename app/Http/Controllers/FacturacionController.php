@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
 use Milon\Barcode\DNS2D;
 use PDF;
 use Spatie\ArrayToXml\ArrayToXml;
+use ZipArchive;
 
 class FacturacionController extends ApiController
 {
@@ -1895,8 +1896,50 @@ class FacturacionController extends ApiController
             return $enviar_email;
             /**email fin */
         } else {
-            return $pdf->inline($name_pdf);
+            if (isset($request->agregar_zip)) {
+                return $pdf->save(public_path('/') . $folio_id . '.pdf');
+            } else {
+                return $pdf->inline($name_pdf);
+            }
         }
+    }
+
+    public function get_cfdi_download(Request $request, $folio = '')
+    {
+        $zip_file = 'cdfi.zip'; // Name of our archive to download
+
+        if (File::exists(public_path($zip_file))) {
+            File::delete(public_path($zip_file));
+        }
+
+        $pdf = $folio . '.pdf';
+        if (File::exists(public_path($pdf))) {
+            File::delete(public_path($pdf));
+        }
+
+// Initializing PHP class
+        $zip = new \ZipArchive();
+        $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        $zipfile1 = 'zip.txt';
+
+        $xml      = $folio . '.xml';
+        $path_xml = Storage::disk('cfdis')->path($xml);
+
+        $request->merge([
+            'agregar_zip' => true,
+        ]);
+        $this->get_cfdi_pdf($request, $folio);
+        // Adding file: second parameter is what will the path inside of the archive
+        // So it will create another folder called "storage/" inside ZIP, and put the file there.
+        $zip->addFile($path_xml, $xml);
+        $zip->addFile(public_path($pdf), $pdf);
+        $zip->close();
+        if (File::exists(public_path($pdf))) {
+            File::delete(public_path($pdf));
+        }
+// We return the file immediately after download
+        return response()->download($zip_file);
     }
 
 }
