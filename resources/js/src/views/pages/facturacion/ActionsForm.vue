@@ -104,22 +104,12 @@
             <h3>¿QUÉ NECESITA DE ESTE CFDI?</h3>
           </template>
           <template slot="thead">
-            <vs-th>Ver Operación</vs-th>
             <vs-th>Ver CFDI</vs-th>
             <vs-th>Descargar</vs-th>
             <vs-th>Cancelar CFDI</vs-th>
           </template>
           <tbody>
             <vs-tr>
-              <vs-td>
-                <div class="py-3 px-2 text-center">
-                  <img
-                    width="36px"
-                    src="@assets/images/pdf.svg"
-                    class="cursor-pointer"
-                  />
-                </div>
-              </vs-td>
               <vs-td>
                 <div class="py-3 px-2 text-center">
                   <img
@@ -259,10 +249,15 @@ export default {
         this.$vs.loading();
         try {
           let res = await facturacion.get_cfdi_download(folio);
-          console.log("DownloadCFDI -> res", res);
+          const downloadUrl = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.setAttribute("download", this.cfdi.id + ".zip"); //any other extension
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
           this.$vs.loading.close();
         } catch (error) {
-          console.log("DownloadCFDI -> error", error);
           /**error al cargar vendedores */
           this.$vs.notify({
             title: "Error",

@@ -60,8 +60,8 @@ export default {
         return axios.get("/facturacion/get_cfdis_timbrados/"+folio);
     },
     get_cfdi_download(folio) {
-    console.log("get_cfdi_download -> folio", folio)
-        
-        return axios.get("/facturacion/get_cfdi_download/"+folio);
-    },
+        return axios.get("/facturacion/get_cfdi_download/"+folio,{
+            responseType: "blob"
+        });
+    }
 };

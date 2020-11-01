@@ -1941,7 +1941,6 @@ class FacturacionController extends ApiController
 // We return the file immediately after download
         return response()->download($zip_file);
     }
-
 }
 
 class Autenticar

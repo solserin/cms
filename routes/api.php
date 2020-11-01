@@ -73,6 +73,8 @@ Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'F
 Route::get('facturacion/get_cfdi_from_xml/{folio?}', 'FacturacionController@leer_xml');
 Route::get('facturacion/get_cfdis_timbrados/{folio_id?}/{paginated?}/{metodo_pago_id?}/{tipo_comprobante_id?}', 'FacturacionController@get_cfdis_timbrados');
 Route::get('facturacion/get_cfdi_pdf/{folio_id?}', 'FacturacionController@get_cfdi_pdf');
+Route::get('facturacion/get_cfdi_operacion_pdf/{folio_id?}', 'FacturacionController@get_cfdi_operacion_pdf');
+
 Route::get('facturacion/get_cfdi_download/{folio_id?}', 'FacturacionController@get_cfdi_download');
 
 Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
