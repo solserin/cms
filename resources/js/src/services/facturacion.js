@@ -63,5 +63,9 @@ export default {
         return axios.get("/facturacion/get_cfdi_download/"+folio,{
             responseType: "blob"
         });
-    }
+    },
+      cancelar_cfdi_folio(datos) {
+        let call = "/facturacion/cancelar_cfdi_folio";
+        return axios.post(call, datos);
+    },
 };

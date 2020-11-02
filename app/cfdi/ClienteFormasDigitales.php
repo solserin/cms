@@ -100,4 +100,20 @@ class ClienteFormasDigitales
         @$proc->importStyleSheet($XSL);
         return $proc->transformToXML($this->xml);
     }
+
+    public function consultar($parametros)
+    {
+        if (ENV('APP_ENV') == 'local') {
+            $url_consulta = ENV('WEB_SERVICE_CONSULTA_DEVELOP');
+        } else {
+            $url_consulta = ENV('WEB_SERVICE_CONSULTA_PRODUCTION');
+        }
+
+        /* conexion al web service */
+        $client = new SoapClient($url_consulta);
+        $result = $client->ConsultarEstatusCFDI_2($parametros);
+        // Mostramos el XML Request enviado al WebService
+        //echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
+        return $result;
+    }
 }

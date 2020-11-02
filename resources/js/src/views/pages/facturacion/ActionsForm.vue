@@ -143,6 +143,7 @@
                     width="36px"
                     src="@assets/images/cancel.svg"
                     class="cursor-pointer"
+                    @click="Cancelar()"
                   /></div
               ></vs-td>
             </vs-tr>
@@ -229,9 +230,15 @@ export default {
         email: "",
         destinatario: "",
       },
+      openPassword: false,
+      accionNombre: "Timbrar CFDI",
+      callback: Function,
     };
   },
   methods: {
+    closePassword() {
+      this.openPassword = false;
+    },
     openReporte(nombre_reporte = "", link = "", parametro = "", tipo = "") {
       this.ListaReportes = [];
       this.request.folio_id = this.cfdi.id;
@@ -310,6 +317,94 @@ export default {
     handleSearch(searching) {},
     handleChangePage(page) {},
     handleSort(key, active) {},
+    Cancelar() {
+      try {
+        (async () => {
+          /**ingreso */
+          if (this.cfdi.id > 0) {
+            this.callback = await this.cancelar_cfdi_folio;
+            this.openPassword = true;
+          } else {
+            this.$vs.notify({
+              title: "Error",
+              text: "Seleccione 1 CFDI",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              position: "bottom-right",
+              time: "8000",
+            });
+          }
+        })();
+      } catch (error) {}
+    },
+    async cancelar_cfdi_folio() {
+      //aqui mando guardar los datos
+      this.errores = [];
+      this.$vs.loading();
+      try {
+        let res = await facturacion.cancelar_cfdi_folio(this.cfdi);
+        if (res.data >= 1) {
+          //success
+          this.$vs.notify({
+            title: "Timbrar CFDI 3.3",
+            text: "Se ha cancelado el CFDI correctamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000,
+          });
+          //this.cerrarVentana();
+        } else {
+          this.$vs.notify({
+            title: "Timbrar CFDI 3.3",
+            text: "Error al cancelar el CFDI, por favor reintente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 4000,
+          });
+        }
+
+        this.$vs.loading.close();
+      } catch (err) {
+        if (err.response) {
+          console.log("timbrar_cfdi -> err.response", err.response);
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          } else if (err.response.status == 422) {
+            //checo si existe cada error
+            this.errores = err.response.data.error;
+            this.$vs.notify({
+              title: "Timbrar CFDI 3.3",
+              text: "Verifique los errores encontrados en los datos.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 5000,
+            });
+          } else if (err.response.status == 409) {
+            this.$vs.notify({
+              title: "Timbrar CFDI 3.3",
+              text: err.response.data.error,
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 30000,
+            });
+          }
+        }
+        this.$vs.loading.close();
+      }
+    },
   },
   created() {},
 };

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Milon\Barcode\DNS2D;
 use PDF;
+use SoapClient;
 use Spatie\ArrayToXml\ArrayToXml;
 use ZipArchive;
 
@@ -730,7 +731,7 @@ class FacturacionController extends ApiController
                     'total'                       => 0,
                     'sat_tipo_comprobante_id'     => $request->tipo_comprobante['value'],
                     'sat_metodos_pago_id'         => $request->metodo_pago['value'],
-                    'rfc_emisor'                  => $datos_funeraria->rfc,
+                    'rfc_emisor'                  => ENV('APP_ENV') == 'local' ? 'EWE1709045U0' : strtoupper($datos_funeraria['rfc']),
                     'nombre_emisor'               => $datos_funeraria->nombre_comercial,
                     'sat_regimenes_id'            => 1, //personas morales
                     'sat_pais_id'                 => $request->sat_pais['value'],
@@ -1150,8 +1151,8 @@ class FacturacionController extends ApiController
                 if (ENV('APP_ENV') == 'local') {
                     $certificado_path     = ENV('CER_PAC');
                     $key_path             = ENV('KEY_PAC');
-                    $usuario              = ENV('USER_PAC');
-                    $password             = ENV('PASSWORD_PAC');
+                    $usuario              = ENV('USER_PAC_DEV');
+                    $password             = ENV('PASSWORD_PAC_DEV');
                     $root_path_cer        = ENV('ROOT_CER_DEV');
                     $root_path_key        = ENV('ROOT_KEY_DEV');
                     $credentials_password = ENV('PASSWORD_LLAVES');
@@ -1159,8 +1160,8 @@ class FacturacionController extends ApiController
                     /**data from DB */
                     $certificado_path     = ENV('CER_PAC'); //sistema
                     $key_path             = ENV('KEY_PAC'); //sistema
-                    $usuario              = ENV('USER_PAC');
-                    $password             = ENV('PASSWORD_PAC');
+                    $usuario              = ENV('USER_PAC_PROD');
+                    $password             = ENV('PASSWORD_PAC_PROD');
                     $root_path_cer        = ENV('ROOT_CER_PROD');
                     $root_path_key        = ENV('ROOT_KEY_PROD');
                     $credentials_password = ENV('PASSWORD_LLAVES');
@@ -1863,15 +1864,15 @@ class FacturacionController extends ApiController
             $pdf->setOptions([
                 'header-html' => view('facturacion.cfdi.header'),
             ]);
-        }else{
+        } else {
             /**verificando si lleva leyenda pagado */
             if ($cfdi['sat_tipo_comprobante_id'] == 1) {
-                if ($cfdi['saldo_cfdi'] <=0) {
-    $pdf->setOptions([
-        'header-html' => view('facturacion.cfdi.header_pagado'),
-    ]);
+                if ($cfdi['saldo_cfdi'] <= 0) {
+                    $pdf->setOptions([
+                        'header-html' => view('facturacion.cfdi.header_pagado'),
+                    ]);
                 }
-}
+            }
 
         }
 
@@ -1951,6 +1952,115 @@ class FacturacionController extends ApiController
 // We return the file immediately after download
         return response()->download($zip_file);
     }
+
+    public function cancelar_cfdi_folio(Request $request)
+    {
+
+        $validaciones = [
+            /**validacion de datos para el cfdi */
+            'id' => 'required|integer|min:1',
+        ];
+
+/**MENSAJES DE LAS VALIDACIONES*/
+        $mensajes = [
+            'integer'  => 'Ingrese un número entero',
+            'required' => 'Dato obligatorio',
+            'min'      => "Este valor debe ser mínimo :min",
+        ];
+
+/**VALIDANDO LOS DATOS */
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        $cfdi = Cfdis::where('id', $request->id)->first();
+        if (empty($cfdi)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos del cfdi.', 409);
+        }
+
+        $xml = $this->leer_xml($request->id);
+        if (empty($xml)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos del xml.', 409);
+        }
+
+        date_default_timezone_set("America/Mazatlan");
+
+        /**datos para la consulta */
+        $parametros            = new Parametros();
+        $parametros->rfcEmisor = $cfdi->rfc_emisor;
+        $parametros->fecha     = str_replace(" ", "T", date("Y-m-d H:i:s"));
+        $parametros->folios    = $cfdi['uuid'];
+
+        $parametros->rfc_receptor = $cfdi->rfc_receptor;
+        $parametros->total        = $cfdi->total;
+        $parametros->uuid         = $cfdi->uuid;
+        $parametros->SelloCFD     = $xml['Complemento']['TimbreFiscalDigital']['SelloCFD'];
+        if (ENV('APP_ENV') == 'local') {
+            $certificado_path     = ENV('CER_PAC');
+            $key_path             = ENV('KEY_PAC');
+            $usuario              = ENV('USER_PAC_DEV');
+            $password             = ENV('PASSWORD_PAC_DEV');
+            $root_path_cer        = ENV('ROOT_CER_DEV');
+            $root_path_key        = ENV('ROOT_KEY_DEV');
+            $credentials_password = ENV('PASSWORD_LLAVES');
+            $url_cancelar         = ENV('WEB_SERVICE_CANCELACION_DEVELOP');
+        } else {
+            /**data from DB */
+            $certificado_path     = ENV('CER_PAC'); //sistema
+            $key_path             = ENV('KEY_PAC'); //sistema
+            $usuario              = ENV('USER_PAC_PROD');
+            $password             = ENV('PASSWORD_PAC_PROD');
+            $root_path_cer        = ENV('ROOT_CER_PROD');
+            $root_path_key        = ENV('ROOT_KEY_PROD');
+            $credentials_password = ENV('PASSWORD_LLAVES');
+            $url_cancelar         = ENV('WEB_SERVICE_CANCELACION_PRODUCTION');
+        }
+
+        $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
+
+        $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
+        $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path);
+
+        $parametros->publicKey  = file_get_contents($certFile);
+        $parametros->privateKey = file_get_contents($keyFile);
+        $parametros->password   = $credentials_password;
+
+        $autentica           = new Autenticar();
+        $autentica->usuario  = $usuario;
+        $autentica->password = $password;
+        $parametros->accesos = $autentica;
+        $client              = new SoapClient($url_cancelar, array('trace' => 1));
+        $result              = $client->Cancelacion_1($parametros);
+        //dd($result->return);
+        //echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
+        // return $result;
+
+        if (isset($result->return->acuse)) {
+            /*CÓDIGO    MENSAJE
+            201    UUID Cancelado.
+            202    UUID previamente cancelado.
+            203    UUID no encontrado.
+            204    UUUID no aplicable o cancelación.
+            205    UUID No existe.
+             */
+            $codigo_respuesta = $result->return->folios->folio->estatusUUID;
+            if ($codigo_respuesta == 201) {
+                /*se guarda acuse en la bd**/
+                return $codigo_respuesta;
+            } else {
+                return $this->errorResponse($result->return->folios->folio->mensaje, 409);
+            }
+            //echo "<br><br>Estatus UUID: " . $result->return->folios->folio->estatusUUID . "<br>Mensaje: " . $result->return->folios->folio->mensaje;
+            //echo '<br>XML response:<br><textarea>' . $result->return->acuse . '</textarea>';
+        } else {
+            /**ocurrio un error al cancelar el cfdi */
+            return $this->errorResponse('Ocurrió un error al cancelar el CFDI.', 409);
+        }
+    }
+
 }
 
 class Autenticar
