@@ -1859,10 +1859,20 @@ class FacturacionController extends ApiController
             'title'       => $name_pdf,
             'footer-html' => view('facturacion.cfdi.footer', ['empresa' => $empresa]),
         ]);
-        if (1 == 0) {
+        if ($cfdi['status'] == 0) {
             $pdf->setOptions([
                 'header-html' => view('facturacion.cfdi.header'),
             ]);
+        }else{
+            /**verificando si lleva leyenda pagado */
+            if ($cfdi['sat_tipo_comprobante_id'] == 1) {
+                if ($cfdi['saldo_cfdi'] <=0) {
+    $pdf->setOptions([
+        'header-html' => view('facturacion.cfdi.header_pagado'),
+    ]);
+                }
+}
+
         }
 
         //$pdf->setOption('grayscale', true);
