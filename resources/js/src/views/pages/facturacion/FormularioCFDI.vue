@@ -639,7 +639,14 @@
                           <vs-td>
                             <div
                               class=""
-                              @click="remover_cfdi_a_pagar(indextr)"
+                              @click="
+                                openReporte(
+                                  'Ver CFDI',
+                                  '/facturacion/get_cfdi_pdf/',
+                                  data[indextr],
+                                  'cfdi'
+                                )
+                              "
                             >
                               <img
                                 class="cursor-pointer img-btn"
@@ -820,7 +827,14 @@
                           <vs-td>
                             <div
                               class=""
-                              @click="remover_cfdi_a_pagar(indextr)"
+                              @click="
+                                openReporte(
+                                  'Ver CFDI',
+                                  '/facturacion/get_cfdi_pdf/',
+                                  data[indextr],
+                                  'cfdi'
+                                )
+                              "
                             >
                               <img
                                 class="cursor-pointer img-btn"
@@ -1572,6 +1586,13 @@
       @closeVerificar="closePassword"
       :accion="accionNombre"
     ></Password>
+    <Reporteador
+      :header="'consultar CFDIs'"
+      :show="openReportesLista"
+      :listadereportes="ListaReportes"
+      :request="request"
+      @closeReportes="openReportesLista = false"
+    ></Reporteador>
   </div>
 </template>
 <script>
@@ -1589,6 +1610,7 @@ import SearchOperacion from "@pages/facturacion/search_operacion.vue";
 import SearchCfdi from "@pages/facturacion/search_cfdi.vue";
 import clientes from "@services/clientes";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
+import Reporteador from "@pages/Reporteador";
 
 /**VARIABLES GLOBALES */
 import {
@@ -1605,6 +1627,7 @@ export default {
     SearchOperacion,
     Password,
     SearchCfdi,
+    Reporteador,
   },
   props: {
     show: {
@@ -1825,6 +1848,13 @@ export default {
   },
   data() {
     return {
+      openReportesLista: false,
+      ListaReportes: [],
+      request: {
+        folio_id: "",
+        email: "",
+        destinatario: "",
+      },
       /**control del buscador de cfdis */
       tipo_search: "",
       openBuscadorCfdi: false,
@@ -1993,6 +2023,17 @@ export default {
     };
   },
   methods: {
+    openReporte(nombre_reporte = "", link = "", parametro = "", tipo = "") {
+      this.ListaReportes = [];
+      this.request.folio_id = parametro.id;
+      this.request.email = parametro.cliente_email;
+      this.request.destinatario = parametro.cliente_nombre;
+      this.ListaReportes.push({
+        nombre: nombre_reporte,
+        url: link,
+      });
+      this.openReportesLista = true;
+    },
     acceptAlert() {
       try {
         this.$validator
@@ -2311,6 +2352,7 @@ export default {
               id: datos.id,
               uuid: datos.uuid,
               cliente_nombre: datos.cliente_nombre,
+              cliente_email: datos.cliente_email,
               serie: datos.serie,
               fecha_timbrado_texto: datos.fecha_timbrado_texto,
               total: datos.total,
@@ -2350,6 +2392,7 @@ export default {
       }
     },
     CfdiRelacionarSeleccionado(datos) {
+      console.log("CfdiRelacionarSeleccionado -> datos", datos);
       /**primero hacemos el agregado de los cfdis */
       let esta_cfdi = false;
       this.form.cfdis_relacionados.forEach((element) => {
@@ -2366,6 +2409,7 @@ export default {
           id: datos.id,
           uuid: datos.uuid,
           cliente_nombre: datos.cliente_nombre,
+          cliente_email: datos.cliente_email,
           serie: datos.serie,
           fecha_timbrado_texto: datos.fecha_timbrado_texto,
           total: datos.total,

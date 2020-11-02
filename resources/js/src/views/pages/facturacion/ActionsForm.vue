@@ -252,11 +252,19 @@ export default {
           const downloadUrl = window.URL.createObjectURL(new Blob([res.data]));
           const link = document.createElement("a");
           link.href = downloadUrl;
-          link.setAttribute("download", this.cfdi.id + ".zip"); //any other extension
+          link.setAttribute("download", "CFDI Folio " + this.cfdi.id + ".zip"); //any other extension
           document.body.appendChild(link);
           link.click();
           link.remove();
           this.$vs.loading.close();
+          this.$vs.notify({
+            title: "Descargar CFDI 3.3",
+            text: "Se ha descargado el CFDI correctamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000,
+          });
         } catch (error) {
           /**error al cargar vendedores */
           this.$vs.notify({
