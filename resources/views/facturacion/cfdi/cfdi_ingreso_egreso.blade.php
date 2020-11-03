@@ -125,12 +125,19 @@
                             </tr>
                             <tr>
                                 <td class="w-100">
-                                    <span class="texto-xs2 semibold line-0 uppercase">este documento es una
-                                        representación impresa de un cfdi</span>
+                                    @if (ENV('APP_ENV')=='local')
+                                    <span class="texto-xs2 semibold line-0 uppercase text-danger">este
+                                        documento es una
+                                        representación impresa de un cfdi no válido
+                                    </span>
+                                    @else
+                                    <span class="texto-xs2 semibold line-0 uppercase">este
+                                        documento es una representación impresa de un cfdi
+                                    </span>
+                                    @endif
                                 </td>
                             </tr>
                         </table>
-
                     </td>
                     <td class="w-60 px-2">
                         <table class="center">
