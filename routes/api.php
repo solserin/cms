@@ -75,7 +75,8 @@ Route::get('facturacion/get_cfdis_timbrados/{folio_id?}/{paginated?}/{metodo_pag
 Route::get('facturacion/get_cfdi_pdf/{folio_id?}', 'FacturacionController@get_cfdi_pdf');
 Route::get('facturacion/get_cfdi_download/{folio_id?}', 'FacturacionController@get_cfdi_download');
 Route::get('facturacion/consultar_cfdi_folio/{folio_id?}', 'FacturacionController@consultar_cfdi_folio');
-Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio');
+Route::get('facturacion/get_acuse_cancelacion_pdf/{folio_id?}', 'FacturacionController@get_acuse_cancelacion_pdf');
+Route::get('facturacion/get_cfdi_status_sat/{folio_id?}', 'FacturacionController@get_cfdi_status_sat');
 
 Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
 
@@ -248,6 +249,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     /**rutas de timbrado de cfdi */
     Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi');
+    Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio');
 
 });
 

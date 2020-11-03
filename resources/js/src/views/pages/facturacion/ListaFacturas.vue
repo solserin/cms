@@ -229,7 +229,7 @@
       :id_cfdi="id_cfdi"
       :tipo="TipodeFormulario"
       :show="verConsultarCfdi"
-      @closeVentana="verConsultarCfdi = false"
+      @closeVentana="closeVentanaActions"
     ></ActionsForm>
   </div>
 </template>
@@ -375,6 +375,10 @@ export default {
 
     closeVentana() {
       this.verFormularioCFDI = false;
+      this.get_data(this.actual);
+    },
+    closeVentanaActions() {
+      this.verConsultarCfdi = false;
       this.get_data(this.actual);
     },
     reset(card) {

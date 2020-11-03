@@ -106,7 +106,8 @@
           <template slot="thead">
             <vs-th>Ver CFDI</vs-th>
             <vs-th>Descargar</vs-th>
-            <vs-th>Cancelar CFDI</vs-th>
+            <vs-th v-if="cfdi.status == 1">Cancelar CFDI</vs-th>
+            <vs-th v-else>Ver acuse de cancelación</vs-th>
           </template>
           <tbody>
             <vs-tr>
@@ -138,14 +139,30 @@
                 </div>
               </vs-td>
               <vs-td>
-                <div class="py-3 px-2 text-center">
+                <div class="py-3 px-2 text-center" v-if="cfdi.status == 1">
                   <img
                     width="36px"
                     src="@assets/images/cancel.svg"
                     class="cursor-pointer"
                     @click="Cancelar()"
-                  /></div
-              ></vs-td>
+                  />
+                </div>
+                <div class="py-3 px-2 text-center" v-else>
+                  <img
+                    width="36px"
+                    src="@assets/images/pdf.svg"
+                    class="cursor-pointer"
+                    @click="
+                      openReporte(
+                        'Ver Acuse de Cancelación',
+                        '/facturacion/get_acuse_cancelacion_pdf/',
+                        cfdi.id,
+                        'cfdi'
+                      )
+                    "
+                  />
+                </div>
+              </vs-td>
             </vs-tr>
           </tbody>
         </vs-table>
@@ -318,6 +335,7 @@ export default {
     handleChangePage(page) {},
     handleSort(key, active) {},
     Cancelar() {
+      this.accionNombre = "Cancelar CFDI";
       try {
         (async () => {
           /**ingreso */
@@ -347,17 +365,18 @@ export default {
         if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Timbrar CFDI 3.3",
+            title: "Cancelar CFDI 3.3",
             text: "Se ha cancelado el CFDI correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
             time: 5000,
           });
+          await this.get_cfdi_id();
           //this.cerrarVentana();
         } else {
           this.$vs.notify({
-            title: "Timbrar CFDI 3.3",
+            title: "Cancelar CFDI 3.3",
             text: "Error al cancelar el CFDI, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",

@@ -48,7 +48,6 @@ class Cfdis extends Migration
             $table->dateTime('fecha_timbrado')->nullable();
             $table->string('rfc_proveedor_certificado', 13)->nullable();
             $table->dateTime('fecha_registro')->nullable();
-            $table->dateTime('fecha_cancelacion')->nullable();
             $table->mediumText('nota')->nullable();
             $table->string('num_operacion')->nullable();
             $table->string('rfc_emisor_cta_ordenante')->nullable();
@@ -65,6 +64,8 @@ class Cfdis extends Migration
             $table->foreign('timbro_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('cancelo_id')->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
+            $table->dateTime('fecha_cancelacion')->nullable();
+            $table->longText('acuse_cancelacion')->nullable();
             $table->longText('cadena_original')->nullable();
             $table->longText('xml_timbrado')->nullable();
             $table->tinyInteger('status')->default(1);
