@@ -68,18 +68,18 @@
         }
 
         /*fin de parrafos*/
+
     </style>
 </head>
 
-<body style="background-image:url('{{ url('/images/watermark.jpg') }}')">
+<body style="background-image:url('{{ public_path('/images/watermark.jpg') }}')">
     @include('layouts.estilos')
     <header id="header">
-
         <section>
             <table class="w-100">
                 <tr>
                     <td width="70%">
-                        <img src="{{ public_path(env('LOGOJPG')) }}" class="w-60 mr-8">
+                        <img src="{{ public_path('/images/logopng.png') }}" class="w-60 mr-8">
                     </td>
                     <td width="30%">
                         <div class="numeros-contrato">
