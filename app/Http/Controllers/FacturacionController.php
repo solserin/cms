@@ -1848,8 +1848,9 @@ class FacturacionController extends ApiController
             }
             return $checando_cfdi;
         }
-
-        $cfdi = Cfdis::where('id', $folio_id)->first();
+        $myRequest = new Request();
+        $myRequest->request->add(['test' => 'test']);
+        $cfdi = $this->get_cfdis_timbrados($myRequest, $folio_id)[0];
 
         if (empty($cfdi)) {
             /**datos no encontrados */
@@ -1898,7 +1899,6 @@ class FacturacionController extends ApiController
                     ]);
                 }
             }
-
         }
 
         //$pdf->setOption('grayscale', true);
