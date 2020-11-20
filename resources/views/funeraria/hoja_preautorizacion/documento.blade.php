@@ -72,6 +72,7 @@
         }
 
         /*fin de parrafos*/
+
     </style>
 </head>
 
@@ -151,7 +152,7 @@
             , a
             través de las personas que tengan a bien designar, efectúen todos los trámites necesarios ante las
             autoridades
-            correspondientes con el fin de lograr la <span class="bold">( @if ($datos['embalsamar_b']!=0)
+            correspondientes con el fin de lograr la: <br> <span class="bold">( @if ($datos['embalsamar_b']!=0)
                 __X__
                 @else
                 ____
@@ -169,7 +170,7 @@
                 __X__
                 @else
                 ____
-                @endif ) traslado del cuerpo</span>
+                @endif) traslado del cuerpo</span>
             del (la)
         </p>
         <table class="w-100 tabla_dato size-19px">
