@@ -260,6 +260,7 @@
                 <td class="px-1 px-1 center bg-gray"><span class="bold">cód. sat</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">$costo uni.</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">$desc.</span></td>
+                <td class="px-1 px-1 center bg-gray"><span class="bold">$iva</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">$importe</span></td>
             </tr>
             @foreach ($datos['Conceptos'] as $concepto)
@@ -272,6 +273,8 @@
                         class="light">{{number_format( $concepto['ValorUnitario'],2) }}</span>
                 </td>
                 <td class="px-1 px-1 center"><span class="light">{{number_format( $concepto['Descuento'],2) }}</span>
+                <td class="px-1 px-1 center"><span
+                        class="light">{{number_format($concepto['Impuestos']['Traslados'][0]['Importe'],2) }}</span>
                 </td>
                 <td class="px-1 px-1 center"><span
                         class="light">{{ number_format($concepto['Impuestos']['Traslados'][0]['Importe']+$concepto['ValorUnitario']-$concepto['Descuento'],2) }}</span>
@@ -297,7 +300,7 @@
                         <td class="w-50 right">$ {{ number_format($datos['Comprobante']['Descuento'],2) }}</td>
                     </tr>
                     <tr>
-                        <td class="w-50 left"><span class="bold">i.v.a: </span></td>
+                        <td class="w-50 left"><span class="bold">i.v.a ({{ $cfdi['tasa_iva'] }}%): </span></td>
                         <td class="w-50 right">$ {{ number_format($datos['Impuestos']['TotalImpuestosTrasladados'],2) }}
                         </td>
                     </tr>

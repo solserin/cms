@@ -1615,6 +1615,7 @@ class FacturacionController extends ApiController
             'sat_usos_cfdi_id',
             'fecha_timbrado',
             'status',
+            'tasa_iva',
             DB::raw(
                 '(NULL) as tipo_comprobante_texto'
             ),
@@ -1640,7 +1641,6 @@ class FacturacionController extends ApiController
                 '(NULL) as status_texto'
             )
         )
-
             ->with('pagos_asociados')
             ->with('egresos_asociados')
             ->with('cfdis_pagados')
@@ -1879,7 +1879,7 @@ class FacturacionController extends ApiController
             $documento = 'facturacion/cfdi/cfdi_pago';
         }
 
-        $pdf      = PDF::loadView($documento, ['datos' => $datos, 'empresa' => $empresa]);
+        $pdf      = PDF::loadView($documento, ['datos' => $datos, 'cfdi' => $cfdi, 'empresa' => $empresa]);
         $name_pdf = "FACTURA FOLIO " . strtoupper($datos['Comprobante']['Folio']) . '.pdf';
 
         $pdf->setOptions([
