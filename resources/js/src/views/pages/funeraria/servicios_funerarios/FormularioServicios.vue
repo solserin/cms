@@ -2379,6 +2379,7 @@
                             :data="tr"
                             :key="indextr"
                             v-for="(tr, indextr) in data"
+                            v-show="tr.status_b == 1"
                           >
                             <vs-td class="w-1/12">
                               <div class="capitalize">
@@ -2474,6 +2475,7 @@
                         :data="tr"
                         :key="indextr"
                         v-for="(tr, indextr) in data"
+                        v-show="tr.status_b == 1"
                       >
                         <vs-td class="w-1/12">
                           <div class="capitalize">
