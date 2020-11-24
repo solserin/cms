@@ -2417,7 +2417,6 @@
                       </vs-table>
                     </vx-card>
                   </div>
-
                   <div v-else class="w-full">
                     <div class="float-left pb-5 px-2">
                       <img width="36px" src="@assets/images/checked.svg" />
