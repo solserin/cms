@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cfdis;
 use App\cfdi\ClienteFormasDigitales;
+use App\Facturacion;
 use App\Funeraria;
 use App\MetodosPago;
 use App\Operaciones;
@@ -1158,14 +1159,19 @@ class FacturacionController extends ApiController
                     $root_path_key        = ENV('ROOT_KEY_DEV');
                     $credentials_password = ENV('PASSWORD_LLAVES');
                 } else {
+                    $facturacion_datos_sistema = Facturacion::First();
                     /**data from DB */
-                    $certificado_path     = ENV('CER_PAC'); //sistema
-                    $key_path             = ENV('KEY_PAC'); //sistema
+                    if ($facturacion_datos_sistema->cerFile || $facturacion_datos_sistema->keyFile || $facturacion_datos_sistema->password) {
+                        /**no procede */
+                        return $this->errorResponse("no se han capturado los certificados digitales de facturación", 409);
+                    }
+                    $certificado_path     = $facturacion_datos_sistema->cerFile; //sistema
+                    $key_path             = $facturacion_datos_sistema->keyFile; //sistema
                     $usuario              = ENV('USER_PAC_PROD');
                     $password             = ENV('PASSWORD_PAC_PROD');
                     $root_path_cer        = ENV('ROOT_CER_PROD');
                     $root_path_key        = ENV('ROOT_KEY_PROD');
-                    $credentials_password = ENV('PASSWORD_LLAVES');
+                    $credentials_password = $facturacion_datos_sistema->password;
                 }
                 $contenido_xml_a_timbrar = Storage::disk($storage_disk_xmls)->path($xml_a_timbrar['nombre_xml']);
                 /**mandamos llamar la clase del PAC*/
@@ -2144,14 +2150,19 @@ class FacturacionController extends ApiController
             $credentials_password = ENV('PASSWORD_LLAVES');
             $url_cancelar         = ENV('WEB_SERVICE_CANCELACION_DEVELOP');
         } else {
+            $facturacion_datos_sistema = Facturacion::First();
             /**data from DB */
-            $certificado_path     = ENV('CER_PAC'); //sistema
-            $key_path             = ENV('KEY_PAC'); //sistema
+            if ($facturacion_datos_sistema->cerFile || $facturacion_datos_sistema->keyFile || $facturacion_datos_sistema->password) {
+                /**no procede */
+                return $this->errorResponse("no se han capturado los certificados digitales de facturación", 409);
+            }
+            $certificado_path     = $facturacion_datos_sistema->cerFile; //sistema
+            $key_path             = $facturacion_datos_sistema->keyFile; //sistema
             $usuario              = ENV('USER_PAC_PROD');
             $password             = ENV('PASSWORD_PAC_PROD');
             $root_path_cer        = ENV('ROOT_CER_PROD');
             $root_path_key        = ENV('ROOT_KEY_PROD');
-            $credentials_password = ENV('PASSWORD_LLAVES');
+            $credentials_password = $facturacion_datos_sistema->password;
             $url_cancelar         = ENV('WEB_SERVICE_CANCELACION_PRODUCTION');
         }
 
