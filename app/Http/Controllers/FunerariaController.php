@@ -2821,15 +2821,18 @@ class FunerariaController extends ApiController
                 return $this->errorResponse('Esta solicitud ya fue cancelada, no puede modificarse', 409);
             }
 
-            /**agregada validacion para la gerencia de no reusar el mismo plan funerario */
-            $servicios_planes_usados = ServiciosFunerarios::select('status', 'nombre_afectado')
-                ->where('id', '<>', $request->id_servicio)
-                ->where('ventas_planes_id', '=', $request->id_convenio_plan)->where('status', '<>', 0)->get();
-            if (count($servicios_planes_usados) > 0) {
-                /**se han encontrado servicios funerarios donde el plan funerario a futuro ingresado ha sido utilizado */
-                return $this->errorResponse('El plan funerario a futuro seleccionado ya ha sido utilizado por el servicio prestado al finado : ' . $servicios_planes_usados[0]->nombre_afectado, 409);
-            }
+            if ($request->plan_funerario_futuro_b['value'] == 1) {
+                /**utiliza un servicio funerario a futuro */
+                /**agregada validacion para la gerencia de no reusar el mismo plan funerario */
+                $servicios_planes_usados = ServiciosFunerarios::select('status', 'nombre_afectado')
+                    ->where('id', '<>', $request->id_servicio)
+                    ->where('ventas_planes_id', '=', $request->id_convenio_plan)->where('status', '<>', 0)->get();
+                if (count($servicios_planes_usados) > 0) {
+                    /**se han encontrado servicios funerarios donde el plan funerario a futuro ingresado ha sido utilizado */
+                    return $this->errorResponse('El plan funerario a futuro seleccionado ya ha sido utilizado por el servicio prestado al finado : ' . $servicios_planes_usados[0]->nombre_afectado, 409);
+                }
 
+            }
         }
         $id_return = 0;
         try {
