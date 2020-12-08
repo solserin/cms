@@ -2831,7 +2831,6 @@ class FunerariaController extends ApiController
                     /**se han encontrado servicios funerarios donde el plan funerario a futuro ingresado ha sido utilizado */
                     return $this->errorResponse('El plan funerario a futuro seleccionado ya ha sido utilizado por el servicio prestado al finado : ' . $servicios_planes_usados[0]->nombre_afectado, 409);
                 }
-
             }
         }
         $id_return = 0;
