@@ -398,18 +398,53 @@ class PropiedadesSeeder extends Seeder
             ],
             /**fin de quadriplex sin terraza */
 
+            /**agregando las terrazas de la numero 19 a la numero 22 */
+            [
+                //51
+                'propiedad_indicador' => '19',
+                'frente'              => '-',
+                'filas'               => '10',
+                'columnas'            => '36',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //52
+                'propiedad_indicador' => '20',
+                'frente'              => '-',
+                'filas'               => '10',
+                'columnas'            => '51',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //53
+                'propiedad_indicador' => '21',
+                'frente'              => '-',
+                'filas'               => '9',
+                'columnas'            => '17',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //54
+                'propiedad_indicador' => '22',
+                'frente'              => '-',
+                'filas'               => '9',
+                'columnas'            => '17',
+                'tipo_propiedades_id' => '4',
+            ],
+
             /**agregando las terrazas de la numero 23 a la numero 43 */
             /**registro de propiedades cuadruplex */
             [
-                //51
+                //55
                 'propiedad_indicador' => '23',
                 'frente'              => '-',
                 'filas'               => '5',
                 'columnas'            => '33',
                 'tipo_propiedades_id' => '4',
             ],
+
             [
-                //52
+                //56
                 'propiedad_indicador' => '24',
                 'frente'              => '-',
                 'filas'               => '5',
@@ -417,7 +452,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4',
             ],
             [
-                //53
+                //57
                 'propiedad_indicador' => '25',
                 'frente'              => '-',
                 'filas'               => '5',
@@ -425,7 +460,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4',
             ],
             [
-                //54
+                //58
                 'propiedad_indicador' => '26',
                 'frente'              => '-',
                 'filas'               => '5',
@@ -433,7 +468,7 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4',
             ],
             [
-                //55
+                //59
                 'propiedad_indicador' => '27',
                 'frente'              => '-',
                 'filas'               => '5',
@@ -441,11 +476,131 @@ class PropiedadesSeeder extends Seeder
                 'tipo_propiedades_id' => '4',
             ],
             [
-                //56
+                //60
                 'propiedad_indicador' => '28',
                 'frente'              => '-',
                 'filas'               => '5',
                 'columnas'            => '30',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //61
+                'propiedad_indicador' => '29',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '35',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //62
+                'propiedad_indicador' => '30',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '35',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //63
+                'propiedad_indicador' => '31',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '30',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //64
+                'propiedad_indicador' => '32',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '24',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //65
+                'propiedad_indicador' => '33',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '26',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //66
+                'propiedad_indicador' => '34',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '30',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //67
+                'propiedad_indicador' => '35',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '33',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //68
+                'propiedad_indicador' => '36',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '20',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //69
+                'propiedad_indicador' => '37',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '28',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //70
+                'propiedad_indicador' => '38',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '35',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //71
+                'propiedad_indicador' => '39',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '42',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //72
+                'propiedad_indicador' => '40',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '32',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //73
+                'propiedad_indicador' => '41',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '26',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //74
+                'propiedad_indicador' => '42',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '16',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //75
+                'propiedad_indicador' => '43',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '24',
                 'tipo_propiedades_id' => '4',
             ],
         ];
