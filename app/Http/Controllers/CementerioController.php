@@ -1891,8 +1891,6 @@ class CementerioController extends ApiController
             } else {
                 $venta['venta_terreno']['tipo_financiamiento_texto'] = 'A Futuro';
             }
-
-            return $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio);
             /**actualiznado ubicacion */
             $venta['venta_terreno']['ubicacion_texto'] = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'];
             $venta['venta_terreno']['area_nombre']     = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['area_nombre'];
