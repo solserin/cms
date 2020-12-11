@@ -468,7 +468,234 @@ class CementerioController extends ApiController
             /**bloqueando ubicaciones que estan a la venta
              * UBICACION TIPO-ID-FILA-COLUMNA
              */
-            //return $this->errorResponse($request->ubicacion, 409);
+
+            $bloqueadas = [
+                /**Propiedad terraza 23 id 55 */
+                '4-55-2-14',
+                '4-55-2-15',
+                '4-55-2-16',
+                '4-55-2-17',
+                '4-55-2-18',
+                '4-55-2-19',
+                /**Propiedad terraza 23 id 55 */
+
+                /**Propiedad terraza 25 id 57 */
+                '4-57-2-6',
+                '4-57-2-14',
+                '4-57-2-20',
+                /**Propiedad terraza 25 id 57 */
+
+                /**Propiedad terraza 28 id 60 */
+                '4-60-1-9',
+                /**Propiedad terraza 28 id 60 */
+
+                /**Propiedad terraza 29 id 61 */
+                '4-61-1-9',
+                '4-61-2-24',
+                '4-61-4-20',
+                '4-61-5-20',
+                /**Propiedad terraza 29 id 61 */
+
+                /**Propiedad terraza 30 id 62 */
+                '4-62-2-13',
+                '4-62-3-13',
+                '4-62-3-27',
+                '4-62-4-13',
+                '4-62-4-27',
+                '4-62-5-13',
+                '4-62-5-27',
+                /**Propiedad terraza 30 id 62 */
+
+                /**Propiedad terraza 31 id 63 */
+                '4-63-2-11',
+                '4-63-2-23',
+                '4-63-3-11',
+                '4-63-3-23',
+                /**Propiedad terraza 31 id 63 */
+
+                /**Propiedad terraza 32 id 64 */
+                '4-64-1-13',
+                /**Propiedad terraza 32 id 64 */
+
+                /**Propiedad terraza 33 id 65
+                 * pendiente de revisar cual ubicacion bloquear
+                 */
+                '4-65-5-21',
+                /**Propiedad terraza 33 id 65 */
+
+                /**Propiedad terraza 34 id 66
+                 * pendiente de revisar cual ubicacion bloquear
+                 */
+                '4-66-2-17',
+                '4-66-3-17',
+                '4-66-3-17',
+                '4-66-4-9',
+                '4-66-4-17',
+                '4-66-5-9',
+                '4-66-5-17',
+                /**Propiedad terraza 34 id 66 */
+
+                /**Propiedad terraza 35 id 67 */
+                '4-67-2-21',
+                '4-67-3-13',
+                '4-67-3-21',
+                '4-67-4-13',
+                '4-67-4-21',
+                '4-67-5-13',
+                '4-67-5-21',
+                /**Propiedad terraza 35 id 67 */
+
+                /**Propiedad terraza 36 id 68 */
+                '4-68-1-4',
+                '4-68-1-10',
+                '4-68-1-16',
+                '4-68-1-17',
+                '4-68-2-4',
+                '4-68-2-10',
+                '4-68-2-16',
+                '4-68-2-17',
+                '4-68-3-4',
+                '4-68-3-10',
+                '4-68-3-17',
+                '4-68-4-17',
+                '4-68-5-17',
+                /**Propiedad terraza 36 id 68 */
+
+                /**Propiedad terraza 37 id 69 */
+                '4-69-1-5',
+                '4-69-1-13',
+                '4-69-1-21',
+                '4-69-1-22',
+                '4-69-2-5',
+                '4-69-2-13',
+                '4-69-2-21',
+                '4-69-2-22',
+                '4-69-3-5',
+                '4-69-3-13',
+                '4-69-3-21',
+                '4-69-3-22',
+                '4-69-4-5',
+                '4-69-4-22',
+                '4-69-5-22',
+                /**Propiedad terraza 37 id 69 */
+
+                /**Propiedad terraza 38 id 70 */
+                '4-70-1-9',
+                '4-70-1-17',
+                '4-70-1-25',
+                '4-70-2-9',
+                '4-70-2-17',
+                '4-70-2-25',
+                '4-70-3-9',
+                '4-70-3-17',
+                '4-70-3-25',
+                /**Propiedad terraza 38 id 70 */
+
+                /**Propiedad terraza 39 id 71
+                 * con dudas sobre la fila 5
+                 */
+                '4-71-1-11',
+                '4-71-1-21',
+                '4-71-1-22',
+                '4-71-1-32',
+                '4-71-1-33',
+
+                '4-71-2-11',
+                '4-71-2-21',
+                '4-71-2-22',
+                '4-71-2-32',
+                '4-71-2-33',
+
+                '4-71-3-11',
+                '4-71-3-21',
+                '4-71-3-22',
+                '4-71-3-33',
+                '4-71-4-22',
+                '4-71-4-33',
+                '4-71-5-33',
+                /**Propiedad terraza 39 id 71 */
+
+                /**Propiedad terraza 40 id 72 */
+                '4-72-1-10',
+                '4-72-1-18',
+                '4-72-1-19',
+                '4-72-1-25',
+                '4-72-2-10',
+                '4-72-2-18',
+                '4-72-2-19',
+                '4-72-1-25',
+                '4-72-3-10',
+                '4-72-3-18',
+                '4-72-3-25',
+                '4-72-4-10',
+                '4-72-4-18',
+                /**Propiedad terraza 40 id 72 */
+
+                /**Propiedad terraza 41 id 73 */
+                '4-73-1-7',
+                '4-73-1-8',
+                '4-73-1-14',
+                '4-73-1-15',
+                '4-73-1-21',
+
+                '4-73-2-7',
+                '4-73-2-8',
+                '4-73-2-14',
+                '4-73-2-15',
+                '4-73-2-21',
+
+                '4-73-4-7',
+                '4-73-4-15',
+                '4-73-4-21',
+
+                '4-73-5-7',
+                '4-73-5-21',
+                /**Propiedad terraza 41 id 73 */
+
+                /**Propiedad terraza 42 id 74 */
+                '4-74-1-4',
+                '4-74-1-10',
+                '4-74-1-11',
+                '4-74-1-12',
+                '4-74-1-13',
+                '4-74-2-4',
+                '4-74-2-10',
+                '4-74-2-11',
+                '4-74-2-12',
+                '4-74-3-4',
+                '4-74-3-10',
+                '4-74-3-11',
+                '4-74-4-4',
+                '4-74-4-11',
+                /**Propiedad terraza 42 id 74 */
+
+                /**Propiedad terraza 43 id 75 */
+                '4-75-1-4',
+                '4-75-1-12',
+                '4-75-1-13',
+                '4-75-1-14',
+                '4-75-1-15',
+                '4-75-1-16',
+                '4-75-2-4',
+                '4-75-2-13',
+                '4-75-2-14',
+                '4-75-2-15',
+                '4-75-2-16',
+                '4-75-3-4',
+                '4-75-3-14',
+                '4-75-3-15',
+                '4-75-3-16',
+                '4-75-4-14',
+                /**Propiedad terraza 43 id 75 */
+            ];
+
+            /**verificando si alguna propiedad de las bloqueadas fue elegida para venta */
+            foreach ($bloqueadas as $key => $ubicacion) {
+                if ($ubicacion == $request->ubicacion) {
+                    /**es una ubicacion bloqueada */
+                    return $this->errorResponse('Error, Esta ubicación no se toma en cuenta en el cementerio.', 409);
+                }
+            }
 
             DB::beginTransaction();
             if ($tipo_servicio == 'agregar') {
