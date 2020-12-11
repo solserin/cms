@@ -115,10 +115,10 @@ class CementerioController extends ApiController
                 $dato['nombre_area'] = 'Sección Triplex ' . $dato['propiedad_indicador'];
             } else if ($dato['tipo_propiedades_id'] == 6) {
                 /**cuadriplez dsin terraza */
-                $dato['nombre_area'] = 'Sección de cuadriplex ' . $dato['propiedad_indicador'];
+                $dato['nombre_area'] = 'cuadriplex ' . $dato['propiedad_indicador'];
             } else {
                 /**cuadriplez dsin terraza */
-                $dato['nombre_area'] = 'Sección de mausoleo ' . $dato['propiedad_indicador'];
+                $dato['nombre_area'] = 'mausoleo ' . $dato['propiedad_indicador'];
             }
 
             foreach ($dato['tipo_propiedad']['precios'] as $precio_key => &$precio) {
@@ -465,6 +465,11 @@ class CementerioController extends ApiController
         }
 
         try {
+            /**bloqueando ubicaciones que estan a la venta
+             * UBICACION TIPO-ID-FILA-COLUMNA
+             */
+            //return $this->errorResponse($request->ubicacion, 409);
+
             DB::beginTransaction();
             if ($tipo_servicio == 'agregar') {
                 //venta de uso inmediato y de control sistematizado
@@ -2003,7 +2008,7 @@ class CementerioController extends ApiController
                 } else if ($propiedad['tipo_propiedades_id'] == 7) {
                     $datos['lote_texto']  = $lote;
                     $datos['area_nombre'] = $areas_nombres[($id_propiedad)];
-                    $datos['tipo_texto']  = "cuadriplex";
+                    $datos['tipo_texto']  = "Mausoleo";
                     $datos['fila_texto']  = " Módulo " . $fila;
                     //cuadriplex de mausoleo
                     $ubicacion_texto .= "Mausoleo " . $propiedad['propiedad_indicador'] . " Módulo " . $fila;
