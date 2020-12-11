@@ -19,46 +19,7 @@ Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenContro
 /**rutas publicas_ entran sin token */
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
 /**fin de rutas de modulo en proceso */
-Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
 
-Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
-
-/**inventario */
-Route::get('inventario/get_tipo_articulos', 'InventarioController@get_tipo_articulos');
-Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
-Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
-Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
-Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
-
-/**rutas de servicios funerarios */
-Route::get('funeraria/get_personal_recoger', 'FunerariaController@get_personal_recoger');
-Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}', 'FunerariaController@get_solicitudes_servicios');
-Route::get('funeraria/get_hoja_solicitud', 'FunerariaController@get_hoja_solicitud');
-Route::get('funeraria/hoja_preautorizacion', 'FunerariaController@hoja_preautorizacion');
-Route::get('funeraria/certificado_defuncion', 'FunerariaController@certificado_defuncion');
-Route::get('funeraria/instrucciones_servicio_funerario', 'FunerariaController@instrucciones_servicio_funerario');
-Route::get('funeraria/contancia_de_embalsamiento', 'FunerariaController@contancia_de_embalsamiento');
-Route::get('funeraria/contrato_servicio_funerario', 'FunerariaController@contrato_servicio_funerario');
-Route::get('funeraria/material_velacion_rentado', 'FunerariaController@material_velacion_rentado');
-Route::get('funeraria/entrega_acta_defuncion', 'FunerariaController@entrega_acta_defuncion');
-Route::get('funeraria/entrega_cenizas', 'FunerariaController@entrega_cenizas');
-Route::get('funeraria/orden_servicio', 'FunerariaController@orden_servicio');
-Route::get('funeraria/get_estados_civiles', 'FunerariaController@get_estados_civiles');
-Route::get('funeraria/get_escolaridades', 'FunerariaController@get_escolaridades');
-Route::get('funeraria/get_afiliaciones', 'FunerariaController@get_afiliaciones');
-Route::get('funeraria/get_sitios_muerte', 'FunerariaController@get_sitios_muerte');
-Route::get('funeraria/get_titulos', 'FunerariaController@get_titulos');
-Route::get('funeraria/get_estados_afectado', 'FunerariaController@get_estados_afectado');
-Route::get('funeraria/get_lugares_velacion', 'FunerariaController@get_lugares_velacion');
-Route::get('funeraria/get_lugares_inhumacion', 'FunerariaController@get_lugares_inhumacion');
-Route::get('funeraria/get_material_velacion/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
-Route::get('funeraria/get_tipos_contratante', 'FunerariaController@get_tipos_contratante');
-Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
-Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
-Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{solo_existencias?}/{con_material_velacion?}', 'FunerariaController@get_inventario');
-Route::get('funeraria/get_categorias_servicio', 'FunerariaController@get_categorias_servicio');
-
-Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
 Route::middleware(['client'])->group(function () {
     Route::get('pagos/get_pagos_backend/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
@@ -141,7 +102,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
 
     /**rutas del cementerio */
-
+    Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
     Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
     Route::post('cementerio/update_precio_propiedad', 'CementerioController@update_precio_propiedad');
@@ -149,7 +110,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_financiamientos', 'CementerioController@get_financiamientos');
     Route::get('cementerio/get_precio_by_id', 'CementerioController@get_precio_by_id');
     Route::get('cementerio/lista_precios_pdf/{idioma?}', 'CementerioController@lista_precios_pdf');
-
     Route::get('cementerio/get_vendedores', 'CementerioController@get_vendedores');
     Route::get('titulos/{operacion_id?}', 'CementerioController@generarNumeroTitulo');
     Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
@@ -161,6 +121,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
     Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+    Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
 
     /**rutas de funeraria ventas planes */
     Route::post('funeraria/control_ventas/{tipo_servicio}', 'FunerariaController@control_ventas'); //agregar,modificar
@@ -181,6 +142,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('funeraria/referencias_de_pago', 'FunerariaController@referencias_de_pago');
     Route::get('funeraria/reglamento_pago', 'FunerariaController@reglamento_pago');
     Route::get('funeraria/acuse_cancelacion', 'FunerariaController@acuse_cancelacion');
+    Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
 
     /**rutas de pagos */
     Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
@@ -199,12 +161,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
 
     /**invnetario */
+    Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
     Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
     Route::post('inventario/enable_disable/{tipo}', 'InventarioController@enable_disable');
     Route::post('inventario/ajustar_inventario', 'InventarioController@ajustar_inventario');
-
-    Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
-
     Route::get('inventarios/cementerio/propiedadesById', 'CementerioController@propiedadesById');
     Route::get('inventarios/cementerio/get_propiedades_by_tipo', 'CementerioController@get_propiedades_by_tipo');
     Route::get('inventarios/cementerio/get_usuarios_para_vendedores', 'CementerioController@get_usuarios_para_vendedores');
@@ -215,15 +175,46 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('inventarios/cementerio/actualizar_precios_tarifas', 'CementerioController@actualizar_precios_tarifas');
     Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
-    Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
-
     Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
+    Route::get('inventario/get_tipo_articulos', 'InventarioController@get_tipo_articulos');
+    Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
+    Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
+    Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
+    Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
+    Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
+    Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 
     /**rutas de servicios funerarios */
     Route::post('funeraria/control_solicitud/{tipo_servicio}', 'FunerariaController@control_solicitud');
-
+    Route::post('funeraria/control_contratos/{tipo_servicio}', 'FunerariaController@control_contratos');
+    Route::get('funeraria/get_personal_recoger', 'FunerariaController@get_personal_recoger');
+    Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}', 'FunerariaController@get_solicitudes_servicios');
+    Route::get('funeraria/get_hoja_solicitud', 'FunerariaController@get_hoja_solicitud');
+    Route::get('funeraria/hoja_preautorizacion', 'FunerariaController@hoja_preautorizacion');
+    Route::get('funeraria/certificado_defuncion', 'FunerariaController@certificado_defuncion');
+    Route::get('funeraria/instrucciones_servicio_funerario', 'FunerariaController@instrucciones_servicio_funerario');
+    Route::get('funeraria/contancia_de_embalsamiento', 'FunerariaController@contancia_de_embalsamiento');
+    Route::get('funeraria/contrato_servicio_funerario', 'FunerariaController@contrato_servicio_funerario');
+    Route::get('funeraria/material_velacion_rentado', 'FunerariaController@material_velacion_rentado');
+    Route::get('funeraria/entrega_acta_defuncion', 'FunerariaController@entrega_acta_defuncion');
+    Route::get('funeraria/entrega_cenizas', 'FunerariaController@entrega_cenizas');
+    Route::get('funeraria/orden_servicio', 'FunerariaController@orden_servicio');
+    Route::get('funeraria/get_estados_civiles', 'FunerariaController@get_estados_civiles');
+    Route::get('funeraria/get_escolaridades', 'FunerariaController@get_escolaridades');
+    Route::get('funeraria/get_afiliaciones', 'FunerariaController@get_afiliaciones');
+    Route::get('funeraria/get_sitios_muerte', 'FunerariaController@get_sitios_muerte');
+    Route::get('funeraria/get_titulos', 'FunerariaController@get_titulos');
+    Route::get('funeraria/get_estados_afectado', 'FunerariaController@get_estados_afectado');
+    Route::get('funeraria/get_lugares_velacion', 'FunerariaController@get_lugares_velacion');
+    Route::get('funeraria/get_lugares_inhumacion', 'FunerariaController@get_lugares_inhumacion');
+    Route::get('funeraria/get_material_velacion/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
+    Route::get('funeraria/get_tipos_contratante', 'FunerariaController@get_tipos_contratante');
+    Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+    Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
+    Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{solo_existencias?}/{con_material_velacion?}', 'FunerariaController@get_inventario');
+    Route::get('funeraria/get_categorias_servicio', 'FunerariaController@get_categorias_servicio');
     /**fin de rutas del cementerio */
 
     /**RUTAS PARA FACTURACION */
