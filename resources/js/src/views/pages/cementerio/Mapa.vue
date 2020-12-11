@@ -2993,7 +2993,6 @@ export default {
         });
         //mando los datos al parent
         this.$emit("getDatosTipoPropiedad", this.datosAreaSeleccionada);
-        console.log(this.datosAreaSeleccionada);
         this.$vs.loading.close();
       } catch (error) {
         alert("ocurrió un error, repórtelo a sistemas.");
