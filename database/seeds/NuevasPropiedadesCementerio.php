@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class columnasFilasSeeder extends Seeder
+class NuevasPropiedadesCementerio extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,938 +12,261 @@ class columnasFilasSeeder extends Seeder
      */
     public function run()
     {
-        /**ordenando las propiedades cuadriplex para saber las areas activas y cuales no */
+        /**insetando el nuevo tipo de propiedad de mausoleo */
+        DB::table('tipo_propiedades')->insert([
+            [ //7
+                'tipo'        => 'mausoleos',
+                'descripcion' => 'Propiedades columnas',
+                'capacidad'   => '4',
+            ],
+        ]);
+
         $secciones = [
+            /**agregando las terrazas de la numero 19 a la numero 22 */
+            [
+                //51
+                'propiedad_indicador' => '19',
+                'frente'              => '-',
+                'filas'               => '10',
+                'columnas'            => '36',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //52
+                'propiedad_indicador' => '20',
+                'frente'              => '-',
+                'filas'               => '10',
+                'columnas'            => '51',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //53
+                'propiedad_indicador' => '21',
+                'frente'              => '-',
+                'filas'               => '9',
+                'columnas'            => '17',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //54
+                'propiedad_indicador' => '22',
+                'frente'              => '-',
+                'filas'               => '9',
+                'columnas'            => '25',
+                'tipo_propiedades_id' => '4',
+            ],
 
-            /**propiedad 29 */
+            /**agregando las terrazas de la numero 23 a la numero 43 */
+            /**registro de propiedades cuadruplex */
             [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '1', //A
+                //55
+                'propiedad_indicador' => '23',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '33',
+                'tipo_propiedades_id' => '4',
             ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '5', //E
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '6', //F
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '7', //G
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '8', //H
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '9', //I
-            ],
-            [
-                //id propiedad 29
-                'propiedades_id'  => '29',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '10', //J
-            ],
-            /**fin propiedad 29 */
 
-            /**propiedad 30 */
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '1', //A
+                //56
+                'propiedad_indicador' => '24',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '40',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '2', //B
+                //57
+                'propiedad_indicador' => '25',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '35',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '3', //C
+                //58
+                'propiedad_indicador' => '26',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '30',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '4', //D
+                //59
+                'propiedad_indicador' => '27',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '25',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '5', //E
+                //60
+                'propiedad_indicador' => '28',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '30',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '6', //F
+                //61
+                'propiedad_indicador' => '29',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '35',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '7', //G
+                //62
+                'propiedad_indicador' => '30',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '35',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '8', //H
+                //63
+                'propiedad_indicador' => '31',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '30',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '9', //I
+                //64
+                'propiedad_indicador' => '32',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '24',
+                'tipo_propiedades_id' => '4',
             ],
             [
-                //id propiedad 30
-                'propiedades_id'  => '30',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '10', //J
+                //65
+                'propiedad_indicador' => '33',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '26',
+                'tipo_propiedades_id' => '4',
             ],
-            /**fin propiedad 30 */
+            [
+                //66
+                'propiedad_indicador' => '34',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '30',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //67
+                'propiedad_indicador' => '35',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '33',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //68
+                'propiedad_indicador' => '36',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '20',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //69
+                'propiedad_indicador' => '37',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '28',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //70
+                'propiedad_indicador' => '38',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '35',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //71
+                'propiedad_indicador' => '39',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '42',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //72
+                'propiedad_indicador' => '40',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '32',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //73
+                'propiedad_indicador' => '41',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '26',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //74
+                'propiedad_indicador' => '42',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '16',
+                'tipo_propiedades_id' => '4',
+            ],
+            [
+                //75
+                'propiedad_indicador' => '43',
+                'frente'              => '-',
+                'filas'               => '5',
+                'columnas'            => '24',
+                'tipo_propiedades_id' => '4',
+            ],
+            /**propiedades de tipo mausoleos */
+            [
+                //76 //Mausoleo A
+                'propiedad_indicador' => 'A',
+                'frente'              => '-',
+                'filas'               => '148',
+                'columnas'            => '1',
+                'tipo_propiedades_id' => '7',
+            ],
+            [
+                //77 //Mausoleo B
+                'propiedad_indicador' => 'B',
+                'frente'              => '-',
+                'filas'               => '126',
+                'columnas'            => '1',
+                'tipo_propiedades_id' => '7',
+            ],
+            [
+                //78 //Mausoleo C
+                'propiedad_indicador' => 'C',
+                'frente'              => '-',
+                'filas'               => '100',
+                'columnas'            => '1',
+                'tipo_propiedades_id' => '7',
+            ],
+        ];
 
-            /**propiedad 31 */
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '2',
-                'fin_columna'     => '32',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '4',
-                'fin_columna'     => '32',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '4',
-                'fin_columna'     => '32',
-                'fila'            => '5', //E
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '13',
-                'fin_columna'     => '32',
-                'fila'            => '6', //F
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '16',
-                'fin_columna'     => '32',
-                'fila'            => '7', //G
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '19',
-                'fin_columna'     => '32',
-                'fila'            => '8', //H
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '22',
-                'fin_columna'     => '32',
-                'fila'            => '9', //I
-            ],
-            [
-                //id propiedad 31
-                'propiedades_id'  => '31',
-                'empieza_columna' => '25',
-                'fin_columna'     => '32',
-                'fila'            => '10', //J
-            ],
-            /**fin propiedad 31 */
+        /**insetando las propiedades */
+        foreach ($secciones as $key) {
+            DB::table('propiedades')->insert([
+                'propiedad_indicador' => $key['propiedad_indicador'],
+                'filas'               => $key['filas'],
+                'columnas'            => $key['columnas'],
+                'tipo_propiedades_id' => $key['tipo_propiedades_id'],
+            ]);
+        }
 
-            /**propiedad 32 */
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '13',
-                'fin_columna'     => '31',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '12',
-                'fin_columna'     => '31',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '10',
-                'fin_columna'     => '31',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '9',
-                'fin_columna'     => '31',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '7',
-                'fin_columna'     => '31',
-                'fila'            => '5', //E
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '6',
-                'fin_columna'     => '31',
-                'fila'            => '6', //F
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '5',
-                'fin_columna'     => '31',
-                'fila'            => '7', //G
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '3',
-                'fin_columna'     => '31',
-                'fila'            => '8', //H
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '2',
-                'fin_columna'     => '31',
-                'fila'            => '9', //I
-            ],
-            [
-                //id propiedad 32
-                'propiedades_id'  => '32',
-                'empieza_columna' => '1',
-                'fin_columna'     => '31',
-                'fila'            => '10', //J
-            ],
-            /**fin propiedad 32 */
+        /**insertando las columnas filas de las nuevas propiedades */
 
-            /**propiedad 33 */
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '5', //E
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '6', //F
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '7', //G
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '8', //H
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '9', //I
-            ],
-            [
-                //id propiedad 33
-                'propiedades_id'  => '33',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '10', //J
-            ],
-            /**fin propiedad 33 */
-
-            /**propiedad 34 */
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 35
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '5', //E
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '6', //F
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '7', //G
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '8', //H
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '9', //I
-            ],
-            [
-                //id propiedad 34
-                'propiedades_id'  => '34',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '10', //J
-            ],
-            /**fin propiedad 34 */
-
-            /**propiedad 35 */
-            [
-                //id propiedad 35
-                'propiedades_id'  => '35',
-                'empieza_columna' => '1',
-                'fin_columna'     => '14',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 35
-                'propiedades_id'  => '35',
-                'empieza_columna' => '1',
-                'fin_columna'     => '14',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 35
-                'propiedades_id'  => '35',
-                'empieza_columna' => '1',
-                'fin_columna'     => '14',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 35
-                'propiedades_id'  => '35',
-                'empieza_columna' => '1',
-                'fin_columna'     => '14',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 35
-                'propiedades_id'  => '35',
-                'empieza_columna' => '1',
-                'fin_columna'     => '14',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 35 */
-
-            /**propiedad 36 */
-            [
-                //id propiedad 36
-                'propiedades_id'  => '36',
-                'empieza_columna' => '7',
-                'fin_columna'     => '19',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 36
-                'propiedades_id'  => '36',
-                'empieza_columna' => '5',
-                'fin_columna'     => '19',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 36
-                'propiedades_id'  => '36',
-                'empieza_columna' => '4',
-                'fin_columna'     => '19',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 36
-                'propiedades_id'  => '36',
-                'empieza_columna' => '2',
-                'fin_columna'     => '19',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 36
-                'propiedades_id'  => '36',
-                'empieza_columna' => '1',
-                'fin_columna'     => '19',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 36 */
-
-            /**propiedad 37 */
-            [
-                //id propiedad 37
-                'propiedades_id'  => '37',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 37
-                'propiedades_id'  => '37',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 37
-                'propiedades_id'  => '37',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 37
-                'propiedades_id'  => '37',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 37
-                'propiedades_id'  => '37',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 37 */
-
-            /**propiedad 38 */
-            [
-                //id propiedad 38
-                'propiedades_id'  => '38',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 38
-                'propiedades_id'  => '38',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 38
-                'propiedades_id'  => '38',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 38
-                'propiedades_id'  => '38',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 38
-                'propiedades_id'  => '38',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 38 */
-
-            /**propiedad 39 */
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '19',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '19',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '18',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '18',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '17',
-                'fila'            => '5', //E
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '17',
-                'fila'            => '6', //F
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '16',
-                'fila'            => '7', //G
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '16',
-                'fila'            => '8', //H
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '15',
-                'fila'            => '9', //I
-            ],
-            [
-                //id propiedad 39
-                'propiedades_id'  => '39',
-                'empieza_columna' => '1',
-                'fin_columna'     => '15',
-                'fila'            => '10', //J
-            ],
-            /**fin propiedad 39 */
-
-            /**propiedad 40 */
-            [
-                //id propiedad 40
-                'propiedades_id'  => '40',
-                'empieza_columna' => '1',
-                'fin_columna'     => '21',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 40
-                'propiedades_id'  => '40',
-                'empieza_columna' => '1',
-                'fin_columna'     => '21',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 40
-                'propiedades_id'  => '40',
-                'empieza_columna' => '1',
-                'fin_columna'     => '21',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 40
-                'propiedades_id'  => '40',
-                'empieza_columna' => '1',
-                'fin_columna'     => '20',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 40
-                'propiedades_id'  => '40',
-                'empieza_columna' => '1',
-                'fin_columna'     => '20',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 40 */
-
-            /**propiedad 41 */
-            [
-                //id propiedad 41
-                'propiedades_id'  => '41',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 41
-                'propiedades_id'  => '41',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 41
-                'propiedades_id'  => '41',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 41
-                'propiedades_id'  => '41',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 41
-                'propiedades_id'  => '41',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 41 */
-
-            /**propiedad 42 */
-            [
-                //id propiedad 42
-                'propiedades_id'  => '42',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 42
-                'propiedades_id'  => '42',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 42
-                'propiedades_id'  => '42',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 42
-                'propiedades_id'  => '42',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 42
-                'propiedades_id'  => '42',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 42 */
-
-            /**propiedad 43 */
-            [
-                //id propiedad 43
-                'propiedades_id'  => '43',
-                'empieza_columna' => '1',
-                'fin_columna'     => '23',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 43
-                'propiedades_id'  => '43',
-                'empieza_columna' => '1',
-                'fin_columna'     => '23',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 43
-                'propiedades_id'  => '43',
-                'empieza_columna' => '1',
-                'fin_columna'     => '22',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 43
-                'propiedades_id'  => '43',
-                'empieza_columna' => '1',
-                'fin_columna'     => '22',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 43
-                'propiedades_id'  => '43',
-                'empieza_columna' => '1',
-                'fin_columna'     => '22',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 43 */
-
-            /**propiedad 44 */
-            [
-                //id propiedad 44
-                'propiedades_id'  => '44',
-                'empieza_columna' => '4',
-                'fin_columna'     => '33',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 44
-                'propiedades_id'  => '44',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 44
-                'propiedades_id'  => '44',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 44
-                'propiedades_id'  => '44',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 44
-                'propiedades_id'  => '44',
-                'empieza_columna' => '1',
-                'fin_columna'     => '33',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 44 */
-
-            /**propiedad 45 */
-            [
-                //id propiedad 45
-                'propiedades_id'  => '45',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 45
-                'propiedades_id'  => '45',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 45
-                'propiedades_id'  => '45',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 45
-                'propiedades_id'  => '45',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 45
-                'propiedades_id'  => '45',
-                'empieza_columna' => '1',
-                'fin_columna'     => '32',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 45 */
-
-            /**propiedad 46 */
-            [
-                //id propiedad 46
-                'propiedades_id'  => '46',
-                'empieza_columna' => '1',
-                'fin_columna'     => '27',
-                'fila'            => '1', //A
-            ],
-            [
-                //id propiedad 46
-                'propiedades_id'  => '46',
-                'empieza_columna' => '1',
-                'fin_columna'     => '26',
-                'fila'            => '2', //B
-            ],
-            [
-                //id propiedad 46
-                'propiedades_id'  => '46',
-                'empieza_columna' => '1',
-                'fin_columna'     => '26',
-                'fila'            => '3', //C
-            ],
-            [
-                //id propiedad 46
-                'propiedades_id'  => '46',
-                'empieza_columna' => '1',
-                'fin_columna'     => '26',
-                'fila'            => '4', //D
-            ],
-            [
-                //id propiedad 46
-                'propiedades_id'  => '46',
-                'empieza_columna' => '1',
-                'fin_columna'     => '25',
-                'fila'            => '5', //E
-            ],
-            /**fin propiedad 46 */
-
+        $secciones = [
             /**propiedades de la 19 a la 22 */
             /**propiedad 51 */
             [
@@ -2022,7 +1345,6 @@ class columnasFilasSeeder extends Seeder
             ],
             /**fin propiedad 75 */
         ];
-
         foreach ($secciones as $key) {
             DB::table('columnas_filas')->insert([
                 'propiedades_id'  => $key['propiedades_id'],
@@ -2031,5 +1353,6 @@ class columnasFilasSeeder extends Seeder
                 'fila'            => $key['fila'],
             ]);
         }
+
     }
 }

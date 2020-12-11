@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
  */
 
+/**trabajando sobre ellas */
+Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
+Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
@@ -58,27 +62,6 @@ Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioControl
 Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
 Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{solo_existencias?}/{con_material_velacion?}', 'FunerariaController@get_inventario');
 Route::get('funeraria/get_categorias_servicio', 'FunerariaController@get_categorias_servicio');
-
-/**RUTAS PARA FACTURACION */
-Route::get('facturacion/get_tipos_comprobante', 'FacturacionController@get_tipos_comprobante');
-Route::get('facturacion/get_metodos_pago', 'FacturacionController@get_metodos_pago');
-Route::get('facturacion/get_sat_formas_pago', 'FacturacionController@get_sat_formas_pago');
-Route::get('facturacion/get_tipos_relacion', 'FacturacionController@get_tipos_relacion');
-Route::get('facturacion/get_claves_productos_sat', 'FacturacionController@get_claves_productos_sat');
-Route::get('facturacion/get_sat_unidades', 'FacturacionController@get_sat_unidades');
-Route::get('facturacion/get_usos_cfdi', 'FacturacionController@get_usos_cfdi');
-Route::get('facturacion/get_sat_paises', 'FacturacionController@get_sat_paises');
-Route::get('facturacion/get_empresa_tipo_operaciones', 'FacturacionController@get_empresa_tipo_operaciones');
-Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'FacturacionController@get_operaciones');
-Route::get('facturacion/get_cfdi_from_xml/{folio?}', 'FacturacionController@leer_xml');
-Route::get('facturacion/get_cfdis_timbrados/{folio_id?}/{paginated?}/{metodo_pago_id?}/{tipo_comprobante_id?}', 'FacturacionController@get_cfdis_timbrados');
-Route::get('facturacion/get_cfdi_pdf/{folio_id?}', 'FacturacionController@get_cfdi_pdf');
-Route::get('facturacion/get_cfdi_download/{folio_id?}', 'FacturacionController@get_cfdi_download');
-Route::get('facturacion/consultar_cfdi_folio/{folio_id?}', 'FacturacionController@consultar_cfdi_folio');
-Route::get('facturacion/get_acuse_cancelacion_pdf/{folio_id?}', 'FacturacionController@get_acuse_cancelacion_pdf');
-Route::get('facturacion/get_cfdi_status_sat/{folio_id?}', 'FacturacionController@get_cfdi_status_sat');
-
-Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
 
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
@@ -162,15 +145,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
 
     /**rutas del cementerio */
+
     Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
     Route::post('cementerio/update_precio_propiedad', 'CementerioController@update_precio_propiedad');
     Route::post('cementerio/enable_disable', 'CementerioController@enable_disable');
     Route::get('cementerio/get_financiamientos', 'CementerioController@get_financiamientos');
-    Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_precio_by_id', 'CementerioController@get_precio_by_id');
     Route::get('cementerio/lista_precios_pdf/{idioma?}', 'CementerioController@lista_precios_pdf');
-    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
     Route::get('cementerio/get_vendedores', 'CementerioController@get_vendedores');
     Route::get('titulos/{operacion_id?}', 'CementerioController@generarNumeroTitulo');
     Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
@@ -243,14 +226,7 @@ Route::middleware(['auth:api'])->group(function () {
     /**rutas de servicios funerarios */
     Route::post('funeraria/control_solicitud/{tipo_servicio}', 'FunerariaController@control_solicitud');
 
-    Route::post('funeraria/control_contratos/{tipo_servicio}', 'FunerariaController@control_contratos');
-
     /**fin de rutas del cementerio */
-
-    /**rutas de timbrado de cfdi */
-    Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi');
-    Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio');
-
 });
 
 Route::get('inventarios/cementerio/documento_ubicacion_terreno', 'CementerioController@documento_ubicacion_terreno');
