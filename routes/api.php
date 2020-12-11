@@ -11,13 +11,15 @@ use Illuminate\Http\Request;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
+/**trabajando sobre ellas */
+Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
+Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
-
 
 /**rutas publicas_ entran sin token */
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
@@ -32,8 +34,6 @@ Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
 Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
 Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
 Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
-
-
 
 /**rutas de servicios funerarios */
 Route::get('funeraria/get_personal_recoger', 'FunerariaController@get_personal_recoger');
@@ -63,9 +63,6 @@ Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaControlle
 Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{solo_existencias?}/{con_material_velacion?}', 'FunerariaController@get_inventario');
 Route::get('funeraria/get_categorias_servicio', 'FunerariaController@get_categorias_servicio');
 
-
-Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
-
 Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 /**servicios accedidos desde el backend */
 Route::middleware(['client'])->group(function () {
@@ -76,7 +73,6 @@ Route::middleware(['client'])->group(function () {
 Route::middleware(['auth:api'])->group(function () {
     Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
 
-
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
     /**RUTA PARA OBTENER LOS PUESTOS DISPONIBLEN EN LA EMPRESA */
     /**RUTA PARA OBTENER LOS PERMISOS DEL USUARIO */
@@ -85,7 +81,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('get_perfil', 'Usuarios\UsuariosController@get_perfil');
     /**RUTA PARA OBTENER LOS DATOS DEL USUARIO */
     Route::get('get_usuarioById', 'Usuarios\UsuariosController@get_usuarioById');
-
 
     /**LAS RUTAS QUE ESTAN CONTROLADAS CON EL MIDDLEWARE "permiso" RECIBEN 2 PARAMETROS
      * EL PRIMERO ES EL NUMERO DEL MODULO
@@ -103,7 +98,6 @@ Route::middleware(['auth:api'])->group(function () {
     /**verificar el password del usuario recibe el request del token y el password */
     Route::post('verificar_password', 'Usuarios\UsuariosController@verificar_password');
 
-
     /**RUTAS PARA ROLES */
     Route::get('get_roles', 'Usuarios\RolesController@index');
     Route::get('get_roles_lista', 'Usuarios\RolesController@get_roles');
@@ -115,7 +109,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('add_roles', 'Usuarios\RolesController@add_roles');
     Route::post('update_rol', 'Usuarios\RolesController@update_rol');
     Route::post('delete_rol', 'Usuarios\RolesController@delete_rol');
-
 
     //Empresa
     Route::get('empresa/get_datos_empresa', 'EmpresaController@get_datos_empresa');
@@ -152,15 +145,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
 
     /**rutas del cementerio */
+
     Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
     Route::post('cementerio/update_precio_propiedad', 'CementerioController@update_precio_propiedad');
     Route::post('cementerio/enable_disable', 'CementerioController@enable_disable');
     Route::get('cementerio/get_financiamientos', 'CementerioController@get_financiamientos');
-    Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_precio_by_id', 'CementerioController@get_precio_by_id');
     Route::get('cementerio/lista_precios_pdf/{idioma?}', 'CementerioController@lista_precios_pdf');
-    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
     Route::get('cementerio/get_vendedores', 'CementerioController@get_vendedores');
     Route::get('titulos/{operacion_id?}', 'CementerioController@generarNumeroTitulo');
     Route::get('cementerio/documento_estado_de_cuenta_cementerio', 'CementerioController@documento_estado_de_cuenta_cementerio');
@@ -207,7 +200,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/proveedores/delete_proveedor', 'ProveedoresController@delete_proveedor');
     Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
 
-
     /**invnetario */
     Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
     Route::post('inventario/enable_disable/{tipo}', 'InventarioController@enable_disable');
@@ -234,16 +226,8 @@ Route::middleware(['auth:api'])->group(function () {
     /**rutas de servicios funerarios */
     Route::post('funeraria/control_solicitud/{tipo_servicio}', 'FunerariaController@control_solicitud');
 
-    Route::post('funeraria/control_contratos/{tipo_servicio}', 'FunerariaController@control_contratos');
-
-
-
-
-
-
     /**fin de rutas del cementerio */
 });
-
 
 Route::get('inventarios/cementerio/documento_ubicacion_terreno', 'CementerioController@documento_ubicacion_terreno');
 
@@ -260,9 +244,6 @@ Route::post('/password/reset', 'Auth\Api\ResetPasswordController@reset');
 
 Route::get('ubicacion_texto', 'CementerioController@ubicacion_texto'); //borrar
 
-
-
 //Route::resource('usuarios', 'UsuariosController',['only'=>['index']]);
-
 
 /**FIN DE RUTAS DEL SISTEMA DE LOGUEADO */

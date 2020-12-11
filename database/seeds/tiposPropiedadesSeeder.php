@@ -13,43 +13,43 @@ class tiposPropiedadesSeeder extends Seeder
     public function run()
     {
         $secciones = [
-            [
-                'tipo' => 'uniplex',
+            [ //1
+                'tipo'        => 'uniplex',
                 'descripcion' => 'Propiedades organizadas por módulos',
-                'capacidad' => '1'
+                'capacidad'   => '1',
             ],
-            [
-                'tipo' => 'duplex',
+            [ //2
+                'tipo'        => 'duplex',
                 'descripcion' => 'Propiedades organizadas por módulos',
-                'capacidad' => '2'
+                'capacidad'   => '2',
             ],
-            [
-                'tipo' => 'nichos',
+            [ //3
+                'tipo'        => 'nichos',
                 'descripcion' => 'Propiedades organizadas por columnas',
-                'capacidad' => '1'
+                'capacidad'   => '1',
             ],
-            [
-                'tipo' => 'cuadriplex',
+            [ //4
+                'tipo'        => 'cuadriplex',
                 'descripcion' => 'Propiedades organizadas por terrazas',
-                'capacidad' => '4'
+                'capacidad'   => '4',
             ],
-            [
-                'tipo' => 'triplex',
+            [ //5
+                'tipo'        => 'triplex',
                 'descripcion' => 'Propiedades por columnas',
-                'capacidad' => '3'
+                'capacidad'   => '3',
             ],
-            [
-                'tipo' => 'cuadriplex S/Terraza',
+            [ //6
+                'tipo'        => 'cuadriplex S/Terraza',
                 'descripcion' => 'Propiedades columnas',
-                'capacidad' => '4'
-            ]
+                'capacidad'   => '4',
+            ],
         ];
 
         foreach ($secciones as $key) {
             DB::table('tipo_propiedades')->insert([
-                'tipo' => $key['tipo'],
+                'tipo'        => $key['tipo'],
                 'descripcion' => $key['descripcion'],
-                'capacidad' => $key['capacidad']
+                'capacidad'   => $key['capacidad'],
             ]);
         }
     }
