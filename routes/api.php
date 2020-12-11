@@ -12,11 +12,6 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
-
-/**trabajando sobre ellas */
-Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
-Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
-
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
@@ -69,6 +64,7 @@ Route::middleware(['client'])->group(function () {
     Route::get('pagos/get_pagos_backend/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
 });
 /**fin de servicios accedidos desde el backend */
+
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
     Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
@@ -163,6 +159,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
     Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
+    Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
+    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
 
     /**rutas de funeraria ventas planes */
     Route::post('funeraria/control_ventas/{tipo_servicio}', 'FunerariaController@control_ventas'); //agregar,modificar
@@ -227,6 +225,29 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('funeraria/control_solicitud/{tipo_servicio}', 'FunerariaController@control_solicitud');
 
     /**fin de rutas del cementerio */
+
+    /**RUTAS PARA FACTURACION */
+    Route::get('facturacion/get_tipos_comprobante', 'FacturacionController@get_tipos_comprobante');
+    Route::get('facturacion/get_metodos_pago', 'FacturacionController@get_metodos_pago');
+    Route::get('facturacion/get_sat_formas_pago', 'FacturacionController@get_sat_formas_pago');
+    Route::get('facturacion/get_tipos_relacion', 'FacturacionController@get_tipos_relacion');
+    Route::get('facturacion/get_claves_productos_sat', 'FacturacionController@get_claves_productos_sat');
+    Route::get('facturacion/get_sat_unidades', 'FacturacionController@get_sat_unidades');
+    Route::get('facturacion/get_usos_cfdi', 'FacturacionController@get_usos_cfdi');
+    Route::get('facturacion/get_sat_paises', 'FacturacionController@get_sat_paises');
+    Route::get('facturacion/get_empresa_tipo_operaciones', 'FacturacionController@get_empresa_tipo_operaciones');
+    Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'FacturacionController@get_operaciones');
+    Route::get('facturacion/get_cfdi_from_xml/{folio?}', 'FacturacionController@leer_xml');
+    Route::get('facturacion/get_cfdis_timbrados/{folio_id?}/{paginated?}/{metodo_pago_id?}/{tipo_comprobante_id?}', 'FacturacionController@get_cfdis_timbrados');
+    Route::get('facturacion/get_cfdi_pdf/{folio_id?}', 'FacturacionController@get_cfdi_pdf');
+    Route::get('facturacion/get_cfdi_download/{folio_id?}', 'FacturacionController@get_cfdi_download');
+    Route::get('facturacion/consultar_cfdi_folio/{folio_id?}', 'FacturacionController@consultar_cfdi_folio');
+    Route::get('facturacion/get_acuse_cancelacion_pdf/{folio_id?}', 'FacturacionController@get_acuse_cancelacion_pdf');
+    Route::get('facturacion/get_cfdi_status_sat/{folio_id?}', 'FacturacionController@get_cfdi_status_sat');
+    /**rutas de timbrado de cfdi */
+    Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi');
+    Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio');
+
 });
 
 Route::get('inventarios/cementerio/documento_ubicacion_terreno', 'CementerioController@documento_ubicacion_terreno');
