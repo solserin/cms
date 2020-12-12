@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
+<<<<<<< HEAD
+=======
+/**en pruebas */
+
+>>>>>>> develop
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
@@ -102,6 +107,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
 
     /**rutas del cementerio */
+    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
     Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
@@ -173,7 +180,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_columna_fila_terraza', 'CementerioController@get_columna_fila_terraza');
     Route::get('inventarios/cementerio/precios_tarifas', 'CementerioController@precios_tarifas');
     Route::post('inventarios/cementerio/actualizar_precios_tarifas', 'CementerioController@actualizar_precios_tarifas');
-    Route::get('inventarios/cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
