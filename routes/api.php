@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
-Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -104,6 +103,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
 
     /**rutas del cementerio */
+    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
     Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
