@@ -12,11 +12,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
-<<<<<<< HEAD
-=======
 /**en pruebas */
 
->>>>>>> develop
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
