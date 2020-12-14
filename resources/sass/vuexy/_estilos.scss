@@ -1,3 +1,7 @@
+body * {
+    font-size: 13px;
+}
+
 .img-articulo {
     display: block;
     max-width: 230px;
@@ -986,6 +990,8 @@ th .vs-table-text {
 .cfdis-table table *{
     font-size: 13px !important;
 }
+
+
 
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
