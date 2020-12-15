@@ -80,7 +80,7 @@
         </div>
         <vs-divider />
       </div>
-      <div class="flex flex-wrap px-2 ">
+      <div class="flex flex-wrap px-2">
         <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2">
           <div class="flex flex-wrap">
             <div class="w-full pt-3 pb-3">
@@ -177,7 +177,7 @@
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-          <div class="flex flex-wrap ">
+          <div class="flex flex-wrap">
             <div class="w-full pt-3 pb-3">
               <div class="float-left">
                 <img width="30px" src="@assets/images/plus.svg" class="mt-2" />
@@ -245,7 +245,7 @@
                 'w-full sm:w-12/12 px-2',
                 verModificar
                   ? 'md:w-12/12 lg:w-12/12 xl:w-12/12'
-                  : 'md:w-7/12 lg:w-7/12 xl:w-7/12'
+                  : 'md:w-7/12 lg:w-7/12 xl:w-7/12',
               ]"
             >
               <label class="text-sm opacity-75 font-bold">
@@ -272,7 +272,7 @@
                 'w-full sm:w-12/12  pt-2 pb-3 px-2',
                 verModificar
                   ? ' md:w-6/12 lg:w-6/12 xl:w-6/12'
-                  : ' md:w-6/12 lg:w-6/12 xl:w-6/12'
+                  : ' md:w-6/12 lg:w-6/12 xl:w-6/12',
               ]"
               v-if="verModificar"
             >
@@ -290,7 +290,7 @@
                 'w-full sm:w-12/12  pt-2 pb-3 px-2',
                 verModificar
                   ? ' md:w-6/12 lg:w-6/12 xl:w-6/12'
-                  : ' md:w-5/12 lg:w-5/12 xl:w-5/12 mt-5'
+                  : ' md:w-5/12 lg:w-5/12 xl:w-5/12 mt-5',
               ]"
             >
               <vs-button
@@ -316,7 +316,7 @@
               </label>
               <vs-textarea
                 height="120px"
-                maxlength="400"
+                :rows="5"
                 size="large"
                 ref="nota"
                 type="text"
@@ -333,7 +333,7 @@
               </label>
               <vs-textarea
                 height="120px"
-                maxlength="400"
+                :rows="5"
                 size="large"
                 ref="nota"
                 type="text"
@@ -343,7 +343,7 @@
               />
             </div>
 
-            <div class="flex flex-wrap px-2 ">
+            <div class="flex flex-wrap px-2">
               <div class="w-full px-2">
                 <div class="mt-2">
                   <p class="text-center">
@@ -396,9 +396,7 @@
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
-      :accion="
-        'He revisado la información y quiero registrar este plan funerario'
-      "
+      :accion="'He revisado la información y quiero registrar este plan funerario'"
       :confirmarButton="'Registrar Plan Funerario'"
     ></ConfirmarAceptar>
   </div>
@@ -418,25 +416,25 @@ export default {
     "v-select": vSelect,
     Password,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_plan: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.limpiarValidation();
         //cargo nacionalidades
@@ -449,7 +447,7 @@ export default {
         /**agregando por default una seccion y un concepto */
         this.form.seccion = {
           value: "incluye",
-          label: "plan funerario"
+          label: "plan funerario",
         };
         (async () => {
           if (this.getTipoformulario == "modificar") {
@@ -461,7 +459,7 @@ export default {
           }
         })();
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -470,7 +468,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -478,7 +476,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_plan_id: {
       get() {
@@ -486,9 +484,9 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    verLista: function() {
+    verLista: function () {
       if (this.form.conceptos) {
         let mostrar = false;
         this.datos = [];
@@ -502,7 +500,7 @@ export default {
                   aplicar: concepto.aplicar_en,
                   seccion: element.seccion,
                   index_seccion: index_seccion,
-                  index_concepto: index_concepto
+                  index_concepto: index_concepto,
                 });
               });
               mostrar = true;
@@ -518,13 +516,13 @@ export default {
         return false;
       }
     },
-    verModificar: function() {
+    verModificar: function () {
       if (this.index_seccion !== "" && this.index_concepto !== "") {
         return true;
       } else {
         return false;
       }
-    }
+    },
   },
   data() {
     return {
@@ -537,20 +535,20 @@ export default {
       secciones: [
         {
           value: "incluye",
-          label: "plan funerario"
+          label: "plan funerario",
         },
         {
           value: "inhumacion",
-          label: "caso de inhumación"
+          label: "caso de inhumación",
         },
         {
           value: "cremacion",
-          label: "caso de cremación"
+          label: "caso de cremación",
         },
         {
           value: "velacion",
-          label: "caso de velación"
-        }
+          label: "caso de velación",
+        },
       ],
       form: {
         descripcion: "",
@@ -559,26 +557,26 @@ export default {
         conceptos: [
           {
             seccion: "incluye",
-            conceptos: []
+            conceptos: [],
           },
           {
             seccion: "inhumacion",
-            conceptos: []
+            conceptos: [],
           },
           {
             seccion: "cremacion",
-            conceptos: []
+            conceptos: [],
           },
           {
             seccion: "velacion",
-            conceptos: []
-          }
+            conceptos: [],
+          },
         ],
         nota: "",
         nota_ingles: "",
         concepto: "",
         concepto_ingles: "",
-        id_plan_modificar: 0
+        id_plan_modificar: 0,
         /**variables del modulo */
       },
       errores: [],
@@ -593,7 +591,7 @@ export default {
       callBackConfirmar: Function,
       openConfirmarAceptar: false,
       callBackConfirmarAceptar: Function,
-      accionNombre: "Modificar Plan Funerario"
+      accionNombre: "Modificar Plan Funerario",
     };
   },
   methods: {
@@ -618,8 +616,8 @@ export default {
       this.$validator.pause();
       this.$nextTick(() => {
         this.$validator.errors.clear();
-        this.$validator.fields.items.forEach(field => field.reset());
-        this.$validator.fields.items.forEach(field =>
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
           this.errors.remove(field)
         );
         this.$validator.resume();
@@ -629,7 +627,7 @@ export default {
       this.form.concepto = datos.concepto;
       this.form.concepto_ingles = datos.concepto_ingles;
       /**buscando el item de la lista de secciones */
-      this.secciones.forEach(element => {
+      this.secciones.forEach((element) => {
         if (element.value === datos.seccion) {
           this.form.seccion = element;
         }
@@ -646,7 +644,7 @@ export default {
       /**reseteando el concepto */
       this.form.seccion = {
         value: "incluye",
-        label: "plan funerario"
+        label: "plan funerario",
       };
       this.index_concepto = "";
       this.index_seccion = "";
@@ -660,7 +658,7 @@ export default {
     agregarConcepto() {
       this.$validator
         .validateAll("conceptos")
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Agregar Artículos/Servicios al Plan funerario",
@@ -669,7 +667,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             if (this.verModificar == true) {
@@ -690,13 +688,13 @@ export default {
                     1
                   );
                   /**se agrega el concepto al arreglo */
-                  this.form.conceptos.forEach(element => {
+                  this.form.conceptos.forEach((element) => {
                     if (element.seccion == this.form.seccion.value) {
                       element.conceptos.push({
                         concepto: this.form.concepto,
                         concepto_ingles: this.form.concepto_ingles,
                         aplicar_en: this.form.seccion.label,
-                        seccion: this.form.seccion.value
+                        seccion: this.form.seccion.value,
                       });
                     }
                   });
@@ -713,13 +711,13 @@ export default {
             } else {
               /**es agrregar el concepto */
               /**se agrega el concepto al arreglo */
-              this.form.conceptos.forEach(element => {
+              this.form.conceptos.forEach((element) => {
                 if (element.seccion == this.form.seccion.value) {
                   element.conceptos.push({
                     concepto: this.form.concepto,
                     concepto_ingles: this.form.concepto_ingles,
                     aplicar_en: this.form.seccion.label,
-                    seccion: this.form.seccion.value
+                    seccion: this.form.seccion.value,
                   });
                 }
               });
@@ -728,7 +726,7 @@ export default {
             /**reseteando el concepto */
             this.form.seccion = {
               value: "incluye",
-              label: "plan funerario"
+              label: "plan funerario",
             };
             this.index_concepto = "";
             this.index_seccion = "";
@@ -765,7 +763,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "4000"
+          time: "4000",
         });
         this.cerrarVentana();
       }
@@ -773,7 +771,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Registro de Planes Funerarios",
@@ -782,7 +780,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             this.errores = [];
@@ -807,7 +805,7 @@ export default {
       this.$vs.loading();
       planes
         .registrar_plan(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -816,7 +814,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar", res.data);
             this.cerrarVentana();
@@ -827,12 +825,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
@@ -843,7 +841,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -854,7 +852,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
@@ -864,7 +862,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -878,7 +876,7 @@ export default {
       this.$vs.loading();
       planes
         .update_plan(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -887,7 +885,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar", res.data);
             this.cerrarVentana();
@@ -899,12 +897,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
@@ -915,7 +913,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -926,7 +924,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
@@ -936,7 +934,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -970,20 +968,20 @@ export default {
       this.form.conceptos = [
         {
           seccion: "incluye",
-          conceptos: []
+          conceptos: [],
         },
         {
           seccion: "inhumacion",
-          conceptos: []
+          conceptos: [],
         },
         {
           seccion: "cremacion",
-          conceptos: []
+          conceptos: [],
         },
         {
           seccion: "velacion",
-          conceptos: []
-        }
+          conceptos: [],
+        },
       ];
       this.form.nota = "";
       this.form.nota_ingles = "";
@@ -991,8 +989,8 @@ export default {
     },
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

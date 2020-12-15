@@ -534,7 +534,7 @@
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
             <vs-textarea
               height="200px"
-              maxlength="350"
+              :rows="7"
               size="large"
               ref="nota"
               type="text"

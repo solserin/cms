@@ -3528,7 +3528,7 @@
                               >
                               <vs-textarea
                                 height="240px"
-                                maxlength="350"
+                                :rows="9"
                                 size="large"
                                 ref="nota"
                                 type="text"

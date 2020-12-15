@@ -17,7 +17,7 @@
         <div class="w-full px-5">
           <vs-textarea
             height="200px"
-            maxlength="350"
+            :rows="7"
             size="large"
             ref="nota"
             type="text"
@@ -52,16 +52,16 @@ export default {
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     nota: {
       type: String,
       required: false,
-      default: ""
-    }
+      default: "",
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$nextTick(() =>
           this.$refs["nota"].$el.querySelector("textarea").focus()
@@ -73,12 +73,12 @@ export default {
         /**cargando nota default */
         this.nota_text = this.getNota;
       }
-    }
+    },
   },
 
   data() {
     return {
-      nota_text: ""
+      nota_text: "",
     };
   },
   computed: {
@@ -88,7 +88,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getNota: {
       get() {
@@ -96,8 +96,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     acceptAlert() {
@@ -105,11 +105,11 @@ export default {
     },
     cerrar() {
       this.$emit("closeNotas", this.nota_text);
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showNota) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -117,6 +117,6 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>

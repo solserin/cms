@@ -83,9 +83,7 @@
         <div
           class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2 text-center"
         >
-          <label class="text-base opacity-75 font-medium">
-            Multipago
-          </label>
+          <label class="text-base opacity-75 font-medium"> Multipago </label>
           <div>
             <vs-switch
               class="mt-3 ml-auto mr-auto"
@@ -244,19 +242,13 @@
                   <div class="py-2 font-bold text-base"></div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base">
-                    Monto Programado $
-                  </div>
+                  <div class="py-2 text-base">Monto Programado $</div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base">
-                    Intereses Generados $
-                  </div>
+                  <div class="py-2 text-base">Intereses Generados $</div>
                 </vs-td>
                 <vs-td>
-                  <div class="py-2 text-base">
-                    Descuento Disponible $
-                  </div>
+                  <div class="py-2 text-base">Descuento Disponible $</div>
                 </vs-td>
                 <vs-td>
                   <div class="py-2 text-base">
@@ -266,9 +258,7 @@
               </vs-tr>
               <vs-tr class="">
                 <vs-td colspan="5">
-                  <div class="py-2 font-bold text-base">
-                    Totales $
-                  </div>
+                  <div class="py-2 font-bold text-base">Totales $</div>
                 </vs-td>
                 <vs-td>
                   <div class="py-2 text-base">
@@ -338,9 +328,7 @@
                   tipo de cambio
                 </label>
                 <div>
-                  <span class="uppercase">
-                    peso mexicano ($1.00 MXN)
-                  </span>
+                  <span class="uppercase"> peso mexicano ($1.00 MXN) </span>
                 </div>
               </div>
               <div class="w-full">
@@ -469,9 +457,7 @@
                 <div
                   class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
                 >
-                  <label class="text-sm opacity-75 font-bold">
-                    BANCO
-                  </label>
+                  <label class="text-sm opacity-75 font-bold"> BANCO </label>
                   <img
                     width="32"
                     class="img-center float-left mt-8 mr-2"
@@ -507,7 +493,7 @@
                   </label>
                   <vs-textarea
                     height="240px"
-                    maxlength="350"
+                    :rows="7"
                     size="large"
                     ref="nota"
                     type="text"
