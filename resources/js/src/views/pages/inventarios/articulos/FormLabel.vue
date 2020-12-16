@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups normal-forms venta-propiedades background-header-forms articulos"
+      class="normal-forms background-header-forms servicios_funerarios forms-popups-100"
       fullscreen
       close="cancelar"
       :title="title"
@@ -59,7 +59,7 @@
                   class="cursor-pointer img-btn"
                   src="@assets/images/printlote.svg"
                 />
-                <span class="texto-btn">Imprimir Todos</span>
+                <span class="texto-btn">Imprimir Seleccionados</span>
               </vs-button>
             </div>
           </div>
@@ -71,65 +71,84 @@
         @search="handleSearch"
         @change-page="handleChangePage"
         @sort="handleSort"
-        :data="form.lotes"
         noDataText="0 Resultados"
         class="mt-6"
+        :data="form.lotes"
       >
         <template slot="header">
           <h3>Lotes Disponibles del artículo</h3>
         </template>
         <template slot="thead">
-          <vs-th>Id Artículo</vs-th>
-          <vs-th>Código de Barras</vs-th>
-          <vs-th>Artículo</vs-th>
-          <vs-th>Acciones</vs-th>
+          <vs-th>
+            <vs-checkbox
+              ref="imprimirtodos"
+              color="success"
+              class="mt-3 ml-auto mr-auto"
+              v-model="todos"
+            ></vs-checkbox>
+          </vs-th>
+          <vs-th>Clave Artículo</vs-th>
+          <vs-th>Descripción</vs-th>
+          <vs-th>Número de Lote</vs-th>
+          <vs-th>Existencia</vs-th>
+          <vs-th>Cantidad a Imprimir</vs-th>
+          <vs-th>Imprimir</vs-th>
         </template>
         <template slot-scope="{ data }">
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{ data[indextr].id }}</span>
+              <vs-checkbox
+                ref="imprimir"
+                color="success"
+                class="mt-3 ml-auto mr-auto"
+                v-model="data[indextr].imprimir"
+              ></vs-checkbox>
             </vs-td>
             <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{ data[indextr].id }}</span>
+              <span class="font-semibold">{{
+                data[indextr].articulos_id
+              }}</span>
             </vs-td>
             <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{ data[indextr].id }}</span>
+              <span class="font-semibold">{{ data[indextr].descripcion }}</span>
+            </vs-td>
+            <vs-td :data="data[indextr].id">
+              <span class="font-semibold">{{ data[indextr].lote_id }}</span>
+            </vs-td>
+            <vs-td :data="data[indextr].id">
+              <span class="font-semibold">{{ data[indextr].existencia }}</span>
+            </vs-td>
+            <vs-td class="w-2/12">
+              <vs-input
+                :name="'cantidad' + indextr"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required|integer|min_value:' + 0"
+                class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad"
+                maxlength="4"
+                v-model="form.lotes[indextr].cantidad_imprimir"
+              />
+              <div>
+                <span class="text-danger text-xs">{{
+                  errors.first("cantidad" + indextr)
+                }}</span>
+              </div>
+
+              <div>
+                <span
+                  class="text-danger text-xs"
+                  v-if="errores['lotes.' + indextr + '.cantidad']"
+                >
+                  {{ errores["lotes." + indextr + ".cantidad"][0] }}
+                </span>
+              </div>
             </vs-td>
 
             <vs-td :data="data[indextr].id">
               <div class="flex flex-start">
                 <img
-                  class="cursor-pointer img-btn ml-auto"
-                  src="@assets/images/printlote.svg"
-                  title="Etiquetar"
-                  @click="openFormLabels(data[indextr].id)"
-                  v-if="data[indextr].tipo_articulos_id == 1"
-                />
-                <img
-                  class="cursor-pointer img-btn ml-auto mr-1"
-                  src="@assets/images/na.svg"
-                  title="No etiquetable"
-                  v-else
-                />
-                <img
-                  class="cursor-pointer img-btn ml-auto mr-1"
-                  src="@assets/images/edit.svg"
-                  title="Modificar"
-                  @click="openModificar(data[indextr].id)"
-                />
-                <img
-                  v-if="data[indextr].status == 1"
-                  class="cursor-pointer img-btn-32 mr-auto ml-3"
-                  src="@assets/images/switchon.svg"
-                  title="Deshabilitar"
-                  @click="
-                    deleteArticulo(data[indextr].id, data[indextr].descripcion)
-                  "
-                />
-                <img
-                  v-else
-                  class="cursor-pointer img-btn-32 mr-auto ml-3"
-                  src="@assets/images/switchoff.svg"
+                  class="cursor-pointer img-btn-32 mr-auto ml-auto"
+                  src="@assets/images/printer.svg"
                   title="Habilitar"
                   @click="
                     altaArticulo(data[indextr].id, data[indextr].descripcion)
@@ -200,6 +219,13 @@ export default {
         (async () => {
           this.title = "Imprimir etiquetado de inventario";
           await this.get_inventario();
+          this.$nextTick(() => {
+            this.$refs["imprimirtodos"].$el.querySelector("input").onchange = (
+              $event
+            ) => {
+              this.CheckTodos($event, "btn");
+            };
+          });
         })();
       }
     },
@@ -241,8 +267,10 @@ export default {
           label: "NO",
         },
       ],
+      todos: false,
       descripcion: "",
       existencia: 0,
+      selected: [],
       form: {
         lotes: [],
         id_articulo: 0,
@@ -256,11 +284,6 @@ export default {
       try {
         let res = await inventario.get_inventariable_etiquetado();
         let datos = res.data;
-        console.log(
-          "🚀 ~ file: FormLabel.vue ~ line 168 ~ get_articulo_by_id ~ datos",
-          datos
-        );
-
         /**reviso que tenga lotes el articulo seleccionado */
         if (datos.length > 0) {
           for (let index = 0; index < datos.length; index++) {
@@ -269,21 +292,36 @@ export default {
               this.descripcion = datos[index].descripcion;
               this.existencia = datos[index].existencia;
               this.form.id_articulo = this.get_articulo_id;
-
-              /**cargando solo los lotes con existencia */
-              datos[index].inventario.forEach((element) => {
-                if (element.existencia > 0) {
-                  this.form.lotes.push({
-                    lote_id: element.lotes_id,
-                    articulos_id: element.articulos_id,
-                    existencia: element.existencia,
-                    cantidad_imprimir: element.existencia,
-                  });
-                }
-              });
               break;
             }
           }
+          /**cargando solo los lotes con existencia */
+          datos.forEach((articulo) => {
+            articulo.inventario.forEach((element, indextr) => {
+              if (element.existencia > 0) {
+                this.form.lotes.push({
+                  descripcion: articulo.descripcion,
+                  lote_id: element.lotes_id,
+                  articulos_id: element.articulos_id,
+                  existencia: element.existencia,
+                  cantidad_imprimir: element.existencia,
+                  imprimir:
+                    element.articulos_id == this.get_articulo_id ? true : false,
+                });
+
+                /**acomodando los eventos del checkbox */
+                this.$nextTick(() => {
+                  this.$refs["imprimir"][indextr].$el.querySelector(
+                    "input"
+                  ).onchange = ($event) => {
+                    /**revisar si se activo el check */
+                    //this.checarTodosModulo($event, modulo.id);
+                    this.CheckTodos($event, indextr);
+                  };
+                });
+              }
+            });
+          });
         } else {
           this.$vs.notify({
             title: "Impresión de etiquetas",
@@ -312,6 +350,49 @@ export default {
         this.cerrarVentana();
       }
     },
+
+    CheckTodos(event, indextr) {
+      this.$nextTick(() => {
+        if (indextr != "btn") {
+          /**recorriendo el array para ver si se debe activar el todos o quitar  */
+          if (event.target.checked == false) {
+            this.todos = false;
+            this.$nextTick(() => {
+              this.$refs["imprimirtodos"][0].$el.querySelector(
+                "input"
+              ).checked = false;
+            });
+          } else {
+            this.form.lotes[indextr].imprimir = true;
+            this.$refs["imprimir"][indextr].$el.querySelector(
+              "input"
+            ).checked = true;
+
+            let allChecked = true;
+            for (let index = 0; index < this.form.lotes.length; index++) {
+              console.log(this.form.lotes[index].imprimir);
+              if (this.form.lotes[index].imprimir == false) {
+                allChecked = false;
+                break;
+              }
+            }
+            if (allChecked == true) {
+              this.todos = true;
+              this.$refs["imprimirtodos"][0].$el.querySelector(
+                "input"
+              ).checked = true;
+            }
+          }
+        } else {
+          for (let index = 0; index < this.form.lotes.length; index++) {
+            this.form.lotes[index].imprimir = event.target.checked;
+            this.$refs["imprimir"][index].$el.querySelector("input").checked =
+              event.target.checked;
+          }
+        }
+      });
+    },
+
     acceptAlert() {
       this.$validator
         .validateAll()
@@ -355,7 +436,10 @@ export default {
       this.$emit("closeVentana");
     },
     //regresa los datos a su estado inicial
-    limpiarVentana() {},
+    limpiarVentana() {
+      this.form.lotes = [];
+      this.todos.false;
+    },
     limpiarValidation() {
       this.$validator.pause();
       this.$nextTick(() => {

@@ -199,13 +199,13 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                 v-if="data[indextr].tipo_articulos_id == 1"
               />
               <img
-                class="cursor-pointer img-btn ml-auto mr-1"
+                class="cursor-pointer img-btn ml-auto mr-2"
                 src="@assets/images/na.svg"
                 title="No etiquetable"
                 v-else
               />
               <img
-                class="cursor-pointer img-btn ml-auto mr-1"
+                class="cursor-pointer img-btn ml-auto mr-2"
                 src="@assets/images/edit.svg"
                 title="Modificar"
                 @click="openModificar(data[indextr].id)"
