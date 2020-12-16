@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use PDF;
-use App\Ajustes;
-use AjusteDetalle;
+use App\AjusteInventarioDetalle;
 use App\Articulos;
-use App\Categorias;
-use App\SatUnidades;
-use App\VentaDetalle;
 use App\Departamentos;
-use App\TipoArticulos;
-use Illuminate\Http\Request;
-use App\Ajustes as AppAjustes;
 use App\MovimientosInventario;
 use App\SATProductosServicios;
-use App\AjusteInventarioDetalle;
+use App\SatUnidades;
+use App\TipoArticulos;
+use App\VentaDetalle;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class InventarioController extends ApiController
 {
@@ -35,7 +31,7 @@ class InventarioController extends ApiController
         $unidades = SatUnidades::get();
         foreach ($unidades as $key => &$unidad) {
             $unidad['unidad']
-                = $unidad['unidad'] . '(' . $unidad['clave'] . ')';
+            = $unidad['unidad'] . '(' . $unidad['clave'] . ')';
         }
         return $unidades;
     }
@@ -53,25 +49,25 @@ class InventarioController extends ApiController
         }
         //validaciones
         $validaciones = [
-            'tipoAjuste.value' => 'required',
-            'ajuste.*.id' => [
-                'required'
+            'tipoAjuste.value'            => 'required',
+            'ajuste.*.id'                 => [
+                'required',
             ],
-            'ajuste.*.caduca_b' => [
-                'required'
+            'ajuste.*.caduca_b'           => [
+                'required',
             ],
-            'ajuste.*.fecha_caducidad' => [
-                ''
+            'ajuste.*.fecha_caducidad'    => [
+                '',
             ],
-            'ajuste.*.lote' => [
-                ''
+            'ajuste.*.lote'               => [
+                '',
             ],
-            'ajuste.*.existencia_fisica' => [
-                'required'
+            'ajuste.*.existencia_fisica'  => [
+                'required',
             ],
             'ajuste.*.existencia_sistema' => [
-                'required'
-            ]
+                'required',
+            ],
         ];
 
         //if ($request->tipoAjuste['value'] == 1) {
@@ -85,12 +81,12 @@ class InventarioController extends ApiController
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
-            'required' => 'Ingrese la clave del ajuste',
-            'ajuste.id.required' => 'ingrese el id del artículo',
-            'ajuste.existencia_fisica.required' => 'ingrese la existencia física',
+            'required'                           => 'Ingrese la clave del ajuste',
+            'ajuste.id.required'                 => 'ingrese el id del artículo',
+            'ajuste.existencia_fisica.required'  => 'ingrese la existencia física',
             'ajuste.existencia_sistema.required' => 'ingrese la existencia en el sistema',
-            'ajuste.caduca_b.required' => 'indique si al artículo caduca',
-            'ajuste.fecha_caducidad.required' => 'indique la fecha de caducidad',
+            'ajuste.caduca_b.required'           => 'indique si al artículo caduca',
+            'ajuste.fecha_caducidad.required'    => 'indique la fecha de caducidad',
             'ajuste.fecha_caducidad.date_format' => 'indique la fecha de caducidad(Y-m-d)',
         ];
         request()->validate(
@@ -104,9 +100,9 @@ class InventarioController extends ApiController
                 /**se crea un lote y despues se agregan al inventario */
                 $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
                     [
-                        'nota' => $request->nota,
-                        'fecha_registro' => now(),
-                        'registro_id' => (int) $request->user()->id,
+                        'nota'                => $request->nota,
+                        'fecha_registro'      => now(),
+                        'registro_id'         => (int) $request->user()->id,
                         'tipo_movimientos_id' => 2,
                         //'subtotal' => 0,
                         //'descuento' => 0,
@@ -122,13 +118,13 @@ class InventarioController extends ApiController
                     }
                     DB::table('ajuste_detalle')->insert(
                         [
-                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : NULL,
-                            'existencia_sistema' => $articulo['existencia_sistema'],
-                            'existencia_fisica' => $articulo['existencia_fisica'],
+                            'fecha_caducidad'           => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
+                            'existencia_sistema'        => $articulo['existencia_sistema'],
+                            'existencia_fisica'         => $articulo['existencia_fisica'],
                             'movimientos_inventario_id' => $id_movimiento,
-                            'lotes_id' => $id_movimiento,
-                            'articulos_id' => $articulo['id'],
-                            'nota' => $articulo['nota']
+                            'lotes_id'                  => $id_movimiento,
+                            'articulos_id'              => $articulo['id'],
+                            'nota'                      => $articulo['nota'],
                             /**entrada de lostes por ajuste */
                         ]
                     );
@@ -137,11 +133,11 @@ class InventarioController extends ApiController
                 foreach ($request->ajuste as $key => $articulo) {
                     DB::table('inventario')->insert(
                         [
-                            'lotes_id' => $id_movimiento,
+                            'lotes_id'           => $id_movimiento,
                             'precio_compra_neto' => $articulo['precio_compra'],
-                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : NULL,
-                            'existencia' => $articulo['existencia_fisica'],
-                            'articulos_id' => $articulo['id'],
+                            'fecha_caducidad'    => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
+                            'existencia'         => $articulo['existencia_fisica'],
+                            'articulos_id'       => $articulo['id'],
                         ]
                     );
                 }
@@ -149,9 +145,9 @@ class InventarioController extends ApiController
                 /**es un ajuste de inventario del invnetario actual */
                 $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
                     [
-                        'nota' => $request->nota,
-                        'fecha_registro' => now(),
-                        'registro_id' => (int) $request->user()->id,
+                        'nota'                => $request->nota,
+                        'fecha_registro'      => now(),
+                        'registro_id'         => (int) $request->user()->id,
                         'tipo_movimientos_id' => 1,
                         //'subtotal' => 0,
                         //'descuento' => 0,
@@ -164,13 +160,13 @@ class InventarioController extends ApiController
                 foreach ($request->ajuste as $key => $articulo) {
                     DB::table('ajuste_detalle')->insert(
                         [
-                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : NULL,
-                            'existencia_sistema' => $articulo['existencia_sistema'],
-                            'existencia_fisica' => $articulo['existencia_fisica'],
+                            'fecha_caducidad'           => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
+                            'existencia_sistema'        => $articulo['existencia_sistema'],
+                            'existencia_fisica'         => $articulo['existencia_fisica'],
                             'movimientos_inventario_id' => $id_movimiento,
-                            'lotes_id' => $articulo['lote'],
-                            'articulos_id' => $articulo['id'],
-                            'nota' => $articulo['nota']
+                            'lotes_id'                  => $articulo['lote'],
+                            'articulos_id'              => $articulo['id'],
+                            'nota'                      => $articulo['nota'],
                             /**entrada de lostes por ajuste */
                         ]
                     );
@@ -179,7 +175,7 @@ class InventarioController extends ApiController
                 foreach ($request->ajuste as $key => $articulo) {
                     DB::table('inventario')->where('lotes_id', $articulo['lote'])->where('articulos_id', $articulo['id'])->update(
                         [
-                            'existencia' => $articulo['existencia_fisica']
+                            'existencia' => $articulo['existencia_fisica'],
                         ]
                     );
                 }
@@ -201,25 +197,24 @@ class InventarioController extends ApiController
         }
         /**procede la peticion */
 
-
         //validaciones
         $validaciones = [
-            'id_articulo_modificar' => '',
-            'descripcion' => 'required',
-            'descripcion_ingles' => 'required',
-            'tipo_articulo.value' => 'numeric|required',
-            'departamento.value' => 'numeric|required',
-            'categoria.value' => 'numeric|required',
-            'unidad_sat.value' => 'numeric|required',
-            'unidad.value' => 'numeric|required',
-            'opcion_iva.value' => 'numeric|required',
+            'id_articulo_modificar'  => '',
+            'descripcion'            => 'required',
+            'descripcion_ingles'     => 'required',
+            'tipo_articulo.value'    => 'numeric|required',
+            'departamento.value'     => 'numeric|required',
+            'categoria.value'        => 'numeric|required',
+            'unidad_sat.value'       => 'numeric|required',
+            'unidad.value'           => 'numeric|required',
+            'opcion_iva.value'       => 'numeric|required',
             'opcion_caducidad.value' => 'numeric|required',
-            'minimo_inventario' => 'integer|required|min:1',
-            'maximo_inventario' => 'integer|required|gte:minimo_inventario',
+            'minimo_inventario'      => 'integer|required|min:1',
+            'maximo_inventario'      => 'integer|required|gte:minimo_inventario',
             'opcion_caducidad.value' => 'numeric|required',
-            'costo_compra' => 'numeric|required|min:1',
-            'costo_venta' => 'numeric|required|min:1',
-            'codigo_barras' => ''
+            'costo_compra'           => 'numeric|required|min:1',
+            'costo_venta'            => 'numeric|required|min:1',
+            'codigo_barras'          => '',
         ];
 
         /**verificando si es tipo modificar para validar que venga el id a modificar */
@@ -250,61 +245,60 @@ class InventarioController extends ApiController
             /**es de tipo servicio */
             $request->minimo_inventario = 1;
             $request->maximo_inventario = 1;
-            $request->codigo_barras = NULL;
-            $opcion_caducidad = 0;
+            $request->codigo_barras     = null;
+            $opcion_caducidad           = 0;
         }
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
             'id_articulo_modificar.required' => 'Ingrese un la clave única del artículo',
-            'required' => 'Ingrese este dato',
-            'numeric' => 'Este dato debe ser un número',
-            'integer' => 'Este dato debe ser un número entero',
-            'min' => 'la cantidad debe ser mínimo 1 (Uno)',
-            'gte' => 'la cantidad debe ser igual o mayor al minimo de inventario'
+            'required'                       => 'Ingrese este dato',
+            'numeric'                        => 'Este dato debe ser un número',
+            'integer'                        => 'Este dato debe ser un número entero',
+            'min'                            => 'la cantidad debe ser mínimo 1 (Uno)',
+            'gte'                            => 'la cantidad debe ser igual o mayor al minimo de inventario',
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
 
-
         /*  $unidad_compra = '';
         $unidad_venta = '';
 
         if ($request->tipo_articulo['value'] == 1) {
-            //unidad de pieza 
-            $unidad_compra = 1;
-            $unidad_venta = 1;
+        //unidad de pieza
+        $unidad_compra = 1;
+        $unidad_venta = 1;
         } else {
-            //unidad de servicio
-            $unidad_compra = 2;
-            $unidad_venta = 2;
+        //unidad de servicio
+        $unidad_compra = 2;
+        $unidad_venta = 2;
         }
-        */
+         */
         $id_articulo = 0;
         try {
             DB::beginTransaction();
             if ($tipo_servicio == 'agregar') {
                 $id_articulo = DB::table('articulos')->insertGetId(
                     [
-                        'imagen' => trim($request->imagen) === '' ? NULL : trim($request->imagen),
-                        'tipo_articulos_id' => $request->tipo_articulo['value'],
+                        'imagen'                     => trim($request->imagen) === '' ? null : trim($request->imagen),
+                        'tipo_articulos_id'          => $request->tipo_articulo['value'],
                         'sat_productos_servicios_id' => $request->unidad_sat['value'],
-                        'factor' => 1,
-                        'codigo_barras' => $request->codigo_barras,
-                        'descripcion' => $request->descripcion,
-                        'descripcion_ingles' => $request->descripcion_ingles,
-                        'precio_compra' => $request->costo_compra,
-                        'precio_venta' => $request->costo_venta,
-                        'minimo' => $request->minimo_inventario,
-                        'maximo' => $request->maximo_inventario,
-                        'caduca_b' => $opcion_caducidad,
-                        'grava_iva_b' => $request->opcion_iva['value'],
-                        'categorias_id' => $request->categoria['value'],
-                        'sat_unidades_compra' => $request->unidad['value'],
-                        'sat_unidades_venta' => $request->unidad['value'],
-                        'nota' => $request->nota
+                        'factor'                     => 1,
+                        'codigo_barras'              => $request->codigo_barras,
+                        'descripcion'                => $request->descripcion,
+                        'descripcion_ingles'         => $request->descripcion_ingles,
+                        'precio_compra'              => $request->costo_compra,
+                        'precio_venta'               => $request->costo_venta,
+                        'minimo'                     => $request->minimo_inventario,
+                        'maximo'                     => $request->maximo_inventario,
+                        'caduca_b'                   => $opcion_caducidad,
+                        'grava_iva_b'                => $request->opcion_iva['value'],
+                        'categorias_id'              => $request->categoria['value'],
+                        'sat_unidades_compra'        => $request->unidad['value'],
+                        'sat_unidades_venta'         => $request->unidad['value'],
+                        'nota'                       => $request->nota,
                     ]
                 );
             }
@@ -334,50 +328,50 @@ class InventarioController extends ApiController
 
                 /**validando que nno se cambie el nombre ni tipo, categoria, departamento para cuidar la integridad de los contratos */
                 $ajuste = AjusteInventarioDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
-                $venta = VentaDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
+                $venta  = VentaDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
 
                 $articulo = Articulos::where('id', $request->id_articulo_modificar)->first();
                 /*if (count($ajuste) > 0 || count($venta) > 0) {
-                    if ($articulo['tipo_articulos_id'] != $request->tipo_articulo['value']) {
-                        return $this->errorResponse('No se puede cambiar el tipo de artículos ya que se tienen movimientos registrados con este artículo.', 409);
-                    }
+                if ($articulo['tipo_articulos_id'] != $request->tipo_articulo['value']) {
+                return $this->errorResponse('No se puede cambiar el tipo de artículos ya que se tienen movimientos registrados con este artículo.', 409);
+                }
 
-                    if ($articulo['sat_productos_servicios_id'] != $request->unidad_sat['value']) {
-                        return $this->errorResponse('No se puede cambiar la clave del sat ya que se tienen movimientos registrados con este artículo.', 409);
-                    }
+                if ($articulo['sat_productos_servicios_id'] != $request->unidad_sat['value']) {
+                return $this->errorResponse('No se puede cambiar la clave del sat ya que se tienen movimientos registrados con este artículo.', 409);
+                }
 
-                    if ($articulo['categorias_id'] != $request->categoria['value']) {
-                        return $this->errorResponse('No se puede cambiar la categoría ya que se tienen movimientos registrados con este artículo.', 409);
-                    }
+                if ($articulo['categorias_id'] != $request->categoria['value']) {
+                return $this->errorResponse('No se puede cambiar la categoría ya que se tienen movimientos registrados con este artículo.', 409);
+                }
                 }*/
 
                 /**verificar que no cambie el tipo de caducidad si ya fue vendido algo de ese producto */
                 /**es modificar */
                 DB::table('articulos')->where('id', '=', $request->id_articulo_modificar)->update(
                     [
-                        'imagen' => trim($request->imagen) === '' ? NULL : trim($request->imagen),
-                        'tipo_articulos_id' => $request->tipo_articulo['value'],
+                        'imagen'                     => trim($request->imagen) === '' ? null : trim($request->imagen),
+                        'tipo_articulos_id'          => $request->tipo_articulo['value'],
                         'sat_productos_servicios_id' => $request->unidad_sat['value'],
-                        'factor' => 1,
-                        'codigo_barras' => $request->codigo_barras,
-                        'descripcion' => $request->descripcion,
-                        'descripcion_ingles' => $request->descripcion_ingles,
-                        'precio_compra' => $request->costo_compra,
-                        'precio_venta' => $request->costo_venta,
-                        'minimo' => $request->minimo_inventario,
-                        'maximo' => $request->maximo_inventario,
-                        'caduca_b' => $opcion_caducidad,
-                        'grava_iva_b' => $request->opcion_iva['value'],
-                        'categorias_id' => $request->categoria['value'],
-                        'sat_unidades_compra' => $request->unidad['value'],
-                        'sat_unidades_venta' => $request->unidad['value'],
-                        'nota' => $request->nota
+                        'factor'                     => 1,
+                        'codigo_barras'              => $request->codigo_barras,
+                        'descripcion'                => $request->descripcion,
+                        'descripcion_ingles'         => $request->descripcion_ingles,
+                        'precio_compra'              => $request->costo_compra,
+                        'precio_venta'               => $request->costo_venta,
+                        'minimo'                     => $request->minimo_inventario,
+                        'maximo'                     => $request->maximo_inventario,
+                        'caduca_b'                   => $opcion_caducidad,
+                        'grava_iva_b'                => $request->opcion_iva['value'],
+                        'categorias_id'              => $request->categoria['value'],
+                        'sat_unidades_compra'        => $request->unidad['value'],
+                        'sat_unidades_venta'         => $request->unidad['value'],
+                        'nota'                       => $request->nota,
                     ]
                 );
             }
             DB::commit();
             return
-                $tipo_servicio == 'agregar' ? $id_articulo : $request->id_articulo_modificar;
+            $tipo_servicio == 'agregar' ? $id_articulo : $request->id_articulo_modificar;
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
@@ -387,9 +381,9 @@ class InventarioController extends ApiController
     public function get_ajustes(Request $request, $id_ajuste = 'all', $paginated = '')
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $articulo = $request->articulo;
-        $numero_control = $request->numero_control;
-        $resultado_query = MovimientosInventario::select(
+        $articulo                 = $request->articulo;
+        $numero_control           = $request->numero_control;
+        $resultado_query          = MovimientosInventario::select(
             'id',
             'registro_id',
             'fecha_registro',
@@ -408,7 +402,7 @@ class InventarioController extends ApiController
                 if (trim($numero_control) != '') {
                     if ($filtro_especifico_opcion == 1) {
                         /**filtro por numero de solicitud */
-                        $q->where('movimientos_inventario.id', '=',  $numero_control);
+                        $q->where('movimientos_inventario.id', '=', $numero_control);
                     }
                 }
             })
@@ -428,10 +422,10 @@ class InventarioController extends ApiController
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado = &$resultado_query['data'];
+            $resultado       = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado = &$resultado_query;
+            $resultado       = &$resultado_query;
         }
         foreach ($resultado as $key_ajuste => &$ajuste) {
             $ajuste['fecha_registro_texto'] = fecha_abr($ajuste['fecha_registro']);
@@ -447,18 +441,18 @@ class InventarioController extends ApiController
             /**0- resto, 1- igual, 3- sumo */
             foreach ($ajuste['detalles'] as $key_detalle => &$detalle) {
                 if ($detalle['existencia_sistema'] == $detalle['existencia_fisica']) {
-                    $detalle['resultado_ajuste'] = 1;
+                    $detalle['resultado_ajuste']       = 1;
                     $detalle['resultado_ajuste_texto'] = 'Sin Cambios';
                 } elseif ($detalle['existencia_sistema'] > $detalle['existencia_fisica']) {
                     if ($ajuste['tipo_movimientos_id'] == 1) {
-                        $detalle['resultado_ajuste'] = 0;
+                        $detalle['resultado_ajuste']       = 0;
                         $detalle['resultado_ajuste_texto'] = 'Salida de Mercancías';
                     } else {
-                        $detalle['resultado_ajuste'] = 1;
+                        $detalle['resultado_ajuste']       = 1;
                         $detalle['resultado_ajuste_texto'] = 'Ingreso de Mercancía';
                     }
                 } else {
-                    $detalle['resultado_ajuste'] = 2;
+                    $detalle['resultado_ajuste']       = 2;
                     $detalle['resultado_ajuste_texto'] = 'Ingreso de Mercancía';
                 }
                 /**diferencia real del cambio */
@@ -472,12 +466,12 @@ class InventarioController extends ApiController
     public function get_articulos(Request $request, $id_articulo = 'all', $paginated = '', $id_departamento = 0, $id_categoria = 0, $tipo_articulo = 0, $solo_inventariable = 0)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $articulo = $request->articulo;
-        $numero_control = $request->numero_control;
-        $status = $request->status;
-        $id_articulo_request = $request->id_articulo;
-        $codigo_barras_request = $request->codigo_barras;
-        $resultado_query = Articulos::select(
+        $articulo                 = $request->articulo;
+        $numero_control           = $request->numero_control;
+        $status                   = $request->status;
+        $id_articulo_request      = $request->id_articulo;
+        $codigo_barras_request    = $request->codigo_barras;
+        $resultado_query          = Articulos::select(
             '*',
             DB::raw(
                 '(NULL) AS grava_iva_texto'
@@ -523,11 +517,11 @@ class InventarioController extends ApiController
                 if (trim($numero_control) != '') {
                     if ($filtro_especifico_opcion == 1) {
                         /**filtro por numero de solicitud */
-                        $q->where('articulos.id', '=',  $numero_control);
+                        $q->where('articulos.id', '=', $numero_control);
                     } else if ($filtro_especifico_opcion == 2) {
                         if (trim($numero_control) != '') {
                             /**filtro por numero de solicitud */
-                            $q->where('articulos.codigo_barras', '=',  $numero_control);
+                            $q->where('articulos.codigo_barras', '=', $numero_control);
                         }
                     }
                 }
@@ -577,10 +571,10 @@ class InventarioController extends ApiController
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado = &$resultado_query['data'];
+            $resultado       = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado = &$resultado_query;
+            $resultado       = &$resultado_query;
         }
 
         foreach ($resultado as $key_articulo => &$articulo) {
@@ -614,33 +608,27 @@ class InventarioController extends ApiController
                 }
                 $articulo['existencia'] = $existencia;
 
-
                 if ($existencia < $articulo['minimo']) {
-                    $articulo['estatus_inventario_b'] = '0';
+                    $articulo['estatus_inventario_b']     = '0';
                     $articulo['estatus_inventario_texto'] = 'Desabastecido';
                 } elseif ($existencia <= $articulo['maximo']) {
-                    $articulo['estatus_inventario_b'] = '1';
+                    $articulo['estatus_inventario_b']     = '1';
                     $articulo['estatus_inventario_texto'] = 'Abastecido';
                 } else {
-                    $articulo['estatus_inventario_b'] = '2';
+                    $articulo['estatus_inventario_b']     = '2';
                     $articulo['estatus_inventario_texto'] = 'Sobrestock';
                 }
             } else {
                 $articulo['existencia'] = 'N/A';
 
-
-                $articulo['estatus_inventario_b'] = '1';
+                $articulo['estatus_inventario_b']     = '1';
                 $articulo['estatus_inventario_texto'] = 'N/A';
             }
-
-
 
             /**veirifanco los estatus del inventario */
         }
         return $resultado_query;
     }
-
-
 
     /**ENABLE DISABLE PRECIO DE PROPIEDAD*/
     public function enable_disable(Request $request, $tipo_servicio = '')
@@ -669,7 +657,7 @@ class InventarioController extends ApiController
             if (trim($tipo_servicio) == 'enable') {
                 $res = DB::table('articulos')->where('id', $request->articulo_id)->update(
                     [
-                        'status' =>  1
+                        'status' => 1,
                     ]
                 );
             } else {
@@ -681,7 +669,7 @@ class InventarioController extends ApiController
                     if ($inventario[0]['existencia'] <= 0 || $inventario[0]['existencia'] == 'N/A') {
                         $res = DB::table('articulos')->where('id', $request->articulo_id)->update(
                             [
-                                'status' =>  0
+                                'status' => 0,
                             ]
                         );
                     } else {
@@ -701,18 +689,17 @@ class InventarioController extends ApiController
         }
     }
 
-
     public function get_inventario_pdf(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
+            $email = $request->email_send === 'true' ? true : false;
             if ($email == true) {
                 if (!$request->email_addres || !$request->destinatario) {
                     $this->errorResponse('Es necesario un correo y un destinatario', 409);
                 }
             }
-            $email_to = $request->email_address;
+            $email_to      = $request->email_address;
             $datos_request = json_decode($request->request_parent[0], true);
 
             $r = new \Illuminate\Http\Request();
@@ -723,20 +710,20 @@ class InventarioController extends ApiController
              */
             /*$email = false;
             $email_to = 'hector@gmail.com';
-            */
+             */
             //obtengo la informacion de esa venta
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('inventarios/inventario_completo/inventario', ['empresa' => $empresa, 'inventario' => $inventario]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('inventarios/inventario_completo/inventario', ['empresa' => $empresa, 'inventario' => $inventario]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = 'Reporte de Inventario Registrado.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('inventarios.inventario_completo.footer'),
             ]);
 
             $pdf->setOptions([
-                'header-html' => view('inventarios.inventario_completo.header')
+                'header-html' => view('inventarios.inventario_completo.header'),
             ]);
             $pdf->setOption('orientation', 'landscape');
             $pdf->setOption('margin-left', 12.4);
@@ -756,7 +743,7 @@ class InventarioController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     $request->destinatario,
                     'Reporte de Inventario Registrado',
@@ -773,21 +760,19 @@ class InventarioController extends ApiController
         }
     }
 
-
     public function get_ajuste_pdf(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
+            $email = $request->email_send === 'true' ? true : false;
             if ($email == true) {
                 if (!$request->email_addres || !$request->destinatario) {
                     $this->errorResponse('Es necesario un correo y un destinatario', 409);
                 }
             }
-            $email_to = $request->email_address;
+            $email_to      = $request->email_address;
             $datos_request = json_decode($request->request_parent[0], true);
-            $id_ajuste = $datos_request['id_ajuste'];
-
+            $id_ajuste     = $datos_request['id_ajuste'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
@@ -795,22 +780,22 @@ class InventarioController extends ApiController
             /*$email = false;
             $id_ajuste = 10;
             $email_to = 'hector@gmail.com';
-            */
+             */
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
             $ajuste = $this->get_ajustes($r, $id_ajuste, '');
             //obtengo la informacion de esa venta
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('inventarios/ajustes/ajustes', ['empresa' => $empresa, 'ajustes' => $ajuste]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('inventarios/ajustes/ajustes', ['empresa' => $empresa, 'ajustes' => $ajuste]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = 'Reporte de Ajuste de Inventario.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('inventarios.ajustes.footer'),
             ]);
             $pdf->setOptions([
-                'header-html' => view('inventarios.ajustes.header')
+                'header-html' => view('inventarios.ajustes.header'),
             ]);
             $pdf->setOption('orientation', 'landscape');
             $pdf->setOption('margin-left', 12.4);
@@ -830,7 +815,7 @@ class InventarioController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     $request->destinatario,
                     'Reporte de Ajuste de Inventario',
@@ -847,41 +832,40 @@ class InventarioController extends ApiController
         }
     }
 
-
     public function get_inventario_conteo_pdf(Request $request)
     {
         try {
             /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-            $email =  $request->email_send === 'true' ? true : false;
+            $email = $request->email_send === 'true' ? true : false;
             if ($email == true) {
                 if (!$request->email_addres || !$request->destinatario) {
                     $this->errorResponse('Es necesario un correo y un destinatario', 409);
                 }
             }
-            $email_to = $request->email_address;
+            $email_to      = $request->email_address;
             $datos_request = json_decode($request->request_parent[0], true);
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             /*$email = false;
-        $email_to = 'hector@gmail.com';
-*/
+            $email_to = 'hector@gmail.com';
+             */
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
             $articulos = $this->get_articulos($r, 'all', '', 0, 0, 0, 1);
             //obtengo la informacion de esa venta
             $get_funeraria = new EmpresaController();
-            $empresa = $get_funeraria->get_empresa_data();
-            $pdf = PDF::loadView('inventarios/ajuste_cantidades/ajustes', ['empresa' => $empresa, 'articulos' => $articulos]);
+            $empresa       = $get_funeraria->get_empresa_data();
+            $pdf           = PDF::loadView('inventarios/ajuste_cantidades/ajustes', ['empresa' => $empresa, 'articulos' => $articulos]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = 'Reporte de Inventario Por Lotes.pdf';
             $pdf->setOptions([
-                'title' => $name_pdf,
+                'title'       => $name_pdf,
                 'footer-html' => view('inventarios.ajuste_cantidades.footer'),
             ]);
             $pdf->setOptions([
-                'header-html' => view('inventarios.ajuste_cantidades.header')
+                'header-html' => view('inventarios.ajuste_cantidades.header'),
             ]);
             //$pdf->setOption('orientation', 'landscape');
             $pdf->setOption('margin-left', 12.4);
@@ -901,7 +885,7 @@ class InventarioController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email = $email_controller->pdf_email(
+                $enviar_email     = $email_controller->pdf_email(
                     $email_to,
                     $request->destinatario,
                     'Reporte de Inventario Por Lotes',

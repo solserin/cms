@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
+Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
+Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -181,12 +183,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
-    Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
+
     Route::get('inventario/get_tipo_articulos', 'InventarioController@get_tipo_articulos');
     Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
     Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
     Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
-    Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
+
     Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
     Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 

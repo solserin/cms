@@ -81,5 +81,13 @@ export default {
     ajustar_inventario(param) {
         let call = "/inventario/ajustar_inventario";
         return axios.post(call, param);
-    }
+    },
+
+       get_inventariable_etiquetado() {
+        return axios.get("/inventario/get_inventario/all/false/0/0/0/1", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            })
+        });
+    },
 };

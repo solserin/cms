@@ -192,7 +192,20 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           <vs-td :data="data[indextr].id_user">
             <div class="flex flex-start">
               <img
-                class="cursor-pointer img-btn ml-auto mr-3"
+                class="cursor-pointer img-btn ml-auto"
+                src="@assets/images/printlote.svg"
+                title="Etiquetar"
+                @click="openFormLabels(data[indextr].id)"
+                v-if="data[indextr].tipo_articulos_id == 1"
+              />
+              <img
+                class="cursor-pointer img-btn ml-auto mr-1"
+                src="@assets/images/na.svg"
+                title="No etiquetable"
+                v-else
+              />
+              <img
+                class="cursor-pointer img-btn ml-auto mr-1"
                 src="@assets/images/edit.svg"
                 title="Modificar"
                 @click="openModificar(data[indextr].id)"
@@ -206,7 +219,6 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                   deleteArticulo(data[indextr].id, data[indextr].descripcion)
                 "
               />
-
               <img
                 v-else
                 class="cursor-pointer img-btn-32 mr-auto ml-3"
@@ -251,6 +263,12 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       @closeVentana="verFormularioArticulos = false"
       @retornar_id="retorno_id"
     ></FormularioArticulos>
+    <FormularioLabel
+      :id_articulo="id_articulo_label"
+      :show="verFormularioLabels"
+      @closeVentana="verFormularioLabels = false"
+      @retornar_id="retorno_id"
+    ></FormularioLabel>
   </div>
 </template>
 
@@ -261,6 +279,8 @@ import Reporteador from "@pages/Reporteador";
 import inventario from "@services/inventario";
 
 import FormularioArticulos from "@pages/inventarios/articulos/FormularioArticulos";
+
+import FormularioLabel from "@pages/inventarios/articulos/FormLabel";
 
 //componente de password
 import Password from "@pages/confirmar_password";
@@ -275,18 +295,19 @@ export default {
     "v-select": vSelect,
     Password,
     FormularioArticulos,
-    Reporteador
+    Reporteador,
+    FormularioLabel,
   },
   watch: {
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       this.get_data(this.actual);
     },
-    mostrar: function(newValue, oldValue) {
+    mostrar: function (newValue, oldValue) {
       this.get_data(1);
     },
-    estado: function(newVal, previousVal) {
+    estado: function (newVal, previousVal) {
       this.get_data(1);
-    }
+    },
   },
   data() {
     return {
@@ -295,7 +316,7 @@ export default {
       request: {
         destinatario: "",
         id_tipo_propiedad: "",
-        email: ""
+        email: "",
       },
       PermisosModulo: PermisosModulo,
       openReportesLista: false,
@@ -305,27 +326,27 @@ export default {
       estadosOptions: [
         {
           label: "Todos",
-          value: ""
+          value: "",
         },
         {
           label: "Activos",
-          value: "1"
+          value: "1",
         },
         {
           label: "Cancelados",
-          value: "0"
-        }
+          value: "0",
+        },
       ],
       filtroEspecifico: { label: "Núm. Artículo", value: "1" },
       filtrosEspecificos: [
         {
           label: "Núm. Artículo",
-          value: "1"
+          value: "1",
         },
         {
           label: "Código de Barras",
-          value: "2"
-        }
+          value: "2",
+        },
       ],
       serverOptions: {
         page: "",
@@ -333,7 +354,7 @@ export default {
         status: "",
         filtro_especifico_opcion: "",
         numero_control: "",
-        articulo: ""
+        articulo: "",
       },
       verPaginado: true,
       total: 0,
@@ -353,8 +374,10 @@ export default {
       articulo_id: "",
       request: {
         venta_id: "",
-        email: ""
-      }
+        email: "",
+      },
+      id_articulo_label: 0,
+      verFormularioLabels: false,
     };
   },
   methods: {
@@ -363,7 +386,7 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Inventario General",
-        url: "/inventario/get_inventario_pdf"
+        url: "/inventario/get_inventario_pdf",
       });
       //estado de cuenta
       this.request.email = "";
@@ -375,7 +398,7 @@ export default {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = {
         label: "Núm. Artículo",
-        value: "1"
+        value: "1",
       };
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
@@ -415,14 +438,14 @@ export default {
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
       inventario
         .get_inventario(this.serverOptions)
-        .then(res => {
+        .then((res) => {
           this.articulos = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
@@ -435,7 +458,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             }
           }
@@ -464,6 +487,11 @@ export default {
       this.id_articulo_modificar = articulo_id;
       this.verFormularioArticulos = true;
     },
+    openFormLabels(articulo_id) {
+      this.id_articulo_label = articulo_id;
+      this.verFormularioLabels = true;
+    },
+
     retorno_id(dato) {
       this.get_data(this.actual);
     },
@@ -487,7 +515,7 @@ export default {
     async delete_articulo() {
       this.$vs.loading();
       let datos = {
-        articulo_id: this.articulo_id
+        articulo_id: this.articulo_id,
       };
       try {
         let res = await inventario.delete_articulo(datos);
@@ -500,7 +528,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
         } else {
           this.$vs.notify({
@@ -509,7 +537,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 5000
+            time: 5000,
           });
         }
       } catch (err) {
@@ -523,7 +551,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 8000
+              time: 8000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
@@ -536,7 +564,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 15000
+              time: 15000,
             });
           }
         }
@@ -545,7 +573,7 @@ export default {
     async habilitar_articulo() {
       this.$vs.loading();
       let datos = {
-        articulo_id: this.articulo_id
+        articulo_id: this.articulo_id,
       };
       try {
         let res = await inventario.enable_disable(datos);
@@ -558,7 +586,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
         } else {
           this.$vs.notify({
@@ -567,7 +595,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 5000
+            time: 5000,
           });
         }
       } catch (error) {
@@ -581,7 +609,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 8000
+              time: 8000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
@@ -589,10 +617,10 @@ export default {
           }
         }
       }
-    }
+    },
   },
   created() {
     this.get_data(this.actual);
-  }
+  },
 };
 </script>
