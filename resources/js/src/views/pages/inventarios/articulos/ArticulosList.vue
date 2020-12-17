@@ -33,6 +33,18 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           <img class="cursor-pointer img-btn" src="@assets/images/boxes.svg" />
           <span class="texto-btn">Ver Inventario</span>
         </vs-button>
+        <vs-button
+          class="float-right mr-12"
+          size="small"
+          color="primary"
+         @click="openFormLabels()"
+        >
+          <img
+            class="cursor-pointer img-btn"
+            src="@assets/images/printlote.svg"
+          />
+          <span class="texto-btn">Imprimir Etiquetas</span>
+        </vs-button>
       </div>
     </div>
 
@@ -192,19 +204,6 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           <vs-td :data="data[indextr].id_user">
             <div class="flex flex-start">
               <img
-                class="cursor-pointer img-btn ml-auto"
-                src="@assets/images/printlote.svg"
-                title="Etiquetar"
-                @click="openFormLabels(data[indextr].id)"
-                v-if="data[indextr].tipo_articulos_id == 1"
-              />
-              <img
-                class="cursor-pointer img-btn ml-auto mr-2"
-                src="@assets/images/na.svg"
-                title="No etiquetable"
-                v-else
-              />
-              <img
                 class="cursor-pointer img-btn ml-auto mr-2"
                 src="@assets/images/edit.svg"
                 title="Modificar"
@@ -264,7 +263,6 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       @retornar_id="retorno_id"
     ></FormularioArticulos>
     <FormularioLabel
-      :id_articulo="id_articulo_label"
       :show="verFormularioLabels"
       @closeVentana="verFormularioLabels = false"
       @retornar_id="retorno_id"
@@ -487,8 +485,7 @@ export default {
       this.id_articulo_modificar = articulo_id;
       this.verFormularioArticulos = true;
     },
-    openFormLabels(articulo_id) {
-      this.id_articulo_label = articulo_id;
+    openFormLabels() {
       this.verFormularioLabels = true;
     },
 

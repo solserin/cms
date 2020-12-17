@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="normal-forms background-header-forms servicios_funerarios forms-popups-100"
+      class="normal-forms background-header-forms articulos"
       fullscreen
       close="cancelar"
       :title="title"
@@ -17,35 +17,24 @@
             <div
               class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-1 px-2"
             >
-              <h1 class="font-bold">Artículo Seleccionado</h1>
+              <h1 class="font-bold uppercase">
+                Cantidad de etiquetas a imprimir
+              </h1>
             </div>
             <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mb-1 px-2"
+              class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mb-1 px-2"
             >
               <div class="mt-3">
                 <div class="text-left">
-                  <label class="text-md font-bold opacity-75"
-                    >Descripción
-                  </label>
+                  <label class="text-md font-bold opacity-75">Total </label>
                 </div>
                 <div class="text-left mt-3">
-                  <label class="text-md opacity-75">{{ descripcion }} </label>
-                </div>
-              </div>
-            </div>
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mb-1 px-2"
-            >
-              <div class="mt-3">
-                <div class="text-left">
-                  <label class="text-md font-bold opacity-75"
-                    >Existencia
-                  </label>
-                </div>
-                <div class="text-left mt-3">
-                  <label class="text-md opacity-75"
-                    >{{ existencia }}
-                    <label class="text-md font-bold opacity-75">Piezas </label>
+                  <label
+                    :class="[
+                      'text-md opacity-75 total_etiquetas',
+                      total_etiquetas > 1500 ? 'text-danger' : '',
+                    ]"
+                    >{{ total_etiquetas }}
                   </label>
                 </div>
               </div>
@@ -87,7 +76,7 @@
           <vs-th>
             <vs-checkbox
               ref="imprimirtodos"
-              color="success"
+              color="primary"
               class="mt-3 ml-auto mr-auto"
               v-model="todos"
             ></vs-checkbox>
@@ -97,14 +86,14 @@
           <vs-th>Número de Lote</vs-th>
           <vs-th>Existencia</vs-th>
           <vs-th>Cantidad a Imprimir</vs-th>
-          <vs-th>Imprimir</vs-th>
+          <vs-th hidden>Imprimir</vs-th>
         </template>
         <template slot-scope="{ data }">
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td :data="data[indextr].id">
               <vs-checkbox
                 ref="imprimir"
-                color="success"
+                color="primary"
                 class="mt-3 ml-auto mr-auto"
                 v-model="data[indextr].imprimir"
               ></vs-checkbox>
@@ -154,7 +143,7 @@
               </div>
             </vs-td>
 
-            <vs-td :data="data[indextr].id">
+            <vs-td :data="data[indextr].id" hidden>
               <div class="flex flex-start">
                 <img
                   class="cursor-pointer img-btn-32 mr-auto ml-auto"
@@ -216,11 +205,6 @@ export default {
       type: Boolean,
       required: true,
     },
-    id_articulo: {
-      type: Number,
-      required: false,
-      default: 0,
-    },
   },
   watch: {
     show: function (newValue, oldValue) {
@@ -257,14 +241,7 @@ export default {
         return newValue;
       },
     },
-    get_articulo_id: {
-      get() {
-        return this.id_articulo;
-      },
-      set(newValue) {
-        return newValue;
-      },
-    },
+
     lotes_a_imprimir: function () {
       let etiquetas = [];
       this.form.lotes.forEach((element) => {
@@ -277,6 +254,13 @@ export default {
         }
       });
       return etiquetas;
+    },
+    total_etiquetas: function () {
+      let total = 0;
+      this.lotes_a_imprimir.forEach((element) => {
+        total += parseInt(element.cantidad);
+      });
+      return total;
     },
   },
   data() {
@@ -306,12 +290,8 @@ export default {
         },
       ],
       todos: false,
-      descripcion: "",
-      existencia: 0,
-      selected: [],
       form: {
         lotes: [],
-        id_articulo: 0,
       },
       errores: [],
     };
@@ -324,15 +304,6 @@ export default {
         let datos = res.data;
         /**reviso que tenga lotes el articulo seleccionado */
         if (datos.length > 0) {
-          for (let index = 0; index < datos.length; index++) {
-            if (datos[index].id == this.get_articulo_id) {
-              /**aqui esta el articulo */
-              this.descripcion = datos[index].descripcion;
-              this.existencia = datos[index].existencia;
-              this.form.id_articulo = this.get_articulo_id;
-              break;
-            }
-          }
           /**cargando solo los lotes con existencia */
           datos.forEach((articulo) => {
             articulo.inventario.forEach((element, indextr) => {
@@ -343,8 +314,7 @@ export default {
                   articulos_id: element.articulos_id,
                   existencia: element.existencia,
                   cantidad_imprimir: element.existencia,
-                  imprimir:
-                    element.articulos_id == this.get_articulo_id ? true : false,
+                  imprimir: element.articulos_id == false,
                 });
 
                 /**acomodando los eventos del checkbox */
@@ -408,7 +378,6 @@ export default {
 
             let allChecked = true;
             for (let index = 0; index < this.form.lotes.length; index++) {
-              console.log(this.form.lotes[index].imprimir);
               if (this.form.lotes[index].imprimir == false) {
                 allChecked = false;
                 break;
@@ -432,44 +401,42 @@ export default {
     },
 
     openReporte() {
-      /**mandando las etiquetas a imprimir */
-      this.ListaReportes = [];
-      this.ListaReportes.push({
-        nombre: "Impresión de etiquetas",
-        url: "/inventario/get_pdf_etiquetas",
-      });
-      this.request.email = "";
-      this.request.etiquetas = this.lotes_a_imprimir;
-      this.request.destinatario = "";
-      this.openReportesLista = true;
-      this.$vs.loading.close();
-    },
-
-    acceptAlert() {
-      this.$validator
-        .validateAll()
-        .then((result) => {
-          if (!result) {
-            this.$vs.notify({
-              title: "Guardar Artículo",
-              text: "Verifique que todos los datos han sido capturados",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              position: "bottom-right",
-              time: "4000",
-            });
-          } else {
-            this.errores = [];
-            (async () => {
-              /**modificar, se valida con password */
-              //this.form.id_articulo_modificar = this.get_articulo_id;
-              //this.callback = await this.modificar_articulo;
-              //this.operConfirmar = true;
-            })();
-          }
-        })
-        .catch(() => {});
+      if (this.lotes_a_imprimir.length > 0) {
+        if (this.total_etiquetas < 1500) {
+          /**mandando las etiquetas a imprimir */
+          this.ListaReportes = [];
+          this.ListaReportes.push({
+            nombre: "Impresión de etiquetas",
+            url: "/inventario/get_pdf_etiquetas",
+          });
+          this.request.email = "";
+          this.request.etiquetas = this.lotes_a_imprimir;
+          this.request.destinatario = "";
+          this.openReportesLista = true;
+          this.$vs.loading.close();
+        } else {
+          this.$vs.notify({
+            title: "Imprimir etiquetas",
+            text:
+              "La impresora puede imprimir 1500 etiquetas por rollo como máximo.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            position: "bottom-right",
+            time: "8000",
+          });
+        }
+      } else {
+        this.$vs.notify({
+          title: "Imprimir etiquetas",
+          text: "Verifique que a seleccionado algun lote",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "4000",
+        });
+      }
     },
 
     cancel() {
