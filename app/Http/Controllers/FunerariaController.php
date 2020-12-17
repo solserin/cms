@@ -3036,18 +3036,21 @@ class FunerariaController extends ApiController
             $impuestos                      = 0;
             $total                          = 0;
             $articulos_servicios_recorridos = [];
+
             /**arreglo vacio para que cada que se encuentre en la lista de artivulos enviados se descarte en la proxima vuelta */
             foreach ($request->articulos_servicios as $index_articulo_servicio => $articulo_servicio) {
                 if (in_array($index_articulo_servicio, $articulos_servicios_recorridos)) {
                     /**me brinco al siguiente */
                     continue;
                 }
+
                 /**busncando articulo en el inventario actual */
                 $articulo_encontrado = false;
                 foreach ($inventario as $articulo) {
                     if ($articulo_servicio['id'] == $articulo['id']) {
                         $articulo_encontrado = true;
                         /**articulo encontrado */
+
                         if ($articulo['status'] != 0) {
                             /**comienzo recorrer el invnetario actual para comparar la existencia que pide vender el operador*/
                             if ($articulo['tipo_articulos_id'] != 2) {
@@ -3056,8 +3059,11 @@ class FunerariaController extends ApiController
                                 /**comienza existia   if ($operacion_existia) {*/
                                 /**la operacion ya existia, por lo tanto se revisa la existencia actual en el inventario y la que el usuario pide de nuevo */
                                 $existe_lote = false;
+
                                 foreach ($articulo['inventario'] as $lote) {
+
                                     if ($lote['lotes_id'] == $articulo_servicio['lote']) {
+
                                         /**el lote existe */
                                         $existe_lote     = true;
                                         $tenia_articulos = false;
@@ -3067,6 +3073,7 @@ class FunerariaController extends ApiController
                                                 $tenia_articulos = true;
                                             }
                                         }
+
                                         /**se verifica la existencia que hay actualmente mas la que tiene el servicio actualmente y ver si hay disponibilidad */
                                         /**verifico si el lote fue solicitado en diferentes precios y cantidades */
                                         /**la existencia actual en el inventario de este lote de este articulo esta en $lote['existencia'] */
@@ -5327,7 +5334,11 @@ class FunerariaController extends ApiController
                     $q->where('articulos.categorias_id', '=', $categoria_id);
                 }
             })
-            ->get();
+            ->get()
+            ->map(function ($articulos) {
+                $articulos->inventario = $articulos->inventario->take(150);
+                return $articulos;
+            });
 
         $resultado = array();
         if ($paginated == 'paginated') {

@@ -151,7 +151,7 @@ import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 export default {
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == false) {
         this.pdf_iframe_source = "";
       } else {
@@ -164,48 +164,48 @@ export default {
         this.request_datos.request_parent.push(this.Request);
       }
     },
-    listadereportes: function(newValue, oldValue) {
+    listadereportes: function (newValue, oldValue) {
       if (newValue.length > 0) {
         this.reportesDisponible = [];
-        newValue.forEach(element => {
+        newValue.forEach((element) => {
           this.reportesDisponible.push({
             label: element.nombre,
-            value: element.url
+            value: element.url,
           });
         });
         this.reporteSeleccionado = this.reportesDisponible[0];
       }
     },
-    reporteSeleccionado: function(newValue, oldValue) {
+    reporteSeleccionado: function (newValue, oldValue) {
       this.request_datos.email_send = false;
       (async () => {
         await this.get_pdf();
       })();
-    }
+    },
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     header: {
       type: String,
-      required: true
+      required: true,
     },
     listadereportes: {
       type: Array,
       required: true,
-      default: {}
+      default: {},
     },
     request: {
       type: Object,
       required: true,
-      default: []
-    }
+      default: [],
+    },
   },
   components: {
     "v-select": vSelect,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
 
   data() {
@@ -220,8 +220,8 @@ export default {
         email_address: "",
         email_send: false,
         request_parent: [],
-        destinatario: ""
-      }
+        destinatario: "",
+      },
     };
   },
   computed: {
@@ -231,7 +231,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     HeaderNombre: {
       get() {
@@ -239,7 +239,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     reportes: {
       get() {
@@ -247,7 +247,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     Request: {
       get() {
@@ -255,8 +255,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     cancel() {
@@ -280,7 +280,7 @@ export default {
             icon: "icon-alert-circle",
             color: "danger",
             position: "bottom-right",
-            time: "4000"
+            time: "4000",
           });
         }
         this.$vs.loading.close();
@@ -297,31 +297,33 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
             this.errores = JSON.parse(err.response);
           } else if (err.response.status == 409) {
             //este error es por alguna condicion que el contrano no cumple para modificar
-            //la propiedad esa ya ha sido vendida
+            //la propiedad esa ya ha sido vendido
             this.$vs.notify({
               title: "Ver Reportes",
-              text: err.response.data.error,
+              text: "Ha ocurrido un error, por favor reintente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000
+              time: 30000,
             });
           }
         }
+
+        this.cancel();
       }
     },
 
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Error",
@@ -330,7 +332,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
             return;
           } else {
@@ -364,7 +366,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 6000
+            time: 6000,
           });
           this.request_datos.email_address = "";
           this.request_datos.destinatario = "";
@@ -375,7 +377,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 6000
+            time: 6000,
           });
         }
       } catch (err) {
@@ -389,7 +391,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
@@ -397,11 +399,11 @@ export default {
           }
         }
       }
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       /*if (e.keyCode === 27) {
         if (this.showChecker) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -418,7 +420,7 @@ export default {
         }
       }
     });*/
-  }
+  },
 };
 </script>
 <style  scoped>

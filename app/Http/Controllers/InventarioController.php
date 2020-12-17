@@ -552,6 +552,7 @@ class InventarioController extends ApiController
             ->where('descripcion', 'like', '%' . $articulo . '%')
             ->with('tipo_articulo')
             ->with('inventario')
+
             ->whereHas('tipo_articulo', function ($query) use ($tipo_articulo) {
                 if ((trim($tipo_articulo) != '' && $tipo_articulo > 0)) {
                     $query->where('id', $tipo_articulo);
@@ -565,7 +566,11 @@ class InventarioController extends ApiController
             ->with('unidad_compra:id,clave,unidad')
             ->with('unidad_venta:id,clave,unidad')
             ->orderBy('articulos.id', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($articulos) {
+                $articulos->inventario = $articulos->inventario->take(35);
+                return $articulos;
+            });
 
         $resultado = array();
         if ($paginated == 'paginated') {
@@ -830,6 +835,114 @@ class InventarioController extends ApiController
         } catch (\Throwable $th) {
             return $this->errorResponse('Error al cargar los datos.', 409);
         }
+    }
+
+    public function get_pdf_etiquetas(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email = $request->email_send === 'true' ? true : false;
+        if ($email == true) {
+            if (!$request->email_addres || !$request->destinatario) {
+                $this->errorResponse('Es necesario un correo y un destinatario', 409);
+            }
+        }
+        $email_to      = $request->email_address;
+        $datos_request = json_decode($request->request_parent[0], true);
+        $datos         = $datos_request['etiquetas'];
+
+        $lotes    = [];
+        $ids      = [];
+        $cantidad = 0;
+        foreach ($datos as $dato) {
+            if (!in_array($dato['lotes_id'], $lotes)) {
+                array_push($lotes, $dato['lotes_id']);
+            }
+            if (!in_array($dato['id_articulo'], $ids)) {
+                array_push($ids, $dato['id_articulo']);
+            }
+
+            $cantidad += $dato['cantidad'];
+        }
+
+        if ($cantidad > 1500) {
+            return $this->errorResponse('La impresora puede imprimir un máximo de 1500 por rollo.', 409);
+        }
+
+        $articulos = Articulos::
+            with('inventario')
+            ->with(['inventario' => function ($q) use ($lotes) {
+                $q->whereIn('lotes_id', $lotes);
+            }])
+            ->whereIn('id', $ids)
+            ->get();
+
+        $etiquetas = [];
+        foreach ($articulos as $key => $articulo) {
+            foreach ($datos as $dato) {
+                foreach ($articulo['inventario'] as $inventario) {
+                    if ($dato['id_articulo'] == $articulo['id'] && $inventario['lotes_id'] == $dato['lotes_id']) {
+/**lo repito el numero de veces que se ocupa la etiqueta */
+                        for ($i = 0; $i < $dato['cantidad']; $i++) {
+                            array_push($etiquetas, [
+                                'id'          => $articulo['id'],
+                                'descripcion' => $articulo['descripcion'],
+                                'lotes_id'    => $inventario['lotes_id'],
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**obteniendo los datos para crear las etiquetas */
+
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        /*$email     = false;
+        $id_ajuste = 1;
+        $email_to  = 'hector@gmail.com';
+         */
+
+        //obtengo la informacion de esa venta
+        $get_funeraria = new EmpresaController();
+        $empresa       = $get_funeraria->get_empresa_data();
+        $pdf           = PDF::loadView('inventarios/etiquetado/ajustes', ['empresa' => $empresa, 'etiquetas' => $etiquetas]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = 'Reporte de Ajuste de Inventario.pdf';
+
+        $pdf->setOption('margin-left', 5.4);
+        $pdf->setOption('margin-right', 5.4);
+        $pdf->setOption('margin-top', 5.4);
+        $pdf->setOption('margin-bottom', 5.4);
+
+        $pdf->setOption('page-height', 76.2);
+        $pdf->setOption('page-width', 101.6);
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email     = $email_controller->pdf_email(
+                $email_to,
+                $request->destinatario,
+                'Reporte de Ajuste de Inventario',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+
     }
 
     public function get_inventario_conteo_pdf(Request $request)

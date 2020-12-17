@@ -254,7 +254,7 @@ export default {
                   costo_neto_descuento: 0,
                   importe: 0,
                   facturable_b: articulo.grava_iva_b,
-                  existencia: articulo.existencia,
+                  existencia: lote.existencia,
                   plan_b: 0,
                 });
               });

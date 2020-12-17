@@ -54,7 +54,12 @@
             <div
               class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mb-1 px-2"
             >
-              <vs-button class="float-right mr-12" size="small" color="success">
+              <vs-button
+                class="float-right mr-12"
+                size="small"
+                color="success"
+                @click="openReporte()"
+              >
                 <img
                   class="cursor-pointer img-btn"
                   src="@assets/images/printlote.svg"
@@ -123,7 +128,12 @@
                 :name="'cantidad' + indextr"
                 data-vv-as=" "
                 data-vv-validate-on="blur"
-                v-validate="'required|integer|min_value:' + 0"
+                v-validate="
+                  'required|integer|min_value:' +
+                  0 +
+                  '|max_value:' +
+                  form.lotes[indextr].existencia
+                "
                 class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad"
                 maxlength="4"
                 v-model="form.lotes[indextr].cantidad_imprimir"
@@ -169,7 +179,13 @@
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
     ></ConfirmarDanger>
-
+    <Reporteador
+      :header="'Impresión de inventario'"
+      :show="openReportesLista"
+      :listadereportes="ListaReportes"
+      :request="request"
+      @closeReportes="openReportesLista = false"
+    ></Reporteador>
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
@@ -180,6 +196,7 @@
   </div>
 </template>
 <script>
+import Reporteador from "@pages/Reporteador";
 import vSelect from "vue-select";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
@@ -192,6 +209,7 @@ export default {
     "v-select": vSelect,
     ConfirmarDanger,
     ConfirmarAceptar,
+    Reporteador,
   },
   props: {
     show: {
@@ -247,9 +265,29 @@ export default {
         return newValue;
       },
     },
+    lotes_a_imprimir: function () {
+      let etiquetas = [];
+      this.form.lotes.forEach((element) => {
+        if (element.imprimir == true) {
+          etiquetas.push({
+            cantidad: element.cantidad_imprimir,
+            id_articulo: element.articulos_id,
+            lotes_id: element.lote_id,
+          });
+        }
+      });
+      return etiquetas;
+    },
   },
   data() {
     return {
+      openReportesLista: false,
+      request: {
+        etiquetas: "",
+        email: "",
+        destinatario: "",
+      },
+      ListaReportes: [],
       title: "",
       accionConfirmarSinPassword: "",
       botonConfirmarSinPassword: "",
@@ -391,6 +429,20 @@ export default {
           }
         }
       });
+    },
+
+    openReporte() {
+      /**mandando las etiquetas a imprimir */
+      this.ListaReportes = [];
+      this.ListaReportes.push({
+        nombre: "Impresión de etiquetas",
+        url: "/inventario/get_pdf_etiquetas",
+      });
+      this.request.email = "";
+      this.request.etiquetas = this.lotes_a_imprimir;
+      this.request.destinatario = "";
+      this.openReportesLista = true;
+      this.$vs.loading.close();
     },
 
     acceptAlert() {
