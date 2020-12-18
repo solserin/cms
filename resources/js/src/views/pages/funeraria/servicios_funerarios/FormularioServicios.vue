@@ -3231,7 +3231,7 @@
                                     </vs-td>
                                     <vs-td>
                                       <div class="capitalize">
-                                        {{ data[indextr].lote }}
+                                        {{ data[indextr].num_lote_inventario }}
                                       </div>
                                     </vs-td>
                                     <vs-td>
@@ -5021,6 +5021,7 @@ export default {
                     categoria: articulo.categoria,
                     descripcion: articulo.descripcion,
                     lote: articulo.lotes_id,
+                    num_lote_inventario: articulo.num_lote_inventario,
                     cantidad: articulo.cantidad,
                     costo_neto_normal: articulo.costo_neto_normal,
                     descuento_b: articulo.descuento_b,

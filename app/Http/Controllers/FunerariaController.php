@@ -3255,7 +3255,7 @@ class FunerariaController extends ApiController
                                         $existencia_inventario_tomando_en_cuenta_el_contrato += $lote['existencia'];
 
                                         if ($existencia_inventario_tomando_en_cuenta_el_contrato < $cantidad_lote_solicitado) {
-                                            return $this->errorResponse('No se tiene suficiente cantidad del artículo ' . $articulo_servicio['descripcion'] . ' en el lote ' . $lote['lotes_id'], 409);
+                                            return $this->errorResponse('No se tiene suficiente cantidad del artículo ' . $articulo_servicio['descripcion'] . ' en el lote ' . $lote['num_lote_inventario'], 409);
                                         } else {
                                             /**aqui comienzo a agregar el detalle de como quedara actualizado la parte del inventario
                                              * con la actualizacion de la nueva demanda de

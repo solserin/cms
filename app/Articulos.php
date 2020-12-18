@@ -32,6 +32,5 @@ class Articulos extends Model
     {
         return $this->hasMany('App\Inventario', 'articulos_id', 'id')->select('*')
             ->orderBy('lotes_id', 'desc');
-
     }
 }

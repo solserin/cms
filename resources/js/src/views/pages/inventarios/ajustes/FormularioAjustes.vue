@@ -402,7 +402,7 @@ export default {
               if (
                 ajuste.id == element.articulos_id &&
                 ajuste.fecha_caducidad == element.fecha_caducidad &&
-                ajuste.lote == element.lotes_id
+                ajuste.lote == element.num_lote_inventario
               ) {
                 esta = 1;
                 return;
@@ -418,6 +418,7 @@ export default {
                 descripcion: articulo.descripcion,
                 fecha_caducidad: element.fecha_caducidad,
                 lote: element.lotes_id,
+                lote: element.num_lote_inventario,
                 existencia_sistema: element.existencia,
                 existencia_fisica: element.existencia,
                 nota: "",

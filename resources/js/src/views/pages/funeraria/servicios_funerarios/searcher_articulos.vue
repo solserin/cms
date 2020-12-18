@@ -136,7 +136,7 @@
                   data[indextr].descripcion
                 }}</vs-td>
                 <vs-td :data="data[indextr].lote">{{
-                  data[indextr].lote
+                  data[indextr].num_lote_inventario
                 }}</vs-td>
                 <vs-td :data="data[indextr].costo_neto_normal">
                   $
@@ -227,6 +227,7 @@ export default {
               categoria: articulo.categoria.categoria,
               descripcion: articulo.descripcion,
               lote: "N/A",
+              num_lote_inventario: "N/A",
               cantidad: 1,
               costo_neto_normal: articulo.precio_venta,
               descuento_b: 0,
@@ -248,6 +249,7 @@ export default {
                   categoria: articulo.categoria.categoria,
                   descripcion: articulo.descripcion,
                   lote: lote.lotes_id,
+                  num_lote_inventario: lote.num_lote_inventario,
                   cantidad: 1,
                   costo_neto_normal: articulo.precio_venta,
                   descuento_b: 0,

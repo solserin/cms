@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AjusteInventarioDetalle;
 use App\Articulos;
 use App\Departamentos;
+use App\Inventario;
 use App\MovimientosInventario;
 use App\SATProductosServicios;
 use App\SatUnidades;
@@ -96,6 +97,12 @@ class InventarioController extends ApiController
         try {
             DB::beginTransaction();
             $id_movimiento = 0;
+            /**aqui voy */
+
+            /**creamos el lote nuevo, el lote este es solo para mostrar al usuario, el lote real es lotes_id */
+            $num_lote_inventario = (int) Inventario::max('num_lote_inventario');
+            $num_lote_inventario++;
+
             if ($request->tipoAjuste['value'] == 1) {
                 /**se crea un lote y despues se agregan al inventario */
                 $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
@@ -133,11 +140,12 @@ class InventarioController extends ApiController
                 foreach ($request->ajuste as $key => $articulo) {
                     DB::table('inventario')->insert(
                         [
-                            'lotes_id'           => $id_movimiento,
-                            'precio_compra_neto' => $articulo['precio_compra'],
-                            'fecha_caducidad'    => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
-                            'existencia'         => $articulo['existencia_fisica'],
-                            'articulos_id'       => $articulo['id'],
+                            'lotes_id'            => $id_movimiento,
+                            'precio_compra_neto'  => $articulo['precio_compra'],
+                            'fecha_caducidad'     => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
+                            'existencia'          => $articulo['existencia_fisica'],
+                            'articulos_id'        => $articulo['id'],
+                            'num_lote_inventario' => $num_lote_inventario,
                         ]
                     );
                 }
@@ -884,9 +892,10 @@ class InventarioController extends ApiController
 /**lo repito el numero de veces que se ocupa la etiqueta */
                         for ($i = 0; $i < $dato['cantidad']; $i++) {
                             array_push($etiquetas, [
-                                'id'          => $articulo['id'],
-                                'descripcion' => $articulo['descripcion'],
-                                'lotes_id'    => $inventario['lotes_id'],
+                                'id'                  => $articulo['id'],
+                                'descripcion'         => $articulo['descripcion'],
+                                'lotes_id'            => $inventario['lotes_id'],
+                                'num_lote_inventario' => $inventario['num_lote_inventario'],
                             ]);
                         }
                     }

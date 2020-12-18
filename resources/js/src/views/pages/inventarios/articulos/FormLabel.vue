@@ -107,7 +107,9 @@
               <span class="font-semibold">{{ data[indextr].descripcion }}</span>
             </vs-td>
             <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{ data[indextr].lote_id }}</span>
+              <span class="font-semibold">{{
+                data[indextr].num_lote_inventario
+              }}</span>
             </vs-td>
             <vs-td :data="data[indextr].id">
               <span class="font-semibold">{{ data[indextr].existencia }}</span>
@@ -311,6 +313,7 @@ export default {
                 this.form.lotes.push({
                   descripcion: articulo.descripcion,
                   lote_id: element.lotes_id,
+                  num_lote_inventario: element.num_lote_inventario,
                   articulos_id: element.articulos_id,
                   existencia: element.existencia,
                   cantidad_imprimir: element.existencia,
