@@ -104,7 +104,9 @@
                   <span class="uppercase">{{ data[indextr].descripcion }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].lote">
-                  <span class="uppercase">{{ data[indextr].lote }}</span>
+                  <span class="uppercase">{{
+                    data[indextr].num_lote_inventario
+                  }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].existencia_sistema">
                   <span class="uppercase">{{
@@ -402,7 +404,7 @@ export default {
               if (
                 ajuste.id == element.articulos_id &&
                 ajuste.fecha_caducidad == element.fecha_caducidad &&
-                ajuste.lote == element.num_lote_inventario
+                ajuste.lote == element.lotes_id
               ) {
                 esta = 1;
                 return;
@@ -418,7 +420,7 @@ export default {
                 descripcion: articulo.descripcion,
                 fecha_caducidad: element.fecha_caducidad,
                 lote: element.lotes_id,
-                lote: element.num_lote_inventario,
+                num_lote_inventario: element.num_lote_inventario,
                 existencia_sistema: element.existencia,
                 existencia_fisica: element.existencia,
                 nota: "",

@@ -30,7 +30,7 @@ class MovimientosInventario extends Model
                     '(0) AS diferencia'
                 )
             )
-            ->orderBy('articulos_id', 'asc');
+            ->orderBy('ajuste_detalle.articulos_id', 'asc');
     }
 
     public function articulosserviciofunerario()

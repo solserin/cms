@@ -97,13 +97,12 @@ class InventarioController extends ApiController
         try {
             DB::beginTransaction();
             $id_movimiento = 0;
-            /**aqui voy */
-
-            /**creamos el lote nuevo, el lote este es solo para mostrar al usuario, el lote real es lotes_id */
-            $num_lote_inventario = (int) Inventario::max('num_lote_inventario');
-            $num_lote_inventario++;
 
             if ($request->tipoAjuste['value'] == 1) {
+                /**creamos el lote nuevo, el lote este es solo para mostrar al usuario, el lote real es lotes_id */
+                $num_lote_inventario = (int) Inventario::max('num_lote_inventario');
+                $num_lote_inventario++;
+
                 /**se crea un lote y despues se agregan al inventario */
                 $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
                     [
@@ -447,7 +446,27 @@ class InventarioController extends ApiController
              * resultado_ajuste_texto
              */
             /**0- resto, 1- igual, 3- sumo */
+            /**aqui voy */
+            $lotes_ids = [];
+            foreach ($ajuste['detalles'] as $key_detalle => $detalle) {
+                /**obtengo los indexes de los lotes afectados para obtener el num de lote de usuario */
+                if (!in_array($detalle['lotes_id'], $lotes_ids)) {
+                    array_push($lotes_ids, $detalle['lotes_id']);
+                }
+            }
+
+            $lotes_nums = Inventario::select('lotes_id', 'num_lote_inventario')->whereIn('lotes_id', $lotes_ids)->get();
+
             foreach ($ajuste['detalles'] as $key_detalle => &$detalle) {
+
+                /**agrego el num_lote_inventario */
+                foreach ($lotes_nums as $key => $value) {
+                    if ($value['lotes_id'] == $detalle['lotes_id']) {
+                        $detalle['num_lote_inventario'] = $value['num_lote_inventario'];
+                        break;
+                    }
+                }
+
                 if ($detalle['existencia_sistema'] == $detalle['existencia_fisica']) {
                     $detalle['resultado_ajuste']       = 1;
                     $detalle['resultado_ajuste_texto'] = 'Sin Cambios';
