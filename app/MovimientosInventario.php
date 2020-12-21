@@ -35,9 +35,7 @@ class MovimientosInventario extends Model
 
     public function articulosserviciofunerario()
     {
-        return $this->hasMany('App\VentaDetalle', 'movimientos_inventario_id', 'id')
-
-            ->join('inventario', 'inventario.lotes_id', '=', 'venta_detalle.lotes_id');
+        return $this->hasMany('App\VentaDetalle', 'movimientos_inventario_id', 'id');
     }
 
     public function articulos_operacion()
