@@ -3852,6 +3852,7 @@ class FunerariaController extends ApiController
             ->where('nombre_afectado', 'like', '%' . $fallecido . '%')
             ->orderBy('servicios_funerarios.id', 'desc')
             ->get();
+
         /**verificando si el usario necesita el resultado paginado, todo o por id */
         $resultado = array();
         if ($paginated == 'paginated') {
@@ -3983,6 +3984,9 @@ class FunerariaController extends ApiController
                 }
             }
 
+            $requestEmpty = new \Illuminate\Http\Request();
+            $requestEmpty->replace(['sample' => 'sample']);
+
             /**definiendo si fue por llamada la solicitud */
 
             if ($solicitud['llamada_b'] == 1) {
@@ -4030,7 +4034,7 @@ class FunerariaController extends ApiController
             /**verificando que tipo de operacion_empresa es */
             if ($solicitud['inhumacion_b'] == 1 && $solicitud['cementerios_servicio_id'] == 1) {
                 if (!is_null($solicitud['terreno'])) {
-                    $datos_venta_propiedad                          = $cementerio_controller->get_ventas($request, $solicitud['terreno']['ventas_terrenos_id'], '')[0];
+                    $datos_venta_propiedad                          = $cementerio_controller->get_ventas($requestEmpty, $solicitud['terreno']['ventas_terrenos_id'], '')[0];
                     $solicitud['terreno']['status_operacion']       = $datos_venta_propiedad['operacion_status'];
                     $solicitud['terreno']['saldo_neto']             = $datos_venta_propiedad['saldo_neto'];
                     $solicitud['terreno']['status_operacion_texto'] = $datos_venta_propiedad['status_texto'];
@@ -4041,7 +4045,7 @@ class FunerariaController extends ApiController
             /**verificando si la operacion esta lleva anexado un plan funerario de venta a futuro para usar */
             if ($solicitud['plan_funerario_futuro_b'] == 1 && trim($solicitud['ventas_planes_id']) != '') {
                 /**cargar los datos de la venta de este plan para mandar al frontend */
-                $datos_plan                                           = $this->get_ventas($request, $solicitud['ventas_planes_id'])[0];
+                $datos_plan                                           = $this->get_ventas($requestEmpty, $solicitud['ventas_planes_id'])[0];
                 $solicitud['plan_funerario_futuro']                   = strtoupper($datos_plan['venta_plan']['nombre_original'] . '(' . $datos_plan['numero_convenio'] . ')');
                 $solicitud['plan_funerario_secciones_originales']     = $datos_plan['venta_plan']['secciones_original'];
                 $solicitud['nombre_titular_plan_funerario_futuro']    = $datos_plan['nombre'];
