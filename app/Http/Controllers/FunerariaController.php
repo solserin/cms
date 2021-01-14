@@ -1079,6 +1079,7 @@ class FunerariaController extends ApiController
             if ($tipo_servicio == 'agregar') {
                 //venta de uso inmediato y de control sistematizado
                 //captura de la venta
+
                 $id_venta = DB::table('ventas_planes')->insertGetId(
                     [
                         'tipo_financiamiento'    => $request->tipo_financiamiento,
