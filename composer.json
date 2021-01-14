@@ -20,7 +20,8 @@
         "milon/barcode": "^6.0",
         "nesbot/carbon": "^2.32",
         "spatie/array-to-xml": "^2.14",
-        "villca/numeros-en-letras": "^1.2"
+        "villca/numeros-en-letras": "^1.2",
+        "lcobucci/jwt": "3.3.3"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
