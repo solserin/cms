@@ -74,7 +74,7 @@ html {
 }
 
 body {
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   overflow-x: hidden;
   max-width: 100%;
@@ -993,7 +993,7 @@ u {
 ==========================================================================================*/
 
 code {
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 [dir] code {
@@ -5032,7 +5032,7 @@ i.wizard-icon {
 .vs-textarea {
   font-size: 1rem;
   color: inherit;
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
   line-height: 1.6;
 }
 
