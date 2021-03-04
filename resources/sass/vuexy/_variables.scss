@@ -7,7 +7,6 @@
     Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
 /*========================================================
         SPACING
 =========================================================*/
@@ -16,71 +15,274 @@ $spacer: 2.2rem;
 $spacer-sm: ($spacer / 2);
 $spacer-lg: ($spacer * 2);
 
-
-
 /*========================================================
         COLORS
 =========================================================*/
-
-$primary: #7367F0;
-$success: #28C76F;
-$danger: #EA5455;
-$warning: #FF9F43;
-$dark: #1E1E1E;
+$primary: #b18b1e;
+$secondary: #007bff;
+$success: #28c76f;
+$danger: #ea5455;
+$warning: #ff9f43;
+$dark: #1e1e1e;
 $grey: #b8c2cc;
 $grey-light: #dae1e7;
 $white: #fff;
 $black: #22292f;
 
+/*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+$primary_map: (
+    "50": "#FBF5E5",
+    "100": "#F6EBCB",
+    "200": "#F2E1B1",
+    "300": "#E9CD7D",
+    "400": "#E9CD7D",
+    "500": "#E5C364",
+    "600": "#E0B94A",
+    "700": "#DCAF30",
+    "800": "#CB9F22",
+    "900": "#B18B1E",
+);
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+$secondary_map: (
+    "50": "#E5F2FF",
+    "100": "#CCE5FF",
+    "200": "#B3D7FF",
+    "300": "#99CAFF",
+    "400": "#80BDFF",
+    "500": "#66B0FF",
+    "600": "#4DA3FF",
+    "700": "#3395FF",
+    "800": "#1A88FF",
+    "900": "#1A88FF",
+);
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+$success_map: (
+    "50": "#E8FAF0",
+    "100": "#D2F6E2",
+    "200": "#BBF1D3",
+    "300": "#A5EDC5",
+    "400": "#8EE8B6",
+    "500": "#78E4A8",
+    "600": "#61DF99",
+    "700": "#4ADB8B",
+    "800": "#34D67C",
+    "900": "#28C76F",
+);
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+$danger_map: (
+    "50": "#FDEEEE",
+    "100": "#FBDDDD",
+    "200": "#F9CCCC",
+    "300": "#F7BBBB",
+    "400": "#F5AAAA",
+    "500": "#F29899",
+    "600": "#F08788",
+    "700": "#EE7677",
+    "800": "#EC6566",
+    "900": "#EA5455",
+);
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+$warning_map: (
+    "50": "#FFF5EC",
+    "100": "#FFECD9",
+    "200": "#FFE2C7",
+    "300": "#FFD9B4",
+    "400": "#FFCFA1",
+    "500": "#FFC58E",
+    "600": "#FFBC7B",
+    "700": "#FFB269",
+    "800": "#FFA956",
+    "900": "#FF9F43",
+);
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+$dark_map: (
+    "50": "#E9E9E9",
+    "100": "#D2D2D2",
+    "200": "#BCBCBC",
+    "300": "#A5A5A5",
+    "400": "#8F8F8F",
+    "500": "#787878",
+    "600": "#626262",
+    "700": "#4B4B4B",
+    "800": "#353535",
+    "900": "#1E1E1E",
+);
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+$black_map: (
+    "50": "#E6EAED",
+    "100": "#CDD5DB",
+    "200": "#B4BFC9",
+    "300": "#9BAAB7",
+    "400": "#8395A5",
+    "500": "#6A8093",
+    "600": "#586A7A",
+    "700": "#465461",
+    "800": "#343F48",
+    "900": "#22292F",
+);
+
+$theme-background: #f8f8f8;
+$content-color: #{map-get($dark_map, "600")};
+
+/*Creando los colores segun su tono*/
+@for $index from 0 to 10 {
+    $tono: 50;
+
+    /*verificando el tono a aplicar*/
+    @if $index>0 {
+        $tono: $index * 100;
+    }
+
+    /*textos primarios*/
+    @if map-has-key($primary_map, #{$tono}) {
+        .text-primary-#{$tono} {
+            color: #{map-get($primary_map, #{$tono})};
+        }
+        .bg-primary-#{$tono} {
+            background-color: #{map-get($primary_map, #{$tono})};
+        }
+    }
+
+    /*textos secundarios*/
+    @if map-has-key($secondary_map, #{$tono}) {
+        .text-secondary-#{$tono} {
+            color: #{map-get($secondary_map, #{$tono})};
+        }
+        .bg-secondary-#{$tono} {
+            background-color: #{map-get($secondary_map, #{$tono})};
+        }
+    }
+
+    /*textos success*/
+    @if map-has-key($success_map, #{$tono}) {
+        .text-success-#{$tono} {
+            color: #{map-get($success_map, #{$tono})};
+        }
+        .bg-success-#{$tono} {
+            background-color: #{map-get($success_map, #{$tono})};
+        }
+    }
+
+    /*textos danger*/
+    @if map-has-key($danger_map, #{$tono}) {
+        .text-danger-#{$tono} {
+            color: #{map-get($danger_map, #{$tono})};
+        }
+        .bg-danger-#{$tono} {
+            background-color: #{map-get($danger_map, #{$tono})};
+        }
+    }
+
+    /*text warning*/
+    @if map-has-key($warning_map, #{$tono}) {
+        .text-warning-#{$tono} {
+            color: #{map-get($warning_map, #{$tono})};
+        }
+        .bg-warning-#{$tono} {
+            background-color: #{map-get($warning_map, #{$tono})};
+        }
+    }
+
+    /*text dark*/
+    @if map-has-key($dark_map, #{$tono}) {
+        .text-dark-#{$tono} {
+            color: #{map-get($dark_map, #{$tono})};
+        }
+        .bg-dark-#{$tono} {
+            background-color: #{map-get($dark_map, #{$tono})};
+        }
+    }
+
+    /*text black*/
+    @if map-has-key($black_map, #{$tono}) {
+        .text-black-#{$tono} {
+            color: #{map-get($black_map, #{$tono})};
+        }
+        .bg-black-#{$tono} {
+            background-color: #{map-get($black_map, #{$tono})};
+        }
+    }
+}
 
 /*========================================================
         TYPOGRAPHY
 =========================================================*/
 
-$font-family-sans-serif: 'Roboto',sans-serif !default;
-$font-family-serif:       Georgia, "Times New Roman", Times, serif !default;
+$font-family-sans-serif: "Roboto", sans-serif !default;
+$font-family-serif: Georgia, "Times New Roman", Times, serif !default;
 
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
-$font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace !default;
-$font-family-base:        $font-family-sans-serif !default;
+$font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace !default;
+$font-family-base: $font-family-sans-serif !default;
 
-$font-size-base:          14px !default;
-$font-size-large:         ceil(($font-size-base * 1.25)) !default;
-$font-size-small:         ceil(($font-size-base * 0.85)) !default;
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+/*1.125 Major Second*/
+$scale: 1.125;
 
-$h1-font-size:                $font-size-base * 2;
-$h2-font-size:                $font-size-base * 1.74;
-$h3-font-size:                $font-size-base * 1.51;
-$h4-font-size:                $font-size-base * 1.32;
-$h5-font-size:                $font-size-base * 1.14;
-$h6-font-size:                $font-size-base;
+@function exponente($number, $exponent) {
+    $value: 1;
+    @if $exponent>0 {
+        @for $i from 1 through $exponent {
+            $value: $value * $number;
+        }
+    }
+    @return $value;
+}
 
+$font-size-base: 14px !default;
 
-$line-height-base:        1.625rem !default;
+//$font-size-large:         ceil(($font-size-base * 1.25)) !default; se removió, al parecer no estaba utilizada por ninguna otro estilo
+$font-size-small: $font-size-base / exponente($scale, 1);
+$font-size-smaller: $font-size-base / exponente($scale, 2);
+$font-size-smallest: $font-size-base / exponente($scale, 3);
 
-$headings-font-family:    inherit !default;
-$headings-font-weight:    500 !default;
-$headings-line-height:    1.2 !default;
-$headings-color:          #2c2c2c;
-$headings-margin-bottom:      ($spacer / 2) !default;
+$h1-font-size: $font-size-base * exponente($scale, 5);
+$h2-font-size: $font-size-base * exponente($scale, 4);
+$h3-font-size: $font-size-base * exponente($scale, 3);
+$h4-font-size: $font-size-base * exponente($scale, 2);
+$h5-font-size: $font-size-base * exponente($scale, 1);
+$h6-font-size: $font-size-base;
 
-$font-weight-light:           300;
-$font-weight-normal:          400;
-$font-weight-bold:            700;
+$line-height-base: 1.625rem !default;
 
-$font-weight-base:            $font-weight-normal;
-$line-height-base:            1.45;
+$headings-font-family: inherit !default;
+$headings-font-weight: 500 !default;
+$headings-line-height: 1.2 !default;
+$headings-color: #2c2c2c;
+$headings-margin-bottom: ($spacer / 2) !default;
 
-$content-color: #626262;
-$theme-background: #f8f8f8;
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
 
+$font-weight-base: $font-weight-normal;
+$line-height-base: 1.45;
 
 /*========================================================
         TYPOGRAPHY
 =========================================================*/
 
 $reduced-sidebar-width: 80px;
-
 
 /*========================================================
         DARK THEME
@@ -100,4 +302,4 @@ $theme-dark-text-color: #c2c6dc;
 $theme-dark-heading-color: #ebeefd;
 // $theme-dark-heading-color: #C9CAD2;
 $theme-dark-border-color: #414561;
-$theme-dark-shadow-color: #0C112E;
+$theme-dark-shadow-color: #0c112e;

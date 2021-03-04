@@ -8,7 +8,7 @@
 ==========================================================================================*/
 
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 body {
     color: $content-color;
@@ -22,12 +22,24 @@ h1, h2, h3, h4, h5, h6,
   color: $headings-color;
 }
 
-h1, .h1 { font-size: $h1-font-size; }
+h1, .h1 { font-size: $h1-font-size}
 h2, .h2 { font-size: $h2-font-size; }
 h3, .h3 { font-size: $h3-font-size; }
 h4, .h4 { font-size: $h4-font-size; }
 h5, .h5 { font-size: $h5-font-size; }
-h6, .h6 { font-size: $h6-font-size; }
+h6,.h6,.font-size-base{
+    font-size: $h6-font-size;
+}
+.font-size-small{
+  font-size: $font-size-small;
+}
+.font-size-smaller {
+    font-size: $font-size-smaller;
+}
+.font-size-smallest {
+    font-size: $font-size-smallest;
+}
+
 
 h4 {
     .vs-tooltip &{
@@ -46,4 +58,21 @@ a {
 // quill editor
 u {
     text-decoration: underline;
+}
+
+/*Weights*/
+.font-light{
+  font-weight: 300;
+}
+
+.font-normal {
+    font-weight: 400;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-bold {
+    font-weight: 700;
 }
