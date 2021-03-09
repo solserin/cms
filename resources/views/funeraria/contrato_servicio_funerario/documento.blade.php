@@ -81,6 +81,7 @@
         }
 
         /*fin de parrafos*/
+
     </style>
 </head>
 
@@ -335,8 +336,8 @@
             “El consumidor” pagará como contraprestación a “El proveedor” por el Servicio objeto del presente
             Contrato, la cantidad de <span class="bold uppercase">
                 $
-                {{ number_format($datos['operacion']['subtotal'], 2) }}
-                ({{ numeros_a_letras($datos['operacion']['subtotal']) }}</span>),
+                {{ number_format($datos['operacion']['subtotal']-$datos['operacion']['descuento'], 2) }}
+                ({{ numeros_a_letras($datos['operacion']['subtotal']-$datos['operacion']['descuento']) }}</span>),
             más el Importe
             al Valor
             Agregado de $
