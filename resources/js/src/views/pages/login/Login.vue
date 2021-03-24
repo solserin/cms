@@ -106,7 +106,6 @@
                           >¿Olvidaste tu contraseña?</router-link
                         >
                       </div>
-
                       <div class="flex flex-wrap justify-between py-10">
                         <a
                           href="#"
@@ -144,7 +143,7 @@ export default {
       //password: "password",
       email: "",
       password: "",
-      checkbox_remember_me: false
+      checkbox_remember_me: false,
     };
   },
   computed: {
@@ -152,8 +151,8 @@ export default {
       return !this.errors.any() && this.email != "" && this.password != "";
     },
     ...mapGetters({
-      isLoggedIn: "auth/isLoggedIn"
-    })
+      isLoggedIn: "auth/isLoggedIn",
+    }),
   },
   methods: {
     checkLogin() {
@@ -168,7 +167,7 @@ export default {
           text: "Su cuenta ya ha iniciado sesión!",
           iconPack: "feather",
           icon: "icon-alert-circle",
-          color: "warning"
+          color: "warning",
         });
         return false;
       }
@@ -184,8 +183,8 @@ export default {
         checkbox_remember_me: this.checkbox_remember_me,
         userDetails: {
           email: this.email,
-          password: this.password
-        }
+          password: this.password,
+        },
       };
 
       this.$store
@@ -193,22 +192,22 @@ export default {
         .then(() => {
           this.$vs.loading.close();
         })
-        .catch(error => {
+        .catch((error) => {
           this.$vs.loading.close();
           this.$vs.notify({
             title: "Error",
             text: error.response.data.error,
             iconPack: "feather",
             icon: "icon-alert-circle",
-            color: "danger"
+            color: "danger",
           });
         });
-    }
+    },
   },
   created() {
     this.$nextTick(() =>
       this.$refs["email"].$el.querySelector("input").focus()
     );
-  }
+  },
 };
 </script>

@@ -1,4 +1,6 @@
-@import url(https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700);@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;
+
+400;500;700&display=swap);@charset "UTF-8";
 
 /*=========================================================================================
   File Name: app.scss
@@ -36,8 +38,761 @@
 =========================================================*/
 
 /*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+
+/*Creando los colores segun su tono*/
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+.text-primary-50 {
+  color: #FBF5E5;
+}
+
+[dir] .bg-primary-50 {
+  background-color: #FBF5E5;
+}
+
+/*textos secundarios*/
+
+.text-secondary-50 {
+  color: #E5F2FF;
+}
+
+[dir] .bg-secondary-50 {
+  background-color: #E5F2FF;
+}
+
+/*textos success*/
+
+.text-success-50 {
+  color: #E8FAF0;
+}
+
+[dir] .bg-success-50 {
+  background-color: #E8FAF0;
+}
+
+/*textos danger*/
+
+.text-danger-50 {
+  color: #FDEEEE;
+}
+
+[dir] .bg-danger-50 {
+  background-color: #FDEEEE;
+}
+
+/*text warning*/
+
+.text-warning-50 {
+  color: #FFF5EC;
+}
+
+[dir] .bg-warning-50 {
+  background-color: #FFF5EC;
+}
+
+/*text dark*/
+
+.text-dark-50 {
+  color: #E9E9E9;
+}
+
+[dir] .bg-dark-50 {
+  background-color: #E9E9E9;
+}
+
+/*text black*/
+
+.text-black-50 {
+  color: #E6EAED;
+}
+
+[dir] .bg-black-50 {
+  background-color: #E6EAED;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-100 {
+  color: #F6EBCB;
+}
+
+[dir] .bg-primary-100 {
+  background-color: #F6EBCB;
+}
+
+/*textos secundarios*/
+
+.text-secondary-100 {
+  color: #CCE5FF;
+}
+
+[dir] .bg-secondary-100 {
+  background-color: #CCE5FF;
+}
+
+/*textos success*/
+
+.text-success-100 {
+  color: #D2F6E2;
+}
+
+[dir] .bg-success-100 {
+  background-color: #D2F6E2;
+}
+
+/*textos danger*/
+
+.text-danger-100 {
+  color: #FBDDDD;
+}
+
+[dir] .bg-danger-100 {
+  background-color: #FBDDDD;
+}
+
+/*text warning*/
+
+.text-warning-100 {
+  color: #FFECD9;
+}
+
+[dir] .bg-warning-100 {
+  background-color: #FFECD9;
+}
+
+/*text dark*/
+
+.text-dark-100 {
+  color: #D2D2D2;
+}
+
+[dir] .bg-dark-100 {
+  background-color: #D2D2D2;
+}
+
+/*text black*/
+
+.text-black-100 {
+  color: #CDD5DB;
+}
+
+[dir] .bg-black-100 {
+  background-color: #CDD5DB;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-200 {
+  color: #F2E1B1;
+}
+
+[dir] .bg-primary-200 {
+  background-color: #F2E1B1;
+}
+
+/*textos secundarios*/
+
+.text-secondary-200 {
+  color: #B3D7FF;
+}
+
+[dir] .bg-secondary-200 {
+  background-color: #B3D7FF;
+}
+
+/*textos success*/
+
+.text-success-200 {
+  color: #BBF1D3;
+}
+
+[dir] .bg-success-200 {
+  background-color: #BBF1D3;
+}
+
+/*textos danger*/
+
+.text-danger-200 {
+  color: #F9CCCC;
+}
+
+[dir] .bg-danger-200 {
+  background-color: #F9CCCC;
+}
+
+/*text warning*/
+
+.text-warning-200 {
+  color: #FFE2C7;
+}
+
+[dir] .bg-warning-200 {
+  background-color: #FFE2C7;
+}
+
+/*text dark*/
+
+.text-dark-200 {
+  color: #BCBCBC;
+}
+
+[dir] .bg-dark-200 {
+  background-color: #BCBCBC;
+}
+
+/*text black*/
+
+.text-black-200 {
+  color: #B4BFC9;
+}
+
+[dir] .bg-black-200 {
+  background-color: #B4BFC9;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-300 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-300 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-300 {
+  color: #99CAFF;
+}
+
+[dir] .bg-secondary-300 {
+  background-color: #99CAFF;
+}
+
+/*textos success*/
+
+.text-success-300 {
+  color: #A5EDC5;
+}
+
+[dir] .bg-success-300 {
+  background-color: #A5EDC5;
+}
+
+/*textos danger*/
+
+.text-danger-300 {
+  color: #F7BBBB;
+}
+
+[dir] .bg-danger-300 {
+  background-color: #F7BBBB;
+}
+
+/*text warning*/
+
+.text-warning-300 {
+  color: #FFD9B4;
+}
+
+[dir] .bg-warning-300 {
+  background-color: #FFD9B4;
+}
+
+/*text dark*/
+
+.text-dark-300 {
+  color: #A5A5A5;
+}
+
+[dir] .bg-dark-300 {
+  background-color: #A5A5A5;
+}
+
+/*text black*/
+
+.text-black-300 {
+  color: #9BAAB7;
+}
+
+[dir] .bg-black-300 {
+  background-color: #9BAAB7;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-400 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-400 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-400 {
+  color: #80BDFF;
+}
+
+[dir] .bg-secondary-400 {
+  background-color: #80BDFF;
+}
+
+/*textos success*/
+
+.text-success-400 {
+  color: #8EE8B6;
+}
+
+[dir] .bg-success-400 {
+  background-color: #8EE8B6;
+}
+
+/*textos danger*/
+
+.text-danger-400 {
+  color: #F5AAAA;
+}
+
+[dir] .bg-danger-400 {
+  background-color: #F5AAAA;
+}
+
+/*text warning*/
+
+.text-warning-400 {
+  color: #FFCFA1;
+}
+
+[dir] .bg-warning-400 {
+  background-color: #FFCFA1;
+}
+
+/*text dark*/
+
+.text-dark-400 {
+  color: #8F8F8F;
+}
+
+[dir] .bg-dark-400 {
+  background-color: #8F8F8F;
+}
+
+/*text black*/
+
+.text-black-400 {
+  color: #8395A5;
+}
+
+[dir] .bg-black-400 {
+  background-color: #8395A5;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-500 {
+  color: #E5C364;
+}
+
+[dir] .bg-primary-500 {
+  background-color: #E5C364;
+}
+
+/*textos secundarios*/
+
+.text-secondary-500 {
+  color: #66B0FF;
+}
+
+[dir] .bg-secondary-500 {
+  background-color: #66B0FF;
+}
+
+/*textos success*/
+
+.text-success-500 {
+  color: #78E4A8;
+}
+
+[dir] .bg-success-500 {
+  background-color: #78E4A8;
+}
+
+/*textos danger*/
+
+.text-danger-500 {
+  color: #F29899;
+}
+
+[dir] .bg-danger-500 {
+  background-color: #F29899;
+}
+
+/*text warning*/
+
+.text-warning-500 {
+  color: #FFC58E;
+}
+
+[dir] .bg-warning-500 {
+  background-color: #FFC58E;
+}
+
+/*text dark*/
+
+.text-dark-500 {
+  color: #787878;
+}
+
+[dir] .bg-dark-500 {
+  background-color: #787878;
+}
+
+/*text black*/
+
+.text-black-500 {
+  color: #6A8093;
+}
+
+[dir] .bg-black-500 {
+  background-color: #6A8093;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-600 {
+  color: #E0B94A;
+}
+
+[dir] .bg-primary-600 {
+  background-color: #E0B94A;
+}
+
+/*textos secundarios*/
+
+.text-secondary-600 {
+  color: #4DA3FF;
+}
+
+[dir] .bg-secondary-600 {
+  background-color: #4DA3FF;
+}
+
+/*textos success*/
+
+.text-success-600 {
+  color: #61DF99;
+}
+
+[dir] .bg-success-600 {
+  background-color: #61DF99;
+}
+
+/*textos danger*/
+
+.text-danger-600 {
+  color: #F08788;
+}
+
+[dir] .bg-danger-600 {
+  background-color: #F08788;
+}
+
+/*text warning*/
+
+.text-warning-600 {
+  color: #FFBC7B;
+}
+
+[dir] .bg-warning-600 {
+  background-color: #FFBC7B;
+}
+
+/*text dark*/
+
+.text-dark-600 {
+  color: #626262;
+}
+
+[dir] .bg-dark-600 {
+  background-color: #626262;
+}
+
+/*text black*/
+
+.text-black-600 {
+  color: #586A7A;
+}
+
+[dir] .bg-black-600 {
+  background-color: #586A7A;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-700 {
+  color: #DCAF30;
+}
+
+[dir] .bg-primary-700 {
+  background-color: #DCAF30;
+}
+
+/*textos secundarios*/
+
+.text-secondary-700 {
+  color: #3395FF;
+}
+
+[dir] .bg-secondary-700 {
+  background-color: #3395FF;
+}
+
+/*textos success*/
+
+.text-success-700 {
+  color: #4ADB8B;
+}
+
+[dir] .bg-success-700 {
+  background-color: #4ADB8B;
+}
+
+/*textos danger*/
+
+.text-danger-700 {
+  color: #EE7677;
+}
+
+[dir] .bg-danger-700 {
+  background-color: #EE7677;
+}
+
+/*text warning*/
+
+.text-warning-700 {
+  color: #FFB269;
+}
+
+[dir] .bg-warning-700 {
+  background-color: #FFB269;
+}
+
+/*text dark*/
+
+.text-dark-700 {
+  color: #4B4B4B;
+}
+
+[dir] .bg-dark-700 {
+  background-color: #4B4B4B;
+}
+
+/*text black*/
+
+.text-black-700 {
+  color: #465461;
+}
+
+[dir] .bg-black-700 {
+  background-color: #465461;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-800 {
+  color: #CB9F22;
+}
+
+[dir] .bg-primary-800 {
+  background-color: #CB9F22;
+}
+
+/*textos secundarios*/
+
+.text-secondary-800 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-800 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-800 {
+  color: #34D67C;
+}
+
+[dir] .bg-success-800 {
+  background-color: #34D67C;
+}
+
+/*textos danger*/
+
+.text-danger-800 {
+  color: #EC6566;
+}
+
+[dir] .bg-danger-800 {
+  background-color: #EC6566;
+}
+
+/*text warning*/
+
+.text-warning-800 {
+  color: #FFA956;
+}
+
+[dir] .bg-warning-800 {
+  background-color: #FFA956;
+}
+
+/*text dark*/
+
+.text-dark-800 {
+  color: #353535;
+}
+
+[dir] .bg-dark-800 {
+  background-color: #353535;
+}
+
+/*text black*/
+
+.text-black-800 {
+  color: #343F48;
+}
+
+[dir] .bg-black-800 {
+  background-color: #343F48;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-900 {
+  color: #B18B1E;
+}
+
+[dir] .bg-primary-900 {
+  background-color: #B18B1E;
+}
+
+/*textos secundarios*/
+
+.text-secondary-900 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-900 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-900 {
+  color: #28C76F;
+}
+
+[dir] .bg-success-900 {
+  background-color: #28C76F;
+}
+
+/*textos danger*/
+
+.text-danger-900 {
+  color: #EA5455;
+}
+
+[dir] .bg-danger-900 {
+  background-color: #EA5455;
+}
+
+/*text warning*/
+
+.text-warning-900 {
+  color: #FF9F43;
+}
+
+[dir] .bg-warning-900 {
+  background-color: #FF9F43;
+}
+
+/*text dark*/
+
+.text-dark-900 {
+  color: #1E1E1E;
+}
+
+[dir] .bg-dark-900 {
+  background-color: #1E1E1E;
+}
+
+/*text black*/
+
+.text-black-900 {
+  color: #22292F;
+}
+
+[dir] .bg-black-900 {
+  background-color: #22292F;
+}
+
+/*========================================================
         TYPOGRAPHY
 =========================================================*/
+
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+
+/*1.125 Major Second*/
 
 /*========================================================
         TYPOGRAPHY
@@ -74,7 +829,7 @@ html {
 }
 
 body {
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   overflow-x: hidden;
   max-width: 100%;
@@ -304,8 +1059,762 @@ body {
 =========================================================*/
 
 /*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+
+/*Creando los colores segun su tono*/
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-50 {
+  color: #FBF5E5;
+}
+
+[dir] .bg-primary-50 {
+  background-color: #FBF5E5;
+}
+
+/*textos secundarios*/
+
+.text-secondary-50 {
+  color: #E5F2FF;
+}
+
+[dir] .bg-secondary-50 {
+  background-color: #E5F2FF;
+}
+
+/*textos success*/
+
+.text-success-50 {
+  color: #E8FAF0;
+}
+
+[dir] .bg-success-50 {
+  background-color: #E8FAF0;
+}
+
+/*textos danger*/
+
+.text-danger-50 {
+  color: #FDEEEE;
+}
+
+[dir] .bg-danger-50 {
+  background-color: #FDEEEE;
+}
+
+/*text warning*/
+
+.text-warning-50 {
+  color: #FFF5EC;
+}
+
+[dir] .bg-warning-50 {
+  background-color: #FFF5EC;
+}
+
+/*text dark*/
+
+.text-dark-50 {
+  color: #E9E9E9;
+}
+
+[dir] .bg-dark-50 {
+  background-color: #E9E9E9;
+}
+
+/*text black*/
+
+.text-black-50 {
+  color: #E6EAED;
+}
+
+[dir] .bg-black-50 {
+  background-color: #E6EAED;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-100 {
+  color: #F6EBCB;
+}
+
+[dir] .bg-primary-100 {
+  background-color: #F6EBCB;
+}
+
+/*textos secundarios*/
+
+.text-secondary-100 {
+  color: #CCE5FF;
+}
+
+[dir] .bg-secondary-100 {
+  background-color: #CCE5FF;
+}
+
+/*textos success*/
+
+.text-success-100 {
+  color: #D2F6E2;
+}
+
+[dir] .bg-success-100 {
+  background-color: #D2F6E2;
+}
+
+/*textos danger*/
+
+.text-danger-100 {
+  color: #FBDDDD;
+}
+
+[dir] .bg-danger-100 {
+  background-color: #FBDDDD;
+}
+
+/*text warning*/
+
+.text-warning-100 {
+  color: #FFECD9;
+}
+
+[dir] .bg-warning-100 {
+  background-color: #FFECD9;
+}
+
+/*text dark*/
+
+.text-dark-100 {
+  color: #D2D2D2;
+}
+
+[dir] .bg-dark-100 {
+  background-color: #D2D2D2;
+}
+
+/*text black*/
+
+.text-black-100 {
+  color: #CDD5DB;
+}
+
+[dir] .bg-black-100 {
+  background-color: #CDD5DB;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-200 {
+  color: #F2E1B1;
+}
+
+[dir] .bg-primary-200 {
+  background-color: #F2E1B1;
+}
+
+/*textos secundarios*/
+
+.text-secondary-200 {
+  color: #B3D7FF;
+}
+
+[dir] .bg-secondary-200 {
+  background-color: #B3D7FF;
+}
+
+/*textos success*/
+
+.text-success-200 {
+  color: #BBF1D3;
+}
+
+[dir] .bg-success-200 {
+  background-color: #BBF1D3;
+}
+
+/*textos danger*/
+
+.text-danger-200 {
+  color: #F9CCCC;
+}
+
+[dir] .bg-danger-200 {
+  background-color: #F9CCCC;
+}
+
+/*text warning*/
+
+.text-warning-200 {
+  color: #FFE2C7;
+}
+
+[dir] .bg-warning-200 {
+  background-color: #FFE2C7;
+}
+
+/*text dark*/
+
+.text-dark-200 {
+  color: #BCBCBC;
+}
+
+[dir] .bg-dark-200 {
+  background-color: #BCBCBC;
+}
+
+/*text black*/
+
+.text-black-200 {
+  color: #B4BFC9;
+}
+
+[dir] .bg-black-200 {
+  background-color: #B4BFC9;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-300 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-300 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-300 {
+  color: #99CAFF;
+}
+
+[dir] .bg-secondary-300 {
+  background-color: #99CAFF;
+}
+
+/*textos success*/
+
+.text-success-300 {
+  color: #A5EDC5;
+}
+
+[dir] .bg-success-300 {
+  background-color: #A5EDC5;
+}
+
+/*textos danger*/
+
+.text-danger-300 {
+  color: #F7BBBB;
+}
+
+[dir] .bg-danger-300 {
+  background-color: #F7BBBB;
+}
+
+/*text warning*/
+
+.text-warning-300 {
+  color: #FFD9B4;
+}
+
+[dir] .bg-warning-300 {
+  background-color: #FFD9B4;
+}
+
+/*text dark*/
+
+.text-dark-300 {
+  color: #A5A5A5;
+}
+
+[dir] .bg-dark-300 {
+  background-color: #A5A5A5;
+}
+
+/*text black*/
+
+.text-black-300 {
+  color: #9BAAB7;
+}
+
+[dir] .bg-black-300 {
+  background-color: #9BAAB7;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-400 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-400 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-400 {
+  color: #80BDFF;
+}
+
+[dir] .bg-secondary-400 {
+  background-color: #80BDFF;
+}
+
+/*textos success*/
+
+.text-success-400 {
+  color: #8EE8B6;
+}
+
+[dir] .bg-success-400 {
+  background-color: #8EE8B6;
+}
+
+/*textos danger*/
+
+.text-danger-400 {
+  color: #F5AAAA;
+}
+
+[dir] .bg-danger-400 {
+  background-color: #F5AAAA;
+}
+
+/*text warning*/
+
+.text-warning-400 {
+  color: #FFCFA1;
+}
+
+[dir] .bg-warning-400 {
+  background-color: #FFCFA1;
+}
+
+/*text dark*/
+
+.text-dark-400 {
+  color: #8F8F8F;
+}
+
+[dir] .bg-dark-400 {
+  background-color: #8F8F8F;
+}
+
+/*text black*/
+
+.text-black-400 {
+  color: #8395A5;
+}
+
+[dir] .bg-black-400 {
+  background-color: #8395A5;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-500 {
+  color: #E5C364;
+}
+
+[dir] .bg-primary-500 {
+  background-color: #E5C364;
+}
+
+/*textos secundarios*/
+
+.text-secondary-500 {
+  color: #66B0FF;
+}
+
+[dir] .bg-secondary-500 {
+  background-color: #66B0FF;
+}
+
+/*textos success*/
+
+.text-success-500 {
+  color: #78E4A8;
+}
+
+[dir] .bg-success-500 {
+  background-color: #78E4A8;
+}
+
+/*textos danger*/
+
+.text-danger-500 {
+  color: #F29899;
+}
+
+[dir] .bg-danger-500 {
+  background-color: #F29899;
+}
+
+/*text warning*/
+
+.text-warning-500 {
+  color: #FFC58E;
+}
+
+[dir] .bg-warning-500 {
+  background-color: #FFC58E;
+}
+
+/*text dark*/
+
+.text-dark-500 {
+  color: #787878;
+}
+
+[dir] .bg-dark-500 {
+  background-color: #787878;
+}
+
+/*text black*/
+
+.text-black-500 {
+  color: #6A8093;
+}
+
+[dir] .bg-black-500 {
+  background-color: #6A8093;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-600 {
+  color: #E0B94A;
+}
+
+[dir] .bg-primary-600 {
+  background-color: #E0B94A;
+}
+
+/*textos secundarios*/
+
+.text-secondary-600 {
+  color: #4DA3FF;
+}
+
+[dir] .bg-secondary-600 {
+  background-color: #4DA3FF;
+}
+
+/*textos success*/
+
+.text-success-600 {
+  color: #61DF99;
+}
+
+[dir] .bg-success-600 {
+  background-color: #61DF99;
+}
+
+/*textos danger*/
+
+.text-danger-600 {
+  color: #F08788;
+}
+
+[dir] .bg-danger-600 {
+  background-color: #F08788;
+}
+
+/*text warning*/
+
+.text-warning-600 {
+  color: #FFBC7B;
+}
+
+[dir] .bg-warning-600 {
+  background-color: #FFBC7B;
+}
+
+/*text dark*/
+
+.text-dark-600 {
+  color: #626262;
+}
+
+[dir] .bg-dark-600 {
+  background-color: #626262;
+}
+
+/*text black*/
+
+.text-black-600 {
+  color: #586A7A;
+}
+
+[dir] .bg-black-600 {
+  background-color: #586A7A;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-700 {
+  color: #DCAF30;
+}
+
+[dir] .bg-primary-700 {
+  background-color: #DCAF30;
+}
+
+/*textos secundarios*/
+
+.text-secondary-700 {
+  color: #3395FF;
+}
+
+[dir] .bg-secondary-700 {
+  background-color: #3395FF;
+}
+
+/*textos success*/
+
+.text-success-700 {
+  color: #4ADB8B;
+}
+
+[dir] .bg-success-700 {
+  background-color: #4ADB8B;
+}
+
+/*textos danger*/
+
+.text-danger-700 {
+  color: #EE7677;
+}
+
+[dir] .bg-danger-700 {
+  background-color: #EE7677;
+}
+
+/*text warning*/
+
+.text-warning-700 {
+  color: #FFB269;
+}
+
+[dir] .bg-warning-700 {
+  background-color: #FFB269;
+}
+
+/*text dark*/
+
+.text-dark-700 {
+  color: #4B4B4B;
+}
+
+[dir] .bg-dark-700 {
+  background-color: #4B4B4B;
+}
+
+/*text black*/
+
+.text-black-700 {
+  color: #465461;
+}
+
+[dir] .bg-black-700 {
+  background-color: #465461;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-800 {
+  color: #CB9F22;
+}
+
+[dir] .bg-primary-800 {
+  background-color: #CB9F22;
+}
+
+/*textos secundarios*/
+
+.text-secondary-800 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-800 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-800 {
+  color: #34D67C;
+}
+
+[dir] .bg-success-800 {
+  background-color: #34D67C;
+}
+
+/*textos danger*/
+
+.text-danger-800 {
+  color: #EC6566;
+}
+
+[dir] .bg-danger-800 {
+  background-color: #EC6566;
+}
+
+/*text warning*/
+
+.text-warning-800 {
+  color: #FFA956;
+}
+
+[dir] .bg-warning-800 {
+  background-color: #FFA956;
+}
+
+/*text dark*/
+
+.text-dark-800 {
+  color: #353535;
+}
+
+[dir] .bg-dark-800 {
+  background-color: #353535;
+}
+
+/*text black*/
+
+.text-black-800 {
+  color: #343F48;
+}
+
+[dir] .bg-black-800 {
+  background-color: #343F48;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-900 {
+  color: #B18B1E;
+}
+
+[dir] .bg-primary-900 {
+  background-color: #B18B1E;
+}
+
+/*textos secundarios*/
+
+.text-secondary-900 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-900 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-900 {
+  color: #28C76F;
+}
+
+[dir] .bg-success-900 {
+  background-color: #28C76F;
+}
+
+/*textos danger*/
+
+.text-danger-900 {
+  color: #EA5455;
+}
+
+[dir] .bg-danger-900 {
+  background-color: #EA5455;
+}
+
+/*text warning*/
+
+.text-warning-900 {
+  color: #FF9F43;
+}
+
+[dir] .bg-warning-900 {
+  background-color: #FF9F43;
+}
+
+/*text dark*/
+
+.text-dark-900 {
+  color: #1E1E1E;
+}
+
+[dir] .bg-dark-900 {
+  background-color: #1E1E1E;
+}
+
+/*text black*/
+
+.text-black-900 {
+  color: #22292F;
+}
+
+[dir] .bg-black-900 {
+  background-color: #22292F;
+}
+
+/*========================================================
         TYPOGRAPHY
 =========================================================*/
+
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+
+/*1.125 Major Second*/
 
 /*========================================================
         TYPOGRAPHY
@@ -940,32 +2449,45 @@ h6,
 
 h1,
 .h1 {
-  font-size: 28px;
+  font-size: 25.22845px;
 }
 
 h2,
 .h2 {
-  font-size: 24.36px;
+  font-size: 22.42529px;
 }
 
 h3,
 .h3 {
-  font-size: 21.14px;
+  font-size: 19.93359px;
 }
 
 h4,
 .h4 {
-  font-size: 18.48px;
+  font-size: 17.71875px;
 }
 
 h5,
 .h5 {
-  font-size: 15.96px;
+  font-size: 15.75px;
 }
 
 h6,
-.h6 {
+.h6,
+.font-size-base {
   font-size: 14px;
+}
+
+.font-size-small {
+  font-size: 12.44444px;
+}
+
+.font-size-smaller {
+  font-size: 11.06173px;
+}
+
+.font-size-smallest {
+  font-size: 9.83265px;
 }
 
 .vs-tooltip h4 {
@@ -983,6 +2505,24 @@ u {
   text-decoration: underline;
 }
 
+/*Weights*/
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
 /*=========================================================================================
     File Name: _misc.scss
     Description: partial- misc styles
@@ -993,7 +2533,7 @@ u {
 ==========================================================================================*/
 
 code {
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 [dir] code {
@@ -1194,8 +2734,762 @@ i.wizard-icon {
 =========================================================*/
 
 /*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+
+/*Creando los colores segun su tono*/
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-50 {
+  color: #FBF5E5;
+}
+
+[dir] .bg-primary-50 {
+  background-color: #FBF5E5;
+}
+
+/*textos secundarios*/
+
+.text-secondary-50 {
+  color: #E5F2FF;
+}
+
+[dir] .bg-secondary-50 {
+  background-color: #E5F2FF;
+}
+
+/*textos success*/
+
+.text-success-50 {
+  color: #E8FAF0;
+}
+
+[dir] .bg-success-50 {
+  background-color: #E8FAF0;
+}
+
+/*textos danger*/
+
+.text-danger-50 {
+  color: #FDEEEE;
+}
+
+[dir] .bg-danger-50 {
+  background-color: #FDEEEE;
+}
+
+/*text warning*/
+
+.text-warning-50 {
+  color: #FFF5EC;
+}
+
+[dir] .bg-warning-50 {
+  background-color: #FFF5EC;
+}
+
+/*text dark*/
+
+.text-dark-50 {
+  color: #E9E9E9;
+}
+
+[dir] .bg-dark-50 {
+  background-color: #E9E9E9;
+}
+
+/*text black*/
+
+.text-black-50 {
+  color: #E6EAED;
+}
+
+[dir] .bg-black-50 {
+  background-color: #E6EAED;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-100 {
+  color: #F6EBCB;
+}
+
+[dir] .bg-primary-100 {
+  background-color: #F6EBCB;
+}
+
+/*textos secundarios*/
+
+.text-secondary-100 {
+  color: #CCE5FF;
+}
+
+[dir] .bg-secondary-100 {
+  background-color: #CCE5FF;
+}
+
+/*textos success*/
+
+.text-success-100 {
+  color: #D2F6E2;
+}
+
+[dir] .bg-success-100 {
+  background-color: #D2F6E2;
+}
+
+/*textos danger*/
+
+.text-danger-100 {
+  color: #FBDDDD;
+}
+
+[dir] .bg-danger-100 {
+  background-color: #FBDDDD;
+}
+
+/*text warning*/
+
+.text-warning-100 {
+  color: #FFECD9;
+}
+
+[dir] .bg-warning-100 {
+  background-color: #FFECD9;
+}
+
+/*text dark*/
+
+.text-dark-100 {
+  color: #D2D2D2;
+}
+
+[dir] .bg-dark-100 {
+  background-color: #D2D2D2;
+}
+
+/*text black*/
+
+.text-black-100 {
+  color: #CDD5DB;
+}
+
+[dir] .bg-black-100 {
+  background-color: #CDD5DB;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-200 {
+  color: #F2E1B1;
+}
+
+[dir] .bg-primary-200 {
+  background-color: #F2E1B1;
+}
+
+/*textos secundarios*/
+
+.text-secondary-200 {
+  color: #B3D7FF;
+}
+
+[dir] .bg-secondary-200 {
+  background-color: #B3D7FF;
+}
+
+/*textos success*/
+
+.text-success-200 {
+  color: #BBF1D3;
+}
+
+[dir] .bg-success-200 {
+  background-color: #BBF1D3;
+}
+
+/*textos danger*/
+
+.text-danger-200 {
+  color: #F9CCCC;
+}
+
+[dir] .bg-danger-200 {
+  background-color: #F9CCCC;
+}
+
+/*text warning*/
+
+.text-warning-200 {
+  color: #FFE2C7;
+}
+
+[dir] .bg-warning-200 {
+  background-color: #FFE2C7;
+}
+
+/*text dark*/
+
+.text-dark-200 {
+  color: #BCBCBC;
+}
+
+[dir] .bg-dark-200 {
+  background-color: #BCBCBC;
+}
+
+/*text black*/
+
+.text-black-200 {
+  color: #B4BFC9;
+}
+
+[dir] .bg-black-200 {
+  background-color: #B4BFC9;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-300 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-300 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-300 {
+  color: #99CAFF;
+}
+
+[dir] .bg-secondary-300 {
+  background-color: #99CAFF;
+}
+
+/*textos success*/
+
+.text-success-300 {
+  color: #A5EDC5;
+}
+
+[dir] .bg-success-300 {
+  background-color: #A5EDC5;
+}
+
+/*textos danger*/
+
+.text-danger-300 {
+  color: #F7BBBB;
+}
+
+[dir] .bg-danger-300 {
+  background-color: #F7BBBB;
+}
+
+/*text warning*/
+
+.text-warning-300 {
+  color: #FFD9B4;
+}
+
+[dir] .bg-warning-300 {
+  background-color: #FFD9B4;
+}
+
+/*text dark*/
+
+.text-dark-300 {
+  color: #A5A5A5;
+}
+
+[dir] .bg-dark-300 {
+  background-color: #A5A5A5;
+}
+
+/*text black*/
+
+.text-black-300 {
+  color: #9BAAB7;
+}
+
+[dir] .bg-black-300 {
+  background-color: #9BAAB7;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-400 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-400 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-400 {
+  color: #80BDFF;
+}
+
+[dir] .bg-secondary-400 {
+  background-color: #80BDFF;
+}
+
+/*textos success*/
+
+.text-success-400 {
+  color: #8EE8B6;
+}
+
+[dir] .bg-success-400 {
+  background-color: #8EE8B6;
+}
+
+/*textos danger*/
+
+.text-danger-400 {
+  color: #F5AAAA;
+}
+
+[dir] .bg-danger-400 {
+  background-color: #F5AAAA;
+}
+
+/*text warning*/
+
+.text-warning-400 {
+  color: #FFCFA1;
+}
+
+[dir] .bg-warning-400 {
+  background-color: #FFCFA1;
+}
+
+/*text dark*/
+
+.text-dark-400 {
+  color: #8F8F8F;
+}
+
+[dir] .bg-dark-400 {
+  background-color: #8F8F8F;
+}
+
+/*text black*/
+
+.text-black-400 {
+  color: #8395A5;
+}
+
+[dir] .bg-black-400 {
+  background-color: #8395A5;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-500 {
+  color: #E5C364;
+}
+
+[dir] .bg-primary-500 {
+  background-color: #E5C364;
+}
+
+/*textos secundarios*/
+
+.text-secondary-500 {
+  color: #66B0FF;
+}
+
+[dir] .bg-secondary-500 {
+  background-color: #66B0FF;
+}
+
+/*textos success*/
+
+.text-success-500 {
+  color: #78E4A8;
+}
+
+[dir] .bg-success-500 {
+  background-color: #78E4A8;
+}
+
+/*textos danger*/
+
+.text-danger-500 {
+  color: #F29899;
+}
+
+[dir] .bg-danger-500 {
+  background-color: #F29899;
+}
+
+/*text warning*/
+
+.text-warning-500 {
+  color: #FFC58E;
+}
+
+[dir] .bg-warning-500 {
+  background-color: #FFC58E;
+}
+
+/*text dark*/
+
+.text-dark-500 {
+  color: #787878;
+}
+
+[dir] .bg-dark-500 {
+  background-color: #787878;
+}
+
+/*text black*/
+
+.text-black-500 {
+  color: #6A8093;
+}
+
+[dir] .bg-black-500 {
+  background-color: #6A8093;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-600 {
+  color: #E0B94A;
+}
+
+[dir] .bg-primary-600 {
+  background-color: #E0B94A;
+}
+
+/*textos secundarios*/
+
+.text-secondary-600 {
+  color: #4DA3FF;
+}
+
+[dir] .bg-secondary-600 {
+  background-color: #4DA3FF;
+}
+
+/*textos success*/
+
+.text-success-600 {
+  color: #61DF99;
+}
+
+[dir] .bg-success-600 {
+  background-color: #61DF99;
+}
+
+/*textos danger*/
+
+.text-danger-600 {
+  color: #F08788;
+}
+
+[dir] .bg-danger-600 {
+  background-color: #F08788;
+}
+
+/*text warning*/
+
+.text-warning-600 {
+  color: #FFBC7B;
+}
+
+[dir] .bg-warning-600 {
+  background-color: #FFBC7B;
+}
+
+/*text dark*/
+
+.text-dark-600 {
+  color: #626262;
+}
+
+[dir] .bg-dark-600 {
+  background-color: #626262;
+}
+
+/*text black*/
+
+.text-black-600 {
+  color: #586A7A;
+}
+
+[dir] .bg-black-600 {
+  background-color: #586A7A;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-700 {
+  color: #DCAF30;
+}
+
+[dir] .bg-primary-700 {
+  background-color: #DCAF30;
+}
+
+/*textos secundarios*/
+
+.text-secondary-700 {
+  color: #3395FF;
+}
+
+[dir] .bg-secondary-700 {
+  background-color: #3395FF;
+}
+
+/*textos success*/
+
+.text-success-700 {
+  color: #4ADB8B;
+}
+
+[dir] .bg-success-700 {
+  background-color: #4ADB8B;
+}
+
+/*textos danger*/
+
+.text-danger-700 {
+  color: #EE7677;
+}
+
+[dir] .bg-danger-700 {
+  background-color: #EE7677;
+}
+
+/*text warning*/
+
+.text-warning-700 {
+  color: #FFB269;
+}
+
+[dir] .bg-warning-700 {
+  background-color: #FFB269;
+}
+
+/*text dark*/
+
+.text-dark-700 {
+  color: #4B4B4B;
+}
+
+[dir] .bg-dark-700 {
+  background-color: #4B4B4B;
+}
+
+/*text black*/
+
+.text-black-700 {
+  color: #465461;
+}
+
+[dir] .bg-black-700 {
+  background-color: #465461;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-800 {
+  color: #CB9F22;
+}
+
+[dir] .bg-primary-800 {
+  background-color: #CB9F22;
+}
+
+/*textos secundarios*/
+
+.text-secondary-800 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-800 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-800 {
+  color: #34D67C;
+}
+
+[dir] .bg-success-800 {
+  background-color: #34D67C;
+}
+
+/*textos danger*/
+
+.text-danger-800 {
+  color: #EC6566;
+}
+
+[dir] .bg-danger-800 {
+  background-color: #EC6566;
+}
+
+/*text warning*/
+
+.text-warning-800 {
+  color: #FFA956;
+}
+
+[dir] .bg-warning-800 {
+  background-color: #FFA956;
+}
+
+/*text dark*/
+
+.text-dark-800 {
+  color: #353535;
+}
+
+[dir] .bg-dark-800 {
+  background-color: #353535;
+}
+
+/*text black*/
+
+.text-black-800 {
+  color: #343F48;
+}
+
+[dir] .bg-black-800 {
+  background-color: #343F48;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-900 {
+  color: #B18B1E;
+}
+
+[dir] .bg-primary-900 {
+  background-color: #B18B1E;
+}
+
+/*textos secundarios*/
+
+.text-secondary-900 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-900 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-900 {
+  color: #28C76F;
+}
+
+[dir] .bg-success-900 {
+  background-color: #28C76F;
+}
+
+/*textos danger*/
+
+.text-danger-900 {
+  color: #EA5455;
+}
+
+[dir] .bg-danger-900 {
+  background-color: #EA5455;
+}
+
+/*text warning*/
+
+.text-warning-900 {
+  color: #FF9F43;
+}
+
+[dir] .bg-warning-900 {
+  background-color: #FF9F43;
+}
+
+/*text dark*/
+
+.text-dark-900 {
+  color: #1E1E1E;
+}
+
+[dir] .bg-dark-900 {
+  background-color: #1E1E1E;
+}
+
+/*text black*/
+
+.text-black-900 {
+  color: #22292F;
+}
+
+[dir] .bg-black-900 {
+  background-color: #22292F;
+}
+
+/*========================================================
         TYPOGRAPHY
 =========================================================*/
+
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+
+/*1.125 Major Second*/
 
 /*========================================================
         TYPOGRAPHY
@@ -1592,7 +3886,7 @@ i.wizard-icon {
 }
 
 [dir] .vs__dropdown-option--highlight {
-  background: #7367F0;
+  background: #b18b1e;
 }
 
 .vs__dropdown-option--disabled {
@@ -1843,8 +4137,762 @@ i.wizard-icon {
 =========================================================*/
 
 /*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+
+/*Creando los colores segun su tono*/
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-50 {
+  color: #FBF5E5;
+}
+
+[dir] .bg-primary-50 {
+  background-color: #FBF5E5;
+}
+
+/*textos secundarios*/
+
+.text-secondary-50 {
+  color: #E5F2FF;
+}
+
+[dir] .bg-secondary-50 {
+  background-color: #E5F2FF;
+}
+
+/*textos success*/
+
+.text-success-50 {
+  color: #E8FAF0;
+}
+
+[dir] .bg-success-50 {
+  background-color: #E8FAF0;
+}
+
+/*textos danger*/
+
+.text-danger-50 {
+  color: #FDEEEE;
+}
+
+[dir] .bg-danger-50 {
+  background-color: #FDEEEE;
+}
+
+/*text warning*/
+
+.text-warning-50 {
+  color: #FFF5EC;
+}
+
+[dir] .bg-warning-50 {
+  background-color: #FFF5EC;
+}
+
+/*text dark*/
+
+.text-dark-50 {
+  color: #E9E9E9;
+}
+
+[dir] .bg-dark-50 {
+  background-color: #E9E9E9;
+}
+
+/*text black*/
+
+.text-black-50 {
+  color: #E6EAED;
+}
+
+[dir] .bg-black-50 {
+  background-color: #E6EAED;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-100 {
+  color: #F6EBCB;
+}
+
+[dir] .bg-primary-100 {
+  background-color: #F6EBCB;
+}
+
+/*textos secundarios*/
+
+.text-secondary-100 {
+  color: #CCE5FF;
+}
+
+[dir] .bg-secondary-100 {
+  background-color: #CCE5FF;
+}
+
+/*textos success*/
+
+.text-success-100 {
+  color: #D2F6E2;
+}
+
+[dir] .bg-success-100 {
+  background-color: #D2F6E2;
+}
+
+/*textos danger*/
+
+.text-danger-100 {
+  color: #FBDDDD;
+}
+
+[dir] .bg-danger-100 {
+  background-color: #FBDDDD;
+}
+
+/*text warning*/
+
+.text-warning-100 {
+  color: #FFECD9;
+}
+
+[dir] .bg-warning-100 {
+  background-color: #FFECD9;
+}
+
+/*text dark*/
+
+.text-dark-100 {
+  color: #D2D2D2;
+}
+
+[dir] .bg-dark-100 {
+  background-color: #D2D2D2;
+}
+
+/*text black*/
+
+.text-black-100 {
+  color: #CDD5DB;
+}
+
+[dir] .bg-black-100 {
+  background-color: #CDD5DB;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-200 {
+  color: #F2E1B1;
+}
+
+[dir] .bg-primary-200 {
+  background-color: #F2E1B1;
+}
+
+/*textos secundarios*/
+
+.text-secondary-200 {
+  color: #B3D7FF;
+}
+
+[dir] .bg-secondary-200 {
+  background-color: #B3D7FF;
+}
+
+/*textos success*/
+
+.text-success-200 {
+  color: #BBF1D3;
+}
+
+[dir] .bg-success-200 {
+  background-color: #BBF1D3;
+}
+
+/*textos danger*/
+
+.text-danger-200 {
+  color: #F9CCCC;
+}
+
+[dir] .bg-danger-200 {
+  background-color: #F9CCCC;
+}
+
+/*text warning*/
+
+.text-warning-200 {
+  color: #FFE2C7;
+}
+
+[dir] .bg-warning-200 {
+  background-color: #FFE2C7;
+}
+
+/*text dark*/
+
+.text-dark-200 {
+  color: #BCBCBC;
+}
+
+[dir] .bg-dark-200 {
+  background-color: #BCBCBC;
+}
+
+/*text black*/
+
+.text-black-200 {
+  color: #B4BFC9;
+}
+
+[dir] .bg-black-200 {
+  background-color: #B4BFC9;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-300 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-300 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-300 {
+  color: #99CAFF;
+}
+
+[dir] .bg-secondary-300 {
+  background-color: #99CAFF;
+}
+
+/*textos success*/
+
+.text-success-300 {
+  color: #A5EDC5;
+}
+
+[dir] .bg-success-300 {
+  background-color: #A5EDC5;
+}
+
+/*textos danger*/
+
+.text-danger-300 {
+  color: #F7BBBB;
+}
+
+[dir] .bg-danger-300 {
+  background-color: #F7BBBB;
+}
+
+/*text warning*/
+
+.text-warning-300 {
+  color: #FFD9B4;
+}
+
+[dir] .bg-warning-300 {
+  background-color: #FFD9B4;
+}
+
+/*text dark*/
+
+.text-dark-300 {
+  color: #A5A5A5;
+}
+
+[dir] .bg-dark-300 {
+  background-color: #A5A5A5;
+}
+
+/*text black*/
+
+.text-black-300 {
+  color: #9BAAB7;
+}
+
+[dir] .bg-black-300 {
+  background-color: #9BAAB7;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-400 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-400 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-400 {
+  color: #80BDFF;
+}
+
+[dir] .bg-secondary-400 {
+  background-color: #80BDFF;
+}
+
+/*textos success*/
+
+.text-success-400 {
+  color: #8EE8B6;
+}
+
+[dir] .bg-success-400 {
+  background-color: #8EE8B6;
+}
+
+/*textos danger*/
+
+.text-danger-400 {
+  color: #F5AAAA;
+}
+
+[dir] .bg-danger-400 {
+  background-color: #F5AAAA;
+}
+
+/*text warning*/
+
+.text-warning-400 {
+  color: #FFCFA1;
+}
+
+[dir] .bg-warning-400 {
+  background-color: #FFCFA1;
+}
+
+/*text dark*/
+
+.text-dark-400 {
+  color: #8F8F8F;
+}
+
+[dir] .bg-dark-400 {
+  background-color: #8F8F8F;
+}
+
+/*text black*/
+
+.text-black-400 {
+  color: #8395A5;
+}
+
+[dir] .bg-black-400 {
+  background-color: #8395A5;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-500 {
+  color: #E5C364;
+}
+
+[dir] .bg-primary-500 {
+  background-color: #E5C364;
+}
+
+/*textos secundarios*/
+
+.text-secondary-500 {
+  color: #66B0FF;
+}
+
+[dir] .bg-secondary-500 {
+  background-color: #66B0FF;
+}
+
+/*textos success*/
+
+.text-success-500 {
+  color: #78E4A8;
+}
+
+[dir] .bg-success-500 {
+  background-color: #78E4A8;
+}
+
+/*textos danger*/
+
+.text-danger-500 {
+  color: #F29899;
+}
+
+[dir] .bg-danger-500 {
+  background-color: #F29899;
+}
+
+/*text warning*/
+
+.text-warning-500 {
+  color: #FFC58E;
+}
+
+[dir] .bg-warning-500 {
+  background-color: #FFC58E;
+}
+
+/*text dark*/
+
+.text-dark-500 {
+  color: #787878;
+}
+
+[dir] .bg-dark-500 {
+  background-color: #787878;
+}
+
+/*text black*/
+
+.text-black-500 {
+  color: #6A8093;
+}
+
+[dir] .bg-black-500 {
+  background-color: #6A8093;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-600 {
+  color: #E0B94A;
+}
+
+[dir] .bg-primary-600 {
+  background-color: #E0B94A;
+}
+
+/*textos secundarios*/
+
+.text-secondary-600 {
+  color: #4DA3FF;
+}
+
+[dir] .bg-secondary-600 {
+  background-color: #4DA3FF;
+}
+
+/*textos success*/
+
+.text-success-600 {
+  color: #61DF99;
+}
+
+[dir] .bg-success-600 {
+  background-color: #61DF99;
+}
+
+/*textos danger*/
+
+.text-danger-600 {
+  color: #F08788;
+}
+
+[dir] .bg-danger-600 {
+  background-color: #F08788;
+}
+
+/*text warning*/
+
+.text-warning-600 {
+  color: #FFBC7B;
+}
+
+[dir] .bg-warning-600 {
+  background-color: #FFBC7B;
+}
+
+/*text dark*/
+
+.text-dark-600 {
+  color: #626262;
+}
+
+[dir] .bg-dark-600 {
+  background-color: #626262;
+}
+
+/*text black*/
+
+.text-black-600 {
+  color: #586A7A;
+}
+
+[dir] .bg-black-600 {
+  background-color: #586A7A;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-700 {
+  color: #DCAF30;
+}
+
+[dir] .bg-primary-700 {
+  background-color: #DCAF30;
+}
+
+/*textos secundarios*/
+
+.text-secondary-700 {
+  color: #3395FF;
+}
+
+[dir] .bg-secondary-700 {
+  background-color: #3395FF;
+}
+
+/*textos success*/
+
+.text-success-700 {
+  color: #4ADB8B;
+}
+
+[dir] .bg-success-700 {
+  background-color: #4ADB8B;
+}
+
+/*textos danger*/
+
+.text-danger-700 {
+  color: #EE7677;
+}
+
+[dir] .bg-danger-700 {
+  background-color: #EE7677;
+}
+
+/*text warning*/
+
+.text-warning-700 {
+  color: #FFB269;
+}
+
+[dir] .bg-warning-700 {
+  background-color: #FFB269;
+}
+
+/*text dark*/
+
+.text-dark-700 {
+  color: #4B4B4B;
+}
+
+[dir] .bg-dark-700 {
+  background-color: #4B4B4B;
+}
+
+/*text black*/
+
+.text-black-700 {
+  color: #465461;
+}
+
+[dir] .bg-black-700 {
+  background-color: #465461;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-800 {
+  color: #CB9F22;
+}
+
+[dir] .bg-primary-800 {
+  background-color: #CB9F22;
+}
+
+/*textos secundarios*/
+
+.text-secondary-800 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-800 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-800 {
+  color: #34D67C;
+}
+
+[dir] .bg-success-800 {
+  background-color: #34D67C;
+}
+
+/*textos danger*/
+
+.text-danger-800 {
+  color: #EC6566;
+}
+
+[dir] .bg-danger-800 {
+  background-color: #EC6566;
+}
+
+/*text warning*/
+
+.text-warning-800 {
+  color: #FFA956;
+}
+
+[dir] .bg-warning-800 {
+  background-color: #FFA956;
+}
+
+/*text dark*/
+
+.text-dark-800 {
+  color: #353535;
+}
+
+[dir] .bg-dark-800 {
+  background-color: #353535;
+}
+
+/*text black*/
+
+.text-black-800 {
+  color: #343F48;
+}
+
+[dir] .bg-black-800 {
+  background-color: #343F48;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-900 {
+  color: #B18B1E;
+}
+
+[dir] .bg-primary-900 {
+  background-color: #B18B1E;
+}
+
+/*textos secundarios*/
+
+.text-secondary-900 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-900 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-900 {
+  color: #28C76F;
+}
+
+[dir] .bg-success-900 {
+  background-color: #28C76F;
+}
+
+/*textos danger*/
+
+.text-danger-900 {
+  color: #EA5455;
+}
+
+[dir] .bg-danger-900 {
+  background-color: #EA5455;
+}
+
+/*text warning*/
+
+.text-warning-900 {
+  color: #FF9F43;
+}
+
+[dir] .bg-warning-900 {
+  background-color: #FF9F43;
+}
+
+/*text dark*/
+
+.text-dark-900 {
+  color: #1E1E1E;
+}
+
+[dir] .bg-dark-900 {
+  background-color: #1E1E1E;
+}
+
+/*text black*/
+
+.text-black-900 {
+  color: #22292F;
+}
+
+[dir] .bg-black-900 {
+  background-color: #22292F;
+}
+
+/*========================================================
         TYPOGRAPHY
 =========================================================*/
+
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+
+/*1.125 Major Second*/
 
 /*========================================================
         TYPOGRAPHY
@@ -1916,8 +4964,762 @@ i.wizard-icon {
 =========================================================*/
 
 /*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+
+/*Creando los colores segun su tono*/
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-50 {
+  color: #FBF5E5;
+}
+
+[dir] .bg-primary-50 {
+  background-color: #FBF5E5;
+}
+
+/*textos secundarios*/
+
+.text-secondary-50 {
+  color: #E5F2FF;
+}
+
+[dir] .bg-secondary-50 {
+  background-color: #E5F2FF;
+}
+
+/*textos success*/
+
+.text-success-50 {
+  color: #E8FAF0;
+}
+
+[dir] .bg-success-50 {
+  background-color: #E8FAF0;
+}
+
+/*textos danger*/
+
+.text-danger-50 {
+  color: #FDEEEE;
+}
+
+[dir] .bg-danger-50 {
+  background-color: #FDEEEE;
+}
+
+/*text warning*/
+
+.text-warning-50 {
+  color: #FFF5EC;
+}
+
+[dir] .bg-warning-50 {
+  background-color: #FFF5EC;
+}
+
+/*text dark*/
+
+.text-dark-50 {
+  color: #E9E9E9;
+}
+
+[dir] .bg-dark-50 {
+  background-color: #E9E9E9;
+}
+
+/*text black*/
+
+.text-black-50 {
+  color: #E6EAED;
+}
+
+[dir] .bg-black-50 {
+  background-color: #E6EAED;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-100 {
+  color: #F6EBCB;
+}
+
+[dir] .bg-primary-100 {
+  background-color: #F6EBCB;
+}
+
+/*textos secundarios*/
+
+.text-secondary-100 {
+  color: #CCE5FF;
+}
+
+[dir] .bg-secondary-100 {
+  background-color: #CCE5FF;
+}
+
+/*textos success*/
+
+.text-success-100 {
+  color: #D2F6E2;
+}
+
+[dir] .bg-success-100 {
+  background-color: #D2F6E2;
+}
+
+/*textos danger*/
+
+.text-danger-100 {
+  color: #FBDDDD;
+}
+
+[dir] .bg-danger-100 {
+  background-color: #FBDDDD;
+}
+
+/*text warning*/
+
+.text-warning-100 {
+  color: #FFECD9;
+}
+
+[dir] .bg-warning-100 {
+  background-color: #FFECD9;
+}
+
+/*text dark*/
+
+.text-dark-100 {
+  color: #D2D2D2;
+}
+
+[dir] .bg-dark-100 {
+  background-color: #D2D2D2;
+}
+
+/*text black*/
+
+.text-black-100 {
+  color: #CDD5DB;
+}
+
+[dir] .bg-black-100 {
+  background-color: #CDD5DB;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-200 {
+  color: #F2E1B1;
+}
+
+[dir] .bg-primary-200 {
+  background-color: #F2E1B1;
+}
+
+/*textos secundarios*/
+
+.text-secondary-200 {
+  color: #B3D7FF;
+}
+
+[dir] .bg-secondary-200 {
+  background-color: #B3D7FF;
+}
+
+/*textos success*/
+
+.text-success-200 {
+  color: #BBF1D3;
+}
+
+[dir] .bg-success-200 {
+  background-color: #BBF1D3;
+}
+
+/*textos danger*/
+
+.text-danger-200 {
+  color: #F9CCCC;
+}
+
+[dir] .bg-danger-200 {
+  background-color: #F9CCCC;
+}
+
+/*text warning*/
+
+.text-warning-200 {
+  color: #FFE2C7;
+}
+
+[dir] .bg-warning-200 {
+  background-color: #FFE2C7;
+}
+
+/*text dark*/
+
+.text-dark-200 {
+  color: #BCBCBC;
+}
+
+[dir] .bg-dark-200 {
+  background-color: #BCBCBC;
+}
+
+/*text black*/
+
+.text-black-200 {
+  color: #B4BFC9;
+}
+
+[dir] .bg-black-200 {
+  background-color: #B4BFC9;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-300 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-300 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-300 {
+  color: #99CAFF;
+}
+
+[dir] .bg-secondary-300 {
+  background-color: #99CAFF;
+}
+
+/*textos success*/
+
+.text-success-300 {
+  color: #A5EDC5;
+}
+
+[dir] .bg-success-300 {
+  background-color: #A5EDC5;
+}
+
+/*textos danger*/
+
+.text-danger-300 {
+  color: #F7BBBB;
+}
+
+[dir] .bg-danger-300 {
+  background-color: #F7BBBB;
+}
+
+/*text warning*/
+
+.text-warning-300 {
+  color: #FFD9B4;
+}
+
+[dir] .bg-warning-300 {
+  background-color: #FFD9B4;
+}
+
+/*text dark*/
+
+.text-dark-300 {
+  color: #A5A5A5;
+}
+
+[dir] .bg-dark-300 {
+  background-color: #A5A5A5;
+}
+
+/*text black*/
+
+.text-black-300 {
+  color: #9BAAB7;
+}
+
+[dir] .bg-black-300 {
+  background-color: #9BAAB7;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-400 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-400 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-400 {
+  color: #80BDFF;
+}
+
+[dir] .bg-secondary-400 {
+  background-color: #80BDFF;
+}
+
+/*textos success*/
+
+.text-success-400 {
+  color: #8EE8B6;
+}
+
+[dir] .bg-success-400 {
+  background-color: #8EE8B6;
+}
+
+/*textos danger*/
+
+.text-danger-400 {
+  color: #F5AAAA;
+}
+
+[dir] .bg-danger-400 {
+  background-color: #F5AAAA;
+}
+
+/*text warning*/
+
+.text-warning-400 {
+  color: #FFCFA1;
+}
+
+[dir] .bg-warning-400 {
+  background-color: #FFCFA1;
+}
+
+/*text dark*/
+
+.text-dark-400 {
+  color: #8F8F8F;
+}
+
+[dir] .bg-dark-400 {
+  background-color: #8F8F8F;
+}
+
+/*text black*/
+
+.text-black-400 {
+  color: #8395A5;
+}
+
+[dir] .bg-black-400 {
+  background-color: #8395A5;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-500 {
+  color: #E5C364;
+}
+
+[dir] .bg-primary-500 {
+  background-color: #E5C364;
+}
+
+/*textos secundarios*/
+
+.text-secondary-500 {
+  color: #66B0FF;
+}
+
+[dir] .bg-secondary-500 {
+  background-color: #66B0FF;
+}
+
+/*textos success*/
+
+.text-success-500 {
+  color: #78E4A8;
+}
+
+[dir] .bg-success-500 {
+  background-color: #78E4A8;
+}
+
+/*textos danger*/
+
+.text-danger-500 {
+  color: #F29899;
+}
+
+[dir] .bg-danger-500 {
+  background-color: #F29899;
+}
+
+/*text warning*/
+
+.text-warning-500 {
+  color: #FFC58E;
+}
+
+[dir] .bg-warning-500 {
+  background-color: #FFC58E;
+}
+
+/*text dark*/
+
+.text-dark-500 {
+  color: #787878;
+}
+
+[dir] .bg-dark-500 {
+  background-color: #787878;
+}
+
+/*text black*/
+
+.text-black-500 {
+  color: #6A8093;
+}
+
+[dir] .bg-black-500 {
+  background-color: #6A8093;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-600 {
+  color: #E0B94A;
+}
+
+[dir] .bg-primary-600 {
+  background-color: #E0B94A;
+}
+
+/*textos secundarios*/
+
+.text-secondary-600 {
+  color: #4DA3FF;
+}
+
+[dir] .bg-secondary-600 {
+  background-color: #4DA3FF;
+}
+
+/*textos success*/
+
+.text-success-600 {
+  color: #61DF99;
+}
+
+[dir] .bg-success-600 {
+  background-color: #61DF99;
+}
+
+/*textos danger*/
+
+.text-danger-600 {
+  color: #F08788;
+}
+
+[dir] .bg-danger-600 {
+  background-color: #F08788;
+}
+
+/*text warning*/
+
+.text-warning-600 {
+  color: #FFBC7B;
+}
+
+[dir] .bg-warning-600 {
+  background-color: #FFBC7B;
+}
+
+/*text dark*/
+
+.text-dark-600 {
+  color: #626262;
+}
+
+[dir] .bg-dark-600 {
+  background-color: #626262;
+}
+
+/*text black*/
+
+.text-black-600 {
+  color: #586A7A;
+}
+
+[dir] .bg-black-600 {
+  background-color: #586A7A;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-700 {
+  color: #DCAF30;
+}
+
+[dir] .bg-primary-700 {
+  background-color: #DCAF30;
+}
+
+/*textos secundarios*/
+
+.text-secondary-700 {
+  color: #3395FF;
+}
+
+[dir] .bg-secondary-700 {
+  background-color: #3395FF;
+}
+
+/*textos success*/
+
+.text-success-700 {
+  color: #4ADB8B;
+}
+
+[dir] .bg-success-700 {
+  background-color: #4ADB8B;
+}
+
+/*textos danger*/
+
+.text-danger-700 {
+  color: #EE7677;
+}
+
+[dir] .bg-danger-700 {
+  background-color: #EE7677;
+}
+
+/*text warning*/
+
+.text-warning-700 {
+  color: #FFB269;
+}
+
+[dir] .bg-warning-700 {
+  background-color: #FFB269;
+}
+
+/*text dark*/
+
+.text-dark-700 {
+  color: #4B4B4B;
+}
+
+[dir] .bg-dark-700 {
+  background-color: #4B4B4B;
+}
+
+/*text black*/
+
+.text-black-700 {
+  color: #465461;
+}
+
+[dir] .bg-black-700 {
+  background-color: #465461;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-800 {
+  color: #CB9F22;
+}
+
+[dir] .bg-primary-800 {
+  background-color: #CB9F22;
+}
+
+/*textos secundarios*/
+
+.text-secondary-800 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-800 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-800 {
+  color: #34D67C;
+}
+
+[dir] .bg-success-800 {
+  background-color: #34D67C;
+}
+
+/*textos danger*/
+
+.text-danger-800 {
+  color: #EC6566;
+}
+
+[dir] .bg-danger-800 {
+  background-color: #EC6566;
+}
+
+/*text warning*/
+
+.text-warning-800 {
+  color: #FFA956;
+}
+
+[dir] .bg-warning-800 {
+  background-color: #FFA956;
+}
+
+/*text dark*/
+
+.text-dark-800 {
+  color: #353535;
+}
+
+[dir] .bg-dark-800 {
+  background-color: #353535;
+}
+
+/*text black*/
+
+.text-black-800 {
+  color: #343F48;
+}
+
+[dir] .bg-black-800 {
+  background-color: #343F48;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-900 {
+  color: #B18B1E;
+}
+
+[dir] .bg-primary-900 {
+  background-color: #B18B1E;
+}
+
+/*textos secundarios*/
+
+.text-secondary-900 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-900 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-900 {
+  color: #28C76F;
+}
+
+[dir] .bg-success-900 {
+  background-color: #28C76F;
+}
+
+/*textos danger*/
+
+.text-danger-900 {
+  color: #EA5455;
+}
+
+[dir] .bg-danger-900 {
+  background-color: #EA5455;
+}
+
+/*text warning*/
+
+.text-warning-900 {
+  color: #FF9F43;
+}
+
+[dir] .bg-warning-900 {
+  background-color: #FF9F43;
+}
+
+/*text dark*/
+
+.text-dark-900 {
+  color: #1E1E1E;
+}
+
+[dir] .bg-dark-900 {
+  background-color: #1E1E1E;
+}
+
+/*text black*/
+
+.text-black-900 {
+  color: #22292F;
+}
+
+[dir] .bg-black-900 {
+  background-color: #22292F;
+}
+
+/*========================================================
         TYPOGRAPHY
 =========================================================*/
+
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+
+/*1.125 Major Second*/
 
 /*========================================================
         TYPOGRAPHY
@@ -1962,8 +5764,762 @@ i.wizard-icon {
 =========================================================*/
 
 /*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+
+/*Creando los colores segun su tono*/
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-50 {
+  color: #FBF5E5;
+}
+
+[dir] .bg-primary-50 {
+  background-color: #FBF5E5;
+}
+
+/*textos secundarios*/
+
+.text-secondary-50 {
+  color: #E5F2FF;
+}
+
+[dir] .bg-secondary-50 {
+  background-color: #E5F2FF;
+}
+
+/*textos success*/
+
+.text-success-50 {
+  color: #E8FAF0;
+}
+
+[dir] .bg-success-50 {
+  background-color: #E8FAF0;
+}
+
+/*textos danger*/
+
+.text-danger-50 {
+  color: #FDEEEE;
+}
+
+[dir] .bg-danger-50 {
+  background-color: #FDEEEE;
+}
+
+/*text warning*/
+
+.text-warning-50 {
+  color: #FFF5EC;
+}
+
+[dir] .bg-warning-50 {
+  background-color: #FFF5EC;
+}
+
+/*text dark*/
+
+.text-dark-50 {
+  color: #E9E9E9;
+}
+
+[dir] .bg-dark-50 {
+  background-color: #E9E9E9;
+}
+
+/*text black*/
+
+.text-black-50 {
+  color: #E6EAED;
+}
+
+[dir] .bg-black-50 {
+  background-color: #E6EAED;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-100 {
+  color: #F6EBCB;
+}
+
+[dir] .bg-primary-100 {
+  background-color: #F6EBCB;
+}
+
+/*textos secundarios*/
+
+.text-secondary-100 {
+  color: #CCE5FF;
+}
+
+[dir] .bg-secondary-100 {
+  background-color: #CCE5FF;
+}
+
+/*textos success*/
+
+.text-success-100 {
+  color: #D2F6E2;
+}
+
+[dir] .bg-success-100 {
+  background-color: #D2F6E2;
+}
+
+/*textos danger*/
+
+.text-danger-100 {
+  color: #FBDDDD;
+}
+
+[dir] .bg-danger-100 {
+  background-color: #FBDDDD;
+}
+
+/*text warning*/
+
+.text-warning-100 {
+  color: #FFECD9;
+}
+
+[dir] .bg-warning-100 {
+  background-color: #FFECD9;
+}
+
+/*text dark*/
+
+.text-dark-100 {
+  color: #D2D2D2;
+}
+
+[dir] .bg-dark-100 {
+  background-color: #D2D2D2;
+}
+
+/*text black*/
+
+.text-black-100 {
+  color: #CDD5DB;
+}
+
+[dir] .bg-black-100 {
+  background-color: #CDD5DB;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-200 {
+  color: #F2E1B1;
+}
+
+[dir] .bg-primary-200 {
+  background-color: #F2E1B1;
+}
+
+/*textos secundarios*/
+
+.text-secondary-200 {
+  color: #B3D7FF;
+}
+
+[dir] .bg-secondary-200 {
+  background-color: #B3D7FF;
+}
+
+/*textos success*/
+
+.text-success-200 {
+  color: #BBF1D3;
+}
+
+[dir] .bg-success-200 {
+  background-color: #BBF1D3;
+}
+
+/*textos danger*/
+
+.text-danger-200 {
+  color: #F9CCCC;
+}
+
+[dir] .bg-danger-200 {
+  background-color: #F9CCCC;
+}
+
+/*text warning*/
+
+.text-warning-200 {
+  color: #FFE2C7;
+}
+
+[dir] .bg-warning-200 {
+  background-color: #FFE2C7;
+}
+
+/*text dark*/
+
+.text-dark-200 {
+  color: #BCBCBC;
+}
+
+[dir] .bg-dark-200 {
+  background-color: #BCBCBC;
+}
+
+/*text black*/
+
+.text-black-200 {
+  color: #B4BFC9;
+}
+
+[dir] .bg-black-200 {
+  background-color: #B4BFC9;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-300 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-300 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-300 {
+  color: #99CAFF;
+}
+
+[dir] .bg-secondary-300 {
+  background-color: #99CAFF;
+}
+
+/*textos success*/
+
+.text-success-300 {
+  color: #A5EDC5;
+}
+
+[dir] .bg-success-300 {
+  background-color: #A5EDC5;
+}
+
+/*textos danger*/
+
+.text-danger-300 {
+  color: #F7BBBB;
+}
+
+[dir] .bg-danger-300 {
+  background-color: #F7BBBB;
+}
+
+/*text warning*/
+
+.text-warning-300 {
+  color: #FFD9B4;
+}
+
+[dir] .bg-warning-300 {
+  background-color: #FFD9B4;
+}
+
+/*text dark*/
+
+.text-dark-300 {
+  color: #A5A5A5;
+}
+
+[dir] .bg-dark-300 {
+  background-color: #A5A5A5;
+}
+
+/*text black*/
+
+.text-black-300 {
+  color: #9BAAB7;
+}
+
+[dir] .bg-black-300 {
+  background-color: #9BAAB7;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-400 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-400 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-400 {
+  color: #80BDFF;
+}
+
+[dir] .bg-secondary-400 {
+  background-color: #80BDFF;
+}
+
+/*textos success*/
+
+.text-success-400 {
+  color: #8EE8B6;
+}
+
+[dir] .bg-success-400 {
+  background-color: #8EE8B6;
+}
+
+/*textos danger*/
+
+.text-danger-400 {
+  color: #F5AAAA;
+}
+
+[dir] .bg-danger-400 {
+  background-color: #F5AAAA;
+}
+
+/*text warning*/
+
+.text-warning-400 {
+  color: #FFCFA1;
+}
+
+[dir] .bg-warning-400 {
+  background-color: #FFCFA1;
+}
+
+/*text dark*/
+
+.text-dark-400 {
+  color: #8F8F8F;
+}
+
+[dir] .bg-dark-400 {
+  background-color: #8F8F8F;
+}
+
+/*text black*/
+
+.text-black-400 {
+  color: #8395A5;
+}
+
+[dir] .bg-black-400 {
+  background-color: #8395A5;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-500 {
+  color: #E5C364;
+}
+
+[dir] .bg-primary-500 {
+  background-color: #E5C364;
+}
+
+/*textos secundarios*/
+
+.text-secondary-500 {
+  color: #66B0FF;
+}
+
+[dir] .bg-secondary-500 {
+  background-color: #66B0FF;
+}
+
+/*textos success*/
+
+.text-success-500 {
+  color: #78E4A8;
+}
+
+[dir] .bg-success-500 {
+  background-color: #78E4A8;
+}
+
+/*textos danger*/
+
+.text-danger-500 {
+  color: #F29899;
+}
+
+[dir] .bg-danger-500 {
+  background-color: #F29899;
+}
+
+/*text warning*/
+
+.text-warning-500 {
+  color: #FFC58E;
+}
+
+[dir] .bg-warning-500 {
+  background-color: #FFC58E;
+}
+
+/*text dark*/
+
+.text-dark-500 {
+  color: #787878;
+}
+
+[dir] .bg-dark-500 {
+  background-color: #787878;
+}
+
+/*text black*/
+
+.text-black-500 {
+  color: #6A8093;
+}
+
+[dir] .bg-black-500 {
+  background-color: #6A8093;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-600 {
+  color: #E0B94A;
+}
+
+[dir] .bg-primary-600 {
+  background-color: #E0B94A;
+}
+
+/*textos secundarios*/
+
+.text-secondary-600 {
+  color: #4DA3FF;
+}
+
+[dir] .bg-secondary-600 {
+  background-color: #4DA3FF;
+}
+
+/*textos success*/
+
+.text-success-600 {
+  color: #61DF99;
+}
+
+[dir] .bg-success-600 {
+  background-color: #61DF99;
+}
+
+/*textos danger*/
+
+.text-danger-600 {
+  color: #F08788;
+}
+
+[dir] .bg-danger-600 {
+  background-color: #F08788;
+}
+
+/*text warning*/
+
+.text-warning-600 {
+  color: #FFBC7B;
+}
+
+[dir] .bg-warning-600 {
+  background-color: #FFBC7B;
+}
+
+/*text dark*/
+
+.text-dark-600 {
+  color: #626262;
+}
+
+[dir] .bg-dark-600 {
+  background-color: #626262;
+}
+
+/*text black*/
+
+.text-black-600 {
+  color: #586A7A;
+}
+
+[dir] .bg-black-600 {
+  background-color: #586A7A;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-700 {
+  color: #DCAF30;
+}
+
+[dir] .bg-primary-700 {
+  background-color: #DCAF30;
+}
+
+/*textos secundarios*/
+
+.text-secondary-700 {
+  color: #3395FF;
+}
+
+[dir] .bg-secondary-700 {
+  background-color: #3395FF;
+}
+
+/*textos success*/
+
+.text-success-700 {
+  color: #4ADB8B;
+}
+
+[dir] .bg-success-700 {
+  background-color: #4ADB8B;
+}
+
+/*textos danger*/
+
+.text-danger-700 {
+  color: #EE7677;
+}
+
+[dir] .bg-danger-700 {
+  background-color: #EE7677;
+}
+
+/*text warning*/
+
+.text-warning-700 {
+  color: #FFB269;
+}
+
+[dir] .bg-warning-700 {
+  background-color: #FFB269;
+}
+
+/*text dark*/
+
+.text-dark-700 {
+  color: #4B4B4B;
+}
+
+[dir] .bg-dark-700 {
+  background-color: #4B4B4B;
+}
+
+/*text black*/
+
+.text-black-700 {
+  color: #465461;
+}
+
+[dir] .bg-black-700 {
+  background-color: #465461;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-800 {
+  color: #CB9F22;
+}
+
+[dir] .bg-primary-800 {
+  background-color: #CB9F22;
+}
+
+/*textos secundarios*/
+
+.text-secondary-800 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-800 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-800 {
+  color: #34D67C;
+}
+
+[dir] .bg-success-800 {
+  background-color: #34D67C;
+}
+
+/*textos danger*/
+
+.text-danger-800 {
+  color: #EC6566;
+}
+
+[dir] .bg-danger-800 {
+  background-color: #EC6566;
+}
+
+/*text warning*/
+
+.text-warning-800 {
+  color: #FFA956;
+}
+
+[dir] .bg-warning-800 {
+  background-color: #FFA956;
+}
+
+/*text dark*/
+
+.text-dark-800 {
+  color: #353535;
+}
+
+[dir] .bg-dark-800 {
+  background-color: #353535;
+}
+
+/*text black*/
+
+.text-black-800 {
+  color: #343F48;
+}
+
+[dir] .bg-black-800 {
+  background-color: #343F48;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-900 {
+  color: #B18B1E;
+}
+
+[dir] .bg-primary-900 {
+  background-color: #B18B1E;
+}
+
+/*textos secundarios*/
+
+.text-secondary-900 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-900 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-900 {
+  color: #28C76F;
+}
+
+[dir] .bg-success-900 {
+  background-color: #28C76F;
+}
+
+/*textos danger*/
+
+.text-danger-900 {
+  color: #EA5455;
+}
+
+[dir] .bg-danger-900 {
+  background-color: #EA5455;
+}
+
+/*text warning*/
+
+.text-warning-900 {
+  color: #FF9F43;
+}
+
+[dir] .bg-warning-900 {
+  background-color: #FF9F43;
+}
+
+/*text dark*/
+
+.text-dark-900 {
+  color: #1E1E1E;
+}
+
+[dir] .bg-dark-900 {
+  background-color: #1E1E1E;
+}
+
+/*text black*/
+
+.text-black-900 {
+  color: #22292F;
+}
+
+[dir] .bg-black-900 {
+  background-color: #22292F;
+}
+
+/*========================================================
         TYPOGRAPHY
 =========================================================*/
+
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+
+/*1.125 Major Second*/
 
 /*========================================================
         TYPOGRAPHY
@@ -2097,8 +6653,762 @@ i.wizard-icon {
 =========================================================*/
 
 /*========================================================
+        COLOR PRIMARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SECUNDARIO CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR SUCCESS CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DANGER CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR WARNING CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR DARK CON SUS VARIACIONES
+=========================================================*/
+
+/*========================================================
+        COLOR BLACK CON SUS VARIACIONES
+=========================================================*/
+
+/*Creando los colores segun su tono*/
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-50 {
+  color: #FBF5E5;
+}
+
+[dir] .bg-primary-50 {
+  background-color: #FBF5E5;
+}
+
+/*textos secundarios*/
+
+.text-secondary-50 {
+  color: #E5F2FF;
+}
+
+[dir] .bg-secondary-50 {
+  background-color: #E5F2FF;
+}
+
+/*textos success*/
+
+.text-success-50 {
+  color: #E8FAF0;
+}
+
+[dir] .bg-success-50 {
+  background-color: #E8FAF0;
+}
+
+/*textos danger*/
+
+.text-danger-50 {
+  color: #FDEEEE;
+}
+
+[dir] .bg-danger-50 {
+  background-color: #FDEEEE;
+}
+
+/*text warning*/
+
+.text-warning-50 {
+  color: #FFF5EC;
+}
+
+[dir] .bg-warning-50 {
+  background-color: #FFF5EC;
+}
+
+/*text dark*/
+
+.text-dark-50 {
+  color: #E9E9E9;
+}
+
+[dir] .bg-dark-50 {
+  background-color: #E9E9E9;
+}
+
+/*text black*/
+
+.text-black-50 {
+  color: #E6EAED;
+}
+
+[dir] .bg-black-50 {
+  background-color: #E6EAED;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-100 {
+  color: #F6EBCB;
+}
+
+[dir] .bg-primary-100 {
+  background-color: #F6EBCB;
+}
+
+/*textos secundarios*/
+
+.text-secondary-100 {
+  color: #CCE5FF;
+}
+
+[dir] .bg-secondary-100 {
+  background-color: #CCE5FF;
+}
+
+/*textos success*/
+
+.text-success-100 {
+  color: #D2F6E2;
+}
+
+[dir] .bg-success-100 {
+  background-color: #D2F6E2;
+}
+
+/*textos danger*/
+
+.text-danger-100 {
+  color: #FBDDDD;
+}
+
+[dir] .bg-danger-100 {
+  background-color: #FBDDDD;
+}
+
+/*text warning*/
+
+.text-warning-100 {
+  color: #FFECD9;
+}
+
+[dir] .bg-warning-100 {
+  background-color: #FFECD9;
+}
+
+/*text dark*/
+
+.text-dark-100 {
+  color: #D2D2D2;
+}
+
+[dir] .bg-dark-100 {
+  background-color: #D2D2D2;
+}
+
+/*text black*/
+
+.text-black-100 {
+  color: #CDD5DB;
+}
+
+[dir] .bg-black-100 {
+  background-color: #CDD5DB;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-200 {
+  color: #F2E1B1;
+}
+
+[dir] .bg-primary-200 {
+  background-color: #F2E1B1;
+}
+
+/*textos secundarios*/
+
+.text-secondary-200 {
+  color: #B3D7FF;
+}
+
+[dir] .bg-secondary-200 {
+  background-color: #B3D7FF;
+}
+
+/*textos success*/
+
+.text-success-200 {
+  color: #BBF1D3;
+}
+
+[dir] .bg-success-200 {
+  background-color: #BBF1D3;
+}
+
+/*textos danger*/
+
+.text-danger-200 {
+  color: #F9CCCC;
+}
+
+[dir] .bg-danger-200 {
+  background-color: #F9CCCC;
+}
+
+/*text warning*/
+
+.text-warning-200 {
+  color: #FFE2C7;
+}
+
+[dir] .bg-warning-200 {
+  background-color: #FFE2C7;
+}
+
+/*text dark*/
+
+.text-dark-200 {
+  color: #BCBCBC;
+}
+
+[dir] .bg-dark-200 {
+  background-color: #BCBCBC;
+}
+
+/*text black*/
+
+.text-black-200 {
+  color: #B4BFC9;
+}
+
+[dir] .bg-black-200 {
+  background-color: #B4BFC9;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-300 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-300 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-300 {
+  color: #99CAFF;
+}
+
+[dir] .bg-secondary-300 {
+  background-color: #99CAFF;
+}
+
+/*textos success*/
+
+.text-success-300 {
+  color: #A5EDC5;
+}
+
+[dir] .bg-success-300 {
+  background-color: #A5EDC5;
+}
+
+/*textos danger*/
+
+.text-danger-300 {
+  color: #F7BBBB;
+}
+
+[dir] .bg-danger-300 {
+  background-color: #F7BBBB;
+}
+
+/*text warning*/
+
+.text-warning-300 {
+  color: #FFD9B4;
+}
+
+[dir] .bg-warning-300 {
+  background-color: #FFD9B4;
+}
+
+/*text dark*/
+
+.text-dark-300 {
+  color: #A5A5A5;
+}
+
+[dir] .bg-dark-300 {
+  background-color: #A5A5A5;
+}
+
+/*text black*/
+
+.text-black-300 {
+  color: #9BAAB7;
+}
+
+[dir] .bg-black-300 {
+  background-color: #9BAAB7;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-400 {
+  color: #E9CD7D;
+}
+
+[dir] .bg-primary-400 {
+  background-color: #E9CD7D;
+}
+
+/*textos secundarios*/
+
+.text-secondary-400 {
+  color: #80BDFF;
+}
+
+[dir] .bg-secondary-400 {
+  background-color: #80BDFF;
+}
+
+/*textos success*/
+
+.text-success-400 {
+  color: #8EE8B6;
+}
+
+[dir] .bg-success-400 {
+  background-color: #8EE8B6;
+}
+
+/*textos danger*/
+
+.text-danger-400 {
+  color: #F5AAAA;
+}
+
+[dir] .bg-danger-400 {
+  background-color: #F5AAAA;
+}
+
+/*text warning*/
+
+.text-warning-400 {
+  color: #FFCFA1;
+}
+
+[dir] .bg-warning-400 {
+  background-color: #FFCFA1;
+}
+
+/*text dark*/
+
+.text-dark-400 {
+  color: #8F8F8F;
+}
+
+[dir] .bg-dark-400 {
+  background-color: #8F8F8F;
+}
+
+/*text black*/
+
+.text-black-400 {
+  color: #8395A5;
+}
+
+[dir] .bg-black-400 {
+  background-color: #8395A5;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-500 {
+  color: #E5C364;
+}
+
+[dir] .bg-primary-500 {
+  background-color: #E5C364;
+}
+
+/*textos secundarios*/
+
+.text-secondary-500 {
+  color: #66B0FF;
+}
+
+[dir] .bg-secondary-500 {
+  background-color: #66B0FF;
+}
+
+/*textos success*/
+
+.text-success-500 {
+  color: #78E4A8;
+}
+
+[dir] .bg-success-500 {
+  background-color: #78E4A8;
+}
+
+/*textos danger*/
+
+.text-danger-500 {
+  color: #F29899;
+}
+
+[dir] .bg-danger-500 {
+  background-color: #F29899;
+}
+
+/*text warning*/
+
+.text-warning-500 {
+  color: #FFC58E;
+}
+
+[dir] .bg-warning-500 {
+  background-color: #FFC58E;
+}
+
+/*text dark*/
+
+.text-dark-500 {
+  color: #787878;
+}
+
+[dir] .bg-dark-500 {
+  background-color: #787878;
+}
+
+/*text black*/
+
+.text-black-500 {
+  color: #6A8093;
+}
+
+[dir] .bg-black-500 {
+  background-color: #6A8093;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-600 {
+  color: #E0B94A;
+}
+
+[dir] .bg-primary-600 {
+  background-color: #E0B94A;
+}
+
+/*textos secundarios*/
+
+.text-secondary-600 {
+  color: #4DA3FF;
+}
+
+[dir] .bg-secondary-600 {
+  background-color: #4DA3FF;
+}
+
+/*textos success*/
+
+.text-success-600 {
+  color: #61DF99;
+}
+
+[dir] .bg-success-600 {
+  background-color: #61DF99;
+}
+
+/*textos danger*/
+
+.text-danger-600 {
+  color: #F08788;
+}
+
+[dir] .bg-danger-600 {
+  background-color: #F08788;
+}
+
+/*text warning*/
+
+.text-warning-600 {
+  color: #FFBC7B;
+}
+
+[dir] .bg-warning-600 {
+  background-color: #FFBC7B;
+}
+
+/*text dark*/
+
+.text-dark-600 {
+  color: #626262;
+}
+
+[dir] .bg-dark-600 {
+  background-color: #626262;
+}
+
+/*text black*/
+
+.text-black-600 {
+  color: #586A7A;
+}
+
+[dir] .bg-black-600 {
+  background-color: #586A7A;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-700 {
+  color: #DCAF30;
+}
+
+[dir] .bg-primary-700 {
+  background-color: #DCAF30;
+}
+
+/*textos secundarios*/
+
+.text-secondary-700 {
+  color: #3395FF;
+}
+
+[dir] .bg-secondary-700 {
+  background-color: #3395FF;
+}
+
+/*textos success*/
+
+.text-success-700 {
+  color: #4ADB8B;
+}
+
+[dir] .bg-success-700 {
+  background-color: #4ADB8B;
+}
+
+/*textos danger*/
+
+.text-danger-700 {
+  color: #EE7677;
+}
+
+[dir] .bg-danger-700 {
+  background-color: #EE7677;
+}
+
+/*text warning*/
+
+.text-warning-700 {
+  color: #FFB269;
+}
+
+[dir] .bg-warning-700 {
+  background-color: #FFB269;
+}
+
+/*text dark*/
+
+.text-dark-700 {
+  color: #4B4B4B;
+}
+
+[dir] .bg-dark-700 {
+  background-color: #4B4B4B;
+}
+
+/*text black*/
+
+.text-black-700 {
+  color: #465461;
+}
+
+[dir] .bg-black-700 {
+  background-color: #465461;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-800 {
+  color: #CB9F22;
+}
+
+[dir] .bg-primary-800 {
+  background-color: #CB9F22;
+}
+
+/*textos secundarios*/
+
+.text-secondary-800 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-800 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-800 {
+  color: #34D67C;
+}
+
+[dir] .bg-success-800 {
+  background-color: #34D67C;
+}
+
+/*textos danger*/
+
+.text-danger-800 {
+  color: #EC6566;
+}
+
+[dir] .bg-danger-800 {
+  background-color: #EC6566;
+}
+
+/*text warning*/
+
+.text-warning-800 {
+  color: #FFA956;
+}
+
+[dir] .bg-warning-800 {
+  background-color: #FFA956;
+}
+
+/*text dark*/
+
+.text-dark-800 {
+  color: #353535;
+}
+
+[dir] .bg-dark-800 {
+  background-color: #353535;
+}
+
+/*text black*/
+
+.text-black-800 {
+  color: #343F48;
+}
+
+[dir] .bg-black-800 {
+  background-color: #343F48;
+}
+
+/*verificando el tono a aplicar*/
+
+/*textos primarios*/
+
+.text-primary-900 {
+  color: #B18B1E;
+}
+
+[dir] .bg-primary-900 {
+  background-color: #B18B1E;
+}
+
+/*textos secundarios*/
+
+.text-secondary-900 {
+  color: #1A88FF;
+}
+
+[dir] .bg-secondary-900 {
+  background-color: #1A88FF;
+}
+
+/*textos success*/
+
+.text-success-900 {
+  color: #28C76F;
+}
+
+[dir] .bg-success-900 {
+  background-color: #28C76F;
+}
+
+/*textos danger*/
+
+.text-danger-900 {
+  color: #EA5455;
+}
+
+[dir] .bg-danger-900 {
+  background-color: #EA5455;
+}
+
+/*text warning*/
+
+.text-warning-900 {
+  color: #FF9F43;
+}
+
+[dir] .bg-warning-900 {
+  background-color: #FF9F43;
+}
+
+/*text dark*/
+
+.text-dark-900 {
+  color: #1E1E1E;
+}
+
+[dir] .bg-dark-900 {
+  background-color: #1E1E1E;
+}
+
+/*text black*/
+
+.text-black-900 {
+  color: #22292F;
+}
+
+[dir] .bg-black-900 {
+  background-color: #22292F;
+}
+
+/*========================================================
         TYPOGRAPHY
 =========================================================*/
+
+/*calculando los sizes de las fuentes segun la escala que se está usando*/
+
+/*1.125 Major Second*/
 
 /*========================================================
         TYPOGRAPHY
@@ -2243,9 +7553,9 @@ i.wizard-icon {
 }
 
 [dir] .flatpickr-calendar .flatpickr-day.selected, [dir] .flatpickr-calendar .flatpickr-day.startRange, [dir] .flatpickr-calendar .flatpickr-day.endRange, [dir] .flatpickr-calendar .flatpickr-day.selected.inRange, [dir] .flatpickr-calendar .flatpickr-day.startRange.inRange, [dir] .flatpickr-calendar .flatpickr-day.endRange.inRange, [dir] .flatpickr-calendar .flatpickr-day.selected:focus, [dir] .flatpickr-calendar .flatpickr-day.startRange:focus, [dir] .flatpickr-calendar .flatpickr-day.endRange:focus, [dir] .flatpickr-calendar .flatpickr-day.selected:hover, [dir] .flatpickr-calendar .flatpickr-day.startRange:hover, [dir] .flatpickr-calendar .flatpickr-day.endRange:hover, [dir] .flatpickr-calendar .flatpickr-day.selected.prevMonthDay, [dir] .flatpickr-calendar .flatpickr-day.startRange.prevMonthDay, [dir] .flatpickr-calendar .flatpickr-day.endRange.prevMonthDay, [dir] .flatpickr-calendar .flatpickr-day.selected.nextMonthDay, [dir] .flatpickr-calendar .flatpickr-day.startRange.nextMonthDay, [dir] .flatpickr-calendar .flatpickr-day.endRange.nextMonthDay {
-  background: #7367F0 !important;
+  background: #b18b1e !important;
   box-shadow: none;
-  border-color: #7367F0 !important;
+  border-color: #b18b1e !important;
 }
 
 .flatpickr-input {
@@ -2260,12 +7570,12 @@ i.wizard-icon {
 }
 
 [dir] .flatpickr-input.active {
-  border: 1px solid #7367F0;
+  border: 1px solid #b18b1e;
 }
 
 .flatpickr-months .flatpickr-prev-month:hover svg,
 .flatpickr-months .flatpickr-next-month:hover svg {
-  fill: #7367F0 !important;
+  fill: #b18b1e !important;
 }
 
 [dir] .theme-dark .flatpickr-calendar {
@@ -2425,7 +7735,7 @@ i.wizard-icon {
 }
 
 [dir] .theme-dark pre[class*="language-"] {
-  background-color: #1E1E1E;
+  background-color: #1e1e1e;
   text-shadow: none;
 }
 
@@ -2698,7 +8008,7 @@ i.wizard-icon {
 }
 
 [dir] .theme-dark #todo-app .list-item-component:hover {
-  box-shadow: 0px 0 0 0px #1E1E1E;
+  box-shadow: 0px 0 0 0px #1e1e1e;
 }
 
 [dir] .theme-dark #email-app .email__mails .email__mail-item .mail__mail-item {
@@ -2706,11 +8016,11 @@ i.wizard-icon {
 }
 
 [dir=ltr] .theme-dark #email-app .email__mails .email__mail-item .mail__mail-item:hover {
-  box-shadow: 10px 0 0 0px #1E1E1E;
+  box-shadow: 10px 0 0 0px #1e1e1e;
 }
 
 [dir=rtl] .theme-dark #email-app .email__mails .email__mail-item .mail__mail-item:hover {
-  box-shadow: -10px 0 0 0px #1E1E1E;
+  box-shadow: -10px 0 0 0px #1e1e1e;
 }
 
 [dir] .theme-dark #email-app .email__mails .email__mail-item .mail__mail-item.mail__opened-mail {
@@ -4496,11 +9806,11 @@ i.wizard-icon {
 
 .vs-breadcrumb--ol a:focus,
 .vs-breadcrumb--ol a:hover {
-  color: #7367F0;
+  color: #b18b1e;
 }
 
 .vs-breadcrumb--ol .active {
-  color: #7367F0;
+  color: #b18b1e;
 }
 
 .vs-checkbox-small .vs-checkbox--input:checked + .vs-checkbox .vs-icon {
@@ -4810,7 +10120,7 @@ i.wizard-icon {
 }
 
 .vs-navbar-color-transparent .vs-navbar--item a:hover {
-  color: #7367F0 !important;
+  color: #b18b1e !important;
 }
 
 .vs-navbar-gradient .vs-navbar--item.is-active-item a {
@@ -4824,7 +10134,7 @@ i.wizard-icon {
 .vs-notifications h3 {
   color: #fff;
   font-weight: 600;
-  font-size: 15.96px;
+  font-size: 15.75px;
 }
 
 [dir] .vs-pagination--li.is-current {
@@ -5032,7 +10342,7 @@ i.wizard-icon {
 .vs-textarea {
   font-size: 1rem;
   color: inherit;
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
   line-height: 1.6;
 }
 
@@ -5167,10 +10477,6 @@ button:focus {
 
 .vjs-fluid {
   padding-top: 41.66666666666667% !important;
-}
-
-body * {
-  font-size: 13px;
 }
 
 .img-articulo {
