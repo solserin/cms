@@ -1,4 +1,5 @@
-
+/*importando los estilos*/
+@import "vuexy/login";
 
 .img-articulo {
     display: block;
@@ -329,7 +330,7 @@
     content: url("../../../../../resources/assets/images/tags.svg");
 }
 
-.consultar_cfdi .vs-popup--title{
+.consultar_cfdi .vs-popup--title {
     text-align: center !important;
 }
 
@@ -719,34 +720,13 @@
 
 /*fin de buttons*/
 
-[dir] .layout--full-page .bg-img {
-    background: url(/images/aeternus/login.jpg) !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-}
-
-.layer {
-    background-color: rgba(190, 140, 14, 0.3);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 999 !important;
-}
-
-.login-form {
-    z-index: 1000 !important;
-    background-color: rgba(255, 255, 255, 0.8) !important;
-}
-
 .zindex1000 {
     z-index: 1000 !important;
 }
 
 .login-img {
-    max-width: 295px !important;
+    max-width: 320px !important;
+    width: 320px !important;
 }
 
 .iniciar-sesion {
@@ -990,12 +970,9 @@ th .vs-table-text {
 .cfdi-contenido {
 }
 
-
-.cfdis-table table *{
+.cfdis-table table * {
     font-size: 13px !important;
 }
-
-
 
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)

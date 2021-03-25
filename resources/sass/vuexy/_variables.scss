@@ -143,7 +143,9 @@ $black_map: (
 
 $theme-background: #f8f8f8;
 $content-color: #{map-get($dark_map, "600")};
-
+.color-copy {
+    color: $content-color;
+}
 /*Creando los colores segun su tono*/
 @for $index from 0 to 10 {
     $tono: 50;
@@ -153,9 +155,9 @@ $content-color: #{map-get($dark_map, "600")};
         $tono: $index * 100;
     }
 
-    /*textos primarios*/
+    /*colores primarios*/
     @if map-has-key($primary_map, #{$tono}) {
-        .text-primary-#{$tono} {
+        .color-primary-#{$tono} {
             color: #{map-get($primary_map, #{$tono})};
         }
         .bg-primary-#{$tono} {
@@ -163,9 +165,9 @@ $content-color: #{map-get($dark_map, "600")};
         }
     }
 
-    /*textos secundarios*/
+    /*colores secundarios*/
     @if map-has-key($secondary_map, #{$tono}) {
-        .text-secondary-#{$tono} {
+        .color-secondary-#{$tono} {
             color: #{map-get($secondary_map, #{$tono})};
         }
         .bg-secondary-#{$tono} {
@@ -173,9 +175,9 @@ $content-color: #{map-get($dark_map, "600")};
         }
     }
 
-    /*textos success*/
+    /*colores success*/
     @if map-has-key($success_map, #{$tono}) {
-        .text-success-#{$tono} {
+        .color-success-#{$tono} {
             color: #{map-get($success_map, #{$tono})};
         }
         .bg-success-#{$tono} {
@@ -183,9 +185,9 @@ $content-color: #{map-get($dark_map, "600")};
         }
     }
 
-    /*textos danger*/
+    /*colores danger*/
     @if map-has-key($danger_map, #{$tono}) {
-        .text-danger-#{$tono} {
+        .color-danger-#{$tono} {
             color: #{map-get($danger_map, #{$tono})};
         }
         .bg-danger-#{$tono} {
@@ -193,9 +195,9 @@ $content-color: #{map-get($dark_map, "600")};
         }
     }
 
-    /*text warning*/
+    /*colores warning*/
     @if map-has-key($warning_map, #{$tono}) {
-        .text-warning-#{$tono} {
+        .color-warning-#{$tono} {
             color: #{map-get($warning_map, #{$tono})};
         }
         .bg-warning-#{$tono} {
@@ -203,9 +205,9 @@ $content-color: #{map-get($dark_map, "600")};
         }
     }
 
-    /*text dark*/
+    /*colores dark*/
     @if map-has-key($dark_map, #{$tono}) {
-        .text-dark-#{$tono} {
+        .color-dark-#{$tono} {
             color: #{map-get($dark_map, #{$tono})};
         }
         .bg-dark-#{$tono} {
@@ -213,9 +215,9 @@ $content-color: #{map-get($dark_map, "600")};
         }
     }
 
-    /*text black*/
+    /*colores black*/
     @if map-has-key($black_map, #{$tono}) {
-        .text-black-#{$tono} {
+        .color-black-#{$tono} {
             color: #{map-get($black_map, #{$tono})};
         }
         .bg-black-#{$tono} {
@@ -252,16 +254,16 @@ $scale: 1.125;
 $font-size-base: 14px !default;
 
 //$font-size-large:         ceil(($font-size-base * 1.25)) !default; se removió, al parecer no estaba utilizada por ninguna otro estilo
-$font-size-small: $font-size-base / exponente($scale, 1);
-$font-size-smaller: $font-size-base / exponente($scale, 2);
-$font-size-smallest: $font-size-base / exponente($scale, 3);
+$small: $font-size-base / exponente($scale, 1);
+$smaller: $font-size-base / exponente($scale, 2);
+$smallest: $font-size-base / exponente($scale, 3);
 
 $h1-font-size: $font-size-base * exponente($scale, 5);
 $h2-font-size: $font-size-base * exponente($scale, 4);
 $h3-font-size: $font-size-base * exponente($scale, 3);
 $h4-font-size: $font-size-base * exponente($scale, 2);
 $h5-font-size: $font-size-base * exponente($scale, 1);
-$h6-font-size: $font-size-base;
+$normal: $font-size-base;
 
 $line-height-base: 1.625rem !default;
 
@@ -271,8 +273,10 @@ $headings-line-height: 1.2 !default;
 $headings-color: #2c2c2c;
 $headings-margin-bottom: ($spacer / 2) !default;
 
+/*weights*/
 $font-weight-light: 300;
 $font-weight-normal: 400;
+$font-weight-medium: 500;
 $font-weight-bold: 700;
 
 $font-weight-base: $font-weight-normal;
@@ -303,3 +307,18 @@ $theme-dark-heading-color: #ebeefd;
 // $theme-dark-heading-color: #C9CAD2;
 $theme-dark-border-color: #414561;
 $theme-dark-shadow-color: #0c112e;
+
+/*========================================================
+        Z-INDEX
+=========================================================*/
+
+@for $index from 1 to 10 {
+    /*solo se necesitan 20 indexes hasta el momento*/
+
+    .z-index-#{$index} {
+        z-index: #{map-get($primary_map, #{$index})};
+    }
+    .z-index#{$index} {
+        z-index: #{map-get($primary_map, #{$index})};
+    }
+}
