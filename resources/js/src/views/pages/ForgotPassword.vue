@@ -9,43 +9,70 @@
 
 
 <template>
-  <div class="h-screen flex w-full bg-img">
+  <div class="h-screen flex w-full bg-login-password-recovery">
     <div class="layer"></div>
-    <div class="vx-col w-4/5 sm:w-4/5 md:w-3/5 lg:w-3/4 xl:w-3/5 mx-auto self-center">
-      <vx-card class="login-form">
+    <div class="w-4/5 sm:w-4/5 md:w-4/5 lg:w-3/5 xl:w-3/5 mx-auto self-center">
+      <vx-card class="py-20 md:bg-danger-600">
         <div slot="no-body">
-          <div class="vx-row">
-            <div class="vx-col hidden sm:hidden md:hidden lg:block lg:w-1/2 mx-auto self-center">
-              <img src="@assets/images/pages/forgot-password.png" alt="login" class="mx-auto" />
+          <div class="flex flex-wrap">
+            <div class="w-full hidden sm:hidden md:hidden xl:block xl:w-5/12">
+              <div class="w-full">
+                <img
+                  src="@assets/images/pages/forgot-password.png"
+                  alt="login"
+                  class="mx-auto"
+                />
+              </div>
             </div>
-            <div class="vx-col sm:w-full md:w-full lg:w-1/2 mx-auto self-center">
-              <div class="p-8">
-                <div class="vx-card__title mb-8">
-                  <h4 class="mb-4 iniciar-sesion">Recuperar su contraseña</h4>
-                  <p>Por favor ingrese su correo electrónico a donde enviaremos las instrucciones para recuperar su cuenta.</p>
+            <div class="w-full sm:w-full md:w-12/12 lg:w-12/12 xl:w-7/12">
+              <div class="px-8">
+                <div class="vx-card__title mb-4">
+                  <h4 class="color-dark-800 h1 font-medium pb-2">
+                    Recuperar su contraseña
+                  </h4>
+                  <p class="size-base font-normal normal-line">
+                    Por favor ingrese su correo electrónico a donde enviaremos
+                    las instrucciones para recuperar su cuenta.
+                  </p>
                 </div>
-                <div class="vx-col sm:w-full pb-6">
+                <div class="sm:w-full pb-6">
                   <form @submit.prevent="submitForm">
-                    <vs-input
-                      type="email"
-                      v-validate="'required|email|min:3'"
-                      data-vv-validate-on="blur"
-                      label-placeholder="Email (Usuario)"
-                      v-model="email"
-                      icon="icon icon-user"
-                      icon-pack="feather"
-                      class="w-full mb-4"
-                      name="email"
-                      data-vv-as="email"
-                    />
+                    <div class="w-full">
+                      <label class="size-small color-copy"
+                        >Correo electrónico
+                        <span class="color-danger-900">(*)</span></label
+                      >
+                      <vs-input
+                        v-validate="'required|email|min:3|max:50'"
+                        name="email"
+                        maxlength="50"
+                        icon-no-border
+                        data-vv-as=" "
+                        icon="icon icon-user"
+                        icon-pack="feather"
+                        placeholder="Correo electrónico"
+                        v-model="email"
+                        class="w-full py-1"
+                        ref="email"
+                      />
+                      <span class="text-danger size-smaller">{{
+                        errors.first("email")
+                      }}</span>
+                    </div>
                   </form>
-                  <span class="text-danger text-sm">{{ errors.first('email') }}</span>
                 </div>
-                <vs-button type="border" to="/pages/login" class="px-4 w-full md:w-auto">Regresar</vs-button>
+
+                <vs-button
+                  type="border"
+                  to="/pages/login"
+                  class="px-4 w-full md:w-auto"
+                  >Regresar</vs-button
+                >
                 <vs-button
                   class="float-right px-4 w-full md:w-auto mt-3 mb-8 md:mt-0 md:mb-0"
                   @click.prevent="submitForm"
-                >Recuperar Contraseña</vs-button>
+                  >Recuperar Contraseña</vs-button
+                >
               </div>
             </div>
           </div>
@@ -60,37 +87,37 @@ import axios from "../../http/axios/index";
 export default {
   data() {
     return {
-      email: ""
+      email: "",
     };
   },
   methods: {
     submitForm() {
-      this.$validator.validateAll().then(result => {
+      this.$validator.validateAll().then((result) => {
         if (result) {
           const payload = {
-            email: this.email
+            email: this.email,
           };
           this.$vs.loading();
           axios
             .post("/password/email", payload)
-            .then(resp => {
+            .then((resp) => {
               //exito con la peticion
               this.$vs.notify({
                 time: 6000,
                 title: "Recuperar contraseña",
                 text: resp.data,
-                color: "success"
+                color: "success",
               });
               this.email = "";
               this.$vs.loading.close();
             })
-            .catch(error => {
+            .catch((error) => {
               if (error) {
                 this.$vs.notify({
                   time: 6000,
                   title: "Recuperar contraseña",
                   text: "Usuario no registrado, intente nuevamente.",
-                  color: "danger"
+                  color: "danger",
                 });
               }
               this.$vs.loading.close();
@@ -100,7 +127,7 @@ export default {
         }
       });
       return false;
-    }
-  }
+    },
+  },
 };
 </script>

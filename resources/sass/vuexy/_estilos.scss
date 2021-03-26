@@ -1,4 +1,5 @@
 /*importando los estilos*/
+@import "vuexy/inputs";
 @import "vuexy/login";
 
 .img-articulo {
@@ -369,14 +370,6 @@
     opacity: 1 !important;
 }
 
-.con-vs-popup .vs-popup {
-    border-radius: 0px;
-}
-
-.vs-button {
-    border-radius: 0;
-}
-
 .con-vs-popup {
     z-index: 52000 !important;
 }
@@ -396,10 +389,6 @@
 
 .con-vs-dialog {
     z-index: 62005 !important;
-}
-
-.con-vs-dialog .vs-dialog {
-    border-radius: 0 !important;
 }
 
 /*default size for small devices*/
@@ -490,27 +479,9 @@
     font-size: 24px !important;
 }
 
-.vs-input--input,
-.flatpickr-input {
-    border-radius: 0px !important;
-    border: 1px solid rgba(var(--vs-default_color), 1) !important;
-}
-
-[dir] .vdp-datepicker input,
-.flatpickr-input {
-    border-radius: 0px !important;
-}
-
-[dir] .vdp-datepicker .vdp-datepicker__calendar {
-    border-radius: 0px !important;
-}
-
 /* -------------------------------------------------------------------------- */
 /*                          estilos flatpick calendar                         */
 /* -------------------------------------------------------------------------- */
-.flatpickr-calendar {
-    border-radius: 0px !important;
-}
 
 .flatpickr-calendar .flatpickr-monthDropdown-months {
     border: 0px solid rgba(0, 0, 0, 0.3) !important;
@@ -554,20 +525,8 @@
 /*                       fin estilos calendar flat pick                       */
 /* -------------------------------------------------------------------------- */
 
-[dir] .vs__dropdown-toggle {
-    border-radius: 0px !important;
-}
-
-.con-vs-card {
-    border-radius: 0px !important;
-}
-
 .vs-input--placeholder {
     color: rgba(0, 0, 0, 0.7);
-}
-
-.vs-con-textarea {
-    border-radius: 0px !important;
 }
 
 .texto-informacion {
@@ -722,11 +681,6 @@
 
 .zindex1000 {
     z-index: 1000 !important;
-}
-
-.login-img {
-    max-width: 320px !important;
-    width: 320px !important;
 }
 
 .iniciar-sesion {

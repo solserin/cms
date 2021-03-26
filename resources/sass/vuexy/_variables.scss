@@ -160,6 +160,9 @@ $content-color: #{map-get($dark_map, "600")};
         .color-primary-#{$tono} {
             color: #{map-get($primary_map, #{$tono})};
         }
+        .color-primary-hover-#{$tono}:hover {
+            color: #{map-get($primary_map, #{$tono})};
+        }
         .bg-primary-#{$tono} {
             background-color: #{map-get($primary_map, #{$tono})};
         }
