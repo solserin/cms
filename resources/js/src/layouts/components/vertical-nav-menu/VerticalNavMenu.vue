@@ -25,11 +25,18 @@
     >
       <div @mouseenter="mouseEnter" @mouseleave="mouseLeave">
         <!-- Header -->
-        <div class="header-sidebar flex items-end justify-between" slot="header">
+        <div
+          class="header-sidebar flex items-end justify-between"
+          slot="header"
+        >
           <!-- Logo -->
-          <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/">
+          <router-link
+            tag="div"
+            class="vx-logo cursor-pointer flex items-center"
+            to="/"
+          >
             <template v-if="!verticalNavMenuItemsMin">
-              <img src="@assets/images/logo/aeternus.jpg" width="190" />
+              <img src="@assets/images/sistemas_aeternus.svg" width="160" />
             </template>
             <template v-else>
               <img src="@assets/images/logo/icono.png" width="35" />
@@ -39,7 +46,8 @@
               class="vx-logo-text text-primary"
               v-show="isMouseEnter || !reduce"
               v-if="title"
-            >{{ title }}</span>
+              >{{ title }}</span
+            >
           </router-link>
           <!-- /Logo -->
 
@@ -50,7 +58,9 @@
               <feather-icon
                 icon="XIcon"
                 class="m-0 cursor-pointer"
-                @click="$store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', false)"
+                @click="
+                  $store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', false)
+                "
               />
             </template>
 
@@ -86,7 +96,9 @@
               v-if="item.header && !verticalNavMenuItemsMin"
               class="navigation-header truncate"
               :key="`header-${index}`"
-            >{{ $t(item.i18n) || item.header }}</span>
+            >
+              {{ $t(item.i18n) || item.header }}
+            </span>
             <!-- /Group Header -->
 
             <template v-else-if="!item.header">
@@ -102,15 +114,15 @@
                 :isDisabled="item.isDisabled"
                 :slug="item.slug"
               >
-                <span
-                  v-show="!verticalNavMenuItemsMin"
-                  class="truncate"
-                >{{ $t(item.i18n) || item.name }}</span>
+                <span v-show="!verticalNavMenuItemsMin" class="truncate">{{
+                  $t(item.i18n) || item.name
+                }}</span>
                 <vs-chip
                   class="ml-auto"
                   :color="item.tagColor"
                   v-if="item.tag && (isMouseEnter || !reduce)"
-                >{{ item.tag }}</vs-chip>
+                  >{{ item.tag }}</vs-chip
+                >
               </v-nav-menu-item>
 
               <!-- Nav-Group -->
@@ -155,7 +167,7 @@ export default {
     VNavMenuGroup,
     VNavMenuItem,
     VuePerfectScrollbar,
-    Logo
+    Logo,
   },
   props: {
     logo: { type: String },
@@ -163,7 +175,7 @@ export default {
     parent: { type: String },
     reduceNotRebound: { type: Boolean, default: true },
     navMenuItems: { type: Array, required: true },
-    title: { type: String }
+    title: { type: String },
   },
   data: () => ({
     clickNotClose: false, // disable close navMenu on outside click
@@ -174,22 +186,22 @@ export default {
       // perfectScrollbar settings
       maxScrollbarLength: 60,
       wheelSpeed: 1,
-      swipeEasing: true
+      swipeEasing: true,
     },
-    showShadowBottom: false
+    showShadowBottom: false,
   }),
   computed: {
     isGroupActive() {
-      return item => {
+      return (item) => {
         const path = this.$route.fullPath;
         const routeParent = this.$route.meta
           ? this.$route.meta.parent
           : undefined;
         let open = false;
 
-        let func = item => {
+        let func = (item) => {
           if (item.submenu) {
-            item.submenu.forEach(item => {
+            item.submenu.forEach((item) => {
               if (
                 item.url &&
                 (path === item.url || routeParent === item.slug)
@@ -210,7 +222,7 @@ export default {
 
       for (let [index, item] of this.navMenuItems.entries()) {
         if (item.header && item.items.length && (index || 1)) {
-          let i = clone.findIndex(ix => ix.header === item.header);
+          let i = clone.findIndex((ix) => ix.header === item.header);
           for (let [subIndex, subItem] of item.items.entries()) {
             clone.splice(i + 1 + subIndex, 0, subItem);
           }
@@ -225,7 +237,7 @@ export default {
       },
       set(val) {
         this.$store.commit("TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE", val);
-      }
+      },
     },
     layoutType() {
       return this.$store.state.mainLayoutType;
@@ -236,7 +248,7 @@ export default {
       },
       set(val) {
         this.$store.commit("TOGGLE_REDUCE_BUTTON", val);
-      }
+      },
     },
     isVerticalNavMenuReduced() {
       return Boolean(this.reduce && this.reduceButton);
@@ -246,7 +258,7 @@ export default {
     },
     windowWidth() {
       return this.$store.state.windowWidth;
-    }
+    },
   },
   watch: {
     $route() {
@@ -261,7 +273,7 @@ export default {
         : "default";
       this.$store.dispatch("updateVerticalNavMenuWidth", verticalNavMenuWidth);
 
-      setTimeout(function() {
+      setTimeout(function () {
         window.dispatchEvent(new Event("resize"));
       }, 100);
     },
@@ -273,7 +285,7 @@ export default {
     },
     windowWidth() {
       this.setVerticalNavMenuWidth();
-    }
+    },
   },
   methods: {
     // handleWindowResize(event) {
@@ -393,11 +405,11 @@ export default {
     toggleReduce(val) {
       this.reduceButton = val;
       this.setVerticalNavMenuWidth();
-    }
+    },
   },
   mounted() {
     this.setVerticalNavMenuWidth();
-  }
+  },
 };
 </script>
 
