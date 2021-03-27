@@ -9,14 +9,14 @@
 
 
 <template>
-  <div class="h-screen flex w-full bg-img">
+  <div class="h-screen flex w-full bg-login-password-recovery">
     <div class="layer"></div>
     <div class="vx-col sm:w-3/5 md:w-3/5 lg:w-3/4 xl:w-3/5 mx-auto self-center">
-      <vx-card class="login-form">
+      <vx-card class="login-form py-20">
         <div slot="no-body">
           <div class="vx-row">
             <div
-              class="vx-col hidden sm:hidden md:hidden lg:block lg:w-1/2 mx-auto self-center"
+              class="vx-col hidden sm:hidden md:hidden lg:hidden xl:block lg:w-1/2 mx-auto self-center"
             >
               <img
                 src="@assets/images/pages/reset-password.png"
@@ -25,78 +25,81 @@
               />
             </div>
             <div
-              class="vx-col sm:w-full md:w-full lg:w-1/2 mx-auto self-center"
+              class="vx-col sm:w-full md:w-full lg:w-full xl:w-1/2 mx-auto self-center"
             >
-              <div class="p-8">
-                <div class="vx-card__title mb-8">
-                  <h4 class="mb-4 iniciar-sesion">Cambiar Contraseña</h4>
-                  <p>Por favor ingrese su correo y su nueva contraseña.</p>
+              <div class="px-8">
+                <div class="vx-card__title mb-4">
+                  <h4 class="color-dark-800 h1 font-medium py-2">
+                    Cambiar Contraseña
+                  </h4>
+                  <p class="size-base font-normal normal-line">
+                    Por favor ingrese su correo y su nueva contraseña.
+                  </p>
                 </div>
                 <form @submit.prevent="submitForm">
-                  <vs-input
-                    type="email"
-                    icon="icon icon-user"
-                    icon-pack="feather"
-                    v-validate="'required|email|min:3'"
-                    data-vv-validate-on="blur"
-                    label-placeholder="Email"
-                    v-model="email"
-                    class="w-full mb-8"
-                    name="email"
-                    data-vv-as="email"
-                    v-on:keyup.enter="submitForm"
-                  />
-                  <span class="text-danger text-sm pb-4">{{
-                    errors.first("email")
-                  }}</span>
-                  <vs-input
-                    icon="icon icon-unlock"
-                    icon-pack="feather"
-                    type="password"
-                    v-validate="'required|min:3'"
-                    data-vv-validate-on="blur"
-                    label-placeholder="Contraseña"
-                    v-model="password"
-                    class="w-full mb-8"
-                    name="password"
-                    data-vv-as="Contraseña"
-                    v-on:keyup.enter="submitForm"
-                  />
-                  <span class="text-danger text-sm pb-4">{{
-                    errors.first("password")
-                  }}</span>
-                  <vs-input
-                    icon="icon icon-unlock"
-                    icon-pack="feather"
-                    type="password"
-                    v-validate="'required|min:3'"
-                    data-vv-validate-on="blur"
-                    label-placeholder="Confirmar Contraseña"
-                    v-model="password_confirmation"
-                    class="w-full mb-8"
-                    name="confirmar"
-                    data-vv-as="Confirmar Contraseña"
-                    v-on:keyup.enter="submitForm"
-                  />
-                  <span class="text-danger text-sm pb-4">{{
-                    errors.first("confirmar")
-                  }}</span>
+                  <div class="w-full input-text py-2">
+                    <label>Correo electrónico <span>(*)</span></label>
+                    <vs-input
+                      type="email"
+                      icon="icon icon-user"
+                      icon-pack="feather"
+                      v-validate="'required|email|min:3'"
+                      data-vv-validate-on="blur"
+                      v-model="email"
+                      class="w-full"
+                      name="email"
+                      data-vv-as="email"
+                      v-on:keyup.enter="submitForm"
+                    />
+                    <span>{{ errors.first("email") }}</span>
+                  </div>
+
+                  <div class="w-full input-text py-2">
+                    <label>Nueva Contraseña <span>(*)</span></label>
+                    <vs-input
+                      icon="icon icon-unlock"
+                      icon-pack="feather"
+                      type="password"
+                      v-validate="'required|min:3'"
+                      data-vv-validate-on="blur"
+                      v-model="password"
+                      class="w-full"
+                      name="password"
+                      data-vv-as="Contraseña"
+                      v-on:keyup.enter="submitForm"
+                    />
+                    <span>{{ errors.first("password") }}</span>
+                  </div>
+
+                  <div class="w-full input-text py-2">
+                    <label>Confirmar nueva Contraseña <span>(*)</span></label>
+                    <vs-input
+                      icon="icon icon-unlock"
+                      icon-pack="feather"
+                      type="password"
+                      v-validate="'required|min:3'"
+                      data-vv-validate-on="blur"
+                      v-model="password_confirmation"
+                      class="w-full"
+                      name="confirmar"
+                      data-vv-as="Confirmar Contraseña"
+                      v-on:keyup.enter="submitForm"
+                    />
+                    <span>{{ errors.first("confirmar") }}</span>
+                  </div>
                 </form>
-                <div
-                  class="flex flex-wrap justify-between flex-col-reverse sm:flex-row mt-5"
+
+                <vs-button
+                  type="border"
+                  to="/pages/login"
+                  class="px-4 w-full sm:w-full md:w-full lg:w-full xl:w-auto mt-4"
+                  >Regresar al login</vs-button
                 >
-                  <vs-button
-                    type="border"
-                    to="/pages/login"
-                    class="w-full sm:w-auto mb-8 sm:mb-auto mt-3 sm:mt-auto"
-                    >Regresar al login</vs-button
-                  >
-                  <vs-button
-                    class="w-full sm:w-auto"
-                    @click.prevent="submitForm"
-                    >Cambiar</vs-button
-                  >
-                </div>
+                <vs-button
+                  class="float-right px-4 w-full sm:w-full md:w-full lg:w-full xl:w-auto mt-4"
+                  @click.prevent="submitForm"
+                  >Cambiar contraseña</vs-button
+                >
               </div>
             </div>
           </div>

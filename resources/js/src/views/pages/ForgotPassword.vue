@@ -37,11 +37,8 @@
                 </div>
                 <div class="sm:w-full pb-6">
                   <form @submit.prevent="submitForm">
-                    <div class="w-full">
-                      <label class="size-small color-copy"
-                        >Correo electrónico
-                        <span class="color-danger-900">(*)</span></label
-                      >
+                    <div class="w-full input-text">
+                      <label>Correo electrónico <span>(*)</span></label>
                       <vs-input
                         v-validate="'required|email|min:3|max:50'"
                         name="email"
@@ -55,9 +52,7 @@
                         class="w-full py-1"
                         ref="email"
                       />
-                      <span class="text-danger size-smaller">{{
-                        errors.first("email")
-                      }}</span>
+                      <span>{{ errors.first("email") }}</span>
                     </div>
                   </form>
                 </div>
@@ -69,7 +64,7 @@
                   >Regresar</vs-button
                 >
                 <vs-button
-                  class="float-right px-4 w-full md:w-auto mt-3 mb-8 md:mt-0 md:mb-0"
+                  class="float-right px-4 w-full md:w-auto mt-4 mb-8 md:mt-0 md:mb-0"
                   @click.prevent="submitForm"
                   >Recuperar Contraseña</vs-button
                 >
@@ -116,7 +111,8 @@ export default {
                 this.$vs.notify({
                   time: 6000,
                   title: "Recuperar contraseña",
-                  text: "Usuario no registrado, intente nuevamente.",
+                  text:
+                    "Usuario no registrado, intente nuevamente. mas adelante",
                   color: "danger",
                 });
               }

@@ -42,11 +42,8 @@
                       <h4 class="color-dark-800 h1 font-medium py-2">
                         Inicia sesión
                       </h4>
-                      <div class="w-full py-2">
-                        <label class="size-small color-copy font-medium"
-                          >Correo electrónico
-                          <span class="color-danger-900">(*)</span></label
-                        >
+                      <div class="w-full py-2 input-text">
+                        <label>Correo electrónico <span>(*)</span></label>
                         <vs-input
                           v-validate="'required|email|min:3|max:50'"
                           name="email"
@@ -57,18 +54,13 @@
                           icon-pack="feather"
                           placeholder="Correo electrónico"
                           v-model="email"
-                          class="w-full py-1"
+                          class="w-full"
                           ref="email"
                         />
-                        <span class="text-danger size-smaller">{{
-                          errors.first("email")
-                        }}</span>
+                        <span>{{ errors.first("email") }}</span>
                       </div>
-                      <div class="w-full py-2">
-                        <label class="size-small color-copy font-medium"
-                          >Contraseña
-                          <span class="color-danger-900">(*)</span></label
-                        >
+                      <div class="w-full py-2 input-text">
+                        <label class="">Contraseña <span>(*)</span></label>
                         <vs-input
                           v-validate="'required|min:6|max:25'"
                           type="password"
@@ -80,12 +72,10 @@
                           icon-pack="feather"
                           placeholder="Contraseña"
                           v-model="password"
-                          class="w-full py-1"
+                          class="w-full"
                           v-on:keyup.enter="loginJWT"
                         />
-                        <span class="text-danger size-smaller">{{
-                          errors.first("password")
-                        }}</span>
+                        <span>{{ errors.first("password") }}</span>
                       </div>
 
                       <div
@@ -205,10 +195,9 @@ export default {
         .catch((error) => {
           this.$vs.loading.close();
           this.$vs.notify({
-            title: "Error",
+            time: 150000,
+            title: "Ha ocurrido un error",
             text: error.response.data.error,
-            iconPack: "feather",
-            icon: "icon-alert-circle",
             color: "danger",
           });
         });

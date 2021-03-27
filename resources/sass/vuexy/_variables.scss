@@ -19,7 +19,8 @@ $spacer-lg: ($spacer * 2);
         COLORS
 =========================================================*/
 $primary: #b18b1e;
-$secondary: #007bff;
+$secondary-optional: #007bff;
+$secondary: #75797e;
 $success: #28c76f;
 $danger: #ea5455;
 $warning: #ff9f43;
@@ -48,7 +49,7 @@ $primary_map: (
 /*========================================================
         COLOR SECUNDARIO CON SUS VARIACIONES
 =========================================================*/
-$secondary_map: (
+$secondary_optional_map: (
     "50": "#E5F2FF",
     "100": "#CCE5FF",
     "200": "#B3D7FF",
@@ -169,12 +170,12 @@ $content-color: #{map-get($dark_map, "600")};
     }
 
     /*colores secundarios*/
-    @if map-has-key($secondary_map, #{$tono}) {
+    @if map-has-key($secondary_optional_map, #{$tono}) {
         .color-secondary-#{$tono} {
-            color: #{map-get($secondary_map, #{$tono})};
+            color: #{map-get($secondary_optional_map, #{$tono})};
         }
         .bg-secondary-#{$tono} {
-            background-color: #{map-get($secondary_map, #{$tono})};
+            background-color: #{map-get($secondary_optional_map, #{$tono})};
         }
     }
 

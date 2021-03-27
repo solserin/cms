@@ -76,19 +76,19 @@ export default {
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     callbackOnSuccess: {
       type: Function,
-      required: true
+      required: true,
     },
     accion: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$nextTick(() =>
           this.$refs["contra"].$el.querySelector("input").focus()
@@ -97,12 +97,12 @@ export default {
           this.cancel();
         };
       }
-    }
+    },
   },
 
   data() {
     return {
-      pass: ""
+      pass: "",
     };
   },
   computed: {
@@ -115,11 +115,11 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     accionNombre() {
       return this.accion;
-    }
+    },
   },
   methods: {
     acceptAlert() {
@@ -133,7 +133,7 @@ export default {
       //se verificq que exista una contraseña y se procede a realizar la confirmacion al servidor
       usuarios
         .confirmPassword(this.pass)
-        .then(res => {
+        .then((res) => {
           if (res.status == 200) {
             //preocede a cimplir la peticion
             this.pass = "";
@@ -141,7 +141,7 @@ export default {
             this.callbackOnSuccess();
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.notify({
             title: "Permiso denegado",
             text: err.response.data.error,
@@ -149,7 +149,7 @@ export default {
             icon: "icon-alert-circle",
             color: "danger",
             position: "bottom-center",
-            time: "4000"
+            time: "4000",
           });
           this.pass = "";
           this.$nextTick(() =>
@@ -160,11 +160,11 @@ export default {
     cancel() {
       this.pass = "";
       this.$emit("closeVerificar");
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showChecker) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -172,6 +172,6 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
