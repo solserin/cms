@@ -10,8 +10,14 @@
 
 
 <template functional>
-  <footer class="the-footer flex-wrap justify-between" :class="classes">
-    <span>COPYRIGHT &copy; {{ new Date().getFullYear() }} Aeternus Funerales, Todos los derechos reservados.</span>
+  <footer
+    class="the-footer flex-wrap justify-between size-small"
+    :class="classes"
+  >
+    <span
+      >COPYRIGHT &copy; {{ new Date().getFullYear() }} Aeternus Funerales, Todos
+      los derechos reservados.</span
+    >
     <span class="md:flex hidden items-center">
       <span class="hidden">Hand-crafted & Made with</span>
     </span>
@@ -22,13 +28,13 @@ export default {
   name: "the-footer",
   props: {
     classes: {
-      type: String
-    }
+      type: String,
+    },
   },
   inject: {
     components: {
-      default: {}
-    }
-  }
+      default: {},
+    },
+  },
 };
 </script>
