@@ -1,11 +1,15 @@
 <template>
-  <div class="the-navbar__user-meta flex items-center" v-if="this.activeUserInfo">
+  <div
+    class="the-navbar__user-meta flex items-center"
+    v-if="this.activeUserInfo"
+  >
     <div class="text-right leading-tight hidden sm:block">
-      <p class="font-semibold">{{ this.activeUserInfo.nombre }}</p>
-      <small>Disponible</small>
+      <p class="size-base font-bold lowercase">
+        {{ this.activeUserInfo.nombre }}
+      </p>
+      <small class="size-smaller color-copy">Disponible</small>
     </div>
-
-    <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
+    <vs-dropdown vs-custom-content vs-trigger-click:true class="cursor-pointer">
       <div class="con-img ml-3" v-if="this.activeUserInfo.imagen">
         <img
           key="onlineImg"
@@ -16,7 +20,6 @@
           class="rounded-full shadow-md cursor-pointer block"
         />
       </div>
-
       <div class="con-img ml-3" v-else>
         <img
           key="onlineImg"
@@ -28,23 +31,23 @@
         />
       </div>
 
-      <vs-dropdown-menu class="vx-navbar-dropdown">
+      <vs-dropdown-menu class="vx-navbar-dropdown menu-dropdown-aeternus">
         <ul style="min-width: 9rem">
           <li
-            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+            class="flex py-2 px-4"
             @click="$router.push('/pages/profile').catch(() => {})"
           >
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Perfil</span>
           </li>
-          <!--
           <li
-            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="$router.push('/apps/email').catch(() => {})">
+            class="flex py-2 px-4"
+            @click="$router.push('/home').catch(() => {})"
+          >
             <feather-icon icon="MailIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Inbox</span>
+            <span class="ml-2">Soporte</span>
           </li>
-
+          <!--
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
             @click="$router.push('/apps/todo').catch(() => {})">
@@ -68,10 +71,7 @@
           -->
           <vs-divider class="m-1" />
 
-          <li
-            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="openConfirmarSinPassword=true"
-          >
+          <li class="flex py-2 px-4" @click="openConfirmarSinPassword = true">
             <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Salir</span>
           </li>
@@ -81,7 +81,7 @@
     <ConfirmarDanger
       :show="openConfirmarSinPassword"
       :callback-on-success="logout"
-      @closeVerificar="openConfirmarSinPassword=false"
+      @closeVerificar="openConfirmarSinPassword = false"
       :accion="'Esta operación lo sacará de sistema.'"
       :confirmarButton="'Confirmar y salir'"
     ></ConfirmarDanger>
@@ -94,27 +94,27 @@ export default {
   data() {
     return {
       activeUserInfo: {},
-      openConfirmarSinPassword: false
+      openConfirmarSinPassword: false,
     };
   },
   components: {
-    ConfirmarDanger
+    ConfirmarDanger,
   },
   methods: {
     logout() {
       this.$store.dispatch("auth/logout_user");
-    }
+    },
   },
   mounted() {
     /**si no existe mando llamar los datos del usuario get_perfil de rutas api */
     if (!localStorage.getItem("userInfo")) {
-      this.$store.dispatch("auth/user_datos").then(resp => {
+      this.$store.dispatch("auth/user_datos").then((resp) => {
         this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
       });
     } else {
       this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
       if (!this.activeUserInfo.user_id) {
-        this.$store.dispatch("auth/user_datos").then(resp => {
+        this.$store.dispatch("auth/user_datos").then((resp) => {
           this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
         });
       }
@@ -122,6 +122,6 @@ export default {
   },
   created() {
     this.activeUserInfo = JSON.parse(localStorage.getItem("userInfo"));
-  }
+  },
 };
 </script>

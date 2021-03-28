@@ -23,7 +23,6 @@
           icon="MenuIcon"
           @click.stop="showSidebar"
         />
-
         <!--<bookmarks :navbarColor="navbarColor" v-if="windowWidth >= 992" />-->
 
         <vs-spacer />
@@ -56,8 +55,8 @@ export default {
   props: {
     navbarColor: {
       type: String,
-      default: "#fff"
-    }
+      default: "#fff",
+    },
   },
   components: {
     Bookmarks,
@@ -65,7 +64,7 @@ export default {
     SearchBar,
     CartDropDown,
     NotificationDropDown,
-    ProfileDropDown
+    ProfileDropDown,
   },
   computed: {
     navbarColorLocal() {
@@ -81,7 +80,7 @@ export default {
         "text-white":
           (this.navbarColor != "#10163a" &&
             this.$store.state.theme === "dark") ||
-          (this.navbarColor != "#fff" && this.$store.state.theme !== "dark")
+          (this.navbarColor != "#fff" && this.$store.state.theme !== "dark"),
       };
     },
     windowWidth() {
@@ -93,13 +92,13 @@ export default {
       if (this.verticalNavMenuWidth == "default") return "navbar-default";
       else if (this.verticalNavMenuWidth == "reduced") return "navbar-reduced";
       else if (this.verticalNavMenuWidth) return "navbar-full";
-    }
+    },
   },
   methods: {
     showSidebar() {
       this.$store.commit("TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE", true);
-    }
-  }
+    },
+  },
 };
 </script>
 
