@@ -19,7 +19,10 @@
         @extend .notificaciones;
 
         &.activeNoti:active {
-            //pointer-events: none;
+            pointer-events: none;
+            .content-noti:active::after {
+                pointer-events: all;
+            }
         }
 
         .con-text-noti {
