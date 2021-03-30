@@ -7,7 +7,6 @@
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
 // ======================================================================================
 // Alert
 // ======================================================================================
@@ -38,8 +37,6 @@
   color: inherit;
 }
 
-
-
 // ======================================================================================
 // Avatar
 // ======================================================================================
@@ -54,16 +51,12 @@
   }
 }
 
-
 // ======================================================================================
 // Button
 // ======================================================================================
 
 .vs-button {
-
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
   font-size: 1rem;
-
   &.vs-button-gradient {
     &:hover {
       box-shadow: none !important;
@@ -71,12 +64,11 @@
   }
 
   &:not(.vs-radius):not(.includeIconOnly):not(.small):not(.large) {
-    padding: .75rem 2rem;
+    padding: 0.75rem 2rem;
 
     &.vs-button-border {
-      padding: .679rem 2rem;
+      padding: 0.679rem 2rem;
     }
-
   }
 
   &.small:not(.includeIconOnly) {
@@ -104,14 +96,12 @@
   }
 }
 
-
 // ======================================================================================
 // Breadcrumb
 // ======================================================================================
 
 .vs-breadcrumb--ol {
   a {
-
     &:focus,
     &:hover {
       color: $primary;
@@ -123,13 +113,12 @@
   }
 }
 
-
 // ======================================================================================
 // Check-box
 // ======================================================================================
 
 .vs-checkbox-small {
-  .vs-checkbox--input:checked+.vs-checkbox .vs-icon {
+  .vs-checkbox--input:checked + .vs-checkbox .vs-icon {
     margin-top: 6px;
     margin-left: -1px;
     transform: translateY(-3px);
@@ -142,7 +131,6 @@
   justify-content: center;
 }
 
-
 // ======================================================================================
 // Chip
 // ======================================================================================
@@ -153,7 +141,7 @@
   }
 
   .con-vs-chip {
-    margin: .75rem;
+    margin: 0.75rem;
   }
 
   .con-chips--remove-all {
@@ -167,9 +155,8 @@
 .con-vs-chip {
   min-height: 26px;
   min-width: 26px;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
-
 
 // ======================================================================================
 // Collapse
@@ -197,7 +184,6 @@
   }
 }
 
-
 // ======================================================================================
 // Dialog
 // ======================================================================================
@@ -213,7 +199,7 @@
       }
 
       span.after {
-        width: 0
+        width: 0;
       }
     }
 
@@ -226,13 +212,12 @@
       padding: 1rem;
 
       .vs-button:last-of-type {
-        margin-left: .5rem !important;
+        margin-left: 0.5rem !important;
         border-color: rgba(0, 0, 0, 0.2) !important;
       }
     }
   }
 }
-
 
 // ======================================================================================
 // DropDown
@@ -246,7 +231,7 @@
 // Dropdown Button padding
 .dropdown-button-container {
   .vs-button {
-    padding: .72rem 1.5rem !important;
+    padding: 0.72rem 1.5rem !important;
   }
 
   .vs-button-line {
@@ -258,7 +243,6 @@
   z-index: 42000;
 }
 
-
 // ======================================================================================
 // Input
 // ======================================================================================
@@ -267,7 +251,7 @@
   top: 0px;
 }
 
-.vs-input--input.hasIcon:not(.icon-after-input)+.vs-input--placeholder {
+.vs-input--input.hasIcon:not(.icon-after-input) + .vs-input--placeholder {
   padding-left: 3rem !important;
 }
 
@@ -279,9 +263,9 @@
 // INPUT FORM ELEMENT COMPONENT
 .vs-con-input {
   .vs-inputx {
-    padding: .7rem;
+    padding: 0.7rem;
     font-size: 1rem;
-    border: 1px solid rgba(0, 0, 0, .2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   .vx-inputx:not(.input-rounded-full) {
@@ -291,7 +275,7 @@
 
 .vs-input--input {
   &.normal {
-    padding: .7rem !important;
+    padding: 0.7rem !important;
     font-size: 1rem !important;
 
     ~ .vs-input--icon {
@@ -309,19 +293,19 @@
       padding: 1rem 0.8rem 1rem 3rem !important;
     }
 
-    ~.vs-input--icon {
+    ~ .vs-input--icon {
       top: 1rem !important;
       left: 0.8rem !important;
     }
   }
 
   &.small {
-    padding: .4rem !important;
-    font-size: .8rem !important;
+    padding: 0.4rem !important;
+    font-size: 0.8rem !important;
 
     ~ .vs-input--icon {
       &.feather {
-        top:7px !important;
+        top: 7px !important;
       }
     }
   }
@@ -337,7 +321,7 @@
 
 .vs-input--placeholder {
   &.normal {
-    padding: .7rem !important;
+    padding: 0.7rem !important;
   }
 
   &.large {
@@ -345,42 +329,40 @@
   }
 
   &.small {
-    padding: .2rem .6rem !important;
-    font-size: .8rem !important;
+    padding: 0.2rem 0.6rem !important;
+    font-size: 0.8rem !important;
   }
 }
 
 .vs-input--icon {
   &.feather {
     // top: 10px;
-    padding: .2rem .5rem 0rem .4rem;
+    padding: 0.2rem 0.5rem 0rem 0.4rem;
   }
 }
 
 // Rounded Input
 .vs-input.input-rounded-full {
-
   // Fixes input element don't get rounded borders
   input {
     border-radius: 20px;
   }
 
   .vs-input--input.hasIcon {
-    padding: .8rem 1rem 0.8rem 3rem !important;
+    padding: 0.8rem 1rem 0.8rem 3rem !important;
   }
 
   .input-span-placeholder {
     padding-left: 3rem !important;
-    padding-top: .7rem !important;
+    padding-top: 0.7rem !important;
   }
 
   .vs-icon {
-    margin-top: .1rem !important;
+    margin-top: 0.1rem !important;
     margin-left: 0.6rem !important;
     font-size: 1rem !important;
   }
 }
-
 
 // ======================================================================================
 // List
@@ -389,7 +371,7 @@
 .vs-list--item {
   .list-titles {
     .vs-list--subtitle {
-      font-size: .85rem;
+      font-size: 0.85rem;
     }
   }
 
@@ -397,7 +379,6 @@
     border-bottom: none;
   }
 }
-
 
 // ======================================================================================
 // NavBar
@@ -421,7 +402,6 @@
   }
 }
 
-
 // ======================================================================================
 // Notification
 // ======================================================================================
@@ -435,7 +415,6 @@
     font-size: $h5-font-size;
   }
 }
-
 
 // ======================================================================================
 // Pagination
@@ -460,7 +439,6 @@
   padding: 0;
 }
 
-
 // ======================================================================================
 // PopUp
 // ======================================================================================
@@ -480,7 +458,6 @@
     font-size: 1rem;
   }
 }
-
 
 // ======================================================================================
 // Radio
@@ -508,7 +485,7 @@
   .vs-select--input {
     padding: 10px;
     font-size: 1rem;
-    border: 1px solid rgba(0, 0, 0, .2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -533,7 +510,6 @@
   }
 }
 
-
 // ======================================================================================
 // Sidebar
 // ======================================================================================
@@ -546,7 +522,6 @@
   }
 }
 
-
 // ======================================================================================
 // Switch
 // ======================================================================================
@@ -554,7 +529,6 @@
 .vs-switch--text {
   font-size: 0.7rem;
 }
-
 
 // ======================================================================================
 // Table
@@ -569,11 +543,11 @@
       // align text in search input
       .vs-table--search-input {
         padding: 10px 28px;
-        border: 1px solid rgba(0, 0, 0, .1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         font-size: 0.9rem;
       }
 
-      .vs-table--search-input:focus+i {
+      .vs-table--search-input:focus + i {
         left: 10px;
       }
 
@@ -582,7 +556,6 @@
         left: 10px;
       }
     }
-
   }
 
   .vs-con-tbody {
@@ -639,7 +612,6 @@
   }
 }
 
-
 // ======================================================================================
 // Tabs
 // ======================================================================================
@@ -657,7 +629,7 @@
   }
 
   .vs-tabs-position-left & {
-    padding: .35rem 0.3rem;
+    padding: 0.35rem 0.3rem;
   }
 }
 
@@ -688,7 +660,6 @@
   }
 }
 
-
 // ======================================================================================
 // Text-area
 // ======================================================================================
@@ -701,13 +672,12 @@
 }
 
 .vs-con-textarea {
-  border: 1px solid rgba(0, 0, 0, .2) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
 
   > h4 {
     color: inherit;
   }
 }
-
 
 // ======================================================================================
 // Tool-tip
@@ -716,7 +686,6 @@
 .vs-tooltip {
   z-index: 52000;
 }
-
 
 // ======================================================================================
 // Upload

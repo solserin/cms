@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups clientes big-forms"
+      class="normal-forms solicitud-propiedades background-header-forms forms-popups-85"
       fullscreen
       close="cancelar"
       :title="title"
@@ -24,7 +24,7 @@
               >Seleccione el estado actual del cliente</label
             >
             <vs-switch
-              style="width: 95px;"
+              style="width: 95px"
               color="success"
               class="font-bold mt-2"
               icon-pack="feather"

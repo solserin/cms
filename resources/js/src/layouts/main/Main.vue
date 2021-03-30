@@ -11,7 +11,12 @@
 <template>
   <div
     class="layout--main"
-    :class="[layoutTypeClass, navbarClasses, footerClasses, {'no-scroll': isAppPage}]"
+    :class="[
+      layoutTypeClass,
+      navbarClasses,
+      footerClasses,
+      { 'no-scroll': isAppPage },
+    ]"
   >
     <the-customizer
       v-if="!disableCustomizer"
@@ -29,7 +34,10 @@
 
     <v-nav-menu :navMenuItems="navMenuItems" parent=".layout--main" />
 
-    <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
+    <div
+      id="content-area"
+      :class="[contentAreaClass, { 'show-overlay': bodyOverlay }]"
+    >
       <div id="content-overlay" />
 
       <!-- Navbar -->
@@ -37,18 +45,18 @@
         <the-navbar-horizontal
           :navbarType="navbarType"
           :class="[
-          {'text-white' : isNavbarDark  && !isThemeDark},
-          {'text-base'  : !isNavbarDark && isThemeDark}
-        ]"
+            { 'text-white': isNavbarDark && !isThemeDark },
+            { 'text-base': !isNavbarDark && isThemeDark },
+          ]"
         />
 
         <div style="height: 62px" v-if="navbarType === 'static'"></div>
 
         <h-nav-menu
           :class="[
-          {'text-white' : isNavbarDark  && !isThemeDark},
-          {'text-base'  : !isNavbarDark && isThemeDark}
-        ]"
+            { 'text-white': isNavbarDark && !isThemeDark },
+            { 'text-base': !isNavbarDark && isThemeDark },
+          ]"
           :navMenuItems="navMenuItems"
         />
       </template>
@@ -57,9 +65,9 @@
         <the-navbar-vertical
           :navbarColor="navbarColor"
           :class="[
-          {'text-white' : isNavbarDark  && !isThemeDark},
-          {'text-base'  : !isNavbarDark && isThemeDark}
-        ]"
+            { 'text-white': isNavbarDark && !isThemeDark },
+            { 'text-base': !isNavbarDark && isThemeDark },
+          ]"
         />
       </template>
       <!-- /Navbar -->
@@ -74,7 +82,10 @@
               >
                 <div
                   class="content-area__heading"
-                  :class="{'pr-4 border-0 md:border-r border-solid border-grey-light' : $route.meta.breadcrumb}"
+                  :class="{
+                    'pr-4 border-0 md:border-r border-solid border-grey-light':
+                      $route.meta.breadcrumb,
+                  }"
                 >
                   <h2 class="mb-1">{{ routeTitle }}</h2>
                 </div>
@@ -105,7 +116,9 @@
               <transition :name="routerTransition" mode="out-in">
                 <router-view
                   @changeRouteTitle="changeRouteTitle"
-                  @setAppClasses="(classesStr) => $emit('setAppClasses', classesStr)"
+                  @setAppClasses="
+                    (classesStr) => $emit('setAppClasses', classesStr)
+                  "
                 />
               </transition>
             </div>
@@ -137,7 +150,7 @@ export default {
     TheFooter,
     TheNavbarHorizontal,
     TheNavbarVertical,
-    VNavMenu
+    VNavMenu,
   },
   data() {
     return {
@@ -151,7 +164,7 @@ export default {
       navbarType: themeConfig.navbarType || "floating",
       navMenuItems: navMenuItems,
       routerTransition: themeConfig.routerTransition || "none",
-      routeTitle: this.$route.meta.pageTitle
+      routeTitle: this.$route.meta.pageTitle,
     };
   },
   watch: {
@@ -165,7 +178,7 @@ export default {
     "$store.state.mainLayoutType"(val) {
       this.setNavMenuVisibility(val);
       this.disableThemeTour = true;
-    }
+    },
   },
   computed: {
     bodyOverlay() {
@@ -186,7 +199,7 @@ export default {
       return {
         "footer-hidden": this.footerType == "hidden",
         "footer-sticky": this.footerType == "sticky",
-        "footer-static": this.footerType == "static"
+        "footer-static": this.footerType == "static",
       };
     },
     isAppPage() {
@@ -206,7 +219,7 @@ export default {
         "navbar-hidden": this.navbarType == "hidden",
         "navbar-sticky": this.navbarType == "sticky",
         "navbar-static": this.navbarType == "static",
-        "navbar-floating": this.navbarType == "floating"
+        "navbar-floating": this.navbarType == "floating",
       };
     },
     verticalNavMenuWidth() {
@@ -214,7 +227,7 @@ export default {
     },
     windowWidth() {
       return this.$store.state.windowWidth;
-    }
+    },
   },
   methods: {
     changeRouteTitle(title) {
@@ -249,7 +262,7 @@ export default {
     },
     toggleHideScrollToTop(val) {
       this.hideScrollToTop = val;
-    }
+    },
   },
   created() {
     if (!localStorage.getItem("accessToken")) {
@@ -268,7 +281,7 @@ export default {
     // So, watcher is required for just disabling it.
     this.dynamicWatchers.windowWidth = this.$watch(
       "$store.state.windowWidth",
-      val => {
+      (val) => {
         if (val < 1200) {
           this.disableThemeTour = true;
           this.dynamicWatchers.windowWidth();
@@ -290,7 +303,7 @@ export default {
     });
   },
   beforeDestroy() {
-    Object.keys(this.dynamicWatchers).map(i => {
+    Object.keys(this.dynamicWatchers).map((i) => {
       this.dynamicWatchers[i]();
       delete this.dynamicWatchers[i];
     });
@@ -300,11 +313,11 @@ export default {
     if (localStorage.getItem("AuthMenu")) {
       this.navMenuItems = JSON.parse(localStorage.getItem("AuthMenu"));
     } else {
-      this.$store.dispatch("auth/crear_menu").then(res => {
+      this.$store.dispatch("auth/crear_menu").then((res) => {
         this.navMenuItems = JSON.parse(localStorage.getItem("AuthMenu"));
       });
     }
-  }
+  },
 };
 </script>
 

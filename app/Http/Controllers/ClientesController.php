@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Clientes;
 use App\Nacionalidades;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ClientesController extends ApiController
 {
@@ -20,15 +20,14 @@ class ClientesController extends ApiController
     public function get_clientes(Request $request)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $cliente = $request->cliente;
-        $numero_control = $request->numero_control;
-        $status = $request->status;
+        $cliente                  = $request->cliente;
+        $numero_control           = $request->numero_control;
+        $status                   = $request->status;
 
-        $id_cliente = $request->id_cliente;
-        $rfc = $request->rfc;
-        $celular = $request->celular;
+        $id_cliente   = $request->id_cliente;
+        $rfc          = $request->rfc;
+        $celular      = $request->celular;
         $nacionalidad = $request->nacionalidad_id;
-
 
         $resultado = $this->showAllPaginated(
             Clientes::select(
@@ -42,8 +41,8 @@ class ClientesController extends ApiController
                 'direccion_fiscal',
                 'vivo_b as vivo_b_raw',
                 DB::Raw('IFNULL( clientes.rfc , "N/A" ) as rfc'),
-                DB::Raw('IFNULL( clientes.celular , "No registrado" ) as celular'),
-                DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
+                DB::Raw('IFNULL( clientes.celular , "N/A" ) as celular'),
+                DB::Raw('IF(clientes.vivo_b=1 , "Vivo","Fallecido" ) as vivo_b'),
                 'nacionalidades_id',
                 'generos_id'
             )->with('nacionalidad')->with('genero')->where(function ($q) use ($status) {
@@ -55,13 +54,13 @@ class ClientesController extends ApiController
                     if (trim($numero_control) != '') {
                         if ($filtro_especifico_opcion == 1) {
 
-                            $q->where('clientes.id', '=',  $numero_control);
+                            $q->where('clientes.id', '=', $numero_control);
                         } else if ($filtro_especifico_opcion == 2) {
 
-                            $q->where('clientes.rfc', '=',  $numero_control);
+                            $q->where('clientes.rfc', '=', $numero_control);
                         } else if ($filtro_especifico_opcion == 3) {
 
-                            $q->where('clientes.celular', '=',  $numero_control);
+                            $q->where('clientes.celular', '=', $numero_control);
                         } else {
 
                             $q->where('clientes.email', $numero_control);
@@ -93,12 +92,11 @@ class ClientesController extends ApiController
                         $q->where('clientes.nacionalidades_id', '=', $nacionalidad);
                     }
                 })
-                /**descartando el cliente publico en general */
+            /**descartando el cliente publico en general */
                 ->whereNotIn('clientes.id', [1, 193])
                 ->orderBy('clientes.id', 'desc')
                 ->get()
         );
-
 
         //se retorna el resultado
         return $resultado;
@@ -108,94 +106,87 @@ class ClientesController extends ApiController
     public function get_cliente_id(Request $request)
     {
         $cliente_id = $request->cliente_id;
-        $resultado =
-            Clientes::select(
-                '*',
-                'vivo_b as vivo_b_raw',
-                DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
-                'nacionalidades_id',
-                'generos_id'
-            )->where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')
+        $resultado  =
+        Clientes::select(
+            '*',
+            'vivo_b as vivo_b_raw',
+            DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
+            'nacionalidades_id',
+            'generos_id'
+        )->where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')
             ->first();
         //se retorna el resultado
         return $resultado;
     }
 
-
-
-
     public function guardar_cliente(Request $request)
     {
         $validaciones = [
             /**personal */
-            'nombre' => 'required',
-            'fecha_nac' => '',
-            'direccion' => 'required',
-            'ciudad' => 'required',
-            'estado' => 'required',
+            'nombre'             => 'required',
+            'fecha_nac'          => '',
+            'direccion'          => 'required',
+            'ciudad'             => 'required',
+            'estado'             => 'required',
             'nacionalidad.value' => 'required',
-            'email' => '',
+            'email'              => '',
             /**fiscal */
-            'rfc' => '',
-            'razon_social' => '',
-            'direccion_fiscal' => '',
+            'rfc'                => '',
+            'razon_social'       => '',
+            'direccion_fiscal'   => '',
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
-
 
         if (trim($request->email)) {
             $validaciones['email'] = 'email|unique:clientes,email';
         }
 
         if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '') {
-            $validaciones['rfc'] = 'required|unique:clientes,rfc';
-            $validaciones['razon_social'] = 'required';
+            $validaciones['rfc']              = 'required|unique:clientes,rfc';
+            $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
         }
 
-
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
-            'date_format' => 'Formato de Fecha yyyy-mm-dd',
-            'required' => 'Este dato es obligatorio',
-            'email.email' => 'Ingrese un email válido',
+            'date_format'  => 'Formato de Fecha yyyy-mm-dd',
+            'required'     => 'Este dato es obligatorio',
+            'email.email'  => 'Ingrese un email válido',
             'email.unique' => 'Este email ya fue registrado',
-            'rfc.unique' => 'Este RFC ya fue registrado',
+            'rfc.unique'   => 'Este RFC ya fue registrado',
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
 
-
-
         return DB::table('clientes')->insertGetId(
             [
                 /**informacion fiscal */
-                'generos_id' => (int) $request->genero['value'],
-                'nombre' => $request->nombre,
-                'direccion' => $request->direccion,
-                'ciudad' => $request->ciudad,
-                'estado' => $request->estado,
-                'fecha_nac' =>  trim($request->fecha_nac) != '' ? date('Y-m-d H:i:s', strtotime($request->fecha_nac)) : NULL,
-                'telefono' => trim($request->telefono) != '' ? trim($request->telefono) : NULL,
-                'celular' => trim($request->celular) != '' ? trim($request->celular) : NULL,
-                'telefono_extra' => trim($request->telefono_extra) != '' ? trim($request->telefono_extra) : NULL,
-                'email' => trim($request->email) != '' ? trim($request->email) : NULL,
-                'nacionalidades_id' => (int) $request->nacionalidad['value'],
+                'generos_id'          => (int) $request->genero['value'],
+                'nombre'              => $request->nombre,
+                'direccion'           => $request->direccion,
+                'ciudad'              => $request->ciudad,
+                'estado'              => $request->estado,
+                'fecha_nac'           => trim($request->fecha_nac) != '' ? date('Y-m-d H:i:s', strtotime($request->fecha_nac)) : null,
+                'telefono'            => trim($request->telefono) != '' ? trim($request->telefono) : null,
+                'celular'             => trim($request->celular) != '' ? trim($request->celular) : null,
+                'telefono_extra'      => trim($request->telefono_extra) != '' ? trim($request->telefono_extra) : null,
+                'email'               => trim($request->email) != '' ? trim($request->email) : null,
+                'nacionalidades_id'   => (int) $request->nacionalidad['value'],
                 /**informacion fiscal */
-                'rfc' => trim($request->rfc) != '' ? trim($request->rfc) : NULL,
-                'razon_social' => trim($request->razon_social) != '' ? trim($request->razon_social) : NULL,
-                'direccion_fiscal' => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : NULL,
+                'rfc'                 => trim($request->rfc) != '' ? trim($request->rfc) : null,
+                'razon_social'        => trim($request->razon_social) != '' ? trim($request->razon_social) : null,
+                'direccion_fiscal'    => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : null,
                 /**datos del contacto */
-                'nombre_contacto' => $request->nombre_contacto,
+                'nombre_contacto'     => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,
-                'telefono_contacto' => trim($request->telefono_contacto),
+                'telefono_contacto'   => trim($request->telefono_contacto),
 
-                'fecha_registro' => now(),
-                'registro_id' => (int) $request->user()->id,
-                'vivo_b' => $request->status_cliente,
+                'fecha_registro'      => now(),
+                'registro_id'         => (int) $request->user()->id,
+                'vivo_b'              => $request->status_cliente,
             ]
         );
     }
@@ -205,20 +196,19 @@ class ClientesController extends ApiController
     {
         $validaciones = [
             /**personal */
-            'nombre' => 'required',
-            'direccion' => 'required',
-            'ciudad' => 'required',
-            'estado' => 'required',
+            'nombre'             => 'required',
+            'direccion'          => 'required',
+            'ciudad'             => 'required',
+            'estado'             => 'required',
             'nacionalidad.value' => 'required',
-            'email' => '',
+            'email'              => '',
             /**fiscal */
-            'rfc' => '',
-            'razon_social' => '',
-            'direccion_fiscal' => '',
+            'rfc'                => '',
+            'razon_social'       => '',
+            'direccion_fiscal'   => '',
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
-
 
         if (trim($request->email)) {
             $validaciones['email'] = [
@@ -232,61 +222,57 @@ class ClientesController extends ApiController
                 'required',
                 Rule::unique('clientes', 'rfc')->ignore($request->id_cliente_modificar),
             ];
-            $validaciones['razon_social'] = 'required';
+            $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
         }
 
-
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
-            'required' => 'Este dato es obligatorio',
-            'email.email' => 'Ingrese un email válido',
+            'required'     => 'Este dato es obligatorio',
+            'email.email'  => 'Ingrese un email válido',
             'email.unique' => 'Este email ya fue registrado',
-            'rfc.unique' => 'Este RFC ya fue registrado',
+            'rfc.unique'   => 'Este RFC ya fue registrado',
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
 
-
-
         $res = DB::table('clientes')->where('id', $request->id_cliente_modificar)->update(
             [
                 /**informacion fiscal */
-                'generos_id' => (int) $request->genero['value'],
-                'nombre' => $request->nombre,
-                'direccion' => $request->direccion,
-                'ciudad' => $request->ciudad,
-                'estado' => $request->estado,
-                'fecha_nac' =>  trim($request->fecha_nac) != '' ? date('Y-m-d H:i:s', strtotime($request->fecha_nac)) : NULL,
-                'telefono' => trim($request->telefono) != '' ? trim($request->telefono) : NULL,
-                'celular' => trim($request->celular) != '' ? trim($request->celular) : NULL,
-                'telefono_extra' => trim($request->telefono_extra) != '' ? trim($request->telefono_extra) : NULL,
-                'email' => trim($request->email) != '' ? trim($request->email) : NULL,
-                'nacionalidades_id' => (int) $request->nacionalidad['value'],
+                'generos_id'          => (int) $request->genero['value'],
+                'nombre'              => $request->nombre,
+                'direccion'           => $request->direccion,
+                'ciudad'              => $request->ciudad,
+                'estado'              => $request->estado,
+                'fecha_nac'           => trim($request->fecha_nac) != '' ? date('Y-m-d H:i:s', strtotime($request->fecha_nac)) : null,
+                'telefono'            => trim($request->telefono) != '' ? trim($request->telefono) : null,
+                'celular'             => trim($request->celular) != '' ? trim($request->celular) : null,
+                'telefono_extra'      => trim($request->telefono_extra) != '' ? trim($request->telefono_extra) : null,
+                'email'               => trim($request->email) != '' ? trim($request->email) : null,
+                'nacionalidades_id'   => (int) $request->nacionalidad['value'],
                 /**informacion fiscal */
-                'rfc' => trim($request->rfc) != '' ? trim($request->rfc) : NULL,
-                'razon_social' => trim($request->razon_social) != '' ? trim($request->razon_social) : NULL,
-                'direccion_fiscal' => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : NULL,
+                'rfc'                 => trim($request->rfc) != '' ? trim($request->rfc) : null,
+                'razon_social'        => trim($request->razon_social) != '' ? trim($request->razon_social) : null,
+                'direccion_fiscal'    => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : null,
                 /**datos del contacto */
-                'nombre_contacto' => $request->nombre_contacto,
+                'nombre_contacto'     => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,
-                'telefono_contacto' => trim($request->telefono_contacto),
+                'telefono_contacto'   => trim($request->telefono_contacto),
 
-                'fecha_modificacion' => now(),
-                'modifico_id' => (int) $request->user()->id,
-                'vivo_b' => $request->status_cliente,
+                'fecha_modificacion'  => now(),
+                'modifico_id'         => (int) $request->user()->id,
+                'vivo_b'              => $request->status_cliente,
             ]
         );
 
         if ($res > 0) {
-            return  $request->id_cliente_modificar;
+            return $request->id_cliente_modificar;
         } else {
             return 0;
         }
     }
-
 
     /**DELETE CLIENTES */
     public function baja_cliente(Request $request)

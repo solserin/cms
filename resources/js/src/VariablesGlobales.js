@@ -58,6 +58,10 @@ export const mostrarOptions = [{
     {
         label: "100",
         value: "100"
+    },
+    {
+        label: "200",
+        value: "200"
     }
 ];
 

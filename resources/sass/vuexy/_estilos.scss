@@ -3,6 +3,35 @@
 @import "vuexy/notifications";
 @import "vuexy/login";
 @import "vuexy/dashboard";
+@import "vuexy/buttons";
+@import "vuexy/cards";
+@import "vuexy/tables";
+@import "vuexy/popup-forms";
+
+/*dots*/
+@mixin dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot-success {
+    @include dot;
+    @extend .bg-success-900;
+}
+
+.dot-warning {
+    @include dot;
+    @extend .bg-warning-900;
+}
+
+.dot-danger {
+    @include dot;
+    @extend .bg-danger-900;
+}
+
+/*fin de dots*/
 
 .img-articulo {
     display: block;
@@ -82,11 +111,6 @@
 /* -------------------------------------------------------------------------- */
 /*                               tablas de datos                              */
 /* -------------------------------------------------------------------------- */
-.header-table h3 {
-    text-transform: capitalize !important;
-    font-weight: 600;
-    font-size: 1.1em;
-}
 
 /* -------------------------------------------------------------------------- */
 /*                                   button                                   */
@@ -97,16 +121,6 @@
     position: relative !important;
     font-size: 14px !important;
     font-weight: 500 !important;
-}
-
-.img-btn {
-    display: inline !important;
-    width: 22px !important;
-}
-
-.img-btn-32 {
-    display: inline !important;
-    width: 32px !important;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -203,41 +217,9 @@
     padding: 5px 0 5px 0 !important;
 }
 
-.vs-popup--close {
-    background-color: #cecece !important;
-    color: #303030 !important;
-    font-size: 32px;
-    font-weight: bold !important;
-    border-radius: 0px !important;
-    padding: 4px !important;
-}
-
 .big-forms .vs-popup--close {
     margin-top: -60px !important;
     margin-right: 12px !important;
-}
-
-.normal-forms .vs-popup--close {
-    margin-top: 5px !important;
-    margin-right: 12px !important;
-}
-
-.normal-forms .vs-popup--content {
-    max-height: 87vh !important;
-}
-
-.normal-forms .vs-popup--title h3 {
-    margin-top: 10px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    text-align: center !important;
-    width: 80% !important;
-    border-bottom: 2px solid #cecece !important;
-    padding-bottom: 10px !important;
-    color: #303030 !important;
-    text-transform: capitalize !important;
-    font-size: 18px !important;
-    font-weight: 550 !important;
 }
 
 .reportes_lista .vs-popup--title h3 {
@@ -276,7 +258,6 @@
 }
 
 .background-header-forms .vs-popup--close {
-    margin-top: 25px !important;
     margin-right: 12px !important;
 }
 
@@ -323,10 +304,6 @@
 
 .usuarios .vs-popup--title h3:before {
     content: url("../../../../../resources/assets/images/users.svg");
-}
-
-.clientes .vs-popup--title h3:before {
-    content: url("../../../../../resources/assets/images/client.svg");
 }
 
 .planes_venta_form .vs-popup--title h3:before {
@@ -538,91 +515,6 @@
     color: rgba(var(--vs-primary), 1) !important;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                              estilos de tablas                             */
-/* -------------------------------------------------------------------------- */
-.vs-table--header {
-    padding: 6px 0px 6px 0px !important;
-    text-align: center !important;
-    background-color: #e8e8e8;
-}
-
-.vs-table--thead tr th {
-    padding: 7px 0px 7px 0px !important;
-}
-
-.vs-table--header h3 {
-    color: #666666;
-    font-size: 1.2em;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-
-.vs-table--tbody {
-    border: 0px !important;
-    border-top: 2px solid #fff !important;
-}
-
-.vs-con-table {
-    border-collapse: collapse;
-}
-
-.vs-table--tr:nth-child(even) {
-    background-color: #f2f2f2 !important;
-}
-
-.vs-table--tr:hover {
-    cursor: pointer;
-    background: rgba(221, 221, 221, 1) !important;
-    color: #303030 !important;
-}
-
-.tr_especial,
-.tr_especial:hover {
-    color: #fff !important;
-    border: 1px solid #ddd;
-    background-color: #666666 !important;
-}
-
-.vs-table--thead tr {
-    border: 1px solid #ddd;
-    color: #fff !important;
-    background-color: #666666 !important;
-}
-
-.vs-table--thead tr th {
-    font-size: 1em !important;
-    font-weight: 600 !important;
-}
-
-.vs-table--thead tr th,
-.vs-table--td {
-    font-weight: 500 !important;
-    border: 1px solid #ddd;
-}
-
-.vs-table--td {
-    padding: 2px !important;
-}
-
-/* -------------------------------------------------------------------------- */
-/*                              estilos de tablas                             */
-/* -------------------------------------------------------------------------- */
-
-/*tarifas card*/
-.card-tarifas .vs-card--header {
-    background-color: #666666;
-}
-
-.card-tarifas .vs-card--header h3 {
-    color: #fff;
-    font-size: 1.2em;
-    text-transform: capitalize;
-    font-weight: 600 !important;
-}
-
-/*fin de tarifas card*/
-
 /*password checker*/
 .password-checker .password-checker .vs-dialog-cancel--icon {
     display: none;
@@ -664,10 +556,6 @@
 /*fin de estilos de videos tutoriales*/
 
 /* buttons*/
-
-.vs-card--content {
-    font-size: 1rem !important;
-}
 
 .firma-digital .con-input-upload {
     margin: 0 auto 0 auto !important;
@@ -831,15 +719,6 @@
     display: none !important;
 }
 
-th .sort-th,
-th .vs-table-text {
-    justify-content: center;
-}
-
-.vs-table--td {
-    text-align: center !important;
-}
-
 .distribucion {
     width: 100% !important;
     text-align: center !important;
@@ -915,9 +794,6 @@ th .vs-table-text {
 
 /*alturas verticales personalizadas de los content*/
 
-.normal-forms .vs-popup--content {
-    max-height: 80vh !important;
-}
 .pagos_forms .vs-popup--content {
     max-height: 70vh !important;
 }
