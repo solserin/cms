@@ -1,30 +1,35 @@
-.background-header-forms .vs-popup--content {
-    max-height: 86vh !important;
-}
-
-.normal-forms .vs-popup--title {
+.forms-popup .vs-popup {
     border-radius: 0px !important;
-    padding: 0px !important;
 }
 
-.normal-forms .vs-popup--title h3 {
+.forms-popup .vs-popup--header {
+    padding-top: 14px;
+    height: 3rem;
+    border-radius: 0 !important;
+    background-color: #fff !important;
+}
+
+.forms-popup .vs-popup--title {
+    border-radius: 0px !important;
+}
+
+.forms-popup .vs-popup--title h3 {
+    @extend .size-base, .color-dark-700, .font-bold, .bg-dark-50;
     text-align: center !important;
-    width: 80% !important;
-    text-transform: capitalize !important;
+    text-transform: uppercase !important;
 }
 
-.normal-forms .vs-popup--close {
-    padding: 8px !important;
-    margin-right: 21px !important;
-}
-
-.normal-forms .vs-popup--content {
-    max-height: 87vh !important;
-}
-
-.vs-popup--close {
-    background-color: #cecece !important;
-    font-size: 32px;
+.forms-popup .vs-popup--close {
+    padding: 6.6px !important;
+    margin-top: 16px !important;
     border-radius: 0px !important;
-    padding: 4px !important;
+    margin-right: 15px !important;
+    @extend .h1, .color-dark-900, .font-bold;
+    background-color: #d2d2d2 !important;
+}
+
+.forms-popup .vs-popup--content {
+    padding: 0 !important;
+    margin-top: 27px !important;
+    height: 88% !important;
 }

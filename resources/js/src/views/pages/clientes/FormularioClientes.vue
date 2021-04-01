@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="normal-forms solicitud-propiedades background-header-forms forms-popups-85"
+      class="forms-popup"
       fullscreen
       close="cancelar"
       :title="title"
@@ -11,22 +11,17 @@
       <!--inicio cliente-->
       <!--datos del titular y beneficiarios-->
       <div class="flex flex-wrap px-2">
-        <div class="w-full pt-3 pb-3 px-2">
-          <h3 class="text-xl">
-            <feather-icon
-              icon="UserCheckIcon"
-              class="mr-2"
-              svgClasses="w-5 h-5"
-            />Información del Cliente
-          </h3>
-          <div class="mt-3">
+        <div class="w-full px-2">
+          Información del Cliente
+
+          <div class="hidden">
             <label class="text-sm opacity-75 font-bold uppercase text-primary"
               >Seleccione el estado actual del cliente</label
             >
             <vs-switch
               style="width: 95px"
               color="success"
-              class="font-bold mt-2"
+              class="font-bold"
               icon-pack="feather"
               v-model="form.status_cliente"
             >

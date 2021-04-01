@@ -142,12 +142,6 @@
     color: #666666 !important;
 }
 
-.bg-seccion-forms {
-    background-color: #e8e8e8;
-    color: #303030 !important;
-    font-weight: 600 !important;
-}
-
 .default_color {
     background-color: #c1c1c1 !important;
     color: #303030 !important;
@@ -163,10 +157,6 @@
 
 /* -------------------------------------------------------------------------- */
 /*                          fin de estilos de botones                         */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                 title forms                                */
 /* -------------------------------------------------------------------------- */
 
 /* Tamaño del scroll */
@@ -207,139 +197,6 @@
     margin-right: auto;
 }
 
-.vs-popup--content {
-    max-height: 77vh !important;
-}
-
-.vs-popup--header {
-    background-color: #fff !important;
-    border-radius: 0;
-    padding: 5px 0 5px 0 !important;
-}
-
-.big-forms .vs-popup--close {
-    margin-top: -60px !important;
-    margin-right: 12px !important;
-}
-
-.reportes_lista .vs-popup--title h3 {
-    border-bottom: 0px !important;
-}
-
-.big-forms .vs-popup--title h3 {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    text-align: center !important;
-    width: 50% !important;
-    border-bottom: 2px solid #cecece !important;
-    padding-bottom: 10px !important;
-    color: rgba(var(--vs-primary), 1) !important;
-    text-transform: capitalize !important;
-    font-size: 18px !important;
-    font-weight: 550 !important;
-}
-
-.vs-popup--title h3:before {
-    display: block;
-    width: 65px;
-    height: 65px;
-    margin: 0 auto 10px auto !important;
-}
-
-.background-header-forms .vs-popup--content {
-    max-height: 86vh !important;
-}
-
-.background-header-forms .vs-popup--title h3 {
-    padding: 10px 0px 10px 0px !important;
-    width: 100% !important;
-    background-color: #e8e8e8 !important;
-    border: none !important;
-}
-
-.background-header-forms .vs-popup--close {
-    margin-right: 12px !important;
-}
-
-.inline-header-forms .vs-popup--content {
-    max-height: 86vh !important;
-}
-
-.inline-header-forms .vs-popup--title h3 {
-    margin-top: -5px !important;
-    padding-bottom: 3px !important;
-}
-
-.inline-header-forms .vs-popup--title h3:before {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-}
-
-.inline-header-forms .vs-popup--close {
-    margin-top: -5px !important;
-    margin-right: 12px !important;
-}
-
-.inline-header-forms.vs-popup--title h3:before {
-    vertical-align: middle;
-    padding-right: 10px !important;
-}
-
-.searcher_clientes .vs-popup--title h3:before {
-    vertical-align: middle;
-    padding-right: 10px !important;
-    content: url("../../../../../resources/assets/images/browse-system.svg");
-}
-
-.searcher_terrenos .vs-popup--title h3:before {
-    vertical-align: middle;
-    padding-right: 10px !important;
-    content: url("../../../../../resources/assets/images/browse-system.svg");
-}
-
-.roles .vs-popup--title h3:before {
-    content: url("../../../../../resources/assets/images/roles.svg");
-}
-
-.usuarios .vs-popup--title h3:before {
-    content: url("../../../../../resources/assets/images/users.svg");
-}
-
-.planes_venta_form .vs-popup--title h3:before {
-    content: url("../../../../../resources/assets/images/tags.svg");
-}
-
-.consultar_cfdi .vs-popup--title {
-    text-align: center !important;
-}
-
-.consultar_cfdi .vs-popup--close {
-    margin-top: 15px !important;
-    margin-right: 12px !important;
-}
-
-.pagos_forms .vs-popup--title h3 {
-    padding-bottom: 0px !important;
-    border-bottom: 0px !important;
-}
-
-.pagos_forms .vs-popup--title h3:before {
-    width: 80px;
-    height: 80px;
-    margin-top: -13px !important;
-    content: url("../../../../../resources/assets/images/cash_register.svg");
-}
-
-.pagos_forms .vs-popup--close {
-    margin-top: -65px !important;
-    margin-right: 12px !important;
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                 title forms                                */
-/* -------------------------------------------------------------------------- */
-
 .texto-importante {
     color: rgba(var(--vs-danger), 1) !important;
     font-weight: 600;
@@ -368,71 +225,6 @@
 
 .con-vs-dialog {
     z-index: 62005 !important;
-}
-
-/*default size for small devices*/
-.forms-popups-cancelar_cementerio {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups-pagos {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups-75 {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups-50 {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups-55 {
-    .vs-popup {
-        width: 85% !important;
-    }
-}
-
-.forms-popups-100 {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups-65 {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups-85 {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups-90 {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.forms-popups {
-    .vs-popup {
-        width: 100% !important;
-    }
-}
-
-.vs-popup--background {
-    background: rgba(0, 0, 0, 0.5);
 }
 
 [dir] .vs__dropdown-toggle {
@@ -590,24 +382,10 @@
     line-height: 32px;
 }
 
-/*pdfs de los reportes de los modulos*/
-/*.pdfs_modulos .vs-popup--header,
-.pdfs_modulos .vs-popup--footer {
-    display: none !important;
-}
-*/
-.forms-popups-pagos .vs-popup--content {
-    max-height: 80vh !important;
-}
-
 .iframe_viewer {
     max-height: 100vh !important;
     min-width: 100% !important;
     border: 1px solid #dae1e7 !important;
-}
-
-.pdfs_modulos .vs-popup--content {
-    max-height: 85vh !important;
 }
 
 .pdfs_modulos {
@@ -794,10 +572,6 @@
 
 /*alturas verticales personalizadas de los content*/
 
-.pagos_forms .vs-popup--content {
-    max-height: 70vh !important;
-}
-
 /**cfdi contenido*/
 .cfdi-contenido {
 }
@@ -808,13 +582,6 @@
 
 /**medias queries para el popup de captura de datos */
 // Extra small devices (portrait phones, less than 576px)
-@media (min-width: 576px) {
-    .forms-popups-50 {
-        .vs-popup {
-            width: 50% !important;
-        }
-    }
-}
 
 // Small devices (landscape phones, less than 768px)
 @media (min-width: 768px) {
@@ -825,58 +592,6 @@
 }
 
 // Large devices (desktops, less than 1200px)
-@media (min-width: 1200px) {
-    .forms-popups-cancelar_cementerio {
-        .vs-popup {
-            width: 1000px !important;
-        }
-    }
-
-    .forms-popups-pagos {
-        .vs-popup {
-            width: 95% !important;
-        }
-    }
-
-    .forms-popups-75 {
-        .vs-popup {
-            width: 75% !important;
-        }
-    }
-
-    .forms-popups-55 {
-        .vs-popup {
-            width: 55% !important;
-        }
-    }
-
-    .forms-popups-65 {
-        .vs-popup {
-            width: 65% !important;
-        }
-    }
-
-    .forms-popups-85 {
-        .vs-popup {
-            width: 85% !important;
-        }
-    }
-
-    .forms-popups {
-        .vs-popup {
-            width: 90% !important;
-        }
-    }
-}
-@media (min-width: 1500px) {
-    .normal-forms .vs-popup--content {
-        min-height: 87vh !important;
-    }
-
-    .pagos_forms .vs-popup--content {
-        min-height: 83vh !important;
-    }
-}
 
 /*tabs*/
 .ul-tabs li {
