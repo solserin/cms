@@ -123,6 +123,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       :max-items="serverOptions.per_page.value"
       :data="clientes"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Clientes Registrados</h3>

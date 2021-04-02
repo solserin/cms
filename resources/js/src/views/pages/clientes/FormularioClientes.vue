@@ -15,9 +15,7 @@
         </div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
-            <div
-              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
-            >
+            <div class="w-full md:w-12/12 lg:w-6/12 xl:w-6/12 px-2 input-text">
               <label class="">
                 Nombre completo
                 <span>(*)</span>
@@ -43,10 +41,8 @@
               </span>
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
-            >
-              <label class="">Fecha de Nacimiento (Año-Mes-Dia)</label>
+            <div class="w-full md:w-6/12 lg:w-3/12 xl:w-3/12 px-2 input-text">
+              <label class="">Fecha Nac. (Año-Mes-Dia)</label>
               <flat-pickr
                 name="fecha_nacimiento"
                 :config="configdateTimePicker"
@@ -64,9 +60,7 @@
               </span>
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-3/12 xl:w-3/12 px-2 input-text">
               <label class="">
                 Género
                 <span class="">(*)</span>
@@ -117,9 +111,7 @@
               </span>
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">
                 Nacionalidad
                 <span class="">(*)</span>
@@ -144,9 +136,7 @@
               }}</span>
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">
                 Ciudad
                 <span>(*)</span>
@@ -170,9 +160,7 @@
               </span>
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label>
                 Estado
                 <span class="">(*)</span>
@@ -196,9 +184,7 @@
               </span>
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">Tél. Domicilio</label>
               <vs-input
                 maxlength="25"
@@ -209,9 +195,7 @@
               />
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">Celular</label>
               <vs-input
                 name="celular"
@@ -224,9 +208,7 @@
               />
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">Tél. Extra (Trabajo)</label>
               <vs-input
                 maxlength="25"
@@ -269,9 +251,7 @@
         </div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
-            <div
-              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
-            >
+            <div class="w-full md:w-4/12 lg:w-6/12 xl:w-6/12 px-2 input-text">
               <label class="">
                 RFC
                 <span v-if="datos_fiscales_validacion_computed">(*)</span>
@@ -292,9 +272,7 @@
               </span>
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
-            >
+            <div class="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-2 input-text">
               <label class="">
                 Razón Social
                 <span v-if="datos_fiscales_validacion_computed">(*)</span>
@@ -352,9 +330,7 @@
         </div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">Nombre de un contacto de referencia</label>
               <vs-input
                 name="nombre_contacto"
@@ -365,9 +341,7 @@
                 v-model="form.nombre_contacto"
               />
             </div>
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">Parentesco con el contacto</label>
               <vs-input
                 name="parentesco_contacto"
@@ -380,16 +354,14 @@
               />
             </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
               <label class="">Teléfono del contacto</label>
               <vs-input
                 name="telefono_contacto"
                 data-vv-as=" "
                 maxlength="35"
                 type="text"
-                class="w-full pb-1 pt-1"
+                class="w-full"
                 placeholder="Ingrese un teléfono"
                 v-model.trim="form.telefono_contacto"
               />
