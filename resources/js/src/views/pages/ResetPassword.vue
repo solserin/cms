@@ -37,7 +37,7 @@
                   </p>
                 </div>
                 <form @submit.prevent="submitForm">
-                  <div class="w-full input-text py-2">
+                  <div class="w-full input-text">
                     <label>Correo electrónico <span>(*)</span></label>
                     <vs-input
                       type="email"
@@ -54,7 +54,7 @@
                     <span>{{ errors.first("email") }}</span>
                   </div>
 
-                  <div class="w-full input-text py-2">
+                  <div class="w-full input-text">
                     <label>Nueva Contraseña <span>(*)</span></label>
                     <vs-input
                       icon="icon icon-unlock"
@@ -71,7 +71,7 @@
                     <span>{{ errors.first("password") }}</span>
                   </div>
 
-                  <div class="w-full input-text py-2">
+                  <div class="w-full input-text">
                     <label>Confirmar nueva Contraseña <span>(*)</span></label>
                     <vs-input
                       icon="icon icon-unlock"

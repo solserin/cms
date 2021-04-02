@@ -4,6 +4,7 @@
 
 .forms-popup .vs-popup--header {
     padding-top: 14px;
+    margin-bottom: 28px !important;
     height: 3rem;
     border-radius: 0 !important;
     background-color: #fff !important;
@@ -14,7 +15,7 @@
 }
 
 .forms-popup .vs-popup--title h3 {
-    @extend .size-base, .color-dark-700, .font-bold, .bg-dark-50;
+    @extend .h5, .color-dark-700, .font-medium, .bg-dark-50;
     text-align: center !important;
     text-transform: uppercase !important;
 }
@@ -29,7 +30,53 @@
 }
 
 .forms-popup .vs-popup--content {
-    padding: 0 !important;
-    margin-top: 27px !important;
     height: 88% !important;
+    padding: 0 1.5rem 0 1.5rem !important;
 }
+
+/*textos forms*/
+.form-group {
+    position: relative !important;
+    border: 1px solid #e6eaed !important;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+
+    &:not(:first-child) {
+        margin-top: 2rem;
+    }
+    &:first-child {
+        margin-top: 0.5rem;
+    }
+}
+
+.title-form-group {
+    @extend .h5, .color-copy, .font-medium;
+    position: relative !important;
+    margin-top: -2.3rem !important;
+    background-color: #fff !important;
+    padding: 0 1rem 0 1rem !important;
+    width: fit-content !important;
+}
+
+.form-group-content {
+    position: relative !important;
+    padding-top: 0.5rem;
+}
+
+.bottom-buttons-section {
+    padding: 1.5rem;
+    text-align: right;
+    .text-advice {
+        padding: 0 0 1rem 0;
+        @extend .size-base, .color-copy;
+        .ojo-advice {
+            @extend .font-medium, .color-danger-900;
+        }
+    }
+}
+
+.popup-85 .vs-popup {
+    width: 85% !important;
+}
+
+/*Fin textos forms*/

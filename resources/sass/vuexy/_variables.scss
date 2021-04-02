@@ -143,6 +143,12 @@ $black_map: (
 );
 
 $theme-background: #f8f8f8;
+
+/*bg theme*/
+.theme-background {
+    background-color: $theme-background !important;
+}
+
 $content-color: #{map-get($dark_map, "600")};
 .color-copy {
     color: $content-color;

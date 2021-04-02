@@ -1,489 +1,424 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup"
+      class="forms-popup popup-85"
       fullscreen
       close="cancelar"
       :title="title"
       :active.sync="showVentana"
       ref="formulario"
     >
-      <!--inicio cliente-->
-      <!--datos del titular y beneficiarios-->
-      <div class="flex flex-wrap px-2">
-        <div class="w-full px-2">
-          Información del Cliente
-
-          <div class="hidden">
-            <label class="text-sm opacity-75 font-bold uppercase text-primary"
-              >Seleccione el estado actual del cliente</label
+      <!--Datos de contacto-->
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Datos de contacto</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
             >
-            <vs-switch
-              style="width: 95px"
-              color="success"
-              class="font-bold"
-              icon-pack="feather"
-              v-model="form.status_cliente"
+              <label class="">
+                Nombre completo
+                <span>(*)</span>
+              </label>
+
+              <vs-input
+                ref="nombre_cliente"
+                name="nombre"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="85"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese el nombre del cliente"
+                v-model="form.nombre"
+              />
+              <span class="">
+                {{ errors.first("nombre") }}
+              </span>
+              <span class="" v-if="this.errores.nombre">
+                {{ errores.nombre[0] }}
+              </span>
+            </div>
+
+            <div
+              class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
             >
-              <span slot="on">AÚN VIVE</span>
-              <span slot="off">FALLECIDO</span>
-            </vs-switch>
-          </div>
-        </div>
+              <label class="">Fecha de Nacimiento (Año-Mes-Dia)</label>
+              <flat-pickr
+                name="fecha_nacimiento"
+                :config="configdateTimePicker"
+                v-model="form.fecha_nac"
+                placeholder="Seleccione una fecha"
+                class="w-full"
+              />
 
-        <vs-divider />
-        <!--datos del titular-->
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Nombre completo
-            <span class="text-danger text-sm">(*)</span>
-          </label>
+              <span class="">
+                {{ errors.first("fecha_nacimiento") }}
+              </span>
 
-          <vs-input
-            ref="nombre_cliente"
-            name="nombre"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="85"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del cliente"
-            v-model="form.nombre"
-          />
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("nombre") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">
-              {{ errores.nombre[0] }}
-            </span>
-          </div>
-        </div>
+              <span class="" v-if="this.errores.fecha_nac">
+                {{ errores.fecha_nac[0] }}
+              </span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Fecha de Nacimiento (Año-Mes-Dia)</label
-          >
-          <flat-pickr
-            name="fecha_nacimiento"
-            :config="configdateTimePicker"
-            v-model="form.fecha_nac"
-            placeholder="Seleccione una fecha"
-            class="w-full my-1"
-          />
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("fecha_nacimiento") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.fecha_nac">
-              {{ errores.fecha_nac[0] }}
-            </span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            <span>Género</span>
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="generos"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.genero"
-            class="pb-1 pt-1"
-            v-validate:genero_computed.immediate="'required'"
-            name="genero"
-            data-vv-as=" "
-          >
-            <div slot="no-options">Seleccione una opción</div>
-          </v-select>
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("genero") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores['genero.value']"
-              >{{ errores["genero.value"][0] }}</span
+            <div
+              class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
             >
-          </div>
-        </div>
+              <label class="">
+                Género
+                <span class="">(*)</span>
+              </label>
+              <v-select
+                :options="generos"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="form.genero"
+                class="w-full"
+                v-validate:genero_computed.immediate="'required'"
+                name="genero"
+                data-vv-as=" "
+              >
+                <div slot="no-options">Seleccione una opción</div>
+              </v-select>
+              <span class="">
+                {{ errors.first("genero") }}
+              </span>
+              <span class="" v-if="this.errores['genero.value']">{{
+                errores["genero.value"][0]
+              }}</span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Domicilio Completo
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="direccion"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="150"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Domicilio Completo"
-            v-model="form.direccion"
-          />
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("direccion") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.direccion">
-              {{ errores.direccion[0] }}
-            </span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            <span>Nacionalidad</span>
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="nacionalidades"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.nacionalidad"
-            class="pb-1 pt-1"
-            v-validate:nacionalidad_computed.immediate="'required'"
-            name="nacionalidades_id"
-            data-vv-as=" "
-          >
-            <div slot="no-options">Seleccione una opción</div>
-          </v-select>
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("nacionalidades_id") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores['nacionalidad.value']"
-              >{{ errores["nacionalidad.value"][0] }}</span
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
             >
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Ciudad
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="ciudad"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="45"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese la ciudad"
-            v-model="form.ciudad"
-          />
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("ciudad") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.ciudad">
-              {{ errores.ciudad[0] }}
-            </span>
-          </div>
-        </div>
+              <label class="">
+                Domicilio Completo
+                <span>(*)</span>
+              </label>
+              <vs-input
+                name="direccion"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="150"
+                type="text"
+                class="w-full"
+                placeholder="Domicilio Completo"
+                v-model="form.direccion"
+              />
+              <span class="">
+                {{ errors.first("direccion") }}
+              </span>
+              <span class="" v-if="this.errores.direccion">
+                {{ errores.direccion[0] }}
+              </span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Estado
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="estado"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="45"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el estado"
-            v-model="form.estado"
-          />
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("estado") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.estado">
-              {{ errores.estado[0] }}
-            </span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Tél. Domicilio</label>
-          <vs-input
-            maxlength="25"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el teléfono del domicilio"
-            v-model.trim="form.telefono"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Celular</label>
-          <vs-input
-            name="celular"
-            data-vv-as=" "
-            maxlength="25"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese un número de celular"
-            v-model.trim="form.celular"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Tél. Extra (Trabajo)</label
-          >
-          <vs-input
-            maxlength="25"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese un teléfono extra, del trabajo por ejemplo."
-            v-model="form.telefono_extra"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Correo Electrónico</label>
-          <vs-input
-            name="email"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'email'"
-            maxlength="85"
-            type="email"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el email"
-            v-model.trim="form.email"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first("email") }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.email">
-              {{ errores.email[0] }}
-            </span>
-          </div>
-        </div>
-
-        <!--fin de datos del titular-->
-
-        <vs-divider />
-        <div class="w-full pt-3 pb-3 px-2">
-          <h3 class="text-xl">
-            <feather-icon
-              icon="UserCheckIcon"
-              class="mr-2"
-              svgClasses="w-5 h-5"
-            />Información Fiscal (Para aquellos que facturan)
-          </h3>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            RFC
-            <span
-              v-if="datos_fiscales_validacion_computed"
-              class="text-danger text-sm"
-              >(*)</span
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
             >
-          </label>
-          <vs-input
-            data-vv-as=" "
-            name="rfc"
-            maxlength="13"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="e.j. MELM8305281H0"
-            v-model="form.rfc"
-            v-validate:rfc_validacion_computed="'required'"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first("rfc") }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rfc">
-              {{ errores.rfc[0] }}
-            </span>
-          </div>
-        </div>
+              <label class="">
+                Nacionalidad
+                <span class="">(*)</span>
+              </label>
+              <v-select
+                :options="nacionalidades"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="form.nacionalidad"
+                class="w-full"
+                v-validate:nacionalidad_computed.immediate="'required'"
+                name="nacionalidades_id"
+                data-vv-as=" "
+              >
+                <div slot="no-options">Seleccione una opción</div>
+              </v-select>
+              <span class="">
+                {{ errors.first("nacionalidades_id") }}
+              </span>
+              <span class="" v-if="this.errores['nacionalidad.value']">{{
+                errores["nacionalidad.value"][0]
+              }}</span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Razón Social
-            <span
-              v-if="datos_fiscales_validacion_computed"
-              class="text-danger text-sm"
-              >(*)</span
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
             >
-          </label>
-          <vs-input
-            name="razon_social"
-            data-vv-as=" "
-            v-validate:razon_social_validacion_computed="'required'"
-            maxlength="95"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Mi Empresa SA DE CV"
-            v-model="form.razon_social"
-          />
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("razon_social") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.razon_social"
-              >{{ errores.razon_social[0] }}</span
+              <label class="">
+                Ciudad
+                <span>(*)</span>
+              </label>
+              <vs-input
+                name="ciudad"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="45"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese la ciudad"
+                v-model="form.ciudad"
+              />
+              <span class="">
+                {{ errors.first("ciudad") }}
+              </span>
+              <span class="" v-if="this.errores.ciudad">
+                {{ errores.ciudad[0] }}
+              </span>
+            </div>
+
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
             >
-          </div>
-        </div>
+              <label>
+                Estado
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                name="estado"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="45"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese el estado"
+                v-model="form.estado"
+              />
+              <span class="">
+                {{ errors.first("estado") }}
+              </span>
+              <span class="" v-if="this.errores.estado">
+                {{ errores.estado[0] }}
+              </span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Dirección Fiscal
-            <span
-              v-if="datos_fiscales_validacion_computed"
-              class="text-danger text-sm"
-              >(*)</span
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
             >
-          </label>
-          <vs-input
-            name="direccion_fiscal"
-            data-vv-as=" "
-            v-validate:direccion_fiscal_validacion_computed="'required'"
-            maxlength="95"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Av. Américas #405, Col. Lomas C.P. 30404 Mazatlán, Sin."
-            v-model="form.direccion_fiscal"
-          />
-          <div>
-            <span class="text-danger text-sm">
-              {{ errors.first("direccion_fiscal") }}
-            </span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.direccion_fiscal"
-              >{{ errores.direccion_fiscal[0] }}</span
+              <label class="">Tél. Domicilio</label>
+              <vs-input
+                maxlength="25"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese el teléfono del domicilio"
+                v-model.trim="form.telefono"
+              />
+            </div>
+
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
             >
-          </div>
-        </div>
+              <label class="">Celular</label>
+              <vs-input
+                name="celular"
+                data-vv-as=" "
+                maxlength="25"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese un número de celular"
+                v-model.trim="form.celular"
+              />
+            </div>
 
-        <vs-divider />
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
+            >
+              <label class="">Tél. Extra (Trabajo)</label>
+              <vs-input
+                maxlength="25"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese un teléfono extra, del trabajo por ejemplo."
+                v-model="form.telefono_extra"
+              />
+            </div>
 
-        <div class="w-full pt-3 pb-3 px-2">
-          <h3 class="text-xl">
-            <feather-icon
-              icon="UserCheckIcon"
-              class="mr-2"
-              svgClasses="w-5 h-5"
-            />Referencia de Contacto
-          </h3>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Nombre de un contacto de referencia</label
-          >
-          <vs-input
-            name="nombre_contacto"
-            maxlength="150"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Papá, Mamá, Hermano, Conocido, etc."
-            v-model="form.nombre_contacto"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Parentesco con el contacto</label
-          >
-          <vs-input
-            name="parentesco_contacto"
-            data-vv-as=" "
-            maxlength="45"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Hermano"
-            v-model="form.parentesco_contacto"
-          />
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-sm opacity-75 font-bold"
-            >Teléfono del contacto</label
-          >
-          <vs-input
-            name="telefono_contacto"
-            data-vv-as=" "
-            maxlength="35"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese un teléfono"
-            v-model.trim="form.telefono_contacto"
-          />
-        </div>
-
-        <vs-divider />
-      </div>
-
-      <div class="flex flex-wrap px-2">
-        <div class="w-full px-2">
-          <div class="mt-2">
-            <p class="text-center">
-              <span class="text-danger font-medium">Ojo:</span>
-              Por favor revise la información ingresada, si todo es correcto de
-              click en "Botón de Abajo”.
-            </p>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+            >
+              <label class="">Correo Electrónico</label>
+              <vs-input
+                name="email"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'email'"
+                maxlength="85"
+                type="email"
+                class="w-full"
+                placeholder="Ingrese el email"
+                v-model.trim="form.email"
+              />
+              <span class="">{{ errors.first("email") }}</span>
+              <span class="" v-if="this.errores.email">
+                {{ errores.email[0] }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto"
-      >
-        <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img
-            width="25px"
-            class="cursor-pointer"
-            size="small"
-            src="@assets/images/save.svg"
-          />
-          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
-            >Guardar Datos</span
-          >
-          <span class="texto-btn" v-else>Modificar Datos</span>
-        </vs-button>
-      </div>
+      <!--Datos de contacto-->
 
-      <!--fin cliente-->
+      <!--Datos de facturación-->
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Información Fiscal (Para aquellos que facturan)</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+            >
+              <label class="">
+                RFC
+                <span v-if="datos_fiscales_validacion_computed">(*)</span>
+              </label>
+              <vs-input
+                data-vv-as=" "
+                name="rfc"
+                maxlength="13"
+                type="text"
+                class="w-full"
+                placeholder="e.j. MELM8305281H0"
+                v-model="form.rfc"
+                v-validate:rfc_validacion_computed="'required'"
+              />
+              <span class="">{{ errors.first("rfc") }}</span>
+              <span class="" v-if="this.errores.rfc">
+                {{ errores.rfc[0] }}
+              </span>
+            </div>
+
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+            >
+              <label class="">
+                Razón Social
+                <span v-if="datos_fiscales_validacion_computed">(*)</span>
+              </label>
+              <vs-input
+                name="razon_social"
+                data-vv-as=" "
+                v-validate:razon_social_validacion_computed="'required'"
+                maxlength="95"
+                type="text"
+                class="w-full"
+                placeholder="Ej. Mi Empresa SA DE CV"
+                v-model="form.razon_social"
+              />
+              <span class="">
+                {{ errors.first("razon_social") }}
+              </span>
+              <span class="" v-if="this.errores.razon_social">{{
+                errores.razon_social[0]
+              }}</span>
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+            >
+              <label>
+                Dirección Fiscal
+                <span v-if="datos_fiscales_validacion_computed">(*)</span>
+              </label>
+              <vs-input
+                name="direccion_fiscal"
+                data-vv-as=" "
+                v-validate:direccion_fiscal_validacion_computed="'required'"
+                maxlength="95"
+                type="text"
+                class="w-full"
+                placeholder="Ej. Av. Américas #405, Col. Lomas C.P. 30404 Mazatlán, Sin."
+                v-model="form.direccion_fiscal"
+              />
+              <span class="">
+                {{ errors.first("direccion_fiscal") }}
+              </span>
+              <span class="" v-if="this.errores.direccion_fiscal">{{
+                errores.direccion_fiscal[0]
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Datos de facturación-->
+
+      <!--Datos de referencia-->
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Referencia de Contacto</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
+            >
+              <label class="">Nombre de un contacto de referencia</label>
+              <vs-input
+                name="nombre_contacto"
+                maxlength="150"
+                type="text"
+                class="w-full"
+                placeholder="Ej. Papá, Mamá, Hermano, Conocido, etc."
+                v-model="form.nombre_contacto"
+              />
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
+            >
+              <label class="">Parentesco con el contacto</label>
+              <vs-input
+                name="parentesco_contacto"
+                data-vv-as=" "
+                maxlength="45"
+                type="text"
+                class="w-full"
+                placeholder="Ej. Hermano"
+                v-model="form.parentesco_contacto"
+              />
+            </div>
+
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
+            >
+              <label class="">Teléfono del contacto</label>
+              <vs-input
+                name="telefono_contacto"
+                data-vv-as=" "
+                maxlength="35"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Ingrese un teléfono"
+                v-model.trim="form.telefono_contacto"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Datos de referencia-->
+
+      <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
+        </div>
+
+        <div class="w-full">
+          <vs-button
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="primary"
+            @click="acceptAlert()"
+          >
+            <span class="" v-if="this.getTipoformulario == 'agregar'"
+              >Guardar Datos</span
+            >
+            <span class="" v-else>Modificar Datos</span>
+          </vs-button>
+        </div>
+      </div>
     </vs-popup>
     <Password
       :show="operConfirmar"
@@ -763,7 +698,7 @@ export default {
             icon: "icon-alert-circle",
             color: "danger",
             position: "bottom-right",
-            time: "4000",
+            time: "8000",
           });
           this.cerrarVentana();
         });

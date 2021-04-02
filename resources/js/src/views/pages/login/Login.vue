@@ -42,7 +42,7 @@
                       <h4 class="color-dark-800 h1 font-medium py-2">
                         Inicia sesión
                       </h4>
-                      <div class="w-full py-2 input-text">
+                      <div class="w-full input-text">
                         <label>Correo electrónico <span>(*)</span></label>
                         <vs-input
                           v-validate="'required|email|min:3|max:50'"
@@ -59,7 +59,7 @@
                         />
                         <span>{{ errors.first("email") }}</span>
                       </div>
-                      <div class="w-full py-2 input-text">
+                      <div class="w-full input-text">
                         <label class="">Contraseña <span>(*)</span></label>
                         <vs-input
                           v-validate="'required|min:6|max:25'"
