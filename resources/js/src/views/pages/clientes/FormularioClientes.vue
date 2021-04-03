@@ -708,7 +708,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000",
+              time: "8000",
             });
           } else {
             this.errores = [];
@@ -741,7 +741,8 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000,
+              time: 8000,
+                position: "bottom-right",
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -752,7 +753,8 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000,
+              time: 8000,
+                position: "bottom-right",
             });
           }
           this.$vs.loading.close();
@@ -768,7 +770,8 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000,
+                time: 8000,
+                  position: "bottom-right",
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -779,7 +782,8 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000,
+                time: 8000,
+                  position: "bottom-right",
               });
               //console.log(err.response);
             }
@@ -803,7 +807,8 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000,
+              time: 8000,
+                position: "bottom-right",
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -814,7 +819,8 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000,
+              time: 8000,
+                position: "bottom-right",
             });
           }
           this.$vs.loading.close();
@@ -830,7 +836,8 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000,
+                time: 8000,
+                  position: "bottom-right",
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -841,7 +848,8 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000,
+                time: 8000,
+                  position: "bottom-right",
               });
               //console.log(err.response);
             }

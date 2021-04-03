@@ -28,7 +28,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2">
@@ -158,21 +158,21 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           <vs-td :data="data[indextr].id_user">
             <div class="flex justify-center">
               <img
-                class="cursor-pointer img-btn-20 mx-2"
+                class="cursor-pointer img-btn-18 mx-2"
                 src="@assets/images/edit.svg"
                 title="Modificar"
                 @click="openModificar(data[indextr].id)"
               />
               <img
                 v-if="data[indextr].status == 1"
-                class="img-btn-26 mx-2"
+                class="img-btn-24 mx-2"
                 src="@assets/images/switchon.svg"
                 title="Deshabilitar"
                 @click="deleteCliente(data[indextr].id, data[indextr].nombre)"
               />
               <img
                 v-else
-                class="img-btn-26 mx-2"
+                class="img-btn-24 mx-2"
                 src="@assets/images/switchoff.svg"
                 title="Habilitar"
                 @click="altaCliente(data[indextr].id, data[indextr].nombre)"

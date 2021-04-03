@@ -36,7 +36,7 @@
       <div class="vx-card__actions" v-if="hasAction">
         <slot name="actions">
           <div
-            class="vx-card__action-buttons"
+            class="vx-card__action-buttons px-2"
             v-if="(actionButtons || collapseAction || refreshContentAction || removeCardAction) && !codeToggler"
           >
             <span v-if="actionButtons || collapseAction">
@@ -68,16 +68,13 @@
               v-if="actionButtons || collapseAction"
             />
             -->
-            <span v-if="actionButtons || refreshContentAction">
-              <img
-                width="18px"
-                src="@assets/images/refresh.svg"
+           
+               <feather-icon icon="RefreshCwIcon"
                 @click="refreshcard"
                 :class="{rotate180: !isContentCollapsed}"
-                class="ml-6 cursor-pointer"
-                title="Resetear filtros"
-              />
-            </span>
+                title="Resetear filtros" 
+                v-if="actionButtons || refreshContentAction"
+                />
 
             <!--<feather-icon
               @click="refreshcard"
