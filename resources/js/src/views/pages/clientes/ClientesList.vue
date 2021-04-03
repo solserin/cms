@@ -33,7 +33,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         <div class="flex flex-wrap">
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2">
             <div class="w-full input-text pb-2">
-              <label class="text-sm opacity-75">Mostrar</label>
+              <label class="">Mostrar</label>
               <v-select
                 :options="mostrarOptions"
                 :clearable="false"
@@ -45,7 +45,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </div>
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2">
             <div class="w-full input-text pb-2">
-              <label class="text-sm opacity-75">Estado</label>
+              <label class="">Estado</label>
               <v-select
                 :options="estadosOptions"
                 :clearable="false"
@@ -57,7 +57,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </div>
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2">
             <div class="w-full input-text pb-2">
-              <label class="text-sm opacity-75">Filtrar Específico</label>
+              <label class="">Filtrar Específico</label>
               <v-select
                 :options="filtrosEspecificos"
                 :clearable="false"
@@ -69,7 +69,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </div>
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2">
             <div class="w-full input-text pb-2">
-              <label class="text-sm opacity-75">{{
+              <label class="">{{
                 this.filtroEspecifico.label
               }}</label>
 
@@ -98,7 +98,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </div>
           <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
             <div class="w-full input-text">
-              <label class="text-sm opacity-75">Nombre del Cliente</label>
+              <label class="">Nombre del Cliente</label>
               <vs-input
                 class="w-full"
                 icon="search"
@@ -389,7 +389,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000,
+                time: 8000,
               });
             }
           }
@@ -451,7 +451,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000,
+              time: 8000,
             });
           } else {
             this.$vs.notify({
@@ -460,7 +460,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 5000,
+              time: 8000,
             });
           }
         })
@@ -502,7 +502,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000,
+              time: 8000,
             });
           } else {
             this.$vs.notify({
@@ -511,7 +511,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 5000,
+              time: 8000,
             });
           }
         })

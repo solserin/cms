@@ -1,73 +1,86 @@
 <template>
   <div>
-    <div class="flex flex-wrap">
-      <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
-        <vs-button
-          color="success"
-          size="small"
-          class="w-full ml-auto"
-          @click="verFormulario('agregar')"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Registrar Usuario</span>
-        </vs-button>
-      </div>
+    <div class="w-full text-right">
+      <vs-button
+        class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="verFormulario('agregar')"
+      >
+        <span>Registrar Usuario</span>
+      </vs-button>
     </div>
 
-    <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
+    <div class="pt-6 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
       <vx-card
         no-radius
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 mb-4 px-2">
-            <label class="text-sm opacity-75">Mostrar</label>
-            <v-select
-              :options="mostrarOptions"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="mostrar"
-              class="mb-4 sm:mb-0"
-            />
-          </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 mb-4 px-2">
-            <label class="text-sm opacity-75">Estado</label>
-            <v-select
-              :options="estadosOptions"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="estado"
-              class="mb-4 md:mb-0"
-            />
-          </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-4/12 mb-4 px-2">
-            <label class="text-sm opacity-75">Roles</label>
-            <v-select
-              :options="rolesOptions"
-              :clearable="false"
-              :dir="$vs.rtl ? 'rtl' : 'ltr'"
-              v-model="roles"
-              class="mb-4 md:mb-0"
-            />
-          </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2">
-            <div class="w-full px-2">
-              <h3 class="text-base font-semibold my-3">
-                <feather-icon icon="UserIcon" class="mr-2" svgClasses="w-5 h-5" />Filtrar por Nombre del Titular
-              </h3>
+          <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2">
+            <div class="w-full input-text">
+              <label class="">Mostrar</label>
+              <v-select
+                :options="mostrarOptions"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="mostrar"
+                class="w-full"
+              />
             </div>
-            <label class="text-sm opacity-75">Nombre</label>
-            <vs-input
-              class="w-full"
-              icon="search"
-              placeholder="Filtrar por nombre"
-              v-model="nombre"
-              v-on:keyup.enter="get_data(1)"
-              v-on:blur="get_data(1,'blur')"
-            />
+          </div>
+
+          <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2">
+            <div class="w-full input-text">
+              <label class="">Estado</label>
+              <v-select
+                :options="estadosOptions"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="estado"
+                class="w-full"
+              />
+            </div>
+          </div>
+
+          <div class="w-full md:w-12/12 lg:w-4/12 xl:w-4/12 px-2">
+            <div class="w-full input-text">
+              <label class="">Roles</label>
+              <v-select
+                :options="rolesOptions"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="roles"
+                class="w-full"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap">
+          <div class="w-full px-2 py-4">
+            <h3 class="size-base">
+              <feather-icon
+                icon="UserIcon"
+                class="mr-2"
+                svgClasses="w-5 h-5"
+              />Filtrar por Nombre del Usuario
+            </h3>
+          </div>
+          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
+            <div class="w-full input-text">
+              <label class="">Nombre del usuario</label>
+              <vs-input
+                class="w-full"
+                icon="search"
+                placeholder="Filtrar por nombre"
+                v-model="nombre"
+                v-on:keyup.enter="get_data(1)"
+                v-on:blur="get_data(1, 'blur')"
+              />
+            </div>
           </div>
         </div>
       </vx-card>
@@ -82,6 +95,7 @@
       :max-items="serverOptions.per_page.value"
       :data="users"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Usuarios registrados</h3>
@@ -95,42 +109,52 @@
         <vs-th>Rol</vs-th>
         <vs-th>Acciones</vs-th>
       </template>
-      <template slot-scope="{data}">
+      <template slot-scope="{ data }">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-          <vs-td :data="data[indextr].id_user">{{data[indextr].id_user}}</vs-td>
-          <vs-td :data="data[indextr].nombre">{{data[indextr].nombre}}</vs-td>
-          <vs-td :data="data[indextr].email">{{data[indextr].email}}</vs-td>
+          <vs-td :data="data[indextr].id_user">
+            <span class="font-bold">
+              {{ data[indextr].id_user }}
+            </span>
+          </vs-td>
+          <vs-td :data="data[indextr].nombre">{{ data[indextr].nombre }}</vs-td>
+          <vs-td :data="data[indextr].email">{{ data[indextr].email }}</vs-td>
           <vs-td :data="data[indextr].genero">
-            <p v-if="data[indextr].genero==1">Hombre</p>
+            <p v-if="data[indextr].genero == 1">Hombre</p>
             <p v-else>Mujer</p>
           </vs-td>
           <vs-td :data="data[indextr].estado">
-            <p v-if="data[indextr].estado==1" class="text-success">Activo</p>
-            <p v-else class="text-danger">Sin Acceso</p>
+            <p v-if="data[indextr].estado == 1">
+              Activo <span class="dot-success"></span>
+            </p>
+            <p v-else>Sin Acceso <span class="dot-warning"></span></p>
           </vs-td>
-          <vs-td :data="data[indextr].rol">{{data[indextr].rol}}</vs-td>
+          <vs-td :data="data[indextr].rol">{{ data[indextr].rol }}</vs-td>
           <vs-td :data="data[indextr].id_user">
-            <div class="flex flex-start">
+            <div class="flex justify-center">
               <img
-                class="cursor-pointer img-btn ml-auto mr-3"
+                class="cursor-pointer img-btn-18 mx-2"
                 src="@assets/images/edit.svg"
                 title="Modificar"
                 @click="openModificar(data[indextr].id_user)"
               />
               <img
-                v-if="data[indextr].estado==1"
-                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                v-if="data[indextr].estado == 1"
+                class="img-btn-24 mx-2"
                 src="@assets/images/switchon.svg"
                 title="Deshabilitar"
-                @click="deleteUsuario(data[indextr].id_user,data[indextr].nombre)"
+                @click="
+                  deleteUsuario(data[indextr].id_user, data[indextr].nombre)
+                "
               />
 
               <img
                 v-else
-                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                class="img-btn-24 mx-2"
                 src="@assets/images/switchoff.svg"
                 title="Habilitar"
-                @click="habilitarUsuario(data[indextr].id_user,data[indextr].nombre)"
+                @click="
+                  habilitarUsuario(data[indextr].id_user, data[indextr].nombre)
+                "
               />
             </div>
           </vs-td>
@@ -138,7 +162,12 @@
       </template>
     </vs-table>
     <div>
-      <vs-pagination v-if="ver" :total="this.total" v-model="actual" class="mt-8"></vs-pagination>
+      <vs-pagination
+        v-if="ver"
+        :total="this.total"
+        v-model="actual"
+        class="mt-8"
+      ></vs-pagination>
     </div>
 
     <formularioUsuarios
@@ -169,7 +198,7 @@ import usuarios from "@services/Usuarios";
 import {
   mostrarOptions,
   estadosOptions,
-  rolesOptions
+  rolesOptions,
 } from "@/VariablesGlobales";
 import vSelect from "vue-select";
 
@@ -177,21 +206,21 @@ export default {
   components: {
     "v-select": vSelect,
     Password,
-    formularioUsuarios
+    formularioUsuarios,
   },
   watch: {
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       this.get_data(this.actual);
     },
-    mostrar: function(newValue, oldValue) {
+    mostrar: function (newValue, oldValue) {
       this.get_data(1);
     },
-    estado: function(newVal, previousVal) {
+    estado: function (newVal, previousVal) {
       this.get_data(1);
     },
-    roles: function(newValue, oldValue) {
+    roles: function (newValue, oldValue) {
       this.get_data(1);
-    }
+    },
   },
   data() {
     return {
@@ -224,10 +253,10 @@ export default {
         per_page: "",
         status: "",
         rol_id: "",
-        nombre: ""
+        nombre: "",
       },
       /**user id para bajas y altas */
-      user_id: ""
+      user_id: "",
     };
   },
   methods: {
@@ -261,14 +290,14 @@ export default {
       this.serverOptions.nombre = this.nombre;
       usuarios
         .getUsuarios(this.serverOptions)
-        .then(res => {
+        .then((res) => {
           this.users = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.ver = true;
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
@@ -281,7 +310,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 8000,
               });
             }
           }
@@ -290,17 +319,17 @@ export default {
     get_roles() {
       usuarios
         .getRoles()
-        .then(res => {
+        .then((res) => {
           this.rolesOptions = [];
           //le agrego todos los roles
           this.rolesOptions.push({ label: "Todos", value: "" });
-          res.data.data.forEach(element => {
+          res.data.data.forEach((element) => {
             /**AGREGO LOS DEMAS ROLES */
             this.rolesOptions.push(element);
           });
           this.roles = { label: "Todos", value: "" };
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     handleSearch(searching) {},
     handleChangePage(page) {},
@@ -322,11 +351,11 @@ export default {
     delete_usuario() {
       this.$vs.loading();
       let datos = {
-        user_id: this.user_id
+        user_id: this.user_id,
       };
       usuarios
         .delete_usuario(datos)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           this.get_data(this.actual);
           if (res.data == 1) {
@@ -336,7 +365,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 4000
+              time: 8000,
             });
           } else {
             this.$vs.notify({
@@ -345,11 +374,11 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "primary",
-              time: 4000
+              time: 8000,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -361,7 +390,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 8000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -381,11 +410,11 @@ export default {
     habilitar_usuario() {
       this.$vs.loading();
       let datos = {
-        user_id: this.user_id
+        user_id: this.user_id,
       };
       usuarios
         .habilitar_usuario(datos)
-        .then(res => {
+        .then((res) => {
           this.get_data(this.actual);
           this.$vs.loading.close();
           if (res.data == 1) {
@@ -395,7 +424,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 4000
+              time: 8000,
             });
           } else {
             this.$vs.notify({
@@ -404,11 +433,11 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "primary",
-              time: 4000
+              time: 8000,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -420,7 +449,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 8000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -440,11 +469,11 @@ export default {
     verFormulario(tipo) {
       this.tipoFormulario = tipo;
       this.verFormularioUsuarios = true;
-    }
+    },
   },
   created() {
     this.get_roles();
     this.get_data(this.actual);
-  }
+  },
 };
 </script>

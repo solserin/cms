@@ -1,245 +1,261 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups usuarios big-forms"
+      class="forms-popup popup-80"
       close="cancel"
       :title="title"
       :active.sync="showVentana"
       ref="usuarios"
     >
-      <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2 pb-4">
-        <h3 class="text-xl">
-          <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />
+      <!--Datos del usuario-->
+      <div class="form-group">
+        <div class="title-form-group">
           <span>Información del Usuario</span>
-        </h3>
-      </div>
-      <vs-divider />
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full   xl:w-4/12 px-2 input-text">
+              <label class="">
+                Nombre
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                ref="nombre"
+                name="Nombre"
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese el nombre del usuario"
+                v-model="form.nombre"
+              />
+              <span class="">{{ errors.first("Nombre") }}</span>
+              <span class="" v-if="this.errores.nombre">{{
+                errores.nombre[0]
+              }}</span>
+            </div>
+            <div class="w-full md:w-6/12  xl:w-4/12 px-2 input-text">
+              <label class="">
+                Rol
+                <span class="">(*)</span>
+              </label>
+              <v-select
+                :options="rolesOptions"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="roles"
+                class="w-full"
+              />
+              <span class="" v-if="this.errores.rol_id">{{
+                errores.rol_id[0]
+              }}</span>
+            </div>
+            <div class="w-full md:w-6/12  xl:w-4/12 px-2 input-text">
+              <label class="">
+                Género
+                <span class="">(*)</span>
+              </label>
+              <v-select
+                :options="generosOptions"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="genero"
+                class="w-full"
+              />
+              <span class="" v-if="this.errores.genero">{{
+                errores.genero[0]
+              }}</span>
+            </div>
 
-      <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Nombre
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            ref="nombre"
-            name="Nombre"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.nombre"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Nombre') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.nombre">{{errores.nombre[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Rol
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="rolesOptions"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="roles"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rol_id">{{errores.rol_id[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Género
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="generosOptions"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="genero"
-            class="mb-4 sm:mb-0 pb-1 pt-1"
-          />
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.genero">{{errores.genero[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Usuario (email)
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="Usuario (email)"
-            data-vv-validate-on="blur"
-            v-validate="'required|email'"
-            type="email"
-            class="w-full pb-1 pt-1"
-            placeholder="Correo electrónico del usuario"
-            v-model="form.usuario"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Usuario (email)') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.usuario">{{errores.usuario[0]}}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Password
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            name="Password"
-            type="password"
-            class="w-full pb-1 pt-1"
-            placeholder="Contraseña del usuario"
-            v-model="form.password"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Password') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.password">{{errores.password[0]}}</span>
-          </div>
-        </div>
+            <div class="w-full  lg:w-12/12 xl:w-4/12 px-2 input-text">
+              <label class="">
+                Usuario (email)
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                name="Usuario (email)"
+                data-vv-validate-on="blur"
+                v-validate="'required|email'"
+                type="email"
+                class="w-full"
+                placeholder="Correo electrónico del usuario"
+                v-model="form.usuario"
+              />
 
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Repetir Password
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            name="Repetir Password"
-            type="password"
-            class="w-full pb-1 pt-1"
-            placeholder="Repita la contraseña"
-            v-model="form.repetir"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('Repetir Password') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.repetir">{{errores.repetir[0]}}</span>
-          </div>
-        </div>
-      </div>
+              <span class="">{{ errors.first("Usuario (email)") }}</span>
 
-      <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Dirección</label>
-          <vs-input
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.direccion"
-          />
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 mb-3 px-2">
-          <label class="text-sm opacity-75 font-bold">Teléfono</label>
-          <vs-input
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.telefono"
-          />
-        </div>
+              <span class="" v-if="this.errores.usuario">{{
+                errores.usuario[0]
+              }}</span>
+            </div>
+            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
+              <label class="">
+                Password
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                name="Password"
+                type="password"
+                class="w-full"
+                placeholder="Contraseña del usuario"
+                v-model="form.password"
+              />
 
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-3/12 mb-2 px-2">
-          <label class="text-sm opacity-75 font-bold">Celular</label>
-          <vs-input
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.celular"
-          />
+              <span class="">{{ errors.first("Password") }}</span>
+
+              <span class="" v-if="this.errores.password">{{
+                errores.password[0]
+              }}</span>
+            </div>
+            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
+              <label class="">
+                Repetir Password
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                name="Repetir Password"
+                type="password"
+                class="w-full"
+                placeholder="Repita la contraseña"
+                v-model="form.repetir"
+              />
+
+              <span class="">{{ errors.first("Repetir Password") }}</span>
+
+              <span class="" v-if="this.errores.repetir">{{
+                errores.repetir[0]
+              }}</span>
+            </div>
+
+            <div class="w-full lg:w-12/12 xl:w-4/12 px-2 input-text">
+              <label class="">Dirección</label>
+              <vs-input
+                type="text"
+                class="w-full"
+                placeholder="Ingrese el nombre del usuario"
+                v-model="form.direccion"
+              />
+            </div>
+            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
+              <label class="">Teléfono</label>
+              <vs-input
+                type="text"
+                class="w-full"
+                placeholder="Ingrese el nombre del usuario"
+                v-model="form.telefono"
+              />
+            </div>
+            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
+              <label class="">Celular</label>
+              <vs-input
+                type="text"
+                class="w-full"
+                placeholder="Ingrese el nombre del usuario"
+                v-model="form.celular"
+              />
+            </div>
+          </div>
         </div>
       </div>
+      <!--Datos del usuario-->
 
-      <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2 py-4">
-          <h3 class="text-xl">
-            <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />
-            <span>Seleccione las áreas de responsabilidad de este usuario</span>
-          </h3>
+      <!--Datos del area de trabajo-->
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Responsabilidades de este usuario</span>
         </div>
-        <vs-divider />
-
-        <div
-          class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 py-4"
-          v-for="puesto in puestos"
-          :key="puesto.id"
-        >
-          <vs-checkbox
-            class="bg-gray-headers px-2 py-4"
-            v-model="form.puestos"
-            :vs-value="puesto.id"
-          >
-            <label class="text-sm opacity-75 font-bold dark-text">{{ puesto.puesto }}</label>
-          </vs-checkbox>
-        </div>
-        <div class="w-full px-2 mt-2">
-          <span class="text-danger text-sm" v-if="this.errores.puestos">{{errores.puestos[0]}}</span>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap">
-        <div class="vx-row w-full mt-2 px-2">
-          <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2 py-4">
-            <h3 class="text-xl">
-              <feather-icon icon="UsersIcon" class="mr-2" svgClasses="w-5 h-5" />
-              <span>Información de un Contacto</span>
-            </h3>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
+              v-for="puesto in puestos"
+              :key="puesto.id"
+            >
+              <vs-checkbox
+                class="theme-background p-2"
+                v-model="form.puestos"
+                :vs-value="puesto.id"
+              >
+                <label class="size-small color-copy font-medium">{{ puesto.puesto }}</label>
+              </vs-checkbox>
+            </div>
+            <div class="w-full px-2 mt-2">
+              <span class="" v-if="this.errores.puestos">{{
+                errores.puestos[0]
+              }}</span>
+            </div>
           </div>
         </div>
-        <vs-divider />
-        <div class="w-full mb-2 px-2">
-          <label class="text-sm opacity-75 font-bold">Nombre de un contacto</label>
+      </div>
+      <!--Datos del area de trabajo-->
+
+      <!--Datos del contacto-->
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Información de un Contacto</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+              <div class="w-full  lg:w-12/12 xl:w-4/12 px-2 input-text">
+          <label class="">Nombre de un contacto</label>
           <vs-input
             type="text"
-            class="w-full pb-1 pt-1"
+            class="w-full"
             placeholder="Ingrese el nombre del usuario"
             v-model="form.nombre_contacto"
           />
         </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 mb-2 px-2">
-          <label class="text-sm opacity-75 font-bold">Teléfono del contacto</label>
+        <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
+          <label class="">Teléfono del contacto</label>
           <vs-input
             type="text"
-            class="w-full pb-1 pt-1"
+            class="w-full"
             placeholder="Ingrese el nombre del usuario"
             v-model="form.tel_contacto"
           />
         </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 mb-2 px-2">
-          <label class="text-sm opacity-75 font-bold">Parentesco</label>
+        <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
+          <label class="">Parentesco</label>
           <vs-input
             type="text"
-            class="w-full pb-1 pt-1"
+            class="w-full"
             placeholder="Ingrese el nombre del usuario"
             v-model="form.parentesco_contacto"
           />
         </div>
+          </div>
+        </div>
+      </div>
+      <!--Datos del contacto-->
+
+
+
+
+       <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
+        </div>
+
+        <div class="w-full">
+          <vs-button
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="primary"
+            @click="acceptAlert()"
+          >
+            <span class="" v-if="this.getTipoformulario == 'agregar'"
+              >Crear Usuario</span
+            >
+            <span class="" v-else>Modificar Usuario</span>
+          </vs-button>
+        </div>
       </div>
 
-      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 mt-8 pb-20 px-2 mr-auto ml-auto">
-        <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
-          <span class="texto-btn" v-if="this.getTipoformulario=='agregar'">Guardar Datos</span>
-          <span class="texto-btn" v-else>Modificar Datos</span>
-        </vs-button>
-      </div>
     </vs-popup>
     <Password
       :show="operConfirmar"
@@ -250,14 +266,14 @@
     <ConfirmarDanger
       :show="openConfirmarDanger"
       :callback-on-success="callBackConfirmar"
-      @closeVerificar="openConfirmarDanger=false"
+      @closeVerificar="openConfirmarDanger = false"
       :accion="accionConfirmarDanger"
       :confirmarButton="botonConfirmarDanger"
     ></ConfirmarDanger>
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
       :callback-on-success="callback"
-      @closeVerificar="openConfirmarAceptar=false"
+      @closeVerificar="openConfirmarAceptar = false"
       :accion="'He revisado la información y quiero registrar a este usuario'"
       :confirmarButton="'Guardar Usuario'"
     ></ConfirmarAceptar>
@@ -277,25 +293,25 @@ export default {
     "v-select": vSelect,
     Password,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_usuario: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["usuarios"].$el.querySelector(".vs-icon").onclick = () => {
           this.cancel();
@@ -315,7 +331,7 @@ export default {
           this.get_usuarioById(this.get_usuario_id);
         }
       }
-    }
+    },
   },
   data() {
     return {
@@ -348,9 +364,9 @@ export default {
         celular: "",
         nombre_contacto: "",
         tel_contacto: "",
-        parentesco_contacto: ""
+        parentesco_contacto: "",
       },
-      errores: []
+      errores: [],
     };
   },
   computed: {
@@ -360,7 +376,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -368,7 +384,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_usuario_id: {
       get() {
@@ -376,23 +392,23 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     get_usuarioById(id_user) {
       this.$vs.loading();
       usuarios
         .get_usuarioById(id_user)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           this.roles = {
             label: res.data[0].rol,
-            value: res.data[0].roles_id
+            value: res.data[0].roles_id,
           };
           this.genero = {
             label: res.data[0].genero_des,
-            value: res.data[0].genero
+            value: res.data[0].genero,
           };
           this.form.user_id = res.data[0].id_user;
           this.form.nombre = res.data[0].nombre;
@@ -407,11 +423,11 @@ export default {
           this.form.tel_contacto = res.data[0].tel_contacto;
           this.form.parentesco_contacto = res.data[0].parentesco;
           /**llenando los puestos */
-          res.data[0].puestos.forEach(element => {
+          res.data[0].puestos.forEach((element) => {
             this.form.puestos.push(element.id);
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
         });
     },
@@ -419,7 +435,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Error",
@@ -428,7 +444,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
             return;
           } else {
@@ -477,28 +493,28 @@ export default {
       this.$vs.loading();
       usuarios
         .getRoles()
-        .then(res => {
+        .then((res) => {
           //le agrego todos los roles
           this.rolesOptions = [];
           this.rolesOptions.push({ label: "Seleccione 1", value: "" });
-          res.data.data.forEach(element => {
+          res.data.data.forEach((element) => {
             /**AGREGO LOS DEMAS ROLES */
             this.rolesOptions.push(element);
           });
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
         });
     },
     get_puestos() {
       usuarios
         .get_puestos()
-        .then(res => {
+        .then((res) => {
           //le agrego todos los roles
           this.puestos = res.data;
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     //funcion que inserta el nuevo rol
     saveUsuario() {
@@ -509,7 +525,7 @@ export default {
       this.form.genero = this.genero.value;
       usuarios
         .add_usuario(this.form)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           this.$vs.notify({
             title: "Agregar Usuarios",
@@ -517,12 +533,12 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 4000
+            time: 4000,
           });
           this.$emit("get_data");
           this.cerrarVentana();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -534,7 +550,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               this.$vs.notify({
@@ -544,7 +560,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "danger",
                 position: "bottom-right",
-                time: "4000"
+                time: "4000",
               });
               /**error de validacion */
               this.errores = err.response.data.error;
@@ -561,7 +577,7 @@ export default {
       this.form.genero = this.genero.value;
       usuarios
         .update_usuario(this.form)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading();
           this.$vs.notify({
             title: "Modificar Usuarios",
@@ -569,12 +585,12 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 4000
+            time: 4000,
           });
           this.$emit("get_data");
           this.cerrarVentana();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -586,7 +602,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -597,7 +613,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "danger",
                 position: "bottom-right",
-                time: "4000"
+                time: "4000",
               });
               this.errores = err.response.data.error;
             }
@@ -607,7 +623,7 @@ export default {
 
     closeChecker() {
       this.operConfirmar = false;
-    }
-  }
+    },
+  },
 };
 </script>
