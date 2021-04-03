@@ -7,6 +7,7 @@
 @import "vuexy/cards";
 @import "vuexy/tables";
 @import "vuexy/popup-forms";
+@import "vuexy/roles";
 
 /*dots*/
 @mixin dot {
@@ -75,38 +76,7 @@
     color: rgba(var(--vs-primary), 1) !important;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                roles estilos                               */
-/* -------------------------------------------------------------------------- */
-.roles .vs-collapse-item--header {
-    background-color: rgba(var(--vs-primary), 1) !important;
-    color: #fff !important;
-    font-size: 1em !important;
-    font-weight: 500 !important;
-}
 
-.roles .vs-collapse-item--header div {
-    text-transform: uppercase !important;
-}
-
-.roles .modulos {
-    background-color: #f8fafb !important;
-    border: 1px solid #cecece !important;
-    font-weight: normal;
-    font-size: 1.2em;
-    /*background-color: #cecece !important;*/
-    color: #303030 !important;
-}
-
-.roles .secciones {
-    color: #303030 !important;
-}
-
-.total_etiquetas {
-    text-transform: capitalize !important;
-    font-weight: 600;
-    font-size: 1.3em !important;
-}
 
 /* -------------------------------------------------------------------------- */
 /*                               tablas de datos                              */

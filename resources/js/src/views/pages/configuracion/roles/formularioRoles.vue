@@ -1,85 +1,105 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-75 roles big-forms"
+      class="forms-popup popup-80"
       close="cancel"
       :title="title"
       :active.sync="showVentana"
       ref="roles"
     >
-      <div class="w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12 px-2 pb-4">
-        <h3 class="text-xl">
-          <feather-icon icon="SettingsIcon" svgClasses="w-5 h-5" />
-          <span>Caracteríticas del Rol</span>
-        </h3>
-      </div>
-      <vs-divider />
-
-      <div class="flex flex-wrap">
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Nombre del Rol
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            data-vv-as=" "
-            ref="nombre"
-            name="nombre_rol"
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el nombre del rol"
-            v-model="form.rol"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first('nombre_rol') }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.rol">{{errores.rol[0]}}</span>
+      <!--Nombre del rol-->
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Rol de usuario</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full px-2 input-text">
+              <label class="">
+                Nombre del Rol
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                data-vv-as=" "
+                ref="nombre"
+                name="nombre_rol"
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Ingrese el nombre del rol"
+                v-model="form.rol"
+              />
+              <span class="">{{ errors.first("nombre_rol") }}</span>
+              <span class="" v-if="this.errores.rol">{{ errores.rol[0] }}</span>
+            </div>
           </div>
         </div>
+      </div>
+      <!--Nombre del rol-->
 
-        <div class="w-full px-2">
-          <div v-for="seccion in modulos" :key="seccion.id">
-            <p class="font-medium py-2 capitalize font-bold">sección de {{seccion.seccion}}</p>
-
-            <div class="modulos my-2 py-2" v-for="modulo in seccion.modulos" :key="modulo.id">
+      <!--Permisos del rol-->
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Permisos en el sistema</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div v-for="seccion in modulos" :key="seccion.id" class="w-full">
               <div
-                :class="['flex flex-wrap',es_agrupador(modulo)==true?'text-primary text-center':'']"
+                class="size-small uppercase font-medium color-black-900 px-2 py-1"
               >
-                <div class="w-full font-medium" v-if="es_agrupador(modulo)==true">{{modulo.modulo}}</div>
+                {{ seccion.seccion }}
+                <vs-divider />
+              </div>
+              <div
+                class="w-full"
+                v-for="modulo in seccion.modulos"
+                :key="modulo.id"
+              >
                 <div
-                  v-else
-                  class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 font-medium"
+                  v-if="es_agrupador(modulo) == false"
+                  class="flex flex-wrap theme-background mb-4 py-4 px-4 rounded-lg"
                 >
-                  <div class="ml-1">{{modulo.modulo}}</div>
-                  <vs-checkbox
-                    ref="permisos_modulo"
-                    color="success"
-                    class="capitalize text-base font-medium mt-2 permiso"
-                    v-model="form.modulos"
-                    :vs-value="modulo.id"
-                  >Seleccionar Todos</vs-checkbox>
-                </div>
-                <div class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2">
-                  <div class="flex flex-wrap">
-                    <ul
-                      class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 p-2"
-                      v-for="permiso in modulo.permisos"
-                      :key="permiso.id"
+                  <div class="md:w-3/12">
+                    <div class="pb-2 size-base font-medium color-copy">
+                      {{ modulo.modulo }}
+                    </div>
+                    <vs-checkbox
+                      ref="permisos_modulo"
+                      color="success"
+                      class="size-small font-medium color-copy py-2"
+                      v-model="form.modulos"
+                      :vs-value="modulo.id"
+                      >Todos los permisos</vs-checkbox
                     >
-                      <li>
-                        <label class="capitalize text-base font-medium">{{ permiso.permiso }}</label>
-                        <vs-switch
-                          ref="permiso"
-                          color="success"
-                          v-model="form.permisos"
-                          :vs-value="permiso.id"
-                        />
-                      </li>
-                    </ul>
                   </div>
+                  <div class="w-full md:w-9/12">
+                    <div class="flex flex-wrap">
+                      <!--Permisos del modulo-->
+                      <ul
+                        v-for="permiso in modulo.permisos"
+                        :key="permiso.id"
+                        class="w-full sm:w-6/12 md:w-6/12 lg:w-4/12 text-center"
+                      >
+                        <li class="px-3 pt-2">
+                          <label
+                            class="text-center size-small font-medium color-copy"
+                            >{{ permiso.permiso }}</label
+                          >
+                          <vs-switch
+                            ref="permiso"
+                            color="primary"
+                            v-model="form.permisos"
+                            :vs-value="permiso.id"
+                            class="mx-auto"
+                          />
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!--Permisos del modulo-->
                 </div>
               </div>
             </div>
@@ -87,12 +107,27 @@
         </div>
       </div>
 
-      <div class="w-full sm:w-12/12 md:w-4/12 lg:w-3/12 xl:w-3/12 mt-8 pb-8 px-2 mr-auto ml-auto">
-        <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img width="25px" class="cursor-pointer" size="small" src="@assets/images/save.svg" />
-          <span class="texto-btn" v-if="this.getTipoformulario=='agregar'">Crear Nuevo Rol</span>
-          <span class="texto-btn" v-else>Modificar Datos</span>
-        </vs-button>
+      <!--Permisos del rol-->
+
+      <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
+        </div>
+
+        <div class="w-full">
+          <vs-button
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="primary"
+            @click="acceptAlert()"
+          >
+            <span class="" v-if="this.getTipoformulario == 'agregar'"
+              >Crear Rol</span
+            >
+            <span class="" v-else>Modificar Rol</span>
+          </vs-button>
+        </div>
       </div>
     </vs-popup>
     <Password
@@ -104,14 +139,14 @@
     <ConfirmarDanger
       :show="openConfirmarDanger"
       :callback-on-success="callBackConfirmar"
-      @closeVerificar="openConfirmarDanger=false"
+      @closeVerificar="openConfirmarDanger = false"
       :accion="accionConfirmarDanger"
       :confirmarButton="botonConfirmarDanger"
     ></ConfirmarDanger>
     <ConfirmarAceptar
       :show="openConfirmarAceptar"
       :callback-on-success="callback"
-      @closeVerificar="openConfirmarAceptar=false"
+      @closeVerificar="openConfirmarAceptar = false"
       :accion="'He revisado la información y quiero registrar este rol'"
       :confirmarButton="'Crear Rol'"
     ></ConfirmarAceptar>
@@ -131,25 +166,25 @@ export default {
     "v-select": vSelect,
     Password,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_rol: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["roles"].$el.querySelector(".vs-icon").onclick = () => {
           this.cancel();
@@ -161,12 +196,12 @@ export default {
         this.get_modulos_permisos();
 
         if (this.getTipoformulario == "agregar") {
-          this.title = "Registrar Nuevo Rol de Usuario";
+          this.title = "Registrar Rol de Usuario";
         } else {
-          this.title = "Modificar Permisos de un Rol";
+          this.title = "Modificar Rol de Usuario";
         }
       }
-    }
+    },
   },
   data() {
     return {
@@ -185,9 +220,9 @@ export default {
         modulos: [],
         permisos: [],
         rol: "",
-        rol_id: ""
+        rol_id: "",
       },
-      errores: []
+      errores: [],
     };
   },
   computed: {
@@ -197,7 +232,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -205,7 +240,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_rol_id_modificar: {
       get() {
@@ -213,23 +248,23 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     get_rol_id(id_rol) {
       this.$vs.loading();
       roles
         .get_rol_id(id_rol)
-        .then(res => {
+        .then((res) => {
           this.form.rol = res.data.data.rol;
           /**llenando los valores de permisos haciendo clicks */
           this.$nextTick(() => {
             let index_permiso = 0;
-            this.modulos.forEach(secciones => {
-              secciones.modulos.forEach(modulo => {
-                modulo.permisos.forEach(permiso => {
-                  res.data.data.permisos.forEach(element => {
+            this.modulos.forEach((secciones) => {
+              secciones.modulos.forEach((modulo) => {
+                modulo.permisos.forEach((permiso) => {
+                  res.data.data.permisos.forEach((element) => {
                     if (permiso.id == element.permisos_id) {
                       /**se remueve el permiso del arreglo y se da el click */
                       this.form.permisos.push(element.permisos_id);
@@ -258,7 +293,7 @@ export default {
 
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
         });
     },
@@ -271,7 +306,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Error",
@@ -280,7 +315,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
             return;
           } else {
@@ -314,15 +349,15 @@ export default {
       this.$nextTick(() => {
         let index_permiso = 0;
         let index_modulo = 0;
-        this.modulos.forEach(secciones => {
-          secciones.modulos.forEach(modulo => {
+        this.modulos.forEach((secciones) => {
+          secciones.modulos.forEach((modulo) => {
             //apagados todos los select all de cada modulo
             if (modulo.url != "") {
               this.$refs["permisos_modulo"][0].$el.querySelector(
                 "input"
               ).checked = false;
             }
-            modulo.permisos.forEach(permiso => {
+            modulo.permisos.forEach((permiso) => {
               this.$refs["permiso"][0].$el.querySelector(
                 "input"
               ).checked = false;
@@ -341,26 +376,26 @@ export default {
       this.$vs.loading();
       roles
         .get_modulos_permisos()
-        .then(res => {
+        .then((res) => {
           this.modulos = res.data;
           this.$nextTick(() => {
             let index_modulo = 0;
             let permiso_index = 0;
-            this.modulos.forEach(secciones => {
-              secciones.modulos.forEach(modulo => {
+            this.modulos.forEach((secciones) => {
+              secciones.modulos.forEach((modulo) => {
                 if (modulo.url != "") {
                   this.$refs["permisos_modulo"][index_modulo].$el.querySelector(
                     "input"
-                  ).onchange = $event => {
+                  ).onchange = ($event) => {
                     /**revisar si se activo el check */
                     this.checarTodosModulo($event, modulo.id);
                   };
                   index_modulo++;
                 }
-                modulo.permisos.forEach(permiso => {
+                modulo.permisos.forEach((permiso) => {
                   this.$refs["permiso"][permiso_index].$el.querySelector(
                     "input"
-                  ).onchange = $event => {
+                  ).onchange = ($event) => {
                     this.updateChecarTodosModulo($event, modulo.id, permiso.id);
                   };
                   permiso_index++;
@@ -373,7 +408,7 @@ export default {
           });
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
         });
     },
@@ -386,9 +421,9 @@ export default {
         let index_modulo = 0;
         if (event.target.checked == true) {
           /**checar si se debe de prender el boton de encender todos setgun si estan todos los permisos de ese modulo activado */
-          this.modulos.forEach(secciones => {
-            secciones.modulos.forEach(modulo => {
-              modulo.permisos.forEach(permiso => {
+          this.modulos.forEach((secciones) => {
+            secciones.modulos.forEach((modulo) => {
+              modulo.permisos.forEach((permiso) => {
                 if (permiso.modulos_id == modulo_id) {
                   if (
                     this.$refs["permiso"][index_permiso].$el.querySelector(
@@ -405,7 +440,7 @@ export default {
                     this.form.modulos.push(modulo_id);
                     this.$refs["permisos_modulo"][
                       index_modulo
-                    ].$el.querySelector("input").onclick = $event => {
+                    ].$el.querySelector("input").onclick = ($event) => {
                       /**revisar si se activo el check */
                       this.checarTodosModulo($event, modulo.id);
                     };
@@ -420,8 +455,8 @@ export default {
           });
         } else {
           /**aqui se apaga el checar modulo a fuerzas este o no prendido*/
-          this.modulos.forEach(secciones => {
-            secciones.modulos.forEach(modulo => {
+          this.modulos.forEach((secciones) => {
+            secciones.modulos.forEach((modulo) => {
               if (modulo.url != "") {
                 if (modulo.id == modulo_id) {
                   this.removeA(this.form.modulos, modulo_id);
@@ -441,9 +476,9 @@ export default {
       /**prendiendo todos los del modulo */
       this.$nextTick(() => {
         let index_permiso = 0;
-        this.modulos.forEach(secciones => {
-          secciones.modulos.forEach(modulo => {
-            modulo.permisos.forEach(permiso => {
+        this.modulos.forEach((secciones) => {
+          secciones.modulos.forEach((modulo) => {
+            modulo.permisos.forEach((permiso) => {
               if (modulo_id == permiso.modulos_id) {
                 this.removeA(this.form.permisos, permiso.id);
                 /**verificando la casilla */
@@ -487,7 +522,7 @@ export default {
       this.errores = [];
       roles
         .add_roles(this.form)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           this.$vs.notify({
             title: "Crear Roles de Usuario",
@@ -495,12 +530,12 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 4000
+            time: 4000,
           });
           this.$emit("get_data");
           this.cerrarVentana();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -512,7 +547,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               this.$vs.notify({
@@ -523,7 +558,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "danger",
                 position: "bottom-right",
-                time: "12000"
+                time: "12000",
               });
               /**error de validacion */
               this.errores = err.response.data.error;
@@ -539,7 +574,7 @@ export default {
       this.form.rol_id = this.get_rol_id_modificar;
       roles
         .update_rol(this.form)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading();
           this.$vs.notify({
             title: "Modificar Roles",
@@ -547,12 +582,12 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 4000
+            time: 4000,
           });
           this.$emit("get_data");
           this.cerrarVentana();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -564,7 +599,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -575,7 +610,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "danger",
                 position: "bottom-right",
-                time: "4000"
+                time: "4000",
               });
               this.errores = err.response.data.error;
             }
@@ -585,7 +620,7 @@ export default {
 
     closeChecker() {
       this.operConfirmar = false;
-    }
-  }
+    },
+  },
 };
 </script>
