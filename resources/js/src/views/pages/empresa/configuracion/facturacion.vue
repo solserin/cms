@@ -3,161 +3,147 @@
     <div class="flex flex-wrap">
       <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4">
         <vs-card class="cardx card-tarifas" fixedHeight>
-          <div slot="header">
-            <h3>Información Fiscal</h3>
-          </div>
-          <div class="mt-3">
-            <div class="flex flex-wrap">
-              <div class="w-full pb-5 px-2">
-                <h3 class="text-xl">
-                  <feather-icon icon="EditIcon" class="mr-2" svgClasses="w-5 h-5" />Firma Electrónica
-                </h3>
-              </div>
-              <div class="w-full mt-5 px-2 text-center">
-                <span
-                  v-if="this.certificado_llave_capturados"
-                  class="pr-3 pl-3 text-white bg-success uppercase"
-                >el sistema ya tiene registrado una firma electrónica, si desea actualizar los archivos súbalos por favor.</span>
-              </div>
-              <div class="w-full mt-5 px-2 text-center">
-                <span
-                  v-if="this.certificado_llave_validos"
-                  class="pr-3 pl-3 text-white bg-danger"
-                >Seleccione certificado digital (.cer) y llave privada (.key) que desea actualizar</span>
-                <span
-                  v-else
-                  class="pr-3 pl-3 text-white bg-success uppercase"
-                >Certificado (.cer) válido hasta {{fecha_validez}}</span>
-              </div>
-              <div class="w-full my-10">
-                <div class="flex flex-wrap firma-digital">
-                  <div
-                    class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center ml-auto"
+          <!--Datos de la firma-->
+          <div class="form-group">
+            <div class="title-form-group">
+              <span>Certificado digital</span>
+            </div>
+            <div class="form-group-content">
+              <div class="flex flex-wrap">
+                <div
+                  class="w-full md:w-12/12 lg:w-6/12 xl:w-6/12 px-2 input-text text-center firma-digital"
+                >
+                  <label class="">
+                    Certificado Digital (.cer)
+                    <span class="">(*)</span>
+                  </label>
+                  <vs-upload
+                    accept=".cer"
+                    single-upload
+                    ref="uploadCer"
+                    text="Certificado(.cer)"
+                    limit="1"
+                    :headers="requestHeaders"
+                    fileName="certificate"
+                    automatic
+                    action="/empresa/facturacion/validateCER"
+                    @on-success="successCertificate"
+                    @on-error="errorCertificate"
+                    @on-delete="clearCertificate"
+                  />
+                  <span class="" v-show="certificateError"
+                    >No se ha subido archivo de certificado</span
                   >
-                    <label class="text-sm opacity-75 font-semibold">
-                      Certificado Digital (.cer)
-                      <span class="text-danger text-sm">(*)</span>
-                    </label>
-                    <vs-upload
-                      accept=".cer"
-                      single-upload
-                      ref="uploadCer"
-                      text="Certificado(.cer)"
-                      limit="1"
-                      :headers="requestHeaders"
-                      fileName="certificate"
-                      automatic
-                      action="/empresa/facturacion/validateCER"
-                      @on-success="successCertificate"
-                      @on-error="errorCertificate"
-                      @on-delete="clearCertificate"
-                    />
-                    <span
-                      class="text-danger text-sm"
-                      v-show="certificateError"
-                    >No se ha subido archivo de certificado</span>
-                    <div class="mt-2">
-                      <span
-                        class="text-danger text-sm"
-                        v-if="this.errores.nombre_comercial"
-                      >{{errores.nombre_comercial[0]}}</span>
-                    </div>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2 text-center mr-auto"
-                  >
-                    <label class="text-sm opacity-75 font-semibold">
-                      Llave Privada (.key)
-                      <span class="text-danger text-sm">(*)</span>
-                    </label>
-                    <vs-upload
-                      accept=".key"
-                      single-upload
-                      ref="uploadKey"
-                      text="Llave Privada (.key)"
-                      limit="1"
-                      :headers="requestHeaders"
-                      fileName="key"
-                      automatic
-                      action="/empresa/facturacion/validateKEY"
-                      @on-success="successKey"
-                      @on-error="errorKey"
-                      @on-delete="clearKey"
-                    />
+                  <div class="">
+                    <span class="" v-if="this.errores.nombre_comercial">{{
+                      errores.nombre_comercial[0]
+                    }}</span>
                   </div>
                 </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-                <label class="text-sm opacity-75">
-                  Contraseña
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  name="password"
-                  data-vv-as=" "
-                  v-validate="'required'"
-                  maxlength="35"
-                  type="password"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Contraseña"
-                  v-model="form.password"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('password') }}</span>
+                <div
+                  class="w-full md:w-12/12 lg:w-6/12 xl:w-6/12 px-2 input-text text-center firma-digital"
+                >
+                  <label class="">
+                    Llave Privada (.key)
+                    <span class="">(*)</span>
+                  </label>
+                  <vs-upload
+                    accept=".key"
+                    single-upload
+                    ref="uploadKey"
+                    text="Llave Privada (.key)"
+                    limit="1"
+                    :headers="requestHeaders"
+                    fileName="key"
+                    automatic
+                    action="/empresa/facturacion/validateKEY"
+                    @on-success="successKey"
+                    @on-error="errorKey"
+                    @on-delete="clearKey"
+                  />
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger text-sm"
-                    v-if="this.errores.password"
-                  >{{errores.password[0]}}</span>
+                <div class="w-full py-6 px-2 text-center">
+                  <div
+                    v-if="this.certificado_llave_capturados"
+                    class="size-base color-success-900"
+                  >
+                    El sistema ya tiene registrado una firma electrónica, si
+                    desea actualizar los archivos súbalos por favor.
+                  </div>
+                  <div
+                    v-if="this.certificado_llave_validos"
+                    class="size-base color-copy"
+                  >
+                    Seleccione certificado digital (.cer) y llave privada (.key)
+                    que desea actualizar.
+                  </div>
+                  <div v-else class="size-base color-success-900">
+                    Certificado (.cer) válido hasta {{ fecha_validez }}
+                  </div>
                 </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
-                  Repetir Contraseña
-                  <span class="text-danger text-sm">(*)</span>
-                </label>
-                <vs-input
-                  type="password"
-                  name="passwordRepetir"
-                  data-vv-as=" "
-                  v-validate="'required'"
-                  maxlength="35"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Repetir Contraseña"
-                  v-model="form.passwordRepetir"
-                />
-                <div>
-                  <span class="text-danger text-sm">{{ errors.first('passwordRepetir') }}</span>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+                >
+                  <label class="">
+                    Contraseña
+                    <span class="">(*)</span>
+                  </label>
+                  <vs-input
+                    name="password"
+                    data-vv-as=" "
+                    v-validate="'required'"
+                    maxlength="35"
+                    type="password"
+                    class="w-full"
+                    placeholder="Contraseña"
+                    v-model="form.password"
+                  />
+                  <span class="">{{ errors.first("password") }}</span>
+                  <span class="" v-if="this.errores.password">{{
+                    errores.password[0]
+                  }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger text-sm"
-                    v-if="this.errores.passwordRepetir"
-                  >{{errores.passwordRepetir[0]}}</span>
+                <div
+                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+                >
+                  <label class="">
+                    Repetir Contraseña
+                    <span class="">(*)</span>
+                  </label>
+                  <vs-input
+                    type="password"
+                    name="passwordRepetir"
+                    data-vv-as=" "
+                    v-validate="'required'"
+                    maxlength="35"
+                    class="w-full"
+                    placeholder="Repetir Contraseña"
+                    v-model="form.passwordRepetir"
+                  />
+                  <span class="">{{ errors.first("passwordRepetir") }}</span>
+                  <span class="" v-if="this.errores.passwordRepetir">{{
+                    errores.passwordRepetir[0]
+                  }}</span>
                 </div>
               </div>
             </div>
           </div>
-          <vs-divider />
+          <!--Datos de la firma-->
 
-          <div>
-            <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
-                <p class="text-sm">
-                  <span class="text-danger font-medium">Ojo:</span>
-                  Aquí puedes modificar la información necesaria para poder emitir facturas electrónicas.
-                </p>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <vs-button
-                  size="small"
-                  class="ml-auto"
-                  color="success"
-                  icon="add_circle_outline"
-                  @click="mandarModificar()"
-                >Actualizar Firma Electrónica</vs-button>
-              </div>
+          <div class="bottom-buttons-section">
+            <div class="text-advice">
+              <span class="ojo-advice">Ojo:</span>
+              Por favor revise la información ingresada, si todo es correcto de
+              click en el "Botón de Abajo”.
+            </div>
+            <div class="w-full">
+              <vs-button
+                class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+                color="primary"
+                @click="mandarModificar()"
+              >
+                <span>Actualizar Firma Electrónica</span>
+              </vs-button>
             </div>
           </div>
         </vs-card>
@@ -172,27 +158,27 @@ import empresa from "@services/empresa";
 import { tr } from "date-fns/locale";
 export default {
   components: {
-    "v-select": vSelect
+    "v-select": vSelect,
   },
   props: {
     datos: {
       type: Object,
       required: true,
-      default: {}
+      default: {},
     },
     erroresForm: {
       type: Object,
       required: true,
-      default: {}
-    }
+      default: {},
+    },
   },
   watch: {
-    datos: function(newValue, oldValue) {
+    datos: function (newValue, oldValue) {
       this.mostrarDatos();
-    }
+    },
   },
   computed: {
-    certificado_llave_capturados: function() {
+    certificado_llave_capturados: function () {
       if (this.form.cerPath != null && this.form.keyPath != null) {
         return true;
       } else {
@@ -200,7 +186,7 @@ export default {
       }
     },
 
-    certificado_llave_validos: function() {
+    certificado_llave_validos: function () {
       if (this.form.certificateFile != null && this.form.keyFile != null) {
         return false;
       } else {
@@ -208,7 +194,7 @@ export default {
       }
     },
     //decide si es posbile mandar el form  para actualizar
-    validar_certificado_actualizar: function() {
+    validar_certificado_actualizar: function () {
       if (!this.certificado_llave_capturados) {
         if (!this.certificado_llave_validos) {
           return true;
@@ -221,7 +207,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     errores: {
       get() {
@@ -229,13 +215,13 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       requestHeaders: {
-        Authorization: "Bearer " + localStorage.getItem("accessToken")
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       keyError: false,
       certificateError: false,
@@ -249,8 +235,8 @@ export default {
         cer: "",
         key: "",
         certificateFile: null,
-        keyFile: null
-      }
+        keyFile: null,
+      },
     };
   },
   methods: {
@@ -268,7 +254,7 @@ export default {
     mandarModificar() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Actualizar Datos",
@@ -276,7 +262,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
             return;
           } else {
@@ -288,7 +274,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 4000
+                time: 4000,
               });
               return;
             }
@@ -322,7 +308,7 @@ export default {
         position: "top-center",
         color: "danger",
         title: "Firma Electrónica",
-        text: data.error.message
+        text: data.error.message,
       });
       this.clearCertificate();
     },
@@ -346,14 +332,14 @@ export default {
         position: "top-center",
         color: "danger",
         title: "Firma Electrónica",
-        text: data.error.message
+        text: data.error.message,
       });
       this.clearKey();
     },
     clearKey() {
       this.form.keyFile = null;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

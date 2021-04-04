@@ -27,7 +27,7 @@
         padding: .1rem 1.25rem .1rem 1.25rem;
 
         &.activeChild{
-          background-color: white !important;
+            background-color: #fff;
         }
     }
 }
@@ -39,4 +39,6 @@
 .con-vs-card{
     border-top-right-radius: 0 !important;
     border-top-left-radius: 0 !important;
+    margin: 0 !important;
 }
+
