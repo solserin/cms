@@ -1,22 +1,19 @@
 <template>
   <div>
     <div class="flex flex-wrap">
-      <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4">
-        <vs-card class="cardx card-tarifas" fixedHeight>
-          <div slot="header">
-            <h3>Información de la Funeraria</h3>
-          </div>
-          <div class="mt-3">
+      <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 ">
+        <vs-card class="" fixedHeight>
+         
             <div class="flex flex-wrap">
-              <div class="w-full pb-5 px-2">
-                <h3 class="text-xl">
-                  <feather-icon icon="EditIcon" class="mr-2" svgClasses="w-5 h-5" />Información fiscal de la empresa
+              <div class="w-full ">
+                <h3 class="">
+                  <feather-icon icon="EditIcon" class="" svgClasses="w-5 h-5" />Información fiscal de la empresa
                 </h3>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Nombre comercial
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="nombre_comercial"
@@ -24,24 +21,24 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder=" Nombre comercial de la empresa"
                   v-model="form.nombre_comercial"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('nombre_comercial') }}</span>
+                  <span class="">{{ errors.first('nombre_comercial') }}</span>
                 </div>
-                <div class="mt-2">
+                <div class="">
                   <span
-                    class="text-danger text-sm"
+                    class=""
                     v-if="this.errores.nombre_comercial"
                   >{{errores.nombre_comercial[0]}}</span>
                 </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Razón Social
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="razon_social"
@@ -49,31 +46,31 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder=" Razón social de la empresa"
                   v-model="form.razon_social"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('razon_social') }}</span>
+                  <span class="">{{ errors.first('razon_social') }}</span>
                 </div>
-                <div class="mt-2">
+                <div class="">
                   <span
-                    class="text-danger text-sm"
+                    class=""
                     v-if="this.errores.razon_social"
                   >{{errores.razon_social[0]}}</span>
                 </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
-                <label class="text-sm opacity-75 font-medium">
+                <label class=" ">
                   <span>Régimen Fiscal</span>
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <v-select
                   :options="regimenes"
                   :clearable="false"
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
                   v-model="form.regimen"
-                  class="pb-1 pt-1"
+                  class=""
                   v-validate:validacion_regimen.immediate="'required'"
                   name="regimen"
                   data-vv-as=" "
@@ -82,19 +79,19 @@
                   <div slot="no-options">Seleccione 1 Régimen</div>
                 </v-select>
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('regimen') }}</span>
+                  <span class="">{{ errors.first('regimen') }}</span>
                 </div>
-                <div class="mt-2">
+                <div class="">
                   <span
-                    class="text-danger text-sm"
+                    class=""
                     v-if="this.errores.regimen"
                   >{{errores.regimen[0]}}</span>
                 </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   RFC
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="rfc"
@@ -102,22 +99,22 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="RFC de la empresa"
                   v-model="form.rfc"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('rfc') }}</span>
+                  <span class="">{{ errors.first('rfc') }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
+                <div class="">
+                  <span class="" v-if="this.errores.rfc">{{errores.rfc[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Teléfono
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="telefono"
@@ -125,25 +122,25 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Teléfono(s)"
                   v-model="form.telefono"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('telefono') }}</span>
+                  <span class="">{{ errors.first('telefono') }}</span>
                 </div>
-                <div class="mt-2">
+                <div class="">
                   <span
-                    class="text-danger text-sm"
+                    class=""
                     v-if="this.errores.telefono"
                   >{{errores.telefono[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Correo Electrónico
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="email"
@@ -151,45 +148,45 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Correo Electrónico"
                   v-model="form.email"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('email') }}</span>
+                  <span class="">{{ errors.first('email') }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.email">{{errores.email[0]}}</span>
+                <div class="">
+                  <span class="" v-if="this.errores.email">{{errores.email[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75">Fax</label>
+                <label class="">Fax</label>
                 <vs-input
                   name="fax"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Fax"
                   v-model="form.fax"
                 />
 
-                <div class="mt-2"></div>
+                <div class=""></div>
               </div>
             </div>
-          </div>
+          
           <vs-divider />
-          <div class="mt-3">
+          <div class="">
             <div class="flex flex-wrap">
-              <div class="w-full pb-5 px-2">
-                <h3 class="text-xl">
+              <div class="w-full ">
+                <h3 class="">
                   <feather-icon icon="MapPinIcon" class="mr-2" svgClasses="w-5 h-5" />Ubicación
                 </h3>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Calle
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="calle"
@@ -197,21 +194,21 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Calle"
                   v-model="form.calle"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('calle') }}</span>
+                  <span class="">{{ errors.first('calle') }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.calle">{{errores.calle[0]}}</span>
+                <div class="">
+                  <span class="" v-if="this.errores.calle">{{errores.calle[0]}}</span>
                 </div>
               </div>
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Colonia
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="colonia"
@@ -219,25 +216,25 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Colonia"
                   v-model="form.colonia"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('colonia') }}</span>
+                  <span class="">{{ errors.first('colonia') }}</span>
                 </div>
-                <div class="mt-2">
+                <div class="">
                   <span
-                    class="text-danger text-sm"
+                    class=""
                     v-if="this.errores.colonia"
                   >{{errores.colonia[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Núm. Exterior
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="num_ext"
@@ -245,39 +242,39 @@
                   v-validate="'required'"
                   maxlength="6"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Núm. Exterior"
                   v-model="form.num_ext"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('num_ext') }}</span>
+                  <span class="">{{ errors.first('num_ext') }}</span>
                 </div>
-                <div class="mt-2">
+                <div class="">
                   <span
-                    class="text-danger text-sm"
+                    class=""
                     v-if="this.errores.num_ext"
                   >{{errores.num_ext[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">Núm. Interior</label>
+                <label class="">Núm. Interior</label>
                 <vs-input
                   name="num_int"
                   maxlength="6"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Núm. Interior"
                   v-model="form.num_int"
                 />
 
-                <div class="mt-2"></div>
+                <div class=""></div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   C.P
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="cp"
@@ -285,29 +282,29 @@
                   v-validate="'required'"
                   maxlength="6"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="C.P"
                   v-model="form.cp"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('cp') }}</span>
+                  <span class="">{{ errors.first('cp') }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.cp">{{errores.cp[0]}}</span>
+                <div class="">
+                  <span class="" v-if="this.errores.cp">{{errores.cp[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75 font-medium">
+                <label class=" ">
                   <span>Zona Horaria</span>
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <v-select
                   :options="zonas"
                   :clearable="false"
                   :dir="$vs.rtl ? 'rtl' : 'ltr'"
                   v-model="form.zona"
-                  class="pb-1 pt-1"
+                  class=""
                   v-validate:validacion_zona.immediate="'required'"
                   name="zona_horaria"
                   data-vv-as=" "
@@ -315,17 +312,17 @@
                   <div slot="no-options">Seleccione una Zona</div>
                 </v-select>
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('zona_horaria') }}</span>
+                  <span class="">{{ errors.first('zona_horaria') }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.zona">{{errores.zona[0]}}</span>
+                <div class="">
+                  <span class="" v-if="this.errores.zona">{{errores.zona[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Ciudad
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="ciudad"
@@ -333,22 +330,22 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Ciudad"
                   v-model="form.ciudad"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('ciudad') }}</span>
+                  <span class="">{{ errors.first('ciudad') }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.ciudad">{{errores.ciudad[0]}}</span>
+                <div class="">
+                  <span class="" v-if="this.errores.ciudad">{{errores.ciudad[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">
+                <label class="">
                   Estado
-                  <span class="text-danger text-sm">(*)</span>
+                  <span class="">(*)</span>
                 </label>
                 <vs-input
                   name="estado"
@@ -356,53 +353,53 @@
                   v-validate="'required'"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Estado"
                   v-model="form.estado"
                 />
                 <div>
-                  <span class="text-danger text-sm">{{ errors.first('estado') }}</span>
+                  <span class="">{{ errors.first('estado') }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger text-sm" v-if="this.errores.estado">{{errores.estado[0]}}</span>
+                <div class="">
+                  <span class="" v-if="this.errores.estado">{{errores.estado[0]}}</span>
                 </div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">Cuenta Bancaria</label>
+                <label class="">Cuenta Bancaria</label>
                 <vs-input
                   name="cuenta"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Cuenta Bancaria"
                   v-model="form.cuenta"
                 />
 
-                <div class="mt-2"></div>
+                <div class=""></div>
               </div>
 
               <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75">Clabe</label>
+                <label class="">Clabe</label>
                 <vs-input
                   name="clabe"
                   maxlength="75"
                   type="text"
-                  class="w-full pb-1 pt-1"
+                  class="w-full "
                   placeholder="Clabe Interbancaria"
                   v-model="form.clabe"
                 />
 
-                <div class="mt-2"></div>
+                <div class=""></div>
               </div>
             </div>
           </div>
           <vs-divider />
-          <div>
+          <div class="hidden">
             <div class="flex flex-wrap">
               <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
                 <p class="text-sm">
-                  <span class="text-danger font-medium">Ojo:</span>
+                  <span class="text-danger ">Ojo:</span>
                   Desde este apartado puedes modificar la informacion que aparece en los formatos y reportes de la empresa. Presta atención a los datos que pueden causr conflictos fiscales ya que son tomados en cuenta a la hora de facturar.
                 </p>
               </div>

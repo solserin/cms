@@ -1,16 +1,16 @@
 <template>
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
-      <vs-tab label="FUNERARIA" icon="supervisor_account" class="pb-5"></vs-tab>
-      <vs-tab label="REGISTRO PÚBLICO" icon="gavel"></vs-tab>
-      <vs-tab label="CEMENTERIO" icon="location_on"></vs-tab>
-      <vs-tab label="FIRMA ELECTRÓNICA" icon="attach_file"></vs-tab>
+      <vs-tab label="FUNERARIA"  class=""></vs-tab>
+      <vs-tab label="REGISTRO PÚBLICO" ></vs-tab>
+      <vs-tab label="CEMENTERIO" ></vs-tab>
+      <vs-tab label="FIRMA ELECTRÓNICA" ></vs-tab>
       <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
     </vs-tabs>
-    <div class="tab-content mt-1" v-show="activeTab==0">
+    <div class="" v-show="activeTab==0">
       <Funeraria :datos="datosEmpresa" :erroresForm="erroresFuneraria" @actualizar="actualizar"></Funeraria>
     </div>
-    <div class="tab-content mt-4 pb-3" v-show="activeTab==1">
+    <div class="" v-show="activeTab==1">
       <RegistroPublico
         :datos="datosEmpresa"
         :erroresForm="erroresRegistroPublico"
@@ -18,11 +18,11 @@
       ></RegistroPublico>
     </div>
 
-    <div class="tab-content mt-1" v-show="activeTab==2">
+    <div class=" " v-show="activeTab==2">
       <Cementerio :datos="datosEmpresa" :erroresForm="erroresCementerio" @actualizar="actualizar"></Cementerio>
     </div>
 
-    <div class="tab-content mt-1" v-show="activeTab==3">
+    <div class=" " v-show="activeTab==3">
       <Facturacion :datos="datosEmpresa" :erroresForm="erroresFacturacion" @actualizar="actualizar"></Facturacion>
     </div>
     <Password

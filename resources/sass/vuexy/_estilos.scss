@@ -8,6 +8,7 @@
 @import "vuexy/tables";
 @import "vuexy/popup-forms";
 @import "vuexy/roles";
+@import "vuexy/tabs";
 
 /*dots*/
 @mixin dot {
@@ -564,12 +565,6 @@
 // Large devices (desktops, less than 1200px)
 
 /*tabs*/
-.ul-tabs li {
-    padding: 0px 1px 0px 1px !important;
-}
-.vs-tabs--btn {
-    border: 1px solid #ddd !important;
-}
 
 /*estilos del plan funerario en el servicio funerario*/
 .dato_servicio {
