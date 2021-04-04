@@ -163,7 +163,7 @@
             >
               {{ data[indextr].status_texto }}
             </p>
-            <p v-else class="text-danger">
+            <p v-else class="text-danger-900">
               {{ data[indextr].status_texto }}
             </p>
           </vs-td>
