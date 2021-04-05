@@ -63,6 +63,7 @@
             line-height: .3em !important;
             text-transform: uppercase;
         }
+
     </style>
 </head>
 
@@ -104,15 +105,11 @@
                 <th>
                     {{ __('cementerio/lista_precios.costo_neto') }} ($)
                 </th>
-                <th>
-                    {{ __('cementerio/lista_precios.costo_a_pronto_pago') }} ($)
-                </th>
+
                 <th>
                     {{ __('cementerio/lista_precios.pago_mensual') }} ($)
                 </th>
-                <th>
-                    {{ __('cementerio/lista_precios.descuento_x_pago') }} ($)
-                </th>
+
                 <th>
                     {{ __('cementerio/lista_precios.financiamiento') }}
                 </th>
@@ -128,9 +125,7 @@
                 <td class="py-1">{{ $key+1 }}</td>
                 <td>$ {{number_format($precios['pago_inicial'],2) }}</td>
                 <td>$ {{number_format($precios['costo_neto'],2) }}</td>
-                <td>$ {{number_format($precios['costo_neto_pronto_pago'],2) }}</td>
                 <td>$ {{number_format($precios['pago_mensual'],2) }}</td>
-                <td>$ {{number_format($precios['descuento_x_pago'],2) }}</td>
                 <td>
                     @if (App::isLocale('es'))
                     {{ $precios['tipo_financiamiento'] }}

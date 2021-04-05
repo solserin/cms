@@ -1,48 +1,47 @@
 /*heighs del form segun su break-points*/
 @media (max-width: 1200px) {
     /*para los forms que no son fullscreen*/
-.forms-popup{
-    &:not(&.fullscreen){
-        .vs-popup{
-           height: 100%;
+    .forms-popup {
+        &:not(&.fullscreen) {
+            .vs-popup {
+                height: 100%;
+            }
+            .vs-popup--content {
+                height: 80%;
+            }
         }
-        .vs-popup--content {
-            height: 80%;
-          }
     }
-}
 }
 
 @mixin break-points-content {
     .vs-popup--content {
         height: 80%;
-      }
+    }
     @media (min-width: 576px) {
         .vs-popup--content {
             height: 82%;
-          }
+        }
     }
 
     @media (min-width: 768px) {
         .vs-popup--content {
             height: 84%;
-          }
+        }
     }
 
     @media (min-width: 992px) {
         .vs-popup--content {
             height: 86%;
-          }
+        }
     }
 
     @media (min-width: 1200px) {
         .vs-popup--content {
             height: 90% !important;
-          }
+        }
     }
 }
 /*heighs del form segun su break-points*/
-
 
 .forms-popup .vs-popup {
     border-radius: 0px !important;
@@ -78,7 +77,6 @@
 
 .forms-popup .vs-popup--content {
     padding: 0 1.5rem 0 1.5rem !important;
-   
 }
 
 /*textos forms*/
@@ -122,6 +120,15 @@
     }
 }
 
+.popup-50 .vs-popup {
+    @media (min-width: 768px) {
+        width: 100% !important;
+    }
+
+    @media (min-width: 1200px) {
+        width: 50% !important;
+    }
+}
 
 .popup-80 .vs-popup {
     @media (min-width: 576px) {

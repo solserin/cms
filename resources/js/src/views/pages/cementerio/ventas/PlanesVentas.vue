@@ -47,7 +47,7 @@
                 <div slot="no-options">Seleccione un Tipo de Propiedad</div>
               </v-select>
             </div>
-            <div v-if="propiedades.length > 0" class="w-full px-2">
+            <div v-if="propiedades.length > 0" class="w-full px-2 pt-6">
               <div
                 v-for="(propiedad, index) in propiedades"
                 :key="index"
@@ -68,9 +68,9 @@
                     <vs-th>#</vs-th>
                     <vs-th>Pago Inicial ($)</vs-th>
                     <vs-th>Costo Neto ($)</vs-th>
-                    <vs-th>Costo a Pronto Pago ($)</vs-th>
+
                     <vs-th>Abono Mensual ($)</vs-th>
-                    <vs-th>Desc. x Pago ($)</vs-th>
+
                     <vs-th>Financiamiento</vs-th>
                     <vs-th>Descripción</vs-th>
                     <vs-th>Acciones</vs-th>
@@ -94,22 +94,12 @@
                         >$
                         {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td
                       >
-                      <vs-td :data="data[index_precio].costo_neto"
-                        >$
-                        {{
-                          precio.costo_neto_pronto_pago | numFormat("0,000.00")
-                        }}</vs-td
-                      >
+
                       <vs-td :data="data[index_precio].pago_mensual"
                         >$
                         {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
                       >
-                      <vs-td :data="data[index_precio].costo_neto"
-                        >$
-                        {{
-                          precio.descuento_x_pago | numFormat("0,000.00")
-                        }}</vs-td
-                      >
+
                       <vs-td :data="data[index_precio].tipo_financiamiento">{{
                         precio.tipo_financiamiento
                       }}</vs-td>

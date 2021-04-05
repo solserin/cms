@@ -1,361 +1,169 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-55 precios_financiamientos normal-forms"
+      class="forms-popup popup-50"
       close="cancelar"
       :title="title"
       :active.sync="showVentana"
       ref="formulario"
     >
-      <div class="flex flex-wrap px-2">
-        <div class="w-full pb-3">
-          <img
-            width="60"
-            class="img-center"
-            src="@assets/images/preciotag.svg"
-          />
-          <h3 class="text-xl text-center">
-            Información del plan de Financiamiento
-          </h3>
-        </div>
-
-        <vs-divider />
-        <!--datos del titular-->
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Descripción/Nombre del Plan
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            ref="descripcion"
-            name="descripcion"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="85"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Pago de Contado"
-            v-model="form.descripcion"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("descripcion")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.descripcion">{{
-              errores.descripcion[0]
-            }}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Descripción/Nombre del Plan(Inglés)
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            ref="descripcion_ingles"
-            name="descripcion_ingles"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="85"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Spot Price"
-            v-model="form.descripcion_ingles"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("descripcion_ingles")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.descripcion_ingles"
-              >{{ errores.descripcion_ingles[0] }}</span
-            >
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            <span>Tipo de Financiamiento</span>
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="financiamientos"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.contado_b"
-            class="pb-1 pt-1"
-            name="contado_b"
-            data-vv-as=" "
-          >
-            <div slot="no-options">Seleccione una opción</div>
-          </v-select>
-
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("contado_b")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores['contado_b.value']"
-              >{{ errores["contado_b.value"][0] }}</span
-            >
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            <span>Tipo de Propiedad</span>
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="tipos_propiedad"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.tipo_propiedades_id"
-            v-validate:tipo_propiedad_computed.immediate="'required'"
-            class="pb-1 pt-1"
-            name="tipo_propiedades_id"
-            data-vv-as=" "
-          >
-            <div slot="no-options">Seleccione una opción</div>
-          </v-select>
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("tipo_propiedades_id")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores['tipo_propiedades_id.value']"
-              >{{ errores["tipo_propiedades_id.value"][0] }}</span
-            >
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Pagos/Meses a Pagar
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="financiamiento"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required|integer'"
-            maxlength="2"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. 1"
-            :disabled="es_contado"
-            v-model="form.financiamiento"
-          />
-
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("financiamiento")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.financiamiento"
-              >{{ errores.financiamiento[0] }}</span
-            >
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            $ Costo Neto(Con IVA)
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            ref="costo_neto"
-            name="costo_neto"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="85"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. $1000.00"
-            v-model="form.costo_neto"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("costo_neto")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.costo_neto">{{
-              errores.costo_neto[0]
-            }}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            $ Pago Inicial Mínimo
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="pago_inicial"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required|numeric'"
-            maxlength="6"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. $1000.00"
-            v-model="form.pago_inicial"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("pago_inicial")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.pago_inicial"
-              >{{ errores.pago_inicial[0] }}</span
-            >
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            $ Costo Neto(Con IVA) de Contado
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            ref="costo_neto_financiamiento_normal"
-            name="costo_neto_financiamiento_normal"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'required'"
-            maxlength="6"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. 1000.00"
-            v-model="form.costo_neto_financiamiento_normal"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("costo_neto_financiamiento_normal")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.costo_neto_financiamiento_normal"
-              >{{ errores.costo_neto_financiamiento_normal[0] }}</span
-            >
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            <span>Aplica Descuento x Pronto Pago</span>
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <v-select
-            :options="descuento"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="form.descuento_pronto_pago_b"
-            class="pb-1 pt-1"
-            name="descuento_pronto_pago_b"
-            data-vv-as=" "
-          >
-            <div slot="no-options">Seleccione una opción</div>
-          </v-select>
-
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("descuento_pronto_pago_b")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores['descuento_pronto_pago_b.value']"
-              >{{ errores["descuento_pronto_pago_b.value"][0] }}</span
-            >
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            $ Costo Neto(Con IVA) con Pronto Pago
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-          <vs-input
-            name="costo_neto_pronto_pago"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            v-validate="'numeric'"
-            maxlength="6"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. 1000.00"
-            v-model="form.costo_neto_pronto_pago"
-            :disabled="aplica_descuento"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("costo_neto_pronto_pago")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.costo_neto_pronto_pago"
-              >{{ errores.costo_neto_pronto_pago[0] }}</span
-            >
-          </div>
-        </div>
-
-        <vs-divider />
-      </div>
-
-      <div class="flex flex-wrap px-2">
-        <div class="w-full px-2">
-          <div class="mt-2">
-            <p class="text-center">
-              <span class="text-danger font-medium">Ojo:</span>
-              Por favor revise la información ingresada, si todo es correcto de
-              click en "Botón de Abajo”.
-            </p>
+      <div class="form-group">
+        <div class="title-form-group">Plan de Financiamiento</div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full px-2 input-text">
+              <label class="">
+                Descripción/Nombre del Plan
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                ref="descripcion"
+                name="descripcion"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="85"
+                type="text"
+                class="w-full"
+                placeholder="Ej. Pago de Contado"
+                v-model="form.descripcion"
+              />
+              <span class="">{{ errors.first("descripcion") }}</span>
+              <span class="" v-if="this.errores.descripcion">{{
+                errores.descripcion[0]
+              }}</span>
+            </div>
+            <div class="w-full lg:w-6/12 px-2 input-text">
+              <label class=" ">
+                Tipo de Financiamiento
+                <span class="">(*)</span>
+              </label>
+              <v-select
+                :options="financiamientos"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="form.contado_b"
+                class="w-full"
+                name="contado_b"
+                data-vv-as=" "
+              >
+                <div slot="no-options">Seleccione una opción</div>
+              </v-select>
+              <span class="">{{ errors.first("contado_b") }}</span>
+              <span class="" v-if="this.errores['contado_b.value']">{{
+                errores["contado_b.value"][0]
+              }}</span>
+            </div>
+            <div class="w-full lg:w-6/12 px-2 input-text">
+              <label class=" ">
+                Tipo de Propiedad
+                <span class="">(*)</span>
+              </label>
+              <v-select
+                :options="tipos_propiedad"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="form.tipo_propiedades_id"
+                v-validate:tipo_propiedad_computed.immediate="'required'"
+                class="w-full"
+                name="tipo_propiedades_id"
+                data-vv-as=" "
+              >
+                <div slot="no-options">Seleccione una opción</div>
+              </v-select>
+              <span class="">{{ errors.first("tipo_propiedades_id") }}</span>
+              <span class="" v-if="this.errores['tipo_propiedades_id.value']">{{
+                errores["tipo_propiedades_id.value"][0]
+              }}</span>
+            </div>
+            <div class="w-full lg:w-4/12 px-2 input-text">
+              <label class=" ">
+                Pagos/Meses a Pagar
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                name="financiamiento"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required|integer'"
+                maxlength="2"
+                type="text"
+                class="w-full"
+                placeholder="Ej. 1"
+                :disabled="es_contado"
+                v-model="form.financiamiento"
+              />
+              <span class="">{{ errors.first("financiamiento") }}</span>
+              <span class="" v-if="this.errores.financiamiento">{{
+                errores.financiamiento[0]
+              }}</span>
+            </div>
+            <div class="w-full lg:w-4/12 px-2 input-text">
+              <label class=" ">
+                $ Costo Neto(Con IVA)
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                ref="costo_neto"
+                name="costo_neto"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="85"
+                type="text"
+                class="w-full"
+                placeholder="Ej. $1000.00"
+                v-model="form.costo_neto"
+              />
+              <span class="">{{ errors.first("costo_neto") }}</span>
+              <span class="" v-if="this.errores.costo_neto">{{
+                errores.costo_neto[0]
+              }}</span>
+            </div>
+            <div class="w-full lg:w-4/12 px-2 input-text">
+              <label class=" ">
+                $ Pago Inicial Mínimo
+                <span class="">(*)</span>
+              </label>
+              <vs-input
+                name="pago_inicial"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required|numeric'"
+                maxlength="6"
+                type="text"
+                class="w-full"
+                placeholder="Ej. $1000.00"
+                v-model="form.pago_inicial"
+              />
+              <span class="">{{ errors.first("pago_inicial") }}</span>
+              <span class="" v-if="this.errores.pago_inicial">{{
+                errores.pago_inicial[0]
+              }}</span>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto"
-      >
-        <vs-button
-          class="w-full"
-          @click="acceptAlert()"
-          color="primary"
-          size="small"
-        >
-          <img
-            width="25px"
-            class="cursor-pointer"
-            src="@assets/images/save.svg"
-          />
-          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
-            >Guardar Datos</span
+
+      <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
+        </div>
+
+        <div class="w-full">
+          <vs-button
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="primary"
+            @click="acceptAlert()"
           >
-          <span class="texto-btn" v-else>Modificar Datos</span>
-        </vs-button>
+            <span class="" v-if="this.getTipoformulario == 'agregar'"
+              >Guardar Precio</span
+            >
+            <span class="" v-else>Modificar Precio</span>
+          </vs-button>
+        </div>
       </div>
     </vs-popup>
     <Password
@@ -396,25 +204,25 @@ export default {
     "v-select": vSelect,
     Password,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_precio: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         //cargo nacionalidades
         this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
@@ -426,12 +234,7 @@ export default {
 
         this.form.contado_b = {
           value: 1,
-          label: "Pago de Contado/Uso Inmediato"
-        };
-
-        this.form.descuento_pronto_pago_b = {
-          value: "0",
-          label: "No"
+          label: "Pago de Contado/Uso Inmediato",
         };
 
         (async () => {
@@ -448,7 +251,7 @@ export default {
         })();
       }
     },
-    "form.contado_b": function(newValue, oldValue) {
+    "form.contado_b": function (newValue, oldValue) {
       if (newValue.value == 1) {
         this.form.financiamiento = 1;
       } else {
@@ -457,7 +260,7 @@ export default {
           this.form.financiamiento = this.datosPrecio.financiamiento;
         }
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -466,7 +269,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -474,7 +277,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_precio_id: {
       get() {
@@ -482,25 +285,18 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    tipo_propiedad_computed: function() {
+    tipo_propiedad_computed: function () {
       return this.form.tipo_propiedades_id.value;
     },
-    es_contado: function() {
+    es_contado: function () {
       if (this.form.contado_b.value == 1) {
         return true;
       } else {
         return false;
       }
     },
-    aplica_descuento: function() {
-      if (this.form.descuento_pronto_pago_b.value == 1) {
-        return false;
-      } else {
-        return true;
-      }
-    }
   },
   data() {
     return {
@@ -518,22 +314,22 @@ export default {
       financiamientos: [
         {
           value: "1",
-          label: "Pago de Contado/Uso Inmediato"
+          label: "Pago de Contado/Uso Inmediato",
         },
         {
           value: "0",
-          label: "Pago a Meses/Uso a Futuro"
-        }
+          label: "Pago a Meses/Uso a Futuro",
+        },
       ],
       descuento: [
         {
           value: "1",
-          label: "Si"
+          label: "Si",
         },
         {
           value: "0",
-          label: "No"
-        }
+          label: "No",
+        },
       ],
       tipos_propiedad: [],
       form: {
@@ -541,17 +337,13 @@ export default {
         id_precio_modificar: 0,
         /**datos */
         descripcion: "",
-        descripcion_ingles: "",
         contado_b: {},
         financiamiento: "",
         pago_inicial: "",
         costo_neto: "",
-        costo_neto_financiamiento_normal: "",
-        descuento_pronto_pago_b: {},
-        costo_neto_pronto_pago: "",
-        tipo_propiedades_id: { value: "", label: "Seleccione 1" }
+        tipo_propiedades_id: { value: "", label: "Seleccione 1" },
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
@@ -563,12 +355,12 @@ export default {
         this.tipos_propiedad = [];
         this.tipos_propiedad.push({
           value: "",
-          label: "Seleccione 1"
+          label: "Seleccione 1",
         });
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.tipos_propiedad.push({
             label: "Tipo " + element.tipo,
-            value: element.id
+            value: element.id,
           });
           //la primero opcion
           this.form.tipo_propiedades_id = this.tipos_propiedad[0];
@@ -585,36 +377,22 @@ export default {
         let res = await cementerio.get_precio_by_id(this.get_precio_id);
         this.datosPrecio = res.data;
         this.form.descripcion = this.datosPrecio.descripcion;
-        this.form.descripcion_ingles = this.datosPrecio.descripcion_ingles;
         //actualizo los datos en el formulario
-        this.financiamientos.forEach(element => {
+        this.financiamientos.forEach((element) => {
           if (element.value == this.datosPrecio.contado_b) {
             this.form.contado_b = element;
             this.form.financiamiento = this.datosPrecio.financiamiento;
             return;
           }
         });
-        this.tipos_propiedad.forEach(element => {
+        this.tipos_propiedad.forEach((element) => {
           if (element.value == this.datosPrecio.tipo_propiedades_id) {
             this.form.tipo_propiedades_id = element;
             return;
           }
         });
-        this.form.costo_neto = this.datosPrecio.costo_neto;
-        this.form.pago_inicial = this.datosPrecio.pago_inicial;
-        this.form.costo_neto_financiamiento_normal = this.datosPrecio.costo_neto_financiamiento_normal;
-
-        this.descuento.forEach(element => {
-          if (element.value == this.datosPrecio.descuento_pronto_pago_b) {
-            this.form.descuento_pronto_pago_b = element;
-            return;
-          }
-        });
-        this.form.costo_neto_pronto_pago =
-          this.datosPrecio.descuento_pronto_pago_b == 1
-            ? this.datosPrecio.costo_neto_pronto_pago
-            : "";
-
+        this.form.costo_neto = parseFloat(this.datosPrecio.costo_neto);
+        this.form.pago_inicial = parseFloat(this.datosPrecio.pago_inicial);
         this.$vs.loading.close();
       } catch (error) {
         this.$vs.loading.close();
@@ -625,7 +403,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "4000"
+          time: "4000",
         });
         this.cerrarVentana();
       }
@@ -633,7 +411,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Registro de Precios",
@@ -642,7 +420,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             this.errores = [];
@@ -666,7 +444,7 @@ export default {
       this.$vs.loading();
       cementerio
         .registrar_precio_propiedad(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -675,7 +453,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -686,12 +464,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
@@ -702,7 +480,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -713,7 +491,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
               //console.log(err.response);
             } else if (err.response.status == 409) {
@@ -724,7 +502,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -738,7 +516,7 @@ export default {
       this.$vs.loading();
       cementerio
         .update_precio_propiedad(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -747,7 +525,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -758,12 +536,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             console.log(
               "update_precio_propiedad -> err.response",
@@ -778,7 +556,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -789,7 +567,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
@@ -799,7 +577,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -828,22 +606,18 @@ export default {
       this.form.id_precio_modificar = 0;
       /**datos */
       this.form.descripcion = "";
-      this.form.descripcion_ingles = "";
       this.form.contado_b = {};
       this.form.financiamiento = "";
       this.form.pago_inicial = "";
       this.form.costo_neto = "";
-      this.form.costo_neto_financiamiento_normal = "";
-      this.form.descuento_pronto_pago_b = {};
-      this.form.costo_neto_pronto_pago = "";
       this.form.tipo_propiedades_id = { value: "", label: "Seleccione 1" };
       this.errores = [];
     },
 
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>
