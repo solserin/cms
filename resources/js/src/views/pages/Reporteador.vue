@@ -2,122 +2,94 @@
   <div class="centerx">
     <vs-popup
       :title="HeaderNombre"
-      class="bg-grey-light forms-popups-100 normal-forms pdfs_modulos"
+      class="forms-popup"
       fullscreen
       :active.sync="showChecker"
       ref="formulario"
     >
       <!-- <img style="width:100px;" src="@assets/images/pdf.svg" alt />-->
       <div class="flex flex-wrap">
-        <div class="w-full sm:w-5/5 md:w-2/5 lg:w-1/5 xl:w-1/5 px-2 mb-8">
-          <!--datos de los reportes-->
-          <h1 class="text-base capitalize font-semibold text-black">
-            Formatos Disponibles del Documento
-          </h1>
-          <div class="flex flex-wrap mt-8">
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
-              <label class="text-sm opacity-75 font-semibold">
-                <span>Seleccione 1:</span>
-              </label>
-              <v-select
-                :options="reportesDisponible"
-                v-model="reporteSeleccionado"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                class="pb-1 pt-1"
-                name="vendedor"
-                data-vv-as=" "
-              >
-                <div slot="no-options">Seleccione un reporte</div>
-              </v-select>
-            </div>
-            <!--
-            <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 my-5">
-              <div class="descargar cursor-pointer text-info">
-                Descargar documento
-                <img style="width:30px;" src="@assets/images/pdf.svg" alt />
-              </div>
-            </div>
-            -->
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-6"
-            >
-              <label class="text-sm opacity-75 font-medium"
-                >Nombre destinatario</label
-              >
-              <vs-input
-                name="destinatario"
-                data-vv-as=" "
-                data-vv-validate-on="blur"
-                v-validate="'required'"
-                maxlength="75"
-                type="text"
-                class="w-full pb-1 pt-1"
-                placeholder="Nombre destinatario"
-                v-model="request_datos.destinatario"
-              />
-              <div>
-                <span class="text-danger text-sm">{{
-                  errors.first("destinatario")
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="text-danger text-sm"
-                  v-if="this.errores.destinatario"
-                  >{{ errores.destinatario[0] }}</span
+        <div class="w-full xl:w-3/12 px-2">
+          <div class="form-group">
+            <div class="title-form-group">Formatos del Documento</div>
+            <div class="form-group-content">
+              <div class="flex flex-wrap">
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
                 >
+                  <label class=""> Seleccione 1 </label>
+                  <v-select
+                    :options="reportesDisponible"
+                    v-model="reporteSeleccionado"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    class="w-full"
+                    name="vendedor"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">Seleccione un reporte</div>
+                  </v-select>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+                >
+                  <label class="">Nombre destinatario</label>
+                  <vs-input
+                    name="destinatario"
+                    data-vv-as=" "
+                    data-vv-validate-on="blur"
+                    v-validate="'required'"
+                    maxlength="75"
+                    type="text"
+                    class="w-full"
+                    placeholder="Nombre destinatario"
+                    v-model="request_datos.destinatario"
+                  />
+                  <span class="">{{ errors.first("destinatario") }}</span>
+                  <span class="" v-if="this.errores.destinatario">{{
+                    errores.destinatario[0]
+                  }}</span>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+                >
+                  <label class="">Enviar por Correo</label>
+                  <vs-input
+                    name="email"
+                    data-vv-as=" "
+                    data-vv-validate-on="blur"
+                    v-validate="'required|email'"
+                    maxlength="75"
+                    type="email"
+                    class="w-full"
+                    placeholder="Ingrese el email"
+                    v-model="request_datos.email_address"
+                  />
+                  <span class="">{{ errors.first("email") }}</span>
+                  <span class="" v-if="this.errores.email">{{
+                    errores.email[0]
+                  }}</span>
+                </div>
+                <div
+                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                >
+                  <vs-button
+                    color="success"
+                    class="w-full mt-6"
+                    @click="acceptAlert()"
+                  >
+                    <span class="">Enviar por Correo</span>
+                  </vs-button>
+                </div>
               </div>
-            </div>
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mt-3"
-            >
-              <label class="text-sm opacity-75 font-medium"
-                >Enviar por Correo</label
-              >
-              <vs-input
-                name="email"
-                data-vv-as=" "
-                data-vv-validate-on="blur"
-                v-validate="'required|email'"
-                maxlength="75"
-                type="email"
-                class="w-full pb-1 pt-1"
-                placeholder="Ingrese el email"
-                v-model="request_datos.email_address"
-              />
-              <div>
-                <span class="text-danger text-sm">{{
-                  errors.first("email")
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span class="text-danger text-sm" v-if="this.errores.email">{{
-                  errores.email[0]
-                }}</span>
-              </div>
-            </div>
-
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-6"
-            >
-              <vs-button
-                size="small"
-                color="success"
-                class="w-full my-4"
-                @click="acceptAlert()"
-              >
-                <img
-                  class="cursor-pointer img-btn"
-                  src="@assets/images/gmail.svg"
-                />
-                <span class="texto-btn">Enviar por Correo</span>
-              </vs-button>
             </div>
           </div>
+
+          <!--datos de los reportes-->
+
           <!--fin de datos de los reportes-->
         </div>
-        <div class="w-full sm:w-5/5 md:w-3/5 lg:w-4/5 xl:w-4/5 px-2">
+        <div class="w-full xl:w-9/12 px-2">
           <div class="pdf_layout h-screen bg-grey-light">
             <div class="flex inline-block h-screen bg-grey-light">
               <span
