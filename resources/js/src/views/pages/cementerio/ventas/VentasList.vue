@@ -17,7 +17,6 @@
         <span>Vender Propiedad</span>
       </vs-button>
     </div>
-
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
       <vx-card
         no-radius
@@ -28,7 +27,7 @@
       >
         <div class="flex flex-wrap">
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
             <label class="">Mostrar</label>
             <v-select
@@ -40,7 +39,7 @@
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
             <label class="">Estado</label>
             <v-select
@@ -52,7 +51,7 @@
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
             <label class="">Filtrar Específico</label>
             <v-select
@@ -64,7 +63,7 @@
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
           >
             <label class="">Número de Control</label>
             <vs-input
@@ -153,45 +152,46 @@
           <vs-td :data="data[indextr].ubicacion_texto">{{
             data[indextr].venta_terreno.ubicacion_texto
           }}</vs-td>
+
           <vs-td :data="data[indextr].operacion_status">
-            <p v-if="data[indextr].operacion_status == 1" class="">
+            <p v-if="data[indextr].operacion_status == 0">
               {{ data[indextr].status_texto }}
+              <span class="dot-danger"></span>
             </p>
-            <p
-              v-else-if="data[indextr].operacion_status == 2"
-              class="text-success"
-            >
+            <p v-else-if="data[indextr].operacion_status == 1">
               {{ data[indextr].status_texto }}
+              <span class="dot-warning"></span>
             </p>
-            <p v-else class="text-danger-900">
+            <p v-else-if="data[indextr].operacion_status == 2">
               {{ data[indextr].status_texto }}
+              <span class="dot-success"></span>
             </p>
           </vs-td>
 
           <vs-td :data="data[indextr].id">
             <div class="flex justify-center">
               <img
-                class="cursor-pointer img-btn-20 mx-2"
+                class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
                 title="Expediente"
                 @click="ConsultarVenta(data[indextr].ventas_terrenos_id)"
               />
               <img
-                class="img-btn-18 mx-2"
+                class="img-btn-18 mx-3"
                 src="@assets/images/edit.svg"
                 title="Modificar Contrato"
                 @click="openModificar(data[indextr].ventas_terrenos_id)"
               />
               <img
                 v-if="data[indextr].operacion_status >= 1"
-                class="img-btn-22 ml-2"
+                class="img-btn-22 mx-3"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
                 @click="cancelarVenta(data[indextr].ventas_terrenos_id)"
               />
               <img
                 v-else
-                class="img-btn-22 ml-2"
+                class="img-btn-22 mx-3"
                 src="@assets/images/trash-open.svg"
                 title="Esta venta ya fue cancelada, puede hacer click aquí para consultar"
                 @click="ConsultarVentaAcuse(data[indextr].ventas_terrenos_id)"

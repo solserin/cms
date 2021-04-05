@@ -503,27 +503,15 @@
                       </span>
                     </div>
                     <div class="w-full lg:w-4/12 xl:w-4/12 px-2 input-text">
-                      <label>
-                        Beneficiario {{ index + 1 }} - Teléfono
-                        <span>(*)</span>
-                      </label>
+                      <label> Beneficiario {{ index + 1 }} - Teléfono </label>
                       <vs-input
                         :name="'telefono' + index"
-                        data-vv-as=" "
-                        data-vv-validate-on="blur"
-                        v-validate="''"
                         maxlength="35"
                         type="text"
                         class="w-full"
                         placeholder="Teléfono"
                         v-model="beneficiario.telefono"
                       />
-                      <span>{{ errors.first("telefono" + index) }}</span>
-                      <span
-                        v-if="errores['beneficiarios.' + index + '.telefono']"
-                      >
-                        {{ errores["beneficiarios." + index + ".telefono"][0] }}
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -553,7 +541,7 @@
           <div class="title-form-group">$ Información resumida de la venta</div>
           <div class="form-group-content">
             <div class="flex flex-wrap">
-              <div class="w-full md:w-6/12 px-2">
+              <div class="w-full lg:w-6/12 px-2">
                 <!--checkout-->
                 <div class="flex flex-wrap">
                   <div class="w-full md:w-6/12 input-text px-2">
@@ -652,7 +640,7 @@
                       v-validate="'required|decimal:2|min_value:1'"
                       type="text"
                       class="w-full"
-                      placeholder="$ 0.00"
+                      placeholder=""
                       v-model="form.costo_neto"
                     />
                     <span>{{ errors.first("costo_neto") }}</span>
@@ -703,7 +691,6 @@
                     />
                     <span>{{ errors.first("total_a_pagar") }}</span>
                   </div>
-
                   <div class="w-full md:w-6/12 input-text px-2">
                     <label class=" ">
                       $ Pago Inicial
@@ -726,7 +713,7 @@
                       type="text"
                       class="w-full"
                       v-model="form.pago_inicial"
-                      placeholder="$ 0.00"
+                      placeholder=""
                     />
 
                     <span>{{ errors.first("pago_inicial") }}</span>
@@ -737,24 +724,23 @@
                   </div>
 
                   <div class="w-full input-text px-2">
+                    <label class=" "> Ingrese alguna nota o comentario </label>
                     <vs-textarea
-                      height="200px"
                       :rows="4"
                       ref="nota"
                       type="text"
-                      class="w-full"
-                      placeholder="Ingrese una nota..."
+                      class="w-full h-full"
                       v-model.trim="form.nota"
                     />
                   </div>
                 </div>
                 <!--checkout-->
               </div>
-              <div class="w-full md:w-6/12 px-2">
-                <div class="flex flex-wrap lg:mt-16 sm:hidden">
+              <div class="w-full lg:w-6/12 px-2 lg:mt-16">
+                <div class="flex flex-wrap">
                   <!--Resumen checkout-->
                   <div
-                    class="theme-background p-4 w-full md:w-10/12 mx-auto rounded-lg size-base border-gray-solid-1"
+                    class="theme-background p-4 w-full md:w-10/12 mx-auto rounded-lg size-base border-gray-solid-1 hidden lg:block"
                   >
                     <div class="h5 color-dark-900 pb-6 text-center">
                       Resumen de la venta
@@ -872,7 +858,7 @@
                     cliente para la compra de la propiedad que se ha
                     seleccionado.
                   </div>
-                  <div class="w-full px-2 pt-4 text-center mx-auto">
+                  <div class="w-full px-2 pt-6 text-center mx-auto">
                     <vs-button
                       v-if="!fueCancelada"
                       class="w-full md:w-10/12"
@@ -1497,7 +1483,6 @@ export default {
             this.form.propiedades_id = this.datosAreas.id;
             this.form.tipo_propiedades_id = this.datosAreas.tipo_propiedades_id;
             this.form.ubicacion = this.crear_ubicacion_computed;
-            this.form.costo_neto = this.total_a_pagar_computed;
             /**actualizando los valores de total de venta */
             //fin de actualizar datos de ubicacion
             (async () => {
@@ -1889,9 +1874,12 @@ export default {
         /**beneficairios */
         this.form.beneficiarios = this.datosVenta.beneficiarios;
         this.form.financiamiento = this.datosVenta.financiamiento;
-        this.form.descuento = this.datosVenta.descuento;
+
         this.form.tasa_iva =
           Number(this.datosVenta.tasa_iva) <= 0 ? 16 : this.datosVenta.tasa_iva;
+        this.form.costo_neto = this.datosVenta.costo_neto_calculado;
+        this.form.descuento = this.datosVenta.descuento_neto_calculado;
+
         this.form.pago_inicial = this.datosVenta.pagos_programados[0].monto_programado;
         this.form.nota = this.datosVenta.nota;
 

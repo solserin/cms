@@ -187,13 +187,6 @@ class CementerioController extends ApiController
         }
         /**procede la peticion */
 
-        /**aqui comienzan a gurdar los datos */
-        $subtotal   = $request->subtotal; //sin iva
-        $tasa_iva   = $request->tasa_iva; //sin iva
-        $iva        = $request->impuestos; //solo el iva
-        $descuento  = $request->descuento;
-        $costo_neto = $request->costo_neto;
-
         /**valdiando que cuadren las cantidades de la venta */
         //validaciones directas sin condicionales
         $validaciones = [
@@ -222,11 +215,8 @@ class CementerioController extends ApiController
             /**nuevos datos a requerir */
             'financiamiento'               => '',
             'tasa_iva'                     => 'numeric|required|min:1|max:25',
-            'subtotal'                     => 'numeric|required|min:1',
-            'descuento'                    => 'required|numeric|min:0|max:' . $request->subtotal,
-            'impuestos'                    => 'numeric|required|min:0',
-            'costo_neto'                   => 'numeric|required|min:0',
-            'costo_neto_pronto_pago'       => 'required|min:1|lte:' . $costo_neto,
+            'descuento'                    => '',
+            'costo_neto'                   => 'numeric|required|min:1',
             'pago_inicial'                 => '',
             /**titular_sustituto */
             'titular_sustituto'            => 'required',
@@ -237,9 +227,6 @@ class CementerioController extends ApiController
                 'required',
             ],
             'beneficiarios.*.parentesco'   => [
-                'required',
-            ],
-            'beneficiarios.*.telefono'     => [
                 'required',
             ],
         ];
@@ -258,18 +245,49 @@ class CementerioController extends ApiController
             }
         }
 
+        /**creamos los calculos del total a pagar para desglosar impuestos y pago inicial necesario segun el financiamiento */
+        /**aqui comienzan a gurdar los datos */
+        $tasa_iva_calculos = 0;
+        $tasa_iva_decimal  = 0;
+        if (isset($request->tasa_iva) && isset($request->costo_neto) && isset($request->descuento)) {
+            if ($request->tasa_iva > 0) {
+                $tasa_iva_calculos = ($request->tasa_iva / 100) + 1;
+                $tasa_iva_decimal  = $request->tasa_iva / 100;
+            }
+        } else {
+            return $this->errorResponse('Ingrese IVA, costo neto y descuento.', 409);
+        }
+
+        $tasa_iva   = $request->tasa_iva;
+        $costo_neto = $request->costo_neto;
+        $descuento  = $request->descuento;
+
+        /**total neto a pagar */
+        $total_pagar = $costo_neto - $descuento;
+
+        /**calculando los descuentos para calcular los impuestos por IVA */
+        $subtotal               = $costo_neto / $tasa_iva_calculos;
+        $subtotal_con_descuento = $total_pagar / $tasa_iva_calculos;
+        /**obtengo la cantidad que se le aplica al subototal como descuento para registrar impuestos */
+        $descuento_real_para_impuestos = $subtotal - $subtotal_con_descuento;
+
+        /**calulando los impuestos */
+        $iva = ($subtotal - $descuento_real_para_impuestos) * $tasa_iva_decimal;
+
         /**si pasan estas condicones podemos continuar */
         /**solo en caso de modificaciones */
-
         /**validando el pago inicial */
         if ($request->financiamiento == 1) {
             /**cuando es a contado */
             /**es un solo pago de inicio */
-            $validaciones['pago_inicial'] = 'numeric|required|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
+            $validaciones['pago_inicial'] = 'numeric|required|min:' . $total_pagar . '|max:' . $total_pagar;
         } else {
             //cuando es a credito
-            $validaciones['pago_inicial'] = 'numeric|required|min:' . ($request->costo_neto * .1) . '|max:' . ($request->costo_neto * .7);
+            $validaciones['pago_inicial'] = 'numeric|required|min:' . ($total_pagar * .1) . '|max:' . ($total_pagar * .7);
         }
+
+        /**validando que el descuento no sobrepase el costo neto de la venta */
+        $validaciones['descuento'] = 'numeric|required|min:0|max:' . $costo_neto;
 
         /**validando de manera manual si la ubicacion enviada ya esta registrada y esta activa */
         $ubicacion_enviada = VentasTerrenos::select('ventas_terrenos.id')->join('operaciones', 'operaciones.ventas_terrenos_id', '=', 'ventas_terrenos.id')
@@ -279,7 +297,6 @@ class CementerioController extends ApiController
                 if ($ubicacion_enviada->id != $request->id_venta) {
                     return $this->errorResponse('La ubicación seleccionada ya ha sido vendida.', 409);
                 }
-
             } else {
                 return $this->errorResponse('La ubicación seleccionada ya ha sido vendida.', 409);
             }
@@ -392,7 +409,6 @@ class CementerioController extends ApiController
         }
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
-
         $mensajes = [
             'id_venta.required'     => 'Ingrese un la clave única de la venta para continuar',
             'max'                   => 'verifique la cantidad',
@@ -406,7 +422,6 @@ class CementerioController extends ApiController
             //beneficiarios
             '*.nombre.required'     => 'ingrese este dato',
             '*.parentesco.required' => 'ingrese este dato',
-            '*.telefono.required'   => 'ingrese este dato',
             'lte'                   => 'verifique la cantidad',
             'unique.num_operacion'  => 'Este número de operación ya fue registrado.',
             'pago_inicial.min'      => 'El pago inicial debe ser al menos :min ',
@@ -440,14 +455,12 @@ class CementerioController extends ApiController
             if (
                 $request->financiamiento != $datos_venta['financiamiento'] ||
                 $request->fecha_venta != $datos_venta['fecha_operacion'] ||
-                (round($request->impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
-                    round($request->subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
-                    round($request->costo_neto, 2, PHP_ROUND_HALF_UP) != round($datos_venta['total'], 2, PHP_ROUND_HALF_UP) ||
+                (round($iva, 2, PHP_ROUND_HALF_UP) != round($datos_venta['impuestos'], 2, PHP_ROUND_HALF_UP) ||
+                    round($subtotal, 2, PHP_ROUND_HALF_UP) != round($datos_venta['subtotal'], 2, PHP_ROUND_HALF_UP) ||
+                    round($total_pagar, 2, PHP_ROUND_HALF_UP) != round($datos_venta['total'], 2, PHP_ROUND_HALF_UP) ||
                     ((float) $request->pago_inicial) != (count($datos_venta['pagos_programados']) > 0 ? ((float) $datos_venta['pagos_programados'][0]['monto_programado']) : 0) ||
-                    round($request->descuento, 2, PHP_ROUND_HALF_UP) != round($datos_venta['descuento'], 2, PHP_ROUND_HALF_UP) ||
-                    round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP) != round($datos_venta['costo_neto_pronto_pago'], 2, PHP_ROUND_HALF_UP))
+                    round($descuento_real_para_impuestos, 2, PHP_ROUND_HALF_UP) != round($datos_venta['descuento'], 2, PHP_ROUND_HALF_UP))
             ) {
-
                 if ($datos_venta['total'] > 0) {
                     /**si la venta no fue gratis */
                     if ($datos_venta['pagos_realizados'] > 0) {
@@ -465,10 +478,9 @@ class CementerioController extends ApiController
         }
 
         try {
-            /**bloqueando ubicaciones que estan a la venta
+            /**bloqueando ubicaciones que estan a la venta pero que no están habilitadas en el cementerio
              * UBICACION TIPO-ID-FILA-COLUMNA
              */
-
             $bloqueadas = [
                 /**Propiedad terraza 23 id 55 */
                 '4-55-2-14',
@@ -725,11 +737,11 @@ class CementerioController extends ApiController
                         'empresa_operaciones_id'           => 1, //venta de terrenos
                         'subtotal'                         => $subtotal,
                         'tasa_iva'                         => $tasa_iva,
-                        'descuento'                        => $descuento,
+                        'descuento'                        => $descuento_real_para_impuestos,
                         'impuestos'                        => $iva,
-                        'total'                            => $costo_neto,
+                        'total'                            => $total_pagar,
                         'descuento_pronto_pago_b'          => 1,
-                        'costo_neto_pronto_pago'           => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
+                        'costo_neto_pronto_pago'           => $total_pagar, //paso este dato por defecto pues no se utiliza en la practica
                         'antiguedad_operacion_id'          => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto'                => $request->titular_sustituto,
@@ -786,11 +798,11 @@ class CementerioController extends ApiController
                         'numero_titulo'                    => trim($request->titulo),
                         'subtotal'                         => $subtotal,
                         'tasa_iva'                         => $tasa_iva,
-                        'descuento'                        => $descuento,
+                        'descuento'                        => $descuento_real_para_impuestos,
                         'impuestos'                        => $iva,
-                        'total'                            => $costo_neto,
+                        'total'                            => $total_pagar,
                         'descuento_pronto_pago_b'          => 1,
-                        'costo_neto_pronto_pago'           => round($request->costo_neto_pronto_pago, 2, PHP_ROUND_HALF_UP),
+                        'costo_neto_pronto_pago'           => $total_pagar, //paso este dato por defecto pues no se utiliza en la practica
                         'antiguedad_operacion_id'          => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto'                => $request->titular_sustituto,
@@ -978,14 +990,35 @@ class CementerioController extends ApiController
         $descuento = round($request->descuento, 2, PHP_ROUND_HALF_UP);
         $costo_neto = round($request->costo_neto, 2, PHP_ROUND_HALF_UP);
         $pago_inicial = round($request->pago_inicial, 2, PHP_ROUND_HALF_UP);
-        $total_a_pagar = round($request->total_pagar, 2, PHP_ROUND_HALF_UP);
+        $total_pagar = round($request->total_pagar, 2, PHP_ROUND_HALF_UP);
          */
-        $subtotal      = $request->subtotal; //sin iva
-        $iva           = $request->impuestos; //solo el iva
-        $descuento     = $request->descuento;
-        $costo_neto    = $request->costo_neto;
-        $pago_inicial  = $request->pago_inicial;
-        $total_a_pagar = $request->total_pagar;
+
+        $pago_inicial = $request->pago_inicial;
+
+        /**creamos los calculos del total a pagar para desglosar impuestos y pago inicial necesario segun el financiamiento */
+/**aqui comienzan a gurdar los datos */
+        $tasa_iva_calculos = 0;
+        if (isset($request->tasa_iva) && isset($request->costo_neto) && isset($request->descuento)) {
+            if ($request->tasa_iva > 0) {
+                $tasa_iva_calculos = ($request->tasa_iva / 100) + 1;
+            }
+        } else {
+            return $this->errorResponse('Ingrese IVA, costo neto y descuento.', 409);
+        }
+
+        $tasa_iva = $request->tasa_iva;
+
+        $costo_neto = $request->costo_neto;
+        $descuento  = $request->descuento;
+
+/**total neto a pagar */
+        $total_pagar = $costo_neto - $descuento;
+
+/**calculando los descuentos para calcular los impuestos por IVA */
+        $subtotal               = $costo_neto / $tasa_iva_calculos;
+        $subtotal_con_descuento = $total_pagar / $tasa_iva_calculos;
+/**obtengo la cantidad que se le aplica al subototal como descuento para registrar impuestos */
+        $descuento_real_para_impuestos = $subtotal - $subtotal_con_descuento;
 
         /**valdiando que cuadren las cantidades de la venta */
 
@@ -1016,7 +1049,7 @@ class CementerioController extends ApiController
                     'referencia_pago'    => $referencia_pago_clave . date('Ymd', strtotime($request->fecha_venta)) . '01' . $id_venta, //se crea una referencia para saber a que pago pertenece
                     'fecha_programada'   => $fecha_maxima, //fecha de la venta
                     'conceptos_pagos_id' => 3, //3-pago unico //que concepto de pago es, segun los conceptos de pago, abono, enganche o liquidacion
-                    'monto_programado'   => $costo_neto,
+                    'monto_programado'   => $total_pagar,
                     'operaciones_id'     => $operacion_id,
                     'status'             => 1,
                 ]
@@ -1028,7 +1061,7 @@ class CementerioController extends ApiController
              * segun el porcentaje del pago
              */
 
-            $resto_a_mensualidades = $total_a_pagar - $pago_inicial;
+            $resto_a_mensualidades = $total_pagar - $pago_inicial;
 
             //enganche inicial mandado mas lo descontado para sacar impuestos completos
 
@@ -1069,7 +1102,7 @@ class CementerioController extends ApiController
                     $decimales = $monto_abono - intval($monto_abono);
                     if ($decimales > 0) {
                         /**tiene decimales */
-                        $abono       = ($costo_neto - $request->pago_inicial - (intval($monto_abono) * $request->financiamiento));
+                        $abono       = ($total_pagar - $request->pago_inicial - (intval($monto_abono) * $request->financiamiento));
                         $monto_abono = $abono + intval($monto_abono);
                     }
                 } else {
@@ -1705,6 +1738,12 @@ class CementerioController extends ApiController
                 'total',
                 'descuento_pronto_pago_b',
                 'costo_neto_pronto_pago',
+                DB::raw(
+                    '(NULL) AS costo_neto_calculado'
+                ),
+                DB::raw(
+                    '(NULL) AS descuento_neto_calculado'
+                ),
                 'numero_solicitud',
                 'numero_convenio',
                 'numero_titulo',
@@ -1867,6 +1906,14 @@ class CementerioController extends ApiController
         $datos_cementerio = $this->get_cementerio();
 
         foreach ($resultado as $index_venta => &$venta) {
+
+/**calculando el costo neto y descuento calcuado */
+/**aqui voy*/
+            $tasa_iva_decimal = $venta['tasa_iva'] / 100;
+
+            $venta['costo_neto_calculado']     = round($venta['total'] + ($venta['descuento'] * (1 + $tasa_iva_decimal)), 2, PHP_ROUND_HALF_UP);
+            $venta['descuento_neto_calculado'] = round(($venta['descuento'] * (1 + $tasa_iva_decimal)), 2, PHP_ROUND_HALF_UP);
+
             /**DEFINIENDO EL STATUS DE LA VENTA*/
             if ($venta['operacion_status'] == 0) {
                 $venta['status_texto'] = 'Cancelada';
