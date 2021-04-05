@@ -77,8 +77,6 @@
     color: rgba(var(--vs-primary), 1) !important;
 }
 
-
-
 /* -------------------------------------------------------------------------- */
 /*                               tablas de datos                              */
 /* -------------------------------------------------------------------------- */
@@ -549,17 +547,6 @@
 
 .cfdis-table table * {
     font-size: 13px !important;
-}
-
-/**medias queries para el popup de captura de datos */
-// Extra small devices (portrait phones, less than 576px)
-
-// Small devices (landscape phones, less than 768px)
-@media (min-width: 768px) {
-}
-
-// Medium devices (tablets, less than 992px)
-@media (min-width: 992px) {
 }
 
 // Large devices (desktops, less than 1200px)

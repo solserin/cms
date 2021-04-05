@@ -30,6 +30,58 @@ $grey-light: #dae1e7;
 $white: #fff;
 $black: #22292f;
 
+@for $border from 1 to 3 {
+    .border-primary-solid-#{$border} {
+        border: #{$border}px solid #{$primary};
+    }
+    .border-secondary-solid-#{$border} {
+        border: #{$border}px solid #{$secondary-optional};
+    }
+    .border-success-solid-#{$border} {
+        border: #{$border}px solid #{$success};
+    }
+    .border-danger-solid-#{$border} {
+        border: #{$border}px solid #{$danger};
+    }
+    .border-warning-solid-#{$border} {
+        border: #{$border}px solid #{$warning};
+    }
+    .border-dark-solid-#{$border} {
+        border: #{$border}px solid #{$dark};
+    }
+    .border-black-solid-#{$border} {
+        border: #{$border}px solid #{$black};
+    }
+    .border-gray-solid-#{$border} {
+        border: #{$border}px solid #{$grey};
+    }
+
+    .border-primary-dotted-#{$border} {
+        border: #{$border}px dotted #{$primary};
+    }
+    .border-secondary-dotted-#{$border} {
+        border: #{$border}px dotted #{$secondary-optional};
+    }
+    .border-success-dotted-#{$border} {
+        border: #{$border}px dotted #{$success};
+    }
+    .border-danger-dotted-#{$border} {
+        border: #{$border}px dotted #{$danger};
+    }
+    .border-warning-dotted-#{$border} {
+        border: #{$border}px dotted #{$warning};
+    }
+    .border-dark-dotted-#{$border} {
+        border: #{$border}px dotted #{$dark};
+    }
+    .border-black-dotted-#{$border} {
+        border: #{$border}px dotted #{$black};
+    }
+    .border-gray-dotted-#{$border} {
+        border: #{$border}px dotted #{$grey};
+    }
+}
+
 /*========================================================
         COLOR PRIMARIO CON SUS VARIACIONES
 =========================================================*/
@@ -43,7 +95,7 @@ $primary_map: (
     "600": "#E0B94A",
     "700": "#DCAF30",
     "800": "#CB9F22",
-    "900": "#B18B1E",
+    "900": "#B18B1E"
 );
 
 /*========================================================
@@ -59,7 +111,7 @@ $secondary_optional_map: (
     "600": "#4DA3FF",
     "700": "#3395FF",
     "800": "#1A88FF",
-    "900": "#1A88FF",
+    "900": "#1A88FF"
 );
 
 /*========================================================
@@ -75,7 +127,7 @@ $success_map: (
     "600": "#61DF99",
     "700": "#4ADB8B",
     "800": "#34D67C",
-    "900": "#28C76F",
+    "900": "#28C76F"
 );
 
 /*========================================================
@@ -91,7 +143,7 @@ $danger_map: (
     "600": "#F08788",
     "700": "#EE7677",
     "800": "#EC6566",
-    "900": "#EA5455",
+    "900": "#EA5455"
 );
 
 /*========================================================
@@ -107,7 +159,7 @@ $warning_map: (
     "600": "#FFBC7B",
     "700": "#FFB269",
     "800": "#FFA956",
-    "900": "#FF9F43",
+    "900": "#FF9F43"
 );
 
 /*========================================================
@@ -123,7 +175,7 @@ $dark_map: (
     "600": "#626262",
     "700": "#4B4B4B",
     "800": "#353535",
-    "900": "#1E1E1E",
+    "900": "#1E1E1E"
 );
 
 /*========================================================
@@ -139,7 +191,7 @@ $black_map: (
     "600": "#586A7A",
     "700": "#465461",
     "800": "#343F48",
-    "900": "#22292F",
+    "900": "#22292F"
 );
 
 $theme-background: #f8f8f8;
