@@ -1,155 +1,162 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups big-forms planes_venta_form"
+      class="forms-popup popup-90"
       fullscreen
       title="listado de precios para propiedades en cementerio"
       :active.sync="showVentana"
       ref="planes_cementerio"
     >
-      <div class="flex flex-wrap pb-12 pt-2">
-        <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12">
-          <label class="text-sm opacity-75 font-bold">
-            <span class="uppercase">Filtrar por tipo de propiedad:</span>
-          </label>
-          <v-select
-            :options="propiedades_tipos"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="propiedad_tipo"
-            class="pb-1 pt-1"
-          >
-            <div slot="no-options">Seleccione un Tipo de Propiedad</div>
-          </v-select>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12">
-          <vs-button
-            class="float-right mt-6"
-            size="small"
-            color="success"
-            @click="agregar()"
-          >
-            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Agregar Precios</span>
-          </vs-button>
-          <vs-button
-            class="float-right mr-16 mt-6"
-            size="small"
-            color="primary"
-            @click="
-              openReporte(
-                'Precios x Propiedad (Español)',
-                '/cementerio/lista_precios_pdf/es',
-                ''
-              )
-            "
-          >
-            <img
-              class="cursor-pointer img-btn"
-              src="@assets/images/printer.svg"
-            />
-            <span class="texto-btn">Ver Precios x Propiedad</span>
-          </vs-button>
-        </div>
+      <div class="w-full text-right">
+        <vs-button
+          class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+          color="primary"
+          type="border"
+          @click="
+            openReporte(
+              'Precios x Propiedad (Español)',
+              '/cementerio/lista_precios_pdf/es',
+              ''
+            )
+          "
+        >
+          <span>Imprimir lista de precios</span>
+        </vs-button>
+        <vs-button
+          class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+          color="primary"
+          @click="agregar()"
+        >
+          <span>Agregar Precio</span>
+        </vs-button>
       </div>
 
-      <div v-if="propiedades.length > 0">
-        <div
-          v-for="(propiedad, index) in propiedades"
-          :key="index"
-          :class="indexPrecios(index, propiedad.id)"
-        >
-          <vs-table :data="propiedad.precios" noDataText="0 Resultados">
-            <template slot="header">
-              <h3>
-                Tipo {{ propiedad.tipo }}, capacidad
-                {{ propiedad.capacidad }} Persona(s)
-              </h3>
-            </template>
-            <template slot="thead">
-              <vs-th>#</vs-th>
-              <vs-th>Pago Inicial ($)</vs-th>
-              <vs-th>Costo Neto ($)</vs-th>
-              <vs-th>Costo a Pronto Pago ($)</vs-th>
-              <vs-th>Abono Mensual ($)</vs-th>
-              <vs-th>Desc. x Pago ($)</vs-th>
-              <vs-th>Financiamiento</vs-th>
-              <vs-th>Descripción</vs-th>
-              <vs-th>Acciones</vs-th>
-            </template>
-            <template slot-scope="{ data }">
-              <vs-tr
-                :data="precio"
-                :key="index_precio"
-                v-for="(precio, index_precio) in data"
+      <div class="form-group">
+        <div class="title-form-group">Precios de las propiedades</div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full px-2 input-text">
+              <label> Filtrar por tipo de propiedad </label>
+              <v-select
+                :options="propiedades_tipos"
+                :clearable="false"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                v-model="propiedad_tipo"
+                class="w-full"
               >
-                <vs-td :data="data[index_precio].id">
-                  <span class="font-semibold">{{ index_precio + 1 }}</span>
-                </vs-td>
-                <vs-td :data="data[index_precio].pago_inicial"
-                  >$ {{ precio.pago_inicial | numFormat("0,000.00") }}</vs-td
+                <div slot="no-options">Seleccione un Tipo de Propiedad</div>
+              </v-select>
+            </div>
+            <div v-if="propiedades.length > 0" class="w-full px-2">
+              <div
+                v-for="(propiedad, index) in propiedades"
+                :key="index"
+                :class="indexPrecios(index, propiedad.id)"
+              >
+                <vs-table
+                  :data="propiedad.precios"
+                  noDataText="0 Resultados"
+                  class="tabla-datos"
                 >
-                <vs-td :data="data[index_precio].costo_neto"
-                  >$ {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td
-                >
-                <vs-td :data="data[index_precio].costo_neto"
-                  >$
-                  {{
-                    precio.costo_neto_pronto_pago | numFormat("0,000.00")
-                  }}</vs-td
-                >
-                <vs-td :data="data[index_precio].pago_mensual"
-                  >$ {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
-                >
-                <vs-td :data="data[index_precio].costo_neto"
-                  >$
-                  {{ precio.descuento_x_pago | numFormat("0,000.00") }}</vs-td
-                >
-                <vs-td :data="data[index_precio].tipo_financiamiento">{{
-                  precio.tipo_financiamiento
-                }}</vs-td>
-                <vs-td :data="data[index_precio].descripcion">{{
-                  precio.descripcion
-                }}</vs-td>
+                  <template slot="header">
+                    <h3>
+                      Tipo {{ propiedad.tipo }}, capacidad
+                      {{ propiedad.capacidad }} Persona(s)
+                    </h3>
+                  </template>
+                  <template slot="thead">
+                    <vs-th>#</vs-th>
+                    <vs-th>Pago Inicial ($)</vs-th>
+                    <vs-th>Costo Neto ($)</vs-th>
+                    <vs-th>Costo a Pronto Pago ($)</vs-th>
+                    <vs-th>Abono Mensual ($)</vs-th>
+                    <vs-th>Desc. x Pago ($)</vs-th>
+                    <vs-th>Financiamiento</vs-th>
+                    <vs-th>Descripción</vs-th>
+                    <vs-th>Acciones</vs-th>
+                  </template>
+                  <template slot-scope="{ data }">
+                    <vs-tr
+                      :data="precio"
+                      :key="index_precio"
+                      v-for="(precio, index_precio) in data"
+                    >
+                      <vs-td :data="data[index_precio].id">
+                        <span class="font-semibold">{{
+                          index_precio + 1
+                        }}</span>
+                      </vs-td>
+                      <vs-td :data="data[index_precio].pago_inicial"
+                        >$
+                        {{ precio.pago_inicial | numFormat("0,000.00") }}</vs-td
+                      >
+                      <vs-td :data="data[index_precio].costo_neto"
+                        >$
+                        {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td
+                      >
+                      <vs-td :data="data[index_precio].costo_neto"
+                        >$
+                        {{
+                          precio.costo_neto_pronto_pago | numFormat("0,000.00")
+                        }}</vs-td
+                      >
+                      <vs-td :data="data[index_precio].pago_mensual"
+                        >$
+                        {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
+                      >
+                      <vs-td :data="data[index_precio].costo_neto"
+                        >$
+                        {{
+                          precio.descuento_x_pago | numFormat("0,000.00")
+                        }}</vs-td
+                      >
+                      <vs-td :data="data[index_precio].tipo_financiamiento">{{
+                        precio.tipo_financiamiento
+                      }}</vs-td>
+                      <vs-td :data="data[index_precio].descripcion">{{
+                        precio.descripcion
+                      }}</vs-td>
 
-                <vs-td :data="data[index_precio].status">
-                  <img
-                    class="cursor-pointer img-btn ml-auto mr-3 mb-1"
-                    src="@assets/images/edit.svg"
-                    title="Modificar"
-                    @click="openModificar(data[index_precio].id)"
-                  />
-                  <img
-                    v-if="data[index_precio].status == 1"
-                    class="cursor-pointer img-btn-32 mr-auto ml-3"
-                    src="@assets/images/switchon.svg"
-                    title="Deshabilitar"
-                    @click="
-                      enable_disable_precio(
-                        data[index_precio].id,
-                        data[index_precio].descripcion,
-                        'deshabilitar'
-                      )
-                    "
-                  />
-
-                  <img
-                    v-else
-                    class="cursor-pointer img-btn-32 mr-auto ml-3"
-                    src="@assets/images/switchoff.svg"
-                    title="Habilitar"
-                    @click="
-                      enable_disable_precio(
-                        data[index_precio].id,
-                        data[index_precio].descripcion,
-                        'habilitar'
-                      )
-                    "
-                  />
-                </vs-td>
-              </vs-tr>
-            </template>
-          </vs-table>
+                      <vs-td :data="data[index_precio].status">
+                        <img
+                          class="cursor-pointer img-btn-18 mx-2"
+                          src="@assets/images/edit.svg"
+                          title="Modificar"
+                          @click="openModificar(data[index_precio].id)"
+                        />
+                        <img
+                          v-if="data[index_precio].status == 1"
+                          class="img-btn-24 mx-2"
+                          src="@assets/images/switchon.svg"
+                          title="Deshabilitar"
+                          @click="
+                            enable_disable_precio(
+                              data[index_precio].id,
+                              data[index_precio].descripcion,
+                              'deshabilitar'
+                            )
+                          "
+                        />
+                        <img
+                          v-else
+                          class="img-btn-24 mx-2"
+                          src="@assets/images/switchoff.svg"
+                          title="Habilitar"
+                          @click="
+                            enable_disable_precio(
+                              data[index_precio].id,
+                              data[index_precio].descripcion,
+                              'habilitar'
+                            )
+                          "
+                        />
+                      </vs-td>
+                    </vs-tr>
+                  </template>
+                </vs-table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -158,9 +165,7 @@
         :show="operConfirmar"
         :callback-on-success="callback"
         @closeVerificar="operConfirmar = false"
-        :accion="
-          '¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'
-        "
+        :accion="'¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'"
         :confirmarButton="'Eliminar'"
       ></ConfirmarDanger>
       <Password
@@ -200,11 +205,11 @@ export default {
   props: {
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["planes_cementerio"].$el.querySelector(
           ".vs-icon"
@@ -221,14 +226,14 @@ export default {
         this.datosVenta = [];
         this.total = 0;
       }
-    }
+    },
   },
   components: {
     ConfirmarDanger,
     Password,
     "v-select": vSelect,
     FormularioPrecios,
-    Reporteador
+    Reporteador,
   },
   data() {
     return {
@@ -238,7 +243,7 @@ export default {
       request: {
         destinatario: "",
         id_tipo_propiedad: "",
-        email: ""
+        email: "",
       },
       /**reportrador */
       selected: [],
@@ -253,7 +258,7 @@ export default {
       openPassword: false,
       accionPassword: "",
       callback: Function,
-      callbackPassword: Function
+      callbackPassword: Function,
       //datos que mando para actualizar
     };
   },
@@ -264,8 +269,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     openReporte(nombre_reporte = "", link = "", parametro = "") {
@@ -273,11 +278,11 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Precios x Propiedad (Español)",
-        url: "/cementerio/lista_precios_pdf/es"
+        url: "/cementerio/lista_precios_pdf/es",
       });
       this.ListaReportes.push({
         nombre: "Precios x Propiedad (Inglés)",
-        url: "/cementerio/lista_precios_pdf/en"
+        url: "/cementerio/lista_precios_pdf/en",
       });
       //estado de cuenta
       this.request.email = "";
@@ -303,7 +308,7 @@ export default {
         if (index == 0) {
           return "";
         } else {
-          return "pt-16";
+          return "pt-6";
         }
       }
     },
@@ -317,12 +322,12 @@ export default {
         this.propiedades_tipos = [];
         this.propiedades_tipos.push({
           label: "Todas las Propiedades",
-          value: ""
+          value: "",
         });
-        this.propiedades.forEach(element => {
+        this.propiedades.forEach((element) => {
           this.propiedades_tipos.push({
             label: "Tipo " + element.tipo,
-            value: element.id
+            value: element.id,
           });
           //la primero opcion
           this.propiedad_tipo = this.propiedades_tipos[0];
@@ -340,7 +345,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -362,11 +367,11 @@ export default {
     enable_disable() {
       this.$vs.loading();
       let datos = {
-        id_precio: this.id_precio_modificar
+        id_precio: this.id_precio_modificar,
       };
       cementerio
         .enable_disable(datos)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           this.get_financiamientos();
           if (res.data >= 1) {
@@ -376,7 +381,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 4000
+              time: 4000,
             });
           } else {
             this.$vs.notify({
@@ -385,11 +390,11 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "primary",
-              time: 4000
+              time: 4000,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -401,7 +406,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -414,13 +419,13 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
         });
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>
