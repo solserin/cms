@@ -740,13 +740,17 @@
                 <div class="flex flex-wrap">
                   <!--Resumen checkout-->
                   <div
-                    class="theme-background p-4 w-full md:w-10/12 mx-auto rounded-lg size-base border-gray-solid-1 hidden lg:block"
+                    class="p-4 w-full md:w-10/12 mx-auto rounded-lg size-base border-gray-solid-1 hidden xl:block rounded-lg"
                   >
-                    <div class="h5 color-dark-900 pb-6 text-center">
+                    <div
+                      class="size-base font-bold color-black-900 uppercase pb-6 text-center"
+                    >
                       Resumen de la venta
                     </div>
                     <div class="flex flex-wrap color-copy">
-                      <div class="w-full sm:w-6/12 px-2 text-left pb-2">
+                      <div
+                        class="w-full sm:w-6/12 px-2 text-left font-medium pb-2"
+                      >
                         Cliente
                       </div>
                       <div
@@ -754,7 +758,9 @@
                       >
                         {{ form.cliente }}
                       </div>
-                      <div class="w-full sm:w-6/12 px-2 text-left py-2">
+                      <div
+                        class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                      >
                         Ubicación
                       </div>
                       <div
@@ -805,7 +811,9 @@
                           >Seleccione un Área del Cementerio</span
                         >
                       </div>
-                      <div class="w-full sm:w-6/12 px-2 text-left py-2">
+                      <div
+                        class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                      >
                         Vendedor
                       </div>
                       <div
@@ -816,7 +824,9 @@
                         }}</span>
                         <span v-else class="">Seleccione un Vendedor</span>
                       </div>
-                      <div class="w-full sm:w-6/12 px-2 text-left py-2">
+                      <div
+                        class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                      >
                         $ Costo neto
                       </div>
                       <div
@@ -824,7 +834,9 @@
                       >
                         $ {{ form.costo_neto | numFormat("0,000.00") }}
                       </div>
-                      <div class="w-full sm:w-6/12 px-2 text-left py-2">
+                      <div
+                        class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                      >
                         $ Descuento
                       </div>
                       <div
@@ -832,7 +844,9 @@
                       >
                         $ {{ form.descuento | numFormat("0,000.00") }}
                       </div>
-                      <div class="w-full sm:w-6/12 px-2 text-left py-2">
+                      <div
+                        class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                      >
                         $ Total a pagar
                       </div>
                       <div
@@ -840,7 +854,9 @@
                       >
                         $ {{ total_a_pagar_computed | numFormat("0,000.00") }}
                       </div>
-                      <div class="w-full sm:w-6/12 px-2 text-left py-2">
+                      <div
+                        class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                      >
                         $ Pago inicial
                       </div>
                       <div

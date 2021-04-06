@@ -20,18 +20,24 @@
       >
         <!--<bookmarks :navbarColor="navbarColor" v-if="windowWidth >= 992" />-->
 
-        <router-link tag="div" to="/" class="vx-logo cursor-pointer mx-auto flex items-center">
-          <logo class="w-10 mr-4 fill-current text-primary" />
-          <span class="vx-logo-text text-primary">Vuexy</span>
+        <router-link
+          tag="div"
+          to="/"
+          class="vx-logo cursor-pointer mx-auto flex items-center"
+        >
+          <!-- <logo class="w-10 mr-4 fill-current text-primary" />-->
+          <!-- <span class="vx-logo-text font-light color-primary-900"
+            >Aeternus Funerales</span
+          >-->
         </router-link>
 
         <!--<i18n />-->
 
-        <search-bar class="pr-3" />
+        <!--<search-bar class="pr-3" />-->
 
         <!--<cart-drop-down />-->
 
-        <notification-drop-down />
+        <!--<notification-drop-down />-->
 
         <profile-drop-down />
       </vs-navbar>
@@ -54,8 +60,8 @@ export default {
     logo: { type: String },
     navbarType: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   components: {
     Logo,
@@ -64,7 +70,7 @@ export default {
     SearchBar,
     CartDropDown,
     NotificationDropDown,
-    ProfileDropDown
+    ProfileDropDown,
   },
   computed: {
     navbarColor() {
@@ -105,8 +111,8 @@ export default {
     },
     windowWidth() {
       return this.$store.state.windowWidth;
-    }
-  }
+    },
+  },
 };
 </script>
 
