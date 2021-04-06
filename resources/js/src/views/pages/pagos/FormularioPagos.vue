@@ -1,8 +1,8 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup popup-95"
-      fullscreen
+      :class="['forms-popup', !mostrar_datos_operacion ? 'popup-85' : '']"
+      :fullscreen="mostrar_datos_operacion"
       close="cancelar"
       :title="'control de cobranza'"
       :active.sync="showVentana"
@@ -14,9 +14,7 @@
         </div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-            >
+            <div class="w-full md:w-6/12 xl:w-4/12 px-2 input-text">
               <label>
                 Referencia de Pago
                 <span>(*)</span>
@@ -42,9 +40,7 @@
                 errores.referencia[0]
               }}</span>
             </div>
-            <div
-              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-3 input-text"
-            >
+            <div class="w-full md:w-6/12 xl:w-4/12 px-3 input-text">
               <label>
                 Fecha y Hora del Pago
                 <span>(*)</span>
@@ -64,9 +60,7 @@
                 errores.fecha_pago[0]
               }}</span>
             </div>
-            <div
-              class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2 text-center input-text"
-            >
+            <div class="w-full md:w-6/12 xl:w-2/12 px-2 text-center input-text">
               <label>Habilitar Multipago</label>
               <div>
                 <vs-switch
@@ -78,9 +72,11 @@
                 />
               </div>
             </div>
-            <div class="w-full md:w-3/12 px-2 text-right">
+            <div
+              class="w-full md:w-6/12 xl:w-2/12 px-2 text-center xl:text-right"
+            >
               <vs-button
-                class="w-full lg:w-9/12 md:ml-2 my-2 mt-6 md:mt-4"
+                class="w-full my-2 mt-6 md:mt-4"
                 @click="CalcularPago()"
               >
                 <span>Calcular Adeudo</span>
@@ -90,14 +86,14 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" v-if="mostrar_datos_operacion">
         <div class="title-form-group">
-          <span>Detalle del pago</span>
+          <span>Referencias a Pagar</span>
         </div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
             <!--incio de tabla-->
-            <div class="w-full" v-if="mostrar_datos_operacion">
+            <div class="w-full">
               <vs-table
                 :data="form.datos_operacion.pagos_programados"
                 noDataText="0 Resultados"
@@ -122,8 +118,8 @@
                   <vs-th>Fecha Programada</vs-th>
                   <vs-th>Monto Programado $</vs-th>
                   <vs-th>Intereses Generados $</vs-th>
-                  <vs-th>Descuento Disponible $</vs-th>
-                  <vs-th> Saldo del Pago(Sin descuento) $</vs-th>
+                  <vs-th hidden>Descuento Disponible $</vs-th>
+                  <vs-th> Saldo del Pago $</vs-th>
                 </template>
                 <template slot-scope="{ data }">
                   <vs-tr
@@ -228,6 +224,7 @@
                       :class="[
                         programados.status_pago == 0 ? 'color-danger-900' : '',
                       ]"
+                      hidden
                       >$
                       {{
                         programados.descuento_pronto_pago
@@ -253,16 +250,16 @@
                       <div class="py-2"></div>
                     </vs-td>
                     <vs-td>
-                      <div class="py-2">Monto Programado $</div>
+                      <div class="py-2 uppercase">Monto Programado $</div>
                     </vs-td>
                     <vs-td>
-                      <div class="py-2">Intereses Generados $</div>
+                      <div class="py-2 uppercase">Intereses Generados $</div>
+                    </vs-td>
+                    <vs-td hidden>
+                      <div class="py-2 uppercase">Descuento Disponible $</div>
                     </vs-td>
                     <vs-td>
-                      <div class="py-2">Descuento Disponible $</div>
-                    </vs-td>
-                    <vs-td>
-                      <div class="py-2">Saldo del Pago(Sin descuento) $</div>
+                      <div class="py-2 uppercase">Saldo del Pago $</div>
                     </vs-td>
                   </vs-tr>
                   <vs-tr class="font-medium color-black-900 size-base">
@@ -279,7 +276,7 @@
                         $ {{ maximo_interes | numFormat("0,000.00") }}
                       </div>
                     </vs-td>
-                    <vs-td>
+                    <vs-td hidden>
                       <div class="py-2">
                         $ {{ maximo_descuento | numFormat("0,000.00") }}
                       </div>
@@ -298,10 +295,10 @@
               <div class="flex flex-wrap">
                 <div class="w-full lg:w-8/12">
                   <div class="flex flex-wrap">
-                    <div class="w-full lg:w-6/12 px-2">
+                    <div class="w-full xl:w-6/12 px-2">
                       <div class="form-group mt-6">
                         <div class="title-form-group">
-                          <span>Detalle del pago</span>
+                          <span>Método del pago</span>
                         </div>
                         <div class="form-group-content">
                           <div class="flex flex-wrap">
@@ -370,7 +367,10 @@
                             </div>
 
                             <div class="w-full px-2 input-text">
-                              <label> REFERENCIA SOBRE EL ABONO </label>
+                              <label
+                                >Referencia de abono
+                                (depósito/transferencia)</label
+                              >
 
                               <vs-input
                                 data-vv-scope="pago_form"
@@ -391,9 +391,8 @@
                                 errores.referencia_sobre_pago[0]
                               }}</span>
                             </div>
-
                             <div class="w-full px-2 input-text">
-                              <label> BANCO </label>
+                              <label>Nombre del banco </label>
                               <vs-input
                                 data-vv-scope="pago_form"
                                 size="large"
@@ -414,9 +413,9 @@
                         </div>
                       </div>
                     </div>
-                    <div class="w-full lg:w-6/12 px-2">
+                    <div class="w-full lg:w-6/12 hidden xl:block">
                       <!--Datos de resumen-->
-                      <div class="flex pt-6">
+                      <div class="flex pt-6 px-2">
                         <!--Resumen de pago-->
                         <div
                           class="w-full p-4 border-gray-solid-1 mx-auto rounded-lg"
@@ -483,9 +482,19 @@
                               Total a pagar
                             </div>
                             <div
-                              class="w-full text-center color-black-700 uppercase pt-2"
+                              class="w-full text-center font-medium color-black-700 uppercase pt-2"
                             >
-                              {{ form.datos_operacion.operacion_texto }}
+                              <span v-if="total_pagar > 0" class="uppercase">
+                                $
+                                {{ total_pagar | numFormat("0,000.00") }}
+                                Pesos mexicanos
+                              </span>
+                              <span
+                                v-else
+                                class="uppercase color-danger-900 font-normal"
+                              >
+                                no se ha ingresado la cantidad a pagar
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -493,11 +502,10 @@
                       </div>
                       <!--FIN de resumen-->
                     </div>
-                    <div class="w-full px-2 input-text">
-                      <label> NOTA U OBSERVACIÓN: </label>
+                    <div class="w-full input-text mt-6 px-2">
+                      <label> Nota u observación: </label>
                       <vs-textarea
-                        height="240px"
-                        :rows="5"
+                        :rows="6"
                         size="large"
                         ref="nota"
                         type="text"
@@ -508,298 +516,230 @@
                     </div>
                   </div>
                 </div>
-                <div class="w-full lg:w-4/12">f</div>
+                <div class="w-full lg:w-4/12 px-2">
+                  <div class="form-group lg:mt-6">
+                    <div class="title-form-group">
+                      <span>Realizar Pago</span>
+                    </div>
+                    <div class="form-group-content">
+                      <div class="flex flex-wrap">
+                        <!-- realizar pago -->
+                        <div class="w-full input-text px-2">
+                          <label>
+                            $ ABONO A CAPITAL
+                            <span>(*)</span>
+                          </label>
+                          <vs-input
+                            data-vv-scope="pago_form"
+                            maxlength="9"
+                            size="large"
+                            name="abono"
+                            data-vv-as=" "
+                            v-validate="
+                              'required|decimal:2|min_value:' +
+                              minimo_abono +
+                              '|max_value:' +
+                              maximo_abono
+                            "
+                            type="text"
+                            class="w-full"
+                            placeholder="$ 0.00"
+                            v-model.trim="form.abono"
+                          />
+                          <span>{{ errors.first("pago_form.abono") }}</span>
+                          <span v-if="this.errores.abono">{{
+                            errores.abono[0]
+                          }}</span>
+                        </div>
+                        <div class="w-full input-text px-2">
+                          <label>
+                            $ INTERESES MORATORIOS
+                            <span>(*)</span>
+                          </label>
+                          <vs-input
+                            data-vv-scope="pago_form"
+                            maxlength="9"
+                            size="large"
+                            name="intereses"
+                            data-vv-as=" "
+                            v-validate="
+                              'required|decimal:2|min_value:0|max_value:' +
+                              maximo_interes
+                            "
+                            type="text"
+                            class="w-full"
+                            placeholder="$ 0.00"
+                            v-model.trim="form.intereses"
+                          />
+                          <span>{{ errors.first("pago_form.intereses") }}</span>
+                          <span v-if="this.errores.intereses">{{
+                            errores.intereses[0]
+                          }}</span>
+                        </div>
+                        <div class="w-full input-text px-2 hidden">
+                          <label>
+                            $ DESCUENTO POR PRONTO PAGO
+                            <span>(*)</span>
+                          </label>
+                          <vs-input
+                            data-vv-scope="pago_form"
+                            maxlength="9"
+                            size="large"
+                            name="descuento"
+                            data-vv-as=" "
+                            v-validate="
+                              'required|decimal:2|min_value:0|max_value:' +
+                              maximo_descuento
+                            "
+                            type="text"
+                            class="w-full"
+                            placeholder="$ 0.00"
+                            v-model.trim="form.descuento_pronto_pago"
+                          />
+                          <span>{{ errors.first("pago_form.descuento") }}</span>
+                          <span v-if="this.errores.descuento">{{
+                            errores.descuento[0]
+                          }}</span>
+                        </div>
+                        <div class="w-full input-text px-2">
+                          <label>
+                            $ TOTAL A PAGAR
+                            <span>(*)</span>
+                          </label>
+                          <vs-input
+                            data-vv-scope="pago_form"
+                            maxlength="9"
+                            size="large"
+                            name="total"
+                            data-vv-as=" "
+                            v-validate="
+                              'required|decimal:2|min_value:0|max_value:' +
+                              maximo_saldo
+                            "
+                            type="text"
+                            class="w-full"
+                            placeholder=""
+                            v-model.trim="total_pagar"
+                            readonly
+                            :disabled="true"
+                          />
+                          <span>{{ errors.first("pago_form.total") }}</span>
+                          <span v-if="this.errores.total">{{
+                            errores.total[0]
+                          }}</span>
+                        </div>
+
+                        <div class="w-full input-text px-2">
+                          <label>
+                            $ CANTIDAD CON QUE PAGÓ
+                            <span>(*)</span>
+                          </label>
+
+                          <vs-input
+                            data-vv-scope="pago_form"
+                            maxlength="9"
+                            size="large"
+                            name="pago_con_cantidad"
+                            data-vv-as=" "
+                            v-validate="
+                              'required|decimal:2|min_value:' +
+                              cantidad_a_regresar +
+                              '|max_value:' +
+                              maximo_cantidad_pago
+                            "
+                            type="text"
+                            class="w-full"
+                            placeholder=""
+                            v-model.trim="form.pago_con_cantidad"
+                            :disabled="
+                              this.form.formaPago.value != 1 ? true : false
+                            "
+                          />
+                          <span>{{
+                            errors.first("pago_form.pago_con_cantidad")
+                          }}</span>
+
+                          <span v-if="this.errores.pago_con_cantidad">{{
+                            errores.pago_con_cantidad[0]
+                          }}</span>
+                        </div>
+
+                        <div class="w-full input-text px-2">
+                          <label>
+                            $ CAMBIO A REGRESAR
+                            <span>(*)</span>
+                          </label>
+                          <vs-input
+                            data-vv-scope="pago_form"
+                            maxlength="9"
+                            size="large"
+                            name="cambio_pago"
+                            data-vv-as=" "
+                            v-validate="'required|decimal:2|min_value:0'"
+                            type="text"
+                            class="w-full"
+                            placeholder=""
+                            v-model.trim="cantidad_a_regresar"
+                            readonly
+                            :disabled="true"
+                          />
+                          <span>{{
+                            errors.first("pago_form.cambio_pago")
+                          }}</span>
+                          <span v-if="this.errores.cambio_pago">{{
+                            errores.cambio_pago[0]
+                          }}</span>
+                        </div>
+
+                        <div class="w-full px-2">
+                          <div class="text-center py-6">
+                            <span class="color-danger-900">Ojo:</span>
+                            Por favor revise la información ingresada, si todo
+                            es correcto de click en "Botón de Abajo”.
+                          </div>
+                          <div v-if="form.formaPago.value == 7">
+                            <h3
+                              class="w-full size-base color-danger-900 pb-6 font-normal"
+                            >
+                              Advertencia, la forma de pago seleccionada se
+                              tomará como un descuento.
+                            </h3>
+                          </div>
+                          <vs-button
+                            class="w-full"
+                            @click="acceptAlert()"
+                            color="success"
+                          >
+                            <span class="">Guardar Pago</span>
+                          </vs-button>
+                        </div>
+
+                        <!-- realizar pago -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="flex flex-wrap px-2" v-if="mostrar_datos_operacion">
-        <div class="w-full flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12">
-            <div class="flex flex-wrap"></div>
-          </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-            <div class="w-full flex flex-wrap">
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label>
-                  $ ABONO A CAPITAL
-                  <span>(*)</span>
-                </label>
-                <img
-                  width="25"
-                  class="img-center float-left mt-10 mr-1"
-                  src="@assets/images/capital.svg"
-                />
-                <vs-input
-                  data-vv-scope="pago_form"
-                  maxlength="9"
-                  size="large"
-                  name="abono"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:' +
-                    minimo_abono +
-                    '|max_value:' +
-                    maximo_abono
-                  "
-                  type="text"
-                  class="w-full texto-bold"
-                  placeholder="$ 0.00"
-                  v-model.trim="form.abono"
-                />
-
-                <div>
-                  <span>{{ errors.first("pago_form.abono") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span v-if="this.errores.abono">{{ errores.abono[0] }}</span>
-                </div>
-              </div>
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label>
-                  $ INTERESES MORATORIOS
-                  <span>(*)</span>
-                </label>
-                <img
-                  width="25"
-                  class="img-center float-left mt-10 mr-1"
-                  src="@assets/images/intereses.svg"
-                />
-                <vs-input
-                  data-vv-scope="pago_form"
-                  maxlength="9"
-                  size="large"
-                  name="intereses"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:0|max_value:' + maximo_interes
-                  "
-                  type="text"
-                  class="w-full texto-bold"
-                  placeholder="$ 0.00"
-                  v-model.trim="form.intereses"
-                />
-
-                <div>
-                  <span>{{ errors.first("pago_form.intereses") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span v-if="this.errores.intereses">{{
-                    errores.intereses[0]
-                  }}</span>
-                </div>
-              </div>
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 hidden"
-              >
-                <label>
-                  $ DESCUENTO POR PRONTO PAGO
-                  <span>(*)</span>
-                </label>
-                <img
-                  width="25"
-                  class="img-center float-left mt-10 mr-1"
-                  src="@assets/images/discount.svg"
-                />
-                <vs-input
-                  data-vv-scope="pago_form"
-                  maxlength="9"
-                  size="large"
-                  name="descuento"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:0|max_value:' +
-                    maximo_descuento
-                  "
-                  type="text"
-                  class="w-full texto-bold"
-                  placeholder="$ 0.00"
-                  v-model.trim="form.descuento_pronto_pago"
-                />
-
-                <div>
-                  <span>{{ errors.first("pago_form.descuento") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span v-if="this.errores.descuento">{{
-                    errores.descuento[0]
-                  }}</span>
-                </div>
-              </div>
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label>
-                  $ TOTAL A PAGAR
-                  <span>(*)</span>
-                </label>
-                <img
-                  width="25"
-                  class="img-center float-left mt-10 mr-1"
-                  src="@assets/images/payment-method.svg"
-                />
-
-                <vs-input
-                  data-vv-scope="pago_form"
-                  maxlength="9"
-                  size="large"
-                  name="total"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:0|max_value:' + maximo_saldo
-                  "
-                  type="text"
-                  class="w-full texto-bold text-primary"
-                  placeholder=""
-                  v-model.trim="total_pagar"
-                  readonly
-                  :disabled="true"
-                />
-                <div>
-                  <span>{{ errors.first("pago_form.total") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span v-if="this.errores.total">{{ errores.total[0] }}</span>
-                </div>
-              </div>
-
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label>
-                  $ CANTIDAD CON QUE PAGÓ
-                  <span>(*)</span>
-                </label>
-                <img
-                  width="25"
-                  class="img-center float-left mt-10 mr-1"
-                  src="@assets/images/cantidad_pago.svg"
-                />
-                <vs-input
-                  data-vv-scope="pago_form"
-                  maxlength="9"
-                  size="large"
-                  name="pago_con_cantidad"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:' +
-                    cantidad_a_regresar +
-                    '|max_value:' +
-                    maximo_cantidad_pago
-                  "
-                  type="text"
-                  class="w-full texto-bold"
-                  placeholder=""
-                  v-model.trim="form.pago_con_cantidad"
-                  :disabled="this.form.formaPago.value != 1 ? true : false"
-                />
-                <div>
-                  <span>{{ errors.first("pago_form.pago_con_cantidad") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span v-if="this.errores.pago_con_cantidad">{{
-                    errores.pago_con_cantidad[0]
-                  }}</span>
-                </div>
-              </div>
-
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label>
-                  $ CAMBIO A REGRESAR
-                  <span>(*)</span>
-                </label>
-                <img
-                  width="25"
-                  class="img-center float-left mt-10 mr-1"
-                  src="@assets/images/cantidad_cambio.svg"
-                />
-                <vs-input
-                  data-vv-scope="pago_form"
-                  maxlength="9"
-                  size="large"
-                  name="cambio_pago"
-                  data-vv-as=" "
-                  v-validate="'required|decimal:2|min_value:0'"
-                  type="text"
-                  class="w-full texto-bold"
-                  placeholder=""
-                  v-model.trim="cantidad_a_regresar"
-                  readonly
-                  :disabled="true"
-                />
-                <div>
-                  <span>{{ errors.first("pago_form.cambio_pago") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span v-if="this.errores.cambio_pago">{{
-                    errores.cambio_pago[0]
-                  }}</span>
-                </div>
-              </div>
-
-              <div class="w-full px-2">
-                <div class="mt-2">
-                  <div class="text-center" v-if="form.formaPago.value != 7">
-                    <span class="color-danger-900 font-medium">Ojo:</span>
-                    Por favor revise la información ingresada, si todo es
-                    correcto de click en "Botón de Abajo”.
-                  </div>
-                  <div v-else>
-                    <img width="25px" src="@assets/images/warning.svg" />
-                    <h3
-                      class="w-11/12 font-medium color-danger-900 py-1 float-right ml-1"
-                    >
-                      Advertencia, la forma de pago seleccionada se tomará como
-                      un descuento.
-                    </h3>
-                  </div>
-                  <vs-button
-                    class="w-full mb-5 mt-5"
-                    @click="acceptAlert()"
-                    color="success"
-                    size="small"
-                  >
-                    <img
-                      width="25px"
-                      class="cursor-pointer"
-                      src="@assets/images/save.svg"
-                    />
-                    <span class="texto-btn">Guardar Pago</span>
-                  </vs-button>
-                </div>
+      <div class="form-group" v-if="error != ''">
+        <div class="title-form-group">
+          <span>Errores encontrados</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full px-2">
+              <div class="font-normal size-base color-danger-900">
+                {{ error }}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div v-else>
-        <div class="flex flex-wrap" v-if="error != ''">
-          <div class="w-full px-2">
-            <img
-              width="70"
-              class="img-center pt-3"
-              src="@assets/images/disabled.svg"
-            />
-            <h3
-              class="text-center color-danger-900 text-lg uppercase py-6 font-bold"
-            >
-              Este pago no puede ser registrado por el siguiente motivo
-            </h3>
 
-            <p class="text-center text-xl pb-5 uppercase">
-              {{ error }}
-            </p>
-          </div>
-        </div>
-      </div>
       <!--fin mostrar datos de operacion-->
     </vs-popup>
     <Password

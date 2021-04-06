@@ -57,7 +57,7 @@
             <template v-if="showCloseButton">
               <feather-icon
                 icon="XIcon"
-                class="m-0 cursor-pointer"
+                class="m-0 cursor-pointer text-primary"
                 @click="
                   $store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', false)
                 "
