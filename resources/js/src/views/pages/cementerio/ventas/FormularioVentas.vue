@@ -1174,12 +1174,12 @@ export default {
       if (this.form.financiamiento == 1) {
         pago_inicial_minimo = this.total_a_pagar_computed;
       } else {
-        pago_inicial_minimo = this.total_a_pagar_computed * 0.1;
+        pago_inicial_minimo = (this.total_a_pagar_computed * 0.1).toFixed(2);
       }
       if (isNaN(pago_inicial_minimo)) {
         return 0;
       } else {
-        return pago_inicial_minimo.toFixed(2);
+        return pago_inicial_minimo;
       }
     },
     /**maximo valor permitido del enganche */
@@ -1188,13 +1188,13 @@ export default {
       if (this.form.financiamiento == 1) {
         pago_inicial_maximo = this.total_a_pagar_computed;
       } else {
-        pago_inicial_maximo = this.total_a_pagar_computed * 0.7;
+        pago_inicial_maximo = (this.total_a_pagar_computed * 0.7).toFixed(2);
       }
 
       if (isNaN(pago_inicial_maximo)) {
         return 0;
       } else {
-        return pago_inicial_maximo.toFixed(2);
+        return pago_inicial_maximo;
       }
     },
 
@@ -1454,7 +1454,7 @@ export default {
           value: 1,
         },
         /**muestra el enganche original con el que se hizo la venta */
-        financiamiento: "",
+        financiamiento: 1,
         tasa_iva: 16,
         costo_neto: "",
         descuento: 0,
@@ -1740,7 +1740,7 @@ export default {
       this.form.vendedor = { label: "Seleccione 1", value: "" };
       this.form.tasa_iva = 16;
       this.form.financiamiento = "";
-      this.form.costo_neto = 0;
+      this.form.costo_neto = "";
       this.form.descuento = 0;
       this.form.pago_inicial = "";
       this.idAreaInicial = 0;

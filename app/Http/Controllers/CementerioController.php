@@ -735,13 +735,13 @@ class CementerioController extends ApiController
                         'numero_convenio'                  => $this->generarNumeroConvenio($request),
                         'numero_titulo'                    => ($request->ventaAntiguedad['value'] == 3) ? $request->titulo : null,
                         'empresa_operaciones_id'           => 1, //venta de terrenos
-                        'subtotal'                         => $subtotal,
+                        'subtotal'                         => round($subtotal, 2, PHP_ROUND_HALF_UP),
                         'tasa_iva'                         => $tasa_iva,
-                        'descuento'                        => $descuento_real_para_impuestos,
-                        'impuestos'                        => $iva,
-                        'total'                            => $total_pagar,
+                        'descuento'                        => round($descuento_real_para_impuestos, 2, PHP_ROUND_HALF_UP),
+                        'impuestos'                        => round($iva, 2, PHP_ROUND_HALF_UP),
+                        'total'                            => round($total_pagar, 2, PHP_ROUND_HALF_UP),
                         'descuento_pronto_pago_b'          => 1,
-                        'costo_neto_pronto_pago'           => $total_pagar, //paso este dato por defecto pues no se utiliza en la practica
+                        'costo_neto_pronto_pago'           => round($total_pagar, 2, PHP_ROUND_HALF_UP), //paso este dato por defecto pues no se utiliza en la practica
                         'antiguedad_operacion_id'          => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto'                => $request->titular_sustituto,
@@ -796,13 +796,13 @@ class CementerioController extends ApiController
                         /**venta  liquidada solamente */
                         'numero_convenio'                  => trim($request->convenio),
                         'numero_titulo'                    => trim($request->titulo),
-                        'subtotal'                         => $subtotal,
+                        'subtotal'                         => round($subtotal, 2, PHP_ROUND_HALF_UP),
                         'tasa_iva'                         => $tasa_iva,
-                        'descuento'                        => $descuento_real_para_impuestos,
-                        'impuestos'                        => $iva,
-                        'total'                            => $total_pagar,
+                        'descuento'                        => round($descuento_real_para_impuestos, 2, PHP_ROUND_HALF_UP),
+                        'impuestos'                        => round($iva, 2, PHP_ROUND_HALF_UP),
+                        'total'                            => round($total_pagar, 2, PHP_ROUND_HALF_UP),
                         'descuento_pronto_pago_b'          => 1,
-                        'costo_neto_pronto_pago'           => $total_pagar, //paso este dato por defecto pues no se utiliza en la practica
+                        'costo_neto_pronto_pago'           => round($total_pagar, 2, PHP_ROUND_HALF_UP), //paso este dato por defecto pues no se utiliza en la practica
                         'antiguedad_operacion_id'          => (int) $request->ventaAntiguedad['value'],
                         /** titular_sustituto */
                         'titular_sustituto'                => $request->titular_sustituto,
@@ -1102,8 +1102,8 @@ class CementerioController extends ApiController
                     $decimales = $monto_abono - intval($monto_abono);
                     if ($decimales > 0) {
                         /**tiene decimales */
-                        $abono       = ($total_pagar - $request->pago_inicial - (intval($monto_abono) * $request->financiamiento));
-                        $monto_abono = $abono + intval($monto_abono);
+                        $abono              = $total_pagar - $request->pago_inicial - (intval($monto_abono) * $request->financiamiento);
+                     $monto_abono = round($abono + intval($monto_abono), 2, PHP_ROUND_HALF_UP);
                     }
                 } else {
                     $abono       = intval($monto_abono);

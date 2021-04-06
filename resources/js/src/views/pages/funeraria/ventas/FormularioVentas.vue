@@ -14,7 +14,7 @@
     >
       <!--inicio venta-->
       <div class="flex flex-wrap">
-        <div class="w-full lg:w-6/12 px-4">
+        <div class="w-full lg:w-7/12 px-4">
           <!--Contenido del plan-->
           <div class="form-group">
             <div class="title-form-group">Contenido del Plan Funerario</div>
@@ -63,7 +63,7 @@
           <!--fin del contenido del plan -->
         </div>
 
-        <div class="w-full lg:w-6/12 px-4">
+        <div class="w-full lg:w-5/12 px-4">
           <!-- Seleccionar el plan -->
           <div class="form-group">
             <div class="title-form-group">Plan Funerario y Cliente</div>
@@ -188,7 +188,7 @@
             <div class="title-form-group">Control de Venta</div>
             <div class="form-group-content">
               <div class="flex flex-wrap">
-                <div class="w-full lg:w-7/12 px-2 input-text">
+                <div class="w-full px-2 input-text">
                   <label>
                     Seleccione 1 vendedor:
                     <span>(*)</span>
@@ -213,7 +213,7 @@
                     errores["vendedor.value"][0]
                   }}</span>
                 </div>
-                <div class="w-full lg:w-5/12 px-2 input-text">
+                <div class="w-full px-2 input-text">
                   <label>Fecha de la Venta (Año-Mes-Dia)</label>
                   <span>(*)</span>
                   <flat-pickr
@@ -525,9 +525,7 @@
                     v-model="form.tasa_iva"
                     maxlength="2"
                   />
-
                   <span>{{ errors.first("tasa_iva") }}</span>
-
                   <span v-if="this.errores.tasa_iva">{{
                     errores.tasa_iva[0]
                   }}</span>
@@ -569,7 +567,10 @@
                     size="large"
                     name="descuento"
                     data-vv-as=" "
-                    v-validate="'required|decimal:2|min_value:0'"
+                    v-validate="
+                      'required|decimal:2|min_value:0|max_value:' +
+                      form.costo_neto
+                    "
                     type="text"
                     class="w-full"
                     placeholder=""
@@ -613,9 +614,9 @@
                     data-vv-as=" "
                     v-validate="
                       'required|decimal:2|min_value:' +
-                      this.valor_minimo_pago_inicial +
+                      valor_minimo_pago_inicial +
                       '|max_value:' +
-                      this.valor_maximo_pago_inicial
+                      valor_maximo_pago_inicial
                     "
                     maxlength="10"
                     type="text"
@@ -623,7 +624,6 @@
                     v-model="form.pago_inicial"
                     placeholder=""
                   />
-
                   <span>{{ errors.first("pago_inicial") }}</span>
 
                   <span v-if="this.errores.pago_inicial">{{
@@ -645,7 +645,122 @@
               <!--checkout-->
             </div>
 
-            <div class="w-full lg:w-6/12 px-2 lg:mt-16"></div>
+            <div class="w-full lg:w-6/12 px-2 lg:mt-16">
+              <div class="flex flex-wrap">
+                <!--Resumen checkout-->
+                <div
+                  class="p-4 w-full md:w-10/12 mx-auto rounded-lg size-base border-gray-solid-1 hidden xl:block rounded-lg"
+                >
+                  <div
+                    class="size-base font-bold color-black-900 uppercase pb-6 text-center"
+                  >
+                    Resumen de la venta
+                  </div>
+                  <div class="flex flex-wrap color-copy">
+                    <div
+                      class="w-full sm:w-6/12 px-2 text-left font-medium pb-2"
+                    >
+                      Cliente
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 font-medium text-right pb-2"
+                    >
+                      {{ form.cliente }}
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                    >
+                      Paquete Funerario
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                    >
+                      {{ form.plan_funerario.label }}
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                    >
+                      Vendedor
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                    >
+                      <span v-if="this.form.vendedor.value != ''">{{
+                        this.form.vendedor.label
+                      }}</span>
+                      <span v-else class="">Seleccione un Vendedor</span>
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                    >
+                      $ Costo neto
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                    >
+                      $ {{ form.costo_neto | numFormat("0,000.00") }}
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                    >
+                      $ Descuento
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                    >
+                      $ {{ form.descuento | numFormat("0,000.00") }}
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                    >
+                      $ Total a pagar
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                    >
+                      $ {{ total_a_pagar_computed | numFormat("0,000.00") }}
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 text-left font-medium py-2"
+                    >
+                      $ Pago inicial
+                    </div>
+                    <div
+                      class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                    >
+                      $ {{ form.pago_inicial | numFormat("0,000.00") }}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="w-full md:w-10/12 px-2 size-base color-copy pt-6 text-center mx-auto"
+                >
+                  <span class="color-danger-900 font-medium">Ojo:</span>
+                  Al hacer hacer click, se está actuando en representación del
+                  cliente para la compra de la propiedad que se ha seleccionado.
+                </div>
+                <div class="w-full px-2 pt-6 text-center mx-auto">
+                  <vs-button
+                    v-if="!fueCancelada"
+                    class="w-full md:w-10/12"
+                    @click="acceptAlert()"
+                    color="success"
+                  >
+                    <span v-if="this.getTipoformulario == 'agregar'"
+                      >Guardar Venta</span
+                    >
+                    <span v-else>Modificar Venta</span>
+                  </vs-button>
+                  <vs-button v-else class="w-full md:w-10/12" color="success">
+                    <span v-if="this.getTipoformulario == 'agregar'"
+                      >Guardar Venta</span
+                    >
+                    <span v-else>Modificar Venta</span>
+                  </vs-button>
+                </div>
+                <!--Resumen checkout-->
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -677,8 +792,6 @@
       @closeBuscador="openBuscador = false"
       @retornoCliente="clienteSeleccionado"
     ></ClientesBuscador>
-
-    <Notas :nota="form.nota" :show="openNotas" @closeNotas="closeNotas"></Notas>
   </div>
 </template>
 <script>
@@ -689,7 +802,6 @@ import "flatpickr/dist/themes/airbnb.css";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
-import Notas from "@pages/notas";
 import planes from "@services/planes";
 import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
@@ -707,7 +819,6 @@ export default {
     ConfirmarDanger,
     ConfirmarAceptar,
     ClientesBuscador,
-    Notas,
   },
   props: {
     show: {
@@ -755,43 +866,22 @@ export default {
   },
   computed: {
     minimo_financiamiento: function () {
-      if (this.form.financiamiento == 1) {
-        return 1;
-      } else {
-        return 1;
-        //return 2;
-      }
+      return 1;
     },
     maximo_financiamiento: function () {
-      if (this.form.financiamiento == 1) {
-        return 1;
-      } else {
-        return 120;
-      }
+      return 120;
     },
     /**sacando los valores para aplicar los descuentos respectivos */
     tasa_iva_porcentaje_computed: function () {
       /**calculando el iva */
       let tasa_iva = (Number(this.form.tasa_iva) / 100).toFixed(2);
-      if (isNaN(tasa_iva)) {
-        return 0;
-      } else {
-        return tasa_iva;
-      }
       return tasa_iva;
     },
+
     tasa_iva_computed: function () {
       /**calculando el iva */
       let tasa_iva = (Number(this.form.tasa_iva) / 100 + 1).toFixed(2);
       return tasa_iva;
-    },
-
-    subtotal_computed: function () {
-      let tasa_iva = this.tasa_iva_computed;
-      let costo_neto = this.form.costo_neto;
-      let descuento = this.form.descuento;
-      let subtotal = costo_neto / tasa_iva;
-      return subtotal.toFixed(2);
     },
 
     total_a_pagar_computed: function () {
@@ -834,12 +924,12 @@ export default {
       if (this.form.financiamiento == 1) {
         pago_inicial_minimo = this.total_a_pagar_computed;
       } else {
-        pago_inicial_minimo = this.total_a_pagar_computed * 0.1;
+        pago_inicial_minimo = (this.total_a_pagar_computed * 0.1).toFixed(2);
       }
       if (isNaN(pago_inicial_minimo)) {
         return 0;
       } else {
-        return pago_inicial_minimo.toFixed(2);
+        return pago_inicial_minimo;
       }
     },
     /**maximo valor permitido del enganche */
@@ -848,30 +938,15 @@ export default {
       if (this.form.financiamiento == 1) {
         pago_inicial_maximo = this.total_a_pagar_computed;
       } else {
-        pago_inicial_maximo = this.total_a_pagar_computed * 0.7;
+        pago_inicial_maximo = (this.total_a_pagar_computed * 0.7).toFixed(2);
       }
-
       if (isNaN(pago_inicial_maximo)) {
         return 0;
       } else {
-        return pago_inicial_maximo.toFixed(2);
+        return pago_inicial_maximo;
       }
     },
 
-    minimo_pronto_pago: function () {
-      let minimo_pronto_pago = 0;
-      if (this.form.financiamiento == 1) {
-        minimo_pronto_pago = this.total_a_pagar_computed;
-      } else {
-        minimo_pronto_pago = 0;
-      }
-
-      if (isNaN(minimo_pronto_pago)) {
-        return 0;
-      } else {
-        return minimo_pronto_pago;
-      }
-    },
     /**checando si la venta ya fue liquidada*/
     ventaLiquidada: function () {
       if (this.getTipoformulario == "modificar") {
@@ -942,13 +1017,6 @@ export default {
         return false;
       }
     },
-    capturar_num_titulo: function () {
-      if (this.form.ventaAntiguedad.value == 3) {
-        return true;
-      } else {
-        return false;
-      }
-    },
 
     //validaciones calculadas
     //valido que elija un plan de venta
@@ -981,12 +1049,6 @@ export default {
         return this.form.convenio;
       } else return true;
     },
-    num_titulo_validacion_computed: function () {
-      //checo que el dato venta a futuro este activo
-      if (this.form.ventaAntiguedad.value == 3) {
-        return this.form.titulo;
-      } else return true;
-    },
 
     //fin de validaciones calculadas
   },
@@ -995,7 +1057,6 @@ export default {
       planes_funerarios: [],
       datos: [],
       /**variables dle modulo */
-      openNotas: false,
       configdateTimePicker: configdateTimePicker,
       verDisponibilidad: false,
       openBuscador: false,
@@ -1066,7 +1127,7 @@ export default {
         },
         /**muestra el enganche original con el que se hizo la venta */
 
-        financiamiento: "",
+        financiamiento: 1,
         tasa_iva: 16,
         costo_neto: "",
         descuento: 0,
@@ -1085,10 +1146,6 @@ export default {
     };
   },
   methods: {
-    closeNotas(nota) {
-      this.form.nota = nota;
-      this.openNotas = false;
-    },
     acceptAlert() {
       this.$validator
         .validateAll()
@@ -1109,8 +1166,6 @@ export default {
             //se confirma la cntraseña
             /**actualizando los valores de total de venta */
             //fin de actualizar datos de ubicacion
-            this.form.costo_neto = this.costo_neto_computed;
-            this.form.impuestos = this.iva_computed;
             (async () => {
               if (this.getTipoformulario == "agregar") {
                 this.callBackConfirmarAceptar = await this.guardar_venta;
@@ -1394,8 +1449,8 @@ export default {
       this.form.beneficiarios = [];
 
       this.form.tasa_iva = 16;
-      this.form.financiamiento = "";
-      this.form.costo_neto = 0;
+      this.form.financiamiento = 1;
+      this.form.costo_neto = "";
       this.form.descuento = 0;
       this.form.pago_inicial = "";
       this.form.nota = "";
@@ -1639,8 +1694,11 @@ export default {
         this.form.descuento = this.datosVenta.descuento;
         this.form.tasa_iva =
           Number(this.datosVenta.tasa_iva) <= 0 ? 16 : this.datosVenta.tasa_iva;
+
+        this.form.costo_neto = this.datosVenta.costo_neto_calculado;
+        this.form.descuento = this.datosVenta.descuento_neto_calculado;
+
         this.form.pago_inicial = this.datosVenta.pagos_programados[0].monto_programado;
-        this.form.costo_neto_pronto_pago = this.datosVenta.costo_neto_pronto_pago;
         this.form.nota = this.datosVenta.nota;
         /**mostrando los datos relacionados al pago */
         this.$vs.loading.close();
