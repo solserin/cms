@@ -1,518 +1,533 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-pagos normal-forms pagos_forms"
+      class="forms-popup popup-95"
       fullscreen
       close="cancelar"
       :title="'control de cobranza'"
       :active.sync="showVentana"
       ref="formulario"
     >
-      <div class="flex flex-wrap px-2">
-        <!--datos del titular-->
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-          <label class="text-base opacity-75 font-medium">
-            Referencia de Pago
-            <span class="mensaje-requerido">(*)</span>
-          </label>
-          <img
-            width="40"
-            class="img-center float-left mt-6 mr-1"
-            src="@assets/images/reference.svg"
-          />
-          <vs-input
-            data-vv-scope="form_calcular_adeudo"
-            ref="referencia"
-            name="referencia"
-            data-vv-as=" "
-            data-vv-validate-on="blur"
-            maxlength="25"
-            type="text"
-            class="w-full pb-1 pt-1"
-            v-validate="'required'"
-            placeholder="Núm. de referencia del pago"
-            v-model.trim="form.referencia"
-            :disabled="getReferencia != '' ? true : false"
-            @keypress.enter="CalcularPago()"
-          />
-          <div>
-            <span class="mensaje-requerido">{{
-              errors.first("form_calcular_adeudo.referencia")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="mensaje-requerido" v-if="this.errores.referencia">{{
-              errores.referencia[0]
-            }}</span>
-          </div>
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Referencia de pago</span>
         </div>
-        <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-3">
-          <div class="ml-4">
-            <label class="text-base opacity-75 font-medium">
-              Fecha y Hora del Pago
-              <span class="mensaje-requerido">(*)</span>
-            </label>
-            <img
-              width="32"
-              class="img-center float-left mt-8 mr-2"
-              src="@assets/images/calendar.svg"
-            />
-            <flat-pickr
-              data-vv-scope="form_calcular_adeudo"
-              name="fecha_pago"
-              data-vv-as=" "
-              v-validate:fecha_pago_validacion_computed.immediate="'required'"
-              :config="configdateTimePickerWithTime"
-              v-model="form.fecha_pago"
-              placeholder="Fecha del Pago"
-              class="w-full md:w-10/12 my-1"
-            />
-            <div>
-              <span class="mensaje-requerido">{{
-                errors.first("form_calcular_adeudo.fecha_pago")
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
+            >
+              <label>
+                Referencia de Pago
+                <span>(*)</span>
+              </label>
+
+              <vs-input
+                data-vv-scope="form_calcular_adeudo"
+                ref="referencia"
+                name="referencia"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                maxlength="25"
+                type="text"
+                class="w-full"
+                v-validate="'required'"
+                placeholder="Núm. de referencia del pago"
+                v-model.trim="form.referencia"
+                :disabled="getReferencia != '' ? true : false"
+                @keypress.enter="CalcularPago()"
+              />
+              <span>{{ errors.first("form_calcular_adeudo.referencia") }}</span>
+              <span v-if="this.errores.referencia">{{
+                errores.referencia[0]
               }}</span>
             </div>
-            <div class="mt-2">
-              <span class="mensaje-requerido" v-if="this.errores.fecha_pago">{{
+            <div
+              class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-3 input-text"
+            >
+              <label>
+                Fecha y Hora del Pago
+                <span>(*)</span>
+              </label>
+              <flat-pickr
+                data-vv-scope="form_calcular_adeudo"
+                name="fecha_pago"
+                data-vv-as=" "
+                v-validate:fecha_pago_validacion_computed.immediate="'required'"
+                :config="configdateTimePickerWithTime"
+                v-model="form.fecha_pago"
+                placeholder="Fecha del Pago"
+                class="w-full"
+              />
+              <span>{{ errors.first("form_calcular_adeudo.fecha_pago") }}</span>
+              <span v-if="this.errores.fecha_pago">{{
                 errores.fecha_pago[0]
               }}</span>
             </div>
-          </div>
-        </div>
-
-        <div
-          class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2 text-center"
-        >
-          <label class="text-base opacity-75 font-medium"> Multipago </label>
-          <div>
-            <vs-switch
-              class="mt-3 ml-auto mr-auto"
-              ref="permiso"
-              color="success"
-              v-model="form.multipago"
-              :vs-value="false"
-            />
-          </div>
-        </div>
-
-        <div
-          class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-right"
-        >
-          <vs-button
-            class="w-11/12 mt-6 default_color"
-            @click="CalcularPago()"
-            size="small"
-          >
-            <img
-              width="20px"
-              class="cursor-pointer"
-              src="@assets/images/money-cog.svg"
-            />
-            <span class="texto-btn text-base opacity-75 font-bold"
-              >Calcular Adeudo</span
+            <div
+              class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2 text-center input-text"
             >
-          </vs-button>
+              <label>Habilitar Multipago</label>
+              <div>
+                <vs-switch
+                  class="mx-auto mt-2"
+                  ref="permiso"
+                  color="success"
+                  v-model="form.multipago"
+                  :vs-value="false"
+                />
+              </div>
+            </div>
+            <div class="w-full md:w-3/12 px-2 text-right">
+              <vs-button
+                class="w-full lg:w-9/12 md:ml-2 my-2 mt-6 md:mt-4"
+                @click="CalcularPago()"
+              >
+                <span>Calcular Adeudo</span>
+              </vs-button>
+            </div>
+          </div>
         </div>
-        <vs-divider />
+      </div>
+
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Detalle del pago</span>
+        </div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <!--incio de tabla-->
+            <div class="w-full" v-if="mostrar_datos_operacion">
+              <vs-table
+                :data="form.datos_operacion.pagos_programados"
+                noDataText="0 Resultados"
+                class="tabla-datos"
+              >
+                <template slot="header">
+                  <h3>Listado de pagos programados</h3>
+                </template>
+                <template slot="thead">
+                  <vs-th>
+                    <vs-checkbox
+                      ref="seleccionar_todos"
+                      color="primary"
+                      class="capitalize font-medium mt-2 permiso"
+                      :vs-value="true"
+                      v-model="seleccionar_todos"
+                    ></vs-checkbox>
+                  </vs-th>
+                  <vs-th>#</vs-th>
+                  <vs-th>Concepto</vs-th>
+                  <vs-th>Referencia</vs-th>
+                  <vs-th>Fecha Programada</vs-th>
+                  <vs-th>Monto Programado $</vs-th>
+                  <vs-th>Intereses Generados $</vs-th>
+                  <vs-th>Descuento Disponible $</vs-th>
+                  <vs-th> Saldo del Pago(Sin descuento) $</vs-th>
+                </template>
+                <template slot-scope="{ data }">
+                  <vs-tr
+                    :data="programados"
+                    v-show="
+                      programados.status == 1 && programados.status_pago != 2
+                    "
+                    v-for="(programados, indextr) in form.datos_operacion
+                      .pagos_programados"
+                    v-bind:key="programados.id"
+                    ref="row"
+                  >
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr].num_pago
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                    >
+                      <vs-checkbox
+                        ref="pago_seleccionado"
+                        color="primary"
+                        :vs-value="programados"
+                        v-model="form.pagos_a_cubrir"
+                      ></vs-checkbox>
+                    </vs-td>
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr].num_pago
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                    >
+                      <span class="font-semibold">{{
+                        programados.num_pago
+                      }}</span>
+                    </vs-td>
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr]
+                          .concepto_texto
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                      >{{ programados.concepto_texto }}</vs-td
+                    >
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr]
+                          .referencia_pago
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                      >{{ programados.referencia_pago }}</vs-td
+                    >
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr]
+                          .fecha_programada_abr
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                      >{{ programados.fecha_programada_abr }}</vs-td
+                    >
+
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr]
+                          .status_pago
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                      >$
+                      {{
+                        (programados.monto_programado -
+                          programados.total_cubierto)
+                          | numFormat("0,000.00")
+                      }}</vs-td
+                    >
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr]
+                          .intereses
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                      >$
+                      {{ programados.intereses | numFormat("0,000.00") }}</vs-td
+                    >
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr]
+                          .status_pago
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                      >$
+                      {{
+                        programados.descuento_pronto_pago
+                          | numFormat("0,000.00")
+                      }}</vs-td
+                    >
+                    <vs-td
+                      :data="
+                        form.datos_operacion.pagos_programados[indextr]
+                          .saldo_neto
+                      "
+                      :class="[
+                        programados.status_pago == 0 ? 'color-danger-900' : '',
+                      ]"
+                      >$
+                      {{
+                        programados.saldo_neto | numFormat("0,000.00")
+                      }}</vs-td
+                    >
+                  </vs-tr>
+                  <vs-tr class="font-medium color-primary-900 size-base">
+                    <vs-td colspan="5">
+                      <div class="py-2"></div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">Monto Programado $</div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">Intereses Generados $</div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">Descuento Disponible $</div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">Saldo del Pago(Sin descuento) $</div>
+                    </vs-td>
+                  </vs-tr>
+                  <vs-tr class="font-medium color-black-900 size-base">
+                    <vs-td colspan="5">
+                      <div class="py-2 font-bold uppercase">Totales $</div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">
+                        $ {{ maximo_abono | numFormat("0,000.00") }}
+                      </div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">
+                        $ {{ maximo_interes | numFormat("0,000.00") }}
+                      </div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">
+                        $ {{ maximo_descuento | numFormat("0,000.00") }}
+                      </div>
+                    </vs-td>
+                    <vs-td>
+                      <div class="py-2">
+                        $ {{ maximo_saldo | numFormat("0,000.00") }}
+                      </div>
+                    </vs-td>
+                  </vs-tr>
+                </template>
+              </vs-table>
+            </div>
+            <!--FIN de tabla-->
+            <div class="w-full">
+              <div class="flex flex-wrap">
+                <div class="w-full lg:w-8/12">
+                  <div class="flex flex-wrap">
+                    <div class="w-full lg:w-6/12 px-2">
+                      <div class="form-group mt-6">
+                        <div class="title-form-group">
+                          <span>Detalle del pago</span>
+                        </div>
+                        <div class="form-group-content">
+                          <div class="flex flex-wrap">
+                            <!--Forma de pago-->
+                            <div class="w-full px-2 input-text">
+                              <label>
+                                Forma de Pago
+                                <span>(*)</span>
+                              </label>
+                              <v-select
+                                v-validate:forma_pago_validacion_computed.immediate="
+                                  'required'
+                                "
+                                data-vv-scope="pago_form"
+                                :options="FormasPago"
+                                :clearable="false"
+                                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                                v-model="form.formaPago"
+                                class="large_select"
+                                name="forma_pago"
+                                data-vv-as=" "
+                              >
+                                <div slot="no-options">
+                                  No Se Ha Seleccionado Ninguna Opción
+                                </div>
+                              </v-select>
+                              <span>{{
+                                errors.first("pago_form.forma_pago")
+                              }}</span>
+                              <span v-if="this.errores['formaPago.value']">{{
+                                errores["formaPago.value"][0]
+                              }}</span>
+                            </div>
+
+                            <div class="w-full px-2 input-text">
+                              <label>
+                                Cobrado Por:
+                                <span>(*)</span>
+                              </label>
+
+                              <v-select
+                                v-validate:cobrador_validacion_computed.immediate="
+                                  'required'
+                                "
+                                data-vv-scope="pago_form"
+                                :options="Cobradores"
+                                :clearable="false"
+                                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                                v-model="form.cobrador"
+                                class="large_select"
+                                name="forma_pago"
+                                data-vv-as=" "
+                              >
+                                <div slot="no-options">
+                                  No Se Ha Seleccionado Ninguna Opción
+                                </div>
+                              </v-select>
+
+                              <span>{{
+                                errors.first("pago_form.forma_pago")
+                              }}</span>
+
+                              <span v-if="this.errores['formaPago.value']">{{
+                                errores["formaPago.value"][0]
+                              }}</span>
+                            </div>
+
+                            <div class="w-full px-2 input-text">
+                              <label> REFERENCIA SOBRE EL ABONO </label>
+
+                              <vs-input
+                                data-vv-scope="pago_form"
+                                size="large"
+                                name="referencia_sobre_pago"
+                                data-vv-as=" "
+                                type="text"
+                                class="w-full"
+                                placeholder="Ej. cheque número 1"
+                                v-model="form.referencia_sobre_pago"
+                              />
+
+                              <span>{{
+                                errors.first("pago_form.referencia")
+                              }}</span>
+
+                              <span v-if="this.errores.referencia_sobre_pago">{{
+                                errores.referencia_sobre_pago[0]
+                              }}</span>
+                            </div>
+
+                            <div class="w-full px-2 input-text">
+                              <label> BANCO </label>
+                              <vs-input
+                                data-vv-scope="pago_form"
+                                size="large"
+                                name="banco"
+                                data-vv-as=" "
+                                type="text"
+                                class="w-full"
+                                placeholder="Ej. Santander"
+                                v-model="form.banco"
+                              />
+                              <span>{{ errors.first("pago_form.banco") }}</span>
+                              <span v-if="this.errores.banco">{{
+                                errores.banco[0]
+                              }}</span>
+                            </div>
+                            <!--Forma de pago-->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w-full lg:w-6/12 px-2">
+                      <!--Datos de resumen-->
+                      <div class="flex pt-6">
+                        <!--Resumen de pago-->
+                        <div
+                          class="w-full p-4 border-gray-solid-1 mx-auto rounded-lg"
+                        >
+                          <h3
+                            class="size-base font-bold color-black-900 text-center uppercase"
+                          >
+                            Resumen del pago
+                          </h3>
+                          <div class="flex pt-6 pb-2">
+                            <div class="w-6/12 text-left font-medium">
+                              Fecha del pago
+                            </div>
+                            <div class="w-6/12 text-right">
+                              {{ form.datos_operacion.fecha_a_pagar_texto }}
+                            </div>
+                          </div>
+                          <div class="flex py-2">
+                            <div class="w-6/12 text-left font-medium">
+                              Beneficiario
+                            </div>
+                            <div class="w-6/12 text-right">
+                              {{ form.datos_operacion.nombre }}
+                            </div>
+                          </div>
+                          <div class="flex py-2">
+                            <div class="w-6/12 text-left font-medium">
+                              Concepto del pago
+                            </div>
+                            <div class="w-6/12 text-right">
+                              {{ form.datos_operacion.operacion_texto }}
+                            </div>
+                          </div>
+                          <div class="flex py-2">
+                            <div class="w-6/12 text-left font-medium">
+                              Tipo de Cambio
+                            </div>
+                            <div class="w-6/12 text-right uppercase">
+                              peso mexicano ($1.00 MXN)
+                            </div>
+                          </div>
+                          <div class="flex py-2">
+                            <div class="w-6/12 text-left font-medium">
+                              Forma de pago
+                            </div>
+                            <div class="w-6/12 text-right uppercase">
+                              {{ form.formaPago["label"] }}
+                            </div>
+                          </div>
+                          <div class="flex py-2">
+                            <div class="w-6/12 text-left font-medium">
+                              Cobrado por:
+                            </div>
+                            <div class="w-6/12 text-right uppercase">
+                              {{ form.cobrador.label }}
+                            </div>
+                          </div>
+                          <div
+                            class="flex flex-wrap mt-2 theme-background py-6"
+                          >
+                            <div
+                              class="w-full text-center font-medium color-black-900 uppercase"
+                            >
+                              Total a pagar
+                            </div>
+                            <div
+                              class="w-full text-center color-black-700 uppercase pt-2"
+                            >
+                              {{ form.datos_operacion.operacion_texto }}
+                            </div>
+                          </div>
+                        </div>
+                        <!--Fin de Resumen de pago-->
+                      </div>
+                      <!--FIN de resumen-->
+                    </div>
+                    <div class="w-full px-2 input-text">
+                      <label> NOTA U OBSERVACIÓN: </label>
+                      <vs-textarea
+                        height="240px"
+                        :rows="5"
+                        size="large"
+                        ref="nota"
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese una nota..."
+                        v-model.trim="form.nota"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="w-full lg:w-4/12">f</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="flex flex-wrap px-2" v-if="mostrar_datos_operacion">
-        <div class="w-full pt-8" v-if="mostrar_datos_operacion">
-          <vs-table
-            class="tablas-pagos"
-            :data="form.datos_operacion.pagos_programados"
-            noDataText="0 Resultados"
-          >
-            <template slot="header">
-              <h3>Listado de pagos programados</h3>
-            </template>
-            <template slot="thead">
-              <vs-th>
-                <vs-checkbox
-                  ref="seleccionar_todos"
-                  color="primary"
-                  class="capitalize text-base font-medium mt-2 permiso"
-                  :vs-value="true"
-                  v-model="seleccionar_todos"
-                ></vs-checkbox>
-              </vs-th>
-              <vs-th>#</vs-th>
-              <vs-th>Concepto</vs-th>
-              <vs-th>Referencia</vs-th>
-              <vs-th>Fecha Programada</vs-th>
-              <vs-th>Monto Programado $</vs-th>
-              <vs-th>Intereses Generados $</vs-th>
-              <vs-th>Descuento Disponible $</vs-th>
-              <vs-th> Saldo del Pago(Sin descuento) $</vs-th>
-            </template>
-            <template slot-scope="{ data }">
-              <vs-tr
-                :data="programados"
-                v-show="programados.status == 1 && programados.status_pago != 2"
-                v-for="(programados, indextr) in form.datos_operacion
-                  .pagos_programados"
-                v-bind:key="programados.id"
-                ref="row"
-              >
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr].num_pago
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >
-                  <vs-checkbox
-                    ref="pago_seleccionado"
-                    color="primary"
-                    class="capitalize text-base font-medium mt-2 permiso"
-                    :vs-value="programados"
-                    v-model="form.pagos_a_cubrir"
-                  ></vs-checkbox>
-                </vs-td>
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr].num_pago
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                >
-                  <span class="font-semibold">{{ programados.num_pago }}</span>
-                </vs-td>
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr]
-                      .concepto_texto
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                  >{{ programados.concepto_texto }}</vs-td
-                >
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr]
-                      .referencia_pago
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                  >{{ programados.referencia_pago }}</vs-td
-                >
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr]
-                      .fecha_programada_abr
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                  >{{ programados.fecha_programada_abr }}</vs-td
-                >
-
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr].status_pago
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                  >$
-                  {{
-                    (programados.monto_programado - programados.total_cubierto)
-                      | numFormat("0,000.00")
-                  }}</vs-td
-                >
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr].intereses
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                  >$ {{ programados.intereses | numFormat("0,000.00") }}</vs-td
-                >
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr].status_pago
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                  >$
-                  {{
-                    programados.descuento_pronto_pago | numFormat("0,000.00")
-                  }}</vs-td
-                >
-                <vs-td
-                  :data="
-                    form.datos_operacion.pagos_programados[indextr].saldo_neto
-                  "
-                  :class="[programados.status_pago == 0 ? 'text-danger' : '']"
-                  >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td
-                >
-              </vs-tr>
-              <vs-tr class="tr_especial">
-                <vs-td colspan="5">
-                  <div class="py-2 font-bold text-base"></div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">Monto Programado $</div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">Intereses Generados $</div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">Descuento Disponible $</div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">
-                    Saldo del Pago(Sin descuento) $
-                  </div>
-                </vs-td>
-              </vs-tr>
-              <vs-tr class="">
-                <vs-td colspan="5">
-                  <div class="py-2 font-bold text-base">Totales $</div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">
-                    $ {{ maximo_abono | numFormat("0,000.00") }}
-                  </div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">
-                    $ {{ maximo_interes | numFormat("0,000.00") }}
-                  </div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">
-                    $ {{ maximo_descuento | numFormat("0,000.00") }}
-                  </div>
-                </vs-td>
-                <vs-td>
-                  <div class="py-2 text-base">
-                    $ {{ maximo_saldo | numFormat("0,000.00") }}
-                  </div>
-                </vs-td>
-              </vs-tr>
-            </template>
-          </vs-table>
-        </div>
-        <vs-divider />
-
         <div class="w-full flex flex-wrap">
           <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12">
-            <div class="flex flex-wrap px-2 pb-8">
-              <div
-                class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-2 text-center"
-              >
-                <label class="text-base uppercase opacity-75 font-bold">
-                  Concepto de Pago
-                </label>
-                <div class="py-2 uppercase">
-                  {{ form.datos_operacion.operacion_texto }}
-                </div>
-              </div>
-              <div
-                class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-2 text-center"
-              >
-                <label class="text-base uppercase opacity-75 font-bold">
-                  titular beneficiario
-                </label>
-                <div class="py-2 uppercase">
-                  {{ form.datos_operacion.nombre }}
-                </div>
-              </div>
-
-              <div
-                class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-2 text-center"
-              >
-                <label class="text-base uppercase opacity-75 font-bold">
-                  fecha del pago
-                </label>
-                <div class="py-2 uppercase">
-                  {{ form.datos_operacion.fecha_a_pagar_texto }}
-                </div>
-              </div>
-
-              <div
-                class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-2 text-center"
-              >
-                <label class="text-base uppercase opacity-75 font-bold">
-                  tipo de cambio
-                </label>
-                <div>
-                  <span class="uppercase"> peso mexicano ($1.00 MXN) </span>
-                </div>
-              </div>
-              <div class="w-full">
-                <vs-divider />
-              </div>
-            </div>
-            <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2">
-                <label class="text-base opacity-75 font-medium">
-                  <span>Forma de Pago</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <img
-                  width="32"
-                  class="img-center float-left mt-8 mr-2"
-                  src="@assets/images/payment-method.svg"
-                />
-                <v-select
-                  v-validate:forma_pago_validacion_computed.immediate="
-                    'required'
-                  "
-                  data-vv-scope="pago_form"
-                  :options="FormasPago"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.formaPago"
-                  class="pb-1 pt-1 large_select"
-                  name="forma_pago"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ninguna Opción
-                  </div>
-                </v-select>
-
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.forma_pago")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['formaPago.value']"
-                    >{{ errores["formaPago.value"][0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-                <label class="text-base opacity-75 font-medium">
-                  <span>Cobrado Por:</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <img
-                  width="32"
-                  class="img-center float-left mt-8 mr-2"
-                  src="@assets/images/businessman.svg"
-                />
-                <v-select
-                  v-validate:cobrador_validacion_computed.immediate="'required'"
-                  data-vv-scope="pago_form"
-                  :options="Cobradores"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.cobrador"
-                  class="pb-1 pt-1 large_select"
-                  name="forma_pago"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">
-                    No Se Ha Seleccionado Ninguna Opción
-                  </div>
-                </v-select>
-
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.forma_pago")
-                  }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['formaPago.value']"
-                    >{{ errores["formaPago.value"][0] }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="w-full flex flex-wrap">
-                <div
-                  class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold">
-                    REFERENCIA SOBRE EL ABONO
-                  </label>
-                  <img
-                    width="32"
-                    class="img-center float-left mt-8 mr-2"
-                    src="@assets/images/check-bank.svg"
-                  />
-                  <vs-input
-                    data-vv-scope="pago_form"
-                    size="large"
-                    name="referencia_sobre_pago"
-                    data-vv-as=" "
-                    type="text"
-                    class="w-full pb-1 pt-1 texto-bold"
-                    placeholder="Ej. cheque número 1"
-                    v-model="form.referencia_sobre_pago"
-                  />
-
-                  <div>
-                    <span class="mensaje-requerido">{{
-                      errors.first("pago_form.referencia")
-                    }}</span>
-                  </div>
-                  <div class="mt-2">
-                    <span
-                      class="mensaje-requerido"
-                      v-if="this.errores.referencia_sobre_pago"
-                      >{{ errores.referencia_sobre_pago[0] }}</span
-                    >
-                  </div>
-                </div>
-
-                <div
-                  class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"> BANCO </label>
-                  <img
-                    width="32"
-                    class="img-center float-left mt-8 mr-2"
-                    src="@assets/images/bank.svg"
-                  />
-                  <vs-input
-                    data-vv-scope="pago_form"
-                    size="large"
-                    name="banco"
-                    data-vv-as=" "
-                    type="text"
-                    class="w-full pb-1 pt-1 texto-bold"
-                    placeholder="Ej. Santander"
-                    v-model="form.banco"
-                  />
-
-                  <div>
-                    <span class="mensaje-requerido">{{
-                      errors.first("pago_form.banco")
-                    }}</span>
-                  </div>
-                  <div class="mt-2">
-                    <span class="mensaje-requerido" v-if="this.errores.banco">{{
-                      errores.banco[0]
-                    }}</span>
-                  </div>
-                </div>
-                <div
-                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold">
-                    NOTA U OBSERVACIÓN:
-                  </label>
-                  <vs-textarea
-                    height="240px"
-                    :rows="7"
-                    size="large"
-                    ref="nota"
-                    type="text"
-                    class="w-full pt-3 pb-3 mt-1 large_textarea"
-                    placeholder="Ingrese una nota..."
-                    v-model.trim="form.nota"
-                  />
-                </div>
-              </div>
-            </div>
+            <div class="flex flex-wrap"></div>
           </div>
           <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
             <div class="w-full flex flex-wrap">
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
-                <label class="text-sm opacity-75 font-bold">
+                <label>
                   $ ABONO A CAPITAL
-                  <span class="texto-importante">(*)</span>
+                  <span>(*)</span>
                 </label>
                 <img
                   width="25"
@@ -532,28 +547,24 @@
                     maximo_abono
                   "
                   type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
+                  class="w-full texto-bold"
                   placeholder="$ 0.00"
                   v-model.trim="form.abono"
                 />
 
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.abono")
-                  }}</span>
+                  <span>{{ errors.first("pago_form.abono") }}</span>
                 </div>
                 <div class="mt-2">
-                  <span class="mensaje-requerido" v-if="this.errores.abono">{{
-                    errores.abono[0]
-                  }}</span>
+                  <span v-if="this.errores.abono">{{ errores.abono[0] }}</span>
                 </div>
               </div>
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
-                <label class="text-sm opacity-75 font-bold">
+                <label>
                   $ INTERESES MORATORIOS
-                  <span class="texto-importante">(*)</span>
+                  <span>(*)</span>
                 </label>
                 <img
                   width="25"
@@ -570,30 +581,26 @@
                     'required|decimal:2|min_value:0|max_value:' + maximo_interes
                   "
                   type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
+                  class="w-full texto-bold"
                   placeholder="$ 0.00"
                   v-model.trim="form.intereses"
                 />
 
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.intereses")
-                  }}</span>
+                  <span>{{ errors.first("pago_form.intereses") }}</span>
                 </div>
                 <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.intereses"
-                    >{{ errores.intereses[0] }}</span
-                  >
+                  <span v-if="this.errores.intereses">{{
+                    errores.intereses[0]
+                  }}</span>
                 </div>
               </div>
               <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 hidden"
               >
-                <label class="text-sm opacity-75 font-bold">
+                <label>
                   $ DESCUENTO POR PRONTO PAGO
-                  <span class="texto-importante">(*)</span>
+                  <span>(*)</span>
                 </label>
                 <img
                   width="25"
@@ -611,30 +618,26 @@
                     maximo_descuento
                   "
                   type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
+                  class="w-full texto-bold"
                   placeholder="$ 0.00"
                   v-model.trim="form.descuento_pronto_pago"
                 />
 
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.descuento")
-                  }}</span>
+                  <span>{{ errors.first("pago_form.descuento") }}</span>
                 </div>
                 <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.descuento"
-                    >{{ errores.descuento[0] }}</span
-                  >
+                  <span v-if="this.errores.descuento">{{
+                    errores.descuento[0]
+                  }}</span>
                 </div>
               </div>
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
-                <label class="text-sm opacity-75 font-bold">
+                <label>
                   $ TOTAL A PAGAR
-                  <span class="texto-importante">(*)</span>
+                  <span>(*)</span>
                 </label>
                 <img
                   width="25"
@@ -652,30 +655,26 @@
                     'required|decimal:2|min_value:0|max_value:' + maximo_saldo
                   "
                   type="text"
-                  class="w-full pb-1 pt-1 texto-bold text-primary"
+                  class="w-full texto-bold text-primary"
                   placeholder=""
                   v-model.trim="total_pagar"
                   readonly
                   :disabled="true"
                 />
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.total")
-                  }}</span>
+                  <span>{{ errors.first("pago_form.total") }}</span>
                 </div>
                 <div class="mt-2">
-                  <span class="mensaje-requerido" v-if="this.errores.total">{{
-                    errores.total[0]
-                  }}</span>
+                  <span v-if="this.errores.total">{{ errores.total[0] }}</span>
                 </div>
               </div>
 
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
-                <label class="text-sm opacity-75 font-bold">
+                <label>
                   $ CANTIDAD CON QUE PAGÓ
-                  <span class="texto-importante">(*)</span>
+                  <span>(*)</span>
                 </label>
                 <img
                   width="25"
@@ -695,31 +694,27 @@
                     maximo_cantidad_pago
                   "
                   type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
+                  class="w-full texto-bold"
                   placeholder=""
                   v-model.trim="form.pago_con_cantidad"
                   :disabled="this.form.formaPago.value != 1 ? true : false"
                 />
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.pago_con_cantidad")
-                  }}</span>
+                  <span>{{ errors.first("pago_form.pago_con_cantidad") }}</span>
                 </div>
                 <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.pago_con_cantidad"
-                    >{{ errores.pago_con_cantidad[0] }}</span
-                  >
+                  <span v-if="this.errores.pago_con_cantidad">{{
+                    errores.pago_con_cantidad[0]
+                  }}</span>
                 </div>
               </div>
 
               <div
                 class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
               >
-                <label class="text-sm opacity-75 font-bold">
+                <label>
                   $ CAMBIO A REGRESAR
-                  <span class="texto-importante">(*)</span>
+                  <span>(*)</span>
                 </label>
                 <img
                   width="25"
@@ -734,37 +729,33 @@
                   data-vv-as=" "
                   v-validate="'required|decimal:2|min_value:0'"
                   type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
+                  class="w-full texto-bold"
                   placeholder=""
                   v-model.trim="cantidad_a_regresar"
                   readonly
                   :disabled="true"
                 />
                 <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("pago_form.cambio_pago")
-                  }}</span>
+                  <span>{{ errors.first("pago_form.cambio_pago") }}</span>
                 </div>
                 <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.cambio_pago"
-                    >{{ errores.cambio_pago[0] }}</span
-                  >
+                  <span v-if="this.errores.cambio_pago">{{
+                    errores.cambio_pago[0]
+                  }}</span>
                 </div>
               </div>
 
               <div class="w-full px-2">
                 <div class="mt-2">
                   <div class="text-center" v-if="form.formaPago.value != 7">
-                    <span class="text-danger font-medium text-base">Ojo:</span>
+                    <span class="color-danger-900 font-medium">Ojo:</span>
                     Por favor revise la información ingresada, si todo es
                     correcto de click en "Botón de Abajo”.
                   </div>
                   <div v-else>
                     <img width="25px" src="@assets/images/warning.svg" />
                     <h3
-                      class="w-11/12 font-medium text-base text-danger py-1 float-right ml-1"
+                      class="w-11/12 font-medium color-danger-900 py-1 float-right ml-1"
                     >
                       Advertencia, la forma de pago seleccionada se tomará como
                       un descuento.
@@ -798,7 +789,7 @@
               src="@assets/images/disabled.svg"
             />
             <h3
-              class="text-center text-danger text-lg uppercase py-6 font-bold"
+              class="text-center color-danger-900 text-lg uppercase py-6 font-bold"
             >
               Este pago no puede ser registrado por el siguiente motivo
             </h3>

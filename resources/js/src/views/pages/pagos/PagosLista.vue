@@ -1,55 +1,46 @@
 <template>
   <div>
-    <div class="flex flex-wrap">
-      <div class="w-full mb-1">
-        <vs-button
-          class="float-right"
-          size="small"
-          color="success"
-          @click="formulario('agregar')"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/pay.svg" />
-          <span class="texto-btn">Capturar Pago</span>
-        </vs-button>
-      </div>
+    <div class="w-full text-right">
+      <vs-button
+        class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="formulario('agregar')"
+      >
+        <span class="">Capturar Pago</span>
+      </vs-button>
     </div>
+
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
       <vx-card
         no-radius
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Mostrar</label>
+          <div class="w-full lg:w-3/12 xl:w-3/12 px-2 input-text">
+            <label class="">Mostrar</label>
             <v-select
               :options="mostrarOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="mostrar"
-              class="mb-4 sm:mb-0"
+              class="w-full"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Estado</label>
+          <div class="w-full lg:w-3/12 xl:w-3/12 px-2 input-text">
+            <label class="">Estado</label>
             <v-select
               :options="estadosOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="estado"
-              class="mb-4 md:mb-0"
+              class="w-full"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Fecha de Pago</label>
+          <div class="w-full lg:w-3/12 xl:w-3/12 px-2 input-text">
+            <label class="">Fecha de Pago</label>
             <flat-pickr
               data-vv-scope="form_calcular_adeudo"
               name="fecha_pago"
@@ -61,10 +52,8 @@
               class="w-full"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
-          >
-            <label class="text-sm opacity-75">Número de Movimiento</label>
+          <div class="w-full lg:w-3/12 xl:w-3/12 px-2 input-text">
+            <label class="">Número de Movimiento</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -84,6 +73,7 @@
       :max-items="serverOptions.per_page.value"
       :data="pagos"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Movimientos Realizados</h3>
@@ -131,30 +121,23 @@
             $ {{ data[indextr].monto_pago | numFormat("0,000.00") }}
           </vs-td>
           <vs-td :data="data[indextr].status">
-            <p v-if="data[indextr].status == 1" class=" font-medium">
-              {{ data[indextr].status_texto }}
+            <p v-if="data[indextr].status == 1">
+              Cobrado <span class="dot-success"></span>
             </p>
-            <p v-else class="text-danger font-medium">
-              {{ data[indextr].status_texto }}
-            </p>
+            <p v-else>Cancelado <span class="dot-danger"></span></p>
           </vs-td>
           <vs-td :data="data[indextr].id">
-            <div class="flex flex-start py-1">
+            <div class="flex justify-center py-1">
               <img
-                :class="[
-                  'cursor-pointer img-btn',
-                  tr.status == 1 ? 'ml-auto mr-2' : 'ml-auto mr-auto'
-                ]"
+                class="img-btn-20 mx-2"
                 src="@assets/images/pdf.svg"
                 title="Ver Recibo"
                 @click="openReporte(data[indextr])"
               />
-
               <!--verificar que tipo de movimeinto es, me itneresa que el id del pago a cancelar sea el del pago parent siempre-->
               <img
-                width="24"
                 v-if="data[indextr].status == 1"
-                class="cursor-pointer mr-auto ml-2"
+                class="img-btn-20 mx-2"
                 src="@assets/images/cancel.svg"
                 title="Cancelar Movimiento"
                 @click="
@@ -227,31 +210,31 @@ export default {
     FormularioPagos,
     Reporteador,
     CancelarPago,
-    flatPickr
+    flatPickr,
   },
   watch: {
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       (async () => {
         await this.get_data(this.actual);
       })();
     },
-    mostrar: function(newValue, oldValue) {
+    mostrar: function (newValue, oldValue) {
       (async () => {
         await this.get_data(1);
       })();
     },
-    estado: function(newVal, previousVal) {
+    estado: function (newVal, previousVal) {
       (async () => {
         await this.get_data(1);
       })();
     },
-    "serverOptions.fecha_pago": function(newVal, previousVal) {
+    "serverOptions.fecha_pago": function (newVal, previousVal) {
       if (newVal != "") {
         (async () => {
           await this.get_data(1);
         })();
       }
-    }
+    },
   },
   data() {
     return {
@@ -261,7 +244,7 @@ export default {
       request: {
         id_pago: "",
         email: "",
-        destinatario: ""
+        destinatario: "",
       },
       id_pago: 0,
       openCancelar: false,
@@ -271,7 +254,7 @@ export default {
         per_page: "",
         status: "",
         numero_control: "",
-        fecha_pago: ""
+        fecha_pago: "",
       },
       activeTab: 0,
       verPaginado: true,
@@ -285,21 +268,21 @@ export default {
       estadosOptions: [
         {
           label: "Todos",
-          value: ""
+          value: "",
         },
         {
           label: "Activos",
-          value: "1"
+          value: "1",
         },
         {
           label: "Cancelados",
-          value: "0"
-        }
+          value: "0",
+        },
       ],
       //fin variables
       openStatus: false,
       callback: Function,
-      accionNombre: ""
+      accionNombre: "",
     };
   },
   methods: {
@@ -314,7 +297,7 @@ export default {
       this.ListaReportes = [];
       this.ListaReportes.push({
         nombre: "Recibo de Movimiento",
-        url: url
+        url: url,
       });
       //estado de cuenta
       this.request.email =
@@ -344,7 +327,7 @@ export default {
             icon: "icon-alert-circle",
             color: "danger",
             position: "bottom-right",
-            time: "9000"
+            time: "9000",
           });
         }
       })();
@@ -408,7 +391,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -458,16 +441,16 @@ export default {
             icon: "icon-alert-circle",
             color: "danger",
             position: "bottom-right",
-            time: "9000"
+            time: "9000",
           });
         }
       })();
-    }
+    },
   },
   created() {
     (async () => {
       await this.get_data(this.actual);
     })();
-  }
+  },
 };
 </script>
