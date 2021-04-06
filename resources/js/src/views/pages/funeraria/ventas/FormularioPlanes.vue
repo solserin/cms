@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup popup-95"
+      class="forms-popup popup-80"
       fullscreen
       close="cancelar"
       :title="title"
@@ -41,271 +41,182 @@
         <div class="title-form-group">Contenido del Plan Funerario</div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
-            <div class="w-full xl:w-7/12 px-2">
-              {{ form.conceptos }}
-              <vs-table
-                :data="datos"
-                noDataText="No se han agregado Artículos ni Servicios"
-                class="tabla-datos"
-              >
-                <template slot="header">
-                  <h3>Servicios y Artículos que Incluye el Paquete</h3>
-                </template>
-                <template slot="thead">
-                  <vs-th>#</vs-th>
-                  <vs-th>Artículo/Servicio</vs-th>
-                  <vs-th>Aplicar en</vs-th>
-                  <vs-th>Acciones</vs-th>
-                </template>
-                <template slot-scope="{ data }">
-                  <vs-tr
-                    :data="tr"
-                    :key="indextr"
-                    v-for="(tr, indextr) in data"
-                  >
-                    <vs-td>
-                      <div>
-                        <span>{{ alfabeto[indextr] }})</span>
-                      </div>
-                    </vs-td>
-                    <vs-td>
-                      <div>
-                        {{ tr.concepto }}
-                      </div>
-                    </vs-td>
-                    <vs-td>
-                      <div>{{ tr.aplicar }}</div>
-                    </vs-td>
-                    <vs-td>
-                      <div class="flex justify-center">
-                        <img
-                          class="img-btn-18 mx-3"
-                          src="@assets/images/edit.svg"
-                          title="Modificar"
-                          @click="update(tr)"
-                        />
-                        <img
-                          class="img-btn-22 mx-3"
-                          src="@assets/images/trash.svg"
-                          title="Quitar"
-                          @click="remove(tr)"
-                        />
-                      </div>
-                    </vs-td>
-                  </vs-tr>
-                </template>
-              </vs-table>
+            <div class="w-full px-2">
+              <div v-if="verLista">
+                <vs-table
+                  :data="datos"
+                  noDataText="No se han agregado Artículos ni Servicios"
+                  class="tabla-datos"
+                >
+                  <template slot="header">
+                    <h3>Servicios y Artículos que Incluye el Paquete</h3>
+                  </template>
+                  <template slot="thead">
+                    <vs-th>#</vs-th>
+                    <vs-th>Artículo/Servicio</vs-th>
+                    <vs-th>Aplicar en</vs-th>
+                    <vs-th>Acciones</vs-th>
+                  </template>
+                  <template slot-scope="{ data }">
+                    <vs-tr
+                      :data="tr"
+                      :key="indextr"
+                      v-for="(tr, indextr) in data"
+                    >
+                      <vs-td>
+                        <div>
+                          <span>{{ alfabeto[indextr] }})</span>
+                        </div>
+                      </vs-td>
+                      <vs-td>
+                        <div>
+                          {{ tr.concepto }}
+                        </div>
+                      </vs-td>
+                      <vs-td>
+                        <div>{{ tr.aplicar }}</div>
+                      </vs-td>
+                      <vs-td>
+                        <div class="flex justify-center">
+                          <img
+                            class="img-btn-18 mx-3"
+                            src="@assets/images/edit.svg"
+                            title="Modificar"
+                            @click="update(tr)"
+                          />
+                          <img
+                            class="img-btn-22 mx-3"
+                            src="@assets/images/trash.svg"
+                            title="Quitar"
+                            @click="remove(tr)"
+                          />
+                        </div>
+                      </vs-td>
+                    </vs-tr>
+                  </template>
+                </vs-table>
+              </div>
+              <div class="w-full" v-else>
+                <vs-table
+                  :data="[]"
+                  noDataText="No se han agregado Artículos ni Servicios"
+                >
+                  <template slot="header">
+                    <h3>Servicios y Artículos que Incluye el Paquete</h3>
+                  </template>
+                  <template slot="thead">
+                    <vs-th>#</vs-th>
+                    <vs-th>Artículo/Servicio</vs-th>
+                    <vs-th>Aplicar en</vs-th>
+                    <vs-th>Acciones</vs-th>
+                  </template>
+                </vs-table>
+              </div>
             </div>
-            <div class="w-full xl:w-5/12 px-2"></div>
+            <div class="w-full">
+              <div class="flex flex-wrap">
+                <div
+                  class="w-full h5 size-base font-medium uppercase color-dark-900 pb-2 px-2 py-6"
+                >
+                  Agregar conceptos a la lista
+                </div>
+                <div class="w-full lg:w-8/12 input-text px-2">
+                  <label>
+                    Concepto
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    data-vv-scope="conceptos"
+                    ref="concepto"
+                    name="concepto"
+                    data-vv-as=" "
+                    v-validate.disable="'required'"
+                    maxlength="200"
+                    type="text"
+                    class="w-full"
+                    placeholder="Ej. Una urna básica"
+                    v-model="form.concepto"
+                  />
+                  <span>{{ errors.first("conceptos.concepto") }}</span>
+                </div>
+
+                <div class="px-2 input-text w-full lg:w-4/12">
+                  <label>
+                    Aplicar en
+                    <span>(*)</span>
+                  </label>
+                  <v-select
+                    :options="secciones"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.seccion"
+                    class="w-full"
+                    name="plan_venta"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      No Se Ha Seleccionado Ninguna Opción
+                    </div>
+                  </v-select>
+                </div>
+
+                <div class="w-full text-right px-2 pt-6">
+                  <vs-button
+                    v-if="verModificar"
+                    class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+                    color="danger"
+                    @click="cancelarModificacion"
+                    type="line"
+                  >
+                    <span>Cancelar modificación</span>
+                  </vs-button>
+                  <vs-button
+                    @click="agregarConcepto"
+                    class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+                    color="success"
+                    type="line"
+                  >
+                    <span v-if="!verModificar">Agregar</span>
+                    <span v-else>Modificar concepto</span>
+                  </vs-button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="flex flex-wrap px-2">
-        <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2">
-          <div class="flex flex-wrap">
-            <div class="w-full">
-              <div class="mt-2 py-2">
-                <span
-                  class="mensaje-requerido"
-                  v-if="this.errores['conceptos.0.conceptos']"
-                  >{{ errores["conceptos.0.conceptos"][0] }}</span
-                >
-              </div>
-            </div>
-          </div>
+      <vs-divider />
+      <div class="w-full input-text">
+        <label> Nota u observación sobre el paquete funerario: </label>
+        <vs-textarea
+          height="120px"
+          maxlength="400"
+          size="large"
+          ref="nota"
+          type="text"
+          class="w-full"
+          placeholder=""
+          v-model.trim="form.nota"
+        />
+      </div>
+      <div class="bottom-buttons-section w-full">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
         </div>
-        <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-          <div class="flex flex-wrap">
-            <div class="w-full pt-3 pb-3">
-              <div class="float-left">
-                <img width="30px" src="@assets/images/plus.svg" class="mt-2" />
-                <h3
-                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                >
-                  Agregar Conceptos
-                </h3>
-              </div>
-            </div>
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-            >
-              <label>
-                Concepto
-                <span>(*)</span>
-              </label>
-              <vs-input
-                data-vv-scope="conceptos"
-                ref="concepto"
-                name="concepto"
-                data-vv-as=" "
-                v-validate.disable="'required'"
-                maxlength="200"
-                type="text"
-                class="w-full"
-                placeholder="Ej. Una urna básica"
-                v-model="form.concepto"
-              />
-              <div>
-                <span>{{ errors.first("conceptos.concepto") }}</span>
-              </div>
-              <div class="mt-2"></div>
-            </div>
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-            >
-              <label>
-                Concepto en inglés
-                <span>(*)</span>
-              </label>
-              <vs-input
-                data-vv-scope="conceptos"
-                ref="concepto_ingles"
-                name="concepto_ingles"
-                data-vv-as=" "
-                v-validate.disable="'required'"
-                maxlength="200"
-                type="text"
-                class="w-full"
-                placeholder="Ej. Basic urn"
-                v-model="form.concepto_ingles"
-              />
-              <div>
-                <span>{{ errors.first("conceptos.concepto_ingles") }}</span>
-              </div>
-              <div class="mt-2"></div>
-            </div>
-            <div
-              :class="[
-                'w-full sm:w-12/12 px-2',
-                verModificar
-                  ? 'md:w-12/12 lg:w-12/12 xl:w-12/12'
-                  : 'md:w-7/12 lg:w-7/12 xl:w-7/12',
-              ]"
-            >
-              <label>
-                <span>Aplicar en</span>
-                <span class="texto-importante">(*)</span>
-              </label>
-              <v-select
-                :options="secciones"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="form.seccion"
-                class="pb-1 pt-1 plan_venta"
-                name="plan_venta"
-                data-vv-as=" "
-              >
-                <div slot="no-options">
-                  No Se Ha Seleccionado Ninguna Opción
-                </div>
-              </v-select>
-              <div class="mt-2"></div>
-            </div>
-            <div
-              :class="[
-                'w-full sm:w-12/12  pt-2 pb-3 px-2',
-                verModificar
-                  ? ' md:w-6/12 lg:w-6/12 xl:w-6/12'
-                  : ' md:w-6/12 lg:w-6/12 xl:w-6/12',
-              ]"
-              v-if="verModificar"
-            >
-              <vs-button
-                class="w-full"
-                @click="cancelarModificacion"
-                color="danger"
-                size="small"
-              >
-                <span class="font-medium text-base">Cancelar Modificación</span>
-              </vs-button>
-            </div>
-            <div
-              :class="[
-                'w-full sm:w-12/12  pt-2 pb-3 px-2',
-                verModificar
-                  ? ' md:w-6/12 lg:w-6/12 xl:w-6/12'
-                  : ' md:w-5/12 lg:w-5/12 xl:w-5/12 mt-5',
-              ]"
-            >
-              <vs-button
-                class="w-full"
-                @click="agregarConcepto"
-                color="success"
-                size="small"
-              >
-                <span class="font-medium text-base" v-if="!verModificar"
-                  >Agregar a la Lista</span
-                >
-                <span class="font-medium text-base" v-else
-                  >Modificar Servicio</span
-                >
-              </vs-button>
-            </div>
 
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+        <div class="w-full">
+          <vs-button
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="primary"
+            @click="acceptAlert()"
+          >
+            <span class="" v-if="this.getTipoformulario == 'agregar'"
+              >Guardar Datos</span
             >
-              <label> NOTA U OBSERVACIÓN: </label>
-              <vs-textarea
-                height="120px"
-                maxlength="400"
-                size="large"
-                ref="nota"
-                type="text"
-                class="w-full pt-3 pb-3 mt-1 large_textarea"
-                placeholder="Ingrese una nota..."
-                v-model.trim="form.nota"
-              />
-            </div>
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-            >
-              <label> NOTA U OBSERVACIÓN(EN INGLÉS): </label>
-              <vs-textarea
-                height="120px"
-                maxlength="400"
-                size="large"
-                ref="nota"
-                type="text"
-                class="w-full pt-3 pb-3 mt-1 large_textarea"
-                placeholder="Ingrese una nota en inglés..."
-                v-model.trim="form.nota_ingles"
-              />
-            </div>
-
-            <div class="flex flex-wrap px-2">
-              <div class="w-full px-2">
-                <div class="mt-2">
-                  <p class="text-center">
-                    <span class="text-danger font-medium">Ojo:</span>
-                    Por favor revise la información ingresada, si todo es
-                    correcto de click en "Botón de Abajo”.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="w-full mt-4">
-              <vs-button
-                class="w-full"
-                @click="acceptAlert()"
-                color="primary"
-                size="small"
-              >
-                <img
-                  width="25px"
-                  class="cursor-pointer"
-                  src="@assets/images/save.svg"
-                />
-                <span
-                  class="texto-btn"
-                  v-if="this.getTipoformulario == 'agregar'"
-                  >Guardar Datos</span
-                >
-                <span class="texto-btn" v-else>Modificar Datos</span>
-              </vs-button>
-            </div>
-          </div>
+            <span class="" v-else>Modificar Datos</span>
+          </vs-button>
         </div>
       </div>
     </vs-popup>
@@ -427,7 +338,6 @@ export default {
               element.conceptos.forEach((concepto, index_concepto) => {
                 this.datos.push({
                   concepto: concepto.concepto,
-                  concepto_ingles: concepto.concepto_ingles,
                   aplicar: concepto.aplicar_en,
                   seccion: element.seccion,
                   index_seccion: index_seccion,
@@ -448,7 +358,11 @@ export default {
       }
     },
     verModificar: function () {
-      if (this.index_seccion !== "" && this.index_concepto !== "") {
+      if (
+        this.index_seccion !== "" &&
+        this.index_concepto !== "" &&
+        this.modificando == true
+      ) {
         return true;
       } else {
         return false;
@@ -482,8 +396,8 @@ export default {
         },
       ],
       form: {
+        modificando: false,
         descripcion: "",
-        descripcion_ingles: "",
         seccion: {},
         conceptos: [
           {
@@ -504,9 +418,7 @@ export default {
           },
         ],
         nota: "",
-        nota_ingles: "",
         concepto: "",
-        concepto_ingles: "",
         id_plan_modificar: 0,
         /**variables del modulo */
       },
@@ -556,7 +468,6 @@ export default {
     },
     update(datos) {
       this.form.concepto = datos.concepto;
-      this.form.concepto_ingles = datos.concepto_ingles;
       /**buscando el item de la lista de secciones */
       this.secciones.forEach((element) => {
         if (element.value === datos.seccion) {
@@ -566,12 +477,14 @@ export default {
       /**agregando los indexes de concepto */
       this.index_seccion = datos.index_seccion;
       this.index_concepto = datos.index_concepto;
+      this.modificando = true;
       this.$nextTick(() =>
         this.$refs["concepto"].$el.querySelector("input").focus()
       );
       this.limpiarValidation();
     },
     cancelarModificacion() {
+      this.modificando = false;
       /**reseteando el concepto */
       this.form.seccion = {
         value: "incluye",
@@ -580,7 +493,6 @@ export default {
       this.index_concepto = "";
       this.index_seccion = "";
       this.form.concepto = "";
-      this.form.concepto_ingles = "";
       this.limpiarValidation();
       this.$nextTick(() =>
         this.$refs["concepto"].$el.querySelector("input").focus()
@@ -623,7 +535,6 @@ export default {
                     if (element.seccion == this.form.seccion.value) {
                       element.conceptos.push({
                         concepto: this.form.concepto,
-                        concepto_ingles: this.form.concepto_ingles,
                         aplicar_en: this.form.seccion.label,
                         seccion: this.form.seccion.value,
                       });
@@ -634,9 +545,6 @@ export default {
                   this.form.conceptos[this.index_seccion].conceptos[
                     this.index_concepto
                   ].concepto = this.form.concepto;
-                  this.form.conceptos[this.index_seccion].conceptos[
-                    this.index_concepto
-                  ].concepto_ingles = this.form.concepto_ingles;
                 }
               }
             } else {
@@ -646,7 +554,6 @@ export default {
                 if (element.seccion == this.form.seccion.value) {
                   element.conceptos.push({
                     concepto: this.form.concepto,
-                    concepto_ingles: this.form.concepto_ingles,
                     aplicar_en: this.form.seccion.label,
                     seccion: this.form.seccion.value,
                   });
@@ -662,7 +569,6 @@ export default {
             this.index_concepto = "";
             this.index_seccion = "";
             this.form.concepto = "";
-            this.form.concepto_ingles = "";
             this.limpiarValidation();
             this.$nextTick(() =>
               this.$refs["concepto"].$el.querySelector("input").focus()
@@ -680,9 +586,7 @@ export default {
         //actualizo los datos en el formulario
         this.id_plan_modificar = this.datosPlan.id;
         this.form.descripcion = this.datosPlan.plan;
-        this.form.descripcion_ingles = this.datosPlan.plan_ingles;
         this.form.nota = this.datosPlan.nota;
-        this.form.nota_ingles = this.datosPlan.nota_ingles;
         this.form.conceptos = this.datosPlan.secciones;
         this.$vs.loading.close();
       } catch (error) {
@@ -894,7 +798,6 @@ export default {
       this.form.id_plan_modificar = 0;
       /**datos */
       this.form.descripcion = "";
-      this.form.descripcion_ingles = "";
       this.cancelarModificacion();
       this.form.conceptos = [
         {
@@ -915,7 +818,6 @@ export default {
         },
       ];
       this.form.nota = "";
-      this.form.nota_ingles = "";
       this.errores = [];
     },
     closeChecker() {

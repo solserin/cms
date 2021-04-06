@@ -43,7 +43,6 @@ class FunerariaController extends ApiController
         //validaciones directas sin condicionales
         $validaciones = [
             'descripcion'           => 'required',
-            'descripcion_ingles'    => 'required',
             'conceptos.0.conceptos' => [
                 'required',
             ],
@@ -52,7 +51,6 @@ class FunerariaController extends ApiController
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
         $mensajes = [
             'descripcion.required'           => 'Ingrese el nombre del plan funerario.',
-            'descripcion_ingles.required'    => 'Ingrese el nombre del plan funerario(en inglés).',
             'conceptos.0.conceptos.required' => 'Debe ingresar al menos 1 Artículo/Servicio que aplique en la sección "Plan Funerario".',
         ];
 
@@ -79,9 +77,9 @@ class FunerariaController extends ApiController
                 $id_plan = DB::table('planes_funerarios')->insertGetId(
                     [
                         'plan'               => $request->descripcion,
-                        'plan_ingles'        => $request->descripcion_ingles,
+                        'plan_ingles'        => $request->descripcion,
                         'nota'               => $request->nota != '' ? $request->nota : '',
-                        'nota_ingles'        => $request->nota_ingles != '' ? $request->nota_ingles : '',
+                        'nota_ingles'        => $request->nota != '' ? $request->nota : '',
                         'registro_id'        => (int) $request->user()->id,
                         'modifico_id'        => (int) $request->user()->id,
                         'fecha_registro'     => now(),
@@ -95,7 +93,7 @@ class FunerariaController extends ApiController
                             [
                                 'seccion_id'           => ($key_seccion + 1),
                                 'concepto'             => $concepto['concepto'],
-                                'concepto_ingles'      => $concepto['concepto_ingles'],
+                                'concepto_ingles'      => $concepto['concepto'],
                                 'planes_funerarios_id' => $id_plan,
                             ]
                         );
@@ -108,9 +106,9 @@ class FunerariaController extends ApiController
                 DB::table('planes_funerarios')->where('id', $request->id_plan_modificar)->update(
                     [
                         'plan'               => $request->descripcion,
-                        'plan_ingles'        => $request->descripcion_ingles,
+                        'plan_ingles'        => $request->descripcion,
                         'nota'               => $request->nota != '' ? $request->nota : '',
-                        'nota_ingles'        => $request->nota_ingles != '' ? $request->nota_ingles : '',
+                        'nota_ingles'        => $request->nota != '' ? $request->nota : '',
                         'modifico_id'        => (int) $request->user()->id,
                         'fecha_modificacion' => now(),
                     ]
@@ -125,7 +123,7 @@ class FunerariaController extends ApiController
                             [
                                 'seccion_id'           => ($key_seccion + 1),
                                 'concepto'             => $concepto['concepto'],
-                                'concepto_ingles'      => $concepto['concepto_ingles'],
+                                'concepto_ingles'      => $concepto['concepto'],
                                 'planes_funerarios_id' => $request->id_plan_modificar,
                             ]
                         );
