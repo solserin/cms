@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms venta-propiedades background-header-forms"
+      class="forms-popup"
       fullscreen
       close="cancelar"
       :title="
@@ -13,1175 +13,642 @@
       ref="formulario"
     >
       <!--inicio venta-->
-      <div class="venta-details">
-        <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-            <!--contenido del plan funerario-->
-            <div class="float-left px-2">
-              <img width="36px" src="@assets/images/list_planes.svg" />
-              <h3
-                class="float-right ml-3 text-xl px-2 py-1 bg-seccion-forms"
-              >Contenido del Plan Funerario</h3>
+      <div class="flex flex-wrap">
+        <div class="w-full lg:w-6/12 px-4">
+          <!--Contenido del plan-->
+          <div class="form-group">
+            <div class="title-form-group">Contenido del Plan Funerario</div>
+            <div class="form-group-content">
+              <div class="flex flex-wrap">
+                <div class="w-full py-6" v-if="verLista">
+                  <vs-table
+                    class="tabla-datos"
+                    :data="datos"
+                    noDataText="No se han agregado Artículos ni Servicios"
+                  >
+                    <template slot="header">
+                      <h3>Servicios y Artículos que Incluye el Paquete</h3>
+                    </template>
+                    <template slot="thead">
+                      <vs-th>#</vs-th>
+                      <vs-th>Artículo/Servicio</vs-th>
+                      <vs-th>Aplicar en</vs-th>
+                    </template>
+                    <template slot-scope="{ data }">
+                      <vs-tr
+                        :data="tr"
+                        :key="indextr"
+                        v-for="(tr, indextr) in data"
+                      >
+                        <vs-td>
+                          <div class="px-2 font-bold">
+                            {{ alfabeto[indextr] }})
+                          </div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="px-2">{{ tr.concepto }}</div>
+                        </vs-td>
+                        <vs-td>
+                          <div class="px-2 font-medium capitalize">
+                            {{ tr.aplicar }}
+                          </div>
+                        </vs-td>
+                      </vs-tr>
+                    </template>
+                  </vs-table>
+                </div>
+              </div>
             </div>
-            <div class="w-full mt-16" v-if="verLista">
-              <vs-table
-                class="w-full"
-                :data="datos"
-                noDataText="No se han agregado Artículos ni Servicios"
-              >
-                <template slot="header">
-                  <h3>Servicios y Artículos que Incluye el Paquete</h3>
-                </template>
-                <template slot="thead">
-                  <vs-th>#</vs-th>
-                  <vs-th>Artículo/Servicio</vs-th>
-                  <vs-th>Aplicar en</vs-th>
-                </template>
-                <template slot-scope="{ data }">
-                  <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-                    <vs-td class="w-1/12">
-                      <div class="capitalize">
-                        <span class="lowercase">{{ alfabeto[indextr] }})</span>
-                      </div>
-                    </vs-td>
-                    <vs-td class="w-7/12">
-                      <div class="capitalize">
-                        {{ tr.concepto }}
-                        <span class="text-sm hidden">({{ tr.concepto_ingles }})</span>
-                      </div>
-                    </vs-td>
-                    <vs-td class="w-2/12">
-                      <div class="capitalize">{{ tr.aplicar }}</div>
-                    </vs-td>
-                    <template class="expand-user" slot="expand"></template>
-                  </vs-tr>
-                </template>
-              </vs-table>
-            </div>
-            <div class="w-full mt-16" v-else>
-              <vs-table :data="[]" noDataText="No se han agregado Artículos ni Servicios">
-                <template slot="header">
-                  <h3>Servicios y Artículos que Incluye el Paquete</h3>
-                </template>
-                <template slot="thead">
-                  <vs-th>#</vs-th>
-                  <vs-th>Artículo/Servicio</vs-th>
-                  <vs-th>Aplicar en</vs-th>
-                </template>
-              </vs-table>
-            </div>
-            <!--fin de contenido del plan funerario-->
           </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-            <div class="float-left pb-5 px-2">
-              <img width="36px" src="@assets/images/corpse.svg" />
-              <h3
-                class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-              >Información del tipo de venta</h3>
-            </div>
+          <!--fin del contenido del plan -->
+        </div>
 
-            <div class="w-full px-2">
-              <vs-divider />
-            </div>
-            <div class="flex flex-wrap mt-1">
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Seleccione un Plan Funerario</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  :options="planes_funerarios"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.plan_funerario"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:plan_funerario_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="plan_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">No Se Ha Seleccionado Ningún Plan</div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">{{ errors.first("plan_validacion") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['plan_funerario.value']"
-                  >{{ errores["plan_funerario.value"][0] }}</span>
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Tipo de Venta</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :disabled="ModificarVenta"
-                  :options="ventasAntiguedad"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.ventaAntiguedad"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:antiguedad_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="antiguedad_validacion"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">Seleccione 1</div>
-                </v-select>
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("antiguedad_validacion")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores['ventaAntiguedad.value']"
-                  >{{ errores["ventaAntiguedad.value"][0] }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-wrap mt-1">
-              <div class="w-full px-2 mt-2">
-                <p class="text-xs">
-                  <span class="text-danger font-medium">Ojo:</span>
-                  Debe seleccionar la modalidad de la venta que se esté
-                  registrando en caso de que haya sido realizada fuera del
-                  control del sistema, ya que ese tipo de ventas cuenta con un
-                  control especial de números de órden.
-                </p>
-              </div>
-            </div>
-            <vs-divider />
-            <div class="flex flex-wrap mt-1">
-              <div class="float-left pb-3 px-2">
-                <img width="36px" src="@assets/images/order.svg" />
-                <h3
-                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                >Información del cliente y control de venta</h3>
-              </div>
-
-              <!--nombre del cliente-->
-              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
-                <div class="flex flex-wrap">
-                  <div class="w-full px-2">
-                    <label class="text-sm opacity-75 font-bold">
-                      Seleccione un Cliente
-                      <span class="texto-importante">(*)</span>
-                    </label>
-                  </div>
-                  <div class="w-full sm:w-3/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
-                    <div v-if="fueCancelada != true">
-                      <img
-                        v-if="form.id_cliente == ''"
-                        width="46px"
-                        class="cursor-pointer p-2 mt-2"
-                        src="@assets/images/search.svg"
-                        @click="openBuscador = true"
-                        title="Buscar Cliente"
-                      />
-                      <img
-                        v-else
-                        width="46px"
-                        class="cursor-pointer p-2 mt-2"
-                        src="@assets/images/minus.svg"
-                        @click="quitarCliente()"
-                      />
+        <div class="w-full lg:w-6/12 px-4">
+          <!-- Seleccionar el plan -->
+          <div class="form-group">
+            <div class="title-form-group">Plan Funerario y Cliente</div>
+            <div class="form-group-content">
+              <div class="flex flex-wrap">
+                <div class="w-full input-text px-2">
+                  <label>
+                    Seleccione un Plan Funerario
+                    <span>(*)</span>
+                  </label>
+                  <v-select
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    :options="planes_funerarios"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.plan_funerario"
+                    class="w-full"
+                    v-validate:plan_funerario_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="plan_validacion"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">
+                      No Se Ha Seleccionado Ningún Plan
                     </div>
-                    <div v-else>
-                      <img
-                        width="46px"
-                        class="cursor-pointer p-2 mt-2"
-                        src="@assets/images/minus.svg"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="w-full sm:w-9/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2">
-                    <vs-input
-                      size="large"
-                      readonly
-                      v-validate="'required'"
-                      name="id_cliente"
-                      data-vv-as=" "
-                      type="text"
-                      class="w-full py-1 cursor-pointer texto-bold"
-                      placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR LA VENTA."
-                      v-model="form.cliente"
-                      maxlength="100"
-                      ref="cliente_ref"
-                    />
-                    <div>
-                      <span class="mensaje-requerido">{{ errors.first("id_cliente") }}</span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="mensaje-requerido"
-                        v-if="this.errores.id_cliente"
-                      >{{ errores.id_cliente[0] }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!--fin nombre del cliente-->
-              <!--vendedor-->
-              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 pt-2">
-                <div class="flex flex-wrap">
-                  <div class="w-full px-2">
-                    <label class="text-sm opacity-75 font-bold">
-                      <span>Seleccione 1 vendedor:</span>
-                      <span class="texto-importante">(*)</span>
-                    </label>
-                  </div>
-                  <div class="w-full sm:w-3/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
-                    <img
-                      width="46px"
-                      class="p-2 mt-2"
-                      src="@assets/images/businessman.svg"
-                      title="Seleccione 1 Vendedor"
-                    />
-                  </div>
-                  <div class="w-full sm:w-9/12 md:w-11/12 lg:w-11/12 xl:w-11/12">
-                    <v-select
-                      :options="vendedores"
-                      :clearable="false"
-                      :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      v-model="form.vendedor"
-                      class="pb-1 pt-1 large_select"
-                      v-validate:vendedor_validacion_computed.immediate="
-                        'required'
-                      "
-                      name="vendedor"
-                      data-vv-as=" "
-                      :disabled="fueCancelada"
-                    >
-                      <div slot="no-options">Seleccione un vendedor</div>
-                    </v-select>
-                    <div>
-                      <span class="mensaje-requerido">{{ errors.first("vendedor") }}</span>
-                    </div>
-                    <div class="mt-2">
-                      <span
-                        class="mensaje-requerido"
-                        v-if="this.errores['vendedor.value']"
-                      >{{ errores["vendedor.value"][0] }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!--Fin de vendedor-->
-
-              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 pt-4">
-                <label class="text-sm opacity-75 font-bold">
-                  Fecha de la Venta (Año-Mes-Dia)
-                  <span class="texto-importante">(*)</span>
-                </label>
-
-                <flat-pickr
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  name="fecha_venta"
-                  data-vv-as=" "
-                  v-validate:fecha_venta_validacion_computed.immediate="
-                    'required'
-                  "
-                  :config="configdateTimePicker"
-                  v-model="form.fecha_venta"
-                  placeholder="Fecha de la Venta"
-                  class="w-full my-1"
-                />
-
-                <div>
-                  <span class="mensaje-requerido">{{ errors.first("fecha_venta") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.fecha_venta"
-                  >{{ errores.fecha_venta[0] }}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-4">
-                <label class="text-sm opacity-75 font-bold">
-                  Núm. Solicitud
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate:solicitud_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="solicitud"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder=" Núm. Solicitud"
-                  v-model="form.solicitud"
-                  :disabled="fueCancelada"
-                  maxlength="12"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{ errors.first("solicitud") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.solicitud"
-                  >{{ errores.solicitud[0] }}</span>
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 pt-4">
-                <label class="text-sm opacity-75 font-bold">
-                  Núm. Convenio
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate:num_convenio_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="num_convenio"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Núm. Convenio"
-                  v-model="form.convenio"
-                  :disabled="!capturar_num_convenio || fueCancelada"
-                  maxlength="16"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{ errors.first("num_convenio") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.convenio"
-                  >{{ errores.convenio[0] }}</span>
-                </div>
-              </div>
-
-              <!-- <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Núm. Título
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate:num_titulo_validacion_computed.immediate="
-                    'required'
-                  "
-                  name="num_titulo"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Núm. Título"
-                  v-model="form.titulo"
-                  :disabled="
-                    !(capturar_num_titulo + capturar_num_titulo) || fueCancelada
-                  "
-                  maxlength="16"
-                />
-                <div>
-                  <span class="mensaje-requerido">{{
-                    errors.first("num_titulo")
+                  </v-select>
+                  <span>{{ errors.first("plan_validacion") }}</span>
+                  <span v-if="this.errores['plan_funerario.value']">{{
+                    errores["plan_funerario.value"][0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="mensaje-requerido" v-if="this.errores.titulo">{{
-                    errores.titulo[0]
+                <div class="w-full input-text px-2">
+                  <label>
+                    Tipo de Venta
+                    <span>(*)</span>
+                  </label>
+                  <v-select
+                    :disabled="ModificarVenta"
+                    :options="ventasAntiguedad"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.ventaAntiguedad"
+                    class="w-full"
+                    v-validate:antiguedad_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="antiguedad_validacion"
+                    data-vv-as=" "
+                  >
+                    <div slot="no-options">Seleccione 1</div>
+                  </v-select>
+                  <span>
+                    {{ errors.first("antiguedad_validacion") }}
+                  </span>
+                  <span v-if="this.errores['ventaAntiguedad.value']">{{
+                    errores["ventaAntiguedad.value"][0]
+                  }}</span>
+                </div>
+                <div class="w-full px-2">
+                  <div class="py-3 size-small">
+                    <span class="color-danger-900 font-medium">Ojo:</span>
+                    Debe seleccionar la modalidad de la venta que se esté
+                    registrando en caso de que haya sido realizada fuera del
+                    control del sistema, ya que ese tipo de ventas cuenta con un
+                    control especial de números de órden.
+                  </div>
+                </div>
+
+                <div class="w-full py-2">
+                  <div class="w-full px-2" v-if="fueCancelada">
+                    <div
+                      class="theme-background text-center py-2 px-2 size-base border-gray-solid-1"
+                    >
+                      <span class="font-medium"> Clave: </span>
+                      {{ form.id_cliente }},
+                      <span class="font-medium"> Nombre: </span>
+                      {{ form.cliente }},
+                      <span class="font-medium"> Dirección: </span>
+                      {{ form.direccion_cliente }}
+                    </div>
+                  </div>
+                  <div class="w-full px-2" v-else-if="form.id_cliente == ''">
+                    <div
+                      class="bg-danger-50 text-center py-2 px-2 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                      @click="openBuscador = true"
+                    >
+                      Debe seleccionar a un cliente
+                    </div>
+                  </div>
+                  <div class="w-full px-2" v-else>
+                    <div
+                      class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
+                    >
+                      <div class="flex flex-wrap">
+                        <div class="w-full lg:w-10/12 py-1">
+                          <span class="font-medium"> Clave: </span>
+                          {{ form.id_cliente }},
+                          <span class="font-medium"> Nombre: </span>
+                          {{ form.cliente }},
+                          <span class="font-medium"> Dirección: </span>
+                          {{ form.direccion_cliente }}
+                        </div>
+                        <div class="w-full lg:w-2/12 text-center py-1">
+                          <span
+                            @click="quitarCliente()"
+                            class="color-danger-900 cursor-pointer"
+                            >X Cambiar cliente
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="title-form-group">Control de Venta</div>
+            <div class="form-group-content">
+              <div class="flex flex-wrap">
+                <div class="w-full lg:w-7/12 px-2 input-text">
+                  <label>
+                    Seleccione 1 vendedor:
+                    <span>(*)</span>
+                  </label>
+                  <v-select
+                    :options="vendedores"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.vendedor"
+                    class="w-full"
+                    v-validate:vendedor_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="vendedor"
+                    data-vv-as=" "
+                    :disabled="fueCancelada"
+                  >
+                    <div slot="no-options">Seleccione un vendedor</div>
+                  </v-select>
+                  <span>{{ errors.first("vendedor") }}</span>
+                  <span v-if="this.errores['vendedor.value']">{{
+                    errores["vendedor.value"][0]
+                  }}</span>
+                </div>
+                <div class="w-full lg:w-5/12 px-2 input-text">
+                  <label>Fecha de la Venta (Año-Mes-Dia)</label>
+                  <span>(*)</span>
+                  <flat-pickr
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    name="fecha_venta"
+                    data-vv-as=" "
+                    v-validate:fecha_venta_validacion_computed.immediate="
+                      'required'
+                    "
+                    :config="configdateTimePicker"
+                    v-model="form.fecha_venta"
+                    placeholder="Fecha de la Venta"
+                    class="w-full"
+                  />
+                  <span>{{ errors.first("fecha_venta") }}</span>
+                  <span v-if="this.errores.fecha_venta">{{
+                    errores.fecha_venta[0]
+                  }}</span>
+                </div>
+                <div class="w-full lg:w-6/12 px-2 input-text">
+                  <label>
+                    Núm. Solicitud
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    v-validate:solicitud_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="solicitud"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder=" Núm. Solicitud"
+                    v-model="form.solicitud"
+                    :disabled="fueCancelada"
+                    maxlength="12"
+                  />
+                  <span>{{ errors.first("solicitud") }}</span>
+                  <span v-if="this.errores.solicitud">{{
+                    errores.solicitud[0]
+                  }}</span>
+                </div>
+                <div class="w-full lg:w-6/12 px-2 input-text">
+                  <label>
+                    Núm. Convenio
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    v-validate:num_convenio_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="num_convenio"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder="Núm. Convenio"
+                    v-model="form.convenio"
+                    :disabled="!capturar_num_convenio || fueCancelada"
+                    maxlength="16"
+                  />
+                  <span>{{ errors.first("num_convenio") }}</span>
+                  <span v-if="this.errores.convenio">{{
+                    errores.convenio[0]
                   }}</span>
                 </div>
               </div>
-              -->
-              <vs-divider />
             </div>
           </div>
+          <!-- Seleccionar el plan -->
         </div>
-        <!--datos del titular y beneficiarios-->
-        <div class="flex flex-wrap px-2">
-          <div class="w-full pt-3 pb-3 px-2">
-            <div class="float-left">
-              <img width="36px" src="@assets/images/sustituto.svg" />
-              <h3
-                class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-              >Titular Sustituto del Contrato</h3>
-            </div>
-          </div>
-          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              Nombre del titular sustituto
-              <span class="texto-importante">(*)</span>
-            </label>
-            <vs-input
-              name="titular_sustituto"
-              data-vv-as=" "
-              data-vv-validate-on="blur"
-              v-validate="'required'"
-              maxlength="150"
-              type="text"
-              class="w-full pb-1 pt-1"
-              placeholder="Nombre del titular sustituto"
-              v-model="form.titular_sustituto"
-              :disabled="fueCancelada"
-            />
-            <div>
-              <span class="mensaje-requerido">{{ errors.first("titular_sustituto") }}</span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="mensaje-requerido"
-                v-if="this.errores.titular_sustituto"
-              >{{ errores.titular_sustituto[0] }}</span>
-            </div>
-          </div>
-
-          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              Parentesco con el titular sustituto
-              <span class="texto-importante">(*)</span>
-            </label>
-            <vs-input
-              name="parentesco_titular_sustituto"
-              data-vv-as=" "
-              data-vv-validate-on="blur"
-              v-validate="'required'"
-              maxlength="45"
-              type="text"
-              class="w-full pb-1 pt-1"
-              placeholder="Ej. Hermano"
-              v-model="form.parentesco_titular_sustituto"
-              :disabled="fueCancelada"
-            />
-            <div>
-              <span class="mensaje-requerido">
-                {{
-                errors.first("parentesco_titular_sustituto")
-                }}
-              </span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="mensaje-requerido"
-                v-if="this.errores.parentesco_titular_sustituto"
-              >{{ errores.parentesco_titular_sustituto[0] }}</span>
-            </div>
-          </div>
-
-          <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-            <label class="text-sm opacity-75 font-bold">
-              Teléfono de contacto
-              <span class="texto-importante">(*)</span>
-            </label>
-            <vs-input
-              name="telefono_titular_sustituto"
-              data-vv-as=" "
-              data-vv-validate-on="blur"
-              v-validate="'required'"
-              maxlength="45"
-              type="text"
-              class="w-full pb-1 pt-1"
-              placeholder="Ingrese un teléfono"
-              v-model="form.telefono_titular_sustituto"
-              :disabled="fueCancelada"
-            />
-            <div>
-              <span class="mensaje-requerido">{{ errors.first("telefono_titular_sustituto") }}</span>
-            </div>
-            <div class="mt-2">
-              <span
-                class="mensaje-requerido"
-                v-if="this.errores.telefono_titular_sustituto"
-              >{{ errores.telefono_titular_sustituto[0] }}</span>
-            </div>
-          </div>
-
-          <vs-divider />
-        </div>
-        <!--fin de datos del titular y beneficiarios-->
-        <div class="flex flex-wrap px-2">
-          <div class="w-full pt-3 pb-3 px-2">
-            <div class="float-left">
-              <img width="36px" src="@assets/images/beneficiarios.svg" />
-              <h3
-                class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-              >Lista de beneficiarios del contrato</h3>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="form.beneficiarios.length > 0">
-          <div
-            :key="index"
-            v-for="(beneficiario, index) in form.beneficiarios"
-            class="flex flex-wrap px-2"
-          >
-            <!--datos de los beneficiarios-->
-
-            <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2">
-              <label class="text-sm opacity-75">
-                <span class="font-bold">Beneficiario {{ index + 1 }} - Nombre completo</span>
-                <span class="texto-importante">(*)</span>
-              </label>
-              <vs-input
-                :name="'beneficiario' + index"
-                data-vv-as=" "
-                data-vv-validate-on="blur"
-                v-validate="'required'"
-                maxlength="75"
-                type="text"
-                class="w-full pb-1 pt-1"
-                placeholder="Ingrese el nombre del benericiario"
-                v-model="beneficiario.nombre"
-              />
-              <div class="pb-2">
-                <span class="mensaje-requerido">{{ errors.first("beneficiario" + index) }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="mensaje-requerido"
-                  v-if="errores['beneficiarios.' + index + '.nombre']"
-                >{{ errores["beneficiarios." + index + ".nombre"][0] }}</span>
-              </div>
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-              <label class="text-sm opacity-75">
-                <span class="font-bold">Beneficiario {{ index + 1 }} - Parentesco</span>
-                <span class="texto-importante">(*)</span>
-              </label>
-              <vs-input
-                :name="'parentesco' + index"
-                data-vv-as=" "
-                data-vv-validate-on="blur"
-                v-validate="'required'"
-                maxlength="35"
-                type="text"
-                class="w-full pb-1 pt-1"
-                placeholder="Parentesco"
-                v-model="beneficiario.parentesco"
-              />
-              <div class="pb-2">
-                <span class="mensaje-requerido">{{ errors.first("parentesco" + index) }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="mensaje-requerido"
-                  v-if="errores['beneficiarios.' + index + '.parentesco']"
-                >
-                  {{
-                  errores["beneficiarios." + index + ".parentesco"][0]
-                  }}
-                </span>
-              </div>
-            </div>
-            <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-              <label class="text-sm opacity-75">
-                <span class="font-bold">Beneficiario {{ index + 1 }} - Teléfono</span>
-                <span class="texto-importante">(*)</span>
-              </label>
-              <vs-input
-                :name="'telefono' + index"
-                data-vv-as=" "
-                data-vv-validate-on="blur"
-                v-validate="'required|min:10'"
-                maxlength="35"
-                type="text"
-                class="w-full pb-1 pt-1"
-                placeholder="Teléfono"
-                v-model="beneficiario.telefono"
-              />
-              <div class="pb-2">
-                <span class="mensaje-requerido">{{ errors.first("telefono" + index) }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="mensaje-requerido"
-                  v-if="errores['beneficiarios.' + index + '.telefono']"
-                >
-                  {{
-                  errores["beneficiarios." + index + ".telefono"][0]
-                  }}
-                </span>
-              </div>
-            </div>
-            <div class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2">
-              <div
-                class="mt-10 float-right"
-                @click="remover_beneficiario(index)"
-                v-if="!fueCancelada"
-              >
-                <img class="cursor-pointer img-btn" src="@assets/images/minus.svg" />
-                <span class="text-danger font-medium float-right pl-3 cursor-pointer">Remover</span>
-              </div>
-            </div>
-            <!--fin de datos de los beneficiarios-->
-          </div>
-        </div>
-
-        <div v-else class="w-full flex flex-wrap pt-4 px-2">
-          <div class="flex flex-wrap">
-            <div class="w-full px-2">
-              <div class="float-left">
-                <img width="26px" src="@assets/images/warning.svg" />
-                <h3
-                  class="float-right mt-2 ml-3 text-base text-danger font-medium"
-                >Advertencia, no ha capturado beneficiarios aún.</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap pt-4 px-2">
-          <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
-            <div class="mt-5">
-              <p class="text-sm">
-                <span class="text-danger font-medium">Ojo:</span>
-                En este apartado puede agregar cada uno de los beneficiarios que
-                tenga derecho el titular de este contrato.
-              </p>
-            </div>
-          </div>
-          <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-            <div class="mt-8 float-right" @click="agregar_beneficiario()" v-if="!fueCancelada">
-              <span
-                class="text-white font-medium px-2 py-1 bg-success cursor-pointer"
-              >Agregar beneficiario</span>
-              <img class="cursor-pointer img-btn float-right ml-3" src="@assets/images/plus.svg" />
-            </div>
-          </div>
-        </div>
-        <vs-divider />
-
-        <!--checkout-->
-        <div class="flex flex-wrap my-6">
-          <div class="w-full sm:w-12/12 md:w-6/12 px-2">
-            <div class="flex flex-wrap">
-              <div class="w-full pt-3 pb-3 px-2">
-                <div class="float-left">
-                  <img width="36px" src="@assets/images/summary.svg" />
-                  <h3
-                    class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                  >Información resumida de la venta</h3>
-                </div>
-              </div>
-            </div>
-            <!--resumen de la venta-->
-            <div class="flex flex-wrap mt-6 dark-text font-medium">
-              <div class="w-full sm:w-12/12 ml-auto md:w-12/12 lg:w-12/12 xl:w-12/12">
-                <div class="flex flex-wrap">
-                  <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                    <span class="text-gray-100 font-bold">Nombre del Titular</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span v-if="this.form.id_cliente == ''">
-                      <span class="text-danger">Seleccione un cliente para esta venta</span>
-                    </span>
-                    <span v-else class="uppercase font-bold">{{ form.cliente }}</span>
-                  </div>
-                </div>
-
-                <vs-divider />
-                <div class="flex flex-wrap">
-                  <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                    <span class="text-gray-100 font-bold">Vendedor</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span v-if="this.form.vendedor.value != ''">{{ this.form.vendedor.label }}</span>
-                    <span v-else class="text-danger">Seleccione un Vendedor</span>
-                  </div>
-                </div>
-                <vs-divider />
-                <div class="flex flex-wrap hidden">
-                  <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                    <span class="text-gray-100 font-bold">Plan de Venta</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span v-if="this.form.planVenta.value > 0">
-                      <span v-if="this.form.planVenta.value == 1">
-                        Pago Único de ${{
-                        this.costo_neto_computed | numFormat("0,000.00")
-                        }}
-                        Pesos
-                      </span>
-                      <span v-else>
-                        Pago Inicial de ${{
-                        this.form.pago_inicial | numFormat("0,000.00")
-                        }}
-                        Pesos. Más
-                        {{ this.form.planVenta.value }}
-                        Mensualidades de ${{
-                        ((this.costo_neto_computed - this.form.pago_inicial) /
-                        this.form.planVenta.value)
-                        | numFormat("0,000.00")
-                        }}
-                        Pesos Aprox.
-                      </span>
-                    </span>
-                    <span v-else class="text-danger">Seleccione un Plan de Venta</span>
-                  </div>
-                </div>
-                <vs-divider class="hidden" />
-                <div class="flex flex-wrap">
-                  <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                    <span class="text-gray-100 font-bold">Sub Total</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span>
-                      $
-                      {{ this.form.subtotal | numFormat("0,000.00") }}
-                      Pesos
-                    </span>
-                  </div>
-                </div>
-                <vs-divider />
-                <div class="flex flex-wrap">
-                  <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                    <span class="text-gray-100 font-bold">Descuento</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span>
-                      $
-                      {{ this.form.descuento | numFormat("0,000.00") }}
-                      Pesos
-                    </span>
-                  </div>
-                </div>
-                <vs-divider />
-                <div class="flex flex-wrap">
-                  <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                    <span class="text-gray-100 font-bold">IVA</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span>
-                      $
-                      {{ iva_computed | numFormat("0,000.00") }}
-                      Pesos
-                    </span>
-                  </div>
-                </div>
-                <vs-divider />
-                <div class="flex flex-wrap">
-                  <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                    <span class="text-gray-100 font-bold">Total a Pagar</span>
-                  </div>
-                  <div
-                    class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2 text-right text-gray-900 font-medium"
-                  >
-                    <span>
-                      $
-                      {{ costo_neto_computed | numFormat("0,000.00") }}
-                      Pesos
-                    </span>
-                  </div>
-                </div>
-                <vs-divider />
-                <div class="w-full pb-9">
-                  <h3
-                    class="mt-2 text-base px-2 py-1 bg-seccion-forms"
-                    style="line-height: 1.6em;"
-                    hidden
-                  >
-                    Se recomienda revisar la Información capturada antes de
-                    mandar
-                    <span
-                      class="text-danger"
-                    >Guardar la venta</span>, si ya
-                    revisó que todo está correcto puede proceder.
-                  </h3>
-
-                  <h3
-                    class="mt-2 text-base px-2 py-1 bg-seccion-forms mb-1"
-                    style="line-height: 1.6em;"
-                  >Nota/Comentario:</h3>
-                  <span class="px-2">{{ form.nota }}</span>
-                </div>
-
-                <vs-divider />
-              </div>
-            </div>
-            <!--fin del resumen de la venta-->
-          </div>
-          <div class="w-full sm:w-12/12 md:w-6/12 px-2">
-            <div class="flex flex-wrap">
-              <div class="w-full pt-3 pb-3 px-2">
-                <div class="float-left">
-                  <img width="36px" src="@assets/images/payments.svg" />
-                  <h3
-                    class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                  >Programación de pagos</h3>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-wrap">
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold hidden">
-                  <span v-if="form.tipo_financiamiento == 1">Pago Único</span>
-                  <span v-if="form.tipo_financiamiento == 2">A Futuro/A Meses</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Número de Pagos</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  size="large"
-                  v-validate.disabled="
-                    'required|integer|min_value:' +
-                    minimo_financiamiento +
-                    '|max_value:' +
-                    maximo_financiamiento
-                  "
-                  name="financiamiento"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Número de pagos"
-                  v-model="form.financiamiento"
-                  maxlength="3"
-                />
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("financiamiento")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.financiamiento"
-                  >{{ errores.financiamiento[0] }}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  $ Sub Total
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  size="large"
-                  name="subtotal"
-                  data-vv-as=" "
-                  v-validate="'required|decimal:2|min_value:1'"
-                  type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
-                  placeholder="$ 0.00"
-                  v-model="form.subtotal"
-                />
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("subtotal")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.subtotal"
-                  >{{ errores.subtotal[0] }}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  $ Descuento
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  size="large"
-                  name="descuento"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:0|max_value:' +
-                    this.form.subtotal
-                  "
-                  type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
-                  placeholder="$ 0.00"
-                  v-model="form.descuento"
-                />
-
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("descuento")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.descuento"
-                  >{{ errores.descuento[0] }}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Tasa IVA %
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  size="large"
-                  name="tasa_iva"
-                  data-vv-as=" "
-                  v-validate="'required|decimal:2|min_value:0|max_value:25'"
-                  type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
-                  placeholder="Porcentaje IVA"
-                  v-model="form.tasa_iva"
-                  maxlength="2"
-                />
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("tasa_iva")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.tasa_iva"
-                  >{{ errores.tasa_iva[0] }}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  $ IVA
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  size="large"
-                  name="impuestos"
-                  data-vv-as=" "
-                  v-validate="'required|decimal:2|min_value:0'"
-                  type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
-                  placeholder
-                  v-model="iva_computed"
-                  :disabled="true"
-                />
-
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("impuestos")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.impuestos"
-                  >{{ errores.impuestos[0] }}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  $ Total a Pagar
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  size="large"
-                  name="costo_neto"
-                  data-vv-as=" "
-                  v-validate="'required|decimal:2|min_value:0'"
-                  type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
-                  v-model="costo_neto_computed"
-                  :disabled="true"
-                  readonly
-                />
-
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("costo_neto")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.costo_neto"
-                  >{{ errores.costo_neto[0] }}</span>
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  $ Pago Inicial
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  size="large"
-                  name="pago_inicial"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:' +
-                    this.valor_minimo_pago_inicial +
-                    '|max_value:' +
-                    this.valor_maximo_pago_inicial
-                  "
-                  maxlength="10"
-                  type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
-                  v-model="form.pago_inicial"
-                  placeholder="$ 0.00"
-                />
-
-                <div>
-                  <span class="mensaje-requerido">
-                    {{
-                    errors.first("pago_inicial")
-                    }}
-                  </span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.pago_inicial"
-                  >{{ errores.pago_inicial[0] }}</span>
-                </div>
-                <div class="mt-2"></div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  $ Costo Neto Pronto Pago
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  :disabled="
-                    tiene_pagos_realizados || ventaLiquidada || fueCancelada
-                  "
-                  size="large"
-                  name="costo_neto_pronto_pago"
-                  data-vv-as=" "
-                  v-validate="
-                    'required|decimal:2|min_value:' +
-                    minimo_pronto_pago +
-                    '|max_value:' +
-                    costo_neto_computed
-                  "
-                  maxlength="10"
-                  type="text"
-                  class="w-full pb-1 pt-1 texto-bold"
-                  v-model="form.costo_neto_pronto_pago"
-                  placeholder="$ 0.00"
-                />
-
-                <div>
-                  <span class="mensaje-requerido">{{ errors.first("costo_neto_pronto_pago") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="mensaje-requerido"
-                    v-if="this.errores.costo_neto_pronto_pago"
-                  >{{ errores.costo_neto_pronto_pago[0] }}</span>
-                </div>
-                <div class="mt-2"></div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-                <div class="flex flex-wrap py-4 mt-5">
-                  <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
-                    <div
-                      class="float-left"
-                      v-if="
-                        costo_neto_computed == 0 &&
-                        (!isNaN(this.form.subtotal) && this.form.subtotal > 0)
-                      "
-                    >
-                      <h3 class="text-sm text-danger font-medium mt-1">
-                        Advertencia, está haciendo un descuento del 100%,
-                        verifique si desea continuar.
-                      </h3>
-                    </div>
-                  </div>
-                  <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                    <div
-                      class="float-right cursor-pointer"
-                      @click="openNotas = true"
-                      v-if="!fueCancelada"
-                    >
-                      <img width="26px" src="@assets/images/notas_add.svg" />
-                      <h3 class="float-right ml-3 mt-1 text-base font-medium">Agregar Nota</h3>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex flex-wrap mt-3">
-                  <vs-button
-                    v-if="!fueCancelada"
-                    class="w-full ml-auto mr-auto mt-5"
-                    @click="acceptAlert()"
-                    color="success"
-                    size="small"
-                  >
-                    <img width="25px" class="cursor-pointer" src="@assets/images/save.svg" />
-                    <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'">Guardar Venta</span>
-                    <span class="texto-btn" v-else>Modificar Venta</span>
-                  </vs-button>
-                  <vs-button
-                    v-else
-                    class="w-full ml-auto mr-auto mt-5"
-                    color="success"
-                    size="small"
-                  >
-                    <img width="25px" class="cursor-pointer" src="@assets/images/save.svg" />
-                    <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'">Guardar Venta</span>
-                    <span class="texto-btn" v-else>Modificar Venta</span>
-                  </vs-button>
-                </div>
-              </div>
-              <!--fin de precios-->
-            </div>
-          </div>
-        </div>
-        <!--fin del checkout-->
       </div>
+      <!--Fin venta-->
 
-      <!--fin venta-->
+      <!--Titular sustituo-->
+      <div class="form-group">
+        <div class="title-form-group">Titular Sustituto del Contrato</div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full lg:w-4/12 xl:w-4/12 px-2 input-text">
+              <label class=" ">
+                Nombre del titular sustituto
+                <span>(*)</span>
+              </label>
+              <vs-input
+                name="titular_sustituto"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="150"
+                type="text"
+                class="w-full"
+                placeholder="Nombre del titular sustituto"
+                v-model="form.titular_sustituto"
+                :disabled="fueCancelada"
+              />
+              <span>{{ errors.first("titular_sustituto") }}</span>
+              <span v-if="this.errores.titular_sustituto">{{
+                errores.titular_sustituto[0]
+              }}</span>
+            </div>
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
+              <label class=" ">
+                Parentesco con el titular sustituto
+                <span>(*)</span>
+              </label>
+              <vs-input
+                name="parentesco_titular_sustituto"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="45"
+                type="text"
+                class="w-full"
+                placeholder="Ej. Hermano"
+                v-model="form.parentesco_titular_sustituto"
+                :disabled="fueCancelada"
+              />
+              <span>
+                {{ errors.first("parentesco_titular_sustituto") }}
+              </span>
+              <span v-if="this.errores.parentesco_titular_sustituto">{{
+                errores.parentesco_titular_sustituto[0]
+              }}</span>
+            </div>
+            <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
+              <label class=" ">
+                Teléfono de contacto
+                <span>(*)</span>
+              </label>
+              <vs-input
+                name="telefono_titular_sustituto"
+                data-vv-as=" "
+                data-vv-validate-on="blur"
+                v-validate="'required'"
+                maxlength="45"
+                type="text"
+                class="w-full"
+                placeholder="Ingrese un teléfono"
+                v-model="form.telefono_titular_sustituto"
+                :disabled="fueCancelada"
+              />
+              <span>{{ errors.first("telefono_titular_sustituto") }}</span>
+              <span v-if="this.errores.telefono_titular_sustituto">{{
+                errores.telefono_titular_sustituto[0]
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Titular sustituo-->
+
+      <!--datos del titular y beneficiarios-->
+      <div class="w-full text-right mt-6" v-if="!fueCancelada">
+        <span
+          @click="agregar_beneficiario()"
+          class="color-success-900 cursor-pointer"
+          >+ Agregar beneficiarios</span
+        >
+      </div>
+      <div class="form-group">
+        <div class="title-form-group">Beneficiarios del contrato</div>
+        <div class="form-group-content">
+          <div v-if="form.beneficiarios.length > 0">
+            <div
+              :key="index"
+              v-for="(beneficiario, index) in form.beneficiarios"
+              class="flex flex-wrap"
+            >
+              <div class="w-full md:w-11/12">
+                <div class="flex flex-wrap">
+                  <div class="w-full lg:w-4/12 xl:w-4/12 px-2 input-text">
+                    <label>
+                      Beneficiario {{ index + 1 }} - Nombre completo
+                      <span>(*)</span>
+                    </label>
+                    <vs-input
+                      :name="'beneficiario' + index"
+                      data-vv-as=" "
+                      data-vv-validate-on="blur"
+                      v-validate="'required'"
+                      maxlength="75"
+                      type="text"
+                      class="w-full"
+                      placeholder="Ingrese el nombre del benericiario"
+                      v-model="beneficiario.nombre"
+                    />
+                    <span>{{ errors.first("beneficiario" + index) }}</span>
+                    <span
+                      v-if="errores['beneficiarios.' + index + '.nombre']"
+                      >{{
+                        errores["beneficiarios." + index + ".nombre"][0]
+                      }}</span
+                    >
+                  </div>
+                  <div class="w-full lg:w-4/12 xl:w-4/12 px-2 input-text">
+                    <label>
+                      Beneficiario {{ index + 1 }} - Parentesco
+                      <span>(*)</span>
+                    </label>
+                    <vs-input
+                      :name="'parentesco' + index"
+                      data-vv-as=" "
+                      data-vv-validate-on="blur"
+                      v-validate="'required'"
+                      maxlength="35"
+                      type="text"
+                      class="w-full"
+                      placeholder="Parentesco"
+                      v-model="beneficiario.parentesco"
+                    />
+                    <span>{{ errors.first("parentesco" + index) }}</span>
+                    <span
+                      v-if="errores['beneficiarios.' + index + '.parentesco']"
+                    >
+                      {{ errores["beneficiarios." + index + ".parentesco"][0] }}
+                    </span>
+                  </div>
+                  <div class="w-full lg:w-4/12 xl:w-4/12 px-2 input-text">
+                    <label> Beneficiario {{ index + 1 }} - Teléfono </label>
+                    <vs-input
+                      :name="'telefono' + index"
+                      maxlength="35"
+                      type="text"
+                      class="w-full"
+                      placeholder="Teléfono"
+                      v-model="beneficiario.telefono"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="w-full md:w-1/12 px-2">
+                <div class="table h-full mx-auto mt-2">
+                  <span
+                    @click="remover_beneficiario(index)"
+                    v-if="!fueCancelada"
+                    class="color-danger-900 cursor-pointer table-cell align-middle"
+                    >X remover</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="px-2">
+            <div class="w-full px-2 size-base color-copy pt-2">
+              <span class="color-danger-900 font-medium">Ojo:</span>
+              No se han ingresado datos de los beneficiarios de este contrato.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--fin de datos del titular y beneficiarios-->
+
+      <!--Checkout-->
+      <div class="form-group">
+        <div class="title-form-group">$ Información resumida de la venta</div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full lg:w-6/12 px-2">
+              <!--checkout-->
+              <div class="flex flex-wrap">
+                <div class="w-full md:w-6/12 input-text px-2">
+                  <label class=" ">
+                    Número de Pagos
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    size="large"
+                    v-validate.disabled="
+                      'required|integer|min_value:' +
+                      minimo_financiamiento +
+                      '|max_value:' +
+                      maximo_financiamiento
+                    "
+                    name="financiamiento"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder="Número de pagos"
+                    v-model="form.financiamiento"
+                    maxlength="3"
+                  />
+                  <span>{{ errors.first("financiamiento") }}</span>
+                  <span v-if="this.errores.financiamiento">{{
+                    errores.financiamiento[0]
+                  }}</span>
+                </div>
+
+                <div class="w-full md:w-6/12 input-text px-2">
+                  <label class=" ">
+                    Tasa IVA %
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    size="large"
+                    name="tasa_iva"
+                    data-vv-as=" "
+                    v-validate="'required|decimal:2|min_value:0|max_value:25'"
+                    type="text"
+                    class="w-full"
+                    placeholder="Porcentaje IVA"
+                    v-model="form.tasa_iva"
+                    maxlength="2"
+                  />
+
+                  <span>{{ errors.first("tasa_iva") }}</span>
+
+                  <span v-if="this.errores.tasa_iva">{{
+                    errores.tasa_iva[0]
+                  }}</span>
+                </div>
+                <!--aqui-->
+                <div class="w-full input-text px-2">
+                  <label class=" ">
+                    $ Costo neto del paquete
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    size="large"
+                    name="costo_neto"
+                    data-vv-as=" "
+                    v-validate="'required|decimal:2|min_value:1'"
+                    type="text"
+                    class="w-full"
+                    placeholder=""
+                    v-model="form.costo_neto"
+                  />
+                  <span>{{ errors.first("costo_neto") }}</span>
+                  <span v-if="this.errores.costo_neto">{{
+                    errores.costo_neto[0]
+                  }}</span>
+                </div>
+
+                <div class="w-full input-text px-2">
+                  <label class=" ">
+                    $ Descuento
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    size="large"
+                    name="descuento"
+                    data-vv-as=" "
+                    v-validate="'required|decimal:2|min_value:0'"
+                    type="text"
+                    class="w-full"
+                    placeholder=""
+                    v-model="form.descuento"
+                  />
+                  <span>{{ errors.first("descuento") }}</span>
+                  <span v-if="this.errores.descuento">{{
+                    errores.descuento[0]
+                  }}</span>
+                </div>
+
+                <div class="w-full md:w-6/12 input-text px-2">
+                  <label class=" ">
+                    $ Total a Pagar
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    size="large"
+                    name="total_a_pagar"
+                    data-vv-as=" "
+                    v-validate="'required|decimal:2|min_value:0'"
+                    type="text"
+                    class="w-full"
+                    v-model="total_a_pagar_computed"
+                    :disabled="true"
+                    readonly
+                  />
+                  <span>{{ errors.first("total_a_pagar") }}</span>
+                </div>
+                <div class="w-full md:w-6/12 input-text px-2">
+                  <label class=" ">
+                    $ Pago Inicial
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    :disabled="
+                      tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                    "
+                    size="large"
+                    name="pago_inicial"
+                    data-vv-as=" "
+                    v-validate="
+                      'required|decimal:2|min_value:' +
+                      this.valor_minimo_pago_inicial +
+                      '|max_value:' +
+                      this.valor_maximo_pago_inicial
+                    "
+                    maxlength="10"
+                    type="text"
+                    class="w-full"
+                    v-model="form.pago_inicial"
+                    placeholder=""
+                  />
+
+                  <span>{{ errors.first("pago_inicial") }}</span>
+
+                  <span v-if="this.errores.pago_inicial">{{
+                    errores.pago_inicial[0]
+                  }}</span>
+                </div>
+
+                <div class="w-full input-text px-2">
+                  <label class=" "> Ingrese alguna nota o comentario </label>
+                  <vs-textarea
+                    :rows="4"
+                    ref="nota"
+                    type="text"
+                    class="w-full h-full"
+                    v-model.trim="form.nota"
+                  />
+                </div>
+              </div>
+              <!--checkout-->
+            </div>
+
+            <div class="w-full lg:w-6/12 px-2 lg:mt-16"></div>
+          </div>
+        </div>
+      </div>
     </vs-popup>
     <Password
       :show="openPassword"
@@ -1285,18 +752,6 @@ export default {
         /**acciones al cerrar el formulario */
       }
     },
-    "form.planVenta": function (newValue, oldValue) {
-      if (newValue.value != "") {
-        /**el plan cambio a un plan especifico */
-        this.form.subtotal = newValue.subtotal;
-        this.form.costo_neto_pronto_pago = newValue.costo_neto_pronto_pago;
-      }
-    },
-    /**watch para cargado de planes de venta */
-    "form.plan_funerario": function (newValue, oldValue) {
-      /**cargando planes */
-      //this.cargarPlanes();
-    },
   },
   computed: {
     minimo_financiamiento: function () {
@@ -1328,36 +783,21 @@ export default {
     tasa_iva_computed: function () {
       /**calculando el iva */
       let tasa_iva = (Number(this.form.tasa_iva) / 100 + 1).toFixed(2);
-      if (isNaN(tasa_iva)) {
-        return 0;
-      } else {
-        return tasa_iva;
-      }
+      return tasa_iva;
     },
-    iva_computed: function () {
-      /**calculando el iva */
-      let iva = (
-        (Number(this.form.subtotal) - Number(this.form.descuento)) *
-        this.tasa_iva_porcentaje_computed
-      ).toFixed(2);
-      if (isNaN(iva)) {
-        return 0;
-      } else {
-        return iva;
-      }
+
+    subtotal_computed: function () {
+      let tasa_iva = this.tasa_iva_computed;
+      let costo_neto = this.form.costo_neto;
+      let descuento = this.form.descuento;
+      let subtotal = costo_neto / tasa_iva;
+      return subtotal.toFixed(2);
     },
-    costo_neto_computed: function () {
-      /**calculando el iva */
-      let costo_neto = (
-        (Number(this.form.subtotal) - Number(this.form.descuento)) *
-        this.tasa_iva_computed
-      ).toFixed(2);
-      if (isNaN(costo_neto)) {
-        return 0;
-      } else {
-        return costo_neto;
-      }
+
+    total_a_pagar_computed: function () {
+      return (this.form.costo_neto - this.form.descuento).toFixed(2);
     },
+
     verLista: function () {
       if (this.form.plan_funerario.value != "") {
         let mostrar = false;
@@ -1392,37 +832,36 @@ export default {
     valor_minimo_pago_inicial: function () {
       let pago_inicial_minimo = 0;
       if (this.form.financiamiento == 1) {
-        pago_inicial_minimo = this.costo_neto_computed;
+        pago_inicial_minimo = this.total_a_pagar_computed;
       } else {
-        pago_inicial_minimo = this.costo_neto_computed * 0.1;
+        pago_inicial_minimo = this.total_a_pagar_computed * 0.1;
       }
       if (isNaN(pago_inicial_minimo)) {
         return 0;
       } else {
-        return pago_inicial_minimo;
+        return pago_inicial_minimo.toFixed(2);
       }
     },
     /**maximo valor permitido del enganche */
     valor_maximo_pago_inicial: function () {
       let pago_inicial_maximo = 0;
       if (this.form.financiamiento == 1) {
-        pago_inicial_maximo = this.costo_neto_computed;
+        pago_inicial_maximo = this.total_a_pagar_computed;
       } else {
-        pago_inicial_maximo = this.costo_neto_computed * 0.7;
+        pago_inicial_maximo = this.total_a_pagar_computed * 0.7;
       }
 
       if (isNaN(pago_inicial_maximo)) {
         return 0;
       } else {
-        return pago_inicial_maximo;
+        return pago_inicial_maximo.toFixed(2);
       }
     },
 
-    /**maximo valor permitido del enganche */
     minimo_pronto_pago: function () {
       let minimo_pronto_pago = 0;
       if (this.form.financiamiento == 1) {
-        minimo_pronto_pago = this.costo_neto_computed;
+        minimo_pronto_pago = this.total_a_pagar_computed;
       } else {
         minimo_pronto_pago = 0;
       }
@@ -1511,19 +950,9 @@ export default {
       }
     },
 
-    plan_venta: function () {
-      if (this.form.planVenta.value == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
     //validaciones calculadas
     //valido que elija un plan de venta
-    plan_de_venta_computed: function () {
-      return this.form.planVenta.value;
-    },
+
     plan_funerario_validacion_computed: function () {
       return this.form.plan_funerario.value;
     },
@@ -1596,20 +1025,7 @@ export default {
       ],
       vendedores: [],
       //variables con mapa
-      planesVenta: [
-        {
-          label: "Seleccione 1",
-          value: "",
-          subtotal: "0.00",
-          impuestos: "0.00",
-          costo_neto: "0.00",
-          pago_inicial: "",
-          descuento_pronto_pago_b: "",
-          costo_neto_pronto_pago: "",
-          porcentaje_pronto_pago: "",
-          costo_neto_financiamiento_normal: "",
-        },
-      ],
+
       /**para modificar, se traen los datos aqui */
       datosVenta: [],
       //fin var con mapa
@@ -1630,6 +1046,7 @@ export default {
         id_venta: "",
         /**datos del cliente seleccionado */
         cliente: "seleccione 1 cliente",
+        direccion_cliente: "",
         id_cliente: "",
         fecha_venta: "",
         /**titular substituto */
@@ -1642,32 +1059,19 @@ export default {
         titulo: "",
         /**datos origen */
         //variables con mapa
-        planVenta: {
-          label: "Seleccione 1",
-          value: "",
-          subtotal: "0.00",
-          impuestos: "0.00",
-          costo_neto: "0.00",
-          pago_inicial: "",
-          descuento_pronto_pago_b: "",
-          costo_neto_pronto_pago: "",
-          porcentaje_pronto_pago: "",
-          costo_neto_financiamiento_normal: "",
-        },
+
         ventaAntiguedad: {
           label: "NUEVA VENTA",
           value: 1,
         },
         /**muestra el enganche original con el que se hizo la venta */
-        tasa_iva: 16,
-        impuestos: "",
+
         financiamiento: "",
-        pago_inicial_origen: "",
-        subtotal: "",
-        descuento: "",
+        tasa_iva: 16,
         costo_neto: "",
+        descuento: 0,
         pago_inicial: "",
-        costo_neto_pronto_pago: "",
+
         vendedor: {
           label: "Seleccione 1",
           value: "",
@@ -1949,142 +1353,6 @@ export default {
         this.cerrarVentana();
       }
     },
-    cargarPlanes() {
-      this.form.planVenta = this.planesVenta[0];
-      this.planesVenta = [];
-      this.planesVenta.push({
-        label: "Seleccione 1",
-        value: "",
-        subtotal: "0.00",
-        impuestos: "0.00",
-        costo_neto: "0.00",
-        pago_inicial: "",
-        descuento_pronto_pago_b: "",
-        costo_neto_pronto_pago: "",
-        porcentaje_pronto_pago: "",
-        costo_neto_financiamiento_normal: "",
-      });
-      if (this.verLista == true) {
-        this.form.plan_funerario.precios.forEach((element) => {
-          if (element.status == 1) {
-            //la venta es a futuro y puede seleccionar todas los siguientes planes de venta
-            //precios de pagos a meses
-            if (element.financiamiento > 1) {
-              this.planesVenta.push({
-                label: element.tipo_financiamiento,
-                value: Number(element.financiamiento),
-                subtotal: Number(element.subtotal),
-                impuestos: Number(element.impuestos),
-                costo_neto: Number(element.costo_neto),
-                pago_inicial: Number(element.pago_inicial),
-                descuento_pronto_pago_b: Number(
-                  element.descuento_pronto_pago_b
-                ),
-                costo_neto_pronto_pago: Number(element.costo_neto_pronto_pago),
-                porcentaje_pronto_pago: Number(element.porcentaje_pronto_pago),
-                costo_neto_financiamiento_normal: Number(
-                  element.costo_neto_financiamiento_normal
-                ),
-              });
-            }
-          }
-        });
-        //selecciono el primero precio automaticamente
-        if (this.getTipoformulario == "agregar") {
-          /**tipo de formulario agregar */
-          //this.seleccionarPlanVenta();
-        } else {
-          /**logica para traer los datos originales de la venta */
-          let plan_encontrado = false;
-          this.planesVenta.forEach((element) => {
-            if (element.value != "") {
-              if (
-                element.value == this.datosVenta.financiamiento &&
-                element.costo_neto == this.datosVenta.total &&
-                element.costo_neto_pronto_pago ==
-                  this.datosVenta.costo_neto_pronto_pago
-              ) {
-                /**en caso de que se encuentre el original */
-                this.form.planVenta = element;
-                plan_encontrado = true;
-                return;
-              }
-            }
-          });
-          if (plan_encontrado == false) {
-            /**pregurnando si el plan de venta no es el original */
-            if (
-              this.form.plan_funerario.label ==
-              this.form.plan_funerario.plan + "(Original de Venta)"
-            ) {
-              if (this.form.planVenta.value == "") {
-                /**no se encontro el plan y se debe de agregar uno como de origen */
-                let planVenta = {
-                  label:
-                    this.datosVenta.financiamiento == 1
-                      ? "Pago Único/Uso Inmediato (Plan Original)"
-                      : "Pago a " +
-                        this.datosVenta.financiamiento +
-                        " Meses/a Futuro(origen venta)",
-                  value: Number(this.datosVenta.financiamiento),
-                  subtotal: Number(this.datosVenta.subtotal),
-                  impuestos: Number(this.datosVenta.impuestos),
-                  costo_neto: Number(this.datosVenta.total),
-                  pago_inicial: Number(
-                    this.datosVenta.pagos_programados.length > 0
-                      ? this.datosVenta.pagos_programados[0].monto_programado
-                      : 0
-                  ),
-                  descuento_pronto_pago_b: Number(
-                    this.datosVenta.descuento_pronto_pago_b
-                  ),
-                  costo_neto_pronto_pago: Number(
-                    this.datosVenta.costo_neto_pronto_pago
-                  ),
-                  porcentaje_pronto_pago: 0,
-                  costo_neto_financiamiento_normal: Number(
-                    this.datosVenta.costo_neto_financiamiento_normal
-                  ),
-                };
-                this.planesVenta.push(planVenta);
-                this.form.planVenta = planVenta;
-              } else {
-                this.seleccionarPlanVenta();
-              }
-            } else {
-              this.seleccionarPlanVenta();
-            }
-          }
-
-          this.form.descuento = this.datosVenta.descuento;
-          /**seleccionando el pago inicial */
-          if (this.datosVenta.pagos_programados.length > 0) {
-            /**tiene pagos programado y debemos seleccionar el pago programado para tomar el pago inicial */
-            this.form.pago_inicial = this.datosVenta.pagos_programados[0].monto_programado;
-          } else {
-            this.form.pago_inicial = 0;
-          }
-        }
-      } //fin if datos area
-    },
-    seleccionarPlanVenta() {
-      //selecciono el primero precio automaticamente
-      if (this.planesVenta.length > 1) {
-        this.form.planVenta = this.planesVenta[1];
-      } else {
-        this.form.planVenta = this.planesVenta[0];
-        this.$vs.notify({
-          title: "Planes de Venta",
-          text:
-            "No hay planes de venta que mostrar. Debe ingresarlos en la sección 'Planes de Venta en módulo de Funeraria > Planes a Futuro > Planes de Venta'",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-          position: "bottom-right",
-          time: "12000",
-        });
-      }
-    },
 
     cancelar() {
       this.botonConfirmarSinPassword = "Salir y limpiar";
@@ -2117,19 +1385,18 @@ export default {
       this.form.titulo = "";
       this.form.cliente = "";
       this.form.id_cliente = "";
+      this.form.direccion_cliente = "";
       this.form.vendedor = { label: "Seleccione 1", value: "" };
       this.form.fecha_venta = "";
-
       this.form.titular_sustituto = "";
       this.form.parentesco_titular_sustituto = "";
       this.form.telefono_titular_sustituto = "";
       this.form.beneficiarios = [];
-      //this.form.planVenta = this.planesVenta[0];
+
       this.form.tasa_iva = 16;
-      this.form.descuento = "";
-      this.form.subtotal = "";
-      this.form.impuestos = "";
-      this.form.costo_neto_pronto_pago = "";
+      this.form.financiamiento = "";
+      this.form.costo_neto = 0;
+      this.form.descuento = 0;
       this.form.pago_inicial = "";
       this.form.nota = "";
     },
@@ -2202,12 +1469,18 @@ export default {
       /**obtiene los datos retornados del buscar cliente */
       this.form.cliente = datos.nombre;
       this.form.id_cliente = datos.id_cliente;
+      this.form.direccion_cliente = datos.datos.direccion;
+      console.log(
+        "🚀 ~ file: FormularioVentas.vue ~ line 1819 ~ datos.datos.direccion",
+        datos.datos.direccion
+      );
       //alert(datos.id_cliente);
     },
 
     limpiarCliente() {
       this.form.id_cliente = "";
       this.form.cliente = "seleccione 1 cliente";
+      this.form.direccion_cliente = "";
     },
     quitarCliente() {
       this.botonConfirmarSinPassword = "Cambiar cliente";
@@ -2323,6 +1596,7 @@ export default {
         });
         this.form.id_cliente = this.datosVenta.cliente_id;
         this.form.cliente = this.datosVenta.nombre;
+        this.form.direccion_cliente = this.datosVenta.direccion;
         /**verificando si existe el vendedor o si no para crearlo, podria no existir en caso de que haya sido cancelado */
         this.vendedores.forEach((element) => {
           if (element.value == this.datosVenta.venta_plan.vendedor.id) {

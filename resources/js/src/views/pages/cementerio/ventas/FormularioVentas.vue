@@ -231,6 +231,7 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="w-full px-2 input-text">
                     <label>
                       Seleccione al vendedor
@@ -1178,7 +1179,7 @@ export default {
       if (isNaN(pago_inicial_minimo)) {
         return 0;
       } else {
-        return pago_inicial_minimo;
+        return pago_inicial_minimo.toFixed(2);
       }
     },
     /**maximo valor permitido del enganche */
@@ -1193,7 +1194,7 @@ export default {
       if (isNaN(pago_inicial_maximo)) {
         return 0;
       } else {
-        return pago_inicial_maximo;
+        return pago_inicial_maximo.toFixed(2);
       }
     },
 
@@ -1815,12 +1816,14 @@ export default {
       this.form.cliente = datos.nombre;
       this.form.id_cliente = datos.id_cliente;
       this.form.direccion_cliente = datos.datos.direccion;
+
       //alert(datos.id_cliente);
     },
 
     limpiarCliente() {
       this.form.id_cliente = "";
       this.form.cliente = "seleccione 1 cliente";
+      this.form.direccion_cliente = "";
     },
     quitarCliente() {
       this.botonConfirmarSinPassword = "Cambiar cliente";
