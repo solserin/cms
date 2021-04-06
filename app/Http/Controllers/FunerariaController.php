@@ -1445,7 +1445,7 @@ class FunerariaController extends ApiController
                         $q->where('operaciones.numero_convenio', '=', $numero_control);
                     } else if ($filtro_especifico_opcion == 3) {
                         /**filtro por numero de solicitud */
-                        $q->where('operaciones.numero_titulo', '=', $numero_control);
+                        $q->where('operaciones.ventas_planes_id', '=', $numero_control);
                     } else {
                         /**filtro por numero de solicitud */
                         // $q->where('ventas_terrenos.id', $numero_control);

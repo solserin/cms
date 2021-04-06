@@ -200,7 +200,7 @@
           </vs-table>
         </div>
 
-        <div class="w-ful" v-if="datosVenta.operacion_id">
+        <div class="w-full" v-if="datosVenta.operacion_id">
           <vs-table class="tabla-datos" :data="pagos" noDataText="0 Resultados">
             <template slot="header">
               <h3>Listado de Abonos Recibidos</h3>

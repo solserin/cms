@@ -1,79 +1,72 @@
 <template>
   <div>
-    <div class="flex flex-wrap">
-      <div class="w-full mb-1">
-        <vs-button
-          class="float-right"
-          size="small"
-          color="success"
-          @click="formulario('agregar')"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Vender Plan Funerario a Futuro</span>
-        </vs-button>
-        <vs-button
-          class="float-right mr-12"
-          size="small"
-          color="primary"
-          @click="openPlanesVenta = true"
-        >
-          <img
-            class="cursor-pointer img-btn"
-            src="@assets/images/preciotag.svg"
-          />
-          <span class="texto-btn">Planes de Venta</span>
-        </vs-button>
-      </div>
+    <div class="w-full text-right">
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="openPlanesVenta = true"
+        type="border"
+      >
+        <span>Planes de Venta</span>
+      </vs-button>
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="formulario('agregar')"
+      >
+        <span>Vender Planes Funerarios a Futuro</span>
+      </vs-button>
     </div>
+
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
       <vx-card
         no-radius
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Mostrar</label>
+            <label class="">Mostrar</label>
             <v-select
               :options="mostrarOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="mostrar"
-              class="mb-4 sm:mb-0"
+              class="sm:mb-0"
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Estado</label>
+            <label class="">Estado</label>
             <v-select
               :options="estadosOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="estado"
-              class="mb-4 md:mb-0"
+              class=""
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Filtrar Específico</label>
+            <label class="">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="filtroEspecifico"
-              class="mb-4 md:mb-0"
+              class=""
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Número de Control</label>
+            <label class="">Número de Control</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -87,8 +80,8 @@
         </div>
 
         <div class="flex flex-wrap">
-          <div class="w-full px-2">
-            <h3 class="text-base font-semibold my-3">
+          <div class="w-full px-2 py-4">
+            <h3 class="text-base">
               <feather-icon
                 icon="UserIcon"
                 class="mr-2"
@@ -97,9 +90,9 @@
             </h3>
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
+            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Nombre del Titular</label>
+            <label class="">Nombre del Titular</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -120,6 +113,7 @@
       :max-items="serverOptions.per_page.value"
       :data="ventas"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Ventas de Planes Funerarios a Futuro</h3>
@@ -159,52 +153,51 @@
             </span>
           </vs-td>
           <vs-td :data="data[indextr].operacion_status">
-            <p v-if="data[indextr].operacion_status == 1" class=" font-medium">
+            <p v-if="data[indextr].operacion_status == 0">
               {{ data[indextr].status_texto }}
+              <span class="dot-danger"></span>
             </p>
-            <p
-              v-else-if="data[indextr].operacion_status == 2"
-              class="font-medium text-success"
-            >
+            <p v-else-if="data[indextr].operacion_status == 1">
               {{ data[indextr].status_texto }}
+              <span class="dot-warning"></span>
             </p>
-            <p v-else class="text-danger font-medium">
+            <p v-else-if="data[indextr].operacion_status == 2">
               {{ data[indextr].status_texto }}
+              <span class="dot-success"></span>
             </p>
           </vs-td>
 
           <vs-td :data="data[indextr].id">
-            <div class="flex flex-start py-1">
+            <div class="flex justify-center">
               <img
-                class="cursor-pointer img-btn ml-auto"
+                class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
                 title="Expediente"
                 @click="ConsultarVenta(data[indextr].ventas_planes_id)"
               />
               <img
-                class="cursor-pointer img-btn ml-6 mr-6"
+                class="img-btn-18 mx-3"
                 src="@assets/images/edit.svg"
                 title="Modificar Contrato"
                 @click="openModificar(data[indextr].ventas_planes_id)"
               />
               <img
-                width="24"
                 v-if="data[indextr].operacion_status >= 1"
-                class="cursor-pointer mr-auto"
+                class="img-btn-22 mx-3"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
                 @click="cancelarVenta(data[indextr].ventas_planes_id)"
               />
               <img
-                width="24"
                 v-else
-                class="cursor-pointer mr-auto"
+                class="img-btn-22 mx-3"
                 src="@assets/images/trash-open.svg"
                 title="Esta venta ya fue cancelada, puede hacer click aquí para consultar"
                 @click="ConsultarVentaAcuse(data[indextr].ventas_planes_id)"
               />
             </div>
           </vs-td>
+
           <template class="expand-user" slot="expand"></template>
         </vs-tr>
       </template>
@@ -279,24 +272,24 @@ export default {
     FormularioVentas,
     ReportesVentas,
     CancelarVenta,
-    PlanesVenta
+    PlanesVenta,
   },
   watch: {
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       (async () => {
         await this.get_data(this.actual);
       })();
     },
-    mostrar: function(newValue, oldValue) {
+    mostrar: function (newValue, oldValue) {
       (async () => {
         await this.get_data(1);
       })();
     },
-    estado: function(newVal, previousVal) {
+    estado: function (newVal, previousVal) {
       (async () => {
         await this.get_data(1);
       })();
-    }
+    },
   },
   data() {
     return {
@@ -316,35 +309,35 @@ export default {
       estadosOptions: [
         {
           label: "Todas",
-          value: ""
+          value: "",
         },
         {
           label: "Por Pagar",
-          value: "1"
+          value: "1",
         },
         {
           label: "Pagadas",
-          value: "2"
+          value: "2",
         },
         {
           label: "Canceladas",
-          value: "0"
-        }
+          value: "0",
+        },
       ],
       filtroEspecifico: { label: "Núm. Solicitud", value: "1" },
       filtrosEspecificos: [
         {
           label: "Núm. Solicitud",
-          value: "1"
+          value: "1",
         },
         {
           label: "Núm. Convenio",
-          value: "2"
+          value: "2",
         },
         {
           label: "Núm. Venta",
-          value: "3"
-        }
+          value: "3",
+        },
       ],
       serverOptions: {
         page: "",
@@ -352,7 +345,7 @@ export default {
         status: "",
         filtro_especifico_opcion: "",
         numero_control: "",
-        titular: ""
+        titular: "",
       },
       activeTab: 0,
       verPaginado: true,
@@ -367,7 +360,7 @@ export default {
       verModificar: false,
       id_venta_modificar: 0,
       /**opciones para filtrar la peticion del server */
-      id_venta: 0 /**para consultar los reportesw */
+      id_venta: 0 /**para consultar los reportesw */,
     };
   },
   methods: {
@@ -431,7 +424,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -486,12 +479,12 @@ export default {
       (async () => {
         await this.get_data(this.actual);
       })();
-    }
+    },
   },
   created() {
     (async () => {
       await this.get_data(this.actual);
     })();
-  }
+  },
 };
 </script>

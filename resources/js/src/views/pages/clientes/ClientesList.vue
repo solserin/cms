@@ -69,9 +69,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </div>
           <div class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2">
             <div class="w-full input-text pb-2">
-              <label class="">{{
-                this.filtroEspecifico.label
-              }}</label>
+              <label class="">{{ this.filtroEspecifico.label }}</label>
 
               <vs-input
                 class="w-full"
