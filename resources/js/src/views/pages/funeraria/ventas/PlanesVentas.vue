@@ -1,227 +1,228 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups big-forms planes_venta_form"
+      class="forms-popup popup-85"
       fullscreen
       title="listado de planes funerarios"
       :active.sync="showVentana"
       ref="planes_planes"
     >
-      <div class="flex flex-wrap pb-12 pt-2">
-        <div class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12">
-          <label class="text-sm opacity-75 font-bold">
-            <span class="uppercase">Filtrar por plan Funerario:</span>
-          </label>
-          <v-select
-            :options="tipo_planes"
-            :clearable="false"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            v-model="plan_tipo"
-            class="pb-1 pt-1"
-          >
-            <div slot="no-options">Seleccione un Plan Funerario</div>
-          </v-select>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12">
-          <vs-button
-            class="float-right mt-6"
-            size="small"
-            color="success"
-            @click="agregarPrecios()"
-          >
-            <img
-              class="cursor-pointer img-btn"
-              src="@assets/images/precios.svg"
-            />
-            <span class="texto-btn">Agregar Precios </span>
-          </vs-button>
-          <vs-button
-            class="float-right mt-6 mr-8"
-            size="small"
-            color="primary"
-            @click="agregarPlan()"
-          >
-            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Crear Planes Funerarios</span>
-          </vs-button>
-          <vs-button
-            class="float-right mr-8 mt-6"
-            size="small"
-            color="primary"
-            @click="
-              openReporte(
-                'Todos los Planes (Español)',
-                '/funeraria/planes_funerarios',
-                ''
-              )
-            "
-          >
-            <img
-              class="cursor-pointer img-btn"
-              src="@assets/images/printer.svg"
-            />
-            <span class="texto-btn">Todos los Planes</span>
-          </vs-button>
-        </div>
-      </div>
-      <div v-if="planes.length > 0">
-        <div
-          v-for="(plan, index) in planes"
-          :key="index"
-          :class="[indexPrecios(index, plan.id), 'w-full']"
-        >
-          <vs-table :data="plan.precios" noDataText="0 Resultados">
-            <template slot="header">
-              <table class="w-full">
-                <thead>
-                  <tr>
-                    <td
-                      class="text-left w-full sm:w-12/12 md:w-10/12 lg:w-10/12 xl:w-10/12"
+      <div class="form-group">
+        <div class="title-form-group">Planes Funerarios Registrados</div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full">
+              <div class="flex flex-wrap-reverse xl:flex-wrap">
+                <div class="w-full xl:w-5/12">
+                  <label>
+                    <span>Filtrar por plan Funerario:</span>
+                  </label>
+                  <v-select
+                    :options="tipo_planes"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="plan_tipo"
+                    class="w-full"
+                  >
+                    <div slot="no-options">Seleccione un Plan Funerario</div>
+                  </v-select>
+                </div>
+                <div class="w-full sm:w-12/12 xl:w-7/12 py-6 xl:pt-0">
+                  <div class="w-full text-right">
+                    <vs-button
+                      class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 xl:mt-6"
+                      color="primary"
+                      type="border"
+                      @click="
+                        openReporte(
+                          'Todos los Planes (Español)',
+                          '/funeraria/planes_funerarios',
+                          ''
+                        )
+                      "
                     >
-                      <span class="text-sm uppercase font-bold">
-                        Plan Funerario
-                      </span>
-                    </td>
-                    <td class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12">
-                      <span class="text-sm uppercase font-bold">
-                        Acciones
-                      </span>
-                    </td>
-                  </tr>
-                </thead>
-                <tbody class="bg-white">
-                  <tr class="border-solid border-2 border-gray-600">
-                    <td class="text-left">
-                      <span class="text-base font-medium uppercase">
-                        {{ plan.plan }}
-                      </span>
-                    </td>
-                    <td>
-                      <img
-                        class="cursor-pointer img-btn ml-auto  mb-2"
-                        src="@assets/images/edit.svg"
-                        title="Modificar"
-                        @click="openModificarPlan(plan.id)"
-                      />
-                      <img
-                        v-if="plan.status == 1"
-                        class="cursor-pointer img-btn-32 mr-auto ml-3"
-                        src="@assets/images/switchon.svg"
-                        title="Deshabilitar"
-                        @click="
-                          enable_disable_plan(
-                            plan.id,
-                            plan.plan,
-                            'deshabilitar'
-                          )
-                        "
-                      />
-                      <img
-                        v-else
-                        class="cursor-pointer img-btn-32 mr-auto ml-3"
-                        src="@assets/images/switchoff.svg"
-                        title="Habilitar"
-                        @click="
-                          enable_disable_plan(plan.id, plan.plan, 'habilitar')
-                        "
-                      />
+                      <span>Imprimir lista de planes</span>
+                    </vs-button>
+                    <vs-button
+                      class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 xl:mt-6"
+                      color="primary"
+                      @click="agregarPrecios()"
+                    >
+                      <span>Agregar precios</span>
+                    </vs-button>
+                    <vs-button
+                      class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 xl:mt-6"
+                      color="primary"
+                      @click="agregarPlan()"
+                    >
+                      <span>Crear planes funerarios</span>
+                    </vs-button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                      <img
-                        width="25"
-                        class="cursor-pointer mr-auto ml-4 mb-1"
-                        src="@assets/images/printer.svg"
-                        title="Imprimir Plan Funerario"
-                        @click="
-                          openReportePlan(
-                            'Precios x Plan (Español)',
-                            '/funeraria/pdf_plan_funerario',
-                            plan.id
-                          )
-                        "
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </template>
-            <template slot="thead">
-              <vs-th>#</vs-th>
-              <vs-th>Pago Inicial ($)</vs-th>
-              <vs-th>Costo Neto ($)</vs-th>
-              <vs-th>Costo a Pronto Pago ($)</vs-th>
-              <vs-th>Abono Mensual ($)</vs-th>
-              <vs-th>Desc. x Pago ($)</vs-th>
-              <vs-th>Financiamiento</vs-th>
-              <vs-th>Descripción</vs-th>
-              <vs-th>Acciones</vs-th>
-            </template>
-            <template slot-scope="{ data }">
-              <vs-tr
-                :data="precio"
-                :key="index_precio"
-                v-for="(precio, index_precio) in data"
+            <div v-if="planes.length > 0" class="w-full pt-6">
+              <div
+                v-for="(plan, index) in planes"
+                :key="index"
+                :class="[indexPrecios(index, plan.id), 'w-full']"
               >
-                <vs-td>
-                  <span class="font-semibold">{{ index_precio + 1 }}</span>
-                </vs-td>
-                <vs-td
-                  >$ {{ precio.pago_inicial | numFormat("0,000.00") }}</vs-td
+                <vs-table
+                  :data="plan.precios"
+                  noDataText="0 Resultados"
+                  class="tabla-datos"
                 >
-                <vs-td>$ {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td>
-                <vs-td
-                  >$
-                  {{
-                    precio.costo_neto_pronto_pago | numFormat("0,000.00")
-                  }}</vs-td
-                >
-                <vs-td :data="data[index_precio].pago_mensual"
-                  >$ {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
-                >
-                <vs-td
-                  >$
-                  {{ precio.descuento_x_pago | numFormat("0,000.00") }}</vs-td
-                >
-                <vs-td>{{ precio.tipo_financiamiento }}</vs-td>
-                <vs-td>{{ precio.descripcion }}</vs-td>
+                  <template slot="header">
+                    <div class="w-full py-2">
+                      <div class="flex flex-wrap">
+                        <div
+                          class="w-full lg:w-8/12 px-2 text-center lg:text-left"
+                        >
+                          <span class="uppercase size-base font-medium">
+                            {{ plan.plan }}
+                          </span>
+                        </div>
+                        <div class="w-full lg:w-4/12 px-2">
+                          <div class="w-full text-center lg:text-right">
+                            <vs-button
+                              class="sm:w-auto md:ml-2 my-2 lg:my-0"
+                              color="primary"
+                              @click="openModificarPlan(plan.id)"
+                              type="line"
+                            >
+                              <span>Editar</span>
+                            </vs-button>
 
-                <vs-td>
-                  <img
-                    class="cursor-pointer img-btn ml-auto mb-1"
-                    src="@assets/images/edit.svg"
-                    title="Modificar"
-                    @click="openModificar(data[index_precio].id)"
-                  />
-                  <img
-                    v-if="data[index_precio].status == 1"
-                    class="cursor-pointer img-btn-32  ml-3"
-                    src="@assets/images/switchon.svg"
-                    title="Deshabilitar"
-                    @click="
-                      enable_disable_precio(
-                        data[index_precio].id,
-                        data[index_precio].descripcion,
-                        'deshabilitar'
-                      )
-                    "
-                  />
+                            <vs-button
+                              v-if="plan.status == 1"
+                              class="sm:w-auto md:ml-2 my-2 lg:my-0"
+                              color="danger"
+                              @click="
+                                enable_disable_plan(
+                                  plan.id,
+                                  plan.plan,
+                                  'deshabilitar'
+                                )
+                              "
+                              type="line"
+                            >
+                              <span>Desactivar</span>
+                            </vs-button>
+                            <vs-button
+                              v-else
+                              class="sm:w-auto md:ml-2 my-2 lg:my-0"
+                              color="success"
+                              @click="
+                                enable_disable_plan(
+                                  plan.id,
+                                  plan.plan,
+                                  'habilitar'
+                                )
+                              "
+                              type="line"
+                            >
+                              <span>Habilitar</span>
+                            </vs-button>
+                            <vs-button
+                              class="sm:w-auto md:ml-2 my-2 lg:my-0"
+                              color="gray"
+                              @click="
+                                openReportePlan(
+                                  'Precios x Plan (Español)',
+                                  '/funeraria/pdf_plan_funerario',
+                                  plan.id
+                                )
+                              "
+                              type="line"
+                            >
+                              <span>Imprimir</span>
+                            </vs-button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <template slot="thead">
+                    <vs-th>#</vs-th>
+                    <vs-th>Pago Inicial ($)</vs-th>
+                    <vs-th>Costo Neto ($)</vs-th>
 
-                  <img
-                    v-else
-                    class="cursor-pointer img-btn-32 mr-auto ml-3"
-                    src="@assets/images/switchoff.svg"
-                    title="Habilitar"
-                    @click="
-                      enable_disable_precio(
-                        data[index_precio].id,
-                        data[index_precio].descripcion,
-                        'habilitar'
-                      )
-                    "
-                  />
-                </vs-td>
-              </vs-tr>
-            </template>
-          </vs-table>
+                    <vs-th>Abono Mensual ($)</vs-th>
+
+                    <vs-th>Financiamiento</vs-th>
+                    <vs-th>Descripción</vs-th>
+                    <vs-th>Acciones</vs-th>
+                  </template>
+                  <template slot-scope="{ data }">
+                    <vs-tr
+                      :data="precio"
+                      :key="index_precio"
+                      v-for="(precio, index_precio) in data"
+                    >
+                      <vs-td>
+                        <span class="font-semibold">{{
+                          index_precio + 1
+                        }}</span>
+                      </vs-td>
+                      <vs-td
+                        >$
+                        {{ precio.pago_inicial | numFormat("0,000.00") }}</vs-td
+                      >
+                      <vs-td
+                        >$
+                        {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td
+                      >
+
+                      <vs-td :data="data[index_precio].pago_mensual"
+                        >$
+                        {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
+                      >
+
+                      <vs-td>{{ precio.tipo_financiamiento }}</vs-td>
+                      <vs-td>{{ precio.descripcion }}</vs-td>
+
+                      <vs-td>
+                        <img
+                          class="img-btn-18 mx-3"
+                          src="@assets/images/edit.svg"
+                          title="Modificar"
+                          @click="openModificar(data[index_precio].id)"
+                        />
+                        <img
+                          v-if="data[index_precio].status == 1"
+                          class="img-btn-24 mx-3"
+                          src="@assets/images/switchon.svg"
+                          title="Deshabilitar"
+                          @click="
+                            enable_disable_precio(
+                              data[index_precio].id,
+                              data[index_precio].descripcion,
+                              'deshabilitar'
+                            )
+                          "
+                        />
+
+                        <img
+                          v-else
+                          class="img-btn-24 mx-3"
+                          src="@assets/images/switchoff.svg"
+                          title="Habilitar"
+                          @click="
+                            enable_disable_precio(
+                              data[index_precio].id,
+                              data[index_precio].descripcion,
+                              'habilitar'
+                            )
+                          "
+                        />
+                      </vs-td>
+                    </vs-tr>
+                  </template>
+                </vs-table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -230,9 +231,7 @@
         :show="operConfirmar"
         :callback-on-success="callback"
         @closeVerificar="operConfirmar = false"
-        :accion="
-          '¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'
-        "
+        :accion="'¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'"
         :confirmarButton="'Eliminar'"
       ></ConfirmarDanger>
       <Password
@@ -281,11 +280,11 @@ export default {
   props: {
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["planes_planes"].$el.querySelector(
           ".vs-icon"
@@ -301,7 +300,7 @@ export default {
         this.datosVenta = [];
         this.total = 0;
       }
-    }
+    },
   },
   components: {
     ConfirmarDanger,
@@ -309,7 +308,7 @@ export default {
     "v-select": vSelect,
     FormularioPrecios,
     Reporteador,
-    FormularioPlanes
+    FormularioPlanes,
   },
   data() {
     return {
@@ -325,7 +324,7 @@ export default {
       request: {
         destinatario: "",
         id_tipo_propiedad: "",
-        email: ""
+        email: "",
       },
 
       tipoFormularioPrecio: "",
@@ -342,7 +341,7 @@ export default {
       openPassword: false,
       accionPassword: "",
       callback: Function,
-      callbackPassword: Function
+      callbackPassword: Function,
       //datos que mando para actualizar
     };
   },
@@ -353,8 +352,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     async get_planes() {
@@ -366,12 +365,12 @@ export default {
         this.tipo_planes = [];
         this.tipo_planes.push({
           label: "Todos los Planes",
-          value: ""
+          value: "",
         });
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.tipo_planes.push({
-            label: element.plan.charAt(0).toUpperCase() + element.plan.slice(1),
-            value: element.id
+            label: element.plan,
+            value: element.id,
           });
           //la primero opcion
           this.plan_tipo = this.tipo_planes[0];
@@ -389,7 +388,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -413,11 +412,11 @@ export default {
     enable_disable_planes() {
       this.$vs.loading();
       let datos = {
-        id_plan: this.id_plan_modificar
+        id_plan: this.id_plan_modificar,
       };
       planes
         .enable_disable_planes(datos)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           (async () => {
             await this.get_planes();
@@ -429,7 +428,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 4000
+              time: 4000,
             });
           } else {
             this.$vs.notify({
@@ -438,11 +437,11 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "primary",
-              time: 4000
+              time: 4000,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -454,7 +453,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -467,7 +466,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -484,11 +483,11 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Precios x Plan (Español)",
-        url: "/funeraria/pdf_plan_funerario/es"
+        url: "/funeraria/pdf_plan_funerario/es",
       });
       this.ListaReportes.push({
         nombre: "Precios x Plan (Inglés)",
-        url: "/funeraria/pdf_plan_funerario/en"
+        url: "/funeraria/pdf_plan_funerario/en",
       });
       //estado de cuenta
       this.request.email = "";
@@ -501,11 +500,11 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Todos los Planes (Español)",
-        url: "/funeraria/planes_funerarios/es"
+        url: "/funeraria/planes_funerarios/es",
       });
       this.ListaReportes.push({
         nombre: "Todos los Planes (Inglés)",
-        url: "/funeraria/planes_funerarios/en"
+        url: "/funeraria/planes_funerarios/en",
       });
       //estado de cuenta
       this.request.email = "";
@@ -544,12 +543,12 @@ export default {
         this.planes_tipos = [];
         this.planes_tipos.push({
           label: "Todas las Propiedades",
-          value: ""
+          value: "",
         });
-        this.planes.forEach(element => {
+        this.planes.forEach((element) => {
           this.planes_tipos.push({
             label: "Tipo " + element.tipo,
-            value: element.id
+            value: element.id,
           });
           //la primero opcion
           this.propiedad_tipo = this.planes_tipos[0];
@@ -567,7 +566,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -591,11 +590,11 @@ export default {
     enable_disable() {
       this.$vs.loading();
       let datos = {
-        id_precio: this.id_precio_modificar
+        id_precio: this.id_precio_modificar,
       };
       planes
         .enable_disable(datos)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           (async () => {
             await this.get_planes();
@@ -607,7 +606,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 4000
+              time: 4000,
             });
           } else {
             this.$vs.notify({
@@ -616,11 +615,11 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "primary",
-              time: 4000
+              time: 4000,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -632,7 +631,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -645,13 +644,13 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
         });
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

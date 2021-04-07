@@ -10,6 +10,15 @@
 @import "vuexy/roles";
 @import "vuexy/tabs";
 
+/*Desactivand el efecto scroll drawn refresh on mobiles*/
+body {
+    overscroll-behavior: contain !important;
+}
+body {
+    overscroll-behavior-y: contain !important;
+}
+/*Desactivand el efecto scroll drawn refresh on mobiles*/
+
 /*dots*/
 @mixin dot {
     height: 8px;
