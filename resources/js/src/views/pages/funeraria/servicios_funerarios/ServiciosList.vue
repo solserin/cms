@@ -1,76 +1,72 @@
 <template>
   <div>
-    <div class="flex flex-wrap">
-      <div class="w-full mb-1">
-        <vs-button
-          class="float-right"
-          size="small"
-          color="success"
-          @click="TipoFormularioSolicitud('agregar')"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Nuevo Servicio Funerario</span>
-        </vs-button>
-        <vs-button
-          class="float-right mr-12 hidden"
-          size="small"
-          color="primary"
-          @click="openPlanesVenta = true"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/shovel.svg" />
-          <span class="texto-btn">Servicio de Exhumación</span>
-        </vs-button>
-      </div>
+    <div class="w-full text-right">
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0 hidden"
+        color="primary"
+        @click="openPlanesVenta = true"
+        type="border"
+      >
+        <span>Planes de Venta</span>
+      </vs-button>
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="TipoFormularioSolicitud('agregar')"
+      >
+        <span>Nuevo Servicio Funerario</span>
+      </vs-button>
     </div>
+
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
       <vx-card
         no-radius
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Mostrar</label>
+            <label class="">Mostrar</label>
             <v-select
               :options="mostrarOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="mostrar"
-              class="mb-4 sm:mb-0"
+              class="w-full"
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Estado</label>
+            <label class="">Estado</label>
             <v-select
               :options="estadosOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="estado"
-              class="mb-4 md:mb-0"
+              class="w-full"
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 input-text px-2"
           >
-            <label class="text-sm opacity-75">Filtrar Específico</label>
+            <label class="">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="filtroEspecifico"
-              class="mb-4 md:mb-0"
+              class="w-full"
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 input-text px-2"
           >
-            <label class="text-sm opacity-75">Número de Control</label>
+            <label class="">Número de Control</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -93,10 +89,8 @@
               />Filtrar por Nombre del Fallecido
             </h3>
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
-          >
-            <label class="text-sm opacity-75">Nombre del Fallecido</label>
+          <div class="w-full input-text px-2">
+            <label class="">Nombre del Fallecido</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -117,6 +111,7 @@
       :max-items="serverOptions.per_page.value"
       :data="ventas"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Servicios Funerarios Atendidos</h3>
@@ -148,60 +143,55 @@
           </vs-td>
 
           <vs-td>
-            <p
-              v-if="data[indextr].status_texto == 'Cancelada'"
-              class="font-medium text-danger"
-            >
+            <p v-if="data[indextr].status_texto == 'Cancelada'">
               {{ data[indextr].status_texto }}
+              <span class="dot-danger"></span>
             </p>
-            <p
-              v-else-if="data[indextr].status_texto == 'Por pagar'"
-              class="font-medium"
-            >
+            <p v-else-if="data[indextr].status_texto == 'Por pagar'">
               {{ data[indextr].status_texto }}
+              <span class="dot-warning"></span>
             </p>
-            <p
-              v-else-if="data[indextr].status_texto == 'Pagada'"
-              class="text-success font-medium"
-            >
-              {{ data[indextr].status_texto }}
+
+            <p v-else-if="data[indextr].status_texto == 'Activa'">
+              Sin Contrato
+              <span class="dot-warning"></span>
             </p>
-            <p v-else class="font-medium">
+
+            <p v-else-if="data[indextr].status_texto == 'Pagada'">
               {{ data[indextr].status_texto }}
+              <span class="dot-success"></span>
             </p>
           </vs-td>
           <vs-td :data="data[indextr].id">
-            <div class="flex flex-start py-1">
+            <div class="flex justify-center">
               <img
-                class="cursor-pointer img-btn ml-auto mr-1"
+                class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
                 title="Expediente"
                 @click="ConsultarVenta(data[indextr].servicio_id)"
               />
               <img
-                class="cursor-pointer img-btn ml-6"
+                class="img-btn-18 mx-3"
                 src="@assets/images/edit.svg"
                 title="Modificar Solicitud de Servicio"
                 @click="openModificarSolicitud(data[indextr].servicio_id)"
               />
               <img
-                class="cursor-pointer img-btn ml-6 mr-6"
+                class="img-btn-22 mx-3"
                 src="@assets/images/contrato.svg"
                 title="Editar Contrato"
                 @click="openModificar(data[indextr].servicio_id)"
               />
               <img
-                width="24"
                 v-if="data[indextr].status_b >= 1"
-                class="cursor-pointer mr-auto"
+                class="img-btn-22 mx-3"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
                 @click="cancelarVenta(data[indextr].servicio_id)"
               />
               <img
-                width="24"
                 v-else
-                class="cursor-pointer mr-auto"
+                class="img-btn-22 mx-3"
                 src="@assets/images/trash-open.svg"
                 title="Este contrato ya fue cancelado, puede hacer click aquí para consultar"
                 @click="ConsultarVentaAcuse(data[indextr].servicio_id)"
