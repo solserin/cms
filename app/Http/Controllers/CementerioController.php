@@ -1242,7 +1242,7 @@ class CementerioController extends ApiController
 
             /**forzando en pago inicial a ser igual al costo neto de la propiedad */
             $validaciones['pago_inicial'] = 'required|numeric|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
-            $mensaje_pago_inicial         = 'Este valor debe ser "$ 1.00" Mínimo y $ ' . number_format(($request->costo_neto * .7), 2) . " máximo.";
+            $mensaje_pago_inicial         = 'Este valor debe ser "$ 1.00" Mínimo y $ ' . number_format(($request->costo_neto), 2) . " máximo.";
 
         } else {
             /**es a credito */
@@ -1330,7 +1330,7 @@ class CementerioController extends ApiController
             'contado_b.value'           => 'required|integer|min:0|max:1',
             'financiamiento'            => '',
             'pago_inicial'              => '',
-            'costo_neto'                => 'required|numeric|min:0',
+            'costo_neto'                => 'required|numeric|min:1',
             'tipo_propiedades_id.value' => 'required',
         ];
 
@@ -1344,7 +1344,7 @@ class CementerioController extends ApiController
 
             /**forzando en pago inicial a ser igual al costo neto de la propiedad */
             $validaciones['pago_inicial'] = 'required|numeric|min:' . $request->costo_neto . '|max:' . $request->costo_neto;
-            $mensaje_pago_inicial         = 'Este valor debe ser "$ 1.00" Mínimo y $ ' . number_format(($request->costo_neto * .7), 2) . " máximo.";
+            $mensaje_pago_inicial         = 'Este valor debe ser "$ 1.00" Mínimo y $ ' . number_format(($request->costo_neto), 2) . " máximo.";
         } else {
             /**es a credito */
             $validaciones['financiamiento'] = 'required|integer|min:2|max:64';
