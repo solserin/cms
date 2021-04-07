@@ -464,6 +464,7 @@ class CementerioController extends ApiController
                 if ($datos_venta['total'] > 0) {
                     /**si la venta no fue gratis */
                     if ($datos_venta['pagos_realizados'] > 0) {
+
                         return $this->errorResponse('La venta no puede modificar datos relativos a cantidades, fecha, ubicacion, tipo de venta, tipo de
                 financiamiento, etc. Esto se debe a que existen pagos relacionados a esta venta y modificar cantidades o precios causaría que se perdiera la integridad de esta información.', 409);
                     } else {
@@ -833,8 +834,10 @@ class CementerioController extends ApiController
                     }
                     /**programacion de pagos */
                     if ($costo_neto > 0) {
+
                         /**si la cantidad que resta a pagar es mayor a cero se manda llamar la programcion de pagos */
                         $this->programarPagos($request, $datos_venta['operacion_id'], $request->id_venta, '001');
+
                     } else {
                         /**no hay nada que cobrar, por lo cual debemos generar un numero de titulo inmeadiato */
                         if (trim($datos_venta['numero_titulo']) == '') {
@@ -1085,7 +1088,7 @@ class CementerioController extends ApiController
             //a futuro y a meses
             for ($i = 1; $i <= ((int) $request->financiamiento); $i++) {
                 /**calculando el abono en bruto */
-                $monto_abono = ($costo_neto - $pago_inicial) / $request->financiamiento;
+                $monto_abono = ($total_pagar - $pago_inicial) / $request->financiamiento;
 
                 $numero_pago_para_referencia = '';
                 if ($i < 9) {
@@ -1102,8 +1105,8 @@ class CementerioController extends ApiController
                     $decimales = $monto_abono - intval($monto_abono);
                     if ($decimales > 0) {
                         /**tiene decimales */
-                        $abono              = $total_pagar - $request->pago_inicial - (intval($monto_abono) * $request->financiamiento);
-                     $monto_abono = round($abono + intval($monto_abono), 2, PHP_ROUND_HALF_UP);
+                        $abono       = ($total_pagar - $request->pago_inicial) - (intval($monto_abono) * $request->financiamiento);
+                        $monto_abono = round($abono + intval($monto_abono), 2, PHP_ROUND_HALF_UP);
                     }
                 } else {
                     $abono       = intval($monto_abono);
