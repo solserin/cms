@@ -13,39 +13,30 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 -->
 <template>
   <div>
-    <div class="flex flex-wrap">
-      <div class="w-full mb-1">
-        <vs-button
-          class="float-right"
-          size="small"
-          color="success"
-          @click="formulario('agregar')"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Agregar Artículos</span>
-        </vs-button>
-        <vs-button
-          class="float-right mr-12"
-          size="small"
-          color="primary"
-          @click="openReporte()"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/boxes.svg" />
-          <span class="texto-btn">Ver Inventario</span>
-        </vs-button>
-        <vs-button
-          class="float-right mr-12"
-          size="small"
-          color="primary"
-         @click="openFormLabels()"
-        >
-          <img
-            class="cursor-pointer img-btn"
-            src="@assets/images/printlote.svg"
-          />
-          <span class="texto-btn">Imprimir Etiquetas</span>
-        </vs-button>
-      </div>
+    <div class="w-full text-right">
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="openFormLabels()"
+        type="border"
+      >
+        <span>Imprimir Etiquetas</span>
+      </vs-button>
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="openReporte()"
+        type="border"
+      >
+        <span>Ver Inventario</span>
+      </vs-button>
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="formulario('agregar')"
+      >
+        <span>Agregar Artículos</span>
+      </vs-button>
     </div>
 
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
@@ -54,35 +45,35 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Mostrar</label>
+            <label class="">Mostrar</label>
             <v-select
               :options="mostrarOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="mostrar"
-              class="mb-4 sm:mb-0"
+              class="sm:mb-0"
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
-            <label class="text-sm opacity-75">Estado</label>
+            <label class="">Estado</label>
             <v-select
               :options="estadosOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="estado"
-              class="mb-4 md:mb-0"
+              class=""
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
           >
             <label class="text-sm opacity-75">Filtrar Específico</label>
             <v-select
@@ -94,7 +85,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2 input-text"
           >
             <label class="text-sm opacity-75">
               {{ this.filtroEspecifico.label }}
@@ -122,7 +113,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
             </h3>
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
+            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
           >
             <label class="text-sm opacity-75">Nombre del Artículo</label>
             <vs-input
@@ -148,6 +139,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
       :max-items="serverOptions.per_page.value"
       :data="articulos"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Artículos y Servicios Registrados</h3>
@@ -198,20 +190,26 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </vs-td>
 
           <vs-td :data="data[indextr].status">
-            <p v-if="data[indextr].status == 1" class="text-success">Activo</p>
-            <p v-else class="text-danger">Deshabilitado</p>
+            <p v-if="data[indextr].status == 0">
+              Deshabilitado
+              <span class="dot-danger"></span>
+            </p>
+            <p v-else-if="data[indextr].status == 1">
+              Activo
+              <span class="dot-success"></span>
+            </p>
           </vs-td>
           <vs-td :data="data[indextr].id_user">
-            <div class="flex flex-start">
+            <div class="flex justify-center">
               <img
-                class="cursor-pointer img-btn ml-auto mr-2"
+                class="img-btn-18 mx-3"
                 src="@assets/images/edit.svg"
                 title="Modificar"
                 @click="openModificar(data[indextr].id)"
               />
               <img
                 v-if="data[indextr].status == 1"
-                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                class="img-btn-22 mx-3"
                 src="@assets/images/switchon.svg"
                 title="Deshabilitar"
                 @click="
@@ -220,7 +218,7 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               />
               <img
                 v-else
-                class="cursor-pointer img-btn-32 mr-auto ml-3"
+                class="img-btn-22 mx-3"
                 src="@assets/images/switchoff.svg"
                 title="Habilitar"
                 @click="
