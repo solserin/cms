@@ -208,7 +208,6 @@ class InventarioController extends ApiController
         $validaciones = [
             'id_articulo_modificar'  => '',
             'descripcion'            => 'required',
-            'descripcion_ingles'     => 'required',
             'tipo_articulo.value'    => 'numeric|required',
             'departamento.value'     => 'numeric|required',
             'categoria.value'        => 'numeric|required',
@@ -219,7 +218,6 @@ class InventarioController extends ApiController
             'minimo_inventario'      => 'integer|required|min:1',
             'maximo_inventario'      => 'integer|required|gte:minimo_inventario',
             'opcion_caducidad.value' => 'numeric|required',
-            'costo_compra'           => 'numeric|required|min:1',
             'costo_venta'            => 'numeric|required|min:1',
             'codigo_barras'          => '',
         ];
@@ -295,8 +293,8 @@ class InventarioController extends ApiController
                         'factor'                     => 1,
                         'codigo_barras'              => $request->codigo_barras,
                         'descripcion'                => $request->descripcion,
-                        'descripcion_ingles'         => $request->descripcion_ingles,
-                        'precio_compra'              => $request->costo_compra,
+                        'descripcion_ingles'         => $request->descripcion,
+                        'precio_compra'              => $request->costo_venta,
                         'precio_venta'               => $request->costo_venta,
                         'minimo'                     => $request->minimo_inventario,
                         'maximo'                     => $request->maximo_inventario,
@@ -322,11 +320,11 @@ class InventarioController extends ApiController
                          * caduca
                          */
                         if ($opcion_caducidad != $inventario[0]['caduca_b']) {
-                            return $this->errorResponse('No se debe cambiar la opción caducidad, pues ya existe inventario de este artículo.', 409);
+                            return $this->errorResponse('No se puede cambiar la opción caducidad, pues ya existe inventario de este artículo.', 409);
                         }
 
                         if ($request->tipo_articulo['value'] != $inventario[0]['tipo_articulos_id']) {
-                            return $this->errorResponse('No se debe cambiar el tipo de artículo, pues ya existe inventario de este artículo.', 409);
+                            return $this->errorResponse('No se puede cambiar el tipo de artículo, pues ya existe inventario de este artículo.', 409);
                         }
                     }
                 } else {
@@ -362,8 +360,8 @@ class InventarioController extends ApiController
                         'factor'                     => 1,
                         'codigo_barras'              => $request->codigo_barras,
                         'descripcion'                => $request->descripcion,
-                        'descripcion_ingles'         => $request->descripcion_ingles,
-                        'precio_compra'              => $request->costo_compra,
+                        'descripcion_ingles'         => $request->descripcion,
+                        'precio_compra'              => $request->costo_venta,
                         'precio_venta'               => $request->costo_venta,
                         'minimo'                     => $request->minimo_inventario,
                         'maximo'                     => $request->maximo_inventario,
