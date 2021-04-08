@@ -23,6 +23,7 @@
             <div class="w-full">
               <div class="flex flex-wrap">
                 <div class="w-full xl:w-12/12 px-2">
+                  <!--resumen-->
                   <div class="flex flex-wrap">
                     <div
                       class="p-4 w-full mx-auto rounded-lg size-base border-gray-solid-1 rounded-lg"
@@ -33,36 +34,46 @@
                         Resumen de la venta
                       </div>
                       <div class="flex flex-wrap color-copy">
-                        <div
-                          class="w-full sm:w-6/12 px-2 text-left font-medium pb-2"
-                        >
-                          Propiedad
-                        </div>
-                        <div
-                          class="w-full sm:w-6/12 px-2 font-medium text-right pb-2"
-                        >
-                          <span class="capitalize">
-                            <span
-                              class="capitalize"
-                              v-if="datosVenta.venta_terreno"
-                              >{{
-                                datosVenta.venta_terreno.ubicacion_texto
-                              }}</span
+                        <div class="w-full">
+                          <div class="flex flex-wrap pb-6">
+                            <div
+                              class="w-full text-center font-medium color-black-900 uppercase"
                             >
-                          </span>
+                              Ubicación de la propiedad
+                            </div>
+                            <div
+                              class="w-full text-center font-medium color-copy pt-2"
+                            >
+                              <span class="capitalize">
+                                <span
+                                  class="capitalize"
+                                  v-if="datosVenta.venta_terreno"
+                                  >{{
+                                    datosVenta.venta_terreno.ubicacion_texto
+                                  }}</span
+                                >
+                              </span>
+                            </div>
+                          </div>
                         </div>
 
-                        <div
-                          class="w-full sm:w-6/12 px-2 text-left font-medium pb-2"
-                        >
-                          Titular de la Propiedad
-                        </div>
-                        <div
-                          class="w-full sm:w-6/12 px-2 font-medium text-right pb-2"
-                        >
-                          <span class="capitalize" v-if="datosVenta.nombre">{{
-                            datosVenta.nombre
-                          }}</span>
+                        <div class="w-full">
+                          <div class="flex flex-wrap">
+                            <div
+                              class="w-full xl:w-6/12 text-center font-medium color-black-900 uppercase"
+                            >
+                              Titular de la Propiedad
+                            </div>
+                            <div
+                              class="w-full xl:w-6/12 text-center font-medium color-copy"
+                            >
+                              <span
+                                class="capitalize"
+                                v-if="datosVenta.nombre"
+                                >{{ datosVenta.nombre }}</span
+                              >
+                            </div>
+                          </div>
                         </div>
 
                         <div class="w-full">
@@ -91,6 +102,7 @@
                       </div>
                     </div>
                   </div>
+                  <!--resumen-->
                 </div>
                 <div class="w-full xl:w-12/12">
                   <div class="flex flex-wrap">
@@ -167,7 +179,7 @@
           <vs-button
             v-if="!fueCancelada"
             class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
-            color="primary"
+            color="danger"
             @click="acceptAlert()"
           >
             <span>Cancelar Contrato</span>

@@ -1,171 +1,183 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-cancelar_cementerio normal-forms cancelar_planes background-header-forms"
-      fullscreen
+      class="forms-popup popup-50"
       title="Cancelar Venta de Terreno"
       :active.sync="showVentana"
       ref="cancelar_venta"
     >
-      <div class="pb-5">
-        <div class="flex flex-wrap">
-          <div class="w-full text-center py-1">
-            <div class="w-full">
-              <span class="text-lg font-medium text-dark">
-                ¿Está seguro de querer cancelar este contrato?
-              </span>
-            </div>
-            <div class="w-full py-2 px-2">
-              <span class="text-base">
-                Una vez realizado el proceso de cancelación no habrá manera de
-                volver a habilitar la venta. Es recomendable llevar a cabo este
-                proceso una vez esté seguro de que es necesario.
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2 text-center mt-16"
-          >
-            <img width="400" src="@assets/images/cancelar.png" />
-          </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2">
-            <div class="w-full pt-3 text-center">
-              <span class="font-medium text-dark text-lg"
-                >Tipo de Plan Funerario:</span
-              >
-              <div class="py-1">
-                <span class="capitalize">
-                  <span class="capitalize" v-if="datosVenta.venta_plan">{{
-                    datosVenta.venta_plan.nombre_original
-                  }}</span>
-                </span>
+      <div class="form-group">
+        <div class="title-form-group">Formulario de Cancelación</div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full alerta pt-4 pb-6 px-2">
+              <div class="danger">
+                <h3>¿Está seguro de querer cancelar este contrato?</h3>
+                <p>
+                  Una vez realizado el proceso de cancelación no habrá manera de
+                  volver a habilitar la venta. Es recomendable llevar a cabo
+                  este proceso una vez esté seguro de que es necesario.
+                </p>
               </div>
-            </div>
-
-            <div class="w-full pt-3 text-center">
-              <span class="font-medium text-dark text-lg"
-                >Titular del Plan Funerario:</span
-              >
-              <div class="py-1">
-                <span class="capitalize" v-if="datosVenta.nombre">{{
-                  datosVenta.nombre
-                }}</span>
-              </div>
-            </div>
-
-            <div class="w-full text-center ">
-              <span class="font-medium text-dark text-lg"
-                >Cantidad cubierta de capital hasta la fecha:</span
-              >
-              <div class="py-1">
-                <span class="capitalize" v-if="datosVenta">
-                  $
-                  {{ datosVenta.abonado_capital | numFormat("0,000.00") }}
-                  Pesos mxn
-                </span>
-              </div>
-            </div>
-
-            <div class="w-full py-3">
-              <label class=""
-                >Ingrese la cantidad a regresar en caso de aplicar:</label
-              >
             </div>
             <div class="w-full">
-              <vs-input
-                size="large"
-                v-model="form.cantidad"
-                v-validate="'required|decimal:2|min_value:0'"
-                name="cantidad"
-                data-vv-as=" "
-                type="text"
-                class="w-full"
-                placeholder=" $ 00.00 Pesos MXN"
-                maxlength="7"
-              />
-              <div>
-                <span class="mensaje-requerido">{{
-                  errors.first("cantidad")
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span class="mensaje-requerido" v-if="this.errores.cantidad">{{
-                  errores.cantidad[0]
-                }}</span>
-              </div>
-            </div>
+              <div class="flex flex-wrap">
+                <div class="w-full xl:w-12/12 px-2">
+                  <div class="flex flex-wrap">
+                    <div
+                      class="p-4 w-full mx-auto rounded-lg size-base border-gray-solid-1 rounded-lg"
+                    >
+                      <div
+                        class="size-base font-bold color-black-900 uppercase pb-6 text-center"
+                      >
+                        Resumen de la venta
+                      </div>
+                      <div class="flex flex-wrap color-copy">
+                        <div class="w-full">
+                          <div class="flex flex-wrap pb-6">
+                            <div
+                              class="w-full text-center font-medium color-black-900 uppercase"
+                            >
+                              Tipo de Plan Funerario
+                            </div>
+                            <div
+                              class="w-full text-center font-medium color-copy pt-2"
+                            >
+                              <span class="capitalize">
+                                <span class="" v-if="datosVenta.venta_plan">{{
+                                  datosVenta.venta_plan.nombre_original
+                                }}</span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
 
-            <div class="w-full py-3">
-              <label class="">Seleccione un motivo de cancelación:</label>
-            </div>
-            <div class="w-full">
-              <v-select
-                :options="motivos"
-                :clearable="false"
-                v-model="form.motivo"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                class="pb-1 pt-1 large_select"
-                v-validate:motivo_computed.immediate="'required'"
-                name="plan_venta"
-                data-vv-as=" "
-              >
-                <div slot="no-options">
-                  No Se Ha Seleccionado Ningún Motivo
+                        <div class="w-full">
+                          <div class="flex flex-wrap">
+                            <div
+                              class="w-full xl:w-6/12 text-center font-medium color-black-900 uppercase"
+                            >
+                              Titular de la Propiedad
+                            </div>
+                            <div
+                              class="w-full xl:w-6/12 text-center font-medium color-copy"
+                            >
+                              <span
+                                class="capitalize"
+                                v-if="datosVenta.nombre"
+                                >{{ datosVenta.nombre }}</span
+                              >
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="w-full">
+                          <div
+                            class="flex flex-wrap mt-2 theme-background py-6"
+                          >
+                            <div
+                              class="w-full text-center font-medium color-black-900 uppercase"
+                            >
+                              Cantidad cubierta de capital hasta la fecha:
+                            </div>
+                            <div
+                              class="w-full text-center font-medium color-black-700 uppercase pt-2"
+                            >
+                              <span class="capitalize" v-if="datosVenta">
+                                $
+                                {{
+                                  datosVenta.abonado_capital
+                                    | numFormat("0,000.00")
+                                }}
+                                Pesos mxn
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </v-select>
-              <div>
-                <span class="text-danger text-sm">{{
-                  errors.first("motivo")
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="text-danger text-sm"
-                  v-if="this.errores['motivo.value']"
-                  >{{ errores["motivo.value"][0] }}</span
-                >
+                <div class="w-full xl:w-12/12 pt-6">
+                  <div class="flex flex-wrap">
+                    <div class="w-full xl:w-4/12 input-text px-2">
+                      <label>$ Monto a devolver:</label>
+                      <vs-input
+                        size="large"
+                        v-model="form.cantidad"
+                        v-validate="'required|decimal:2|min_value:0'"
+                        name="cantidad"
+                        data-vv-as=" "
+                        type="text"
+                        class="w-full"
+                        placeholder=" $ 00.00 Pesos MXN"
+                        maxlength="7"
+                      />
+                      <span>{{ errors.first("cantidad") }}</span>
+                      <span v-if="this.errores.cantidad">{{
+                        errores.cantidad[0]
+                      }}</span>
+                    </div>
+
+                    <div class="w-full xl:w-8/12 input-text px-2">
+                      <label>Seleccione un motivo de cancelación:</label>
+                      <v-select
+                        :options="motivos"
+                        :clearable="false"
+                        v-model="form.motivo"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        class="w-full large_select"
+                        v-validate:motivo_computed.immediate="'required'"
+                        name="plan_venta"
+                        data-vv-as=" "
+                      >
+                        <div slot="no-options">
+                          No Se Ha Seleccionado Ningún Motivo
+                        </div>
+                      </v-select>
+                      <span>{{ errors.first("motivo") }}</span>
+                      <span v-if="this.errores['motivo.value']">{{
+                        errores["motivo.value"][0]
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-full input-text px-2">
+                  <label
+                    >Agregue un comentario respecto a la cancelación de esta
+                    venta:</label
+                  >
+                  <vs-textarea
+                    class="w-full"
+                    label="Detalle de la cancelación..."
+                    height="170px"
+                    v-model="form.comentario"
+                    ref="comentario"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="flex flex-wrap px-2">
-          <div class="py-5">
-            <label class=""
-              >Agregue un comentario respecto a la cancelación de esta
-              venta:</label
-            >
-          </div>
-          <vs-textarea
-            class="pb-1 pt-1"
-            label="Detalle de la cancelación..."
-            height="170px"
-            v-model="form.comentario"
-            ref="comentario"
-          />
+      <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
         </div>
 
-        <div class="flex flex-wrap">
-          <div class="w-full pt-6">
-            <div class="text-center">
-              <vs-button
-                color="danger"
-                class=""
-                size="small"
-                @click="acceptAlert"
-              >
-                <img
-                  width="25px"
-                  class="cursor-pointer"
-                  src="@assets/images/cancel.svg"
-                />
-                <span class="texto-btn">Cancelar Contrato</span>
-              </vs-button>
-            </div>
-          </div>
+        <div class="w-full">
+          <vs-button
+            v-if="!fueCancelada"
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="danger"
+            @click="acceptAlert()"
+          >
+            <span>Cancelar Contrato</span>
+          </vs-button>
         </div>
       </div>
 
@@ -195,21 +207,21 @@ export default {
   components: {
     Password,
     "v-select": vSelect,
-    ConfirmarDanger
+    ConfirmarDanger,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     id_venta: {
       type: Number,
       required: true,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["cancelar_venta"].$el.querySelector(
           ".vs-icon"
@@ -238,7 +250,7 @@ export default {
                   iconPack: "feather",
                   icon: "icon-alert-circle",
                   color: "warning",
-                  time: 4000
+                  time: 4000,
                 });
               } else {
                 this.$vs.notify({
@@ -249,7 +261,7 @@ export default {
                   icon: "icon-alert-circle",
                   color: "danger",
                   position: "bottom-right",
-                  time: "9000"
+                  time: "9000",
                 });
               }
             }
@@ -258,10 +270,10 @@ export default {
           }
         })();
       }
-    }
+    },
   },
   computed: {
-    motivo_computed: function() {
+    motivo_computed: function () {
       return this.form.motivo.value;
     },
     showVentana: {
@@ -270,7 +282,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getVentaId: {
       get() {
@@ -278,8 +290,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -294,33 +306,33 @@ export default {
       motivos: [
         {
           label: "FALTA DE PAGO",
-          value: 1
+          value: 1,
         },
         {
           label: "A PETICIÓN DEL CLIENTE",
-          value: 2
+          value: 2,
         },
         {
           label: "ERROR AL CAPTURAR",
-          value: 3
-        }
+          value: 3,
+        },
       ],
       form: {
         venta_id: "",
         motivo: {
           label: "FALTA DE PAGO",
-          value: 1
+          value: 1,
         },
         cantidad: "0.00",
-        comentario: ""
-      }
+        comentario: "",
+      },
     };
   },
   methods: {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Error",
@@ -329,7 +341,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
             return;
           } else {
@@ -355,7 +367,7 @@ export default {
       this.form.cantidad = 0;
       (this.form.motivo = {
         label: "FALTA DE PAGO",
-        value: 1
+        value: 1,
       }),
         this.$emit("closeCancelarVenta");
       return;
@@ -376,7 +388,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("closeCancelarVenta", res.data);
           this.$emit("ConsultarVenta", res.data);
@@ -387,7 +399,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
         }
         this.$vs.loading.close();
@@ -403,7 +415,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -416,7 +428,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             }
 
@@ -426,7 +438,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             //este error es por alguna condicion que el contrano no cumple para modificar
@@ -437,18 +449,18 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000
+              time: 30000,
             });
           }
         }
         this.$vs.loading.close();
       }
-    }
+    },
   },
   created() {},
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showVentana) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -456,6 +468,6 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
