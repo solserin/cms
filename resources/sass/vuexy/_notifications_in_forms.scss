@@ -1,0 +1,24 @@
+.alerta {
+    div {
+        padding: 1.15rem;
+        border-radius: 0 0.5rem 0.5rem 0;
+    }
+    h3 {
+        @extend .h5, .font-medium;
+        padding: 0 0 1rem 0;
+    }
+
+    .warning {
+        @extend .color-warning-900;
+        background-color: #{map-get($warning_map, "50")};
+        border-left: 0.2rem solid #{map-get($warning_map, "900")};
+    }
+    .danger {
+        @extend .color-danger-900;
+        background-color: #{map-get($danger_map, "50")};
+        border-left: 0.2rem solid #{map-get($danger_map, "900")};
+    }
+    p {
+        @extend .size-base;
+    }
+}
