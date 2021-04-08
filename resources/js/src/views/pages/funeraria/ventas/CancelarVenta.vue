@@ -73,7 +73,7 @@
 
                         <div class="w-full">
                           <div
-                            class="flex flex-wrap mt-2 theme-background py-6"
+                            class="flex flex-wrap mt-2 theme-background py-2"
                           >
                             <div
                               class="w-full text-center font-medium color-black-900 uppercase"
