@@ -27,45 +27,37 @@
         :collapse-action="false"
       >
         <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
+          <div class="w-full xl:w-3/12 mb-1 px-2">
             <label class="text-sm opacity-75">Mostrar</label>
             <v-select
               :options="mostrarOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="mostrar"
-              class="mb-4 sm:mb-0"
+              class="w-full"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
+          <div class="w-full xl:w-3/12 mb-1 px-2">
             <label class="text-sm opacity-75">Estado</label>
             <v-select
               :options="estadosOptions"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="estado"
-              class="mb-4 md:mb-0"
+              class="w-full"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
-          >
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
             <label class="">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
               :clearable="false"
               :dir="$vs.rtl ? 'rtl' : 'ltr'"
               v-model="filtroEspecifico"
-              class=""
+              class="w-full"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
-          >
+          <div class="w-full xl:w-3/12 px-2 input-text">
             <label class="">Número de Control</label>
             <vs-input
               class="w-full"

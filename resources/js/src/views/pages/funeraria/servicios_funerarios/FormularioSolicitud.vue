@@ -1,9 +1,9 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms solicitud-propiedades background-header-forms forms-popups-100"
-      fullscreen
+      class="forms-popup popup-75"
       close="cancelar"
+      fullscreen
       :title="
         getTipoformulario == 'modificar'
           ? 'Modificar Solicitud de Servicio Funerario'
@@ -12,461 +12,288 @@
       :active.sync="showVentana"
       ref="formulario"
     >
-      <!--inicio solicitud-->
-      <div class="solicitud-details">
-        <div class="flex flex-wrap">
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-            <div class="float-left pb-5 px-2">
-              <img width="36px" src="@assets/images/corpse.svg" />
-              <h3
-                class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-              >
-                Detalle de la solicitud y del Fallecido
-              </h3>
-            </div>
-
-            <div class="w-full px-2">
-              <vs-divider />
-            </div>
-            <div class="flex flex-wrap mt-1">
-              <div
-                class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2 text-center"
-              >
-                <label class="text-sm font-bold">Origen de Solicitud</label>
-                <div class="mt-3">
-                  <vs-radio
-                    vs-name="llamada_b"
-                    v-model="form.llamada_b"
-                    :vs-value="1"
-                    class="mr-4"
-                    >Por Llamada</vs-radio
-                  >
-                  <vs-radio
-                    vs-name="llamada_b"
-                    v-model="form.llamada_b"
-                    :vs-value="0"
-                    class="mr-4"
-                    >En Sucursal</vs-radio
-                  >
+      <div class="flex flex-wrap">
+        <div class="w-full">
+          <!--Contenido del plan-->
+          <div class="form-group">
+            <div class="title-form-group">Datos del Fallecido y Traslado</div>
+            <div class="form-group-content">
+              <div class="flex flex-wrap">
+                <div class="w-full xl:w-6/12 px-2 text-center input-text">
+                  <label class="">Origen de Solicitud</label>
+                  <div class="mt-3">
+                    <vs-radio
+                      vs-name="llamada_b"
+                      v-model="form.llamada_b"
+                      :vs-value="1"
+                      class="mr-4"
+                      >Por Llamada</vs-radio
+                    >
+                    <vs-radio
+                      vs-name="llamada_b"
+                      v-model="form.llamada_b"
+                      :vs-value="0"
+                      class="mr-4"
+                      >En Sucursal</vs-radio
+                    >
+                  </div>
                 </div>
-              </div>
 
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Nombre del Fallecido
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate.disabled="'required'"
-                  name="nombre_afectado"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Nombre del Fallecido"
-                  v-model="form.nombre_afectado"
-                  maxlength="100"
-                  ref="fallecido"
-                />
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("nombre_afectado")
+                <div class="w-full xl:w-6/12 px-2 input-text">
+                  <label>
+                    Fecha y Hora de Solicitud
+                    <span>(*)</span>
+                  </label>
+                  <flat-pickr
+                    name="fecha_solicitud"
+                    data-vv-as=" "
+                    v-validate:fecha_solicitud_validacion_computed.immediate="
+                      'required'
+                    "
+                    :config="configdateTimePickerWithTime"
+                    v-model="form.fecha_solicitud"
+                    placeholder="Fecha y Hora de Solicitud"
+                    class="w-full"
+                  />
+                  <span>{{ errors.first("fecha_solicitud") }}</span>
+                  <span v-if="this.errores.fecha_solicitud">{{
+                    errores.fecha_solicitud[0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores.nombre_afectado"
-                    >{{ errores.nombre_afectado[0] }}</span
+
+                <div class="w-full px-2 input-text">
+                  <label>
+                    Nombre del Fallecido
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    v-validate.disabled="'required'"
+                    name="nombre_afectado"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder="Nombre del Fallecido"
+                    v-model="form.nombre_afectado"
+                    maxlength="100"
+                    ref="fallecido"
+                  />
+                  <span>{{ errors.first("nombre_afectado") }}</span>
+                  <span v-if="this.errores.nombre_afectado">{{
+                    errores.nombre_afectado[0]
+                  }}</span>
+                </div>
+
+                <div class="w-full xl:w-6/12 px-2 input-text">
+                  <label>
+                    Ubicación del Fallecido
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    v-validate.disabled="'required'"
+                    name="ubicacion_recoger"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder="Ubicación del Fallecido"
+                    v-model="form.ubicacion_recoger"
+                    maxlength="100"
+                  />
+                  <span>{{ errors.first("ubicacion_recoger") }}</span>
+                  <span v-if="this.errores.ubicacion_recoger">{{
+                    errores.ubicacion_recoger[0]
+                  }}</span>
+                </div>
+                <div class="w-full xl:w-6/12 px-2 input-text">
+                  <label>
+                    Encargado de Recoger
+                    <span>(*)</span>
+                  </label>
+                  <v-select
+                    :options="recogioOpciones"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.recogio"
+                    class="w-full"
+                    v-validate:recogio_validacion_computed.immediate="
+                      'required'
+                    "
+                    name="recogio"
+                    data-vv-as=" "
                   >
-                </div>
-              </div>
-
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Fecha y Hora de Solicitud
-                  <span class="texto-importante">(*)</span>
-                </label>
-
-                <flat-pickr
-                  name="fecha_solicitud"
-                  data-vv-as=" "
-                  v-validate:fecha_solicitud_validacion_computed.immediate="
-                    'required'
-                  "
-                  :config="configdateTimePickerWithTime"
-                  v-model="form.fecha_solicitud"
-                  placeholder="Fecha y Hora de Solicitud"
-                  class="w-full my-1"
-                />
-
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("fecha_solicitud")
+                    <div slot="no-options">Seleccione 1</div>
+                  </v-select>
+                  <span>{{ errors.first("recogio") }}</span>
+                  <span v-if="this.errores['recogio.value']">{{
+                    errores["recogio.value"][0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores.fecha_solicitud"
-                    >{{ errores.fecha_solicitud[0] }}</span
-                  >
-                </div>
-              </div>
 
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Causa de Muerte
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  name="causa_muerte"
-                  data-vv-as=" "
-                  v-validate.disabled="'required'"
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Causa de Muerte"
-                  v-model="form.causa_muerte"
-                  maxlength="100"
-                />
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("causa_muerte")
+                <div class="w-full xl:w-6/12 input-text px-2">
+                  <label>
+                    Nombre del Informante
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    v-validate.disabled="'required'"
+                    name="nombre_informante"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder="Nombre del Informante"
+                    v-model="form.nombre_informante"
+                    maxlength="100"
+                  />
+                  <span>{{ errors.first("nombre_informante") }}</span>
+                  <span v-if="this.errores.nombre_informante">{{
+                    errores.nombre_informante[0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span class="text-danger" v-if="this.errores.causa_muerte">{{
-                    errores.causa_muerte[0]
-                  }}</span>
-                </div>
-              </div>
 
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Muerte Natural</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="opciones"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.muerte_natural_b"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  name="muerte_natural_b"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">Seleccione 1</div>
-                </v-select>
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("muerte_natural_b")
+                <div class="w-full sm:w-6/12 xl:w-3/12 input-text px-2">
+                  <label> Teléfono del Informante </label>
+                  <vs-input
+                    name="telefono_informante"
+                    type="text"
+                    class="w-full"
+                    placeholder="Teléfono del Informante"
+                    v-model="form.telefono_informante"
+                    :disabled="fueCancelada"
+                    maxlength="15"
+                  />
+                  <span>{{ errors.first("telefono_informante") }}</span>
+                  <span v-if="this.errores.telefono_informante">{{
+                    errores.telefono_informante[0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores['muerte_natural_b.value']"
-                    >{{ errores["muerte_natural_b.value"][0] }}</span
-                  >
-                </div>
-              </div>
 
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Enfermedad Contagiosa</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="opciones"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.contagioso_b"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  name="contagioso_b"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">Seleccione 1</div>
-                </v-select>
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("contagioso_b")
+                <div class="w-full sm:w-6/12 xl:w-3/12 input-text px-2">
+                  <label> Parentesco con el Fallecido </label>
+                  <vs-input
+                    name="parentesco_informante"
+                    type="text"
+                    class="w-full"
+                    placeholder="Parentesco con el Fallecido"
+                    v-model="form.parentesco_informante"
+                    maxlength="100"
+                  />
+                  <span>{{ errors.first("parentesco_informante") }}</span>
+                  <span v-if="this.errores.parentesco_informante">{{
+                    errores.parentesco_informante[0]
                   }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores['contagioso_b.value']"
-                    >{{ errores["contagioso_b.value"][0] }}</span
-                  >
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="flex flex-wrap mt-1">
-              <div class="w-full px-2 mt-2">
-                <p class="text-xs">
-                  <span class="text-danger font-medium">Ojo:</span>
-                  Debe ingresar la información sobre el fallecido y las causas
-                  de la muerte para que el personal que traslade el cuerpo tome
-                  sus precauciones.
-                </p>
-                <vs-divider />
-              </div>
-            </div>
-
-            <div class="flex flex-wrap mt-1">
-              <div class="float-left pb-3 px-2">
-                <img width="36px" src="@assets/images/informer.svg" />
-                <h3
-                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                >
-                  Datos de Contacto del Informante
-                </h3>
-              </div>
-              <div class="w-full px-2">
-                <vs-divider />
-              </div>
-              <!--vendedor-->
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Nombre del Informante
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate.disabled="'required'"
-                  name="nombre_informante"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Nombre del Informante"
-                  v-model="form.nombre_informante"
-                  maxlength="100"
-                />
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("nombre_informante")
+          <div class="form-group">
+            <div class="title-form-group">Datos del Contratante</div>
+            <div class="form-group-content">
+              <div class="flex flex-wrap pb-6">
+                <div class="w-full xl:w-6/12 input-text px-2">
+                  <label>
+                    Nombre del Contratante
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    v-validate.disabled="'required'"
+                    name="nombre_contratante_temp"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder="Nombre del Contratante"
+                    v-model="form.nombre_contratante_temp"
+                    maxlength="100"
+                  />
+                  <span>{{ errors.first("nombre_contratante_temp") }}</span>
+                  <span v-if="this.errores.nombre_contratante_temp">{{
+                    errores.nombre_contratante_temp[0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores.nombre_informante"
-                    >{{ errores.nombre_informante[0] }}</span
-                  >
-                </div>
-              </div>
 
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Teléfono del Informante
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate.disabled="'required'"
-                  name="telefono_informante"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Teléfono del Informante"
-                  v-model="form.telefono_informante"
-                  :disabled="fueCancelada"
-                  maxlength="15"
-                />
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("telefono_informante")
+                <div class="w-full sm:w-6/12 xl:w-3/12 input-text px-2">
+                  <label> Teléfono del Contratante </label>
+                  <vs-input
+                    name="telefono_contratante_temp"
+                    type="text"
+                    class="w-full"
+                    placeholder="Teléfono del Informante"
+                    v-model="form.telefono_contratante_temp"
+                    :disabled="fueCancelada"
+                    maxlength="15"
+                  />
+                  <span>{{ errors.first("telefono_contratante_temp") }}</span>
+                  <span v-if="this.errores.telefono_contratante_temp">{{
+                    errores.telefono_contratante_temp[0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores.telefono_informante"
-                    >{{ errores.telefono_informante[0] }}</span
-                  >
-                </div>
-              </div>
 
-              <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Parentesco con el Fallecido
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate.disabled="'required'"
-                  name="parentesco_informante"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Parentesco con el Fallecido"
-                  v-model="form.parentesco_informante"
-                  maxlength="100"
-                />
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("parentesco_informante")
+                <div class="w-full sm:w-6/12 xl:w-3/12 input-text px-2">
+                  <label> Parentesco con el Fallecido </label>
+                  <vs-input
+                    name="parentesco_contratante_temp"
+                    type="text"
+                    class="w-full"
+                    placeholder="Parentesco con el Fallecido"
+                    v-model="form.parentesco_contratante_temp"
+                    maxlength="100"
+                  />
+                  <span>{{ errors.first("parentesco_contratante_temp") }}</span>
+                  <span v-if="this.errores.parentesco_contratante_temp">{{
+                    errores.parentesco_contratante_temp[0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores.parentesco_informante"
-                    >{{ errores.parentesco_informante[0] }}</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-wrap mt-1">
-              <div class="w-full px-2 mt-2">
-                <p class="text-xs">
-                  <span class="text-danger font-medium">Ojo:</span>
-                  Ingrese la información mínima del informante para estar en
-                  contacto durante el traslado del cuerpo a la funeraria.
-                </p>
-                <vs-divider />
-              </div>
-            </div>
-
-            <div class="flex flex-wrap mt-1">
-              <div class="float-left pb-3 px-2">
-                <img width="36px" src="@assets/images/recoger.svg" />
-                <h3
-                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                >
-                  Ubicación y Traslado del Fallecido
-                </h3>
-              </div>
-              <div class="w-full px-2">
-                <vs-divider />
-              </div>
-              <!--vendedor-->
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  Ubicación del Fallecido
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <vs-input
-                  v-validate.disabled="'required'"
-                  name="ubicacion_recoger"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Ubicación del Fallecido"
-                  v-model="form.ubicacion_recoger"
-                  maxlength="100"
-                />
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("ubicacion_recoger")
+                <div class="w-full input-text px-2">
+                  <label> Dirección del contratante </label>
+                  <vs-input
+                    name="direccion_contratante_temp"
+                    type="text"
+                    class="w-full"
+                    placeholder="Dirección del contratante"
+                    v-model="form.direccion_contratante_temp"
+                    maxlength="100"
+                  />
+                  <span>{{ errors.first("direccion_contratante_temp") }}</span>
+                  <span v-if="this.errores.direccion_contratante_temp">{{
+                    errores.direccion_contratante_temp[0]
                   }}</span>
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores.ubicacion_recoger"
-                    >{{ errores.ubicacion_recoger[0] }}</span
-                  >
-                </div>
-              </div>
-              <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-                <label class="text-sm opacity-75 font-bold">
-                  <span>Encargado de Recoger</span>
-                  <span class="texto-importante">(*)</span>
-                </label>
-                <v-select
-                  :options="recogioOpciones"
-                  :clearable="false"
-                  :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                  v-model="form.recogio"
-                  class="mb-4 sm:mb-0 pb-1 pt-1"
-                  v-validate:recogio_validacion_computed.immediate="'required'"
-                  name="recogio"
-                  data-vv-as=" "
-                >
-                  <div slot="no-options">Seleccione 1</div>
-                </v-select>
-                <div>
-                  <span class="text-danger">{{ errors.first("recogio") }}</span>
-                </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores['recogio.value']"
-                    >{{ errores["recogio.value"][0] }}</span
-                  >
-                </div>
-              </div>
 
-              <div
-                class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-              >
-                <label class="text-sm opacity-75 font-bold">
-                  Nota/Observación
-                </label>
-                <vs-input
-                  name="nota_al_recoger"
-                  data-vv-as=" "
-                  type="text"
-                  class="w-full pb-1 pt-1"
-                  placeholder="Nota/Observación"
-                  v-model="form.nota_al_recoger"
-                  maxlength="250"
-                />
-                <div>
-                  <span class="text-danger">{{
-                    errors.first("nota_al_recoger")
-                  }}</span>
+                <div class="w-full input-text py-6 px-2">
+                  <label> Ingrese alguna nota o comentario </label>
+                  <vs-textarea
+                    :rows="5"
+                    ref="nota_al_recoger"
+                    type="text"
+                    class="w-full"
+                    v-model.trim="form.nota_al_recoger"
+                  />
                 </div>
-                <div class="mt-2">
-                  <span
-                    class="text-danger"
-                    v-if="this.errores.nota_al_recoger"
-                    >{{ errores.nota_al_recoger[0] }}</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-wrap mt-1">
-              <div class="w-full px-2 mt-2">
-                <p class="text-xs">
-                  <span class="text-danger font-medium">Ojo:</span>
-                  Ingrese la dirección donde será recogido el fallecido y
-                  seleccione de la lista al empleado responsable del traslado.
-                </p>
-                <vs-divider />
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!--checkout-->
-        <div class="flex flex-wrap my-6">
-          <!--precios-->
-          <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 ml-auto mr-auto"
+      <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
+        </div>
+
+        <div class="w-full">
+          <vs-button
+            v-if="!fueCancelada"
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="primary"
+            @click="acceptAlert()"
           >
-            <div class="flex flex-wrap mt-4">
-              <vs-button
-                v-if="!fueCancelada"
-                class="w-full ml-auto mr-auto"
-                @click="acceptAlert()"
-                color="success"
-                size="small"
-              >
-                <img
-                  width="25px"
-                  class="cursor-pointer"
-                  src="@assets/images/save.svg"
-                />
-                <span
-                  class="texto-btn"
-                  v-if="this.getTipoformulario == 'agregar'"
-                  >Guardar Solicitud</span
-                >
-                <span class="texto-btn" v-else>Modificar Solicitud</span>
-              </vs-button>
-            </div>
-          </div>
+            <span class="" v-if="this.getTipoformulario == 'agregar'"
+              >Guardar Solicitud</span
+            >
+            <span class="" v-else>Modificar Solicitud</span>
+          </vs-button>
         </div>
-        <!--fin del checkout-->
       </div>
 
       <!--fin solicitud-->
@@ -632,15 +459,6 @@ export default {
         llamada_b: 1,
         nombre_afectado: "",
         fecha_solicitud: "",
-        causa_muerte: "",
-        muerte_natural_b: {
-          label: "SI",
-          value: 1,
-        },
-        contagioso_b: {
-          label: "NO",
-          value: 0,
-        },
         nombre_informante: "",
         telefono_informante: "",
         parentesco_informante: "",
@@ -649,6 +467,11 @@ export default {
           label: "Seleccione 1",
           value: "",
         },
+
+        nombre_contratante_temp: "",
+        telefono_contratante_temp: "",
+        parentesco_contratante_temp: "",
+        direccion_contratante_temp: "",
         nota_al_recoger: "",
         /**en caso de modificar*/
         id_solicitud: "",
@@ -885,15 +708,7 @@ export default {
       this.form.llamada_b = 1;
       this.form.nombre_afectado = "";
       this.form.fecha_solicitud = "";
-      this.form.causa_muerte = "";
-      this.form.muerte_natural_b = {
-        label: "SI",
-        value: 1,
-      };
-      this.form.contagioso_b = {
-        label: "NO",
-        value: 0,
-      };
+
       this.form.nombre_informante = "";
       this.form.telefono_informante = "";
       this.form.parentesco_informante = "";
@@ -932,22 +747,16 @@ export default {
           partes_hora[0],
           partes_hora[1]
         );
-        this.form.causa_muerte = this.datos_solicitud.causa_muerte;
-        this.opciones.forEach((element) => {
-          if (element.value == this.datos_solicitud.muerte_natural_b) {
-            this.form.muerte_natural_b = element;
-            return;
-          }
-        });
-        this.opciones.forEach((element) => {
-          if (element.value == this.datos_solicitud.contagioso_b) {
-            this.form.contagioso_b = element;
-            return;
-          }
-        });
+
         this.form.nombre_informante = this.datos_solicitud.nombre_informante;
         this.form.telefono_informante = this.datos_solicitud.telefono_informante;
         this.form.parentesco_informante = this.datos_solicitud.parentesco_informante;
+
+        this.form.direccion_contratante_temp = this.datos_solicitud.direccion_contratante_temp;
+        this.form.parentesco_contratante_temp = this.datos_solicitud.parentesco_contratante_temp;
+        this.form.telefono_contratante_temp = this.datos_solicitud.telefono_contratante_temp;
+        this.form.nombre_contratante_temp = this.datos_solicitud.nombre_contratante_temp;
+
         this.form.ubicacion_recoger = this.datos_solicitud.ubicacion_recoger;
         this.form.nota_al_recoger = this.datos_solicitud.nota_al_recoger;
         this.recogioOpciones.forEach((element) => {

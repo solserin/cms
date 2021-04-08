@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
+Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}', 'FunerariaController@get_solicitudes_servicios');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -197,7 +198,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('funeraria/control_solicitud/{tipo_servicio}', 'FunerariaController@control_solicitud');
     Route::post('funeraria/control_contratos/{tipo_servicio}', 'FunerariaController@control_contratos');
     Route::get('funeraria/get_personal_recoger', 'FunerariaController@get_personal_recoger');
-    Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}', 'FunerariaController@get_solicitudes_servicios');
+
     Route::get('funeraria/get_hoja_solicitud', 'FunerariaController@get_hoja_solicitud');
     Route::get('funeraria/hoja_preautorizacion', 'FunerariaController@hoja_preautorizacion');
     Route::get('funeraria/certificado_defuncion', 'FunerariaController@certificado_defuncion');

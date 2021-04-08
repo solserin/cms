@@ -323,12 +323,12 @@ class FunerariaController extends ApiController
     {
         //validaciones directas sin condicionales
         $validaciones = [
-            'descripcion'                      => 'required',
-            'contado_b.value'                  => 'required|integer|min:0|max:1',
-            'financiamiento'                   => '',
-            'pago_inicial'                     => '',
-            'costo_neto'                       => 'required|numeric|min:1',
-            'tipo_plan.value'                  => 'required',
+            'descripcion'     => 'required',
+            'contado_b.value' => 'required|integer|min:0|max:1',
+            'financiamiento'  => '',
+            'pago_inicial'    => '',
+            'costo_neto'      => 'required|numeric|min:1',
+            'tipo_plan.value' => 'required',
         ];
 
         $mensaje_financiamiento = '';
@@ -352,20 +352,18 @@ class FunerariaController extends ApiController
             $mensaje_pago_inicial         = 'Este valor debe ser "$ 1.00" Mínimo y $ ' . number_format(($request->costo_neto * .7), 2) . " máximo.";
         }
 
-  
-
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'pago_inicial.min'                     => $mensaje_pago_inicial,
-            'pago_inicial.lte'                     => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
-            'pago_inicial.max'                     => 'Este valor debe ser $'.number_format(($request->costo_neto * .7), 2).' pesos máximo.',
-            'financiamiento.min'                   => $mensaje_financiamiento,
-            'required'                             => 'Ingrese este dato',
-            'numeric'                              => 'Este dato debe ser un número',
-            'costo_neto.min'                       => 'Esta cantidad debe mayor a cero',
-            'costo_neto.gte'                       => 'Esta cantidad debe mayor o igual al costo neto de contado',
-           
+            'pago_inicial.min'   => $mensaje_pago_inicial,
+            'pago_inicial.lte'   => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
+            'pago_inicial.max'   => 'Este valor debe ser $' . number_format(($request->costo_neto * .7), 2) . ' pesos máximo.',
+            'financiamiento.min' => $mensaje_financiamiento,
+            'required'           => 'Ingrese este dato',
+            'numeric'            => 'Este dato debe ser un número',
+            'costo_neto.min'     => 'Esta cantidad debe mayor a cero',
+            'costo_neto.gte'     => 'Esta cantidad debe mayor o igual al costo neto de contado',
+
         ];
         request()->validate(
             $validaciones,
@@ -409,7 +407,7 @@ class FunerariaController extends ApiController
                     'financiamiento'                   => (int) ($request->financiamiento),
                     'contado_b'                        => (int) ($request->contado_b['value']),
                     'descripcion'                      => $request->descripcion,
-                    'descripcion_ingles'               =>  $request->descripcion,
+                    'descripcion_ingles'               => $request->descripcion,
                 ]
             );
 
@@ -438,13 +436,13 @@ class FunerariaController extends ApiController
 
         //validaciones directas sin condicionales
         $validaciones = [
-            'id_precio_modificar'              => 'required',
-            'descripcion'                      => 'required',
-            'contado_b.value'                  => 'required|integer|min:0|max:1',
-            'financiamiento'                   => '',
-            'pago_inicial'                     => '',
-            'costo_neto'                       => 'required|numeric|min:1',
-            'tipo_plan.value'                  => 'required',
+            'id_precio_modificar' => 'required',
+            'descripcion'         => 'required',
+            'contado_b.value'     => 'required|integer|min:0|max:1',
+            'financiamiento'      => '',
+            'pago_inicial'        => '',
+            'costo_neto'          => 'required|numeric|min:1',
+            'tipo_plan.value'     => 'required',
         ];
 
         $mensaje_financiamiento = '';
@@ -468,19 +466,17 @@ class FunerariaController extends ApiController
             $mensaje_pago_inicial         = 'Este valor debe ser "1.00" Mínimo';
         }
 
-  
-
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
 
         $mensajes = [
-            'pago_inicial.min'                     => $mensaje_pago_inicial,
-            'pago_inicial.lte'                     => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
-            'pago_inicial.max'                     => 'Este valor debe ser $'.number_format(($request->costo_neto * .7), 2).' pesos máximo.',
-            'financiamiento.min'                   => $mensaje_financiamiento,
-            'required'                             => 'Ingrese este dato',
-            'numeric'                              => 'Este dato debe ser un número',
-            'costo_neto.gte'                       => 'Esta cantidad debe mayor o igual al costo neto de contado',
-            'costo_neto.min'                       => 'Esta cantidad debe mayor a cero',
+            'pago_inicial.min'   => $mensaje_pago_inicial,
+            'pago_inicial.lte'   => 'Este valor debe ser "1" mínimo, o igual o menor al costo neto',
+            'pago_inicial.max'   => 'Este valor debe ser $' . number_format(($request->costo_neto * .7), 2) . ' pesos máximo.',
+            'financiamiento.min' => $mensaje_financiamiento,
+            'required'           => 'Ingrese este dato',
+            'numeric'            => 'Este dato debe ser un número',
+            'costo_neto.gte'     => 'Esta cantidad debe mayor o igual al costo neto de contado',
+            'costo_neto.min'     => 'Esta cantidad debe mayor a cero',
         ];
         request()->validate(
             $validaciones,
@@ -520,9 +516,9 @@ class FunerariaController extends ApiController
                     'subtotal'                         => $subtotal,
                     'impuestos'                        => $iva,
                     'costo_neto'                       => $costo_neto,
-                    'costo_neto_financiamiento_normal' =>  $costo_neto,
+                    'costo_neto_financiamiento_normal' => $costo_neto,
                     'descuento_pronto_pago_b'          => 1,
-                    'costo_neto_pronto_pago'           =>  $costo_neto,
+                    'costo_neto_pronto_pago'           => $costo_neto,
                     'planes_funerarios_id'             => (int) ($request->tipo_plan['value']),
                     'fecha_actualizacion'              => now(),
                     'actualizo_id'                     => (int) $request->user()->id,
@@ -2537,17 +2533,19 @@ class FunerariaController extends ApiController
 
         //validaciones directas sin condicionales
         $validaciones = [
-            'llamada_b'              => 'required',
-            'nombre_afectado'        => 'required',
-            'fecha_solicitud'        => 'required',
-            'causa_muerte'           => 'required',
-            'muerte_natural_b.value' => 'required',
-            'contagioso_b.value'     => 'required',
-            'nombre_informante'      => 'required',
-            'telefono_informante'    => 'required',
-            'parentesco_informante'  => 'required',
-            'recogio.value'          => 'required',
-            'id_solicitud'           => '',
+            'llamada_b'               => 'required',
+            'nombre_afectado'         => 'required',
+            'fecha_solicitud'         => 'required',
+            //'causa_muerte'           => 'required',
+            //'muerte_natural_b.value' => 'required',
+            //'contagioso_b.value'     => 'required',
+            'nombre_informante'       => 'required',
+            //'telefono_informante'    => 'required',
+            //'parentesco_informante'  => 'required',
+            //'direccion_contratante_temp'  => 'required',
+            'nombre_contratante_temp' => 'required',
+            'recogio.value'           => 'required',
+            'id_solicitud'            => '',
         ];
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
@@ -2578,21 +2576,25 @@ class FunerariaController extends ApiController
             if ($tipo_servicio == 'agregar') {
                 $id_servicio = DB::table('servicios_funerarios')->insertGetId(
                     [
-                        'tipo_solicitud_id'     => 1,
-                        'llamada_b'             => $request->llamada_b,
-                        'nombre_afectado'       => $request->nombre_afectado,
-                        'fechahora_solicitud'   => $request->fecha_solicitud,
-                        'causa_muerte'          => $request->causa_muerte,
-                        'muerte_natural_b'      => $request->muerte_natural_b['value'],
-                        'contagioso_b'          => $request->contagioso_b['value'],
-                        'nombre_informante'     => $request->nombre_informante,
-                        'telefono_informante'   => $request->telefono_informante,
-                        'parentesco_informante' => $request->parentesco_informante,
-                        'ubicacion_recoger'     => $request->ubicacion_recoger,
-                        'recogio_id'            => $request->recogio['value'],
-                        'nota_al_recoger'       => $request->nota_al_recoger,
-                        'registro_id'           => (int) $request->user()->id,
-                        'fechahora_registro'    => now(),
+                        'tipo_solicitud_id'           => 1,
+                        'llamada_b'                   => $request->llamada_b,
+                        'nombre_afectado'             => $request->nombre_afectado,
+                        'fechahora_solicitud'         => $request->fecha_solicitud,
+                        //'causa_muerte'          => $request->causa_muerte,
+                        //'muerte_natural_b'      => $request->muerte_natural_b['value'],
+                        //'contagioso_b'          => $request->contagioso_b['value'],
+                        'nombre_informante'           => $request->nombre_informante,
+                        'telefono_informante'         => $request->telefono_informante,
+                        'parentesco_informante'       => $request->parentesco_informante,
+                        'nombre_contratante_temp'     => $request->nombre_contratante_temp,
+                        'telefono_contratante_temp'   => $request->telefono_contratante_temp,
+                        'parentesco_contratante_temp' => $request->parentesco_contratante_temp,
+                        'direccion_contratante_temp'  => $request->direccion_contratante_temp,
+                        'ubicacion_recoger'           => $request->ubicacion_recoger,
+                        'recogio_id'                  => $request->recogio['value'],
+                        'nota_al_recoger'             => $request->nota_al_recoger,
+                        'registro_id'                 => (int) $request->user()->id,
+                        'fechahora_registro'          => now(),
                     ]
                 );
                 $id_return = $id_servicio;
@@ -2601,20 +2603,24 @@ class FunerariaController extends ApiController
                 /**es modificar */
                 DB::table('servicios_funerarios')->where('id', $request->id_solicitud)->update(
                     [
-                        'llamada_b'             => $request->llamada_b,
-                        'nombre_afectado'       => $request->nombre_afectado,
-                        'fechahora_solicitud'   => $request->fecha_solicitud,
-                        'causa_muerte'          => $request->causa_muerte,
-                        'muerte_natural_b'      => $request->muerte_natural_b['value'],
-                        'contagioso_b'          => $request->contagioso_b['value'],
-                        'nombre_informante'     => $request->nombre_informante,
-                        'telefono_informante'   => $request->telefono_informante,
-                        'parentesco_informante' => $request->parentesco_informante,
-                        'ubicacion_recoger'     => $request->ubicacion_recoger,
-                        'recogio_id'            => $request->recogio['value'],
-                        'nota_al_recoger'       => $request->nota_al_recoger,
-                        'modifico_id'           => (int) $request->user()->id,
-                        'fecha_modificacion'    => now(),
+                        'llamada_b'                   => $request->llamada_b,
+                        'nombre_afectado'             => $request->nombre_afectado,
+                        'fechahora_solicitud'         => $request->fecha_solicitud,
+                        //'causa_muerte'          => $request->causa_muerte,
+                        //'muerte_natural_b'      => $request->muerte_natural_b['value'],
+                        //'contagioso_b'          => $request->contagioso_b['value'],
+                        'nombre_informante'           => $request->nombre_informante,
+                        'telefono_informante'         => $request->telefono_informante,
+                        'parentesco_informante'       => $request->parentesco_informante,
+                        'nombre_contratante_temp'     => $request->nombre_contratante_temp,
+                        'telefono_contratante_temp'   => $request->telefono_contratante_temp,
+                        'parentesco_contratante_temp' => $request->parentesco_contratante_temp,
+                        'direccion_contratante_temp'  => $request->direccion_contratante_temp,
+                        'ubicacion_recoger'           => $request->ubicacion_recoger,
+                        'recogio_id'                  => $request->recogio['value'],
+                        'nota_al_recoger'             => $request->nota_al_recoger,
+                        'modifico_id'                 => (int) $request->user()->id,
+                        'fecha_modificacion'          => now(),
                     ]
                 );
                 $id_return = $request->id_solicitud;
@@ -3666,6 +3672,10 @@ class FunerariaController extends ApiController
             'fechahora_acta',
             'fechahora_contrato',
             'parentesco_contratante',
+            'nombre_contratante_temp',
+            'telefono_contratante_temp',
+            'parentesco_contratante_temp',
+            'direccion_contratante_temp',
             'ventas_planes_id',
             DB::raw(
                 '(NULL) as genero_texto'

@@ -130,8 +130,38 @@
     }
 }
 
+.popup-60 .vs-popup {
+    @media (min-width: 768px) {
+        width: 100% !important;
+    }
+
+    @media (min-width: 1200px) {
+        width: 60% !important;
+    }
+}
+
+.popup-70 .vs-popup {
+    @media (min-width: 768px) {
+        width: 100% !important;
+    }
+
+    @media (min-width: 1200px) {
+        width: 70% !important;
+    }
+}
+
+.popup-75 .vs-popup {
+    @media (min-width: 768px) {
+        width: 100% !important;
+    }
+
+    @media (min-width: 1200px) {
+        width: 75% !important;
+    }
+}
+
 .popup-80 .vs-popup {
-    @media (min-width: 576px) {
+    @media (min-width: 768px) {
         width: 100% !important;
     }
 

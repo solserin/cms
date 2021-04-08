@@ -138,6 +138,9 @@
                     @if (!is_null($datos['operacion']['cliente']))
                     {{$datos['operacion']['cliente']['nombre']}}
                     @endif
+                    @else
+                    <!--aqui va el nombre del contratante provisional-->
+                    {{$datos['nombre_contratante_temp']}}
                     @endif
                 </td>
                 <td class="w-5">, por</td>
@@ -186,7 +189,15 @@
         <table class="w-100 tabla_dato size-19px mt-8">
             <tr>
                 <td class="w-35">Otorgo este poder en calidad de</td>
-                <td class="w-40 border-bottom center ml-auto mr-auto uppercase"> {{ $datos['parentesco_contratante'] }}
+                <td class="w-40 border-bottom center ml-auto mr-auto uppercase">
+
+                    @if (isset($datos['parentesco_contratante']))
+                    {{ $datos['parentesco_contratante'] }}
+                    @else
+                    <!--aqui va el nombre del contratante provisional-->
+                    {{$datos['parentesco_contratante_temp']}}
+                    @endif
+
                 </td>
                 <td class="25 right">
                     de la persona fallecida,
@@ -206,6 +217,9 @@
                     @if (!is_null($datos['operacion']['cliente']))
                     {{$datos['operacion']['cliente']['direccion']}}
                     @endif
+                    @else
+                    <!--aqui va la direccion del contratante provisional-->
+                    {{$datos['direccion_contratante_temp']}}
                     @endif
                 </td>
             </tr>
@@ -219,6 +233,9 @@
                     @if (!is_null($datos['operacion']['cliente']))
                     {{$datos['operacion']['cliente']['telefono']}}
                     @endif
+                    @else
+                    <!--aqui va el tel del contratante provisional-->
+                    {{$datos['telefono_contratante_temp']}}
                     @endif
                 </td>
             </tr>

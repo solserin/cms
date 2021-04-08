@@ -74,6 +74,7 @@
         .datos_tabla td {
             border: 1px solid #ddd;
         }
+
     </style>
 </head>
 
@@ -146,25 +147,7 @@
             <td class="w-40 py-2 bold px-2">parentesco con el fallecido</td>
             <td class="w-60 px-2">{{ $datos['parentesco_informante'] }}</td>
         </tr>
-        <tr class="size-15px">
-            <td class="w-40 py-2 bold px-2">causa de muerte</td>
-            <td class="w-60 px-2">
-                {{ $datos['causa_muerte'] }},
-                Muerte Natural: {{ $datos['muerte_natural_texto'] }},
-                <div class="pt-1">
-                    padecía enfermedades contagiosas:
-                    @if ($datos['contagioso_b']==1)
-                    <span class="text-danger bold">
-                        {{ $datos['contagioso_texto'] }}
-                    </span>
-                    @else
-                    <span class="bold">
-                        {{ $datos['contagioso_texto'] }}
-                    </span>
-                    @endif
-                </div>
-            </td>
-        </tr>
+
         <tr class="size-15px">
             <td class="w-40 py-2 bold px-2">responsable de recoger cuerpo</td>
             <td class="w-60 px-2">{{ $datos['recogio']['nombre'] }}</td>
