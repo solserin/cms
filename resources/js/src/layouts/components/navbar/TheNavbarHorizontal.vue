@@ -23,12 +23,12 @@
         <router-link
           tag="div"
           to="/"
-          class="vx-logo cursor-pointer mx-auto flex items-center"
+          class="vx-logo cursor-pointer mr-auto flex items-center"
         >
           <!-- <logo class="w-10 mr-4 fill-current text-primary" />-->
-          <!-- <span class="vx-logo-text font-light color-primary-900"
-            >Aeternus Funerales</span
-          >-->
+          <span class="font-medium color-primary-900 h5"
+            >SIIGA AETERNUS FUNERALES</span
+          >
         </router-link>
 
         <!--<i18n />-->

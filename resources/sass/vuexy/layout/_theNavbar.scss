@@ -8,9 +8,9 @@
 ==========================================================================================*/
 
 .vs-navbar.navbar-skelton {
-  padding: .8rem 2.2rem;
+  padding: 0.8rem 2.2rem;
   width: 100%;
-  transition: all .5s;
+  //transition: all 0.5s;
   z-index: 10000;
 }
 
@@ -22,7 +22,12 @@
 }
 
 .vx-navbar-wrapper {
-  background: linear-gradient(to bottom, rgba(248, 248, 248, 0.95) 44%, rgba(248, 248, 248, 0.46) 73%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 248, 248, 0.95) 44%,
+    rgba(248, 248, 248, 0.46) 73%,
+    rgba(255, 255, 255, 0) 100%
+  );
   background-repeat-x: repeat;
   z-index: 41001;
   width: 100%;
@@ -44,13 +49,10 @@
         color: $content-color;
       }
     }
-
-
   }
 }
 
 @media (min-width: 1201px) {
-
   // .vx-navbar-wrapper {
   //   width: 100%;
   // }
@@ -68,16 +70,19 @@
 }
 
 .show-overlay .vx-navbar-wrapper {
-  background: linear-gradient(to bottom, rgba(44, 48, 60, 0.9) 44%, rgba(44, 48, 60, 0.43) 73%, rgba(44, 48, 60, 0) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(44, 48, 60, 0.9) 44%,
+    rgba(44, 48, 60, 0.43) 73%,
+    rgba(44, 48, 60, 0) 100%
+  );
 }
-
 
 /////////////////////////////////////////////////////////
 // NAVBAR VARIANTS
 /////////////////////////////////////////////////////////
 
 .navbar-floating {
-
   .vx-navbar-wrapper {
     @media (min-width: 577px) {
       padding: 1.3rem 2.2rem 2.2rem;
@@ -85,11 +90,11 @@
   }
 
   .vx-navbar {
-    border-radius: .5rem;
-    padding: .8rem 1rem;
+    border-radius: 0.5rem;
+    padding: 0.8rem 1rem;
 
     .search-full-container {
-      border-radius: .5rem;
+      border-radius: 0.5rem;
     }
   }
 }
@@ -141,7 +146,6 @@
   }
 }
 
-
 .navbar-static {
   .vx-navbar-wrapper {
     background: none;
@@ -180,7 +184,7 @@
   z-index: 50000;
 
   .vx-auto-suggest {
-    >div {
+    > div {
       height: 100%;
     }
 
@@ -195,7 +199,7 @@
     }
   }
 
-  >div.feather-icon {
+  > div.feather-icon {
     position: absolute !important;
   }
 }
@@ -225,11 +229,10 @@
   .navbar-sticky {
     .vx-navbar-wrapper {
       .vx-navbar {
-        padding: .8rem 2.2rem;
+        padding: 0.8rem 2.2rem;
       }
     }
   }
-
 }
 
 @media (max-width: 576px) {
@@ -242,7 +245,7 @@
       padding: 0;
 
       .vx-navbar {
-        padding: .8rem 1.5rem;
+        padding: 0.8rem 1.5rem;
       }
     }
   }
@@ -252,7 +255,7 @@
       padding: 0;
 
       .vx-navbar {
-        padding: .8rem 1.5rem;
+        padding: 0.8rem 1.5rem;
       }
     }
 
@@ -265,7 +268,6 @@
     }
   }
 }
-
 
 // BOOKMARK
 .starred-page,
@@ -300,7 +302,7 @@
     max-width: 100%;
     max-height: 100%;
     width: auto;
-    transition: .35s;
+    //transition: 0.35s;
   }
 }
 

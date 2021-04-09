@@ -7,9 +7,8 @@
     Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
-#todo-app{
-    .vs-sidebar--background{
+#todo-app {
+    .vs-sidebar--background {
         position: absolute;
     }
     .todo-scroll-area {
@@ -25,27 +24,27 @@
         height: calc(100% - 50px);
     }
 
-    // TRANSITION
+    // //transition
     .todo_todo-item {
-        transition: all .35s;
+        //transition: all .35s;
     }
 
     .list-item-component {
-        transition: background-color .2s, transform .2s;
+        //transition: background-color .2s, transform .2s;
         border-top: 1px solid #dae1e7;
         &:hover {
             // background-color: #eee;
             transform: translateY(-4px);
-			box-shadow: 0px 3px 10px 0px #ccc;
-            transition: all 0.2s;
+            box-shadow: 0px 3px 10px 0px #ccc;
+            //transition: all 0.2s;
         }
     }
 
     .todo-list {
-      .todo-tags {
-        .con-vs-chip {
-          margin-right: 2px !important;
+        .todo-tags {
+            .con-vs-chip {
+                margin-right: 2px !important;
+            }
         }
-      }
     }
 }

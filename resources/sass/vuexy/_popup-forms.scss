@@ -235,3 +235,21 @@
 }
 
 /*Fin textos forms*/
+
+.bg-content-theme {
+    .vs-popup {
+        @extend .theme-background;
+
+        .vs-popup--content {
+            & > div {
+                .tab-content {
+                    // height: 100vh !important;
+                    padding: 1.5rem 1.25rem 1.5rem 1.25rem;
+                    @media (min-width: 1200px) {
+                        //    height: 82vh !important;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -47,7 +47,7 @@
               class="w-full"
             />
           </div>
-          <div class="w-6/12 xl:w-3/12 input-text px-2">
+          <div class="w-full sm:w-6/12 xl:w-3/12 input-text px-2">
             <label class="">Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
@@ -57,7 +57,7 @@
               class="w-full"
             />
           </div>
-          <div class="w-6/12 xl:w-3/12 input-text px-2">
+          <div class="w-full sm:w-6/12 xl:w-3/12 input-text px-2">
             <label class="">Número de Control</label>
             <vs-input
               class="w-full"
