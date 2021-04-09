@@ -11,6 +11,12 @@
     white-space: nowrap !important;
 }
 
+.no-header {
+    .header-table {
+        display: none !important;
+    }
+}
+
 .vs-table--header {
     padding: 4px 0px 4px 0px !important;
 
@@ -39,12 +45,10 @@
 .tr_especial,
 .tr_especial:hover {
     color: #fff !important;
-    border: 1px solid #ddd;
     background-color: #666666 !important;
 }
 
 .vs-table--thead tr {
-    border: 1px solid #ddd;
     color: #fff !important;
     @extend .bg-dark-600;
 }
@@ -56,6 +60,10 @@
 .vs-table--thead tr th,
 .vs-table--td {
     border: 1px solid #ddd;
+}
+
+.vs-table--thead {
+    border: 2px solid #666666 !important;
 }
 
 .vs-table--td {

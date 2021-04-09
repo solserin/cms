@@ -1525,10 +1525,7 @@ export default {
       this.form.cliente = datos.nombre;
       this.form.id_cliente = datos.id_cliente;
       this.form.direccion_cliente = datos.datos.direccion;
-      console.log(
-        "🚀 ~ file: FormularioVentas.vue ~ line 1819 ~ datos.datos.direccion",
-        datos.datos.direccion
-      );
+
       //alert(datos.id_cliente);
     },
 

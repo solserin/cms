@@ -313,7 +313,6 @@
               </div>
             </div>
           </div>
-
           <!--contenido del informacion del fallecido-->
         </div>
         <div class="tab-content" v-show="activeTab == 1">
@@ -1681,7 +1680,7 @@
             <div class="w-full py-4">
               <div class="form-group py-6">
                 <div class="title-form-group">
-                  Uso de Propiedad en Cementerio
+                  Uso de Convenios en el Servicio
                 </div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
@@ -1927,133 +1926,117 @@
           </div>
         </div>
         <div class="tab-content" v-show="activeTab == 6">
+          <!--Contrato-->
           <div class="flex flex-wrap">
-            <div class="w-full input-text px-2">
-              <div class="float-left px-2">
-                <img width="36px" src="@assets/images/detallescontrato.svg" />
-                <h3
-                  class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-                >
-                  Indique los Detalles del Contrato
-                </h3>
-              </div>
-              <div class="w-full px-2">
-                <vs-divider />
-              </div>
-              <div class="w-full input-text">
-                <div class="flex flex-wrap">
-                  <div
-                    class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
-                  >
-                    <label>
-                      Fecha del Contrato
-                      <span>(*)</span>
-                    </label>
-
-                    <flat-pickr
-                      name="fechahora_contrato"
-                      data-vv-as=" "
-                      v-validate:fechahora_contrato_validacion_computed.immediate="
-                        'required'
-                      "
-                      :config="configdateTimePickerWithTime"
-                      v-model="form.fechahora_contrato"
-                      placeholder="Fecha y Hora del Contrato"
-                      class="w-full"
-                    />
-                    <div>
+            <div class="w-full py-4">
+              <div class="form-group py-6">
+                <div class="title-form-group">Información del Contrato</div>
+                <div class="form-group-content">
+                  <div class="flex flex-wrap">
+                    <div class="w-full xl:w-2/12 px-2 input-text">
+                      <label>
+                        Fecha del Contrato
+                        <span>(*)</span>
+                      </label>
+                      <flat-pickr
+                        name="fechahora_contrato"
+                        data-vv-as=" "
+                        v-validate:fechahora_contrato_validacion_computed.immediate="
+                          'required'
+                        "
+                        :config="configdateTimePickerWithTime"
+                        v-model="form.fechahora_contrato"
+                        placeholder="Fecha y Hora del Contrato"
+                        class="w-full"
+                      />
                       <span>
                         {{ errors.first("fechahora_contrato") }}
                       </span>
-                    </div>
-                    <div class="mt-2">
                       <span v-if="this.errores.fechahora_contrato">{{
                         errores.fechahora_contrato[0]
                       }}</span>
                     </div>
-                  </div>
 
-                  <div class="w-full input-text xl:w-6/12 px-2">
-                    <label>
-                      Seleccione al Contratante
-                      <span>(*)</span>
-                    </label>
-
-                    <div class="flex flex-wrap">
-                      <div
-                        class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
-                      >
-                        <div v-if="fueCancelada != true">
-                          <img
-                            v-if="form.id_cliente == ''"
-                            width="46px"
-                            class="cursor-pointer p-2"
-                            src="@assets/images/search.svg"
-                            @click="openBuscador = true"
-                            title="Buscar Cliente"
-                          />
-                          <img
-                            v-else
-                            width="46px"
-                            class="cursor-pointer p-2"
-                            src="@assets/images/minus.svg"
-                            @click="quitarCliente()"
-                          />
-                        </div>
-                        <div v-else>
-                          <img
-                            width="46px"
-                            class="cursor-pointer p-2"
-                            src="@assets/images/minus.svg"
-                          />
+                    <div class="w-full xl:w-7/12">
+                      <div class="w-full px-2 input-text" v-if="fueCancelada">
+                        <label>
+                          Contratante
+                          <span>(*)</span>
+                        </label>
+                        <div
+                          class="theme-background text-center py-2 px-2 size-base border-gray-solid-1"
+                        >
+                          <span class="font-medium"> Clave: </span>
+                          {{ form.id_cliente }},
+                          <span class="font-medium"> Nombre: </span>
+                          {{ form.cliente }},
+                          <span class="font-medium"> Dirección: </span>
+                          {{ form.direccion_cliente }}
                         </div>
                       </div>
                       <div
-                        class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
+                        class="w-full px-2 input-text"
+                        v-else-if="form.id_cliente == ''"
                       >
-                        <vs-input
-                          readonly
-                          v-validate.disabled="'required'"
-                          name="id_cliente"
-                          data-vv-as=" "
-                          type="text"
-                          class="w-full py-1 cursor-pointer texto-bold"
-                          placeholder="DEBE SELECCIONAR UN CLIENTE PARA REALIZAR EL SERVICIO."
-                          v-model="form.cliente"
-                          maxlength="100"
-                          ref="cliente_ref"
-                        />
-                        <div>
-                          <span>
-                            {{ errors.first("id_cliente") }}
-                          </span>
+                        <label>
+                          Contratante
+                          <span>(*)</span>
+                        </label>
+                        <div
+                          class="bg-danger-50 text-center py-2 px-2 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                          @click="openBuscador = true"
+                        >
+                          Click para seleccionar al contratante
                         </div>
-                        <div class="mt-2">
-                          <span v-if="this.errores.id_cliente">{{
-                            errores.id_cliente[0]
-                          }}</span>
+                      </div>
+                      <div class="w-full px-2 input-text" v-else>
+                        <label>
+                          Contratante
+                          <span>(*)</span>
+                        </label>
+                        <div
+                          class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
+                        >
+                          <div class="flex flex-wrap">
+                            <div class="w-full xl:w-8/12">
+                              <span class="font-medium"> Clave: </span>
+                              {{ form.id_cliente }},
+                              <span class="font-medium"> Nombre: </span>
+                              {{ form.cliente }}
+                              <span class="font-medium hidden">
+                                Dirección:
+                              </span>
+                              <span class="hidden">
+                                {{ form.direccion_cliente }}</span
+                              >
+                            </div>
+                            <div
+                              class="w-full xl:w-4/12 text-center xl:text-right"
+                            >
+                              <span
+                                @click="quitarCliente()"
+                                class="color-danger-900 cursor-pointer"
+                                >X Cambiar cliente
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="w-full input-text xl:w-4/12 px-2">
-                    <label>Parentesco con el Fallecido</label>
-
-                    <vs-input
-                      name="parentesco_contratante"
-                      maxlength="45"
-                      type="text"
-                      class="w-full"
-                      placeholder="Parentesco con el Fallecido"
-                      v-model="form.parentesco_contratante"
-                    />
-                    <div>
+                    <div class="w-full input-text xl:w-3/12 px-2">
+                      <label>Parentesco con el Fallecido</label>
+                      <vs-input
+                        name="parentesco_contratante"
+                        maxlength="45"
+                        type="text"
+                        class="w-full"
+                        placeholder="Parentesco con el Fallecido"
+                        v-model="form.parentesco_contratante"
+                      />
                       <span>
                         {{ errors.first("parentesco_contratante") }}
                       </span>
-                    </div>
-                    <div class="mt-2">
                       <span v-if="this.errores.parentesco_contratante">{{
                         errores.parentesco_contratante[0]
                       }}</span>
@@ -2061,951 +2044,412 @@
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="w-full input-text px-2 mt-5">
-              <div class="float-left px-2" v-if="verLista">
-                <img width="36px" src="@assets/images/articulos.svg" />
-                <h3
-                  class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
-                >
-                  Servicios y Artículos del Plan Funerario Seleccionado
-                </h3>
-              </div>
-              <div class="w-full px-2" v-if="verLista">
-                <vs-divider />
-              </div>
-              <div class="flex flex-wrap">
-                <div class="w-full input-text px-2 mb-6" v-if="verLista">
-                  <div class="w-full">
-                    <vx-card no-radius>
-                      <vs-table
-                        class="w-full"
-                        :data="conceptos"
-                        noDataText="No se han agregado Artículos ni Servicios"
-                      >
-                        <template slot="header">
-                          <h3>
-                            Servicios y Artículos que Incluye el Plan Funerario
-                          </h3>
-                        </template>
-                        <template slot="thead">
-                          <vs-th>#</vs-th>
-                          <vs-th>Artículo/Servicio</vs-th>
-                          <vs-th>Aplicar en</vs-th>
-                        </template>
-                        <template slot-scope="{ data }">
-                          <vs-tr
-                            :data="tr"
-                            :key="indextr"
-                            v-for="(tr, indextr) in data"
-                          >
-                            <vs-td class="w-1/12">
-                              <div class="capitalize">
-                                <span class="lowercase"
-                                  >{{ alfabeto[indextr] }})</span
-                                >
-                              </div>
-                            </vs-td>
-                            <vs-td class="w-7/12">
-                              <div class="capitalize">{{ tr.concepto }}</div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <div class="capitalize">{{ tr.aplicar }}</div>
-                            </vs-td>
-                          </vs-tr>
+              <!--Uso de Planes-->
 
-                          <!--mostrar en caso de que se use un plan ya comprado para uso a futuro-->
-
-                          <vs-tr v-if="form.plan_funerario_futuro_b.value == 1">
-                            <vs-td class="w-1/12"></vs-td>
-                            <vs-td class="w-7/12">
-                              <div
-                                class="capitalize py-1 text-right pr-4 dato_servicio"
-                              >
-                                Titular del Convenio
-                              </div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <div
-                                v-if="datosPlanFunerario != []"
-                                class="uppercase dato_servicio_valor"
-                              >
-                                {{ datosPlanFunerario.nombre }}
-                              </div>
-                            </vs-td>
-                          </vs-tr>
-                          <vs-tr v-if="form.plan_funerario_futuro_b.value == 1">
-                            <vs-td class="w-1/12"></vs-td>
-                            <vs-td class="w-7/12">
-                              <div
-                                class="capitalize py-1 text-right pr-4 dato_servicio"
-                              >
-                                Fecha de la Venta
-                              </div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <div
-                                v-if="datosPlanFunerario != []"
-                                class="capitalize dato_servicio_valor"
-                              >
-                                {{ datosPlanFunerario.fecha_operacion_texto }}
-                              </div>
-                            </vs-td>
-                          </vs-tr>
-                          <vs-tr v-if="form.plan_funerario_futuro_b.value == 1">
-                            <vs-td class="w-1/12"></vs-td>
-                            <vs-td class="w-7/12">
-                              <div
-                                class="capitalize py-1 text-right pr-4 dato_servicio"
-                              >
-                                Estado del Plan
-                              </div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <div
-                                v-if="datosPlanFunerario != []"
-                                class="capitalize dato_servicio_valor"
-                              >
-                                <span
-                                  class="text-warning"
-                                  v-if="
-                                    datosPlanFunerario.operacion_status == 1
-                                  "
-                                  >{{ datosPlanFunerario.status_texto }}</span
-                                >
-                                <span
-                                  class="color-success-900"
-                                  v-else-if="
-                                    datosPlanFunerario.operacion_status == 2
-                                  "
-                                  >{{ datosPlanFunerario.status_texto }}</span
-                                >
-
-                                <span
-                                  v-else-if="
-                                    datosPlanFunerario.operacion_status == 0
-                                  "
-                                  >{{ datosPlanFunerario.status_texto }}</span
-                                >
-                              </div>
-                            </vs-td>
-                          </vs-tr>
-
-                          <vs-tr v-if="form.plan_funerario_futuro_b.value == 1">
-                            <vs-td class="w-1/12"></vs-td>
-                            <vs-td class="w-7/12">
-                              <div
-                                class="capitalize py-1 text-right pr-4 dato_servicio"
-                              >
-                                Saldo Restante
-                              </div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <div
-                                v-if="datosPlanFunerario != []"
-                                class="capitalize dato_servicio_valor"
-                              >
-                                $
-                                {{
-                                  datosPlanFunerario.saldo_neto
-                                    | numFormat("0,000.00")
-                                }}
-                              </div>
-                            </vs-td>
-                          </vs-tr>
-
-                          <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO A FUTURO-->
-
-                          <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO INMEDIATO-->
-                          <vs-tr
-                            v-if="
-                              form.plan_funerario_inmediato_b.value == 1 &&
-                              form.plan_funerario_futuro_b.value == 0 &&
-                              form.plan_funerario.value != ''
-                            "
-                          >
-                            <vs-td class="w-1/12"></vs-td>
-                            <vs-td class="w-7/12">
-                              <div
-                                class="capitalize py-1 text-right pr-4 dato_servicio"
-                              >
-                                Plan Funerario de Uso Inmediato
-                              </div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <div
-                                v-if="datosPlanFunerario != []"
-                                class="capitalize dato_servicio_valor"
-                              >
-                                {{ form.plan_funerario.label }}
-                              </div>
-                            </vs-td>
-                          </vs-tr>
-                          <vs-tr
-                            v-if="
-                              form.plan_funerario_inmediato_b.value == 1 &&
-                              form.plan_funerario_futuro_b.value == 0 &&
-                              form.plan_funerario.value != ''
-                            "
-                          >
-                            <vs-td class="w-1/12"></vs-td>
-                            <vs-td class="w-7/12">
-                              <div
-                                class="capitalize py-1 text-right pr-4 dato_servicio"
-                              >
-                                Total del Plan Funerario
-                              </div>
-                            </vs-td>
-                            <vs-td class="w-2/12">
-                              <div
-                                v-if="datosPlanFunerario != []"
-                                class="capitalize dato_servicio_valor"
-                              >
-                                $
-                                {{
-                                  costo_uso_inmediato_computed
-                                    | numFormat("0,000.00")
-                                }}
-                              </div>
-                            </vs-td>
-                          </vs-tr>
-
-                          <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO INMEDIATO-->
-                        </template>
-                      </vs-table>
-                    </vx-card>
-                  </div>
-                  <!--fin de contenido del plan funerario-->
-                </div>
-
-                <div
-                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
-                >
-                  <label>
-                    <span>¿Tiene Plan Funerario?</span>
-                    <span>(*)</span>
-                  </label>
-                  <v-select
-                    :options="sino"
-                    :clearable="false"
-                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                    v-model="form.plan_funerario_futuro_b"
-                    class="w-full"
-                    name="plan_funerario_futuro_b"
-                  >
-                    <div slot="no-options">Seleccione 1</div>
-                  </v-select>
-                  <div>
-                    <span>
-                      {{ errors.first("plan_funerario_futuro_b") }}
-                    </span>
-                  </div>
-                  <div class="mt-2">
-                    <span
-                      v-if="this.errores['plan_funerario_futuro_b.value']"
-                      >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
-                    >
-                  </div>
-                </div>
-
-                <div
-                  class="w-full input-text xl:w-3/12 px-2"
-                  v-if="form.plan_funerario_futuro_b.value == 0"
-                >
-                  <label>
-                    <span>¿Usar Plan de Uso inmediato?</span>
-                    <span>(*)</span>
-                  </label>
-                  <v-select
-                    :options="sino"
-                    :clearable="false"
-                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                    v-model="form.plan_funerario_inmediato_b"
-                    class="w-full"
-                    name="plan_funerario_inmediato_b"
-                  >
-                    <div slot="no-options">Seleccione 1</div>
-                  </v-select>
-                  <div>
-                    <span>
-                      {{ errors.first("plan_funerario_inmediato_b") }}
-                    </span>
-                  </div>
-                  <div class="mt-2">
-                    <span
-                      v-if="this.errores['plan_funerario_inmediato_b.value']"
-                    >
-                      {{ errores["plan_funerario_inmediato_b.value"][0] }}
-                    </span>
-                  </div>
-                </div>
-
-                <div
-                  class="w-full sm:w-12/12 md:w-7/12 lg:w-7/12 xl:w-7/12 px-2"
-                  v-if="form.plan_funerario_futuro_b.value == 0"
-                >
-                  <label>
-                    <span>Planes Funerarios de Uso Inmediato</span>
-                    <span v-if="form.plan_funerario_inmediato_b.value == 1"
-                      >(*)</span
-                    >
-                  </label>
-                  <v-select
-                    :options="planes_funerarios"
-                    :clearable="false"
-                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                    v-model="form.plan_funerario"
-                    class="w-full"
-                    v-validate:plan_funerario_validacion_computed.immediate="
-                      'required'
-                    "
-                    name="plan_funerario"
-                    data-vv-as=" "
-                    :disabled="
-                      form.plan_funerario_inmediato_b.value == 0 ? true : false
-                    "
-                  >
-                    <div slot="no-options">Seleccione 1</div>
-                  </v-select>
-                  <div>
-                    <span>
-                      {{ errors.first("plan_funerario") }}
-                    </span>
-                  </div>
-                  <div class="mt-2">
-                    <span v-if="this.errores['plan_funerario.value']">{{
-                      errores["plan_funerario.value"][0]
-                    }}</span>
-                  </div>
-                </div>
-
-                <div
-                  class="w-full input-text xl:w-6/12 px-2"
-                  v-show="form.plan_funerario_futuro_b.value == 1"
-                >
-                  <label>
-                    Seleccione el Convenio
-                    <span>(*)</span>
-                  </label>
+              <div class="form-group">
+                <div class="title-form-group">Uso de Planes Funerarios</div>
+                <div class="form-group-content">
                   <div class="flex flex-wrap">
-                    <div
-                      class="w-full sm:w-12/12 md:w-1/12 lg:w-1/12 xl:w-1/12 px-2"
-                    >
-                      <div v-if="fueCancelada != true">
-                        <img
-                          v-if="form.id_convenio_plan == ''"
-                          width="46px"
-                          class="cursor-pointer p-2"
-                          src="@assets/images/search.svg"
-                          @click="openBuscadorPlan = true"
-                          title="Buscar Convenio"
-                        />
-                        <img
-                          v-else
-                          width="46px"
-                          class="cursor-pointer p-2"
-                          src="@assets/images/minus.svg"
-                          @click="quitarPlan()"
-                        />
-                      </div>
-                      <div v-else>
-                        <img
-                          width="46px"
-                          class="cursor-pointer p-2"
-                          src="@assets/images/minus.svg"
-                        />
-                      </div>
+                    <div class="w-full xl:w-2/12 px-2 input-text">
+                      <label>
+                        ¿Tiene Plan Funerario?
+                        <span>(*)</span>
+                      </label>
+                      <v-select
+                        :options="sino"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="form.plan_funerario_futuro_b"
+                        class="w-full"
+                        name="plan_funerario_futuro_b"
+                      >
+                        <div slot="no-options">Seleccione 1</div>
+                      </v-select>
+
+                      <span>
+                        {{ errors.first("plan_funerario_futuro_b") }}
+                      </span>
+
+                      <span
+                        v-if="this.errores['plan_funerario_futuro_b.value']"
+                        >{{ errores["plan_funerario_futuro_b.value"][0] }}</span
+                      >
                     </div>
                     <div
-                      class="w-full sm:w-12/12 md:w-11/12 lg:w-11/12 xl:w-11/12 px-2"
+                      class="w-full input-text xl:w-3/12 px-2"
+                      v-if="form.plan_funerario_futuro_b.value == 0"
                     >
-                      <vs-input
-                        readonly
-                        v-validate:id_convenio_plan_validacion_computed="
+                      <label>
+                        ¿Usar Plan de Uso inmediato?
+                        <span>(*)</span>
+                      </label>
+                      <v-select
+                        :options="sino"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="form.plan_funerario_inmediato_b"
+                        class="w-full"
+                        name="plan_funerario_inmediato_b"
+                      >
+                        <div slot="no-options">Seleccione 1</div>
+                      </v-select>
+                      <span>
+                        {{ errors.first("plan_funerario_inmediato_b") }}
+                      </span>
+                      <span
+                        v-if="this.errores['plan_funerario_inmediato_b.value']"
+                      >
+                        {{ errores["plan_funerario_inmediato_b.value"][0] }}
+                      </span>
+                    </div>
+
+                    <div
+                      class="w-full xl:w-7/12 px-2 input-text"
+                      v-if="form.plan_funerario_futuro_b.value == 0"
+                    >
+                      <label>
+                        Planes Funerarios de Uso Inmediato
+                        <span v-if="form.plan_funerario_inmediato_b.value == 1"
+                          >(*)</span
+                        >
+                      </label>
+                      <v-select
+                        :options="planes_funerarios"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="form.plan_funerario"
+                        class="w-full"
+                        v-validate:plan_funerario_validacion_computed.immediate="
                           'required'
                         "
-                        name="id_convenio_plan"
+                        name="plan_funerario"
                         data-vv-as=" "
-                        type="text"
-                        class="w-full py-1 cursor-pointer texto-bold"
-                        placeholder="SELECCIONE EL CONVENIO DEL PLAN FUNERARIO."
-                        v-model="form.plan"
-                        maxlength="150"
-                        ref="plan_ref"
-                      />
-                      <div>
-                        <span>
-                          {{ errors.first("id_convenio_plan") }}
-                        </span>
-                      </div>
-                      <div class="mt-2">
-                        <span v-if="this.errores.id_convenio_plan">{{
-                          errores.id_convenio_plan[0]
-                        }}</span>
-                      </div>
+                        :disabled="
+                          form.plan_funerario_inmediato_b.value == 0
+                            ? true
+                            : false
+                        "
+                      >
+                        <div slot="no-options">Seleccione 1</div>
+                      </v-select>
+                      <span>
+                        {{ errors.first("plan_funerario") }}
+                      </span>
+                      <span v-if="this.errores['plan_funerario.value']">{{
+                        errores["plan_funerario.value"][0]
+                      }}</span>
                     </div>
-                  </div>
-                </div>
-                <div
-                  class="w-full input-text xl:w-4/12 px-2"
-                  v-show="form.plan_funerario_futuro_b.value == 1"
-                >
-                  <label>
-                    <span>Tipo de Contratante</span>
-                    <span>(*)</span>
-                  </label>
 
-                  <v-select
-                    :options="tipos_contratante"
-                    :clearable="false"
-                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                    v-model="form.tipo_contratante"
-                    class="w-full"
-                    v-validate:tipo_contratante_validacion_computed.immediate="
-                      'required'
-                    "
-                    name="tipo_contratante"
-                    data-vv-as=" "
-                  >
-                    <div slot="no-options">Seleccione 1</div>
-                  </v-select>
-                  <div>
-                    <span>
-                      {{ errors.first("tipo_contratante") }}
-                    </span>
-                  </div>
-                  <div class="mt-2">
-                    <span v-if="this.errores['tipo_contratante.value']">{{
-                      errores["tipo_contratante.value"][0]
-                    }}</span>
-                  </div>
-                </div>
-
-                <div class="w-full px-2">
-                  <vs-divider />
-                </div>
-
-                <div class="w-full mt-5">
-                  <div class="float-left px-2">
-                    <img width="36px" src="@assets/images/articulos.svg" />
-                    <h3
-                      class="float-right mt-2 ml-3 text-xl px-2 py-1 bg-seccion-forms capitalize"
+                    <!--Seleccionar plan funerario a futuro si tiene convenio-->
+                    <div
+                      class="w-full xl:w-7/12"
+                      v-show="form.plan_funerario_futuro_b.value == 1"
                     >
-                      Servicios y Artículos del Contrato
-                    </h3>
-                  </div>
-                  <div class="w-full px-2">
-                    <vs-divider />
-                  </div>
-                  <vx-card no-radius>
-                    <div class="flex flex-wrap">
-                      <div class="w-full input-text md:text-right">
-                        <vs-button
-                          size="small"
-                          color="success"
-                          @click="openBuscadorArticulos = true"
+                      <div class="w-full px-2 input-text" v-if="fueCancelada">
+                        <label>
+                          Convenio del plan funerario a futuro
+                          <span>(*)</span>
+                        </label>
+                        <div
+                          class="theme-background text-center py-2 px-2 size-base border-gray-solid-1"
                         >
-                          <img
-                            class="cursor-pointer img-btn"
-                            src="@assets/images/boxes.svg"
-                          />
-                          <span class="texto-btn">Artículos / Servicios</span>
-                        </vs-button>
-                      </div>
-
-                      <div class="w-full input-text">
-                        <div class="flex flex-wrap">
-                          <div class="w-full input-text">
-                            <div class="w-full mt-5">
-                              <vs-table
-                                class="w-full"
-                                :data="form.articulos_servicios"
-                                noDataText="No se han agregado Artículos ni Servicios"
-                              >
-                                <template slot="header">
-                                  <h3>
-                                    Servicios y Artículos que Incluye el
-                                    Servicio Funerario
-                                  </h3>
-                                </template>
-                                <template slot="thead">
-                                  <vs-th>#</vs-th>
-                                  <vs-th>Tipo</vs-th>
-                                  <vs-th>Descripción</vs-th>
-                                  <vs-th>Lote</vs-th>
-                                  <vs-th>Cant.</vs-th>
-                                  <vs-th>Costo Neto</vs-th>
-                                  <vs-th>Descuento</vs-th>
-                                  <vs-th>Costo Neto Con Descuento</vs-th>
-                                  <vs-th>Importe</vs-th>
-                                  <vs-th>Plan Funerario</vs-th>
-                                  <vs-th>Facturable</vs-th>
-                                  <vs-th>Quitar</vs-th>
-                                </template>
-                                <template slot-scope="{ data }">
-                                  <vs-tr
-                                    :data="tr"
-                                    :key="indextr"
-                                    v-for="(tr, indextr) in data"
-                                  >
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        <span class="lowercase">{{
-                                          indextr + 1
-                                        }}</span>
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        {{ data[indextr].tipo }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        {{ data[indextr].descripcion }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <div class="capitalize">
-                                        {{ data[indextr].num_lote_inventario }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <vs-input
-                                        :name="
-                                          'cantidad_articulos_servicios' +
-                                          indextr
-                                        "
-                                        data-vv-as=" "
-                                        data-vv-validate-on="blur"
-                                        v-validate="
-                                          'required|integer|min_value:' + 1
-                                        "
-                                        class="w-full sm:w-6/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mr-auto ml-auto cantidad"
-                                        maxlength="4"
-                                        v-model="
-                                          form.articulos_servicios[indextr]
-                                            .cantidad
-                                        "
-                                      />
-                                      <div>
-                                        <span>
-                                          {{
-                                            errors.first(
-                                              "cantidad_articulos_servicios" +
-                                                indextr
-                                            )
-                                          }}
-                                        </span>
-                                      </div>
-                                    </vs-td>
-                                    <vs-td
-                                      v-if="
-                                        habilitar_plan_funerario_b == false ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            1 &&
-                                          form.articulos_servicios[indextr]
-                                            .plan_b == 0) ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            0 &&
-                                          form.plan_funerario_inmediato_b
-                                            .value == 1)
-                                      "
-                                    >
-                                      <vs-input
-                                        :name="
-                                          'costo_neto_normal_articulos_servicios' +
-                                          indextr
-                                        "
-                                        data-vv-as=" "
-                                        data-vv-validate-on="blur"
-                                        v-validate="
-                                          'required|decimal:2|min_value:' + 0
-                                        "
-                                        class="w-full sm:w-8/12 md:w-7/12 lg:w-7/12 xl:w-7/12 mr-auto ml-auto cantidad"
-                                        maxlength="10"
-                                        v-model="
-                                          form.articulos_servicios[indextr]
-                                            .costo_neto_normal
-                                        "
-                                        :disabled="
-                                          form.articulos_servicios[indextr]
-                                            .descuento_b == 1
-                                        "
-                                      />
-                                      <div>
-                                        <span>
-                                          {{
-                                            errors.first(
-                                              "costo_neto_normal_articulos_servicios" +
-                                                indextr
-                                            )
-                                          }}
-                                        </span>
-                                      </div>
-                                    </vs-td>
-                                    <vs-td v-else>
-                                      <div class="capitalize">$ 0.00</div>
-                                    </vs-td>
-                                    <vs-td
-                                      v-if="
-                                        habilitar_plan_funerario_b == false ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            1 &&
-                                          form.articulos_servicios[indextr]
-                                            .plan_b == 0) ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            0 &&
-                                          form.plan_funerario_inmediato_b
-                                            .value == 1)
-                                      "
-                                    >
-                                      <vs-switch
-                                        class="ml-auto mr-auto"
-                                        color="success"
-                                        icon-pack="feather"
-                                        v-model="
-                                          form.articulos_servicios[indextr]
-                                            .descuento_b
-                                        "
-                                      >
-                                        <span slot="on">SI</span>
-                                        <span slot="off">NO</span>
-                                      </vs-switch>
-                                    </vs-td>
-                                    <vs-td v-else>
-                                      <div class="capitalize">N/A</div>
-                                    </vs-td>
-                                    <vs-td
-                                      v-if="
-                                        habilitar_plan_funerario_b == false ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            1 &&
-                                          form.articulos_servicios[indextr]
-                                            .plan_b == 0) ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            0 &&
-                                          form.plan_funerario_inmediato_b
-                                            .value == 1)
-                                      "
-                                    >
-                                      <vs-input
-                                        :name="
-                                          'costo_neto_descuento_articulos_servicios' +
-                                          indextr
-                                        "
-                                        data-vv-as=" "
-                                        data-vv-validate-on="blur"
-                                        v-validate="
-                                          'required|decimal:2|min_value:' +
-                                          0 +
-                                          '|max_value:' +
-                                          form.articulos_servicios[indextr]
-                                            .costo_neto_normal
-                                        "
-                                        class="w-full sm:w-8/12 md:w-7/12 lg:w-7/12 xl:w-7/12 mr-auto ml-auto cantidad"
-                                        maxlength="10"
-                                        v-model="
-                                          form.articulos_servicios[indextr]
-                                            .costo_neto_descuento
-                                        "
-                                        :disabled="
-                                          form.articulos_servicios[indextr]
-                                            .descuento_b == 0
-                                        "
-                                      />
-                                      <div>
-                                        <span>
-                                          {{
-                                            errors.first(
-                                              "costo_neto_descuento_articulos_servicios" +
-                                                indextr
-                                            )
-                                          }}
-                                        </span>
-                                      </div>
-                                    </vs-td>
-                                    <vs-td v-else>
-                                      <div class="capitalize">N/A</div>
-                                    </vs-td>
-                                    <vs-td
-                                      v-if="
-                                        habilitar_plan_funerario_b == false ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            1 &&
-                                          form.articulos_servicios[indextr]
-                                            .plan_b == 0) ||
-                                        (habilitar_plan_funerario_b == true &&
-                                          form.plan_funerario_futuro_b.value ==
-                                            0 &&
-                                          form.plan_funerario_inmediato_b
-                                            .value == 1)
-                                      "
-                                    >
-                                      <div
-                                        class="capitalize"
-                                        v-if="
-                                          form.articulos_servicios[indextr]
-                                            .descuento_b == 1
-                                        "
-                                      >
-                                        $
-                                        {{
-                                          (form.articulos_servicios[indextr]
-                                            .costo_neto_descuento *
-                                            form.articulos_servicios[indextr]
-                                              .cantidad)
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                      <div class="capitalize" v-else>
-                                        $
-                                        {{
-                                          (form.articulos_servicios[indextr]
-                                            .costo_neto_normal *
-                                            form.articulos_servicios[indextr]
-                                              .cantidad)
-                                            | numFormat("0,000.00")
-                                        }}
-                                      </div>
-                                    </vs-td>
-                                    <vs-td v-else>
-                                      <div class="capitalize">$ 0.00</div>
-                                    </vs-td>
-
-                                    <vs-td v-if="habilitar_plan_funerario_b">
-                                      <vs-switch
-                                        class="ml-auto mr-auto"
-                                        color="success"
-                                        icon-pack="feather"
-                                        v-model="
-                                          form.articulos_servicios[indextr]
-                                            .plan_b
-                                        "
-                                        :disabled="!habilitar_plan_funerario_b"
-                                      >
-                                        <span slot="on">SI</span>
-                                        <span slot="off">NO</span>
-                                      </vs-switch>
-                                    </vs-td>
-                                    <vs-td v-else>
-                                      <div class="capitalize">N/A</div>
-                                    </vs-td>
-                                    <vs-td>
-                                      <vs-switch
-                                        class="ml-auto mr-auto"
-                                        color="success"
-                                        icon-pack="feather"
-                                        v-model="
-                                          form.articulos_servicios[indextr]
-                                            .facturable_b
-                                        "
-                                      >
-                                        <span slot="on">SI</span>
-                                        <span slot="off">NO</span>
-                                      </vs-switch>
-                                    </vs-td>
-
-                                    <vs-td>
-                                      <div
-                                        @click="remover_articulo(indextr)"
-                                        v-if="!fueCancelada"
-                                      >
-                                        <img
-                                          class="cursor-pointer img-btn"
-                                          src="@assets/images/minus.svg"
-                                        />
-                                      </div>
-                                    </vs-td>
-                                  </vs-tr>
-                                </template>
-                              </vs-table>
-                            </div>
-                          </div>
+                          <span class="font-medium"> Plan Funerario: </span>
+                          {{ form.plan }}
                         </div>
                       </div>
-                    </div>
-
-                    <!--checkout-->
-                    <div class="w-full">
-                      <div class="flex flex-wrap my-6">
-                        <div class="w-full px-2">
-                          <vs-divider />
+                      <div
+                        class="w-full px-2 input-text"
+                        v-else-if="form.id_convenio_plan == ''"
+                      >
+                        <label>
+                          Convenio del plan funerario a futuro
+                          <span>(*)</span>
+                        </label>
+                        <div
+                          class="bg-danger-50 text-center py-2 px-2 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                          @click="openBuscadorPlan = true"
+                        >
+                          Click para seleccionar al convenio
                         </div>
-                        <div class="w-full sm:w-12/12 md:w-8/12 lg:9/12 px-2">
+                      </div>
+                      <div class="w-full px-2 input-text" v-else>
+                        <label>
+                          Convenio del plan funerario a futuro
+                          <span>(*)</span>
+                        </label>
+                        <div
+                          class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
+                        >
                           <div class="flex flex-wrap">
-                            <div class="w-full pt-3 pb-3 px-2">
-                              <div class="float-left">
-                                <img
-                                  class="float-left"
-                                  width="36px"
-                                  src="@assets/images/notas_add.svg"
-                                />
-                                <h3
-                                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                                >
-                                  Notas / Observaciones Sobre el Contrato
-                                </h3>
-                              </div>
-                            </div>
-                            <div class="w-full input-text px-2">
-                              <label>NOTA U OBSERVACIÓN:</label>
-                              <vs-textarea
-                                height="240px"
-                                :rows="9"
-                                size="large"
-                                ref="nota"
-                                type="text"
-                                class="w-full pt-3 pb-3 large_textarea"
-                                placeholder="Ingrese una nota..."
-                                v-model.trim="form.nota"
-                              />
-                            </div>
-                          </div>
-                          <!--fin del resumen de la venta-->
-                        </div>
-                        <div class="w-full sm:w-12/12 md:w-4/12 lg:3/12 px-2">
-                          <div class="flex flex-wrap">
-                            <div class="w-full pt-3 pb-3 px-2">
-                              <div class="float-left">
-                                <img
-                                  class="float-left"
-                                  width="36px"
-                                  src="@assets/images/payments.svg"
-                                />
-                                <h3
-                                  class="float-right mt-2 ml-3 text-xl font-medium px-2 py-1 bg-seccion-forms"
-                                >
-                                  Total del Contrato Funerario
-                                </h3>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="flex flex-wrap">
-                            <div class="w-full input-text px-2 text-center">
-                              <label class="text-xl opacity-75">
-                                Tasa IVA %
-                                <span>(*)</span>
-                              </label>
-                              <vs-input
-                                :disabled="
-                                  tiene_pagos_realizados ||
-                                  ventaLiquidada ||
-                                  fueCancelada
-                                "
-                                size="large"
-                                name="tasa_iva"
-                                data-vv-as=" "
-                                v-validate="
-                                  'required|decimal:2|min_value:14|max_value:25'
-                                "
-                                type="text"
-                                class="w-full texto-bold cantidad"
-                                placeholder="Porcentaje IVA"
-                                v-model="form.tasa_iva"
-                                maxlength="2"
-                              />
-                              <div>
-                                <span class="mensaje-requerido">
-                                  {{ errors.first("tasa_iva") }}
-                                </span>
-                              </div>
-                              <div class="mt-2">
-                                <span
-                                  class="mensaje-requerido"
-                                  v-if="this.errores.tasa_iva"
-                                  >{{ errores.tasa_iva[0] }}</span
-                                >
-                              </div>
+                            <div class="w-full lg:w-8/12">
+                              <span class="font-medium"> Plan Funerario: </span>
+                              {{ form.plan }}
                             </div>
                             <div
-                              class="w-full input-text px-2 text-center"
-                              v-if="verTotalUsoinmediato"
+                              class="w-full lg:w-4/12 text-center xl:text-right"
                             >
-                              <label class="text-lg opacity-75"
-                                >$ Total de plan de uso inmediato</label
-                              >
-                              <div class="mt-1 pb-2 text-center">
-                                <span class="total_contrato text-xl font-bold">
-                                  $
-                                  {{
-                                    totalUsoInmediato | numFormat("0,000.00")
-                                  }}
-                                </span>
-                              </div>
+                              <span
+                                @click="quitarPlan()"
+                                class="color-danger-900 cursor-pointer"
+                                >X Cambiar convenio
+                              </span>
                             </div>
-                            <div class="w-full input-text px-2 text-center">
-                              <label class="text-xl opacity-75"
-                                >$ Total a Pagar</label
-                              >
-                              <div class="mt-3 text-center">
-                                <span class="total_contrato text-3xl font-bold">
-                                  $
-                                  {{ totalContrato | numFormat("0,000.00") }}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div class="w-full px-2 mt-2 text-center">
-                              <p class="texto-ojo">
-                                <span class="font-medium">Ojo:</span>
-                                Los costos de los conceptos capturados ya
-                                incluyen el IVA.
-                              </p>
-                              <vs-divider />
-                            </div>
-
-                            <div class="w-full input-text px-2">
-                              <div class="flex flex-wrap">
-                                <vs-button
-                                  v-if="!fueCancelada"
-                                  class="w-full ml-auto mr-auto"
-                                  @click="acceptAlert()"
-                                  color="success"
-                                  size="large"
-                                >
-                                  <img
-                                    width="25px"
-                                    class="cursor-pointer img-btn"
-                                    src="@assets/images/save.svg"
-                                  />
-                                  <span class="texto-btn"
-                                    >Guardar Contrato</span
-                                  >
-                                </vs-button>
-                              </div>
-                            </div>
-                            <!--fin de precios-->
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!--fin del checkout-->
-                  </vx-card>
+                    <!--Fin de plan funerario con convenio-->
+                    <div
+                      class="w-full input-text xl:w-3/12 px-2"
+                      v-show="form.plan_funerario_futuro_b.value == 1"
+                    >
+                      <label>
+                        Tipo de Contratante
+                        <span>(*)</span>
+                      </label>
+                      <v-select
+                        :options="tipos_contratante"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="form.tipo_contratante"
+                        class="w-full"
+                        v-validate:tipo_contratante_validacion_computed.immediate="
+                          'required'
+                        "
+                        name="tipo_contratante"
+                        data-vv-as=" "
+                      >
+                        <div slot="no-options">Seleccione 1</div>
+                      </v-select>
+                      <span>
+                        {{ errors.first("tipo_contratante") }}
+                      </span>
+                      <span v-if="this.errores['tipo_contratante.value']">{{
+                        errores["tipo_contratante.value"][0]
+                      }}</span>
+                    </div>
+                    <!--Ver Contenido del plan-->
+                    <div v-if="verLista" class="w-full input-text px-2 mt-6">
+                      <vx-card
+                        no-radius
+                        collapse-action
+                        :title="
+                          form.plan_funerario_futuro_b.value == 1
+                            ? form.plan
+                            : form.plan_funerario.label
+                        "
+                      >
+                        <vs-table
+                          class="tabla-datos no-header"
+                          :data="conceptos"
+                          noDataText="No se han agregado Artículos ni Servicios"
+                        >
+                          <template slot="thead">
+                            <vs-th>Artículo/Servicio</vs-th>
+                            <vs-th>Aplicar en</vs-th>
+                          </template>
+                          <template slot-scope="{ data }">
+                            <vs-tr
+                              :data="tr"
+                              :key="indextr"
+                              v-for="(tr, indextr) in data"
+                            >
+                              <vs-td class="">
+                                <div class="capitalize">
+                                  {{ tr.concepto }}
+                                </div>
+                              </vs-td>
+                              <vs-td class="">
+                                <div class="capitalize">{{ tr.aplicar }}</div>
+                              </vs-td>
+                            </vs-tr>
+
+                            <!--mostrar en caso de que se use un plan ya comprado para uso a futuro-->
+
+                            <vs-tr
+                              v-if="form.plan_funerario_futuro_b.value == 1"
+                            >
+                              <vs-td class="w-7/12">
+                                <div
+                                  class="capitalize py-1 text-right pr-4 dato_servicio"
+                                >
+                                  Titular del Convenio
+                                </div>
+                              </vs-td>
+                              <vs-td class="w-2/12">
+                                <div
+                                  v-if="datosPlanFunerario != []"
+                                  class="uppercase dato_servicio_valor"
+                                >
+                                  {{ datosPlanFunerario.nombre }}
+                                </div>
+                              </vs-td>
+                            </vs-tr>
+                            <vs-tr
+                              v-if="form.plan_funerario_futuro_b.value == 1"
+                            >
+                              <vs-td class="w-7/12">
+                                <div
+                                  class="capitalize py-1 text-right pr-4 dato_servicio"
+                                >
+                                  Fecha de la Venta
+                                </div>
+                              </vs-td>
+                              <vs-td class="w-2/12">
+                                <div
+                                  v-if="datosPlanFunerario != []"
+                                  class="capitalize dato_servicio_valor"
+                                >
+                                  {{ datosPlanFunerario.fecha_operacion_texto }}
+                                </div>
+                              </vs-td>
+                            </vs-tr>
+                            <vs-tr
+                              v-if="form.plan_funerario_futuro_b.value == 1"
+                            >
+                              <vs-td class="w-7/12">
+                                <div
+                                  class="capitalize py-1 text-right pr-4 dato_servicio"
+                                >
+                                  Estado del Plan
+                                </div>
+                              </vs-td>
+                              <vs-td class="w-2/12">
+                                <div
+                                  v-if="datosPlanFunerario != []"
+                                  class="capitalize dato_servicio_valor"
+                                >
+                                  <span
+                                    class="color-warning-900"
+                                    v-if="
+                                      datosPlanFunerario.operacion_status == 1
+                                    "
+                                    >{{ datosPlanFunerario.status_texto }}</span
+                                  >
+                                  <span
+                                    class="color-success-900"
+                                    v-else-if="
+                                      datosPlanFunerario.operacion_status == 2
+                                    "
+                                    >{{ datosPlanFunerario.status_texto }}</span
+                                  >
+
+                                  <span
+                                    v-else-if="
+                                      datosPlanFunerario.operacion_status == 0
+                                    "
+                                    >{{ datosPlanFunerario.status_texto }}</span
+                                  >
+                                </div>
+                              </vs-td>
+                            </vs-tr>
+
+                            <vs-tr
+                              v-if="form.plan_funerario_futuro_b.value == 1"
+                            >
+                              <vs-td class="w-7/12">
+                                <div
+                                  class="capitalize py-1 text-right pr-4 dato_servicio"
+                                >
+                                  Saldo Restante
+                                </div>
+                              </vs-td>
+                              <vs-td class="w-2/12">
+                                <div
+                                  v-if="datosPlanFunerario != []"
+                                  class="capitalize dato_servicio_valor"
+                                >
+                                  $
+                                  {{
+                                    datosPlanFunerario.saldo_neto
+                                      | numFormat("0,000.00")
+                                  }}
+                                </div>
+                              </vs-td>
+                            </vs-tr>
+
+                            <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO A FUTURO-->
+
+                            <!--fFIN DE DATOS A USAR EN CASO DE QUE SEA A USO INMEDIATO-->
+                            <vs-tr
+                              v-if="
+                                form.plan_funerario_inmediato_b.value == 1 &&
+                                form.plan_funerario_futuro_b.value == 0 &&
+                                form.plan_funerario.value != ''
+                              "
+                            >
+                              <vs-td class="w-7/12">
+                                <div
+                                  class="capitalize py-1 text-right pr-4 dato_servicio"
+                                >
+                                  Plan Funerario de Uso Inmediato
+                                </div>
+                              </vs-td>
+                              <vs-td class="w-2/12">
+                                <div
+                                  v-if="datosPlanFunerario != []"
+                                  class="capitalize dato_servicio_valor"
+                                >
+                                  {{ form.plan_funerario.label }}
+                                </div>
+                              </vs-td>
+                            </vs-tr>
+                            <vs-tr
+                              v-if="
+                                form.plan_funerario_inmediato_b.value == 1 &&
+                                form.plan_funerario_futuro_b.value == 0 &&
+                                form.plan_funerario.value != ''
+                              "
+                            >
+                              <vs-td class="w-7/12">
+                                <div
+                                  class="capitalize py-1 text-right pr-4 dato_servicio"
+                                >
+                                  Total del Plan Funerario
+                                </div>
+                              </vs-td>
+                              <vs-td class="w-2/12">
+                                <div
+                                  v-if="datosPlanFunerario != []"
+                                  class="capitalize dato_servicio_valor"
+                                >
+                                  $
+                                  {{
+                                    costo_uso_inmediato_computed
+                                      | numFormat("0,000.00")
+                                  }}
+                                </div>
+                              </vs-td>
+                            </vs-tr>
+                            <!--FIN DE DATOS A USAR EN CASO DE QUE SEA A USO INMEDIATO-->
+                          </template>
+                        </vs-table>
+                      </vx-card>
+                      <!--fin de contenido del plan funerario-->
+                    </div>
+                    <!--Fin de contenido-->
+                  </div>
                 </div>
               </div>
+
+              <!-- Fin Uso de Planes-->
+
+              <!--Conceptos-->
+
+              <div class="form-group">
+                <div class="title-form-group">
+                  Desglose de Artículos y Servicios a Pagar
+                </div>
+                <div class="form-group-content">
+                  <div class="flex flex-wrap"></div>
+                </div>
+              </div>
+
+              <!--Fin Conceptos-->
             </div>
           </div>
-          <div class="flex flex-wrap mt-4 px-2 hidden">
-            <div class="w-full px-2 mt-2">
-              <p class="texto-ojo">
-                <span class="font-medium">Ojo:</span>
-                Debe seleccionar la modalidad de la venta que se esté
-                registrando en caso de que haya sido realizada fuera del control
-                del sistema, ya que ese tipo de ventas cuenta con un control
-                especial de números de órden.
-              </p>
-              <vs-divider />
-            </div>
-          </div>
+          <!--Fin Contrato-->
         </div>
       </div>
       <!--fin venta-->
@@ -3878,6 +3322,7 @@ export default {
         fechahora_contrato: "",
         id_cliente: "",
         cliente: "",
+        direccion_cliente: "",
         parentesco_contratante: "",
 
         plan_funerario_futuro_b: {
@@ -4280,6 +3725,7 @@ export default {
               /**al si tener registrada una operacion, se carga el cliente asociado a la operacion */
               this.form.id_cliente = data.operacion.clientes_id;
               this.form.cliente = data.operacion.cliente.nombre;
+              this.form.direccion_cliente = data.operacion.cliente.direccion;
               this.form.tasa_iva = data.operacion.tasa_iva;
             }
             this.form.parentesco_contratante = data.parentesco_contratante;
@@ -4904,6 +4350,7 @@ export default {
 
       this.form.id_cliente = "";
       this.form.cliente = "";
+      this.form.direccion_cliente = "";
       this.form.parentesco_contratante = "";
 
       this.form.plan_funerario_futuro_b = { value: "0", label: "NO" };
@@ -4939,6 +4386,7 @@ export default {
       /**obtiene los datos retornados del buscar cliente */
       this.form.cliente = datos.nombre;
       this.form.id_cliente = datos.id_cliente;
+      this.form.direccion_cliente = datos.datos.direccion;
       //alert(datos.id_cliente);
     },
 
@@ -4998,6 +4446,7 @@ export default {
     limpiarCliente() {
       this.form.id_cliente = "";
       this.form.cliente = "";
+      this.form.direccion_cliente = "";
     },
     quitarCliente() {
       this.botonConfirmarSinPassword = "Cambiar cliente";

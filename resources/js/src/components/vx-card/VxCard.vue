@@ -13,23 +13,28 @@
     class="vx-card"
     ref="card"
     :class="[
-        {'overflow-hidden': tempHidden},
-        {'no-shadow': noShadow},
-        {'rounded-none': noRadius},
-        {'card-border': cardBorder},
-        cardClasses ]"
+      { 'overflow-hidden': tempHidden },
+      { 'no-shadow': noShadow },
+      { 'rounded-none': noRadius },
+      { 'card-border': cardBorder },
+      cardClasses,
+    ]"
     :style="cardStyles"
     v-on="$listeners"
   >
     <div class="vx-card__header" v-if="hasHeader">
       <!-- card title -->
       <div class="vx-card__title">
-        <h4 v-if="this.$props.title" :style="titleStyles" :class="titleClasses">{{ title }}</h4>
+        <h4 v-if="this.$props.title" :style="titleStyles" :class="titleClasses">
+          {{ title }}
+        </h4>
         <h6
           v-if="this.$props.subtitle"
           :style="subtitleStyles"
           :class="subtitleClasses"
-        >{{ subtitle }}</h6>
+        >
+          {{ subtitle }}
+        </h6>
       </div>
 
       <!-- card actions -->
@@ -37,26 +42,28 @@
         <slot name="actions">
           <div
             class="vx-card__action-buttons px-2"
-            v-if="(actionButtons || collapseAction || refreshContentAction || removeCardAction) && !codeToggler"
+            v-if="
+              (actionButtons ||
+                collapseAction ||
+                refreshContentAction ||
+                removeCardAction) &&
+              !codeToggler
+            "
           >
             <span v-if="actionButtons || collapseAction">
-              <img
-                width="18px"
-                src="@assets/images/chevron-up.svg"
+              <feather-icon
+                icon="EyeOffIcon"
                 @click="toggleContent"
-                :class="{rotate180: !isContentCollapsed}"
-                class="ml-6 cursor-pointer"
+                :class="{ rotate180: !isContentCollapsed }"
+                title="Ocultar contenido"
                 v-if="!isContentCollapsed"
-                title="Ocultar"
               />
-              <img
-                width="18px"
-                src="@assets/images/chevron-down.svg"
+              <feather-icon
+                icon="EyeIcon"
                 @click="toggleContent"
-                :class="{rotate180: !isContentCollapsed}"
-                class="ml-6 cursor-pointer"
+                :class="{ rotate180: !isContentCollapsed }"
+                title="Ver contenido"
                 v-else
-                title="Desplegar"
               />
             </span>
 
@@ -68,13 +75,14 @@
               v-if="actionButtons || collapseAction"
             />
             -->
-           
-               <feather-icon icon="RefreshCwIcon"
-                @click="refreshcard"
-                :class="{rotate180: !isContentCollapsed}"
-                title="Resetear filtros" 
-                v-if="actionButtons || refreshContentAction"
-                />
+
+            <feather-icon
+              icon="RefreshCwIcon"
+              @click="refreshcard"
+              :class="{ rotate180: !isContentCollapsed }"
+              title="Resetear filtros"
+              v-if="actionButtons || refreshContentAction"
+            />
 
             <!--<feather-icon
               @click="refreshcard"
@@ -89,10 +97,15 @@
               v-if="actionButtons || removeCardAction"
             />
           </div>
-          <div class="vx-card__code-toggler sm:block hidden" v-if="codeToggler && !actionButtons">
+          <div
+            class="vx-card__code-toggler sm:block hidden"
+            v-if="codeToggler && !actionButtons"
+          >
             <feather-icon
               icon="CodeIcon"
-              :class="{'border border-solid border-primary border-t-0 border-r-0 border-l-0': showCode}"
+              :class="{
+                'border border-solid border-primary border-t-0 border-r-0 border-l-0': showCode,
+              }"
               @click="toggleCode"
             ></feather-icon>
           </div>
@@ -103,7 +116,10 @@
     <div
       class="vx-card__collapsible-content vs-con-loading__container"
       ref="content"
-      :class="[{collapsed: isContentCollapsed}, {'overflow-hidden': tempHidden}]"
+      :class="[
+        { collapsed: isContentCollapsed },
+        { 'overflow-hidden': tempHidden },
+      ]"
       :style="StyleItems"
     >
       <!-- content with no body(no padding) -->
@@ -127,7 +143,7 @@
       ref="codeContainer"
       v-show="this.$slots.codeContainer"
       :style="codeContainerStyles"
-      :class="{collapsed: !showCode}"
+      :class="{ collapsed: !showCode }"
     >
       <div class="code-content">
         <prism :language="codeLanguage" :key="$vs.rtl">
@@ -149,47 +165,47 @@ export default {
     subtitle: String,
     actionButtons: {
       type: Boolean,
-      default: false
+      default: false,
     },
     actionButtonsColor: {
       type: String,
-      default: "success"
+      default: "success",
     },
     codeToggler: {
       type: Boolean,
-      default: false
+      default: false,
     },
     noShadow: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     noRadius: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     cardBorder: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     codeLanguage: {
       default: "markup",
-      type: String
+      type: String,
     },
     collapseAction: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     refreshContentAction: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     removeCardAction: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     headerBackground: {
       default: "",
-      type: String
+      type: String,
     },
     // bodyBackground: {
     //   default: '',
@@ -201,20 +217,20 @@ export default {
     // },
     cardBackground: {
       default: "",
-      type: String
+      type: String,
     },
     contentColor: {
       default: "",
-      type: String
+      type: String,
     },
     titleColor: {
       default: "",
-      type: String
+      type: String,
     },
     subtitleColor: {
       default: "#b8c2cc",
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
@@ -223,7 +239,7 @@ export default {
       maxHeight: null,
       cardMaxHeight: null,
       codeContainerMaxHeight: "0px",
-      tempHidden: false
+      tempHidden: false,
     };
   },
   computed: {
@@ -271,7 +287,7 @@ export default {
     },
     titleStyles() {
       return {
-        color: _color.getColor(this.titleColor)
+        color: _color.getColor(this.titleColor),
       };
     },
     titleClasses() {
@@ -300,7 +316,7 @@ export default {
       }
 
       return str.trim();
-    }
+    },
   },
   methods: {
     toggleContent() {
@@ -325,7 +341,7 @@ export default {
     refreshcard() {
       this.$vs.loading({
         container: this.$refs.content,
-        scale: 0.5
+        scale: 0.5,
       });
       this.tempHidden = true;
       this.$emit("refresh", this);
@@ -362,11 +378,11 @@ export default {
           this.tempHidden = false;
         }, 150);
       }
-    }
+    },
   },
   components: {
-    Prism
-  }
+    Prism,
+  },
 };
 </script>
 
