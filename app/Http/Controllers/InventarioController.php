@@ -231,6 +231,13 @@ class InventarioController extends ApiController
         if ($request->tipo_articulo['value'] != 2) {
             if (trim($request->codigo_barras) == '') {
                 return $this->errorResponse('Ingrese un código de barras.', 409);
+            } else {
+                /**revisando que el codigo de barras tenga al menos 6 caracteres para que no vaya chocar con los ids de los articulos
+                 * que lo usaran como clave alterna
+                 */
+                if (strlen($request->codigo_barras) < 7) {
+                    return $this->errorResponse('El código de barras debe ser al menos 7 caracteres.', 409);
+                }
             }
             /**codigo de barras requerido */
             /**revisando si existe el codigo de berras */
