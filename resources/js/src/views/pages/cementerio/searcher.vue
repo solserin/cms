@@ -1,27 +1,22 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups normal-forms inline-header-forms searcher_terrenos"
+      class="forms-popup"
       fullscreen
       title="Catálogo de Terrenos Vendidos"
       :active.sync="showVentana"
       ref="buscador_terrenos"
     >
-      <div class="flex flex-wrap my-2">
-        <div
-          class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
+      <div class="w-full text-right">
+        <vs-button
+          class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+          color="primary"
+          @click="verFormularioVentas = true"
         >
-          <vs-button
-            color="success"
-            size="small"
-            class="w-full ml-auto"
-            @click="verFormularioVentas = true"
-          >
-            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Vender Propiedad</span>
-          </vs-button>
-        </div>
+          <span>Vender Propiedad</span>
+        </vs-button>
       </div>
+
       <!--inicio de buscador-->
       <div class="py-3">
         <vx-card

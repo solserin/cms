@@ -374,13 +374,9 @@ $theme-dark-shadow-color: #0c112e;
         Z-INDEX
 =========================================================*/
 
-@for $index from 1 to 10 {
+@for $index from 1 to 100 {
     /*solo se necesitan 20 indexes hasta el momento*/
-
-    .z-index-#{$index} {
-        z-index: #{map-get($primary_map, #{$index})};
-    }
     .z-index#{$index} {
-        z-index: #{map-get($primary_map, #{$index})};
+        z-index: #{($index * 1000)} !important;
     }
 }

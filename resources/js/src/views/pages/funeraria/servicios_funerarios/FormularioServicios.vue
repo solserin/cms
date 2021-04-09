@@ -1,5 +1,5 @@
 <template>
-  <div class="centerx">
+  <div>
     <vs-popup
       class="forms-popup bg-content-theme"
       fullscreen
@@ -2445,6 +2445,18 @@
                   <div class="flex flex-wrap"></div>
                 </div>
               </div>
+
+              <vs-button
+                size="small"
+                color="success"
+                @click="openBuscadorArticulos = true"
+              >
+                <img
+                  class="cursor-pointer img-btn"
+                  src="@assets/images/boxes.svg"
+                />
+                <span class="texto-btn">Artículos / Servicios</span>
+              </vs-button>
 
               <!--Fin Conceptos-->
             </div>

@@ -1,7 +1,7 @@
 <template >
-  <div class="centerx">
+  <div class="">
     <vs-popup
-      class="forms-popups normal-forms inline-header-forms searcher_terrenos"
+      class="forms-popup"
       fullscreen
       title="Catálogo de Artículos y Servicios por Lote"
       :active.sync="showVentana"
