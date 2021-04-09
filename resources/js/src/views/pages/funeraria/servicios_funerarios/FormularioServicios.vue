@@ -1006,7 +1006,7 @@
                       <!--cementerio Aeternus-->
                       <div class="w-full" v-if="fueCancelada">
                         <div
-                          class="theme-background text-center py-2 px-2 size-base border-gray-solid-1"
+                          class="theme-background text-center mt-3 py-2 px-2 size-base border-gray-solid-1"
                         >
                           <div class="flex flex-wrap">
                             <div class="w-full lg:w-10/12 py-1 px-2">
@@ -1037,7 +1037,7 @@
                         "
                       >
                         <div
-                          class="bg-danger-50 text-center py-2 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                          class="bg-danger-50 text-center py-2 mt-3 size-base border-danger-solid-1 cursor-pointer color-danger-900"
                           @click="openBuscadorTerreno = true"
                         >
                           Seleccione la propiedad
@@ -1045,7 +1045,7 @@
                       </div>
                       <div class="w-full" v-else>
                         <div
-                          class="bg-success-50 py-2 size-base border-success-solid-2 uppercase"
+                          class="bg-success-50 py-2 mt-3 size-base border-success-solid-2 uppercase"
                         >
                           <div class="flex flex-wrap">
                             <div class="w-full lg:w-10/12 py-1 px-2">
