@@ -124,7 +124,11 @@
                     data-vv-as=" "
                     type="text"
                     class="w-full"
-                    placeholder="Ej. 495394038130"
+                    :placeholder="
+                      form.tipo_articulo.value == 1
+                        ? 'Ej. 495394038130'
+                        : 'Se crea Automáticamente'
+                    "
                     v-model="form.codigo_barras"
                     maxlength="25"
                     ref="codigo_barras"
@@ -500,6 +504,7 @@ export default {
       if (newValue.value != "") {
         if (newValue.value != 1) {
           this.form.opcion_caducidad = { value: 0, label: "NO" };
+          this.form.codigo_barras = "No aplica";
         }
         if (newValue.value == 2) {
           /**servicio */
