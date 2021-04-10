@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="forms-popup"
+      :class="['forms-popup', z_index]"
       fullscreen
       close="cancelar"
       :title="
@@ -161,7 +161,7 @@
                       class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
                     >
                       <div class="flex flex-wrap">
-                        <div class="w-full lg:w-10/12 py-1">
+                        <div class="w-full lg:w-9/12 py-1">
                           <span class="font-medium"> Clave: </span>
                           {{ form.id_cliente }},
                           <span class="font-medium"> Nombre: </span>
@@ -169,7 +169,7 @@
                           <span class="font-medium"> Dirección: </span>
                           {{ form.direccion_cliente }}
                         </div>
-                        <div class="w-full lg:w-2/12 text-center py-1">
+                        <div class="w-full lg:w-3/12 text-center py-1">
                           <span
                             @click="quitarCliente()"
                             class="color-danger-900 cursor-pointer"
@@ -788,6 +788,7 @@
     ></ConfirmarAceptar>
 
     <ClientesBuscador
+      :z_index="'z-index55k'"
       :show="openBuscador"
       @closeBuscador="openBuscador = false"
       @retornoCliente="clienteSeleccionado"
@@ -834,6 +835,11 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {

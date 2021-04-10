@@ -1,7 +1,7 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="forms-popup"
+      :class="['forms-popup', z_index]"
       fullscreen
       close="cancelar"
       :title="
@@ -928,6 +928,7 @@
 
     <ClientesBuscador
       :show="openBuscador"
+      :z_index="'z-index58k'"
       @closeBuscador="openBuscador = false"
       @retornoCliente="clienteSeleccionado"
     ></ClientesBuscador>
@@ -976,6 +977,11 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {

@@ -1,144 +1,76 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="searcher_clientes forms-popups normal-forms inline-header-forms"
-      fullscreen
+      :class="['forms-popup popup-85', z_index]"
       title="Catálogo de clientes registrados"
       :active.sync="showVentana"
       ref="buscador_cliente"
     >
-      <div class="flex flex-wrap my-2">
-        <div
-          class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
+      <div class="w-full text-right">
+        <vs-button
+          class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+          color="primary"
+          @click="verFormularioClientes = true"
         >
-          <vs-button
-            color="success"
-            size="small"
-            class="w-full ml-auto"
-            @click="verFormularioClientes = true"
-          >
-            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Registrar Cliente</span>
-          </vs-button>
-        </div>
+          <span>Registrar Cliente</span>
+        </vs-button>
       </div>
-      <!--inicio de buscador-->
-      <div class="py-3">
+
+      <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
         <vx-card
           no-radius
           title="Filtros de selección"
           refresh-content-action
           @refresh="reset"
+          :collapse-action="false"
         >
-          <template slot="no-body">
-            <div>
-              <div class="flex flex-wrap px-4 py-4">
-                <div
-                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold">Nombre</label>
-                  <vs-input
-                    ref="nombre_cliente"
-                    name="nombre_cliente"
-                    data-vv-as=" "
-                    type="text"
-                    class="w-full pb-1 pt-1"
-                    placeholder="Ej. Juan Pérez"
-                    maxlength="12"
-                    v-model.trim="serverOptions.cliente"
-                    v-on:keyup.enter="get_data('cliente', 1)"
-                    v-on:blur="get_data('cliente', 1, 'blur')"
-                  />
-                  <div>
-                    <span class="text-danger text-sm">{{
-                      errors.first("nombre_cliente")
-                    }}</span>
-                  </div>
-                  <div class="mt-2"></div>
-                </div>
-                <div
-                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Núm. Cliente</label
-                  >
-                  <vs-input
-                    name="num_cliente"
-                    data-vv-as=" "
-                    type="text"
-                    class="w-full pb-1 pt-1"
-                    placeholder="Ej. 1258"
-                    maxlength="6"
-                    v-model.trim="serverOptions.id_cliente"
-                    v-on:keyup.enter="get_data('id_cliente', 1)"
-                    v-on:blur="get_data('id_cliente', 1, 'blur')"
-                  />
-                  <div>
-                    <span class="text-danger text-sm">{{
-                      errors.first("num_cliente")
-                    }}</span>
-                  </div>
-                  <div class="mt-2"></div>
-                </div>
-                <div
-                  class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 hidden"
-                >
-                  <label class="text-sm opacity-75 font-bold">RFC</label>
-                  <vs-input
-                    name="rfc"
-                    data-vv-as=" "
-                    type="text"
-                    class="w-full pb-1 pt-1"
-                    placeholder="ej. DIS961210RG9"
-                    maxlength="13"
-                    v-model.trim="serverOptions.rfc"
-                    v-on:keyup.enter="get_data('rfc', 1)"
-                    v-on:blur="get_data('rfc', 1, 'blur')"
-                  />
-                  <div>
-                    <span class="text-danger text-sm">{{
-                      errors.first("rfc")
-                    }}</span>
-                  </div>
-                  <div class="mt-2"></div>
-                </div>
-
-                <div
-                  class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2"
-                  style="z-index: 52002 !important"
-                >
-                  <label class="text-sm opacity-75 font-bold">
-                    <span>Nacionalidad</span>
-                  </label>
-                  <v-select
-                    :options="nacionalidades"
-                    :clearable="false"
-                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                    v-model="serverOptions.nacionalidad"
-                    class="pb-1 pt-1"
-                    name="nacionalidad"
-                    data-vv-as=" "
-                  >
-                    <div slot="no-options">Seleccione una opción</div>
-                  </v-select>
-                  <div>
-                    <span class="text-danger text-sm">{{
-                      errors.first("nacionalidad")
-                    }}</span>
-                  </div>
-                  <div class="mt-2"></div>
-                </div>
-              </div>
+          <div class="flex flex-wrap pb-6">
+            <div class="w-full input-text xl:w-3/12 px-2">
+              <label>Núm. Cliente</label>
+              <vs-input
+                name="num_cliente"
+                data-vv-as=" "
+                type="text"
+                class="w-full"
+                placeholder="Ej. 1258"
+                maxlength="6"
+                v-model.trim="serverOptions.id_cliente"
+                v-on:keyup.enter="get_data('id_cliente', 1)"
+                v-on:blur="get_data('id_cliente', 1, 'blur')"
+              />
+              <span class="">{{ errors.first("num_cliente") }}</span>
             </div>
-          </template>
+
+            <div class="w-full input-text xl:w-9/12 px-2">
+              <label>Nombre</label>
+              <vs-input
+                ref="nombre_cliente"
+                name="nombre_cliente"
+                data-vv-as=" "
+                type="text"
+                class="w-full"
+                placeholder="Ej. Juan Pérez"
+                maxlength="12"
+                v-model.trim="serverOptions.cliente"
+                v-on:keyup.enter="get_data('cliente', 1)"
+                v-on:blur="get_data('cliente', 1, 'blur')"
+              />
+              <span class="">{{ errors.first("nombre_cliente") }}</span>
+            </div>
+          </div>
         </vx-card>
-        <div class="resultados_clientes mt-10">
+      </div>
+
+      <!--inicio de buscador-->
+      <div class="py-6">
+        <div class="resultados_clientes py-6">
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page.value"
             :data="clientes"
             stripe
             noDataText="0 Resultados"
+            class="tabla-datos"
           >
             <template slot="header">
               <h3>Lista actualizada de clientes registrados</h3>
@@ -148,7 +80,7 @@
               <vs-th>Nombre</vs-th>
               <vs-th>Domicilio</vs-th>
               <vs-th>Celular</vs-th>
-              <vs-th>Nacionalidad</vs-th>
+
               <vs-th>Seleccionar</vs-th>
             </template>
             <template slot-scope="{ data }">
@@ -166,22 +98,20 @@
                   <span class="font-medium">{{ data[indextr].celular }}</span>
                 </vs-td>
 
-                <vs-td :data="data[indextr].nacionalidad['id']">{{
-                  data[indextr].nacionalidad["nacionalidad"]
-                }}</vs-td>
                 <vs-td :data="data[indextr].id_user">
-                  <img
-                    width="25"
-                    class="cursor-pointer"
-                    src="@assets/images/checked.svg"
-                    @click="
-                      retornarSeleccion(
-                        data[indextr].nombre,
-                        data[indextr].id,
-                        data[indextr]
-                      )
-                    "
-                  />
+                  <div class="flex justify-center">
+                    <img
+                      class="cursor-pointer img-btn-20 mx-3"
+                      src="@assets/images/checked.svg"
+                      @click="
+                        retornarSeleccion(
+                          data[indextr].nombre,
+                          data[indextr].id,
+                          data[indextr]
+                        )
+                      "
+                    />
+                  </div>
                 </vs-td>
               </vs-tr>
             </template>
@@ -191,13 +121,14 @@
               v-if="verPaginado"
               :total="this.total"
               v-model="actual"
-              class="mt-3"
+              class="mt-6"
             ></vs-pagination>
           </div>
         </div>
       </div>
       <FormularioClientes
         :tipo="'agregar'"
+        :z_index="'z-index58k'"
         :show="verFormularioClientes"
         @closeVentana="verFormularioClientes = false"
         @retornar_id="retorno_id"
@@ -223,6 +154,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {

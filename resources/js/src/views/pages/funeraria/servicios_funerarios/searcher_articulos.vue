@@ -1,8 +1,7 @@
 <template >
-  <div class="">
+  <div>
     <vs-popup
-      class="forms-popup"
-      fullscreen
+      :class="['forms-popup popup-85', z_index]"
       title="Catálogo de Artículos y Servicios por Lote"
       :active.sync="showVentana"
       ref="buscador_lotes"
@@ -17,93 +16,55 @@
         >
           <template slot="no-body">
             <div>
-              <div class="flex flex-wrap px-4 py-4">
-                <div
-                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Cód. Barras</label
-                  >
-                  <vs-input
-                    name="numero_control"
-                    data-vv-as=" "
-                    type="text"
-                    class="w-full pb-1 pt-1"
-                    placeholder="Ej. 000000001"
-                    maxlength="15"
-                    v-model.trim="serverOptions.numero_control"
-                    v-on:keyup.enter="get_data('numero_control', 1)"
-                    v-on:blur="get_data('numero_control', 1, 'blur')"
-                  />
-                  <div>
-                    <span class="text-danger text-sm">{{
-                      errors.first("numero_control")
-                    }}</span>
-                  </div>
-                  <div class="mt-2"></div>
-                </div>
-
-                <div
-                  class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold">
-                    <span>Categorías</span>
-                    <span class="texto-importante">(*)</span>
+              <div class="flex flex-wrap px-4 py-6">
+                <div class="w-full xl:w-5/12 px-2 input-text">
+                  <label>
+                    Categorías
+                    <span>(*)</span>
                   </label>
                   <v-select
                     :options="categorias"
                     :clearable="false"
                     :dir="$vs.rtl ? 'rtl' : 'ltr'"
                     v-model="serverOptions.categoria"
-                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    class="w-full"
                     name="categoria"
                     data-vv-as=" "
                   >
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
-                  <div>
-                    <span class="text-danger">{{
-                      errors.first("categoria")
-                    }}</span>
-                  </div>
+
+                  <span>{{ errors.first("categoria") }}</span>
                 </div>
 
-                <div
-                  class="w-full sm:w-12/12 md:w-5/12 lg:w-5/12 xl:w-5/12 px-2"
-                >
-                  <label class="text-sm opacity-75 font-bold"
-                    >Descripción</label
-                  >
+                <div class="w-full xl:w-7/12 px-2 input-text">
+                  <label>Descripción</label>
                   <vs-input
                     ref="descripcion"
                     name="descripcion"
                     data-vv-as=" "
                     type="text"
-                    class="w-full pb-1 pt-1"
+                    class="w-full"
                     placeholder="Ej. Ataúd de Madera"
                     maxlength="12"
                     v-model.trim="serverOptions.descripcion"
                     v-on:keyup.enter="get_data('descripcion', 1)"
                     v-on:blur="get_data('descripcion', 1, 'blur')"
                   />
-                  <div>
-                    <span class="text-danger text-sm">{{
-                      errors.first("descripcion")
-                    }}</span>
-                  </div>
-                  <div class="mt-2"></div>
+                  <span>{{ errors.first("descripcion") }}</span>
                 </div>
               </div>
             </div>
           </template>
         </vx-card>
-        <div class="mt-10">
+        <div class="py-6">
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
             :data="lotes"
             stripe
             noDataText="0 Resultados"
+            class="tabla-datos"
           >
             <template slot="header">
               <h3>Lista de Artículos y Servicios por Lotes</h3>
@@ -121,9 +82,7 @@
             <template slot-scope="{ data }">
               <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
                 <vs-td :data="data[indextr].codigo_barras">
-                  <span class="font-semibold">{{
-                    data[indextr].codigo_barras
-                  }}</span>
+                  <span>{{ data[indextr].codigo_barras }}</span>
                 </vs-td>
                 <vs-td :data="data[indextr].tipo">{{
                   data[indextr].tipo
@@ -147,8 +106,7 @@
                 }}</vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
-                    width="25"
-                    class="cursor-pointer"
+                    class="cursor-pointer img-btn-20 mx-3"
                     src="@assets/images/checked.svg"
                     @click="retornarSeleccion(data[indextr])"
                   />
@@ -183,6 +141,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {

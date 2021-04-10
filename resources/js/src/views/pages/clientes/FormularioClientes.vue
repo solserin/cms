@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup popup-85"
+      :class="['forms-popup', 'popup-85', z_index]"
       fullscreen
       close="cancelar"
       :title="title"
@@ -453,6 +453,11 @@ export default {
       required: false,
       default: 0,
     },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
+    },
   },
   watch: {
     show: function (newValue, oldValue) {
@@ -742,7 +747,7 @@ export default {
               icon: "icon-alert-circle",
               color: "success",
               time: 8000,
-                position: "bottom-right",
+              position: "bottom-right",
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -754,7 +759,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               time: 8000,
-                position: "bottom-right",
+              position: "bottom-right",
             });
           }
           this.$vs.loading.close();
@@ -771,7 +776,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "warning",
                 time: 8000,
-                  position: "bottom-right",
+                position: "bottom-right",
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -783,7 +788,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "danger",
                 time: 8000,
-                  position: "bottom-right",
+                position: "bottom-right",
               });
               //console.log(err.response);
             }
@@ -808,7 +813,7 @@ export default {
               icon: "icon-alert-circle",
               color: "success",
               time: 8000,
-                position: "bottom-right",
+              position: "bottom-right",
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -820,7 +825,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               time: 8000,
-                position: "bottom-right",
+              position: "bottom-right",
             });
           }
           this.$vs.loading.close();
@@ -837,7 +842,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "warning",
                 time: 8000,
-                  position: "bottom-right",
+                position: "bottom-right",
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -849,7 +854,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "danger",
                 time: 8000,
-                  position: "bottom-right",
+                position: "bottom-right",
               });
               //console.log(err.response);
             }

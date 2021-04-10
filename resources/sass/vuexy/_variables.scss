@@ -376,7 +376,7 @@ $theme-dark-shadow-color: #0c112e;
 
 @for $index from 1 to 100 {
     /*solo se necesitan 20 indexes hasta el momento*/
-    .z-index#{$index} {
+    .z-index#{$index}k {
         z-index: #{($index * 1000)} !important;
     }
 }

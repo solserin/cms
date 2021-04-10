@@ -1,8 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup"
-      fullscreen
+      :class="['forms-popup popup-85', z_index]"
       title="Catálogo de Terrenos Vendidos"
       :active.sync="showVentana"
       ref="buscador_terrenos"
@@ -28,9 +27,7 @@
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
-                <div
-                  class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2"
-                >
+                <div class="w-full xl:w-3/12 px-2">
                   <label class="text-sm opacity-75 font-bold"
                     >Núm. Convenio</label
                   >
@@ -53,9 +50,7 @@
                   <div class="mt-2"></div>
                 </div>
 
-                <div
-                  class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2"
-                >
+                <div class="w-full xl:w-9/12 px-2">
                   <label class="text-sm opacity-75 font-bold"
                     >Titular de la Propiedad</label
                   >
@@ -82,13 +77,14 @@
             </div>
           </template>
         </vx-card>
-        <div class="resultados_clientes mt-10">
+        <div class="mt-6">
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
             :data="terrenos"
             stripe
             noDataText="0 Resultados"
+            class="tabla-datos"
           >
             <template slot="header">
               <h3>Lista actualizada de clientes registrados</h3>
@@ -126,8 +122,14 @@
                   :class="
                     data[indextr].operacion_status == 0 ? 'text-danger' : ''
                   "
-                  >{{ data[indextr].numero_titulo }}</vs-td
                 >
+                  <span v-if="data[indextr].numero_titulo == ''">
+                    Pendiente
+                  </span>
+                  <span v-else>
+                    {{ data[indextr].numero_titulo }}
+                  </span>
+                </vs-td>
                 <vs-td
                   :data="data[indextr].id"
                   :class="
@@ -147,17 +149,23 @@
                     ")"
                   }}</vs-td
                 >
-                <vs-td
-                  :data="data[indextr].status_texto"
-                  :class="
-                    data[indextr].operacion_status == 0 ? 'text-danger' : ''
-                  "
-                  >{{ data[indextr].status_texto }}</vs-td
-                >
+                <vs-td :data="data[indextr].operacion_status">
+                  <p v-if="data[indextr].operacion_status == 0">
+                    {{ data[indextr].status_texto }}
+                    <span class="dot-danger"></span>
+                  </p>
+                  <p v-else-if="data[indextr].operacion_status == 1">
+                    {{ data[indextr].status_texto }}
+                    <span class="dot-warning"></span>
+                  </p>
+                  <p v-else-if="data[indextr].operacion_status == 2">
+                    {{ data[indextr].status_texto }}
+                    <span class="dot-success"></span>
+                  </p>
+                </vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
-                    width="25"
-                    class="cursor-pointer"
+                    class="cursor-pointer img-btn-20 mx-3"
                     src="@assets/images/checked.svg"
                     @click="
                       retornarSeleccion(
@@ -182,12 +190,13 @@
               v-if="verPaginado"
               :total="this.total"
               v-model="actual"
-              class="mt-3"
+              class="py-6"
             ></vs-pagination>
           </div>
         </div>
       </div>
       <FormularioVentas
+        :z_index="'z-index57k'"
         :id_venta="''"
         :tipo="'agregar'"
         :show="verFormularioVentas"
@@ -215,6 +224,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {

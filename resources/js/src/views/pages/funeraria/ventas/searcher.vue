@@ -1,83 +1,71 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups normal-forms inline-header-forms searcher_terrenos"
-      fullscreen
+      :class="['forms-popup popup-85', z_index]"
       title="Catálogo de Planes Funerarios a Futuro Vendidos"
       :active.sync="showVentana"
       ref="buscador_terrenos"
     >
-      <div class="flex flex-wrap my-2 hidden">
-        <div class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2">
-          <vs-button
-            color="success"
-            size="small"
-            class="w-full ml-auto"
-            @click="verFormularioVentas = true"
-          >
-            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Vender Propiedad</span>
-          </vs-button>
-        </div>
-      </div>
       <!--inicio de buscador-->
-      <div class="py-3">
-        <vx-card no-radius title="Filtros de selección" refresh-content-action @refresh="reset">
+      <div class="py-6">
+        <vx-card
+          no-radius
+          title="Filtros de selección"
+          refresh-content-action
+          @refresh="reset"
+        >
           <template slot="no-body">
             <div>
-              <div class="flex flex-wrap px-4 py-4">
-                <div class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Núm. Convenio</label>
+              <div class="flex flex-wrap px-4 py-6">
+                <div class="w-full input-text xl:w-3/12 px-2">
+                  <label class="">Núm. Convenio</label>
                   <vs-input
                     name="numero_control"
                     data-vv-as=" "
                     type="text"
-                    class="w-full pb-1 pt-1"
+                    class="w-full"
                     placeholder="Ej. 1258"
                     maxlength="6"
                     v-model.trim="serverOptions.numero_control"
                     v-on:keyup.enter="get_data('numero_control', 1)"
                     v-on:blur="get_data('numero_control', 1, 'blur')"
                   />
-                  <div>
-                    <span class="text-danger text-sm">{{ errors.first("numero_control") }}</span>
-                  </div>
-                  <div class="mt-2"></div>
+
+                  <span class="">{{ errors.first("numero_control") }}</span>
                 </div>
 
-                <div class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 px-2">
-                  <label class="text-sm opacity-75 font-bold">Titular del Plan Funerario</label>
+                <div class="w-full input-text xl:w-9/12 px-2">
+                  <label class="">Titular del Plan Funerario</label>
                   <vs-input
                     ref="nombre_titular"
                     name="nombre_titular"
                     data-vv-as=" "
                     type="text"
-                    class="w-full pb-1 pt-1"
+                    class="w-full"
                     placeholder="Ej. Juan Pérez"
                     maxlength="12"
                     v-model.trim="serverOptions.titular"
                     v-on:keyup.enter="get_data('titular', 1)"
                     v-on:blur="get_data('titular', 1, 'blur')"
                   />
-                  <div>
-                    <span class="text-danger text-sm">{{ errors.first("nombre_titular") }}</span>
-                  </div>
-                  <div class="mt-2"></div>
+
+                  <span class="">{{ errors.first("nombre_titular") }}</span>
                 </div>
               </div>
             </div>
           </template>
         </vx-card>
-        <div class="resultados_clientes mt-10">
+        <div class="py-6">
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
             :data="terrenos"
             stripe
             noDataText="0 Resultados"
+            class="tabla-datos"
           >
             <template slot="header">
-              <h3>Lista actualizada de clientes registrados</h3>
+              <h3>Lista de planes a futuro vendidos</h3>
             </template>
             <template slot="thead">
               <vs-th>Núm. Venta</vs-th>
@@ -92,53 +80,81 @@
                 <vs-td
                   :data="data[indextr].ventas_planes_id"
                   :class="
-                    data[indextr].operacion_status == 0 ? 'text-danger' : ''
+                    data[indextr].operacion_status == 0
+                      ? 'color-danger-900'
+                      : ''
                   "
                 >
-                  <span class="font-semibold">{{ data[indextr].ventas_planes_id }}</span>
+                  <span class="font-semibold">{{
+                    data[indextr].ventas_planes_id
+                  }}</span>
                 </vs-td>
                 <vs-td
                   :data="data[indextr].id"
                   :class="
-                    data[indextr].operacion_status == 0 ? 'text-danger' : ''
+                    data[indextr].operacion_status == 0
+                      ? 'color-danger-900'
+                      : ''
                   "
-                >{{ data[indextr].numero_convenio }}</vs-td>
+                  >{{ data[indextr].numero_convenio }}</vs-td
+                >
 
                 <vs-td
                   :data="data[indextr].id"
                   :class="
-                    data[indextr].operacion_status == 0 ? 'text-danger' : ''
+                    data[indextr].operacion_status == 0
+                      ? 'color-danger-900'
+                      : ''
                   "
-                >{{ data[indextr].nombre }}</vs-td>
+                  >{{ data[indextr].nombre }}</vs-td
+                >
                 <vs-td
                   :data="data[indextr].venta_plan"
                   :class="
-                    data[indextr].operacion_status == 0 ? 'text-danger' : ''
+                    data[indextr].operacion_status == 0
+                      ? 'color-danger-900'
+                      : ''
                   "
-                >{{ data[indextr].venta_plan.nombre_original }}</vs-td>
+                  >{{ data[indextr].venta_plan.nombre_original }}</vs-td
+                >
                 <vs-td
                   :data="data[indextr].status_texto"
                   :class="
-                    data[indextr].operacion_status == 0 ? 'text-danger' : ''
+                    data[indextr].operacion_status == 0
+                      ? 'color-danger-900'
+                      : ''
                   "
-                >{{ data[indextr].status_texto }}</vs-td>
+                >
+                  <p v-if="data[indextr].operacion_status == 0">
+                    {{ data[indextr].status_texto }}
+                    <span class="dot-danger"></span>
+                  </p>
+                  <p v-else-if="data[indextr].operacion_status == 1">
+                    {{ data[indextr].status_texto }}
+                    <span class="dot-warning"></span>
+                  </p>
+                  <p v-else-if="data[indextr].operacion_status == 2">
+                    {{ data[indextr].status_texto }}
+                    <span class="dot-success"></span>
+                  </p>
+                </vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
-                    width="25"
-                    class="cursor-pointer"
+                    class="cursor-pointer img-btn-20 mx-3"
                     src="@assets/images/checked.svg"
-                    @click="
-                      retornarSeleccion(
-                        data[indextr]
-                      )
-                    "
+                    @click="retornarSeleccion(data[indextr])"
                   />
                 </vs-td>
               </vs-tr>
             </template>
           </vs-table>
-          <div>
-            <vs-pagination v-if="verPaginado" :total="this.total" v-model="actual" class="mt-3"></vs-pagination>
+          <div class="pt-6">
+            <vs-pagination
+              v-if="verPaginado"
+              :total="this.total"
+              v-model="actual"
+              class=""
+            ></vs-pagination>
           </div>
         </div>
       </div>
@@ -170,6 +186,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {

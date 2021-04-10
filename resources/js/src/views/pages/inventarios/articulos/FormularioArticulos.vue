@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup popup-50"
+      :class="['forms-popup popup-50', z_index]"
       close="cancelar"
       :title="title"
       :active.sync="showVentana"
@@ -447,6 +447,11 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {

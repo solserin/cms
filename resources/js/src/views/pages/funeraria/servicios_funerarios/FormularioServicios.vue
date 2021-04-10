@@ -1,7 +1,7 @@
 <template>
   <div>
     <vs-popup
-      class="forms-popup bg-content-theme"
+      :class="['forms-popup bg-content-theme', z_index]"
       fullscreen
       close="cancelar"
       :title="
@@ -2489,23 +2489,27 @@
     ></ConfirmarAceptar>
 
     <ClientesBuscador
+      :z_index="'z-index55k'"
       :show="openBuscador"
       @closeBuscador="openBuscador = false"
       @retornoCliente="clienteSeleccionado"
     ></ClientesBuscador>
 
     <TerrenosBuscador
+      :z_index="'z-index55k'"
       :show="openBuscadorTerreno"
       @closeBuscador="openBuscadorTerreno = false"
       @retornoTerreno="TerrenoSeleccionado"
     ></TerrenosBuscador>
 
     <PlanesBuscador
+      :z_index="'z-index55k'"
       :show="openBuscadorPlan"
       @closeBuscador="openBuscadorPlan = false"
       @retornoPlan="PlanSeleccionado"
     ></PlanesBuscador>
     <ArticulosBuscador
+      :z_index="'z-index56k'"
       :show="openBuscadorArticulos"
       @closeBuscador="openBuscadorArticulos = false"
       @LoteSeleccionado="LoteSeleccionado"
@@ -2564,6 +2568,11 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {
