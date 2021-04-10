@@ -1,7 +1,7 @@
 <template >
   <div>
     <vs-popup
-      :class="['forms-popup popup-85', z_index]"
+      :class="['forms-popup popup-90', z_index]"
       title="Catálogo de Artículos y Servicios por Lote"
       :active.sync="showVentana"
       ref="buscador_lotes"
@@ -74,7 +74,7 @@
               <vs-th>Tipo</vs-th>
               <vs-th>Categoría</vs-th>
               <vs-th>Descripción</vs-th>
-              <vs-th>Lote</vs-th>
+
               <vs-th>$ Costo</vs-th>
               <vs-th>Existencia</vs-th>
               <vs-th>Seleccionar</vs-th>
@@ -84,9 +84,9 @@
                 <vs-td :data="data[indextr].codigo_barras">
                   <span>{{ data[indextr].codigo_barras }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].tipo">{{
-                  data[indextr].tipo
-                }}</vs-td>
+                <vs-td :data="data[indextr].tipo">
+                  {{ data[indextr].tipo }}
+                </vs-td>
 
                 <vs-td :data="data[indextr].categoria">{{
                   data[indextr].categoria
@@ -94,16 +94,20 @@
                 <vs-td :data="data[indextr].descripcion">{{
                   data[indextr].descripcion
                 }}</vs-td>
-                <vs-td :data="data[indextr].lote">{{
-                  data[indextr].num_lote_inventario
-                }}</vs-td>
                 <vs-td :data="data[indextr].costo_neto_normal">
                   $
                   {{ data[indextr].costo_neto_normal | numFormat("0,000.00") }}
                 </vs-td>
-                <vs-td :data="data[indextr].existencia">{{
-                  data[indextr].existencia
-                }}</vs-td>
+                <vs-td :data="data[indextr].existencia">
+                  <p v-if="data[indextr].existencia > 0">
+                    {{ data[indextr].existencia }}
+                    <span class="dot-success"></span>
+                  </p>
+                  <p v-else>
+                    {{ data[indextr].existencia }}
+                    <span class="dot-danger"></span>
+                  </p>
+                </vs-td>
                 <vs-td :data="data[indextr].id">
                   <img
                     class="cursor-pointer img-btn-20 mx-3"
@@ -189,8 +193,8 @@ export default {
               tipo: "Servicio",
               categoria: articulo.categoria.categoria,
               descripcion: articulo.descripcion,
-              lote: "N/A",
-              num_lote_inventario: "N/A",
+              //lote: "N/A",
+              //num_lote_inventario: "N/A",
               cantidad: 1,
               costo_neto_normal: articulo.precio_venta,
               descuento_b: 0,
@@ -203,27 +207,27 @@ export default {
           } else if (articulo.tipo_articulos_id == 1) {
             /**es de tipo articulo */
             /**checando que haya existencia para poder mostrarlo */
-            if (articulo.inventario.length > 0) {
-              articulo.inventario.forEach((lote) => {
-                this.lotes.push({
-                  id: articulo.id,
-                  codigo_barras: articulo.codigo_barras,
-                  tipo: "Artículo",
-                  categoria: articulo.categoria.categoria,
-                  descripcion: articulo.descripcion,
-                  lote: lote.lotes_id,
-                  num_lote_inventario: lote.num_lote_inventario,
-                  cantidad: 1,
-                  costo_neto_normal: articulo.precio_venta,
-                  descuento_b: 0,
-                  costo_neto_descuento: 0,
-                  importe: 0,
-                  facturable_b: articulo.grava_iva_b,
-                  existencia: lote.existencia,
-                  plan_b: 0,
-                });
-              });
-            }
+            //if (articulo.inventario.length > 0) {
+            // articulo.inventario.forEach((lote) => {
+            this.lotes.push({
+              id: articulo.id,
+              codigo_barras: articulo.codigo_barras,
+              tipo: "Artículo",
+              categoria: articulo.categoria.categoria,
+              descripcion: articulo.descripcion,
+              //lote: lote.lotes_id,
+              //num_lote_inventario: lote.num_lote_inventario,
+              cantidad: 1,
+              costo_neto_normal: articulo.precio_venta,
+              descuento_b: 0,
+              costo_neto_descuento: 0,
+              importe: 0,
+              facturable_b: articulo.grava_iva_b,
+              existencia: articulo.existencia,
+              plan_b: 0,
+            });
+            //});
+            //}
           }
         });
       }

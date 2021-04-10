@@ -1528,7 +1528,7 @@
                             v-for="(tr, indextr) in data"
                           >
                             <vs-td class="w-4/12">
-                              <div class="capitalize">{{ tr.descripcion }}</div>
+                              <div>{{ tr.descripcion }}</div>
                             </vs-td>
                             <vs-td class="w-4/12">
                               <vs-input
@@ -1762,26 +1762,23 @@
                                     v-show="tr.status_b == 1"
                                   >
                                     <vs-td>
-                                      <div
-                                        class="capitalize"
-                                        v-if="get_id_solicitud == tr.id"
-                                      >
+                                      <div v-if="get_id_solicitud == tr.id">
                                         {{
                                           tr.nombre_afectado +
                                           " (Finado de este contrato)"
                                         }}
                                       </div>
-                                      <div class="capitalize" v-else>
+                                      <div v-else>
                                         {{ tr.nombre_afectado }}
                                       </div>
                                     </vs-td>
                                     <vs-td>
-                                      <div class="capitalize">
+                                      <div>
                                         {{ tr.operacion.cliente.nombre }}
                                       </div>
                                     </vs-td>
                                     <vs-td>
-                                      <div class="capitalize">
+                                      <div>
                                         {{ tr.operacion.fecha_operacion_texto }}
                                       </div>
                                     </vs-td>
@@ -1866,26 +1863,23 @@
                                 v-show="tr.status_b == 1"
                               >
                                 <vs-td>
-                                  <div
-                                    class="capitalize"
-                                    v-if="get_id_solicitud == tr.id"
-                                  >
+                                  <div v-if="get_id_solicitud == tr.id">
                                     {{
                                       tr.nombre_afectado +
                                       " (Finado de este contrato)"
                                     }}
                                   </div>
-                                  <div class="capitalize" v-else>
+                                  <div v-else>
                                     {{ tr.nombre_afectado }}
                                   </div>
                                 </vs-td>
                                 <vs-td>
-                                  <div class="capitalize">
+                                  <div>
                                     {{ tr.operacion.cliente.nombre }}
                                   </div>
                                 </vs-td>
                                 <vs-td>
-                                  <div class="capitalize">
+                                  <div>
                                     {{ tr.operacion.fecha_operacion_texto }}
                                   </div>
                                 </vs-td>
@@ -2255,13 +2249,13 @@
                               :key="indextr"
                               v-for="(tr, indextr) in data"
                             >
-                              <vs-td class="">
-                                <div class="capitalize">
+                              <vs-td>
+                                <div>
                                   {{ tr.concepto }}
                                 </div>
                               </vs-td>
-                              <vs-td class="">
-                                <div class="capitalize">{{ tr.aplicar }}</div>
+                              <vs-td>
+                                <div>{{ tr.aplicar }}</div>
                               </vs-td>
                             </vs-tr>
 
@@ -2271,9 +2265,7 @@
                               v-if="form.plan_funerario_futuro_b.value == 1"
                             >
                               <vs-td class="w-7/12">
-                                <div
-                                  class="capitalize py-1 text-right pr-4 dato_servicio"
-                                >
+                                <div class="py-1 text-right pr-4 dato_servicio">
                                   Titular del Convenio
                                 </div>
                               </vs-td>
@@ -2290,16 +2282,14 @@
                               v-if="form.plan_funerario_futuro_b.value == 1"
                             >
                               <vs-td class="w-7/12">
-                                <div
-                                  class="capitalize py-1 text-right pr-4 dato_servicio"
-                                >
+                                <div class="py-1 text-right pr-4 dato_servicio">
                                   Fecha de la Venta
                                 </div>
                               </vs-td>
                               <vs-td class="w-2/12">
                                 <div
                                   v-if="datosPlanFunerario != []"
-                                  class="capitalize dato_servicio_valor"
+                                  class="dato_servicio_valor"
                                 >
                                   {{ datosPlanFunerario.fecha_operacion_texto }}
                                 </div>
@@ -2309,16 +2299,14 @@
                               v-if="form.plan_funerario_futuro_b.value == 1"
                             >
                               <vs-td class="w-7/12">
-                                <div
-                                  class="capitalize py-1 text-right pr-4 dato_servicio"
-                                >
+                                <div class="py-1 text-right pr-4 dato_servicio">
                                   Estado del Plan
                                 </div>
                               </vs-td>
                               <vs-td class="w-2/12">
                                 <div
                                   v-if="datosPlanFunerario != []"
-                                  class="capitalize dato_servicio_valor"
+                                  class="dato_servicio_valor"
                                 >
                                   <span
                                     class="color-warning-900"
@@ -2349,16 +2337,14 @@
                               v-if="form.plan_funerario_futuro_b.value == 1"
                             >
                               <vs-td class="w-7/12">
-                                <div
-                                  class="capitalize py-1 text-right pr-4 dato_servicio"
-                                >
+                                <div class="py-1 text-right pr-4 dato_servicio">
                                   Saldo Restante
                                 </div>
                               </vs-td>
                               <vs-td class="w-2/12">
                                 <div
                                   v-if="datosPlanFunerario != []"
-                                  class="capitalize dato_servicio_valor"
+                                  class="dato_servicio_valor"
                                 >
                                   $
                                   {{
@@ -2380,16 +2366,14 @@
                               "
                             >
                               <vs-td class="w-7/12">
-                                <div
-                                  class="capitalize py-1 text-right pr-4 dato_servicio"
-                                >
+                                <div class="py-1 text-right pr-4 dato_servicio">
                                   Plan Funerario de Uso Inmediato
                                 </div>
                               </vs-td>
                               <vs-td class="w-2/12">
                                 <div
                                   v-if="datosPlanFunerario != []"
-                                  class="capitalize dato_servicio_valor"
+                                  class="dato_servicio_valor"
                                 >
                                   {{ form.plan_funerario.label }}
                                 </div>
@@ -2403,16 +2387,14 @@
                               "
                             >
                               <vs-td class="w-7/12">
-                                <div
-                                  class="capitalize py-1 text-right pr-4 dato_servicio"
-                                >
+                                <div class="py-1 text-right pr-4 dato_servicio">
                                   Total del Plan Funerario
                                 </div>
                               </vs-td>
                               <vs-td class="w-2/12">
                                 <div
                                   v-if="datosPlanFunerario != []"
-                                  class="capitalize dato_servicio_valor"
+                                  class="dato_servicio_valor"
                                 >
                                   $
                                   {{
@@ -2442,21 +2424,308 @@
                   Desglose de Artículos y Servicios a Pagar
                 </div>
                 <div class="form-group-content">
-                  <div class="flex flex-wrap"></div>
+                  <div class="flex flex-wrap">
+                    <div class="w-full xl:w-5/12 px-2 input-text">
+                      <label>Descripción</label>
+                      <vs-input
+                        ref="descripcion"
+                        name="descripcion"
+                        data-vv-as=" "
+                        type="text"
+                        class="w-full"
+                        placeholder="Ej. Ataúd de Madera"
+                        maxlength="12"
+                      />
+                      <feather-icon
+                        icon="SearchIcon"
+                        @click="openBuscadorArticulos = true"
+                        class="cursor-pointer img-btn-30 md:w-auto md:ml-2 my-2 md:mt-0"
+                        title="Buscador de artículos y servicios"
+                      />
+                    </div>
+
+                    <div class="w-full my-6">
+                      <vs-table
+                        class="tabla-datos"
+                        :data="form.articulos_servicios"
+                        noDataText="No se han agregado Artículos ni Servicios"
+                      >
+                        <template slot="header">
+                          <h3>
+                            Servicios y Artículos que Incluye el Servicio
+                            Funerario
+                          </h3>
+                        </template>
+                        <template slot="thead">
+                          <vs-th>#</vs-th>
+                          <vs-th>Tipo</vs-th>
+                          <vs-th>Descripción</vs-th>
+
+                          <vs-th>Cant.</vs-th>
+                          <vs-th>Costo Neto</vs-th>
+                          <vs-th>Descuento</vs-th>
+                          <vs-th>Costo Neto Con Descuento</vs-th>
+                          <vs-th>Importe</vs-th>
+                          <vs-th>Plan Funerario</vs-th>
+                          <vs-th>Facturable</vs-th>
+                          <vs-th>Quitar</vs-th>
+                        </template>
+                        <template slot-scope="{ data }">
+                          <vs-tr
+                            :data="tr"
+                            :key="indextr"
+                            v-for="(tr, indextr) in data"
+                          >
+                            <vs-td>
+                              <div>
+                                <span>{{ indextr + 1 }}</span>
+                              </div>
+                            </vs-td>
+                            <vs-td>
+                              <div>
+                                {{ data[indextr].tipo }}
+                              </div>
+                            </vs-td>
+                            <vs-td>
+                              <div>
+                                {{ data[indextr].descripcion }}
+                              </div>
+                            </vs-td>
+
+                            <vs-td>
+                              <vs-input
+                                :name="'cantidad_articulos_servicios' + indextr"
+                                data-vv-as=" "
+                                data-vv-validate-on="blur"
+                                v-validate="'required|integer|min_value:' + 1"
+                                class="w-full sm:w-6/12 px-2 mr-auto ml-auto cantidad"
+                                maxlength="4"
+                                v-model="
+                                  form.articulos_servicios[indextr].cantidad
+                                "
+                              />
+                              <div>
+                                <span>
+                                  {{
+                                    errors.first(
+                                      "cantidad_articulos_servicios" + indextr
+                                    )
+                                  }}
+                                </span>
+                              </div>
+                            </vs-td>
+                            <vs-td
+                              v-if="
+                                habilitar_plan_funerario_b == false ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 1 &&
+                                  form.articulos_servicios[indextr].plan_b ==
+                                    0) ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 0 &&
+                                  form.plan_funerario_inmediato_b.value == 1)
+                              "
+                            >
+                              <vs-input
+                                :name="
+                                  'costo_neto_normal_articulos_servicios' +
+                                  indextr
+                                "
+                                data-vv-as=" "
+                                data-vv-validate-on="blur"
+                                v-validate="'required|decimal:2|min_value:' + 0"
+                                class="w-full sm:w-6/12 px-2 mr-auto ml-auto cantidad"
+                                maxlength="10"
+                                v-model="
+                                  form.articulos_servicios[indextr]
+                                    .costo_neto_normal
+                                "
+                                :disabled="
+                                  form.articulos_servicios[indextr]
+                                    .descuento_b == 1
+                                "
+                              />
+                              <div>
+                                <span>
+                                  {{
+                                    errors.first(
+                                      "costo_neto_normal_articulos_servicios" +
+                                        indextr
+                                    )
+                                  }}
+                                </span>
+                              </div>
+                            </vs-td>
+                            <vs-td v-else>
+                              <div>$ 0.00</div>
+                            </vs-td>
+                            <vs-td
+                              v-if="
+                                habilitar_plan_funerario_b == false ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 1 &&
+                                  form.articulos_servicios[indextr].plan_b ==
+                                    0) ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 0 &&
+                                  form.plan_funerario_inmediato_b.value == 1)
+                              "
+                            >
+                              <vs-switch
+                                class="ml-auto mr-auto"
+                                color="success"
+                                icon-pack="feather"
+                                v-model="
+                                  form.articulos_servicios[indextr].descuento_b
+                                "
+                              >
+                                <span slot="on">SI</span>
+                                <span slot="off">NO</span>
+                              </vs-switch>
+                            </vs-td>
+                            <vs-td v-else>
+                              <div>N/A</div>
+                            </vs-td>
+                            <vs-td
+                              v-if="
+                                habilitar_plan_funerario_b == false ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 1 &&
+                                  form.articulos_servicios[indextr].plan_b ==
+                                    0) ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 0 &&
+                                  form.plan_funerario_inmediato_b.value == 1)
+                              "
+                            >
+                              <vs-input
+                                :name="
+                                  'costo_neto_descuento_articulos_servicios' +
+                                  indextr
+                                "
+                                data-vv-as=" "
+                                data-vv-validate-on="blur"
+                                v-validate="
+                                  'required|decimal:2|min_value:' +
+                                  0 +
+                                  '|max_value:' +
+                                  form.articulos_servicios[indextr]
+                                    .costo_neto_normal
+                                "
+                                class="w-full sm:w-6/12 px-2 mr-auto ml-auto cantidad"
+                                maxlength="10"
+                                v-model="
+                                  form.articulos_servicios[indextr]
+                                    .costo_neto_descuento
+                                "
+                                :disabled="
+                                  form.articulos_servicios[indextr]
+                                    .descuento_b == 0
+                                "
+                              />
+                              <div>
+                                <span>
+                                  {{
+                                    errors.first(
+                                      "costo_neto_descuento_articulos_servicios" +
+                                        indextr
+                                    )
+                                  }}
+                                </span>
+                              </div>
+                            </vs-td>
+                            <vs-td v-else>
+                              <div>N/A</div>
+                            </vs-td>
+                            <vs-td
+                              v-if="
+                                habilitar_plan_funerario_b == false ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 1 &&
+                                  form.articulos_servicios[indextr].plan_b ==
+                                    0) ||
+                                (habilitar_plan_funerario_b == true &&
+                                  form.plan_funerario_futuro_b.value == 0 &&
+                                  form.plan_funerario_inmediato_b.value == 1)
+                              "
+                            >
+                              <div
+                                v-if="
+                                  form.articulos_servicios[indextr]
+                                    .descuento_b == 1
+                                "
+                              >
+                                $
+                                {{
+                                  (form.articulos_servicios[indextr]
+                                    .costo_neto_descuento *
+                                    form.articulos_servicios[indextr].cantidad)
+                                    | numFormat("0,000.00")
+                                }}
+                              </div>
+                              <div v-else>
+                                $
+                                {{
+                                  (form.articulos_servicios[indextr]
+                                    .costo_neto_normal *
+                                    form.articulos_servicios[indextr].cantidad)
+                                    | numFormat("0,000.00")
+                                }}
+                              </div>
+                            </vs-td>
+                            <vs-td v-else>
+                              <div>$ 0.00</div>
+                            </vs-td>
+                            <vs-td v-if="habilitar_plan_funerario_b">
+                              <vs-switch
+                                class="ml-auto mr-auto"
+                                color="success"
+                                icon-pack="feather"
+                                v-model="
+                                  form.articulos_servicios[indextr].plan_b
+                                "
+                                :disabled="!habilitar_plan_funerario_b"
+                              >
+                                <span slot="on">SI</span>
+                                <span slot="off">NO</span>
+                              </vs-switch>
+                            </vs-td>
+                            <vs-td v-else>
+                              <div>N/A</div>
+                            </vs-td>
+                            <vs-td>
+                              <vs-switch
+                                class="ml-auto mr-auto"
+                                color="success"
+                                icon-pack="feather"
+                                v-model="
+                                  form.articulos_servicios[indextr].facturable_b
+                                "
+                              >
+                                <span slot="on">SI</span>
+                                <span slot="off">NO</span>
+                              </vs-switch>
+                            </vs-td>
+
+                            <vs-td>
+                              <div
+                                class="flex justify-center"
+                                @click="remover_articulo(indextr)"
+                                v-if="!fueCancelada"
+                              >
+                                <img
+                                  class="cursor-pointer img-btn-20 mx-3"
+                                  src="@assets/images/minus.svg"
+                                />
+                              </div>
+                            </vs-td>
+                          </vs-tr>
+                        </template>
+                      </vs-table>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <vs-button
-                size="small"
-                color="success"
-                @click="openBuscadorArticulos = true"
-              >
-                <img
-                  class="cursor-pointer img-btn"
-                  src="@assets/images/boxes.svg"
-                />
-                <span class="texto-btn">Artículos / Servicios</span>
-              </vs-button>
 
               <!--Fin Conceptos-->
             </div>
@@ -3811,8 +4080,8 @@ export default {
                     tipo: articulo.tipo,
                     categoria: articulo.categoria,
                     descripcion: articulo.descripcion,
-                    lote: articulo.lotes_id,
-                    num_lote_inventario: articulo.num_lote_inventario,
+                    // lote: articulo.lotes_id,
+                    //num_lote_inventario: articulo.num_lote_inventario,
                     cantidad: articulo.cantidad,
                     costo_neto_normal: articulo.costo_neto_normal,
                     descuento_b: articulo.descuento_b,

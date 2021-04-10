@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
+Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -189,7 +190,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
     Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
-    Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
+
     Route::get('inventario/get_inventario_conteo_pdf', 'InventarioController@get_inventario_conteo_pdf');
     Route::get('inventario/get_pdf_etiquetas', 'InventarioController@get_pdf_etiquetas');
 
