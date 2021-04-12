@@ -2425,26 +2425,31 @@
                 </div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
-                    <div class="w-full xl:w-5/12 px-2 input-text">
-                      <label>Descripción</label>
+                    <img
+                      class="img-btn-20 mx-3 mt-4"
+                      src="@assets/images/barcode.svg"
+                    />
+                    <div class="w-auto px-2 input-text">
+                      <label>Clave o código de barras</label>
                       <vs-input
-                        ref="descripcion"
-                        name="descripcion"
+                        ref="codigo_barras"
+                        name="codigo_barras"
                         data-vv-as=" "
                         type="text"
                         class="w-full"
-                        placeholder="Ej. Ataúd de Madera"
-                        maxlength="12"
-                      />
-                      <feather-icon
-                        icon="SearchIcon"
-                        @click="openBuscadorArticulos = true"
-                        class="cursor-pointer img-btn-30 md:w-auto md:ml-2 my-2 md:mt-0"
-                        title="Buscador de artículos y servicios"
+                        placeholder="Ej. 0000000123"
+                        maxlength="28"
                       />
                     </div>
 
-                    <div class="w-full my-6">
+                    <img
+                      class="cursor-pointer img-btn-20 mx-3 mt-4"
+                      src="@assets/images/searcharticulo.svg"
+                      title="Buscador de artículos y servicios"
+                      @click="openBuscadorArticulos = true"
+                    />
+
+                    <div class="w-full my-6 px-2">
                       <vs-table
                         class="tabla-datos"
                         :data="form.articulos_servicios"
@@ -2458,9 +2463,10 @@
                         </template>
                         <template slot="thead">
                           <vs-th>#</vs-th>
+                          <vs-th>Clave</vs-th>
+                          <vs-th>Código de Barras</vs-th>
                           <vs-th>Tipo</vs-th>
                           <vs-th>Descripción</vs-th>
-
                           <vs-th>Cant.</vs-th>
                           <vs-th>Costo Neto</vs-th>
                           <vs-th>Descuento</vs-th>
@@ -2479,6 +2485,16 @@
                             <vs-td>
                               <div>
                                 <span>{{ indextr + 1 }}</span>
+                              </div>
+                            </vs-td>
+                            <vs-td>
+                              <div>
+                                <span>{{ data[indextr].id }}</span>
+                              </div>
+                            </vs-td>
+                            <vs-td>
+                              <div>
+                                <span>{{ data[indextr].codigo_barras }}</span>
                               </div>
                             </vs-td>
                             <vs-td>
@@ -2722,6 +2738,113 @@
                           </vs-tr>
                         </template>
                       </vs-table>
+                    </div>
+
+                    <div class="w-full">
+                      <div class="flex flex-wrap my-6">
+                        <div class="w-full sm:w-12/12 md:w-8/12 lg:9/12 px-2">
+                          <div class="flex flex-wrap">
+                            <div class="w-full input-text px-2">
+                              <label>Nota u Observación:</label>
+                              <vs-textarea
+                                height="240px"
+                                :rows="9"
+                                size="large"
+                                ref="nota"
+                                type="text"
+                                class="w-full"
+                                v-model.trim="form.nota"
+                              />
+                            </div>
+                          </div>
+                          <!--fin del resumen de la venta-->
+                        </div>
+                        <div class="w-full sm:w-12/12 md:w-4/12 lg:3/12 px-2">
+                          <div class="flex flex-wrap">
+                            <div class="w-full input-text px-2 text-center">
+                              <label>
+                                Tasa IVA %
+                                <span>(*)</span>
+                              </label>
+                              <vs-input
+                                :disabled="
+                                  tiene_pagos_realizados ||
+                                  ventaLiquidada ||
+                                  fueCancelada
+                                "
+                                size="large"
+                                name="tasa_iva"
+                                data-vv-as=" "
+                                v-validate="
+                                  'required|decimal:2|min_value:14|max_value:25'
+                                "
+                                type="text"
+                                class="w-full cantidad"
+                                placeholder="Porcentaje IVA"
+                                v-model="form.tasa_iva"
+                                maxlength="2"
+                              />
+                              <span class="mensaje-requerido">
+                                {{ errors.first("tasa_iva") }}
+                              </span>
+                              <span
+                                class="mensaje-requerido"
+                                v-if="this.errores.tasa_iva"
+                                >{{ errores.tasa_iva[0] }}</span
+                              >
+                            </div>
+                            <div
+                              class="w-full px-2 text-center"
+                              v-if="verTotalUsoinmediato"
+                            >
+                              <label class="h4 font-medium color-copy"
+                                >$ Total por plan de uso inmediato</label
+                              >
+                              <div class="mt-1 pb-2 text-center">
+                                <span class="h5">
+                                  $
+                                  {{
+                                    totalUsoInmediato | numFormat("0,000.00")
+                                  }}
+                                </span>
+                              </div>
+                            </div>
+                            <div class="w-full px-2 text-center mt-6">
+                              <label class="h4 font-medium color-copy"
+                                >$ Total a Pagar</label
+                              >
+                              <div class="mt-3 text-center">
+                                <span class="h5">
+                                  $
+                                  {{ totalContrato | numFormat("0,000.00") }}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div
+                              class="w-full px-2 size-base color-copy mt-6 text-center"
+                            >
+                              <span class="color-danger-900 font-medium"
+                                >Ojo:</span
+                              >
+                              Los costos de los conceptos capturados ya incluyen
+                              el IVA.
+                            </div>
+
+                            <div class="w-full input-text px-2">
+                              <vs-button
+                                v-if="!fueCancelada"
+                                class="w-full ml-auto mr-auto mt-6"
+                                @click="acceptAlert()"
+                                color="success"
+                              >
+                                <span>Guardar Contrato</span>
+                              </vs-button>
+                            </div>
+                            <!--fin de precios-->
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
