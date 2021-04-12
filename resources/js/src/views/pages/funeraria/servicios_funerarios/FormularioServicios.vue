@@ -2794,7 +2794,7 @@
                               >
                             </div>
                             <div
-                              class="w-full px-2 text-center"
+                              class="w-full px-2 text-center mt-3"
                               v-if="verTotalUsoinmediato"
                             >
                               <label class="h4 font-medium color-copy"
@@ -2809,7 +2809,7 @@
                                 </span>
                               </div>
                             </div>
-                            <div class="w-full px-2 text-center mt-6">
+                            <div class="w-full px-2 text-center mt-3">
                               <label class="h4 font-medium color-copy"
                                 >$ Total a Pagar</label
                               >
@@ -2822,7 +2822,7 @@
                             </div>
 
                             <div
-                              class="w-full px-2 size-base color-copy mt-6 text-center"
+                              class="w-full px-2 size-base color-copy mt-3 text-center"
                             >
                               <span class="color-danger-900 font-medium"
                                 >Ojo:</span
@@ -2834,7 +2834,7 @@
                             <div class="w-full input-text px-2">
                               <vs-button
                                 v-if="!fueCancelada"
-                                class="w-full ml-auto mr-auto mt-6"
+                                class="w-full ml-auto mr-auto mt-3"
                                 @click="acceptAlert()"
                                 color="success"
                               >
