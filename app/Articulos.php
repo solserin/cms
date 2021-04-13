@@ -31,6 +31,6 @@ class Articulos extends Model
     public function inventario()
     {
         return $this->hasMany('App\Inventario', 'articulos_id', 'id')->select('*')
-            ->orderBy('lotes_id', 'desc');
+            ->orderBy('lotes_id', 'asc');
     }
 }
