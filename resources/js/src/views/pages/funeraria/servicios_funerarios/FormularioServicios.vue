@@ -2859,6 +2859,7 @@
       <!--fin venta-->
     </vs-popup>
     <Password
+      :z_index="'z-index56k'"
       :show="openPassword"
       :callback-on-success="callback"
       @closeVerificar="closePassword"

@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="confirmarAceptar confirmar contrasena"
+      :class="['confirmarAceptar confirmar contrasena', z_index]"
       close="cancelar"
       title="contraseña"
       :active.sync="showChecker"
@@ -85,6 +85,11 @@ export default {
     accion: {
       type: String,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {
