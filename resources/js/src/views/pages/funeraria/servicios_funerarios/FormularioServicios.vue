@@ -2430,7 +2430,7 @@
                       src="@assets/images/barcode.svg"
                     />
                     <div
-                      class="w-auto lg:w-3/12 xl:w-2/12 px-2 input-text hidden lg:block"
+                      class="w-auto lg:w-4/12 xl:w-2/12 px-2 input-text hidden lg:block"
                     >
                       <label>Clave o código de barras</label>
                       <vs-input

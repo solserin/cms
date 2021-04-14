@@ -70,6 +70,7 @@
               <h3>Lista de Artículos y Servicios por Lotes</h3>
             </template>
             <template slot="thead">
+              <vs-th>Clave</vs-th>
               <vs-th>Cód. Barras</vs-th>
               <vs-th>Tipo</vs-th>
               <vs-th>Categoría</vs-th>
@@ -81,6 +82,9 @@
             </template>
             <template slot-scope="{ data }">
               <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+                <vs-td :data="data[indextr].id">
+                  <span>{{ data[indextr].id }}</span>
+                </vs-td>
                 <vs-td :data="data[indextr].codigo_barras">
                   <span>{{ data[indextr].codigo_barras }}</span>
                 </vs-td>
