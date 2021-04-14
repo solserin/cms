@@ -3030,80 +3030,109 @@ class FunerariaController extends ApiController
 
             $requestArticulos = $request->articulos_servicios;
 
-            if (!$operacion_existia) {
-                /**si es nueva operacion solo debo agregar el campo lote al request para que se agreguen los lotes antiguos*/
-                foreach ($requestArticulos as $index_articulo_servicio => &$articulo_servicio) {
-                    if (in_array($articulo_servicio['id'], $articulos_servicios_recorridos)) {
-                        /**me brinco al siguiente */
-                        continue;
-                    }
+            $inventario_copia_para_regresar_inventario = $inventario;
 
-                    /**buscando articulo en el inventario actual */
-                    $articulo_encontrado = false;
-                    foreach ($inventario as $articulo) {
-                        if ($articulo_servicio['id'] == $articulo['id']) {
-                            $articulo_encontrado = true;
-                            /**al ser encontrado se revisa que no sea tipo servicio para marcar asignar un lote */
-                            if ($articulo['tipo_articulos_id'] != 2) {
-                                array_push($articulos_servicios_recorridos, $articulo_servicio['id']);
-                                /**al requerir lote creamos los lotes segun su existencia en el almacen */
-                                /**revisamos que haya suficiente existencia en el inventario de este articulo */
-                                if ($articulo['existencia'] > 0 && ($articulo_servicio['cantidad'] <= $articulo['existencia'])) {
-                                    /**hay existencia */
-                                    /**hay existencia suficiente para repartir los lotes */
-                                    $cantidad_por_agregar_del_lote = $articulo_servicio['cantidad'];
-                                    $crear_row                     = false;
-                                    foreach ($articulo['inventario'] as $lote) {
-                                        if ($cantidad_por_agregar_del_lote > 0) {
-                                            if (!$crear_row) {
-                                                /**queda cantidad por crear en lotes */
-                                                if ($cantidad_por_agregar_del_lote >= $lote['existencia']) {
-                                                    $crear_row = true;
-                                                    /**al ser mayor la cantidad por agregar, metemos todo el lote en el lote a crear */
-                                                    $articulo_servicio['lote'] = $lote['lotes_id'];
-                                                    $cantidad_por_agregar_del_lote -= $lote['existencia'];
-                                                    $articulo_servicio['cantidad'] = $lote['existencia'];
-                                                } else {
-                                                    /**se agrega la cantidad al lote del row actual, pues no necesita de crear ningun nuevo row */
-                                                    $articulo_servicio['lote']     = $lote['lotes_id'];
-                                                    $articulo_servicio['cantidad'] = $cantidad_por_agregar_del_lote;
-                                                    break;
-                                                }
-                                            } else {
-                                                if ($cantidad_por_agregar_del_lote >= $lote['existencia']) {
-                                                    /**al ser mayor la cantidad por agregar, metemos todo el lote en el lote a crear */
-                                                    $cantidad_por_agregar_del_lote -= $lote['existencia'];
-                                                    $copia_row_actual             = $articulo_servicio;
-                                                    $copia_row_actual['cantidad'] = $lote['existencia'];
-                                                    $copia_row_actual['lote']     = $lote['lotes_id'];
-                                                    array_push($requestArticulos, $copia_row_actual);
-                                                } else {
-                                                    /**se agrega la cantidad al lote del row actual, pues no necesita de crear ningun nuevo row */
-                                                    $copia_row_actual             = $articulo_servicio;
-                                                    $copia_row_actual['cantidad'] = $cantidad_por_agregar_del_lote;
-                                                    $copia_row_actual['lote']     = $lote['lotes_id'];
-                                                    array_push($requestArticulos, $copia_row_actual);
-                                                    break;
-                                                }
-                                            }
+            if ($operacion_existia) {
+                /**actualizo el inventario con las cantidades que tiene este contrato para que no se afecten las cantidades */
+                /**verifico si tiene articulos */
+                if (count($requestArticulos) > 0) {
+                    foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $concepto_contrato) {
+                        /**cargando los articulos al inventario */
+                        foreach ($inventario_copia_para_regresar_inventario as &$articulo) {
+                            foreach ($articulo['inventario'] as &$lote) {
+                                /**devuelvo los conceptos al inventario */
+                                if ($concepto_contrato['articulos_id'] == $articulo['id']) {
+                                    /**al ser encontrado se revisa que no sea tipo servicio para marcar asignar un lote */
+                                    if ($articulo['tipo_articulos_id'] != 2) {
+                                        if ($lote['lotes_id'] == $concepto_contrato['lotes_id']) {
+                                            /**regreso la cantidad al inventario */
+                                            $articulo['existencia'] += $concepto_contrato['cantidad'];
+                                            $lote['existencia'] += $concepto_contrato['cantidad'];
                                         }
                                     }
-                                } else {
-                                    return $this->errorResponse('El artículo "' . $articulo_servicio['descripcion'] . '" no tiene existencia registrada en el almacén.', 409);
                                 }
-                                /**reparto la cantidad en los lotes del inventario */
                             }
                         }
                     }
-                    if (!$articulo_encontrado) {
-                        return $this->errorResponse('El artículo "' . $articulo_servicio['descripcion'] . '" no existe en la base de datos.', 409);
-                    }
                 }
-            } else {
-                /**no existia la operación */
             }
 
-            //return $this->errorResponse($requestArticulos, 409);
+            //return $this->errorResponse($inventario, 409);
+            $arreglo_de_lotes = [];
+            /**si es nueva operacion solo debo agregar el campo lote al request para que se agreguen los lotes antiguos*/
+            foreach ($requestArticulos as $index_articulo_servicio => &$articulo_servicio) {
+                /*
+                if (in_array($articulo_servicio['id'], $articulos_servicios_recorridos)) {
+                if (isset($articulo_servicio['evitar'])) {
+                //me brinco al siguiente
+                continue;
+                }
+                }
+                 */
+
+                /**buscando articulo en el inventario actual */
+                foreach ($inventario_copia_para_regresar_inventario as $articulo) {
+                    if ($articulo_servicio['id'] == $articulo['id']) {
+                        /**al ser encontrado se revisa que no sea tipo servicio para marcar asignar un lote */
+                        if ($articulo['tipo_articulos_id'] != 2) {
+                            //array_push($articulos_servicios_recorridos, $articulo_servicio['id']);
+                            /**al requerir lote creamos los lotes segun su existencia en el almacen */
+                            /**revisamos que haya suficiente existencia en el inventario de este articulo */
+                            if ($articulo['existencia'] > 0 && ($articulo_servicio['cantidad'] <= $articulo['existencia'])) {
+                                /**hay existencia */
+                                /**hay existencia suficiente para repartir los lotes */
+                                $cantidad_por_agregar_del_lote = $articulo_servicio['cantidad'];
+                                $crear_row                     = false;
+                                foreach ($articulo['inventario'] as $lote) {
+                                    if ($cantidad_por_agregar_del_lote > 0) {
+                                        if (!$crear_row) {
+                                            /**queda cantidad por crear en lotes */
+                                            if ($cantidad_por_agregar_del_lote >= $lote['existencia']) {
+                                                $crear_row = true;
+                                                /**al ser mayor la cantidad por agregar, metemos todo el lote en el lote a crear */
+                                                $articulo_servicio['lote'] = $lote['lotes_id'];
+                                                $cantidad_por_agregar_del_lote -= $lote['existencia'];
+                                                $articulo_servicio['cantidad'] = $lote['existencia'];
+                                                array_push($arreglo_de_lotes, $articulo_servicio);
+                                            } else {
+                                                /**se agrega la cantidad al lote del row actual, pues no necesita de crear ningun nuevo row */
+                                                $articulo_servicio['lote']     = $lote['lotes_id'];
+                                                $articulo_servicio['cantidad'] = $cantidad_por_agregar_del_lote;
+                                                array_push($arreglo_de_lotes, $articulo_servicio);
+                                                break;
+                                            }
+                                        } else {
+                                            if ($cantidad_por_agregar_del_lote >= $lote['existencia']) {
+                                                /**al ser mayor la cantidad por agregar, metemos todo el lote en el lote a crear */
+                                                $cantidad_por_agregar_del_lote -= $lote['existencia'];
+                                                $copia_row_actual             = $articulo_servicio;
+                                                $copia_row_actual['cantidad'] = $lote['existencia'];
+                                                $copia_row_actual['lote']     = $lote['lotes_id'];
+                                                array_push($arreglo_de_lotes, $copia_row_actual);
+                                            } else {
+                                                /**se agrega la cantidad al lote del row actual, pues no necesita de crear ningun nuevo row */
+                                                $copia_row_actual             = $articulo_servicio;
+                                                $copia_row_actual['cantidad'] = $cantidad_por_agregar_del_lote;
+                                                $copia_row_actual['lote']     = $lote['lotes_id'];
+                                                array_push($arreglo_de_lotes, $copia_row_actual);
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            } else {
+                                return $this->errorResponse('El artículo "' . $articulo_servicio['descripcion'] . '" no tiene existencia registrada en el almacén.', 409);
+                            }
+                            /**reparto la cantidad en los lotes del inventario */
+                        }
+                    }
+                }
+            }
+
+            $requestArticulos = $arreglo_de_lotes;
+            return $this->errorResponse($requestArticulos, 409);
 
             /**reinicio el arreglo */
             $articulos_servicios_recorridos = [];
@@ -3544,7 +3573,7 @@ class FunerariaController extends ApiController
 
                     /**se revisa cual articulo ya no fue incluido en la nueva peticion y se debe de aumentar esa existencia en el inventario */
                     $esta = false;
-                    foreach ($request as $index_articulo_servicio => $articulo_servicio) {
+                    foreach ($requestArticulos as $index_articulo_servicio => $articulo_servicio) {
                         if ($articulo_servicio['lote'] == $articulo_contrato['lotes_id'] && $articulo_servicio['id'] == $articulo_contrato['articulos_id']) {
                             $esta = true;
                             break;
@@ -3686,7 +3715,7 @@ class FunerariaController extends ApiController
     }
 
     /**obtiene los servicios funerarios */
-    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false, $uso_plan_funerario_futuro = 0, $uso_terreno_id = 0)
+    public function get_solicitudes_servicios(Request $request, $id_servicio = 'all', $paginated = false, $uso_plan_funerario_futuro = 0, $uso_terreno_id = 0, $unir_lotes_cantidad = 0)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
         $fallecido                = $request->fallecido;
@@ -3942,10 +3971,18 @@ class FunerariaController extends ApiController
         $articulos = Articulos::with('categoria')->with('tipo_articulo')->get();
 
         foreach ($resultado as $index_venta => &$solicitud) {
-
+            $datos                          = [];
+            $articulos_servicios_recorridos = [];
             if (isset($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
                 /**actualizo los datos del arreglo de articulos */
+
                 foreach ($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_articulo => &$articulo) {
+
+                    if (in_array($index_articulo, $articulos_servicios_recorridos)) {
+                        /**me brinco al siguiente */
+                        continue;
+                    }
+
                     foreach ($articulos as $index_inventario => $inventario) {
                         if ($articulo['articulos_id'] == $inventario['id']) {
                             $articulo['descripcion']   = $inventario['descripcion'];
@@ -4055,6 +4092,38 @@ class FunerariaController extends ApiController
                             }
                         }
                     }
+
+                    /**aqui voy */
+
+                    /**aqui reviso si el articulo está repetido, para crear una sola cantidad en vez de varios */
+                    $encontrado     = false;
+                    $cantidad_total = 0;
+                    $row_copiar     = [];
+                    foreach ($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index => $articulo_index) {
+                        if (
+                            $articulo_index['articulos_id'] == $articulo['articulos_id']
+                            && $articulo_index['articulos_id'] == $articulo['articulos_id']
+                            && $articulo_index['costo_neto_normal'] == $articulo['costo_neto_normal']
+                            && $articulo_index['costo_neto_descuento'] == $articulo['costo_neto_descuento']
+                            && $articulo_index['plan_b'] == $articulo['plan_b']
+                            && $articulo_index['descuento_b'] == $articulo['descuento_b']
+                            && $articulo_index['facturable_b'] == $articulo['facturable_b']
+                        ) {
+                            $row_copiar = $articulo;
+                            $encontrado = true;
+                            $cantidad_total += $articulo_index['cantidad'];
+                            if ($unir_lotes_cantidad) {
+                                array_push($articulos_servicios_recorridos, $index);
+                            }
+                        }
+                    }
+                    if ($encontrado) {
+                        $row_copiar['cantidad'] = $cantidad_total;
+                        array_push($datos, $row_copiar);
+                    }
+                }
+                if ($unir_lotes_cantidad) {
+                    $solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] = $datos;
                 }
             }
 

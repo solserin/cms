@@ -53,7 +53,7 @@ export default {
 
 
     get_solicitudes_servicios_id(param) {
-        return axios.get("/funeraria/get_solicitudes_servicios/" + param, {
+        return axios.get("/funeraria/get_solicitudes_servicios/" + param+'/0/0/0/1', {
             cancelToken: new CancelToken(c => {
                 self.cancel = c;
             }),
