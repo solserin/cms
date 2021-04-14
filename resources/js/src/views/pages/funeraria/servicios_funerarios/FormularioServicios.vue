@@ -4605,7 +4605,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000,
+              time: 3000,
             });
           }
         }
