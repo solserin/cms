@@ -3971,7 +3971,7 @@ class FunerariaController extends ApiController
         $articulos = Articulos::with('categoria')->with('tipo_articulo')->get();
 
         foreach ($resultado as $index_venta => &$solicitud) {
-            $datos                          = [];
+            $conceptos_resumidos                          = [];
             $articulos_servicios_recorridos = [];
             if (isset($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
                 /**actualizo los datos del arreglo de articulos */
@@ -4119,11 +4119,11 @@ class FunerariaController extends ApiController
                     }
                     if ($encontrado) {
                         $row_copiar['cantidad'] = $cantidad_total;
-                        array_push($datos, $row_copiar);
+                        array_push($conceptos_resumidos, $row_copiar);
                     }
                 }
                 if ($unir_lotes_cantidad) {
-                    $solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] = $datos;
+                    $solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] = $conceptos_resumidos;
                 }
             }
 
