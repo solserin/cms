@@ -2176,7 +2176,7 @@
                           class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
                         >
                           <div class="flex flex-wrap">
-                            <div class="w-full lg:w-8/12">
+                            <div class="w-full lg:w-7/12">
                               <span class="font-medium"> Plan Funerario: </span>
                               {{ form.plan }}
                             </div>
@@ -2463,9 +2463,9 @@
                         </template>
                         <template slot="thead">
                           <vs-th>#</vs-th>
-                          <vs-th>Clave</vs-th>
-                          <vs-th>Código de Barras</vs-th>
-                          <vs-th>Tipo</vs-th>
+                          <vs-th hidden>Clave</vs-th>
+                          <vs-th hidden>Código de Barras</vs-th>
+                          <vs-th hidden>Tipo</vs-th>
                           <vs-th>Descripción</vs-th>
                           <vs-th>Cant.</vs-th>
                           <vs-th>Costo Neto</vs-th>
@@ -2482,45 +2482,45 @@
                             :key="indextr"
                             v-for="(tr, indextr) in data"
                           >
-                            <vs-td>
+                            <vs-td class="w-full lg:w-1/12">
                               <div>
                                 <span>{{ indextr + 1 }}</span>
                               </div>
                             </vs-td>
-                            <vs-td>
+                            <vs-td hidden>
                               <div>
                                 <span>{{ data[indextr].id }}</span>
                               </div>
                             </vs-td>
-                            <vs-td>
+                            <vs-td hidden>
                               <div>
                                 <span>{{ data[indextr].codigo_barras }}</span>
                               </div>
                             </vs-td>
-                            <vs-td>
+                            <vs-td hidden>
                               <div>
                                 {{ data[indextr].tipo }}
                               </div>
                             </vs-td>
-                            <vs-td>
+                            <vs-td class="w-full lg:w-2/12">
                               <div>
                                 {{ data[indextr].descripcion }}
                               </div>
                             </vs-td>
 
-                            <vs-td>
+                            <vs-td class="w-full lg:w-2/12">
                               <vs-input
                                 :name="'cantidad_articulos_servicios' + indextr"
                                 data-vv-as=" "
                                 data-vv-validate-on="blur"
                                 v-validate="'required|integer|min_value:' + 1"
-                                class="w-full sm:w-6/12 px-2 mr-auto ml-auto cantidad"
+                                class="w-full mr-auto ml-auto cantidad"
                                 maxlength="4"
                                 v-model="
                                   form.articulos_servicios[indextr].cantidad
                                 "
                               />
-                              <div>
+                              <div class="input-text">
                                 <span>
                                   {{
                                     errors.first(
@@ -2531,6 +2531,7 @@
                               </div>
                             </vs-td>
                             <vs-td
+                              class="w-full lg:w-1/12"
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2550,7 +2551,7 @@
                                 data-vv-as=" "
                                 data-vv-validate-on="blur"
                                 v-validate="'required|decimal:2|min_value:' + 0"
-                                class="w-full sm:w-6/12 px-2 mr-auto ml-auto cantidad"
+                                class="w-full mr-auto ml-auto cantidad"
                                 maxlength="10"
                                 v-model="
                                   form.articulos_servicios[indextr]
@@ -2561,7 +2562,7 @@
                                     .descuento_b == 1
                                 "
                               />
-                              <div>
+                              <div class="input-text">
                                 <span>
                                   {{
                                     errors.first(
@@ -2572,10 +2573,11 @@
                                 </span>
                               </div>
                             </vs-td>
-                            <vs-td v-else>
+                            <vs-td v-else class="w-full lg:w-1/12">
                               <div>$ 0.00</div>
                             </vs-td>
                             <vs-td
+                              class="w-full lg:w-1/12"
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2599,10 +2601,11 @@
                                 <span slot="off">NO</span>
                               </vs-switch>
                             </vs-td>
-                            <vs-td v-else>
+                            <vs-td v-else class="w-full lg:w-1/12">
                               <div>N/A</div>
                             </vs-td>
                             <vs-td
+                              class="w-full lg:w-1/12"
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2628,7 +2631,7 @@
                                   form.articulos_servicios[indextr]
                                     .costo_neto_normal
                                 "
-                                class="w-full sm:w-6/12 px-2 mr-auto ml-auto cantidad"
+                                class="w-full mr-auto ml-auto cantidad"
                                 maxlength="10"
                                 v-model="
                                   form.articulos_servicios[indextr]
@@ -2639,7 +2642,7 @@
                                     .descuento_b == 0
                                 "
                               />
-                              <div>
+                              <div class="input-text">
                                 <span>
                                   {{
                                     errors.first(
@@ -2650,10 +2653,11 @@
                                 </span>
                               </div>
                             </vs-td>
-                            <vs-td v-else>
+                            <vs-td v-else class="w-full lg:w-1/12">
                               <div>N/A</div>
                             </vs-td>
                             <vs-td
+                              class="w-full lg:w-1/12"
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2689,7 +2693,7 @@
                                 }}
                               </div>
                             </vs-td>
-                            <vs-td v-else>
+                            <vs-td v-else class="w-full lg:w-1/12">
                               <div>$ 0.00</div>
                             </vs-td>
                             <vs-td v-if="habilitar_plan_funerario_b">
@@ -2706,10 +2710,10 @@
                                 <span slot="off">NO</span>
                               </vs-switch>
                             </vs-td>
-                            <vs-td v-else>
+                            <vs-td v-else class="w-full lg:w-1/12">
                               <div>N/A</div>
                             </vs-td>
-                            <vs-td>
+                            <vs-td class="w-full lg:w-1/12">
                               <vs-switch
                                 class="ml-auto mr-auto"
                                 color="success"
@@ -2723,7 +2727,7 @@
                               </vs-switch>
                             </vs-td>
 
-                            <vs-td>
+                            <vs-td class="w-full lg:w-1/12">
                               <div
                                 class="flex justify-center"
                                 @click="remover_articulo(indextr)"
