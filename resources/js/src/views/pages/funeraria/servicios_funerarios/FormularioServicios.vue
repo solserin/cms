@@ -2426,10 +2426,12 @@
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
                     <img
-                      class="img-btn-20 mx-3 mt-4"
+                      class="img-btn-20 mx-3 mt-4 hidden lg:block"
                       src="@assets/images/barcode.svg"
                     />
-                    <div class="w-auto px-2 input-text">
+                    <div
+                      class="w-auto lg:w-3/12 xl:w-2/12 px-2 input-text hidden lg:block"
+                    >
                       <label>Clave o código de barras</label>
                       <vs-input
                         ref="codigo_barras"
@@ -2439,15 +2441,31 @@
                         class="w-full"
                         placeholder="Ej. 0000000123"
                         maxlength="28"
+                        v-model.trim="serverOptions.numero_control"
+                        v-on:keyup.enter="
+                          get_concepto_por_codigo('codigo_barras')
+                        "
+                        v-on:blur="
+                          get_concepto_por_codigo('codigo_barras', 'blur')
+                        "
                       />
                     </div>
-
                     <img
-                      class="cursor-pointer img-btn-20 mx-3 mt-4"
+                      class="cursor-pointer img-btn-20 mx-3 mt-4 hidden lg:block"
                       src="@assets/images/searcharticulo.svg"
                       title="Buscador de artículos y servicios"
                       @click="openBuscadorArticulos = true"
                     />
+
+                    <div class="w-full text-right block lg:hidden">
+                      <vs-button
+                        class="sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+                        color="primary"
+                        @click="openBuscadorArticulos = true"
+                      >
+                        <span>Buscar artículos</span>
+                      </vs-button>
+                    </div>
 
                     <div class="w-full my-6 px-2">
                       <vs-table
@@ -2482,7 +2500,7 @@
                             :key="indextr"
                             v-for="(tr, indextr) in data"
                           >
-                            <vs-td class="w-full lg:w-1/12">
+                            <vs-td class="">
                               <div>
                                 <span>{{ indextr + 1 }}</span>
                               </div>
@@ -2502,19 +2520,19 @@
                                 {{ data[indextr].tipo }}
                               </div>
                             </vs-td>
-                            <vs-td class="w-full lg:w-2/12">
+                            <vs-td class="">
                               <div>
                                 {{ data[indextr].descripcion }}
                               </div>
                             </vs-td>
 
-                            <vs-td class="w-full lg:w-2/12">
+                            <vs-td class="">
                               <vs-input
                                 :name="'cantidad_articulos_servicios' + indextr"
                                 data-vv-as=" "
                                 data-vv-validate-on="blur"
                                 v-validate="'required|integer|min_value:' + 1"
-                                class="w-full mr-auto ml-auto cantidad"
+                                class="mr-auto ml-auto input-cantidad"
                                 maxlength="4"
                                 v-model="
                                   form.articulos_servicios[indextr].cantidad
@@ -2531,7 +2549,7 @@
                               </div>
                             </vs-td>
                             <vs-td
-                              class="w-full lg:w-1/12"
+                              class=""
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2551,7 +2569,7 @@
                                 data-vv-as=" "
                                 data-vv-validate-on="blur"
                                 v-validate="'required|decimal:2|min_value:' + 0"
-                                class="w-full mr-auto ml-auto cantidad"
+                                class="mr-auto ml-auto input-cantidad"
                                 maxlength="10"
                                 v-model="
                                   form.articulos_servicios[indextr]
@@ -2573,11 +2591,11 @@
                                 </span>
                               </div>
                             </vs-td>
-                            <vs-td v-else class="w-full lg:w-1/12">
+                            <vs-td v-else class="">
                               <div>$ 0.00</div>
                             </vs-td>
                             <vs-td
-                              class="w-full lg:w-1/12"
+                              class=""
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2601,11 +2619,11 @@
                                 <span slot="off">NO</span>
                               </vs-switch>
                             </vs-td>
-                            <vs-td v-else class="w-full lg:w-1/12">
+                            <vs-td v-else class="">
                               <div>N/A</div>
                             </vs-td>
                             <vs-td
-                              class="w-full lg:w-1/12"
+                              class=""
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2631,7 +2649,7 @@
                                   form.articulos_servicios[indextr]
                                     .costo_neto_normal
                                 "
-                                class="w-full mr-auto ml-auto cantidad"
+                                class="mr-auto ml-auto input-cantidad"
                                 maxlength="10"
                                 v-model="
                                   form.articulos_servicios[indextr]
@@ -2653,11 +2671,11 @@
                                 </span>
                               </div>
                             </vs-td>
-                            <vs-td v-else class="w-full lg:w-1/12">
+                            <vs-td v-else class="">
                               <div>N/A</div>
                             </vs-td>
                             <vs-td
-                              class="w-full lg:w-1/12"
+                              class=""
                               v-if="
                                 habilitar_plan_funerario_b == false ||
                                 (habilitar_plan_funerario_b == true &&
@@ -2693,7 +2711,7 @@
                                 }}
                               </div>
                             </vs-td>
-                            <vs-td v-else class="w-full lg:w-1/12">
+                            <vs-td v-else class="">
                               <div>$ 0.00</div>
                             </vs-td>
                             <vs-td v-if="habilitar_plan_funerario_b">
@@ -2710,10 +2728,10 @@
                                 <span slot="off">NO</span>
                               </vs-switch>
                             </vs-td>
-                            <vs-td v-else class="w-full lg:w-1/12">
+                            <vs-td v-else class="">
                               <div>N/A</div>
                             </vs-td>
-                            <vs-td class="w-full lg:w-1/12">
+                            <vs-td class="">
                               <vs-switch
                                 class="ml-auto mr-auto"
                                 color="success"
@@ -2727,7 +2745,7 @@
                               </vs-switch>
                             </vs-td>
 
-                            <vs-td class="w-full lg:w-1/12">
+                            <vs-td class="">
                               <div
                                 class="flex justify-center"
                                 @click="remover_articulo(indextr)"
@@ -3609,6 +3627,9 @@ export default {
           label: "Seleccione 1",
         },
       ],
+      serverOptions: {
+        numero_control: "",
+      },
       form: {
         index_articulo_servicio: "",
         /**DATOS DEL CONTRATO DE LA BD */
@@ -4508,6 +4529,83 @@ export default {
         });
     },
 
+    get_concepto_por_codigo(origen = "", evento = "") {
+      if (evento == "blur") {
+        return;
+      } else {
+        /**checando el origen */
+        if (origen == "codigo_barras") {
+          if (this.serverOptions.numero_control.trim() == "") {
+            //return;
+          }
+        }
+      }
+
+      let self = this;
+      if (funeraria.cancel) {
+        funeraria.cancel("Operation canceled by the user.");
+      }
+      this.$vs.loading();
+      funeraria
+        .get_inventario_servicios_codigos(this.serverOptions)
+        .then((res) => {
+          if (res.data.length > 0) {
+            let datos = res.data[0];
+            /**agrego el concepto al listado del contrato */
+            this.form.articulos_servicios.push({
+              id: datos.id,
+              codigo_barras: datos.codigo_barras,
+              tipo: datos.tipo_articulo.tipo,
+              categoria: datos.categoria.categoria,
+              descripcion: datos.descripcion,
+              //lote: lote.lotes_id,
+              //num_lote_inventario: lote.num_lote_inventario,
+              cantidad: 1,
+              costo_neto_normal: datos.precio_venta,
+              descuento_b: 0,
+              costo_neto_descuento: 0,
+              importe: 0,
+              facturable_b: datos.grava_iva_b,
+              existencia: datos.existencia,
+              plan_b: 0,
+            });
+          } else {
+            this.$vs.notify({
+              title: "Busar artículos y servicios",
+              text:
+                "No se ha encontrado el concepto con el número de clave ingresado.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 8000,
+            });
+          }
+          this.$vs.loading.close();
+          this.serverOptions.numero_control = "";
+          this.$nextTick(() =>
+            this.$refs["codigo_barras"].$el.querySelector("input").focus()
+          );
+        })
+        .catch((err) => {
+          this.$vs.loading.close();
+          this.ver = true;
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 8000,
+              });
+            }
+          }
+        });
+    },
+
     acceptAlert() {
       this.$validator
         .validateAll()
@@ -4567,7 +4665,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000,
+            time: 6000,
           });
         }
 

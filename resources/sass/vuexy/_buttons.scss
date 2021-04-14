@@ -13,7 +13,7 @@
 
 @for $index from 4 to 64 {
     .img-btn-#{$index} {
-        display: inline !important;
+        display: inline;
         width: #{$index}px !important;
     }
 }

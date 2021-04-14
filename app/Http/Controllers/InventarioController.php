@@ -558,6 +558,7 @@ class InventarioController extends ApiController
                     }
                 }
             })
+
             ->where(function ($q) use ($id_articulo_request) {
                 if (trim($id_articulo_request) == 'all' || $id_articulo_request > 0) {
                     if (trim($id_articulo_request) == 'all') {

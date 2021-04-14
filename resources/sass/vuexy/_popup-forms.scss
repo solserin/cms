@@ -219,16 +219,18 @@
 }
 
 .popup-90 .vs-popup {
+    width: 100% !important;
     @media (min-width: 992px) {
         width: 95% !important;
     }
 
-    @media (min-width: 1200px) {
+    @media (min-width: 1440px) {
         width: 90% !important;
     }
 }
 
 .popup-95 .vs-popup {
+    width: 100% !important;
     @media (min-width: 1200px) {
         width: 95% !important;
     }

@@ -147,6 +147,15 @@ export default {
         });
     },
 
+     get_inventario_servicios_codigos(param) {
+        return axios.get("/funeraria/get_inventario/all/0/0/0", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
+    },
+
     cancelar_solicitud(datos) {
         let call = "/funeraria/cancelar_solicitud";
         return axios.post(call, datos);

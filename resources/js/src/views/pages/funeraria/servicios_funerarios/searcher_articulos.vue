@@ -2,7 +2,7 @@
   <div>
     <vs-popup
       :class="['forms-popup popup-90', z_index]"
-      title="Catálogo de Artículos y Servicios por Lote"
+      title="Catálogo de Artículos y Servicios"
       :active.sync="showVentana"
       ref="buscador_lotes"
     >
