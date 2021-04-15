@@ -2521,7 +2521,7 @@
                               </div>
                             </vs-td>
                             <vs-td class="">
-                              <div>
+                              <div class="uppercase">
                                 {{ data[indextr].descripcion }}
                               </div>
                             </vs-td>
