@@ -2764,7 +2764,7 @@
 
                     <div class="w-full">
                       <div class="flex flex-wrap my-6">
-                        <div class="w-full sm:w-12/12 md:w-8/12 lg:9/12 px-2">
+                        <div class="w-full xl:w-8/12 px-2">
                           <div class="flex flex-wrap">
                             <div class="w-full input-text px-2">
                               <label>Nota u Observación:</label>
@@ -2781,7 +2781,7 @@
                           </div>
                           <!--fin del resumen de la venta-->
                         </div>
-                        <div class="w-full sm:w-12/12 md:w-4/12 lg:3/12 px-2">
+                        <div class="w-full xl:w-4/12 px-2">
                           <div class="flex flex-wrap">
                             <div class="w-full input-text px-2 text-center">
                               <label>
