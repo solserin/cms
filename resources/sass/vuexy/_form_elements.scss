@@ -9,6 +9,7 @@
     & > label {
         padding: 0.25rem 0 0.25rem 0;
         @extend .size-small, .color-copy, .font-medium;
+        text-transform: uppercase !important;
         span {
             @extend .color-danger-900;
         }
