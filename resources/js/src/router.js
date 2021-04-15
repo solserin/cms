@@ -442,14 +442,6 @@ const router = new Router({
                         rule: "editor"
                     }
                 },
-                 {
-                    path: "/pages/test",
-                    name: "page-test",
-                    component: () => import("@/views/pages/Test.vue"),
-                    meta: {
-                        rule: "editor"
-                    }
-                },
 
                 {
                     path: "/pages/forgot-password",
@@ -536,7 +528,7 @@ router.afterEach(() => {
 router.beforeEach((to, from, next) => {
     /**validando paginas especiales */
     if (
-        to.path === "/pages/test" ||
+        to.path === "/pages/login" ||
         to.path === "/pages/forgot-password" ||
         to.path === "/callback"
     ) {
@@ -588,7 +580,7 @@ router.beforeEach((to, from, next) => {
                     }
                 }
             }
-        } else return next("/pages/test");
+        } else return next("/pages/login");
     } else {
         return next();
     }
