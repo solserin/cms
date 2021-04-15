@@ -67,7 +67,7 @@
 }
 
 .vs-table--td {
-    @extend .size-small;
+    @extend .size-smaller;
     span {
         text-transform: uppercase !important;
     }
