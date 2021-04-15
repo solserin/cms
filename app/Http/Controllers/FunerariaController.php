@@ -2370,7 +2370,7 @@ class FunerariaController extends ApiController
 
     public function servicio_acuse_cancelacion(Request $request)
     {
-
+       
         try {
             $id_venta = 1;
             $email    = false;
@@ -2381,12 +2381,14 @@ class FunerariaController extends ApiController
             $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
             $id_venta          = $requestVentasList['id_servicio'];
+            
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_solicitudes_servicios($request, $id_venta, '')[0];
+          
 
             if (empty($datos_venta)) {
                 /**datos vacios */
@@ -2416,6 +2418,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-bottom', 13.4);
             $pdf->setOption('page-size', 'letter');
             if ($email == true) {
+                  
                 /**email */
                 /**
                  * parameters lista de la funcion
@@ -2429,7 +2432,7 @@ class FunerariaController extends ApiController
                 $email_controller = new EmailController();
                 $enviar_email     = $email_controller->pdf_email(
                     $email_to,
-                    strtoupper($datos_venta['nombre']),
+                    strtoupper($datos_venta['operacion']['cliente']['nombre']),
                     'ACUSE DE CANCELACIÓN',
                     $name_pdf,
                     $pdf
