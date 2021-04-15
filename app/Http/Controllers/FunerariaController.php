@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Afiliaciones;
-use App\Articulos;
-use App\Categorias;
-use App\Clientes;
-use App\Escolaridades;
-use App\EstadosAfectado;
-use App\EstadosCiviles;
-use App\Http\Controllers\CementerioController;
-use App\LugaresInhumacion;
-use App\LugaresServicio;
-use App\Operaciones;
-use App\PlanConceptosServicioOriginal;
-use App\PlanesFunerarios;
-use App\PreciosPlanes;
-use App\RegistroPublico;
-use App\ServiciosFunerarios;
-use App\SitiosMuerte;
-use App\TiposContratante;
-use App\Titulos;
-use App\User;
-use App\VentasPlanes;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
 use PDF;
+use App\User;
+use App\Titulos;
+use App\Clientes;
+use App\Articulos;
+use Carbon\Carbon;
+use App\Categorias;
+use App\Inventario;
+use App\Operaciones;
+use App\Afiliaciones;
+use App\SitiosMuerte;
+use App\VentasPlanes;
+use App\Escolaridades;
+use App\PreciosPlanes;
+use App\EstadosCiviles;
+use App\EstadosAfectado;
+use App\LugaresServicio;
+use App\RegistroPublico;
+use App\PlanesFunerarios;
+use App\TiposContratante;
+use App\LugaresInhumacion;
+use App\ServiciosFunerarios;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+use App\PlanConceptosServicioOriginal;
+use App\Http\Controllers\CementerioController;
 
 class FunerariaController extends ApiController
 {
@@ -1442,7 +1443,6 @@ class FunerariaController extends ApiController
         foreach ($resultado as $index_venta => &$venta) {
 
             /**calculando el costo neto y descuento calcuado */
-            /**aqui voy*/
             $tasa_iva_decimal = $venta['tasa_iva'] / 100;
 
             $venta['costo_neto_calculado']     = round($venta['total'] + ($venta['descuento'] * (1 + $tasa_iva_decimal)), 2, PHP_ROUND_HALF_UP);
@@ -3117,6 +3117,11 @@ class FunerariaController extends ApiController
                             }else{
                                  return $this->errorResponse("No hay suficiente existencia del ".$articulo['descripcion']." en el inventario.", 409);
                             }
+                        }else{
+                             $copia_row_actual = $concepto;
+                             $copia_row_actual['lote'] =null;
+                             $copia_row_actual['cantidad'] = $concepto['cantidad'];
+                            array_push($arreglo_de_lotes, $copia_row_actual);
                         }
                     }
                 }
@@ -4092,7 +4097,6 @@ class FunerariaController extends ApiController
                         }
                     }
 
-                    /**aqui voy */
 
                     /**aqui reviso si el articulo está repetido, para crear una sola cantidad en vez de varios */
                     $encontrado     = false;
@@ -4530,6 +4534,57 @@ class FunerariaController extends ApiController
                     'status' => 0,
                 ]
             );
+
+            /**se deben de regresar los articulos que tiene este contrato al inventario */
+            /**aqui voy */
+              
+              if (isset($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
+                /**la operacion ya tenia articulos y servicios agregados y se deben de revisar para ver cuales
+                 * se quitaron y se deben regresar al inventario
+                 */
+
+                $lotes_iguales = [];
+                $detalle_inventario=[];
+                foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_contrato => $articulo_contrato) {
+                    if(in_array($index_contrato,$lotes_iguales) || !is_numeric($articulo_contrato['lotes_id'])){
+                        continue;
+                    }
+                  /**busco los ids y lotes iguales */
+                  $suma_articulo=0;
+                   foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_sub => $articulo_sub) {
+                       if(
+                           $articulo_contrato['articulos_id']==$articulo_sub['articulos_id'] &&
+                           $articulo_contrato['lotes_id']==$articulo_sub['lotes_id']
+                       )
+                       {
+                           $suma_articulo+=$articulo_sub['cantidad'];
+                            array_push($lotes_iguales, $index_sub);
+                       }
+                   }
+                   array_push($detalle_inventario, [
+                   'lotes_id'=>$articulo_contrato['lotes_id'],
+                   'articulos_id'=>$articulo_contrato['articulos_id'],
+                   'cantidad'=>$suma_articulo
+                   ]);
+                }
+            } //fin if isset articulos en el contrato
+
+            /**al ser obtenido el array de los articulos a regresar, solo de aumentan al inventario */
+            foreach($detalle_inventario as $detalle){
+                $total =Inventario::select('existencia')->where('lotes_id','=',$detalle['lotes_id'])->where('articulos_id','=',$detalle['articulos_id'])->first();
+               $suma=$total['existencia']+$detalle['cantidad'];
+                 DB::table('inventario')->where('lotes_id',$detalle['lotes_id'])->where('articulos_id',
+                 $detalle['articulos_id'])->update(
+                 [
+                 'existencia' => $suma
+                 ]
+                 );
+            }
+
+            
+            
+
+          // return $this->errorResponse($detalle_inventario,409);
 
             DB::commit();
             return $request->solicitud_id;
