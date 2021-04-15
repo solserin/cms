@@ -1,147 +1,176 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-cancelar_cementerio normal-forms cancelar_cementerio background-header-forms"
-      fullscreen
+      class="forms-popup popup-50"
       title="Cancelar Movimientos de Cobranza"
       :active.sync="showVentana"
       ref="cancelar_pago"
     >
-      <div class="pb-5">
-        <div class="flex flex-wrap">
-          <div class="w-full text-center py-1">
-            <div class="w-full">
-              <span class="text-lg font-medium text-dark">
-                ¿Está seguro de querer cancelar este movimiento?
-              </span>
+      <div class="form-group">
+        <div class="title-form-group">Formulario de Cancelación</div>
+        <div class="form-group-content">
+          <div class="flex flex-wrap">
+            <div class="w-full alerta pt-4 pb-6 px-2">
+              <div class="danger">
+                <h3>¿Está seguro de querer cancelar este pago?</h3>
+                <p>
+                  Una vez realizado el proceso de cancelación no habrá manera de
+                  volver a habilitar este pago. Es recomendable llevar a cabo
+                  este proceso una vez esté seguro de que es necesario.
+                </p>
+              </div>
             </div>
-            <div class="w-full py-2 px-2">
-              <span class="text-base">
-                Una vez realizado el proceso de cancelación no habrá manera de
-                volver a habilitar este movimiento. Es recomendable llevar a
-                cabo este proceso una vez esté seguro de que es necesario.
-              </span>
+            <div class="w-full">
+              <div class="flex flex-wrap">
+                <div class="w-full xl:w-12/12 px-2">
+                  <div class="flex flex-wrap">
+                    <div
+                      class="p-4 w-full mx-auto rounded-lg size-base border-gray-solid-1 rounded-lg"
+                    >
+                      <div
+                        class="size-base font-bold color-black-900 uppercase pb-6 text-center"
+                      >
+                        Resumen del Pago
+                      </div>
+                      <div class="flex flex-wrap color-copy">
+                        <div class="w-full">
+                          <div class="flex flex-wrap pb-6">
+                            <div
+                              class="w-full text-center font-medium color-black-900 uppercase"
+                            >
+                              Operación de Tipo
+                            </div>
+                            <div
+                              class="w-full text-center font-medium color-copy pt-2"
+                            >
+                              <span
+                                class="capitalize"
+                                v-if="datosPago.tipo_operacion_texto"
+                                >{{ datosPago.tipo_operacion_texto }}</span
+                              >
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="w-full">
+                          <div
+                            class="flex flex-wrap mt-2 theme-background py-2"
+                          >
+                            <div
+                              class="w-full text-center font-medium color-black-900 uppercase"
+                            >
+                              Cantidad cubierta de capital hasta la fecha:
+                            </div>
+                            <div
+                              class="w-full text-center font-medium color-black-700 uppercase pt-2"
+                            >
+                              <div class="py-1" v-if="datosPago">
+                                <div class="capitalize">
+                                  Clave
+                                  <span class="font-medium text-black">{{
+                                    datosPago.id
+                                  }}</span
+                                  >, {{ datosPago.movimientos_pagos_texto }}, $
+                                  <span class="font-medium text-black"
+                                    >{{
+                                      datosPago.monto_pago
+                                        | numFormat("0,000.00")
+                                    }}
+                                    Pesos mxn</span
+                                  >
+                                </div>
+                                <div
+                                  class="capitalize py-2"
+                                  :key="indextr"
+                                  v-for="(
+                                    subpago, indextr
+                                  ) in datosPago.subpagos"
+                                >
+                                  Clave
+                                  <span class="font-medium text-black">{{
+                                    subpago.id
+                                  }}</span
+                                  >, {{ subpago.movimientos_pagos_texto }}, $
+                                  <span class="font-medium text-black"
+                                    >{{
+                                      subpago.monto_pago | numFormat("0,000.00")
+                                    }}
+                                    Pesos mxn</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-full xl:w-12/12 pt-6">
+                  <div class="flex flex-wrap">
+                    <div class="w-full input-text px-2">
+                      <label>Seleccione un motivo de cancelación:</label>
+                      <v-select
+                        :options="motivos"
+                        :clearable="false"
+                        v-model="form.motivo"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        class="pb-1 pt-1 large_select"
+                        v-validate:motivo_computed.immediate="'required'"
+                        name="plan_venta"
+                        data-vv-as=" "
+                      >
+                        <div slot="no-options">
+                          No Se Ha Seleccionado Ningún Motivo
+                        </div>
+                      </v-select>
+                      <span class="text-danger text-sm">{{
+                        errors.first("motivo")
+                      }}</span>
+                      <span
+                        class="text-danger text-sm"
+                        v-if="this.errores['motivo.value']"
+                        >{{ errores["motivo.value"][0] }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-full input-text px-2">
+                  <label
+                    >Agregue un comentario respecto a la cancelación de este
+                    movimiento:</label
+                  >
+                  <vs-textarea
+                    class="w-full"
+                    label="Detalle de la cancelación..."
+                    height="170px"
+                    v-model="form.comentario"
+                    ref="comentario"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2 text-center mt-16"
+      </div>
+
+      <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
+        </div>
+
+        <div class="w-full">
+          <vs-button
+            v-if="!fueCancelada"
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="danger"
+            @click="acceptAlert()"
           >
-            <img width="400" src="@assets/images/cancelar.png" />
-          </div>
-          <div class="w-full sm:w-12/12 md:w-12/12 lg:w-6/12 xl:w-6/12 px-2">
-            <div class="w-full pt-1 text-center">
-              <span class="font-medium text-dark text-lg"
-                >Operación de Tipo:</span
-              >
-              <div class="py-1">
-                <span
-                  class="capitalize"
-                  v-if="datosPago.tipo_operacion_texto"
-                  >{{ datosPago.tipo_operacion_texto }}</span
-                >
-              </div>
-            </div>
-
-            <div class="w-full text-center ">
-              <span class="font-medium text-dark text-lg"
-                >Movimientos a Cancelar:</span
-              >
-              <div class="py-1" v-if="datosPago">
-                <div class="capitalize">
-                  Clave
-                  <span class="font-medium text-black">{{ datosPago.id }}</span
-                  >, {{ datosPago.movimientos_pagos_texto }}, $
-                  <span class="font-medium text-black"
-                    >{{ datosPago.monto_pago | numFormat("0,000.00") }} Pesos
-                    mxn</span
-                  >
-                </div>
-                <div
-                  class="capitalize py-2"
-                  :key="indextr"
-                  v-for="(subpago, indextr) in datosPago.subpagos"
-                >
-                  Clave
-                  <span class="font-medium text-black">{{ subpago.id }}</span
-                  >, {{ subpago.movimientos_pagos_texto }}, $
-                  <span class="font-medium text-black"
-                    >{{ subpago.monto_pago | numFormat("0,000.00") }} Pesos
-                    mxn</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <div class="w-full py-3">
-              <label class="">Seleccione un motivo de cancelación:</label>
-            </div>
-            <div class="w-full">
-              <v-select
-                :options="motivos"
-                :clearable="false"
-                v-model="form.motivo"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                class="pb-1 pt-1 large_select"
-                v-validate:motivo_computed.immediate="'required'"
-                name="plan_venta"
-                data-vv-as=" "
-              >
-                <div slot="no-options">
-                  No Se Ha Seleccionado Ningún Motivo
-                </div>
-              </v-select>
-              <div>
-                <span class="text-danger text-sm">{{
-                  errors.first("motivo")
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="text-danger text-sm"
-                  v-if="this.errores['motivo.value']"
-                  >{{ errores["motivo.value"][0] }}</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap px-2">
-          <div class="py-5">
-            <label class=""
-              >Agregue un comentario respecto a la cancelación de este
-              movimiento:</label
-            >
-          </div>
-          <vs-textarea
-            class="pb-1 pt-1"
-            label="Detalle de la cancelación..."
-            height="170px"
-            v-model="form.comentario"
-            ref="comentario"
-          />
-        </div>
-
-        <div class="flex flex-wrap">
-          <div class="w-full pt-6">
-            <div class="text-center">
-              <vs-button
-                color="danger"
-                class=""
-                size="small"
-                @click="acceptAlert"
-              >
-                <img
-                  width="25px"
-                  class="cursor-pointer"
-                  src="@assets/images/cancel.svg"
-                />
-                <span class="texto-btn">Cancelar Movimiento</span>
-              </vs-button>
-            </div>
-          </div>
+            <span>Cancelar Contrato</span>
+          </vs-button>
         </div>
       </div>
 
@@ -171,21 +200,21 @@ export default {
   components: {
     Password,
     "v-select": vSelect,
-    ConfirmarDanger
+    ConfirmarDanger,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     id_pago: {
       type: Number,
       required: true,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["cancelar_pago"].$el.querySelector(
           ".vs-icon"
@@ -213,7 +242,7 @@ export default {
                   iconPack: "feather",
                   icon: "icon-alert-circle",
                   color: "warning",
-                  time: 8000
+                  time: 8000,
                 });
               } else {
                 this.$vs.notify({
@@ -224,7 +253,7 @@ export default {
                   icon: "icon-alert-circle",
                   color: "danger",
                   position: "bottom-right",
-                  time: "9000"
+                  time: "9000",
                 });
               }
             }
@@ -232,10 +261,10 @@ export default {
           }
         })();
       }
-    }
+    },
   },
   computed: {
-    motivo_computed: function() {
+    motivo_computed: function () {
       return this.form.motivo.value;
     },
     showVentana: {
@@ -244,7 +273,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getPagoId: {
       get() {
@@ -252,8 +281,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -268,28 +297,28 @@ export default {
       motivos: [
         {
           label: "A PETICIÓN DEL CLIENTE",
-          value: 2
+          value: 2,
         },
         {
           label: "ERROR AL CAPTURAR",
-          value: 3
-        }
+          value: 3,
+        },
       ],
       form: {
         pago_id: "",
         motivo: {
           label: "ERROR AL CAPTURAR",
-          value: 3
+          value: 3,
         },
-        comentario: ""
-      }
+        comentario: "",
+      },
     };
   },
   methods: {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Error",
@@ -298,7 +327,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "8000"
+              time: "8000",
             });
             return;
           } else {
@@ -338,7 +367,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.limpiarVentana();
           this.$emit("retorno_pago", res.data);
@@ -349,7 +378,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 8000
+            time: 8000,
           });
         }
       } catch (err) {
@@ -362,7 +391,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 8000
+              time: 8000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -375,7 +404,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             }
 
@@ -385,7 +414,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
           } else if (err.response.status == 409) {
             //este error es por alguna condicion que el contrano no cumple para modificar
@@ -396,7 +425,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 30000
+              time: 30000,
             });
           }
         }
@@ -407,14 +436,14 @@ export default {
       this.form.comentario = "";
       this.form.motivo = {
         label: "ERROR AL CAPTURAR",
-        value: 3
+        value: 3,
       };
-    }
+    },
   },
   created() {},
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showVentana) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -422,6 +451,6 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
