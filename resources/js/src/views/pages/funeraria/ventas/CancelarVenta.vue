@@ -379,7 +379,6 @@ export default {
       this.form.venta_id = this.getVentaId;
       try {
         let res = await planes.cancelar_venta(this.form);
-        console.log("cancelar_venta -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -405,8 +404,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("cancelar_venta -> err.response", err.response);
-          //console.log("modificarVenta -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({

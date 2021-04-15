@@ -299,7 +299,7 @@ export default {
           if (this.getVerAcuse == true) {
             this.openReporte(
               "Acuse de cancelación",
-              "/funeraria/acuse_cancelacion",
+              "/funeraria/servicio_funerario/acuse_cancelacion",
               "",
               ""
             );
@@ -526,7 +526,6 @@ export default {
         let res = await funeraria.get_solicitudes_servicios_id(
           this.get_solicitud_id
         );
-        console.log("get_solicitudes_servicios_id -> res", res);
         this.datosSolicitud = res.data[0];
         this.operacion_id = this.datosSolicitud.operacion.operacion_id;
         /*if (this.datosSolicitud.pagos_programados.length > 0) {
@@ -572,7 +571,6 @@ export default {
         let datos_request = { operacion_id: this.operacion_id };
         let res = await pagos.consultar_pagos_operacion_id(datos_request);
         this.pagos = res.data.data;
-        console.log("consultar_pagos_operacion_id ->  this.pagos", this.pagos);
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();

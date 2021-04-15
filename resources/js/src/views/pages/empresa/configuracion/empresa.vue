@@ -1,16 +1,20 @@
 <template>
   <div>
     <vs-tabs alignment="left" position="top" v-model="activeTab">
-      <vs-tab label="FUNERARIA"  class=""></vs-tab>
-      <vs-tab label="REGISTRO PÚBLICO" ></vs-tab>
-      <vs-tab label="CEMENTERIO" ></vs-tab>
-      <vs-tab label="FIRMA ELECTRÓNICA" ></vs-tab>
+      <vs-tab label="FUNERARIA" class=""></vs-tab>
+      <vs-tab label="REGISTRO PÚBLICO"></vs-tab>
+      <vs-tab label="CEMENTERIO"></vs-tab>
+      <vs-tab label="FIRMA ELECTRÓNICA"></vs-tab>
       <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
     </vs-tabs>
-    <div class="" v-show="activeTab==0">
-      <Funeraria :datos="datosEmpresa" :erroresForm="erroresFuneraria" @actualizar="actualizar"></Funeraria>
+    <div class="" v-show="activeTab == 0">
+      <Funeraria
+        :datos="datosEmpresa"
+        :erroresForm="erroresFuneraria"
+        @actualizar="actualizar"
+      ></Funeraria>
     </div>
-    <div class="" v-show="activeTab==1">
+    <div class="" v-show="activeTab == 1">
       <RegistroPublico
         :datos="datosEmpresa"
         :erroresForm="erroresRegistroPublico"
@@ -18,20 +22,28 @@
       ></RegistroPublico>
     </div>
 
-    <div class=" " v-show="activeTab==2">
-      <Cementerio :datos="datosEmpresa" :erroresForm="erroresCementerio" @actualizar="actualizar"></Cementerio>
+    <div class=" " v-show="activeTab == 2">
+      <Cementerio
+        :datos="datosEmpresa"
+        :erroresForm="erroresCementerio"
+        @actualizar="actualizar"
+      ></Cementerio>
     </div>
 
-    <div class=" " v-show="activeTab==3">
-      <Facturacion :datos="datosEmpresa" :erroresForm="erroresFacturacion" @actualizar="actualizar"></Facturacion>
+    <div class=" " v-show="activeTab == 3">
+      <Facturacion
+        :datos="datosEmpresa"
+        :erroresForm="erroresFacturacion"
+        @actualizar="actualizar"
+      ></Facturacion>
     </div>
     <Password
       :show="operConfirmar"
       :callback-on-success="callback"
-      @closeVerificar="operConfirmar=false"
+      @closeVerificar="operConfirmar = false"
       :accion="accionNombre"
     ></Password>
-    <pdf :show="verPdf" :pdf="pdfLink" @closePdf="verPdf=false"></pdf>
+    <pdf :show="verPdf" :pdf="pdfLink" @closePdf="verPdf = false"></pdf>
   </div>
 </template>
 
@@ -50,7 +62,7 @@ import empresa from "@services/empresa";
 import {
   mostrarOptions,
   estadosOptions,
-  rolesOptions
+  rolesOptions,
 } from "@/VariablesGlobales";
 import vSelect from "vue-select";
 
@@ -62,7 +74,7 @@ export default {
     Funeraria,
     RegistroPublico,
     Cementerio,
-    Facturacion
+    Facturacion,
   },
   watch: {},
   data() {
@@ -83,7 +95,7 @@ export default {
       ver: true,
       //los datos mandado del children por el emit
       datos_para_actualizar: [],
-      modulo: ""
+      modulo: "",
     };
   },
   methods: {
@@ -92,12 +104,12 @@ export default {
       this.$vs.loading();
       empresa
         .get_datos_empresa()
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           //mando los datos
           this.datosEmpresa = res.data[0];
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
         });
     },
@@ -133,8 +145,7 @@ export default {
       this.$vs.loading();
       empresa
         .modificarInformacion(this.datos_para_actualizar, this.modulo)
-        .then(res => {
-          console.log(res.data);
+        .then((res) => {
           if (res.data >= 0) {
             //success
             this.$vs.notify({
@@ -143,7 +154,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
           } else {
             this.$vs.notify({
@@ -152,16 +163,14 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
 
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
-            //console.log(err.response);
-            console.log(err.response);
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -171,11 +180,10 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
-              console.log(err.response);
               if (this.datos_para_actualizar.modulo == "funeraria") {
                 this.erroresFuneraria = err.response.data.error;
               } else if (
@@ -192,10 +200,10 @@ export default {
           }
           this.$vs.loading.close();
         });
-    }
+    },
   },
   created() {
     this.get_datos_empresa();
-  }
+  },
 };
 </script>

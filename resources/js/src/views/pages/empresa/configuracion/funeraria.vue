@@ -4,7 +4,7 @@
       <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12">
         <vs-card class="" fixedHeight>
           <!--Datos de la funeraria-->
-          <div class="form-group">
+          <div class="form-group mt-6">
             <div class="title-form-group">
               <span>Información de la empresa</span>
             </div>
@@ -384,9 +384,7 @@
                 color="primary"
                 @click="mandarModificar()"
               >
-                <span 
-                  >Actualizar Datos de Funeraria</span
-                >
+                <span>Actualizar Datos de Funeraria</span>
               </vs-button>
             </div>
           </div>

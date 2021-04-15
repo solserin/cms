@@ -493,7 +493,6 @@ export default {
                 color: "danger",
                 time: 5000,
               });
-              //console.log(err.response);
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
@@ -543,10 +542,6 @@ export default {
         })
         .catch((err) => {
           if (err.response) {
-            console.log(
-              "update_precio_propiedad -> err.response",
-              err.response
-            );
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({

@@ -3,12 +3,8 @@
     <div class="flex flex-wrap">
       <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4">
         <vs-card class="cardx card-tarifas" fixedHeight>
-          <div slot="header">
-            <h3>Información del Cementerio</h3>
-          </div>
-
           <!--Datos del cementerio-->
-          <div class="form-group">
+          <div class="form-group mt-6">
             <div class="title-form-group">
               <span>Datos del cementerio</span>
             </div>

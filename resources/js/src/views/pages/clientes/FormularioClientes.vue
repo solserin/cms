@@ -666,7 +666,6 @@ export default {
           this.$vs.loading.close();
         })
         .catch((err) => {
-          console.log("get_cliente_by_id -> err", err);
           this.$vs.loading.close();
           this.$vs.notify({
             title: "Modificar Cliente",
@@ -790,7 +789,6 @@ export default {
                 time: 8000,
                 position: "bottom-right",
               });
-              //console.log(err.response);
             }
           }
           this.$vs.loading.close();
@@ -856,7 +854,6 @@ export default {
                 time: 8000,
                 position: "bottom-right",
               });
-              //console.log(err.response);
             }
           }
           this.$vs.loading.close();

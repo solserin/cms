@@ -1529,7 +1529,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await cementerio.guardar_venta(this.form);
-        console.log("guardar_venta -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -1556,7 +1555,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("guardar_venta -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -1612,7 +1610,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await cementerio.modificar_venta(this.form);
-        console.log("modificar_venta -> res.data", res.data);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -1639,7 +1636,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("modificar_venta -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({

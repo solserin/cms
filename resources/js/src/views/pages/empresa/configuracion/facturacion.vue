@@ -4,7 +4,7 @@
       <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4">
         <vs-card class="cardx card-tarifas" fixedHeight>
           <!--Datos de la firma-->
-          <div class="form-group">
+          <div class="form-group mt-6">
             <div class="title-form-group">
               <span>Certificado digital</span>
             </div>

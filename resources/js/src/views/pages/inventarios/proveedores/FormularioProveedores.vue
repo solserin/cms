@@ -14,9 +14,7 @@
             class="img-center"
             src="@assets/images/delivery.svg"
           />
-          <h3 class="text-xl text-center">
-            Información del Proveedor
-          </h3>
+          <h3 class="text-xl text-center">Información del Proveedor</h3>
         </div>
 
         <vs-divider />
@@ -51,9 +49,7 @@
           </div>
         </div>
         <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Razón Social
-          </label>
+          <label class="text-sm opacity-75 font-bold"> Razón Social </label>
 
           <vs-input
             name="razon_social"
@@ -248,25 +244,25 @@ export default {
   components: {
     Password,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_proveedor: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       this.limpiarValidation();
       if (newValue == true) {
         //cargo nacionalidades
@@ -286,7 +282,7 @@ export default {
           this.title = "Registrar Nuevo Proveedor";
         }
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -295,7 +291,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -303,7 +299,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_proveedor_id: {
       get() {
@@ -311,8 +307,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -335,9 +331,9 @@ export default {
         nombre_contacto: "",
         telefono: "",
         email: "",
-        nota: ""
+        nota: "",
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
@@ -366,7 +362,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "4000"
+          time: "4000",
         });
         this.cerrarVentana();
       }
@@ -374,7 +370,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Guardar Proveedor",
@@ -383,7 +379,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             this.errores = [];
@@ -416,7 +412,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("retornar_id", res.data);
           this.cerrarVentana();
@@ -427,7 +423,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            time: 4000
+            time: 4000,
           });
         }
         this.$vs.loading.close();
@@ -441,7 +437,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 12000
+              time: 12000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -452,9 +448,8 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 12000
+              time: 12000,
             });
-            //console.log(err.response);
           }
         }
         this.$vs.loading.close();
@@ -475,7 +470,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
           this.$emit("retornar_id", res.data);
         } else {
@@ -485,7 +480,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 4000
+            time: 4000,
           });
         }
         this.cerrarVentana();
@@ -500,7 +495,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           } else if (err.response.status == 422) {
             //checo si existe cada error
@@ -511,9 +506,8 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 5000
+              time: 5000,
             });
-            //console.log(err.response);
           }
         }
         this.$vs.loading.close();
@@ -548,8 +542,8 @@ export default {
       this.$validator.pause();
       this.$nextTick(() => {
         this.$validator.errors.clear();
-        this.$validator.fields.items.forEach(field => field.reset());
-        this.$validator.fields.items.forEach(field =>
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
           this.errors.remove(field)
         );
         this.$validator.resume();
@@ -557,8 +551,8 @@ export default {
     },
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

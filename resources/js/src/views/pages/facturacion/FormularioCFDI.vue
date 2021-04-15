@@ -2182,7 +2182,6 @@ export default {
       this.$vs.loading();
       try {
         let res = await facturacion.timbrar_cfdi(this.form);
-        console.log("timbrar_cfdi -> res", res);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
@@ -2209,7 +2208,6 @@ export default {
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
-          console.log("timbrar_cfdi -> err.response", err.response);
           if (err.response.status == 403) {
             /**FORBIDDEN ERROR */
             this.$vs.notify({
@@ -2248,7 +2246,6 @@ export default {
 
     /**retorno de la operacion selecciona para cargar */
     OperacionSeleccionada(datos) {
-      console.log("OperacionSeleccionada -> datos", datos);
       /**primero hacemos el agregado de las operaciones relacionadas */
       let esta_operacion = false;
       this.form.operaciones_relacionadas.forEach((element) => {
@@ -2332,7 +2329,6 @@ export default {
     },
 
     CfdiPagarSeleccionado(datos) {
-      console.log("CfdiPagarSeleccionado -> datos", datos);
       /**primero hacemos el agregado de los cfdis */
       let esta_cfdi = false;
       this.form.cfdis_a_pagar.forEach((element) => {
@@ -2392,7 +2388,6 @@ export default {
       }
     },
     CfdiRelacionarSeleccionado(datos) {
-      console.log("CfdiRelacionarSeleccionado -> datos", datos);
       /**primero hacemos el agregado de los cfdis */
       let esta_cfdi = false;
       this.form.cfdis_relacionados.forEach((element) => {

@@ -14,7 +14,8 @@
             color="danger"
             size="small"
             class="float-right mb-3"
-          >(Esc) Cerrar</vs-button>
+            >(Esc) Cerrar</vs-button
+          >
           <iframe :src="pdf_iframe" width="560" height="315"></iframe>
         </div>
       </div>
@@ -29,22 +30,22 @@ export default {
   props: {
     pdf: {
       type: String,
-      required: true
+      required: true,
     },
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.get_pdf();
       } else {
         this.ver = false;
         this.pdf_iframe = "";
       }
-    }
+    },
   },
   computed: {
     showPdf: {
@@ -53,7 +54,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     pdfLink: {
       get() {
@@ -61,13 +62,13 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       ver: false,
-      pdf_iframe: ""
+      pdf_iframe: "",
     };
   },
   methods: {
@@ -75,8 +76,7 @@ export default {
       this.$vs.loading();
       usuarios
         .get_pdf(this.pdfLink)
-        .then(res => {
-          console.log(res);
+        .then((res) => {
           this.ver = true;
           this.$vs.loading.close();
           const file = new Blob([res.data], { type: "application/pdf" });
@@ -88,8 +88,7 @@ export default {
             this.pdf_iframe = base64data.replace("octet-stream", "pdf");
           };*/
         })
-        .catch(err => {
-          console.log(err.response);
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -101,7 +100,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -114,11 +113,11 @@ export default {
     cancel() {
       this.ver = false;
       this.$emit("closePdf");
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showPdf) {
           //CIERRO EL pdf viewer AL PRESONAR ESC
@@ -126,7 +125,7 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
 <style lang="css" scoped>
