@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNumLoteInventarioInventarioTable extends Migration
+class AddFirmaPathUsuarios extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +13,8 @@ class AddNumLoteInventarioInventarioTable extends Migration
      */
     public function up()
     {
-        Schema::table('inventario', function ($table) {
-            $table->integer('num_lote_inventario');
+        Schema::table('usuarios', function ($table) {
+         $table->string('firma_path')->nullable()->after('roles_id');
         });
     }
 
@@ -24,9 +25,8 @@ class AddNumLoteInventarioInventarioTable extends Migration
      */
     public function down()
     {
-        Schema::table('inventario', function ($table) {
-            $table->dropColumn('num_lote_inventario');
-        });
-
+         Schema::table('usuarios', function ($table) {
+         $table->dropColumn('firma_path');
+         });
     }
 }
