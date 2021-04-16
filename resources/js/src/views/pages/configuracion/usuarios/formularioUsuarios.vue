@@ -1,241 +1,269 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup popup-80"
+      class="forms-popup popup-80 bg-content-theme"
       close="cancel"
       :title="title"
       :active.sync="showVentana"
       ref="usuarios"
     >
-      <!--Datos del usuario-->
-      <div class="form-group">
-        <div class="title-form-group">
-          <span>Información del Usuario</span>
-        </div>
-        <div class="form-group-content">
+      <div>
+        <vs-tabs alignment="left" position="top" v-model="activeTab">
+          <vs-tab label="DATOS DEL EMPLEADO / USUARIO" class=""></vs-tab>
+          <vs-tab label="REGISTRO DE FIRMA"></vs-tab>
+          <!--<vs-tab label="FACTURACIÓN" icon="fingerprint"></vs-tab>-->
+        </vs-tabs>
+        <div class="tab-content" v-show="activeTab == 0">
           <div class="flex flex-wrap">
-            <div class="w-full   xl:w-4/12 px-2 input-text">
-              <label class="">
-                Nombre
-                <span class="">(*)</span>
-              </label>
-              <vs-input
-                ref="nombre"
-                name="Nombre"
-                data-vv-validate-on="blur"
-                v-validate="'required'"
-                type="text"
-                class="w-full"
-                placeholder="Ingrese el nombre del usuario"
-                v-model="form.nombre"
-              />
-              <span class="">{{ errors.first("Nombre") }}</span>
-              <span class="" v-if="this.errores.nombre">{{
-                errores.nombre[0]
-              }}</span>
-            </div>
-            <div class="w-full md:w-6/12  xl:w-4/12 px-2 input-text">
-              <label class="">
-                Rol
-                <span class="">(*)</span>
-              </label>
-              <v-select
-                :options="rolesOptions"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="roles"
-                class="w-full"
-              />
-              <span class="" v-if="this.errores.rol_id">{{
-                errores.rol_id[0]
-              }}</span>
-            </div>
-            <div class="w-full md:w-6/12  xl:w-4/12 px-2 input-text">
-              <label class="">
-                Género
-                <span class="">(*)</span>
-              </label>
-              <v-select
-                :options="generosOptions"
-                :clearable="false"
-                :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                v-model="genero"
-                class="w-full"
-              />
-              <span class="" v-if="this.errores.genero">{{
-                errores.genero[0]
-              }}</span>
-            </div>
+            <div class="w-full py-4">
+              <!--Datos del usuario-->
+              <div class="form-group">
+                <div class="title-form-group">
+                  <span>Información del Usuario</span>
+                </div>
+                <div class="form-group-content">
+                  <div class="flex flex-wrap">
+                    <div class="w-full xl:w-4/12 px-2 input-text">
+                      <label class="">
+                        Nombre
+                        <span class="">(*)</span>
+                      </label>
+                      <vs-input
+                        ref="nombre"
+                        name="Nombre"
+                        data-vv-validate-on="blur"
+                        v-validate="'required'"
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese el nombre del usuario"
+                        v-model="form.nombre"
+                      />
+                      <span class="">{{ errors.first("Nombre") }}</span>
+                      <span class="" v-if="this.errores.nombre">{{
+                        errores.nombre[0]
+                      }}</span>
+                    </div>
+                    <div class="w-full md:w-6/12 xl:w-4/12 px-2 input-text">
+                      <label class="">
+                        Rol
+                        <span class="">(*)</span>
+                      </label>
+                      <v-select
+                        :options="rolesOptions"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="roles"
+                        class="w-full"
+                      />
+                      <span class="" v-if="this.errores.rol_id">{{
+                        errores.rol_id[0]
+                      }}</span>
+                    </div>
+                    <div class="w-full md:w-6/12 xl:w-4/12 px-2 input-text">
+                      <label class="">
+                        Género
+                        <span class="">(*)</span>
+                      </label>
+                      <v-select
+                        :options="generosOptions"
+                        :clearable="false"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        v-model="genero"
+                        class="w-full"
+                      />
+                      <span class="" v-if="this.errores.genero">{{
+                        errores.genero[0]
+                      }}</span>
+                    </div>
 
-            <div class="w-full  lg:w-12/12 xl:w-4/12 px-2 input-text">
-              <label class="">
-                Usuario (email)
-                <span class="">(*)</span>
-              </label>
-              <vs-input
-                name="Usuario (email)"
-                data-vv-validate-on="blur"
-                v-validate="'required|email'"
-                type="email"
-                class="w-full"
-                placeholder="Correo electrónico del usuario"
-                v-model="form.usuario"
-              />
+                    <div class="w-full lg:w-12/12 xl:w-4/12 px-2 input-text">
+                      <label class="">
+                        Usuario (email)
+                        <span class="">(*)</span>
+                      </label>
+                      <vs-input
+                        name="Usuario (email)"
+                        data-vv-validate-on="blur"
+                        v-validate="'required|email'"
+                        type="email"
+                        class="w-full"
+                        placeholder="Correo electrónico del usuario"
+                        v-model="form.usuario"
+                      />
 
-              <span class="">{{ errors.first("Usuario (email)") }}</span>
+                      <span class="">{{
+                        errors.first("Usuario (email)")
+                      }}</span>
 
-              <span class="" v-if="this.errores.usuario">{{
-                errores.usuario[0]
-              }}</span>
-            </div>
-            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
-              <label class="">
-                Password
-                <span class="">(*)</span>
-              </label>
-              <vs-input
-                data-vv-validate-on="blur"
-                v-validate="'required'"
-                name="Password"
-                type="password"
-                class="w-full"
-                placeholder="Contraseña del usuario"
-                v-model="form.password"
-              />
+                      <span class="" v-if="this.errores.usuario">{{
+                        errores.usuario[0]
+                      }}</span>
+                    </div>
+                    <div
+                      class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text"
+                    >
+                      <label class="">
+                        Password
+                        <span class="">(*)</span>
+                      </label>
+                      <vs-input
+                        data-vv-validate-on="blur"
+                        v-validate="'required'"
+                        name="Password"
+                        type="password"
+                        class="w-full"
+                        placeholder="Contraseña del usuario"
+                        v-model="form.password"
+                      />
 
-              <span class="">{{ errors.first("Password") }}</span>
+                      <span class="">{{ errors.first("Password") }}</span>
 
-              <span class="" v-if="this.errores.password">{{
-                errores.password[0]
-              }}</span>
-            </div>
-            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
-              <label class="">
-                Repetir Password
-                <span class="">(*)</span>
-              </label>
-              <vs-input
-                data-vv-validate-on="blur"
-                v-validate="'required'"
-                name="Repetir Password"
-                type="password"
-                class="w-full"
-                placeholder="Repita la contraseña"
-                v-model="form.repetir"
-              />
+                      <span class="" v-if="this.errores.password">{{
+                        errores.password[0]
+                      }}</span>
+                    </div>
+                    <div
+                      class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text"
+                    >
+                      <label class="">
+                        Repetir Password
+                        <span class="">(*)</span>
+                      </label>
+                      <vs-input
+                        data-vv-validate-on="blur"
+                        v-validate="'required'"
+                        name="Repetir Password"
+                        type="password"
+                        class="w-full"
+                        placeholder="Repita la contraseña"
+                        v-model="form.repetir"
+                      />
 
-              <span class="">{{ errors.first("Repetir Password") }}</span>
+                      <span class="">{{
+                        errors.first("Repetir Password")
+                      }}</span>
 
-              <span class="" v-if="this.errores.repetir">{{
-                errores.repetir[0]
-              }}</span>
-            </div>
+                      <span class="" v-if="this.errores.repetir">{{
+                        errores.repetir[0]
+                      }}</span>
+                    </div>
 
-            <div class="w-full lg:w-12/12 xl:w-4/12 px-2 input-text">
-              <label class="">Dirección</label>
-              <vs-input
-                type="text"
-                class="w-full"
-                placeholder="Ingrese el nombre del usuario"
-                v-model="form.direccion"
-              />
-            </div>
-            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
-              <label class="">Teléfono</label>
-              <vs-input
-                type="text"
-                class="w-full"
-                placeholder="Ingrese el nombre del usuario"
-                v-model="form.telefono"
-              />
-            </div>
-            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
-              <label class="">Celular</label>
-              <vs-input
-                type="text"
-                class="w-full"
-                placeholder="Ingrese el nombre del usuario"
-                v-model="form.celular"
-              />
+                    <div class="w-full lg:w-12/12 xl:w-4/12 px-2 input-text">
+                      <label class="">Dirección</label>
+                      <vs-input
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese el nombre del usuario"
+                        v-model="form.direccion"
+                      />
+                    </div>
+                    <div
+                      class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text"
+                    >
+                      <label class="">Teléfono</label>
+                      <vs-input
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese el nombre del usuario"
+                        v-model="form.telefono"
+                      />
+                    </div>
+                    <div
+                      class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text"
+                    >
+                      <label class="">Celular</label>
+                      <vs-input
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese el nombre del usuario"
+                        v-model="form.celular"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Datos del usuario-->
+
+              <!--Datos del area de trabajo-->
+              <div class="form-group">
+                <div class="title-form-group">
+                  <span>Responsabilidades de este usuario</span>
+                </div>
+                <div class="form-group-content">
+                  <div class="flex flex-wrap">
+                    <div
+                      class="w-full md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
+                      v-for="puesto in puestos"
+                      :key="puesto.id"
+                    >
+                      <vs-checkbox
+                        class="theme-background p-2"
+                        v-model="form.puestos"
+                        :vs-value="puesto.id"
+                      >
+                        <label class="size-small color-copy font-medium">{{
+                          puesto.puesto
+                        }}</label>
+                      </vs-checkbox>
+                    </div>
+                    <div class="w-full px-2 mt-2">
+                      <span class="" v-if="this.errores.puestos">{{
+                        errores.puestos[0]
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Datos del area de trabajo-->
+
+              <!--Datos del contacto-->
+              <div class="form-group">
+                <div class="title-form-group">
+                  <span>Información de un Contacto</span>
+                </div>
+                <div class="form-group-content">
+                  <div class="flex flex-wrap">
+                    <div class="w-full lg:w-12/12 xl:w-4/12 px-2 input-text">
+                      <label class="">Nombre de un contacto</label>
+                      <vs-input
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese el nombre del usuario"
+                        v-model="form.nombre_contacto"
+                      />
+                    </div>
+                    <div
+                      class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text"
+                    >
+                      <label class="">Teléfono del contacto</label>
+                      <vs-input
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese el nombre del usuario"
+                        v-model="form.tel_contacto"
+                      />
+                    </div>
+                    <div
+                      class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text"
+                    >
+                      <label class="">Parentesco</label>
+                      <vs-input
+                        type="text"
+                        class="w-full"
+                        placeholder="Ingrese el nombre del usuario"
+                        v-model="form.parentesco_contacto"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Datos del contacto-->
             </div>
           </div>
         </div>
+        <div class="tab-content" v-show="activeTab == 1"></div>
       </div>
-      <!--Datos del usuario-->
-
-      <!--Datos del area de trabajo-->
-      <div class="form-group">
-        <div class="title-form-group">
-          <span>Responsabilidades de este usuario</span>
-        </div>
-        <div class="form-group-content">
-          <div class="flex flex-wrap">
-            <div
-              class="w-full md:w-4/12 lg:w-4/12 xl:w-4/12 px-2 input-text"
-              v-for="puesto in puestos"
-              :key="puesto.id"
-            >
-              <vs-checkbox
-                class="theme-background p-2"
-                v-model="form.puestos"
-                :vs-value="puesto.id"
-              >
-                <label class="size-small color-copy font-medium">{{ puesto.puesto }}</label>
-              </vs-checkbox>
-            </div>
-            <div class="w-full px-2 mt-2">
-              <span class="" v-if="this.errores.puestos">{{
-                errores.puestos[0]
-              }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--Datos del area de trabajo-->
-
-      <!--Datos del contacto-->
-      <div class="form-group">
-        <div class="title-form-group">
-          <span>Información de un Contacto</span>
-        </div>
-        <div class="form-group-content">
-          <div class="flex flex-wrap">
-              <div class="w-full  lg:w-12/12 xl:w-4/12 px-2 input-text">
-          <label class="">Nombre de un contacto</label>
-          <vs-input
-            type="text"
-            class="w-full"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.nombre_contacto"
-          />
-        </div>
-        <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
-          <label class="">Teléfono del contacto</label>
-          <vs-input
-            type="text"
-            class="w-full"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.tel_contacto"
-          />
-        </div>
-        <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 px-2 input-text">
-          <label class="">Parentesco</label>
-          <vs-input
-            type="text"
-            class="w-full"
-            placeholder="Ingrese el nombre del usuario"
-            v-model="form.parentesco_contacto"
-          />
-        </div>
-          </div>
-        </div>
-      </div>
-      <!--Datos del contacto-->
-
-
-
-
-       <div class="bottom-buttons-section">
+      <div class="bottom-buttons-section">
         <div class="text-advice">
           <span class="ojo-advice">Ojo:</span>
           Por favor revise la información ingresada, si todo es correcto de
@@ -255,7 +283,6 @@
           </vs-button>
         </div>
       </div>
-
     </vs-popup>
     <Password
       :show="operConfirmar"
