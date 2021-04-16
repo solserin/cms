@@ -391,14 +391,6 @@ body {
     display: none !important;
 }
 
-.icono:before {
-    content: url("../../../../../resources/assets/images/question.svg");
-}
-
-.password_icono:before {
-    content: url("../../../../../resources/assets/images/password.svg");
-}
-
 .nota_icono:before {
     display: block;
     width: 85px;
@@ -435,10 +427,6 @@ body {
 }
 
 /*confirmar (sin password) checker*/
-
-.confirmarAceptar .icono:before {
-    content: url("../../../../../resources/assets/images/accept.svg");
-}
 
 /*fin confirmar (sin password) checker*/
 

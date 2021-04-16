@@ -1,3 +1,35 @@
+/*confirms*/
+
+.confirm-form {
+    .vs-popup--header {
+        display: none !important;
+    }
+    .vs-popup {
+        max-width: 440px !important;
+        max-height: 440px !important;
+    }
+
+    .vs-dialog .vs-dialog-header {
+        display: none !important;
+    }
+
+    .password_icono:before {
+        content: url("../../../../../resources/assets/images/password.svg");
+    }
+}
+
+.confirmarDanger {
+    .icono:before {
+        content: url("../../../../../resources/assets/images/question.svg");
+    }
+}
+
+.confirmarAceptar {
+    .icono:before {
+        content: url("../../../../../resources/assets/images/accept.svg");
+    }
+}
+
 /*heighs del form segun su break-points*/
 @media (max-width: 1200px) {
     /*para los forms que no son fullscreen*/

@@ -1,71 +1,52 @@
 <template >
   <div class="centerx">
     <vs-popup
-      :class="['confirmarAceptar confirmar contrasena', z_index]"
+      :class="['confirm-form', z_index]"
       close="cancelar"
       title="contraseña"
       :active.sync="showChecker"
       ref="contra"
     >
       <div class="text-center password_icono"></div>
-      <div class="text-center seguro-mensaje mt-3">
-        Confirmar con Contraseña
+      <div
+        class="w-full text-center mt-3 h2 color-copy font-medium capitalize px-2"
+      >
+        confirmar contraseña
       </div>
-      <div class="text-center seguro-texto mt-3">
-        Para poder
-        <span class="font-semibold text-primary">{{ accionNombre }}</span
-        >, es necesario que verifique su identidad mediante contraseña. Esto
-        reduce el riesgo de que usuarios no autorizados realicen operaciones sin
-        su autorización.
+      <div class="mt-3 text-center hidden">
+        <span class="color-primary-900 size-smaller uppercase">{{
+          accionNombre
+        }}</span>
       </div>
-      <div class="flex flex-wrap mt-2">
-        <div class="w-full px-5">
-          <vs-input
-            maxlength="50"
-            size="large"
-            ref="contra"
-            type="password"
-            class="w-full pt-3 pb-3"
-            placeholder="Contraseña"
-            v-model.trim="pass"
-            @keyup.enter="acceptAlert"
-          />
-        </div>
-        <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
-          <div class="mt-2">
-            <vs-button
-              color="danger"
-              class="float-right mr-2"
-              size="small"
-              type="border"
-              @click="cancel"
-            >
-              <img
-                width="25px"
-                class="cursor-pointer"
-                src="@assets/images/cancel.svg"
-              />
-              <span class="texto-btn">(Esc) Cancelar</span>
-            </vs-button>
-          </div>
-        </div>
-        <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
-          <div class="mt-2">
-            <vs-button
-              size="small"
-              color="success"
-              class="float-left ml-2"
-              @click="acceptAlert"
-            >
-              <img
-                width="25px"
-                class="cursor-pointer"
-                src="@assets/images/checked.svg"
-              />
-              <span class="texto-btn">(Ent) Confirmar</span>
-            </vs-button>
-          </div>
-        </div>
+      <div class="w-full text-center mt-3 color-copy size-small px-2">
+        Para mayor seguridad debe ingresar su contraseña para confirmar que es
+        un usuario autorizado para realizar esta operación.
+      </div>
+
+      <div class="w-full px-2 mt-6 mx-auto">
+        <vs-input
+          maxlength="50"
+          size="large"
+          ref="contra"
+          type="password"
+          class="w-full"
+          placeholder="Contraseña"
+          v-model.trim="pass"
+          @keyup.enter="acceptAlert"
+        />
+      </div>
+
+      <div class="w-full text-right px-2 mt-6">
+        <span @click="cancel" class="color-danger-900 my-2 mr-8 cursor-pointer"
+          >(Esc) Cerrar Ventana</span
+        >
+        <vs-button
+          class="w-auto md:ml-2 my-2 md:mt-0"
+          color="success"
+          @click="acceptAlert"
+        >
+          <span>Continuar</span>
+        </vs-button>
       </div>
     </vs-popup>
   </div>
@@ -89,7 +70,7 @@ export default {
     z_index: {
       type: String,
       required: false,
-      default: "z-index54k",
+      default: "z-index55k",
     },
   },
   watch: {
@@ -153,8 +134,8 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
-            position: "bottom-center",
-            time: "4000",
+            position: "top-center",
+            time: "40000",
           });
           this.pass = "";
           this.$nextTick(() =>

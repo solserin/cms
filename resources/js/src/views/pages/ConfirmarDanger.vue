@@ -3,28 +3,33 @@
     <vs-prompt
       type="confirm"
       title="¿Desea continuar?"
-      class="confirmar"
+      :class="['confirm-form confirmarDanger', z_index]"
       :active.sync="showChecker"
       buttons-hidden
     >
       <div class="text-center icono"></div>
-      <div class="text-center seguro-mensaje mt-3">¿Seguro de continuar?</div>
-      <div class="text-center seguro-texto mt-3">{{accionNombre}}</div>
-      <div class="flex flex-wrap mt-2">
-        <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
-          <div class="mt-2">
-            <vs-button class="float-right mr-2" type="border" @click="cancel">(Esc) Cancelar</vs-button>
-          </div>
-        </div>
-        <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 mt-5">
-          <div class="mt-2">
-            <vs-button
-              :color="confirmarColorTexto"
-              class="float-left ml-2"
-              @click="aceptar"
-            >{{confirmarButtonTexto}}</vs-button>
-          </div>
-        </div>
+      <div
+        class="w-full text-center mt-3 h2 color-copy font-medium capitalize px-2"
+      >
+        ¿Seguro de continuar?
+      </div>
+
+      <div class="w-full text-center mt-3 color-copy size-small px-2">
+        {{ accionNombre }}
+      </div>
+
+      <div class="w-full text-right px-2 mt-6 pb-3">
+        <span @click="cancel" class="color-primary-900 my-2 mr-8 cursor-pointer"
+          >(Esc) Cancelar</span
+        >
+
+        <vs-button
+          class="w-auto md:ml-2 my-2 md:mt-0"
+          :color="confirmarColorTexto"
+          @click="aceptar"
+        >
+          <span>{{ confirmarButtonTexto }}</span>
+        </vs-button>
       </div>
     </vs-prompt>
   </div>
@@ -34,24 +39,29 @@ export default {
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     callbackOnSuccess: {
       type: Function,
-      required: true
+      required: true,
     },
     accion: {
       type: String,
-      required: true
+      required: true,
     },
     confirmarButton: {
       type: String,
-      default: "Aceptar"
+      default: "Aceptar",
     },
     confirmarColor: {
       type: String,
-      default: "danger"
-    }
+      default: "danger",
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index55k",
+    },
   },
 
   data() {
@@ -64,7 +74,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     accionNombre() {
       return this.accion;
@@ -74,7 +84,7 @@ export default {
     },
     confirmarColorTexto() {
       return this.confirmarColor;
-    }
+    },
   },
   methods: {
     aceptar() {
@@ -83,11 +93,11 @@ export default {
     },
     cancel() {
       this.$emit("closeVerificar");
-    }
+    },
   },
   mounted() {
     //cerrando el confirmar con esc
-    document.body.addEventListener("keyup", e => {
+    document.body.addEventListener("keyup", (e) => {
       if (e.keyCode === 27) {
         if (this.showChecker) {
           //CIERRO EL CONFIRMAR AL PRESONAR ESC
@@ -104,6 +114,6 @@ export default {
         }
       }
     });*/
-  }
+  },
 };
 </script>
