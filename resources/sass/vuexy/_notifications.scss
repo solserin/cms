@@ -16,8 +16,11 @@
 
 .vs-component {
     &.vs-notifications {
-        @extend .notificaciones;
+        @media (max-width: 576px) {
+            min-width: 380px !important;
+        }
 
+        @extend .notificaciones;
         &.activeNoti:active {
             pointer-events: none;
             .content-noti:active::after {
