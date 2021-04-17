@@ -60,6 +60,12 @@ return [
             'url'        => env('APP_URL') . '/cfdis',
             'visibility' => 'public',
         ],
+         'signatures' => [
+         'driver' => 'local',
+         'root' => storage_path(ENV('SIGNATURES_ROOT')),
+         'url' => env('APP_URL') . '/signatures',
+         'visibility' => 'public',
+         ],
 
         's3'     => [
             'driver' => 's3',

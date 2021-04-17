@@ -3,18 +3,19 @@
 //pruebas de git
 namespace App\Http\Controllers\Usuarios;
 
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\EmpresaController;
-use App\Puestos;
-use App\User;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\BadResponseException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 use PDF;
+use App\User;
+use App\Puestos;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\EmpresaController;
+use GuzzleHttp\Exception\BadResponseException;
 
 class UsuariosController extends ApiController
 {
@@ -317,8 +318,7 @@ class UsuariosController extends ApiController
 
     public function get_usuarioById(Request $request)
     {
-        return
-        User::select(
+          $resultado_query= User::select(
             'usuarios.id',
             'usuarios.id as id_user',
             'nombre',
@@ -336,6 +336,7 @@ class UsuariosController extends ApiController
             'tel_contacto',
             'nombre_contacto',
             'parentesco',
+            'firma_path',
             DB::raw('(CASE
                         WHEN usuarios.genero = "1" THEN "Hombre"
                         ELSE "Mujer"
@@ -345,6 +346,17 @@ class UsuariosController extends ApiController
             ->join('roles', 'roles.id', '=', 'usuarios.roles_id')
             ->where('usuarios.id', '=', $request->user_id)
             ->get();
+$path='';
+            if(trim($resultado_query[0]['firma_path'])==''){
+                $path=Storage::disk('signatures')->get('default.png');
+                  $resultado_query[0]['firma_registrada']= false;
+            }else{
+               $path=Storage::disk('signatures')->get('users/'.$resultado_query[0]['id']);
+                 $resultado_query[0]['firma_registrada']= true;
+            }
+            $resultado_query[0]['firma_path']= 'data:image/png;base64,'.base64_encode( $path);
+            
+        return $resultado_query;     
     }
 
     public function logout_usuario()

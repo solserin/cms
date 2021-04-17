@@ -10,6 +10,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 
+
 // Vuesax Component Framework
 import Vuesax from "vuesax";
 
@@ -49,6 +50,9 @@ import "./filters/filters";
 // Clipboard
 import VueClipboard from "vue-clipboard2";
 Vue.use(VueClipboard);
+
+import VueSignaturePad from 'vue-signature-pad';
+Vue.use(VueSignaturePad);
 
 // Tour
 import VueTour from "vue-tour";

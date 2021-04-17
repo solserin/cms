@@ -86,6 +86,7 @@
         "moment": "^2.29.1",
         "numeral": "^2.0.6",
         "vue-filter-number-format": "^2.0.0",
-        "vue-moment": "^4.1.0"
+        "vue-moment": "^4.1.0",
+        "vue-signature-pad": "^2.0.2"
     }
 }

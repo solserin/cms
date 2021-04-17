@@ -261,7 +261,37 @@
             </div>
           </div>
         </div>
-        <div class="tab-content" v-show="activeTab == 1"></div>
+        <div class="tab-content" v-show="activeTab == 1">
+          <div class="flex flex-wrap">
+            <div class="w-full py-4">
+              <!--Datos del usuario-->
+              <div class="form-group">
+                <div class="title-form-group">
+                  <span>Digitalización de Firma Manuscrita</span>
+                </div>
+                <div class="form-group-content">
+                  <div class="flex flex-wrap">
+                    <div class="signature">
+                      <h3>Registro de firma del usuario</h3>
+                      <VueSignaturePad ref="signaturePad" class="firma" />
+                      <p>Firme dentro del recuadro</p>
+                      <div class="w-full">
+                        <button @click="save">Save</button>
+                        <button @click="clear">Clear</button>
+                        <button @click="cargar">Cargar</button>
+                      </div>
+                    </div>
+                    <div class="signature-disabled">
+                      El registro de firmas está habilitado solo para la versión
+                      de tableta.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Datos del usuario-->
+            </div>
+          </div>
+        </div>
       </div>
       <div class="bottom-buttons-section">
         <div class="text-advice">
@@ -315,6 +345,7 @@ import ConfirmarDanger from "@pages/ConfirmarDanger";
 /**VARIABLES GLOBALES */
 import { generosOptions } from "@/VariablesGlobales";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
+
 export default {
   components: {
     "v-select": vSelect,
@@ -392,6 +423,7 @@ export default {
         nombre_contacto: "",
         tel_contacto: "",
         parentesco_contacto: "",
+        firma_path: "",
       },
       errores: [],
     };
@@ -423,6 +455,30 @@ export default {
     },
   },
   methods: {
+    save() {
+      const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+      console.log(isEmpty);
+      console.log(data);
+    },
+
+    clear() {
+      this.$refs.signaturePad.clearSignature();
+    },
+    resizeCanvas() {
+      var ratio = Math.max(window.devicePixelRatio || 1, 1);
+      canvas.width = canvas.offsetWidth * ratio;
+      canvas.height = canvas.offsetHeight * ratio;
+      canvas.getContext("2d").scale(ratio, ratio);
+      signaturePad.clear(); // otherwise isEmpty() might return incorrect value
+    },
+
+    cargar() {
+      this.$refs.signaturePad.openSignaturePad();
+      this.$refs.signaturePad.fromDataURL(this.form.firma_path);
+      const datos = this.$refs.signaturePad.toData();
+      this.$refs.signaturePad.fromData(datos);
+    },
+
     get_usuarioById(id_user) {
       this.$vs.loading();
       usuarios
@@ -446,6 +502,7 @@ export default {
           this.form.telefono = res.data[0].telefono;
           this.form.celular = res.data[0].celular;
 
+          this.form.firma_path = res.data[0].firma_path;
           this.form.nombre_contacto = res.data[0].nombre_contacto;
           this.form.tel_contacto = res.data[0].tel_contacto;
           this.form.parentesco_contacto = res.data[0].parentesco;
@@ -453,6 +510,7 @@ export default {
           res.data[0].puestos.forEach((element) => {
             this.form.puestos.push(element.id);
           });
+          this.cargar();
         })
         .catch((err) => {
           this.$vs.loading.close();
