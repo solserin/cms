@@ -358,6 +358,7 @@
       :accion="accionNombre"
     ></Password>
     <ConfirmarDanger
+      :z_index="'z-index58k'"
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword = false"
@@ -366,6 +367,7 @@
     ></ConfirmarDanger>
 
     <ConfirmarAceptar
+      :z_index="'z-index58k'"
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
@@ -389,25 +391,25 @@ export default {
     "v-select": vSelect,
     Password,
     ConfirmarDanger,
-    ConfirmarAceptar
+    ConfirmarAceptar,
   },
   props: {
     show: {
       type: Boolean,
-      required: true
+      required: true,
     },
     tipo: {
       type: String,
-      required: true
+      required: true,
     },
     id_precio: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         //cargo nacionalidades
         this.$refs["formulario"].$el.querySelector(".vs-icon").onclick = () => {
@@ -419,12 +421,12 @@ export default {
 
         this.form.contado_b = {
           value: 1,
-          label: "Pago de Contado/Uso Inmediato"
+          label: "Pago de Contado/Uso Inmediato",
         };
 
         this.form.descuento_pronto_pago_b = {
           value: "0",
-          label: "No"
+          label: "No",
         };
 
         (async () => {
@@ -443,7 +445,7 @@ export default {
 
       this.limpiarValidation();
     },
-    "form.contado_b": function(newValue, oldValue) {
+    "form.contado_b": function (newValue, oldValue) {
       if (newValue.value == 1) {
         this.form.financiamiento = 1;
       } else {
@@ -452,7 +454,7 @@ export default {
           this.form.financiamiento = this.datosPrecio.financiamiento;
         }
       }
-    }
+    },
   },
   computed: {
     showVentana: {
@@ -461,7 +463,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     getTipoformulario: {
       get() {
@@ -469,7 +471,7 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
     get_precio_id: {
       get() {
@@ -477,25 +479,25 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
+      },
     },
-    tipo_propiedad_computed: function() {
+    tipo_propiedad_computed: function () {
       return this.form.tipo_plan.value;
     },
-    es_contado: function() {
+    es_contado: function () {
       if (this.form.contado_b.value == 1) {
         return true;
       } else {
         return false;
       }
     },
-    aplica_descuento: function() {
+    aplica_descuento: function () {
       if (this.form.descuento_pronto_pago_b.value == 1) {
         return false;
       } else {
         return true;
       }
-    }
+    },
   },
   data() {
     return {
@@ -516,22 +518,22 @@ export default {
       financiamientos: [
         {
           value: "1",
-          label: "Pago de Contado/Uso Inmediato"
+          label: "Pago de Contado/Uso Inmediato",
         },
         {
           value: "0",
-          label: "Pago a Meses/Uso a Futuro"
-        }
+          label: "Pago a Meses/Uso a Futuro",
+        },
       ],
       descuento: [
         {
           value: "1",
-          label: "Si"
+          label: "Si",
         },
         {
           value: "0",
-          label: "No"
-        }
+          label: "No",
+        },
       ],
       tipos_propiedad: [],
       form: {
@@ -547,9 +549,9 @@ export default {
         costo_neto_financiamiento_normal: "",
         descuento_pronto_pago_b: {},
         costo_neto_pronto_pago: "",
-        tipo_plan: { value: "", label: "Seleccione 1" }
+        tipo_plan: { value: "", label: "Seleccione 1" },
       },
-      errores: []
+      errores: [],
     };
   },
   methods: {
@@ -562,12 +564,12 @@ export default {
         this.tipo_planes = [];
         this.tipo_planes.push({
           label: "Todos los Planes",
-          value: ""
+          value: "",
         });
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.tipo_planes.push({
             label: element.plan.charAt(0).toUpperCase() + element.plan.slice(1),
-            value: element.id
+            value: element.id,
           });
           //la primero opcion
           this.plan_tipo = this.tipo_planes[0];
@@ -585,7 +587,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -600,14 +602,14 @@ export default {
         this.form.descripcion = this.datosPrecio.descripcion;
         this.form.descripcion_ingles = this.datosPrecio.descripcion_ingles;
         //actualizo los datos en el formulario
-        this.financiamientos.forEach(element => {
+        this.financiamientos.forEach((element) => {
           if (element.value == this.datosPrecio.contado_b) {
             this.form.contado_b = element;
             this.form.financiamiento = this.datosPrecio.financiamiento;
             return;
           }
         });
-        this.tipo_planes.forEach(element => {
+        this.tipo_planes.forEach((element) => {
           if (element.value == this.datosPrecio.planes_funerarios_id) {
             this.form.tipo_plan = element;
             return;
@@ -619,7 +621,7 @@ export default {
           this.datosPrecio.costo_neto_financiamiento_normal
         );
 
-        this.descuento.forEach(element => {
+        this.descuento.forEach((element) => {
           if (element.value == this.datosPrecio.descuento_pronto_pago_b) {
             this.form.descuento_pronto_pago_b = element;
             return;
@@ -640,7 +642,7 @@ export default {
           icon: "icon-alert-circle",
           color: "danger",
           position: "bottom-right",
-          time: "4000"
+          time: "4000",
         });
         this.cerrarVentana();
       }
@@ -648,7 +650,7 @@ export default {
     acceptAlert() {
       this.$validator
         .validateAll()
-        .then(result => {
+        .then((result) => {
           if (!result) {
             this.$vs.notify({
               title: "Registro de Precios",
@@ -657,7 +659,7 @@ export default {
               icon: "icon-alert-circle",
               color: "danger",
               position: "bottom-right",
-              time: "4000"
+              time: "4000",
             });
           } else {
             this.errores = [];
@@ -681,7 +683,7 @@ export default {
       this.$vs.loading();
       planes
         .registrar_precio(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -690,7 +692,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -701,12 +703,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
@@ -717,7 +719,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -728,7 +730,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
@@ -738,7 +740,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -752,7 +754,7 @@ export default {
       this.$vs.loading();
       planes
         .update_precio(this.form)
-        .then(res => {
+        .then((res) => {
           if (res.data >= 1) {
             //success
             this.$vs.notify({
@@ -761,7 +763,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 5000
+              time: 5000,
             });
             this.$emit("retornar_id", res.data);
             this.cerrarVentana();
@@ -772,12 +774,12 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 4000
+              time: 4000,
             });
           }
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response) {
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
@@ -788,7 +790,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               //checo si existe cada error
@@ -799,7 +801,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 5000
+                time: 5000,
               });
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
@@ -809,7 +811,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -853,8 +855,8 @@ export default {
       this.$validator.pause();
       this.$nextTick(() => {
         this.$validator.errors.clear();
-        this.$validator.fields.items.forEach(field => field.reset());
-        this.$validator.fields.items.forEach(field =>
+        this.$validator.fields.items.forEach((field) => field.reset());
+        this.$validator.fields.items.forEach((field) =>
           this.errors.remove(field)
         );
         this.$validator.resume();
@@ -863,8 +865,8 @@ export default {
 
     closeChecker() {
       this.operConfirmar = false;
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

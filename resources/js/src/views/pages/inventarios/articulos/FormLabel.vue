@@ -164,6 +164,7 @@
     </vs-popup>
 
     <ConfirmarDanger
+      :z_index="'z-index58k'"
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword = false"
@@ -178,6 +179,7 @@
       @closeReportes="openReportesLista = false"
     ></Reporteador>
     <ConfirmarAceptar
+      :z_index="'z-index58k'"
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
