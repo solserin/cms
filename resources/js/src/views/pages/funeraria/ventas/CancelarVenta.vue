@@ -189,6 +189,7 @@
       ></Password>
 
       <ConfirmarDanger
+        :z_index="'z-index58k'"
         :show="openConfirmarSinPassword"
         :callback-on-success="callBackConfirmar"
         @closeVerificar="openConfirmarSinPassword = false"

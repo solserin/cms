@@ -137,6 +137,7 @@
       :accion="accionNombre"
     ></Password>
     <ConfirmarDanger
+      :z_index="'z-index58k'"
       :show="openConfirmarDanger"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarDanger = false"
@@ -144,6 +145,7 @@
       :confirmarButton="botonConfirmarDanger"
     ></ConfirmarDanger>
     <ConfirmarAceptar
+      :z_index="'z-index58k'"
       :show="openConfirmarAceptar"
       :callback-on-success="callback"
       @closeVerificar="openConfirmarAceptar = false"

@@ -98,7 +98,7 @@
                     </td>
                     <td>
                       <img
-                        class="cursor-pointer img-btn ml-auto  mb-2"
+                        class="cursor-pointer img-btn ml-auto mb-2"
                         src="@assets/images/edit.svg"
                         title="Modificar"
                         @click="openModificarPlan(plan.id)"
@@ -193,7 +193,7 @@
                   />
                   <img
                     v-if="data[index_precio].status == 1"
-                    class="cursor-pointer img-btn-32  ml-3"
+                    class="cursor-pointer img-btn-32 ml-3"
                     src="@assets/images/switchon.svg"
                     title="Deshabilitar"
                     @click="
@@ -227,12 +227,11 @@
 
       <!--componente de confirmar sin contraseña-->
       <ConfirmarDanger
+        :z_index="'z-index58k'"
         :show="operConfirmar"
         :callback-on-success="callback"
         @closeVerificar="operConfirmar = false"
-        :accion="
-          '¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'
-        "
+        :accion="'¿Desea eliminar este plan de mensualidades? Los datos quedarán eliminados del sistema.'"
         :confirmarButton="'Eliminar'"
       ></ConfirmarDanger>
       <Password
@@ -281,11 +280,11 @@ export default {
   props: {
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
-    show: function(newValue, oldValue) {
+    show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$refs["planes_planes"].$el.querySelector(
           ".vs-icon"
@@ -301,7 +300,7 @@ export default {
         this.datosVenta = [];
         this.total = 0;
       }
-    }
+    },
   },
   components: {
     ConfirmarDanger,
@@ -309,7 +308,7 @@ export default {
     "v-select": vSelect,
     FormularioPrecios,
     Reporteador,
-    FormularioPlanes
+    FormularioPlanes,
   },
   data() {
     return {
@@ -325,7 +324,7 @@ export default {
       request: {
         destinatario: "",
         id_tipo_propiedad: "",
-        email: ""
+        email: "",
       },
 
       tipoFormularioPrecio: "",
@@ -342,7 +341,7 @@ export default {
       openPassword: false,
       accionPassword: "",
       callback: Function,
-      callbackPassword: Function
+      callbackPassword: Function,
       //datos que mando para actualizar
     };
   },
@@ -353,8 +352,8 @@ export default {
       },
       set(newValue) {
         return newValue;
-      }
-    }
+      },
+    },
   },
   methods: {
     async get_planes() {
@@ -366,12 +365,12 @@ export default {
         this.tipo_planes = [];
         this.tipo_planes.push({
           label: "Todos los Planes",
-          value: ""
+          value: "",
         });
-        res.data.forEach(element => {
+        res.data.forEach((element) => {
           this.tipo_planes.push({
             label: element.plan.charAt(0).toUpperCase() + element.plan.slice(1),
-            value: element.id
+            value: element.id,
           });
           //la primero opcion
           this.plan_tipo = this.tipo_planes[0];
@@ -389,7 +388,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -413,11 +412,11 @@ export default {
     enable_disable_planes() {
       this.$vs.loading();
       let datos = {
-        id_plan: this.id_plan_modificar
+        id_plan: this.id_plan_modificar,
       };
       planes
         .enable_disable_planes(datos)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           (async () => {
             await this.get_planes();
@@ -429,7 +428,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 4000
+              time: 4000,
             });
           } else {
             this.$vs.notify({
@@ -438,11 +437,11 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "primary",
-              time: 4000
+              time: 4000,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -454,7 +453,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -467,7 +466,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
@@ -484,11 +483,11 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Precios x Plan (Español)",
-        url: "/funeraria/pdf_plan_funerario/es"
+        url: "/funeraria/pdf_plan_funerario/es",
       });
       this.ListaReportes.push({
         nombre: "Precios x Plan (Inglés)",
-        url: "/funeraria/pdf_plan_funerario/en"
+        url: "/funeraria/pdf_plan_funerario/en",
       });
       //estado de cuenta
       this.request.email = "";
@@ -501,11 +500,11 @@ export default {
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
         nombre: "Todos los Planes (Español)",
-        url: "/funeraria/planes_funerarios/es"
+        url: "/funeraria/planes_funerarios/es",
       });
       this.ListaReportes.push({
         nombre: "Todos los Planes (Inglés)",
-        url: "/funeraria/planes_funerarios/en"
+        url: "/funeraria/planes_funerarios/en",
       });
       //estado de cuenta
       this.request.email = "";
@@ -544,12 +543,12 @@ export default {
         this.planes_tipos = [];
         this.planes_tipos.push({
           label: "Todas las Propiedades",
-          value: ""
+          value: "",
         });
-        this.planes.forEach(element => {
+        this.planes.forEach((element) => {
           this.planes_tipos.push({
             label: "Tipo " + element.tipo,
-            value: element.id
+            value: element.id,
           });
           //la primero opcion
           this.propiedad_tipo = this.planes_tipos[0];
@@ -567,7 +566,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 4000
+              time: 4000,
             });
           }
         }
@@ -591,11 +590,11 @@ export default {
     enable_disable() {
       this.$vs.loading();
       let datos = {
-        id_precio: this.id_precio_modificar
+        id_precio: this.id_precio_modificar,
       };
       planes
         .enable_disable(datos)
-        .then(res => {
+        .then((res) => {
           this.$vs.loading.close();
           (async () => {
             await this.get_planes();
@@ -607,7 +606,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
-              time: 4000
+              time: 4000,
             });
           } else {
             this.$vs.notify({
@@ -616,11 +615,11 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "primary",
-              time: 4000
+              time: 4000,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           if (err.response) {
             if (err.response.status == 403) {
@@ -632,7 +631,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             } else if (err.response.status == 422) {
               /**error de validacion */
@@ -645,13 +644,13 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
-                time: 8000
+                time: 8000,
               });
             }
           }
         });
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

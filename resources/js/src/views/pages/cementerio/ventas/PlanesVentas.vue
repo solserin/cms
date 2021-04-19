@@ -152,6 +152,7 @@
 
       <!--componente de confirmar sin contraseña-->
       <ConfirmarDanger
+        :z_index="'z-index58k'"
         :show="operConfirmar"
         :callback-on-success="callback"
         @closeVerificar="operConfirmar = false"

@@ -1556,6 +1556,7 @@
       </div>
     </vs-popup>
     <ConfirmarDanger
+      :z_index="'z-index58k'"
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword = false"
@@ -1563,6 +1564,7 @@
       :confirmarButton="botonConfirmarSinPassword"
     ></ConfirmarDanger>
     <ClientesBuscador
+      :z_index="'z-index58k'"
       :show="openBuscadorCliente"
       @closeBuscador="openBuscadorCliente = false"
       @retornoCliente="clienteSeleccionado"
