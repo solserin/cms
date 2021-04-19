@@ -271,19 +271,54 @@
                 </div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
-                    <div class="signature">
-                      <h3>Registro de firma del usuario</h3>
-                      <VueSignaturePad ref="signaturePad" class="firma" />
-                      <p>Firme dentro del recuadro</p>
-                      <div class="w-full">
-                        <button @click="save">Save</button>
-                        <button @click="clear">Clear</button>
-                        <button @click="cargar">Cargar</button>
+                    <div class="w-full">
+                      <div class="signature">
+                        <h3 class="mt-6">Registro de Firma Manuscrita</h3>
+                        <div class="firma" v-show="!form.firma_registrada">
+                          <VueSignaturePad
+                            ref="signaturePad"
+                            width="400px"
+                            height="200px"
+                          />
+                        </div>
+                        <div v-show="form.firma_registrada" class="firma">
+                          <img
+                            :src="form.firma_path"
+                            width="400px"
+                            height="200px"
+                            alt=""
+                          />
+                        </div>
+                        <p
+                          :class="['color-danger-900']"
+                          v-if="form.firma_registrada"
+                        >
+                          La firma de este usuario ya ha sido registrada
+                        </p>
+                        <p :class="['color-copy']" v-else>
+                          Firme dentro de esta área
+                        </p>
                       </div>
                     </div>
-                    <div class="signature-disabled">
-                      El registro de firmas está habilitado solo para la versión
-                      de tableta.
+                    <div
+                      class="w-full text-center mt-6"
+                      v-if="!form.firma_registrada"
+                    >
+                      <vs-button
+                        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+                        color="danger"
+                        @click="undo"
+                        size="small"
+                      >
+                        <span>Limpiar</span>
+                      </vs-button>
+                      <vs-button
+                        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0 hidden"
+                        color="success"
+                        size="small"
+                      >
+                        <span>Guardar Firma</span>
+                      </vs-button>
                     </div>
                   </div>
                 </div>
@@ -384,15 +419,16 @@ export default {
           this.title = "Registrar Nuevo Usuario";
         } else {
           this.title = "Modificar Usuario";
-
           /**se cargan los datos del usuario */
           this.get_usuarioById(this.get_usuario_id);
         }
+        //window.addEventListener("resize", this.resizeCanvas);
       }
     },
   },
   data() {
     return {
+      error_message: false,
       openConfirmarAceptar: false,
       title: "",
       botonConfirmarDanger: "",
@@ -424,6 +460,8 @@ export default {
         tel_contacto: "",
         parentesco_contacto: "",
         firma_path: "",
+        firma_registrada: false,
+        firma: "",
       },
       errores: [],
     };
@@ -455,28 +493,34 @@ export default {
     },
   },
   methods: {
-    save() {
-      const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
-      console.log(isEmpty);
-      console.log(data);
-    },
-
-    clear() {
+    undo() {
       this.$refs.signaturePad.clearSignature();
     },
-    resizeCanvas() {
-      var ratio = Math.max(window.devicePixelRatio || 1, 1);
-      canvas.width = canvas.offsetWidth * ratio;
-      canvas.height = canvas.offsetHeight * ratio;
-      canvas.getContext("2d").scale(ratio, ratio);
-      signaturePad.clear(); // otherwise isEmpty() might return incorrect value
+    save() {
+      const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+      //console.log(isEmpty);
+      if (!isEmpty) {
+        if (!this.form.firma_registrada) {
+          this.form.firma = data;
+        }
+      }
+      //console.log(data);
+      // this.$refs.signaturePad.lockSignaturePad();
     },
+    resizeCanvas() {
+      let canvas = this.$refs.signaturePad.$el.firstChild;
 
-    cargar() {
-      this.$refs.signaturePad.openSignaturePad();
-      this.$refs.signaturePad.fromDataURL(this.form.firma_path);
-      const datos = this.$refs.signaturePad.toData();
-      this.$refs.signaturePad.fromData(datos);
+      var ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+      if (canvas.offsetWidth > 0) {
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        //canvas.getContext("2d").scale(ratio, ratio);
+      } else {
+        canvas.width = 400;
+        canvas.height = 200;
+      }
+      //this.$refs.signaturePad.clearSignature(); // otherwise isEmpty() might return incorrect value
     },
 
     get_usuarioById(id_user) {
@@ -501,8 +545,14 @@ export default {
           this.form.direccion = res.data[0].domicilio;
           this.form.telefono = res.data[0].telefono;
           this.form.celular = res.data[0].celular;
-
           this.form.firma_path = res.data[0].firma_path;
+          this.form.firma_registrada = res.data[0].firma_registrada;
+
+          /*this.$refs.signaturePad.fromDataURL(this.form.firma_path);
+          const data = this.$refs.signaturePad.toData();
+          this.$refs.signaturePad.fromData(data);
+          */
+
           this.form.nombre_contacto = res.data[0].nombre_contacto;
           this.form.tel_contacto = res.data[0].tel_contacto;
           this.form.parentesco_contacto = res.data[0].parentesco;
@@ -510,7 +560,6 @@ export default {
           res.data[0].puestos.forEach((element) => {
             this.form.puestos.push(element.id);
           });
-          this.cargar();
         })
         .catch((err) => {
           this.$vs.loading.close();
@@ -534,7 +583,8 @@ export default {
             return;
           } else {
             //se confirma la cntraseña
-
+            /**genero el base64 de la firma */
+            this.save();
             if (this.getTipoformulario == "agregar") {
               /**se manda llamar la funcion de agregar usuario */
               this.accionNombre = "Registrar Nuevo Usuario";
@@ -572,6 +622,10 @@ export default {
       this.form.tel_contacto = "";
       this.form.parentesco_contacto = "";
       this.form.puestos = [];
+      this.form.firma_path = "";
+      this.form.firma = "";
+      this.form.firma_registrada = false;
+      this.undo();
       this.$emit("closeVentana");
     },
     get_roles() {
@@ -603,6 +657,7 @@ export default {
     },
     //funcion que inserta el nuevo rol
     saveUsuario() {
+      this.save();
       this.$vs.loading();
       //limpiando errores
       this.errores = [];
@@ -709,6 +764,9 @@ export default {
     closeChecker() {
       this.operConfirmar = false;
     },
+  },
+  mounted() {
+    this.resizeCanvas();
   },
 };
 </script>

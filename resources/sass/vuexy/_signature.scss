@@ -5,22 +5,22 @@
   }
   text-align: center;
   .firma {
-    margin: 1rem 0 0.5rem 0 !important;
+    margin: 1rem auto 0.5rem auto !important;
     @extend .theme-background, .border-dark-solid-1;
-    max-width: 500px !important;
-    max-height: 250px !important;
+    max-width: 400px !important;
+    max-height: 200px !important;
 
     canvas {
-      max-width: 500px !important;
-      max-height: 250px !important;
-      min-width: 500px !important;
-      min-height: 250px !important;
+      max-width: 400px !important;
+      max-height: 200px !important;
+      min-width: 400px !important;
+      min-height: 200px !important;
       background-color: transparent !important;
       nav-index: 1 !important;
     }
   }
   p {
-    @extend .size-base, .color-copy;
+    @extend .size-base;
   }
 }
 .signature-disabled {

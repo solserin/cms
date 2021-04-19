@@ -51,8 +51,6 @@ import "./filters/filters";
 import VueClipboard from "vue-clipboard2";
 Vue.use(VueClipboard);
 
-import VueSignaturePad from 'vue-signature-pad';
-Vue.use(VueSignaturePad);
 
 // Tour
 import VueTour from "vue-tour";
@@ -113,6 +111,9 @@ Vue.use(require('vue-moment'), {
     moment
 })
  
+import VueSignaturePad from 'vue-signature-pad';
+
+Vue.use(VueSignaturePad);
 /**con esta funcion valido si el usuario tiene cierto permiso sobre algun modulo, tomand
  * con parametros la url del modulo y el id del permiso
  */

@@ -351,7 +351,11 @@ $path='';
                 $path=Storage::disk('signatures')->get('default.png');
                   $resultado_query[0]['firma_registrada']= false;
             }else{
-               $path=Storage::disk('signatures')->get('users/'.$resultado_query[0]['id']);
+                if (Storage::disk('signatures')->exists('users/'.$resultado_query[0]['id'].'.png')) {
+                 $path=Storage::disk('signatures')->get('users/'.$resultado_query[0]['id'].'.png');
+                }else{
+                     $path=Storage::disk('signatures')->get('default.png');
+                }
                  $resultado_query[0]['firma_registrada']= true;
             }
             $resultado_query[0]['firma_path']= 'data:image/png;base64,'.base64_encode( $path);
@@ -437,9 +441,23 @@ $path='';
                     'nombre_contacto' => $request->nombre_contacto,
                     'tel_contacto'    => $request->tel_contacto,
                     'parentesco'      => $request->parentesco_contacto,
+                    'firma_path' => trim($request->firma)!=''?'capturada':null,
                     'created_at'      => now(),
                 ]
             );
+
+            /**guard firma en imagen*/
+           if(trim($request->firma)){
+                $base64_image = $request->firma;
+                if (preg_match('/^data:image\/(\w+);base64,/', $base64_image)) {
+                    $data = substr($base64_image, strpos($base64_image, ',') + 1);
+                    $data = base64_decode($data);
+                    /**guardo la imagen aqui voy */
+                    Storage::disk('signatures')->put('users/'.$id_user.'.png',$data);
+                    //$path=Storage::disk('signatures')->get('default.png');
+                }
+           }
+
 
             /**inserto cada uno de los puestos que tiene este usuario */
             foreach ($request->puestos as $puesto) {
@@ -498,6 +516,21 @@ $path='';
             /**eliminadmos los puestos asociados para crear los nuevos */
             DB::table('usuarios_puestos')->where('usuarios_id', $user_id)->delete();
 
+
+           $datos=DB::table('usuarios')->where('id', $user_id)->where('firma_path',null)->get();
+           $firma=null;
+           $crear_imagen=false;
+            if(count($datos)>0){
+                 if(trim($request->firma)!=null){
+                    $firma="capturada";
+                   $crear_imagen=true;
+                 }
+            }else{
+                if($datos[0]->firma_path!=null){
+                     $firma="capturada";
+                }
+            }
+
             //actualizando los datos del usuario
             if ($request->password == 'nochanges') {
                 DB::table('usuarios')->where('id', $user_id)->update(
@@ -513,6 +546,7 @@ $path='';
                         'tel_contacto'    => $request->tel_contacto,
                         'parentesco'      => $request->parentesco_contacto,
                         'updated_at'      => now(),
+                        'firma_path' => $firma
                     ]
                 );
             } else {
@@ -531,9 +565,23 @@ $path='';
                         'tel_contacto'    => $request->tel_contacto,
                         'parentesco'      => $request->parentesco_contacto,
                         'updated_at'      => now(),
+                         'firma_path' => $firma
                     ]
                 );
             }
+
+                 
+               if($crear_imagen==true){
+                 if(trim($request->firma)){
+                 $base64_image = $request->firma;
+                 if (preg_match('/^data:image\/(\w+);base64,/', $base64_image)) {
+                 $data = substr($base64_image, strpos($base64_image, ',') + 1);
+                 $data = base64_decode($data);
+                 Storage::disk('signatures')->put('users/'.$user_id.'.png',$data);
+                 }
+                 }
+                }
+                 
 
             /**inserto cada uno de los puestos que tiene este usuario */
             foreach ($request->puestos as $puesto) {
