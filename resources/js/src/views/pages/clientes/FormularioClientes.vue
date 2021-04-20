@@ -421,7 +421,6 @@
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import "flatpickr/dist/themes/airbnb.css";
-
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
