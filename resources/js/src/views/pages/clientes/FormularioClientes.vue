@@ -399,7 +399,7 @@
       :accion="accionNombre"
     ></Password>
     <ConfirmarDanger
-      :z_index="'z-index58k'"
+      :z_index="'z-index59k'"
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword = false"
@@ -408,7 +408,7 @@
     ></ConfirmarDanger>
 
     <ConfirmarAceptar
-      :z_index="'z-index58k'"
+      :z_index="'z-index59k'"
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
