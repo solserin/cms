@@ -17,6 +17,8 @@ Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamen
 Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}/{unir_lotes_cantidad?}', 'FunerariaController@get_solicitudes_servicios');
 
 Route::get('firmas/get_areas_firmar/{documento_id?}', 'FirmasController@get_areas_firmar');
+Route::get('firmas/get_firma/{operacion_id?}/{area_id?}', 'FirmasController@get_firma');
+
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -34,7 +36,10 @@ Route::middleware(['client'])->group(function () {
 
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
+Route::post('firmas/firmar', 'FirmasController@firmar');
+
     Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
+
 
     Route::post('logout_usuario', 'Usuarios\UsuariosController@logout_usuario');
     /**RUTA PARA OBTENER LOS PUESTOS DISPONIBLEN EN LA EMPRESA */

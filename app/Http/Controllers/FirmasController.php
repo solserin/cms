@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Firmas;
 use App\Documentos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Storage;
 
 class FirmasController  extends ApiController
 {
@@ -15,6 +18,103 @@ class FirmasController  extends ApiController
             return $resultado;
         }else{
             return $this->errorResponse('No se encontró este documento',409);
+        }
+    }
+
+      public function get_firma($operacion_id='',$area_id='')
+    {
+        $resultado = Firmas::where('areas_firmas_id','=',$area_id)->where(function($query)use($operacion_id){
+            $query->where('operacion_id','=',$operacion_id) ->orWhere('pagos_id','=',$operacion_id)->orWhere('facturas_id','=',$operacion_id);
+        })
+       ->get()->toArray();
+    
+        if(count($resultado)>0){
+            /**se regresa el path de la imagen */
+                if (Storage::disk('signatures')->exists($resultado[0]['id'].'.png')) {
+                    $path=Storage::disk('signatures')->get($resultado[0]['id'].'.png');
+                }else{
+                     $path=Storage::disk('signatures')->get('default.png');
+                }
+                $resultado[0]['firma_path']= 'data:image/png;base64,'.base64_encode( $path);
+                $resultado[0]['fecha_hora_firma'] = fecha_abr($resultado[0]['fecha_hora_firma']);
+            return $resultado;
+        }else{
+            return 1;
+        }
+    }
+
+
+     public function firmar(Request $request)
+    {
+        if(!isset($request->id_area)){
+            return $this->errorResponse('Ingrese la persona que está firmando.',409);
+        }
+         if(!isset($request->operacion_id)){
+            return $this->errorResponse('Ingrese el documento que se está firmando.',409);
+        }
+        if(!isset($request->firma)){
+            return $this->errorResponse('Capture la firma a digitalizar.',409);
+        }
+        if(!isset($request->tipo)){
+            return $this->errorResponse('Capture el tipo de documento que se está firmando.',409);
+        }
+
+
+            $operacion_id=$request->tipo=='operacion'?$request->operacion_id:null;
+            $pago_id=$request->tipo=='pagos'?$request->operacion_id:null;
+            $factura_id=$request->tipo=='facturas'?$request->operacion_id:null;
+
+
+            if($request->tipo=='operacion'){
+                /**checar si este documento ya fue firmado */
+                $firma = DB::table('firmas')->where('areas_firmas_id',$request->id_area)->where('operacion_id',$operacion_id)->get();
+            }else  if($request->tipo=='pagos'){
+                $firma = DB::table('firmas')->where('areas_firmas_id',$request->id_area)->where('pagos_id',$pago_id)->get();
+            } if($request->tipo=='facturas'){
+                 $firma = DB::table('firmas')->where('areas_firmas_id',$request->id_area)->where('facturas_id',$factura_id)->get();
+            }
+
+            if(count($firma)>0){
+                return $this->errorResponse('Está firma ya fue capturada anteriormente.',409);
+            }
+           
+
+            try {
+
+            DB::beginTransaction();
+            $id_firma = DB::table('firmas')->insertGetId(
+                [
+                    'firma_path'                     => (float) $request->pago_inicial,
+                    'registro_id'                     => (int) $request->user()->id,
+                    'fecha_hora_firma'              => now(),
+                    'operacion_id'                     => $operacion_id,
+                    'pagos_id'                     => $pago_id,
+                    'facturas_id'=>$factura_id,
+                    'areas_firmas_id'                     => $request->id_area,
+                ]
+            );
+        
+
+             if(trim($request->firma)){
+                $base64_image = $request->firma;
+                if (preg_match('/^data:image\/(\w+);base64,/', $base64_image)) {
+                    $data = substr($base64_image, strpos($base64_image, ',') + 1);
+                    $data = base64_decode($data);
+                    /**guardo la imagen aqui voy */
+                    Storage::disk('signatures')->put($id_firma.'.png',$data);
+                }
+           }
+             
+
+            if (!Storage::disk('signatures')->exists($id_firma.'.png')) {
+                return $this->errorResponse('Error al guardar la firma, por favor reintente.',409);
+            }
+        
+            DB::commit();
+            return $id_firma;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
         }
     }
 }

@@ -346,7 +346,7 @@ class UsuariosController extends ApiController
             ->join('roles', 'roles.id', '=', 'usuarios.roles_id')
             ->where('usuarios.id', '=', $request->user_id)
             ->get();
-$path='';
+            $path='';
             if(trim($resultado_query[0]['firma_path'])==''){
                 $path=Storage::disk('signatures')->get('default.png');
                   $resultado_query[0]['firma_registrada']= false;

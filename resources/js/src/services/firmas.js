@@ -9,4 +9,10 @@ export default {
     get_areas_firmar(id_documento) {
         return axios.get("/firmas/get_areas_firmar/"+id_documento);
     },
+    firmar(datos) {
+        return axios.post("/firmas/firmar",datos);
+    },
+     get_firma(operacion_id,area_id) {
+        return axios.get("/firmas/get_firma/"+operacion_id+"/"+area_id);
+    },
 };

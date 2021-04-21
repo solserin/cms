@@ -289,6 +289,8 @@
         :header="'Venta de Terrenos'"
         :show="openFirmas"
         :id_documento="id_documento"
+        :operacion_id="operacion_id"
+        :tipo="'operacion'"
         @closeFirmas="openFirmas = false"
       ></Firmas>
 

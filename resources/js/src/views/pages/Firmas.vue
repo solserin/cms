@@ -1,23 +1,22 @@
 <template >
   <div class="centerx">
     <vs-popup
-      title="Firma de Documentos"
+      :title="HeaderNombre"
       class="forms-popup popup-50"
-      fullscreen
       :active.sync="showChecker"
       ref="formulario"
     >
       <!-- <img style="width:100px;" src="@assets/images/pdf.svg" alt />-->
       <div class="flex flex-wrap">
-        <div class="w-full px-2">
+        <div class="w-full px-2 pb-6">
           <div class="form-group">
-            <div class="title-form-group">{{ HeaderNombre }}</div>
+            <div class="title-form-group">{{ documento }}</div>
             <div class="form-group-content">
               <div class="flex flex-wrap">
                 <div
                   class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
                 >
-                  <label class=""> Seleccione 1 </label>
+                  <label class=""> Seleccione quien firma </label>
                   <v-select
                     :options="firmasDisponibles"
                     v-model="firmaSeleccionada"
@@ -30,8 +29,43 @@
                     <div slot="no-options">Seleccione el Firmador</div>
                   </v-select>
                 </div>
-                {{ documento_id }}
-                {{ firmasDisponibles }}
+                <div class="w-full">
+                  <div class="signature">
+                    <h3 class="mt-6">Registro de Firma Manuscrita</h3>
+                    <div class="firma" v-show="!firmado">
+                      <VueSignaturePad
+                        ref="signaturePad"
+                        width="400px"
+                        height="200px"
+                      />
+                    </div>
+                    <div v-show="firmado" class="firma">
+                      <img :src="firma" width="400px" height="200px" alt="" />
+                    </div>
+                    <p :class="['color-copy']" v-if="!firmado">
+                      Firme dentro de esta área
+                    </p>
+                    <p :class="['color-danger-900']" v-else>
+                      La firma se registró el {{ datosFirma.fecha_hora_firma }}
+                    </p>
+                  </div>
+                  <div class="w-full text-center mt-12" v-if="!firmado">
+                    <vs-button
+                      class="w-full sm:w-full sm:w-auto md:w-auto mr-8 my-2 md:mt-0"
+                      color="danger"
+                      @click="undo"
+                    >
+                      <span>Limpiar</span>
+                    </vs-button>
+                    <vs-button
+                      class="w-full sm:w-full sm:w-auto md:w-auto ml-8 my-2 md:mt-0"
+                      color="success"
+                      @click="acceptAlert"
+                    >
+                      <span>Firmar</span>
+                    </vs-button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -43,8 +77,8 @@
         :show="openConfirmarAceptar"
         :callback-on-success="callBackConfirmar"
         @closeVerificar="openConfirmarAceptar = false"
-        :accion="'Enviar el documento por correo'"
-        :confirmarButton="'Enviar Documento'"
+        :accion="'Firmar Documento'"
+        :confirmarButton="'Firmar'"
       ></ConfirmarAceptar>
     </vs-popup>
   </div>
@@ -64,14 +98,17 @@ export default {
         /**cargo el reporte que me llega y sus respectivas areas a firmar */
         (async () => {
           await this.get_areas_firmar();
+          await this.get_firma();
         })();
+        this.resizeCanvas();
       }
     },
-    id_documento: function (newValue, oldValue) {},
     firmaSeleccionada: function (newValue, oldValue) {
-      (async () => {
-        // await this.get_areas_firmar();
-      })();
+      if (newValue.value != "") {
+        (async () => {
+          await this.get_firma();
+        })();
+      }
     },
   },
   props: {
@@ -81,6 +118,14 @@ export default {
     },
     header: {
       type: String,
+      required: true,
+    },
+    tipo: {
+      type: String,
+      required: true,
+    },
+    operacion_id: {
+      type: Number,
       required: true,
     },
     id_documento: {
@@ -100,7 +145,18 @@ export default {
       callBackConfirmar: Function,
       firmasDisponibles: [],
       firmaSeleccionada: {},
+      documento: "Seleccione un documento",
+      verFirma: false,
+      firmado: false,
+      firma: "",
       errores: [],
+      datosFirma: [],
+      form: {
+        firma: "",
+        id_area: 0,
+        operacion_id: 0,
+        tipo: "",
+      },
     };
   },
   computed: {
@@ -128,11 +184,96 @@ export default {
         return newValue;
       },
     },
+    id_operacion: {
+      get() {
+        return this.operacion_id;
+      },
+      set(newValue) {
+        return newValue;
+      },
+    },
   },
   methods: {
+    undo() {
+      this.$refs.signaturePad.clearSignature();
+    },
+    save() {
+      const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+      if (!isEmpty) {
+        this.form.firma = data;
+      } else {
+        this.form.firma = "";
+      }
+      //this.$refs.signaturePad.lockSignaturePad();
+    },
+    resizeCanvas() {
+      let canvas = this.$refs.signaturePad.$el.firstChild;
+      var ratio = Math.max(window.devicePixelRatio || 1, 1);
+      if (canvas.offsetWidth > 0) {
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        //canvas.getContext("2d").scale(ratio, ratio);
+      } else {
+        canvas.width = 400;
+        canvas.height = 200;
+      }
+      //this.$refs.signaturePad.clearSignature(); // otherwise isEmpty() might return incorrect value
+    },
     cancel() {
+      this.$refs.signaturePad.clearSignature();
       this.$emit("closeFirmas");
     },
+
+    async get_firma() {
+      this.$vs.loading();
+      try {
+        let res = await firmas.get_firma(
+          this.id_operacion,
+          this.firmaSeleccionada.value
+        );
+        let data = [];
+        if (res.data.length > 0) {
+          data = res.data[0];
+          this.firmado = true;
+          this.firma = data.firma_path;
+          this.datosFirma = data;
+        } else {
+          this.firmado = false;
+          this.datosFirma = [];
+        }
+        this.$vs.loading.close();
+      } catch (err) {
+        this.$vs.loading.close();
+        this.firmado = false;
+        this.datosFirma = [];
+        this.firma = "";
+        if (err.response) {
+          if (err.response.status == 403) {
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          } else if (err.response.status == 422) {
+            this.errores = JSON.parse(err.response);
+          } else if (err.response.status == 409) {
+            this.$vs.notify({
+              title: "Ver Reportes",
+              text: "Ha ocurrido un error, por favor reintente.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 30000,
+            });
+          }
+        }
+        this.cancel();
+      }
+    },
+
     async get_areas_firmar() {
       this.$vs.loading();
       try {
@@ -140,6 +281,7 @@ export default {
         let data = [];
         if (res.data.length > 0) {
           data = res.data[0];
+          this.documento = data.documento;
         }
         this.firmasDisponibles = [];
         if (res.data.length > 0) {
@@ -150,12 +292,14 @@ export default {
                 value: element.id,
               });
             });
+            this.verFirma = true;
           }
         } else {
           this.firmasDisponibles.push({
             label: "Seleccione 1",
             value: "",
           });
+          this.documento = "Seleccione un documento";
         }
         this.firmaSeleccionada = this.firmasDisponibles[0];
         this.$vs.loading.close();
@@ -194,24 +338,87 @@ export default {
     },
 
     acceptAlert() {
-      this.$validator
-        .validateAll()
-        .then((result) => {
-          if (!result) {
-            this.$vs.notify({
-              title: "Error",
-              text: "Verifique que capturó un email y un destinatario",
-              iconPack: "feather",
-              icon: "icon-alert-circle",
-              color: "danger",
-              position: "bottom-right",
-              time: "4000",
-            });
-            return;
-          } else {
-          }
+      this.save();
+      if (this.form.firma != "") {
+        this.accionNombre = "Registrar Nuevo Usuario";
+        this.openConfirmarAceptar = true;
+        this.form.id_area = this.firmaSeleccionada.value;
+        this.form.operacion_id = this.id_operacion;
+        this.form.tipo = this.tipo;
+        this.callBackConfirmar = this.firmar;
+      } else {
+        this.$vs.notify({
+          title: "Firmar Documentos",
+          text: "No se ha ingresado la firma.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          time: 6000,
+        });
+        return;
+      }
+    },
+
+    firmar() {
+      this.$vs.loading();
+      //limpiando errores
+      this.errores = [];
+      firmas
+        .firmar(this.form)
+        .then((res) => {
+          this.$vs.loading.close();
+          this.$vs.notify({
+            title: "Firma de Documentos",
+            text: "Se ha firmado el documento correctamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 4000,
+          });
+          this.$refs.signaturePad.clearSignature();
+          this.get_firma();
+          //this.$emit("get_data");
+          this.cerrarVentana();
         })
-        .catch(() => {});
+        .catch((err) => {
+          this.$vs.loading.close();
+          if (err.response) {
+            if (err.response.status == 403) {
+              /**FORBIDDEN ERROR */
+              this.$vs.notify({
+                title: "Permiso denegado",
+                text:
+                  "Verifique sus permisos con el administrador del sistema.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000,
+              });
+            } else if (err.response.status == 422) {
+              this.$vs.notify({
+                title: "Error",
+                text: "Verifique que todos los datos han sido capturados",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                position: "bottom-right",
+                time: "4000",
+              });
+              /**error de validacion */
+              this.errores = err.response.data.error;
+            } else {
+              this.$vs.notify({
+                title: "Error",
+                text: err.response.data.error,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                position: "bottom-right",
+                time: "4000",
+              });
+            }
+          }
+        });
     },
 
     /**enviar pdf por mail */
@@ -226,6 +433,7 @@ export default {
         }
       }*/
     });
+    this.resizeCanvas();
   },
 };
 </script>
