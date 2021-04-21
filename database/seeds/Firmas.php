@@ -154,31 +154,25 @@ class Firmas extends Seeder
                 ]
             ],
             [
-            'nombre'=>'CONSTANCIA DE FINIQUITO',
+            'nombre'=>'GUÍA DE SERVICIO PARA EL CLIENTE',
             'firmas'=>[
             'cliente'
             ]
             ],
             [
-            'nombre'=>'ESTADO DE CUENTA',
+            'nombre'=>'ENTREGA DE ACTA DE DEFUNCIÓN',
             'firmas'=>[
             'cliente'
             ]
             ],
             [
-            'nombre'=>'TALONARIO DE PAGOS',
+            'nombre'=>'HOJA DE SERVICIO',
             'firmas'=>[
             'cliente'
             ]
             ],
             [
-            'nombre'=>'REGLAMENTO DE PAGO',
-            'firmas'=>[
-            'cliente'
-            ]
-            ],
-            [
-            'nombre'=>'ACUSE DE CANCELACIÓN',
+            'nombre'=>'CONTRATO',
             'firmas'=>[
             'cliente'
             ]
