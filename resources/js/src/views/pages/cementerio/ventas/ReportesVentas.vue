@@ -41,6 +41,7 @@
                         src="@assets/images/signature.svg"
                         title="Firmar Documento"
                         @click="openFirmador(documento.documento_id)"
+                        v-show="documento.firma"
                       />
                       <img
                         v-if="documento.tipo == 'pdf'"
@@ -395,42 +396,49 @@ export default {
           url: "/cementerio/documento_solicitud",
           tipo: "pdf",
           documento_id: 1,
+          firma: true,
         },
         {
           documento: "Convenio",
           url: "/cementerio/documento_convenio",
           tipo: "pdf",
           documento_id: 2,
+          firma: true,
         },
         {
           documento: "Título",
           url: "/cementerio/documento_titulo",
           tipo: "pdf",
           documento_id: 3,
+          firma: false,
         },
         {
           documento: "Estado de cuenta",
           url: "/cementerio/documento_estado_de_cuenta_cementerio",
           tipo: "pdf",
           documento_id: 4,
+          firma: false,
         },
         {
           documento: "Talonario de Pagos",
           url: "/cementerio/referencias_de_pago",
           tipo: "pdf",
           documento_id: 5,
+          firma: false,
         },
         {
           documento: "Reglamento de Pago",
           url: "/cementerio/reglamento_pago",
           tipo: "pdf",
           documento_id: 6,
+          firma: true,
         },
         {
           documento: "Acuse de cancelación",
           url: "/cementerio/acuse_cancelacion",
           tipo: "pdf",
           documento_id: 7,
+          firma: true,
         },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,

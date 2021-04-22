@@ -27,7 +27,6 @@ class FirmasController  extends ApiController
             $query->where('operacion_id','=',$operacion_id) ->orWhere('pagos_id','=',$operacion_id)->orWhere('facturas_id','=',$operacion_id);
         })
        ->get()->toArray();
-    
         if(count($resultado)>0){
             /**se regresa el path de la imagen */
                 if (Storage::disk('signatures')->exists($resultado[0]['id'].'.png')) {
@@ -42,6 +41,48 @@ class FirmasController  extends ApiController
             return 1;
         }
     }
+
+
+
+    /**obtiene la imagen para plasmar en documentos */
+     public function get_firma_documento($parametro_id='',$area_id='',$firma="")
+    {
+        $array=[];
+        if($firma=="por_area_firma"){
+            $resultado = Firmas::where('areas_firmas_id','=',$area_id)->where(function($query)use($parametro_id){
+                $query->where('operacion_id','=',$parametro_id) ->orWhere('pagos_id','=',$parametro_id)->orWhere('facturas_id','=',$parametro_id);
+            })
+        ->get()->toArray();
+            if(count($resultado)>0){
+                /**se regresa el path de la imagen */
+                    if (Storage::disk('signatures')->exists($resultado[0]['id'].'.png')) {
+                        $path=Storage::disk('signatures')->get($resultado[0]['id'].'.png');
+                    }else{
+                        $path=Storage::disk('signatures')->get('default.png');
+                    }
+                    $array['fecha_hora_firma'] = fecha_abr($resultado[0]['fecha_hora_firma']);
+            }else{
+                $array['fecha_hora_firma'] ="Pendiente";
+                $path=Storage::disk('signatures')->get('default.png');
+            }
+        }else if($firma=="por_vendedor"){
+                if (Storage::disk('signatures')->exists('users/'.$parametro_id.'.png')) {
+                        $path=Storage::disk('signatures')->get('users/'.$parametro_id.'.png');
+                }else{
+                        $path=Storage::disk('signatures')->get('default.png');
+                }
+        }else if($firma=="por_gerente"){
+                if (Storage::disk('signatures')->exists('users/2.png')) {
+                        $path=Storage::disk('signatures')->get('users/2.png');
+                }else{
+                        $path=Storage::disk('signatures')->get('default.png');
+                }
+        }
+
+         $array['firma_path']= 'data:image/png;base64,'.base64_encode( $path);
+        return $array;
+    }
+
 
 
      public function firmar(Request $request)

@@ -498,4 +498,9 @@ border-collapse: collapse;
 }
 
 
+.firma{
+  width: 200px;
+  display: block;
+  margin:0 auto .5rem auto;
+}
   </style>

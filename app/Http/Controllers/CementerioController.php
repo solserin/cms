@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
+use App\User;
 use App\Ajustes;
-use App\AjustesPoliticas;
-use App\AntiguedadesVenta;
 use App\Clientes;
+use Carbon\Carbon;
 use App\Operaciones;
-use App\PreciosPropiedades;
 use App\Propiedades;
 use App\SatFormasPago;
-use App\tipoPropiedades;
-use App\User;
-use App\VentasTerrenos;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
+use App\VentasTerrenos;
+use App\tipoPropiedades;
+use App\AjustesPoliticas;
+use App\AntiguedadesVenta;
+use App\PreciosPropiedades;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
-use PDF;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\FirmasController;
 
 class CementerioController extends ApiController
 {
@@ -2363,7 +2364,17 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa       = $get_funeraria->get_empresa_data();
-        $pdf           = PDF::loadView('cementerios/titulo/titulo', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $FirmasController = new FirmasController();
+        $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],6,'por_area_firma');
+        $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'],null,'por_gerente');
+
+        $firmas=[
+            'cliente'=>$firma_cliente['firma_path'],
+            'gerente'=>$firma_gerente['firma_path']
+        ];
+
+
+        $pdf           = PDF::loadView('cementerios/titulo/titulo', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "FORMATO DE TITULO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -2516,7 +2527,22 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa       = $get_funeraria->get_empresa_data();
-        $pdf           = PDF::loadView('cementerios/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+        $FirmasController = new FirmasController();
+        $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],2,'por_area_firma');
+        $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'],null,'por_vendedor');
+        $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'],null,'por_gerente');
+
+        $firmas=[
+            'cliente'=>$firma_cliente['firma_path'],
+            'vendedor'=>$firma_vendedor['firma_path'],
+            'gerente'=>$firma_gerente['firma_path']
+        ];
+
+
+
+
+        $pdf           = PDF::loadView('cementerios/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "CONVENIO TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -2595,7 +2621,17 @@ class CementerioController extends ApiController
         $get_funeraria = new EmpresaController();
         $empresa       = $get_funeraria->get_empresa_data();
 
-        $pdf = PDF::loadView('cementerios/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa]);
+        $FirmasController = new FirmasController();
+        $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],1,'por_area_firma');
+        $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'],null,'por_vendedor');
+
+        $firmas=[
+            'cliente'=>$firma_cliente['firma_path'],
+            'vendedor'=>$firma_vendedor['firma_path']
+        ];
+
+
+        $pdf = PDF::loadView('cementerios/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
 
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
@@ -2784,7 +2820,17 @@ class CementerioController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa       = $get_funeraria->get_empresa_data();
-        $pdf           = PDF::loadView('cementerios/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+        $FirmasController = new FirmasController();
+        $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],6,'por_area_firma');
+        $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'],null,'por_gerente');
+
+        $firmas=[
+            'cliente'=>$firma_cliente['firma_path'],
+            'gerente'=>$firma_gerente['firma_path']
+        ];
+
+        $pdf           = PDF::loadView('cementerios/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "REGLAMENTO DE PAGO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
