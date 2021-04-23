@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\PlanConceptosServicioOriginal;
+use App\Http\Controllers\FirmasController;
 use App\Http\Controllers\CementerioController;
 
 class FunerariaController extends ApiController
@@ -1815,7 +1816,17 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa]);
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],8,'por_area_firma');
+            $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_vendedor');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path'],
+                'vendedor'=>$firma_vendedor['firma_path']
+            ];
+
+
+            $pdf = PDF::loadView('funeraria/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=> $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
@@ -1897,7 +1908,20 @@ class FunerariaController extends ApiController
 
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('funeraria/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],9,'por_area_firma');
+            $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_vendedor');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path'],
+                'vendedor'=>$firma_vendedor['firma_path'],
+                'gerente'=>$firma_gerente['firma_path']
+            ];
+
+
+            $pdf           = PDF::loadView('funeraria/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONVENIO TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -1971,7 +1995,18 @@ class FunerariaController extends ApiController
 
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('funeraria/finiquitado/finiquitado', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],10,'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path'],
+                'gerente'=>$firma_gerente['firma_path']
+            ];
+
+
+            $pdf           = PDF::loadView('funeraria/finiquitado/finiquitado', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONSTANCIA DE FINIQUITO DE PLAN FUNERARIO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -2243,7 +2278,21 @@ class FunerariaController extends ApiController
 
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],13,'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path'],
+                'gerente'=>$firma_gerente['firma_path']
+            ];
+
+
+
+
+            $pdf           = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=> $firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "REGLAMENTO DE PAGO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -2319,7 +2368,17 @@ class FunerariaController extends ApiController
 
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('funeraria/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],14,'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path'],
+                'gerente'=>$firma_gerente['firma_path']
+            ];
+
+            $pdf           = PDF::loadView('funeraria/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['nombre']) . '.pdf';
 

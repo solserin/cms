@@ -269,6 +269,27 @@
             </p>
         </div>
     </div>
+
+     <div class="w-100 center">
+            <div class="w-50 float-left mt-20">
+                <img src="{{ $firmas['gerente'] }}" class="firma">
+                <div class="w-90 mr-auto ml-auto border-top">
+                    <div class="">
+                        <span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span>
+                    </div>
+                    <span class="uppercase bold texto-sm">"la empresa"</span>
+                </div>
+            </div>
+            <div class="w-50 float-right mt-20">
+                  <img src="{{ $firmas['cliente'] }}" class="firma">
+                <div class="w-90 mr-auto ml-auto border-top">
+                    <div class="">
+                        <span class="uppercase  texto-sm">{{ $datos['nombre'] }}</span>
+                    </div>
+                    <span class="uppercase bold texto-sm">"el cliente"</span>
+                </div>
+            </div>
+        </div>
 </body>
 
 </html>

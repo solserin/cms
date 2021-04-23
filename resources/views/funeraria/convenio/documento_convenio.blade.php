@@ -573,16 +573,21 @@ $mostrar=false;
 
 
 
-        <div class="w-100 center mt-10">
-            <div class="w-50 float-left mt-30">
+       <div class="w-100 center">
+            <div class="w-50 float-left mt-50">
+                <img src="{{ $firmas['gerente'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top">
-                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span></div>
+                    <div class="">
+                        <span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span>
+                    </div>
                     <span class="uppercase bold texto-sm">"la empresa"</span>
                 </div>
             </div>
-            <div class="w-50 float-right mt-30">
+            <div class="w-50 float-right mt-50">
+                  <img src="{{ $firmas['cliente'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top">
-                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm">El (La) C. {{ $datos['nombre'] }}</span>
+                    <div class="">
+                        <span class="uppercase  texto-sm">El (La) C. {{ $datos['nombre'] }}</span>
                     </div>
                     <span class="uppercase bold texto-sm">"el cliente"</span>
                 </div>

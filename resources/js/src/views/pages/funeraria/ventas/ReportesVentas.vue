@@ -38,6 +38,13 @@
                   </vs-td>
                   <vs-td>
                     <img
+                      class="cursor-pointer img-btn-25 mx-4"
+                      src="@assets/images/signature.svg"
+                      title="Firmar Documento"
+                      @click="openFirmador(documento.documento_id)"
+                      v-show="documento.firma"
+                    />
+                    <img
                       v-if="documento.tipo == 'pdf'"
                       class="cursor-pointer img-btn-24 mx-2"
                       src="@assets/images/pdf.svg"
@@ -269,6 +276,15 @@
         </div>
       </div>
 
+      <Firmas
+        :header="'Venta de Terrenos'"
+        :show="openFirmas"
+        :id_documento="id_documento"
+        :operacion_id="operacion_id"
+        :tipo="'operacion'"
+        @closeFirmas="openFirmas = false"
+      ></Firmas>
+
       <Reporteador
         :header="'consultar documentos de venta de propiedad'"
         :show="openReportesLista"
@@ -291,10 +307,12 @@ import Reporteador from "@pages/Reporteador";
 import planes from "@services/planes";
 import pagos from "@services/pagos";
 import FormularioPagos from "@pages/pagos/FormularioPagos";
+import Firmas from "@pages/Firmas";
 export default {
   components: {
     Reporteador,
     FormularioPagos,
+    Firmas,
   },
   props: {
     verAcuse: {
@@ -375,36 +393,50 @@ export default {
           documento: "Formato de Solicitud",
           url: "/funeraria/documento_solicitud",
           tipo: "pdf",
+          documento_id: 8,
+          firma: true,
         },
         {
           documento: "Convenio",
           url: "/funeraria/documento_convenio",
           tipo: "pdf",
+          documento_id: 9,
+          firma: true,
         },
         {
           documento: "Constancia de Finiquito",
           url: "/funeraria/documento_finiquitado",
           tipo: "pdf",
+          documento_id: 10,
+          firma: false,
         },
         {
           documento: "Estado de cuenta",
           url: "/funeraria/documento_estado_de_cuenta_planes",
           tipo: "pdf",
+          documento_id: 11,
+          firma: false,
         },
         {
           documento: "Talonario de Pagos",
           url: "/funeraria/referencias_de_pago",
           tipo: "pdf",
+          documento_id: 12,
+          firma: false,
         },
         {
           documento: "Reglamento de Pago",
           url: "/funeraria/reglamento_pago",
           tipo: "pdf",
+          documento_id: 13,
+          firma: true,
         },
         {
           documento: "Acuse de cancelación",
           url: "/funeraria/acuse_cancelacion",
           tipo: "pdf",
+          documento_id: 14,
+          firma: true,
         },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,
@@ -418,6 +450,7 @@ export default {
         destinatario: "",
       },
       openReportesLista: false,
+      openFirmas: false,
       verFormularioPagos: false,
       tipoFormularioPagos: "",
       operacion_id: "",
@@ -425,6 +458,11 @@ export default {
     };
   },
   methods: {
+    openFirmador(id_documento) {
+      this.id_documento = id_documento;
+      this.openFirmas = true;
+    },
+
     closeFormularioPagos() {
       this.verFormularioPagos = false;
     },

@@ -2288,7 +2288,17 @@ class CementerioController extends ApiController
 
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('cementerios/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+             $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],7,'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'],null,'por_gerente');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path'],
+                'gerente'=>$firma_gerente['firma_path']
+            ];
+
+            $pdf           = PDF::loadView('cementerios/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=> $firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['nombre']) . '.pdf';
 

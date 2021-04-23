@@ -409,13 +409,15 @@
                 </td>
             </tr>
             <tr>
-                <td class="w-40 px-2 pt-12 center">
+                <td class="w-40 px-2 center">
+                     <img src="{{ $firmas['cliente'] }}" class="firma">
                     <span>{{$datos['nombre']}}</span>
                     <div class="w-80 mr-auto ml-auto border-top-black-1 pt-1">
                         firma del cliente
                     </div>
                 </td>
-                <td class="w-60 px-2 pt-2 center">
+                <td class="w-60 px-2 center">
+                   <img src="{{ $firmas['vendedor'] }}" class="firma">
                     <span>{{$datos['venta_plan']['vendedor']['nombre']}}</span>
                     <div class="w-80 mr-auto ml-auto border-top-black-1 pt-1">
                         nombre y firma del vendedor

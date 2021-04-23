@@ -193,6 +193,7 @@
 
     <div class="w-100 center mt-10">
         <div class="w-50 ml-auto mr-auto mt-30">
+             <img src="{{ $firmas['gerente'] }}" class="firma">
             <div class="w-90 mr-auto ml-auto border-top">
                 <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span></div>
                 <span class="uppercase bold texto-sm">"la empresa"</span>
