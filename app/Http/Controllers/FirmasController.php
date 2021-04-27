@@ -49,12 +49,17 @@ class FirmasController  extends ApiController
 
 
     /**obtiene la imagen para plasmar en documentos */
-     public function get_firma_documento($parametro_id='',$area_id='',$firma="")
+     public function get_firma_documento($parametro_id='',$area_id='',$firma="",$tipo="operacion")
     {
         $array=[];
         if($firma=="por_area_firma"){
-            $resultado = Firmas::where('areas_firmas_id','=',$area_id)->where(function($query)use($parametro_id){
-                $query->where('operacion_id','=',$parametro_id) ->orWhere('pagos_id','=',$parametro_id)->orWhere('facturas_id','=',$parametro_id);
+            $resultado = Firmas::where('areas_firmas_id','=',$area_id)->where(function($query)use($parametro_id,$tipo){
+                /**hasta la fecha control solo operaciones y solicitudes */
+                if($tipo=="operacion"){
+                    $query->where('operacion_id','=',$parametro_id);
+                }else if($tipo=="solicitud"){
+                    $query->where('solicitudes_id','=',$parametro_id);
+                }
             })
         ->get()->toArray();
             if(count($resultado)>0){

@@ -124,6 +124,7 @@ export default {
     tipo: {
       type: String,
       required: true,
+      default: "operacion",
     },
     operacion_id: {
       type: Number,

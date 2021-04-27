@@ -2459,7 +2459,7 @@ class FunerariaController extends ApiController
 
             $FirmasController = new FirmasController();
             $firma_gerente       = $FirmasController->get_firma_documento(null,null,'por_gerente');
-            $cliente       = $FirmasController->get_firma_documento($datos_venta['operacion']['id'],29,'por_area_firma');
+            $cliente       = $FirmasController->get_firma_documento($datos_venta['id'],29,'por_area_firma','solicitud');
 
             $firmas=[
                 'gerente'=>$firma_gerente['firma_path'],
@@ -4701,8 +4701,8 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_entrega       = $FirmasController->get_firma_documento($datos_solicitud['id'],15,'por_area_firma');
-            $firma_no_portaba       = $FirmasController->get_firma_documento($datos_solicitud['id'],16,'por_area_firma');
+            $firma_entrega       = $FirmasController->get_firma_documento($datos_solicitud['id'],15,'por_area_firma','solicitud');
+            $firma_no_portaba       = $FirmasController->get_firma_documento($datos_solicitud['id'],16,'por_area_firma','solicitud');
 
             $firmas=[
                 'entrega_pertenencias'=>$firma_entrega['firma_path'],
@@ -4793,10 +4793,10 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $otorgante       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],17,'por_area_firma');
-            $aceptante       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],18,'por_area_firma');
-            $testigo1       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],19,'por_area_firma');
-            $testigo2       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],20,'por_area_firma');
+            $otorgante       = $FirmasController->get_firma_documento($datos_solicitud['id'],17,'por_area_firma','solicitud');
+            $aceptante       = $FirmasController->get_firma_documento($datos_solicitud['id'],18,'por_area_firma','solicitud');
+            $testigo1       = $FirmasController->get_firma_documento($datos_solicitud['id'],19,'por_area_firma','solicitud');
+            $testigo2       = $FirmasController->get_firma_documento($datos_solicitud['id'],20,'por_area_firma','solicitud');
 
             $firmas=[
                 'otorgante'=>$otorgante['firma_path'],
@@ -5051,8 +5051,8 @@ class FunerariaController extends ApiController
             $registro      = RegistroPublico::first();
 
             $FirmasController = new FirmasController();
-            $contratante       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],27,'por_area_firma');
-            $publicidad       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],28,'por_area_firma');
+            $contratante       = $FirmasController->get_firma_documento($datos_solicitud['id'],27,'por_area_firma','solicitud');
+            $publicidad       = $FirmasController->get_firma_documento($datos_solicitud['id'],28,'por_area_firma','solicitud');
             $firma_gerente       = $FirmasController->get_firma_documento(null,null,'por_gerente');
 
             $firmas=[
@@ -5219,7 +5219,7 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],25,'por_area_firma');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'],25,'por_area_firma','solicitud');
 
             $firmas=[
                 'cliente'=>$firma_cliente['firma_path']
@@ -5310,7 +5310,7 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],22,'por_area_firma');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'],22,'por_area_firma','solicitud');
 
             $firmas=[
                 'cliente'=>$firma_cliente['firma_path']
@@ -5403,7 +5403,7 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],26,'por_area_firma');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'],26,'por_area_firma','solicitd');
 
             $firmas=[
                 'cliente'=>$firma_cliente['firma_path']
