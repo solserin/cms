@@ -646,6 +646,7 @@
 
         <div class="w-100 center mt-50">
             <div class="w-50 float-left mt-20">
+                 <img src="{{ $firmas['gerente'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1"><span class="texto-base bold uppercase center">
                             <p class=" line-17 size-13px">
@@ -659,6 +660,7 @@
                 </div>
             </div>
             <div class="w-50 float-right mt-20">
+                 <img src="{{ $firmas['contratante'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1"><span class="texto-base bold uppercase center">
                             <p class=" line-17 size-13px">
@@ -689,6 +691,7 @@
                 ( ) que “El proveedor” le envié publicidad sobre bienes y servicios.
             </p>
             <div class="w-50 float-left mt-10">
+                <img src="{{ $firmas['publicidad'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1"><span class="texto-base bold uppercase center">
                             <p class=" line-17 size-13px">

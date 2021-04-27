@@ -36,6 +36,13 @@
                   </vs-td>
                   <vs-td>
                     <img
+                      class="cursor-pointer img-btn-25 mx-4"
+                      src="@assets/images/signature.svg"
+                      title="Firmar Documento"
+                      @click="openFirmador(documento.documento_id)"
+                      v-show="documento.firma"
+                    />
+                    <img
                       v-if="documento.tipo == 'pdf'"
                       class="cursor-pointer img-btn-24 mx-2"
                       src="@assets/images/pdf.svg"
@@ -254,6 +261,15 @@
         @closeVentana="closeFormularioPagos"
         @retorno_pagos="retorno_pagos"
       ></FormularioPagos>
+
+      <Firmas
+        :header="'Venta de Terrenos'"
+        :show="openFirmas"
+        :id_documento="id_documento"
+        :operacion_id="get_solicitud_id"
+        :tipo="'solicitud'"
+        @closeFirmas="openFirmas = false"
+      ></Firmas>
     </vs-popup>
   </div>
 </template>
@@ -262,10 +278,12 @@ import Reporteador from "@pages/Reporteador";
 import funeraria from "@services/funeraria";
 import pagos from "@services/pagos";
 import FormularioPagos from "@pages/pagos/FormularioPagos";
+import Firmas from "@pages/Firmas";
 export default {
   components: {
     Reporteador,
     FormularioPagos,
+    Firmas,
   },
   props: {
     verAcuse: {
@@ -293,6 +311,11 @@ export default {
         (async () => {
           await this.get_solicitudes_servicios_id();
           if (this.operacion_id != "") {
+            console.log(
+              "🚀 ~ file: ReportesServicio.vue ~ line 314 ~ this.operacion_id",
+              this.operacion_id
+            );
+            this.solicitudes_id = this.operacion_id;
             await this.consultar_pagos_operacion_id();
           }
           /**checamos si esta ventana fue abierta con el fin de ver el acuse de cancelacion */
@@ -346,56 +369,78 @@ export default {
           documento: "Solicitud de Servicio",
           url: "/funeraria/get_hoja_solicitud",
           tipo: "pdf",
+          documento_id: 15,
+          firma: true,
         },
         {
           documento: "Autorización de Servicio Funerario",
           url: "/funeraria/hoja_preautorizacion",
           tipo: "pdf",
+          documento_id: 16,
+          firma: true,
         },
         {
           documento: "Certificado de Defunción",
           url: "/funeraria/certificado_defuncion",
           tipo: "pdf",
+          documento_id: 17,
+          firma: false,
         },
         {
           documento: "Guía de Servicio Para el Cliente",
           url: "/funeraria/instrucciones_servicio_funerario",
           tipo: "pdf",
+          documento_id: 18,
+          firma: false,
         },
         {
           documento: "Constancia de embalsamiento",
           url: "/funeraria/contancia_de_embalsamiento",
           tipo: "pdf",
+          documento_id: 20,
+          firma: true,
         },
         {
           documento: "Material de Velación",
           url: "/funeraria/material_velacion_rentado",
           tipo: "pdf",
+          documento_id: 21,
+          firma: true,
         },
         {
           documento: "Entrega de acta de defunción",
           url: "/funeraria/entrega_acta_defuncion",
           tipo: "pdf",
+          documento_id: 19,
+          firma: true,
         },
         {
           documento: "Entrega de cenizas",
           url: "/funeraria/entrega_cenizas",
           tipo: "pdf",
+          documento_id: 22,
+          firma: true,
         },
         {
           documento: "Hoja de Servicio",
           url: "/funeraria/orden_servicio",
           tipo: "pdf",
+          documento_id: 23,
+          firma: false,
         },
         {
           documento: "Acuse de cancelación",
           url: "/funeraria/servicio_funerario/acuse_cancelacion",
           tipo: "pdf",
+          documento_id: 25,
+          firma: true,
         },
         {
           documento: "Contrato",
           url: "/funeraria/contrato_servicio_funerario",
           tipo: "pdf",
+          documento_id: 24,
+          firma: true,
         },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,
@@ -412,10 +457,18 @@ export default {
       verFormularioPagos: false,
       tipoFormularioPagos: "",
       operacion_id: "",
+      solicitudes_id: "",
+      id_documento: "",
       pagos: [],
+      openFirmas: false,
     };
   },
   methods: {
+    openFirmador(id_documento) {
+      this.id_documento = id_documento;
+      this.openFirmas = true;
+    },
+
     closeFormularioPagos() {
       this.verFormularioPagos = false;
     },

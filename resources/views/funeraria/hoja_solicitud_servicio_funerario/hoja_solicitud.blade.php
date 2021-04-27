@@ -179,13 +179,15 @@
     </table>
 
     <div class="w-100 center mt-2">
-        <div class="w-50 float-left mt-25">
+        <div class="w-50 float-left mt-5">
+             <img src="{{ $firmas['entrega_pertenencias'] }}" class="firma">
             <div class="w-90 mr-auto ml-auto border-top">
                 <span class="uppercase bold texto-sm">FIRMA DE QUE SE ENTREGARON PERTENENCIAS AL MOMENTO DE
                     RECOGER EL CUERPO</span>
             </div>
         </div>
-        <div class="w-50 float-right mt-25">
+        <div class="w-50 float-right mt-5">
+              <img src="{{ $firmas['no_portaba'] }}" class="firma">
             <div class="w-90 mr-auto ml-auto border-top">
                 <span class="uppercase bold texto-sm">FIRMA DE QUE NO PORTABA PERTENENCIAS AL MOMENTO DE
                     RECOGER EL CUERPO</span>

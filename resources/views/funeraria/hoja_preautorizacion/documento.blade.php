@@ -242,13 +242,15 @@
         </table>
 
         <div class="w-100 center">
-            <div class="w-50 float-left mt-20">
+            <div class="w-50 float-left">
+                 <img src="{{ $firmas['otorgante'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1"><span class="texto-base bold">Otorgante</span></div>
                 </div>
                 <span class="texto-base">(Nombre y Firma)</span>
             </div>
-            <div class="w-50 float-right mt-20">
+            <div class="w-50 float-right">
+                 <img src="{{ $firmas['aceptante'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class="pb-1"><span class="texto-base bold">Aceptante</span>
                     </div>
@@ -258,13 +260,15 @@
         </div>
 
         <div class="w-100 center">
-            <div class="w-50 float-left mt-20">
+            <div class="w-50 float-left">
+                 <img src="{{ $firmas['testigo1'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1"><span class="texto-base bold">Testigo</span></div>
                 </div>
                 <span class="texto-base">(Nombre y Firma)</span>
             </div>
-            <div class="w-50 float-right mt-20">
+            <div class="w-50 float-right">
+                 <img src="{{ $firmas['testigo2'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class="pb-1"><span class="texto-base bold">Testigo</span>
                     </div>

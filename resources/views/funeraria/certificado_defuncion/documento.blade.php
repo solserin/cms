@@ -745,8 +745,9 @@
         </tr>
     </table>
 
-    <div class="w-100 center mt-7">
+    <div class="w-100 center hidden">
         <div class="w-50  mr-auto ml-auto">
+             <img src="{{ $firmas['informante'] }}" class="firma" >
             <div class="w-90 border-top">
                 <div class="pt-1 pb-1"><span class="uppercase  texto-sm"></span></div>
                 <span class="uppercase bold texto-sm">firma del informante</span>

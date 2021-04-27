@@ -154,7 +154,8 @@
             @endif). <span class="bold">{{ $datos['nombre_afectado'] }}</span>.
         </p>
         <div class="w-100 center">
-            <div class="w-50 ml-auto mr-auto mt-50">
+            <div class="w-50 ml-auto mr-auto mt-5">
+                <img src="{{ $firmas['cliente'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1">
                         <span class="texto-base bold">

@@ -157,8 +157,9 @@
             </p>
         </div>
 
-        <div class="w-100 center mt-40">
+        <div class="w-100 center mt-5">
             <div class="w-50 ml-auto mr-auto float-right">
+                  <img src="{{ $firmas['cliente'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top">
                     <div class="pt-3 pb-1"><span
                             class="uppercase  texto-sm">{{ $datos['operacion']['cliente']['nombre'] }}</span></div>
@@ -166,6 +167,7 @@
                 </div>
             </div>
             <div class="w-50 ml-auto mr-auto float-left ">
+                  <img src="{{ $firmas['gerente'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top">
                     <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span></div>
                     <span class="uppercase bold texto-sm">"la empresa"</span>

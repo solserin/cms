@@ -2456,7 +2456,19 @@ class FunerariaController extends ApiController
 
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa]);
+
+            $FirmasController = new FirmasController();
+            $firma_gerente       = $FirmasController->get_firma_documento(null,null,'por_gerente');
+            $cliente       = $FirmasController->get_firma_documento($datos_venta['operacion']['id'],29,'por_area_firma');
+
+            $firmas=[
+                'gerente'=>$firma_gerente['firma_path'],
+                'cliente'=>$cliente['firma_path']
+            ];
+
+
+
+            $pdf           = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['operacion']['cliente']['nombre']) . '.pdf';
 
@@ -4688,7 +4700,16 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/hoja_solicitud_servicio_funerario/hoja_solicitud', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+            $FirmasController = new FirmasController();
+            $firma_entrega       = $FirmasController->get_firma_documento($datos_solicitud['id'],15,'por_area_firma');
+            $firma_no_portaba       = $FirmasController->get_firma_documento($datos_solicitud['id'],16,'por_area_firma');
+
+            $firmas=[
+                'entrega_pertenencias'=>$firma_entrega['firma_path'],
+                'no_portaba'=>$firma_no_portaba['firma_path']
+            ];
+
+            $pdf = PDF::loadView('funeraria/hoja_solicitud_servicio_funerario/hoja_solicitud', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "HOJA DE SERVICIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -4771,7 +4792,21 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/hoja_preautorizacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+            $FirmasController = new FirmasController();
+            $otorgante       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],17,'por_area_firma');
+            $aceptante       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],18,'por_area_firma');
+            $testigo1       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],19,'por_area_firma');
+            $testigo2       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],20,'por_area_firma');
+
+            $firmas=[
+                'otorgante'=>$otorgante['firma_path'],
+                'aceptante'=>$aceptante['firma_path'],
+                'testigo1'=>$testigo1['firma_path'],
+                'testigo2'=>$testigo2['firma_path']
+            ];
+
+
+            $pdf = PDF::loadView('funeraria/hoja_preautorizacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "HOJA DE PREAUTORIZACIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -4848,7 +4883,19 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+
+            $FirmasController = new FirmasController();
+
+            $operacion_id=isset($datos_solicitud['operacion'])?$datos_solicitud['operacion']['id']:null;
+
+            $informante       = $FirmasController->get_firma_documento(100000,21,'por_area_firma');
+          
+
+            $firmas=[
+                'informante'=>$informante['firma_path']
+            ];
+
+            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CERTIFICADO DE DEFUNCION " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -4867,7 +4914,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
             $pdf->setOption('margin-top', 4.4);
-            $pdf->setOption('margin-bottom', 4.4);
+            $pdf->setOption('margin-bottom', 1.4);
             $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
@@ -5003,7 +5050,18 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
             $registro      = RegistroPublico::first();
 
-            $pdf = PDF::loadView('funeraria/contrato_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'registro' => $registro]);
+            $FirmasController = new FirmasController();
+            $contratante       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],27,'por_area_firma');
+            $publicidad       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],28,'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento(null,null,'por_gerente');
+
+            $firmas=[
+                'contratante'=>$contratante['firma_path'],
+                'publicidad'=>$publicidad['firma_path'],
+                'gerente'=>$firma_gerente['firma_path']
+            ];
+
+            $pdf = PDF::loadView('funeraria/contrato_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'registro' => $registro,'firmas'=>$firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONTRATO DE SERVICIO FUNERARIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5160,7 +5218,14 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/materialvelacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],25,'por_area_firma');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path']
+            ];
+
+            $pdf = PDF::loadView('funeraria/materialvelacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "EQUIPO DE VELACIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5244,7 +5309,14 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/entrega_acta/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],22,'por_area_firma');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path']
+            ];
+
+            $pdf = PDF::loadView('funeraria/entrega_acta/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ENTREGA DE ACTA DE DEFUNCIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5330,7 +5402,14 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/entrega_cenizas/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+            $FirmasController = new FirmasController();
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],26,'por_area_firma');
+
+            $firmas=[
+                'cliente'=>$firma_cliente['firma_path']
+            ];
+
+            $pdf = PDF::loadView('funeraria/entrega_cenizas/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ENTREGA DE CENIZAS " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';

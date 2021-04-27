@@ -30,8 +30,25 @@
                   </v-select>
                 </div>
                 <div class="w-full">
+                  <div class="w-full text-center mt-12" v-if="!firmado">
+                    <vs-button
+                      class="w-full sm:w-full sm:w-auto md:w-auto mr-8 my-2 md:mt-0"
+                      color="danger"
+                      @click="undo"
+                    >
+                      <span>Limpiar</span>
+                    </vs-button>
+                    <vs-button
+                      class="w-full sm:w-full sm:w-auto md:w-auto ml-8 my-2 md:mt-0"
+                      color="success"
+                      @click="acceptAlert"
+                    >
+                      <span>Firmar</span>
+                    </vs-button>
+                  </div>
+
                   <div class="signature">
-                    <h3 class="mt-6">Registro de Firma Manuscrita</h3>
+                    <h3 class="mt-12">Registro de Firma Manuscrita</h3>
                     <div class="firma" v-show="!firmado">
                       <VueSignaturePad
                         ref="signaturePad"
@@ -48,22 +65,6 @@
                     <p :class="['color-danger-900']" v-else>
                       La firma se registró el {{ datosFirma.fecha_hora_firma }}
                     </p>
-                  </div>
-                  <div class="w-full text-center mt-12" v-if="!firmado">
-                    <vs-button
-                      class="w-full sm:w-full sm:w-auto md:w-auto mr-8 my-2 md:mt-0"
-                      color="danger"
-                      @click="undo"
-                    >
-                      <span>Limpiar</span>
-                    </vs-button>
-                    <vs-button
-                      class="w-full sm:w-full sm:w-auto md:w-auto ml-8 my-2 md:mt-0"
-                      color="success"
-                      @click="acceptAlert"
-                    >
-                      <span>Firmar</span>
-                    </vs-button>
                   </div>
                 </div>
               </div>
@@ -100,8 +101,8 @@ export default {
           await this.get_areas_firmar();
           await this.get_firma();
         })();
-        this.resizeCanvas();
       }
+      this.resizeCanvas();
     },
     firmaSeleccionada: function (newValue, oldValue) {
       if (newValue.value != "") {
@@ -229,7 +230,8 @@ export default {
       try {
         let res = await firmas.get_firma(
           this.id_operacion,
-          this.firmaSeleccionada.value
+          this.firmaSeleccionada.value,
+          this.tipo
         );
         let data = [];
         if (res.data.length > 0) {
@@ -238,6 +240,7 @@ export default {
           this.firma = data.firma_path;
           this.datosFirma = data;
         } else {
+          this.firma = "";
           this.firmado = false;
           this.datosFirma = [];
         }
@@ -433,7 +436,6 @@ export default {
         }
       }*/
     });
-    this.resizeCanvas();
   },
 };
 </script>

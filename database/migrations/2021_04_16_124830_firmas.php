@@ -16,11 +16,12 @@ class Firmas extends Migration
           Schema::create('firmas', function (Blueprint $table) {
           $table->bigIncrements('id');
           $table->unsignedBigInteger('areas_firmas_id')->unsigned()->nullable();
-          $table->foreign('areas_firmas_id')->references('id')->on('documentos');
-           $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
-           $table->foreign('registro_id')->references('id')->on('usuarios');
+          $table->foreign('areas_firmas_id')->references('id')->on('areas_firmas');
+          $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
+          $table->foreign('registro_id')->references('id')->on('usuarios');
           $table->string('firma_path')->nullable();
           $table->bigInteger('operacion_id')->nullable();
+          $table->bigInteger('solicitudes_id')->nullable();
           $table->bigInteger('pagos_id')->nullable();
           $table->bigInteger('facturas_id')->nullable();
           $table->dateTime('fecha_hora_firma')->nullable();

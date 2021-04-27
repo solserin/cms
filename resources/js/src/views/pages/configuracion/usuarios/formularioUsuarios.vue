@@ -498,13 +498,11 @@ export default {
     },
     save() {
       const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
-      //console.log(isEmpty);
       if (!isEmpty) {
         if (!this.form.firma_registrada) {
           this.form.firma = data;
         }
       }
-      //console.log(data);
       // this.$refs.signaturePad.lockSignaturePad();
     },
     resizeCanvas() {

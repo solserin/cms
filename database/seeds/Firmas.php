@@ -148,33 +148,70 @@ class Firmas extends Seeder
             [
                 'nombre'=>'AUTORIZACIÓN DE SERVICIO FUNERARIO',
                 'firmas'=>[
-                    'cliente',
+                    'otorgante',
+                    'aceptante',
                     'testigo 1',
                     'testigo 2'
                 ]
             ],
             [
-            'nombre'=>'GUÍA DE SERVICIO PARA EL CLIENTE',
-            'firmas'=>[
-            'cliente'
-            ]
+            'nombre'=>'CERTIFICADO DE DEFUNCIÓN',
+            'firmas'=>
+                [
+                    'Informante'
+                ]
+            ],
+             [
+            'nombre'=>'GUIA DE SERVICIO PARA EL CLIENTE',
+            'firmas'=>
+                [
+                ]
             ],
             [
             'nombre'=>'ENTREGA DE ACTA DE DEFUNCIÓN',
             'firmas'=>[
-            'cliente'
+            'contratante'
+            ]
+            ],
+             [
+            'nombre'=>'CONSTANCIA DE EMBALSAMIENTO',
+            'firmas'=>
+                [
+                    'Médico Responsable',
+                    'Embalsamador'
+                ]
+            ],
+
+             [
+            'nombre'=>'MATERIAL DE VELACIÓN',
+            'firmas'=>
+                [
+                    'contratante',
+                ]
+            ],
+
+            [
+            'nombre'=>'ENTREGA DE CENIZAS',
+            'firmas'=>[
+            'contratante'
             ]
             ],
             [
             'nombre'=>'HOJA DE SERVICIO',
             'firmas'=>[
-            'cliente'
             ]
             ],
             [
             'nombre'=>'CONTRATO',
             'firmas'=>[
-            'cliente'
+            'contratante',
+             'autorización con fines publicitarios'
+            ]
+            ],
+            [
+            'nombre'=>'ACUSE DE CANCELACIÓN',
+            'firmas'=>[
+                'cliente'
             ]
             ],
          ];

@@ -17,7 +17,7 @@ Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamen
 Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}/{unir_lotes_cantidad?}', 'FunerariaController@get_solicitudes_servicios');
 
 Route::get('firmas/get_areas_firmar/{documento_id?}', 'FirmasController@get_areas_firmar');
-Route::get('firmas/get_firma/{operacion_id?}/{area_id?}', 'FirmasController@get_firma');
+Route::get('firmas/get_firma/{operacion_id?}/{area_id?}/{tipo?}', 'FirmasController@get_firma');
  Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
   Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
 
