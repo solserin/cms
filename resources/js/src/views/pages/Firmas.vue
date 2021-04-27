@@ -101,8 +101,8 @@ export default {
           await this.get_areas_firmar();
           await this.get_firma();
         })();
+        this.resizeCanvas();
       }
-      this.resizeCanvas();
     },
     firmaSeleccionada: function (newValue, oldValue) {
       if (newValue.value != "") {
@@ -214,7 +214,7 @@ export default {
       if (canvas.offsetWidth > 0) {
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;
-        //canvas.getContext("2d").scale(ratio, ratio);
+        canvas.getContext("2d").scale(ratio, ratio);
       } else {
         canvas.width = 400;
         canvas.height = 200;
@@ -246,6 +246,7 @@ export default {
           this.datosFirma = [];
         }
         this.$vs.loading.close();
+        this.resizeCanvas();
       } catch (err) {
         this.$vs.loading.close();
         this.firmado = false;
@@ -382,6 +383,7 @@ export default {
           this.$refs.signaturePad.clearSignature();
           this.get_firma();
           //this.$emit("get_data");
+          this.resizeCanvas();
           this.cerrarVentana();
         })
         .catch((err) => {
