@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use PDF;
 use App\User;
+use App\Pagos;
 use Carbon\Carbon;
 use App\SATMonedas;
 use App\Operaciones;
 use App\SatFormasPago;
+use GuzzleHttp\Client;
+use App\VentasTerrenos;
 use App\PagosProgramados;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ApiController;
-use App\Pagos;
-use App\VentasTerrenos;
-use PhpParser\Node\Stmt\TryCatch;
-use GuzzleHttp\Client;
+use App\Http\Controllers\FirmasController;
 
 class PagosController extends ApiController
 {
@@ -1240,7 +1241,18 @@ class PagosController extends ApiController
 
         $get_funeraria = new EmpresaController();
         $empresa = $get_funeraria->get_empresa_data();
-        $pdf = PDF::loadView('pagos/recibo_pago', ['id_pago' => $id_pago, 'datos' => $datos_pago, 'empresa' => $empresa]);
+
+        $FirmasController = new FirmasController();
+        $firma_cobrador       = $FirmasController->get_firma_documento($datos_pago['cobrador_id'],null,'por_cobrador');
+        $cancelo       = $FirmasController->get_firma_documento($datos_pago['cancelo_id'],null,'por_cobrador');
+        $firmas=[
+            'cobrador'=>$firma_cobrador['firma_path'],
+              'cancelo'=>$cancelo['firma_path']
+        ];
+
+
+
+        $pdf = PDF::loadView('pagos/recibo_pago', ['id_pago' => $id_pago, 'datos' => $datos_pago, 'empresa' => $empresa,'firmas'=>$firmas]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "RECIBO DE PAGO " . strtoupper($datos_pago['referencias_cubiertas'][0]['operacion_del_pago']['cliente']['nombre']) . '.pdf';
 

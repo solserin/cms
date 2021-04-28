@@ -86,6 +86,12 @@ class FirmasController  extends ApiController
                 }else{
                         $path=Storage::disk('signatures')->get('default.png');
                 }
+        }else if($firma=="por_cobrador"){
+                if (Storage::disk('signatures')->exists('users/'.$parametro_id.'.png')) {
+                        $path=Storage::disk('signatures')->get('users/'.$parametro_id.'.png');
+                }else{
+                        $path=Storage::disk('signatures')->get('default.png');
+                }
         }
 
          $array['firma_path']= 'data:image/png;base64,'.base64_encode($path);

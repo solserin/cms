@@ -357,14 +357,37 @@
             </p>
         </div>
 
-        <div class="w-100 center mt-20">
-            <div class="w-50 ml-auto mr-auto">
-                <div class="w-90 mr-auto ml-auto border-top">
-                    <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span></div>
-                    <span class="uppercase bold texto-sm">"la empresa"</span>
+
+        @if ($datos['cancelo_id']!=null)
+             <div class="w-100 center mt-20">
+                <div class="w-50 float-left">
+                    <img src="{{ $firmas['cobrador'] }}" class="firma">
+                    <div class="w-90 mr-auto ml-auto border-top">
+                        <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $datos['cobrador']['nombre']  }}</span></div>
+                        <span class="uppercase bold texto-sm">"Recibió el pago"</span>
+                    </div>
+                </div>
+                 <div class="w-50 float-right">
+                    <img src="{{ $firmas['cancelo'] }}" class="firma">
+                    <div class="w-90 mr-auto ml-auto border-top">
+                        <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $datos['cobrador']['nombre']  }}</span></div>
+                        <span class="uppercase bold texto-sm">"Canceló pago"</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        @else
+            <div class="w-100 center mt-20">
+                <div class="w-50 mr-auto ml-auto">
+                    <img src="{{ $firmas['cobrador'] }}" class="firma">
+                    <div class="w-90 mr-auto ml-auto border-top">
+                        <div class="pt-3 pb-1"><span class="uppercase  texto-sm">{{ $datos['cobrador']['nombre']  }}</span></div>
+                        <span class="uppercase bold texto-sm">"Recibió el pago"</span>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        
 
 
 </body>
