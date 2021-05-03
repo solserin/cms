@@ -193,7 +193,8 @@
 
 
         <div class="w-100 center">
-            <div class="w-50 float-left mt-20">
+            <div class="w-50 float-left">
+                  <img src="{{ $firmas['medico'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class=" pb-1"><span class="texto-base bold">
                             @if ($datos['embalsamar_b']==1)
@@ -203,7 +204,8 @@
                 </div>
                 <span class="texto-base">Médico Responsable</span>
             </div>
-            <div class="w-50 float-right mt-20">
+            <div class="w-50 float-right">
+                  <img src="{{ $firmas['embalsamador'] }}" class="firma">
                 <div class="w-90 mr-auto ml-auto border-top pt-1">
                     <div class="pb-1"><span class="texto-base bold">{{ $datos['preparador'] }}</span>
                     </div>
@@ -211,6 +213,11 @@
                 </div>
             </div>
         </div>
+
+
+
+
+
     </div>
 </body>
 

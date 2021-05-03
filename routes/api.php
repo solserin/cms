@@ -13,13 +13,6 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
-Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
-Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}/{unir_lotes_cantidad?}', 'FunerariaController@get_solicitudes_servicios');
-
-Route::get('firmas/get_areas_firmar/{documento_id?}', 'FirmasController@get_areas_firmar');
-Route::get('firmas/get_firma/{operacion_id?}/{area_id?}/{tipo?}', 'FirmasController@get_firma');
- Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
-  Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
 
 
 /**ruta para obtener tokens */
@@ -38,7 +31,9 @@ Route::middleware(['client'])->group(function () {
 
 /**RUTAS PARA EL SISTEMA DE LOGUEADO*/
 Route::middleware(['auth:api'])->group(function () {
-Route::post('firmas/firmar', 'FirmasController@firmar');
+    Route::post('firmas/firmar', 'FirmasController@firmar');
+    Route::get('firmas/get_areas_firmar/{documento_id?}', 'FirmasController@get_areas_firmar');
+    Route::get('firmas/get_firma/{operacion_id?}/{area_id?}/{tipo?}', 'FirmasController@get_firma');
 
     Route::get('pagos/get_pagos/{id_pago?}/{paginated?}/{ver_subpagos?}', 'PagosController@get_pagos');
 
@@ -137,6 +132,7 @@ Route::post('firmas/firmar', 'FirmasController@firmar');
     Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
+    Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 
     /**rutas de funeraria ventas planes */
     Route::post('funeraria/control_ventas/{tipo_servicio}', 'FunerariaController@control_ventas'); //agregar,modificar
@@ -158,6 +154,8 @@ Route::post('firmas/firmar', 'FirmasController@firmar');
     Route::get('funeraria/reglamento_pago', 'FunerariaController@reglamento_pago');
     Route::get('funeraria/acuse_cancelacion', 'FunerariaController@acuse_cancelacion');
     Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
+    Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}/{unir_lotes_cantidad?}', 'FunerariaController@get_solicitudes_servicios');
+    Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
 
     /**rutas de pagos */
     Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');
@@ -188,7 +186,7 @@ Route::post('firmas/firmar', 'FirmasController@firmar');
     Route::get('inventarios/cementerio/get_columna_fila_terraza', 'CementerioController@get_columna_fila_terraza');
     Route::get('inventarios/cementerio/precios_tarifas', 'CementerioController@precios_tarifas');
     Route::post('inventarios/cementerio/actualizar_precios_tarifas', 'CementerioController@actualizar_precios_tarifas');
-
+    Route::get('inventario/get_inventario/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');

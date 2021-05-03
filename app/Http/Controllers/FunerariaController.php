@@ -5137,10 +5137,23 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-            $pdf = PDF::loadView('funeraria/embalsamiento/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa]);
+          
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONSTANCIA DE EMBALSAMIENTO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
+
+            $FirmasController = new FirmasController();
+            $medico       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],23,'por_area_firma',null);
+            $embalsamador     = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],24,'por_area_firma',null);
+
+            $firmas=[
+                'medico'=>$medico['firma_path'],
+                'embalsamador'=>$embalsamador['firma_path']
+            ];
+
+            $pdf = PDF::loadView('funeraria/embalsamiento/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+
+
             $pdf->setOptions([
                 'title'       => $name_pdf,
                 'footer-html' => view('funeraria.embalsamiento.footer', ['empresa' => $empresa]),
