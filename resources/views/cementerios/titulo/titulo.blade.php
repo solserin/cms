@@ -68,7 +68,6 @@
         }
 
         /*fin de parrafos*/
-
     </style>
 </head>
 
@@ -184,8 +183,8 @@
 
 
     <div class="w-100 center">
-            <div class="w-50 float-left">
-               <table class="w-100 pt-7">
+        <div class="w-50 float-left">
+            <table class="w-100 pt-7">
                 <tr>
                     <td class="w-40 left uppercase size-18px bold text-primary">convenio No.</td>
                     <td class="w-60 center border-bottom-primary-2  size-18px uppercase">{{$datos['numero_convenio']}}
@@ -195,32 +194,35 @@
             <table class="w-100 pt-7">
                 <tr>
                     <td class="w-40 left uppercase size-18px bold text-primary">solicitud No.</td>
-                    <td class="w-60 center border-bottom-primary-2  size-18px uppercase">{{$datos['numero_solicitud_texto']}}
+                    <td class="w-60 center border-bottom-primary-2  size-18px uppercase">
+                        {{$datos['numero_solicitud_texto']}}
                     </td>
                 </tr>
             </table>
-            </div>
-            <div class="w-50 float-right">
-                  <div class="w-100 center">
-                    <div class="w-100 ml-auto">
-                        <img src="{{ $firmas['gerente'] }}" class="firma">
-                        <div class="w-80 mr-auto ml-auto border-top">
-                            <div class="">
-                                <span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span>
-                            </div>
-                            <span class="uppercase bold texto-sm">"la empresa"</span>
+        </div>
+
+        <!--<div class="w-50 float-right">
+            <div class="w-100 center">
+                <div class="w-100 ml-auto">
+                    <img src="{{ $firmas['gerente'] }}" class="firma">
+                    <div class="w-80 mr-auto ml-auto border-top">
+                        <div class="">
+                            <span class="uppercase  texto-sm">{{ $empresa->razon_social }}</span>
                         </div>
+                        <span class="uppercase bold texto-sm">"la empresa"</span>
                     </div>
                 </div>
             </div>
         </div>
+    -->
+    </div>
 
 
-    
-    
 
 
-   
+
+
+
 </body>
 
 </html>
