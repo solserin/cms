@@ -27,7 +27,7 @@
         :collapse-action="false"
       >
         <div class="flex flex-wrap">
-          <div class="w-full xl:w-3/12 mb-1 px-2">
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
             <label class="text-sm opacity-75">Mostrar</label>
             <v-select
               :options="mostrarOptions"
@@ -37,7 +37,7 @@
               class="w-full"
             />
           </div>
-          <div class="w-full xl:w-3/12 mb-1 px-2">
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
             <label class="text-sm opacity-75">Estado</label>
             <v-select
               :options="estadosOptions"

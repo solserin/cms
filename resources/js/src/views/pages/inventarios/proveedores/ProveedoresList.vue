@@ -13,34 +13,27 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 -->
 <template>
   <div>
-    <div class="flex flex-wrap">
-      <div
-        class="w-full sm:w-12/12 ml-auto md:w-4/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+    <div class="w-full text-right">
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="formulario('agregar')"
       >
-        <vs-button
-          color="success"
-          size="small"
-          class="w-full ml-auto"
-          @click="formulario('agregar')"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Registrar Proveedor</span>
-        </vs-button>
-      </div>
+        <span>Registrar Proveedor</span>
+      </vs-button>
     </div>
+
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
       <vx-card
         no-radius
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Mostrar</label>
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
+            <label>Mostrar</label>
             <v-select
               :options="mostrarOptions"
               :clearable="false"
@@ -49,10 +42,8 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 sm:mb-0"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Estado</label>
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
+            <label>Estado</label>
             <v-select
               :options="estadosOptions"
               :clearable="false"
@@ -61,10 +52,8 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 md:mb-0"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
-          >
-            <label class="text-sm opacity-75">Filtrar Específico</label>
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
+            <label>Filtrar Específico</label>
             <v-select
               :options="filtrosEspecificos"
               :clearable="false"
@@ -73,12 +62,8 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               class="mb-4 md:mb-0"
             />
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
-          >
-            <label class="text-sm opacity-75">{{
-              this.filtroEspecifico.label
-            }}</label>
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
+            <label>{{ this.filtroEspecifico.label }}</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -92,19 +77,17 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         </div>
 
         <div class="flex flex-wrap">
-          <div class="w-full px-2">
-            <h3 class="text-base font-semibold my-3">
+          <div class="w-full px-2 py-4">
+            <h3 class="text-base">
               <feather-icon
                 icon="UserIcon"
                 class="mr-2"
                 svgClasses="w-5 h-5"
-              />Filtrar por Nombre del Proveedor
+              />Filtrar por Nombre del Titular
             </h3>
           </div>
-          <div
-            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-4 px-2"
-          >
-            <label class="text-sm opacity-75">Nombre del Proveedor</label>
+          <div class="w-full mb-1 px-2 input-text">
+            <label>Nombre del Proveedor</label>
             <vs-input
               class="w-full"
               icon="search"
@@ -122,21 +105,18 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
     <br />
     <vs-table
       :sst="true"
-      @search="handleSearch"
-      @change-page="handleChangePage"
-      @sort="handleSort"
       :max-items="serverOptions.per_page.value"
       :data="proveedores"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Proveedores Registrados</h3>
       </template>
       <template slot="thead">
-        <vs-th>Núm. Proveedor</vs-th>
+        <vs-th>Clave</vs-th>
         <vs-th>Proveedor</vs-th>
         <vs-th>Contacto</vs-th>
-        <vs-th>Domicilio</vs-th>
         <vs-th>Teléfono</vs-th>
         <vs-th>Status</vs-th>
         <vs-th>Acciones</vs-th>
@@ -156,34 +136,33 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
               {{ data[indextr].nombre_contacto }}
             </span>
           </vs-td>
-          <vs-td :data="data[indextr].direccion">
-            <span class="uppercase">
-              {{ data[indextr].direccion }}
-            </span>
-          </vs-td>
           <vs-td :data="data[indextr].telefono">
             <span class="">{{ data[indextr].telefono }}</span>
           </vs-td>
 
           <vs-td :data="data[indextr].status">
-            <p v-if="data[indextr].status == 1" class="text-success ">
-              Activo
+            <p v-if="data[indextr].status == 1">
+              {{ data[indextr].status_texto }}
+              <span class="dot-success"></span>
             </p>
-            <p v-else class="text-danger ">Deshabilitado</p>
+            <p v-else-if="data[indextr].status == 0">
+              {{ data[indextr].status_texto }}
+              <span class="dot-danger"></span>
+            </p>
           </vs-td>
           <vs-td :data="data[indextr].id_user">
-            <div class="flex flex-start">
+            <div class="flex justify-center">
               <img
-                class="cursor-pointer img-btn ml-auto mr-3"
+                class="img-btn-18 mx-3"
                 src="@assets/images/edit.svg"
-                title="Modificar"
+                title="Modificar Proveedor"
                 @click="openModificar(data[indextr].id)"
               />
               <img
                 v-if="data[indextr].status == 1"
-                class="cursor-pointer img-btn-32 mr-auto ml-3"
-                src="@assets/images/switchon.svg"
-                title="Deshabilitar"
+                class="img-btn-22 mx-3"
+                src="@assets/images/trash.svg"
+                title="Desactivar Proveedor"
                 @click="
                   deleteProveedor(
                     data[indextr].id,
@@ -191,11 +170,10 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
                   )
                 "
               />
-
               <img
                 v-else
-                class="cursor-pointer img-btn-32 mr-auto ml-3"
-                src="@assets/images/switchoff.svg"
+                class="img-btn-22 mx-3"
+                src="@assets/images/trash-open.svg"
                 title="Habilitar"
                 @click="
                   altaProveedor(
@@ -263,18 +241,18 @@ export default {
     "v-select": vSelect,
     Password,
     FormularioProveedores,
-    Reporteador
+    Reporteador,
   },
   watch: {
-    actual: function(newValue, oldValue) {
+    actual: function (newValue, oldValue) {
       this.get_data(this.actual);
     },
-    mostrar: function(newValue, oldValue) {
+    mostrar: function (newValue, oldValue) {
       this.get_data(1);
     },
-    estado: function(newVal, previousVal) {
+    estado: function (newVal, previousVal) {
       this.get_data(1);
-    }
+    },
   },
   data() {
     return {
@@ -288,27 +266,27 @@ export default {
       estadosOptions: [
         {
           label: "Todos",
-          value: ""
+          value: "",
         },
         {
           label: "Activos",
-          value: "1"
+          value: "1",
         },
         {
           label: "Cancelados",
-          value: "0"
-        }
+          value: "0",
+        },
       ],
       filtroEspecifico: { label: "Núm. Proveedor", value: "1" },
       filtrosEspecificos: [
         {
           label: "Núm. Proveedor",
-          value: "1"
+          value: "1",
         },
         {
           label: "Núm. Teléfono",
-          value: "2"
-        }
+          value: "2",
+        },
       ],
       serverOptions: {
         page: "",
@@ -316,7 +294,7 @@ export default {
         status: "",
         filtro_especifico_opcion: "",
         numero_control: "",
-        nombre_comercial: ""
+        nombre_comercial: "",
       },
       verPaginado: true,
       total: 0,
@@ -336,8 +314,8 @@ export default {
       proveedor_id: "",
       request: {
         venta_id: "",
-        email: ""
-      }
+        email: "",
+      },
     };
   },
   methods: {
@@ -345,7 +323,7 @@ export default {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = {
         label: "Núm. Proveedor",
-        value: "1"
+        value: "1",
       };
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
@@ -385,14 +363,14 @@ export default {
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
       proveedores
         .get_proveedores(this.serverOptions)
-        .then(res => {
+        .then((res) => {
           this.proveedores = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
           this.$vs.loading.close();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.loading.close();
           this.ver = true;
           if (err.response) {
@@ -405,7 +383,7 @@ export default {
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
-                time: 4000
+                time: 4000,
               });
             }
           }
@@ -457,7 +435,7 @@ export default {
     async delete_proveedor() {
       this.$vs.loading();
       let datos = {
-        proveedor_id: this.proveedor_id
+        proveedor_id: this.proveedor_id,
       };
       try {
         let res = await proveedores.delete_proveedor(datos);
@@ -470,7 +448,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
         } else {
           this.$vs.notify({
@@ -479,7 +457,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 5000
+            time: 5000,
           });
         }
       } catch (error) {
@@ -493,7 +471,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 8000
+              time: 8000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
@@ -505,7 +483,7 @@ export default {
     async habilitar_proveedor() {
       this.$vs.loading();
       let datos = {
-        proveedor_id: this.proveedor_id
+        proveedor_id: this.proveedor_id,
       };
       try {
         let res = await proveedores.alta_proveedor(datos);
@@ -518,7 +496,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
-            time: 5000
+            time: 5000,
           });
         } else {
           this.$vs.notify({
@@ -527,7 +505,7 @@ export default {
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "warning",
-            time: 5000
+            time: 5000,
           });
         }
       } catch (error) {
@@ -541,7 +519,7 @@ export default {
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
-              time: 8000
+              time: 8000,
             });
           } else if (err.response.status == 422) {
             /**error de validacion */
@@ -549,10 +527,10 @@ export default {
           }
         }
       }
-    }
+    },
   },
   created() {
     this.get_data(this.actual);
-  }
+  },
 };
 </script>

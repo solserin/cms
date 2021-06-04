@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
-
+  Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -174,7 +174,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
 
     /**invnetario */
-    Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
+  
     Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
     Route::post('inventario/enable_disable/{tipo}', 'InventarioController@enable_disable');
     Route::post('inventario/ajustar_inventario', 'InventarioController@ajustar_inventario');

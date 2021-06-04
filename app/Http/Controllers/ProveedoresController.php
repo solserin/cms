@@ -24,7 +24,7 @@ class ProveedoresController extends ApiController
             'direccion',
             'email',
             'status',
-            DB::Raw('IF(proveedores.status=1 , "ACTIVO","DESACTIVADO" ) as status_texto')
+            DB::Raw('IF(proveedores.status=1 , "Activo","Inactivo" ) as status_texto')
         )
             ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
                 if (trim($numero_control) != '') {
