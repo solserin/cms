@@ -1,209 +1,178 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-55 precios_financiamientos normal-forms"
+      :class="['forms-popup', 'popup-70', z_index]"
       close="cancelar"
       :title="title"
       :active.sync="showVentana"
       ref="formulario"
     >
-      <div class="flex flex-wrap px-2">
-        <div class="w-full pb-3">
-          <img
-            width="60"
-            class="img-center"
-            src="@assets/images/delivery.svg"
-          />
-          <h3 class="text-xl text-center">Información del Proveedor</h3>
+      <div class="form-group">
+        <div class="title-form-group">
+          <span>Datos del get_proveedor_by_id</span>
         </div>
-
-        <vs-divider />
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Nombre Comercial / Empresa
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-
-          <vs-input
-            ref="nombre_comercial"
-            name="nombre_comercial"
-            data-vv-as=" "
-            v-validate.disabled="'required'"
-            maxlength="100"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Funeraria Aeternus"
-            v-model.trim="form.nombre_comercial"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("nombre_comercial")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.nombre_comercial"
-              >{{ errores.nombre_comercial[0] }}</span
+        <div class="form-group-content">
+          <div class="flex flex-wrap px-2">
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
             >
-          </div>
-        </div>
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold"> Razón Social </label>
+              <label>
+                Nombre Comercial / Empresa
+                <span>(*)</span>
+              </label>
 
-          <vs-input
-            name="razon_social"
-            maxlength="125"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. Servicios integrales de Sinaloa SA DE CV"
-            v-model.trim="form.razon_social"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("razon_social")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.razon_social"
-              >{{ errores.razon_social[0] }}</span
+              <vs-input
+                ref="nombre_comercial"
+                name="nombre_comercial"
+                data-vv-as=" "
+                v-validate.disabled="'required'"
+                maxlength="100"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Ej. Funeraria Aeternus"
+                v-model.trim="form.nombre_comercial"
+              />
+              <span>{{ errors.first("nombre_comercial") }}</span>
+              <span v-if="this.errores.nombre_comercial">{{
+                errores.nombre_comercial[0]
+              }}</span>
+            </div>
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
             >
-          </div>
-        </div>
+              <label> Razón Social </label>
+              <vs-input
+                name="razon_social"
+                maxlength="125"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Ej. Servicios integrales de Sinaloa SA DE CV"
+                v-model.trim="form.razon_social"
+              />
+              <span>{{ errors.first("razon_social") }}</span>
+              <span v-if="this.errores.razon_social">{{
+                errores.razon_social[0]
+              }}</span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Domicilio Completo
-          </label>
-          <vs-input
-            name="direccion"
-            maxlength="250"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Domicilio Completo"
-            v-model.trim="form.direccion"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("direccion")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.direccion">{{
-              errores.direccion[0]
-            }}</span>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">
-            Nombre del contacto
-            <span class="text-danger text-sm">(*)</span>
-          </label>
-
-          <vs-input
-            name="nombre_contacto"
-            data-vv-as=" "
-            v-validate.disabled="'required'"
-            maxlength="125"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ej. HÉCTOR CRUZ"
-            v-model.trim="form.nombre_contacto"
-          />
-          <div>
-            <span class="text-danger text-sm">{{
-              errors.first("nombre_contacto")
-            }}</span>
-          </div>
-          <div class="mt-2">
-            <span
-              class="text-danger text-sm"
-              v-if="this.errores.nombre_contacto"
-              >{{ errores.nombre_contacto[0] }}</span
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
             >
-          </div>
-        </div>
+              <label> Domicilio Completo </label>
+              <vs-input
+                name="direccion"
+                maxlength="250"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Domicilio Completo"
+                v-model.trim="form.direccion"
+              />
+              <span>{{ errors.first("direccion") }}</span>
+              <span v-if="this.errores.direccion">{{
+                errores.direccion[0]
+              }}</span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Teléfono</label>
-          <vs-input
-            maxlength="25"
-            type="text"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el teléfono de contacto"
-            v-model.trim="form.telefono"
-          />
-        </div>
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+            >
+              <label>
+                Nombre del contacto
+                <span>(*)</span>
+              </label>
 
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-          <label class="text-sm opacity-75 font-bold">Correo Electrónico</label>
-          <vs-input
-            name="email"
-            data-vv-as=" "
-            v-validate.disabled="'email'"
-            maxlength="85"
-            type="email"
-            class="w-full pb-1 pt-1"
-            placeholder="Ingrese el email"
-            v-model.trim="form.email"
-          />
-          <div>
-            <span class="text-danger text-sm">{{ errors.first("email") }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-danger text-sm" v-if="this.errores.email">{{
-              errores.email[0]
-            }}</span>
-          </div>
-        </div>
+              <vs-input
+                name="nombre_contacto"
+                data-vv-as=" "
+                v-validate.disabled="'required'"
+                maxlength="125"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Ej. Juán Pérez"
+                v-model.trim="form.nombre_contacto"
+              />
+              <span>{{ errors.first("nombre_contacto") }}</span>
+              <span v-if="this.errores.nombre_contacto">{{
+                errores.nombre_contacto[0]
+              }}</span>
+            </div>
 
-        <div class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2">
-          <vs-textarea
-            height="200px"
-            maxlength="350"
-            size="large"
-            ref="nota"
-            type="text"
-            class="w-full pt-3 pb-3"
-            placeholder="Ingrese una nota..."
-            v-model.trim="form.nota"
-          />
-        </div>
+            <div
+              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+            >
+              <label>Teléfono</label>
+              <vs-input
+                maxlength="25"
+                type="text"
+                class="w-full pb-1 pt-1"
+                placeholder="Ingrese el teléfono de contacto"
+                v-model.trim="form.telefono"
+              />
+            </div>
 
-        <!--fin de datos del titular-->
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+            >
+              <label>Correo Electrónico</label>
+              <vs-input
+                name="email"
+                data-vv-as=" "
+                v-validate.disabled="'email'"
+                maxlength="85"
+                type="email"
+                class="w-full pb-1 pt-1"
+                placeholder="Ingrese el email"
+                v-model.trim="form.email"
+              />
+              <div>
+                <span>{{ errors.first("email") }}</span>
+              </div>
+              <div class="mt-2">
+                <span v-if="this.errores.email">{{ errores.email[0] }}</span>
+              </div>
+            </div>
 
-        <vs-divider />
-      </div>
+            <div
+              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+            >
+              <vs-textarea
+                height="200px"
+                maxlength="350"
+                size="large"
+                ref="nota"
+                type="text"
+                class="w-full pt-3 pb-3"
+                placeholder="Ingrese una nota..."
+                v-model.trim="form.nota"
+              />
+            </div>
 
-      <div class="flex flex-wrap px-2">
-        <div class="w-full px-2">
-          <div class="mt-2">
-            <p class="text-center">
-              <span class="text-danger font-medium">Ojo:</span>
-              Por favor revise la información ingresada, si todo es correcto de
-              click en "Botón de Abajo”.
-            </p>
+            <!--fin de datos del titular-->
+
+            <vs-divider />
           </div>
         </div>
       </div>
-      <div
-        class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 pt-6 pb-10 px-2 mr-auto ml-auto"
-      >
-        <vs-button class="w-full" @click="acceptAlert()" color="primary">
-          <img
-            width="25px"
-            class="cursor-pointer"
-            size="small"
-            src="@assets/images/save.svg"
-          />
-          <span class="texto-btn" v-if="this.getTipoformulario == 'agregar'"
-            >Guardar Datos</span
+
+      <div class="bottom-buttons-section">
+        <div class="text-advice">
+          <span class="ojo-advice">Ojo:</span>
+          Por favor revise la información ingresada, si todo es correcto de
+          click en el "Botón de Abajo”.
+        </div>
+
+        <div class="w-full">
+          <vs-button
+            class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
+            color="primary"
+            @click="acceptAlert()"
           >
-          <span class="texto-btn" v-else>Modificar Datos</span>
-        </vs-button>
+            <span class="" v-if="this.getTipoformulario == 'agregar'"
+              >Guardar Datos</span
+            >
+            <span class="" v-else>Modificar Datos</span>
+          </vs-button>
+        </div>
       </div>
 
       <!--fin proveedor-->
@@ -262,6 +231,11 @@ export default {
       required: false,
       default: 0,
     },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
+    },
   },
   watch: {
     show: function (newValue, oldValue) {
@@ -275,13 +249,13 @@ export default {
           this.$refs["nombre_comercial"].$el.querySelector("input").focus()
         );
         if (this.getTipoformulario == "modificar") {
-          this.title = "Modificar Datos del Proveedor";
+          this.title = "Modificar Proveedor";
           /**se cargan los datos al formulario */
           (async () => {
             await this.get_proveedor_by_id(this.get_proveedor_id);
           })();
         } else {
-          this.title = "Registrar Nuevo Proveedor";
+          this.title = "Registrar Proveedor";
         }
       }
     },
