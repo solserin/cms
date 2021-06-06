@@ -345,6 +345,35 @@ const router = new Router({
                     }
                 },
 
+
+
+                {
+                    path: "/inventarios/funeraria/compras",
+                    name: "compras_inventario",
+                    component: () =>
+                        import(
+                            "@/views/pages/funeraria/servicios_funerarios/ServiciosList.vue"
+                        ),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Control de Compras a Proveedores"
+                            },
+                            {
+                                title: "Inventario",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Compras",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
+
                 {
                     path: "/funeraria/servicios",
                     name: "servicios_funerarios",

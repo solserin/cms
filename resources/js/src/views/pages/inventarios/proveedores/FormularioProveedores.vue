@@ -124,12 +124,10 @@
                 placeholder="Ingrese el email"
                 v-model.trim="form.email"
               />
-              <div>
-                <span>{{ errors.first("email") }}</span>
-              </div>
-              <div class="mt-2">
-                <span v-if="this.errores.email">{{ errores.email[0] }}</span>
-              </div>
+
+              <span>{{ errors.first("email") }}</span>
+
+              <span v-if="this.errores.email">{{ errores.email[0] }}</span>
             </div>
 
             <div
