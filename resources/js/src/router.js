@@ -352,7 +352,7 @@ const router = new Router({
                     name: "compras_inventario",
                     component: () =>
                         import(
-                            "@/views/pages/funeraria/servicios_funerarios/ServiciosList.vue"
+                            "@/views/pages/inventarios/compras/ComprasList.vue"
                         ),
                     meta: {
                         breadcrumb: [
