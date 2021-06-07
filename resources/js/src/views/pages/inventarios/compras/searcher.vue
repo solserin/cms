@@ -2,17 +2,17 @@
   <div class="centerx">
     <vs-popup
       :class="['forms-popup popup-85', z_index]"
-      title="Catálogo de clientes registrados"
+      title="Catálogo de proveedores registrados"
       :active.sync="showVentana"
-      ref="buscador_cliente"
+      ref="buscador_proveedor"
     >
       <div class="w-full text-right">
         <vs-button
           class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
           color="primary"
-          @click="verFormularioClientes = true"
+          @click="verFormularioProveedores = true"
         >
-          <span>Registrar Cliente</span>
+          <span>Registrar Proveedor</span>
         </vs-button>
       </div>
 
@@ -26,36 +26,36 @@
         >
           <div class="flex flex-wrap pb-6">
             <div class="w-full input-text xl:w-3/12 px-2">
-              <label>Núm. Cliente</label>
+              <label>Núm. Proveedor</label>
               <vs-input
-                name="num_cliente"
+                name="num_proveedor"
                 data-vv-as=" "
                 type="text"
                 class="w-full"
                 placeholder="Ej. 1258"
                 maxlength="6"
-                v-model.trim="serverOptions.id_cliente"
-                v-on:keyup.enter="get_data('id_cliente', 1)"
-                v-on:blur="get_data('id_cliente', 1, 'blur')"
+                v-model.trim="serverOptions.numero_control"
+                v-on:keyup.enter="get_data('numero_control', 1)"
+                v-on:blur="get_data('numero_control', 1, 'blur')"
               />
-              <span class="">{{ errors.first("num_cliente") }}</span>
+              <span class="">{{ errors.first("num_proveedor") }}</span>
             </div>
 
             <div class="w-full input-text xl:w-9/12 px-2">
               <label>Nombre</label>
               <vs-input
-                ref="nombre_cliente"
-                name="nombre_cliente"
+                ref="nombre_proveedor"
+                name="nombre_proveedor"
                 data-vv-as=" "
                 type="text"
                 class="w-full"
                 placeholder="Ej. Juan Pérez"
                 maxlength="12"
-                v-model.trim="serverOptions.cliente"
-                v-on:keyup.enter="get_data('cliente', 1)"
-                v-on:blur="get_data('cliente', 1, 'blur')"
+                v-model.trim="serverOptions.nombre_comercial"
+                v-on:keyup.enter="get_data('nombre_comercial', 1)"
+                v-on:blur="get_data('nombre_comercial', 1, 'blur')"
               />
-              <span class="">{{ errors.first("nombre_cliente") }}</span>
+              <span class="">{{ errors.first("nombre_proveedor") }}</span>
             </div>
           </div>
         </vx-card>
@@ -63,17 +63,17 @@
 
       <!--inicio de buscador-->
       <div class="py-6">
-        <div class="resultados_clientes py-6">
+        <div class="resultados_proveedores py-6">
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page.value"
-            :data="clientes"
+            :data="proveedores"
             stripe
             noDataText="0 Resultados"
             class="tabla-datos"
           >
             <template slot="header">
-              <h3>Lista actualizada de clientes registrados</h3>
+              <h3>Lista actualizada de proveedores registrados</h3>
             </template>
             <template slot="thead">
               <vs-th>Núm. Cliente</vs-th>
@@ -88,14 +88,14 @@
                 <vs-td :data="data[indextr].id">
                   <span class="font-semibold">{{ data[indextr].id }}</span>
                 </vs-td>
-                <vs-td :data="data[indextr].nombre">{{
-                  data[indextr].nombre
+                <vs-td :data="data[indextr].nombre_comercial">{{
+                  data[indextr].nombre_comercial
                 }}</vs-td>
                 <vs-td :data="data[indextr].direccion">{{
                   data[indextr].direccion
                 }}</vs-td>
-                <vs-td :data="data[indextr].celular">
-                  <span class="font-medium">{{ data[indextr].celular }}</span>
+                <vs-td :data="data[indextr].telefono">
+                  <span class="font-medium">{{ data[indextr].telefono }}</span>
                 </vs-td>
 
                 <vs-td :data="data[indextr].id_user">
@@ -105,7 +105,7 @@
                       src="@assets/images/checked.svg"
                       @click="
                         retornarSeleccion(
-                          data[indextr].nombre,
+                          data[indextr].nombre_comercial,
                           data[indextr].id,
                           data[indextr]
                         )
@@ -126,20 +126,20 @@
           </div>
         </div>
       </div>
-      <FormularioClientes
+      <FormularioProveedores
         :tipo="'agregar'"
         :z_index="'z-index58k'"
-        :show="verFormularioClientes"
-        @closeVentana="verFormularioClientes = false"
+        :show="verFormularioProveedores"
+        @closeVentana="verFormularioProveedores = false"
         @retornar_id="retorno_id"
-      ></FormularioClientes>
+      ></FormularioProveedores>
       <!--fin de buscador-->
     </vs-popup>
   </div>
 </template>
 <script>
-import FormularioClientes from "@pages/clientes/FormularioClientes";
-import clientes from "@services/clientes";
+import FormularioProveedores from "@pages/inventarios/proveedores/FormularioProveedores";
+import proveedores from "@services/proveedores";
 import vSelect from "vue-select";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -148,7 +148,7 @@ export default {
   components: {
     "v-select": vSelect,
     Datepicker,
-    FormularioClientes,
+    FormularioProveedores,
   },
   props: {
     show: {
@@ -171,21 +171,18 @@ export default {
     show: function (newValue, oldValue) {
       if (newValue == true) {
         this.$nextTick(() =>
-          this.$refs["nombre_cliente"].$el.querySelector("input").focus()
+          this.$refs["nombre_proveedor"].$el.querySelector("input").focus()
         );
-        this.$refs["buscador_cliente"].$el.querySelector(
-          ".vs-icon"
-        ).onclick = () => {
-          this.cancelar();
-        };
+        this.$refs["buscador_proveedor"].$el.querySelector(".vs-icon").onclick =
+          () => {
+            this.cancelar();
+          };
         this.get_data("", 1);
       } else {
         /**cerrar y limpiar el formulario */
-        this.serverOptions.id_cliente = "";
-        this.serverOptions.cliente = "";
+        this.serverOptions.numero_control = "";
+        this.serverOptions.nombre_comercial = "";
         this.serverOptions.rfc = "";
-        this.serverOptions.celular = "";
-        this.serverOptions.nacionalidad = this.nacionalidades[0];
       }
     },
   },
@@ -201,25 +198,20 @@ export default {
   },
   data() {
     return {
-      verFormularioClientes: false,
+      verFormularioProveedores: false,
       selected: [],
       nacionalidades: [],
       disabledDates: {
         from: new Date(),
       },
-      clientes: [],
+      proveedores: [],
       serverOptions: {
         page: "",
         per_page: "",
-        id_cliente: "",
+        numero_control: "",
         rfc: "",
-        celular: "",
-        cliente: "",
-        nacionalidad: {
-          value: "122",
-          label: "Mexicana",
-        },
-        nacionalidad_id: "",
+        nombre_comercial: "",
+        filtro_especifico_opcion: 1,
       },
       verPaginado: true,
       total: 0,
@@ -230,72 +222,48 @@ export default {
   methods: {
     reset(card) {
       card.removeRefreshAnimation(500);
-      this.serverOptions.id_cliente = "";
-      this.serverOptions.cliente = "";
+      this.serverOptions.numero_control = "";
+      this.serverOptions.nombre_comercial = "";
       this.serverOptions.rfc = "";
-      this.serverOptions.celular = "";
-      this.serverOptions.nacionalidad = this.nacionalidades[0];
       this.get_data("", this.actual);
     },
     cancelar() {
       this.$emit("closeBuscador");
       return;
     },
-    get_nacionalidades() {
-      clientes
-        .get_nacionalidades()
-        .then((res) => {
-          //le agrego las nacionalidades
-          this.nacionalidades = [];
-          this.nacionalidades.push({ label: "Seleccione 1", value: "" });
-          res.data.forEach((element) => {
-            this.nacionalidades.push({
-              label: element.nacionalidad,
-              value: element.id,
-            });
-          });
-          this.serverOptions.nacionalidad = this.nacionalidades[0];
-        })
-        .catch((err) => {});
-    },
     get_data(origen = "", page, evento = "") {
       if (evento == "blur") {
         return;
       } else {
         /**checando el origen */
-        if (origen == "cliente") {
-          if (this.serverOptions.cliente.trim() == "") {
+        if (origen == "nombre_comercial") {
+          if (this.serverOptions.nombre_comercial.trim() == "") {
             //return;
           }
-        } else if (origen == "id_cliente") {
-          if (this.serverOptions.id_cliente.trim() == "") {
+        } else if (origen == "numero_control") {
+          if (this.serverOptions.numero_control.trim() == "") {
             return;
           }
         } else if (origen == "rfc") {
           if (this.serverOptions.rfc.trim() == "") {
             return;
           }
-        } else if (origen == "celular") {
-          if (this.serverOptions.celular.trim() == "") {
-            return;
-          }
         }
       }
 
       let self = this;
-      if (clientes.cancel) {
-        clientes.cancel("Operation canceled by the user.");
+      if (proveedores.cancel) {
+        proveedores.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
       this.serverOptions.page = page;
       this.serverOptions.per_page = 12;
       this.serverOptions.status = 1;
-      this.serverOptions.nacionalidad_id = this.serverOptions.nacionalidad.value;
-      clientes
-        .get_clientes(this.serverOptions)
+      proveedores
+        .get_proveedores(this.serverOptions)
         .then((res) => {
-          this.clientes = res.data.data;
+          this.proveedores = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
           this.verPaginado = true;
@@ -309,8 +277,7 @@ export default {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
                 title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
+                text: "Verifique sus permisos con el administrador del sistema.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
@@ -326,7 +293,7 @@ export default {
     retornarSeleccion(nombre = "", id = "", todos_los_datos = []) {
       /**retorna los datos seleccionados a la venta que los solicita */
       this.$emit("retornoCliente", {
-        id_cliente: id,
+        numero_control: id,
         nombre: nombre,
         datos: todos_los_datos,
       });
@@ -335,9 +302,6 @@ export default {
     retorno_id(dato) {
       this.get_data("", this.actual);
     },
-  },
-  created() {
-    this.get_nacionalidades();
   },
 };
 </script>

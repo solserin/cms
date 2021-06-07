@@ -714,7 +714,6 @@ export default {
         id_proveedor: "",
         proveedor: "",
         referencia: "",
-
         articulos: [],
         tasa_iva: 16,
         nota: "",
@@ -968,6 +967,26 @@ export default {
         );
         this.$validator.resume();
       });
+    },
+
+    clienteSeleccionado(datos) {
+      /**obtiene los datos retornados del buscar cliente */
+      this.form.proveedor = datos.nombre;
+      this.form.id_proveedor = datos.numero_control;
+      //this.form.direccion_cliente = datos.datos.direccion;
+    },
+
+    quitarProveedor() {
+      this.botonConfirmarSinPassword = "Cambiar proveedor";
+      this.accionConfirmarSinPassword =
+        "¿Desea cambiar de proveedor para esta compra?";
+      this.callBackConfirmar = this.limpiarProveedor;
+      this.openConfirmarSinPassword = true;
+    },
+
+    limpiarProveedor() {
+      this.form.id_proveedor = "";
+      this.form.proveedor = "";
     },
   },
   created() {},

@@ -9,12 +9,20 @@
     >
       <div class="form-group">
         <div class="title-form-group">
-          <span>Datos del get_proveedor_by_id</span>
+          <span>Datos del Proveedor</span>
         </div>
         <div class="form-group-content">
           <div class="flex flex-wrap px-2">
             <div
-              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+              class="
+                w-full
+                sm:w-12/12
+                md:w-6/12
+                lg:w-6/12
+                xl:w-6/12
+                px-2
+                input-text
+              "
             >
               <label>
                 Nombre Comercial / Empresa
@@ -38,7 +46,15 @@
               }}</span>
             </div>
             <div
-              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+              class="
+                w-full
+                sm:w-12/12
+                md:w-6/12
+                lg:w-6/12
+                xl:w-6/12
+                px-2
+                input-text
+              "
             >
               <label> Razón Social </label>
               <vs-input
@@ -56,7 +72,15 @@
             </div>
 
             <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+              class="
+                w-full
+                sm:w-12/12
+                md:w-12/12
+                lg:w-12/12
+                xl:w-12/12
+                px-2
+                input-text
+              "
             >
               <label> Domicilio Completo </label>
               <vs-input
@@ -74,7 +98,15 @@
             </div>
 
             <div
-              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+              class="
+                w-full
+                sm:w-12/12
+                md:w-6/12
+                lg:w-6/12
+                xl:w-6/12
+                px-2
+                input-text
+              "
             >
               <label>
                 Nombre del contacto
@@ -98,7 +130,15 @@
             </div>
 
             <div
-              class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 px-2 input-text"
+              class="
+                w-full
+                sm:w-12/12
+                md:w-6/12
+                lg:w-6/12
+                xl:w-6/12
+                px-2
+                input-text
+              "
             >
               <label>Teléfono</label>
               <vs-input
@@ -111,7 +151,15 @@
             </div>
 
             <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+              class="
+                w-full
+                sm:w-12/12
+                md:w-12/12
+                lg:w-12/12
+                xl:w-12/12
+                px-2
+                input-text
+              "
             >
               <label>Correo Electrónico</label>
               <vs-input
@@ -182,16 +230,15 @@
       :accion="accionNombre"
     ></Password>
     <ConfirmarDanger
-      :z_index="'z-index58k'"
+      :z_index="'z-index62k'"
       :show="openConfirmarSinPassword"
       :callback-on-success="callBackConfirmar"
       @closeVerificar="openConfirmarSinPassword = false"
       :accion="accionConfirmarSinPassword"
       :confirmarButton="botonConfirmarSinPassword"
     ></ConfirmarDanger>
-
     <ConfirmarAceptar
-      :z_index="'z-index58k'"
+      :z_index="'z-index62k'"
       :show="openConfirmarAceptar"
       :callback-on-success="callBackConfirmarAceptar"
       @closeVerificar="openConfirmarAceptar = false"
