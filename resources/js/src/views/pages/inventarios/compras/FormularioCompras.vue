@@ -182,9 +182,7 @@
                     noDataText="No se han agregado Artículos ni Servicios"
                   >
                     <template slot="header">
-                      <h3>
-                        Servicios y Artículos que Incluye el Servicio Funerario
-                      </h3>
+                      <h3>Artículos que Incluye la Compra</h3>
                     </template>
                     <template slot="thead">
                       <vs-th>#</vs-th>
@@ -220,7 +218,11 @@
                             :name="'cantidad_articulos' + indextr"
                             data-vv-as=" "
                             data-vv-validate-on="blur"
-                            v-validate="'required|integer|min_value:' + 1"
+                            v-validate="
+                              'required|integer|min_value:' +
+                              1 +
+                              '|max_value:1000'
+                            "
                             class="mr-auto ml-auto input-cantidad"
                             maxlength="4"
                             v-model="form.articulos[indextr].cantidad"
@@ -231,18 +233,8 @@
                             </span>
                           </div>
                         </vs-td>
-                        <vs-td
-                          class=""
-                          v-if="
-                            habilitar_plan_funerario_b == false ||
-                            (habilitar_plan_funerario_b == true &&
-                              form.plan_funerario_futuro_b.value == 1 &&
-                              form.articulos[indextr].plan_b == 0) ||
-                            (habilitar_plan_funerario_b == true &&
-                              form.plan_funerario_futuro_b.value == 0 &&
-                              form.plan_funerario_inmediato_b.value == 1)
-                          "
-                        >
+
+                        <vs-td class="">
                           <vs-input
                             :name="'costo_neto_normal_articulos' + indextr"
                             data-vv-as=" "
@@ -263,21 +255,8 @@
                             </span>
                           </div>
                         </vs-td>
-                        <vs-td v-else class="">
-                          <div>$ 0.00</div>
-                        </vs-td>
-                        <vs-td
-                          class=""
-                          v-if="
-                            habilitar_plan_funerario_b == false ||
-                            (habilitar_plan_funerario_b == true &&
-                              form.plan_funerario_futuro_b.value == 1 &&
-                              form.articulos[indextr].plan_b == 0) ||
-                            (habilitar_plan_funerario_b == true &&
-                              form.plan_funerario_futuro_b.value == 0 &&
-                              form.plan_funerario_inmediato_b.value == 1)
-                          "
-                        >
+
+                        <vs-td class="">
                           <vs-switch
                             class="ml-auto mr-auto"
                             color="success"
@@ -288,8 +267,45 @@
                             <span slot="off">NO</span>
                           </vs-switch>
                         </vs-td>
-                        <vs-td v-else class="">
-                          <div>N/A</div>
+                        <vs-td class="">
+                          <vs-input
+                            :name="'costo_neto_descuento' + indextr"
+                            data-vv-as=" "
+                            data-vv-validate-on="blur"
+                            v-validate="'required|decimal:2|min_value:' + 0"
+                            class="mr-auto ml-auto input-cantidad"
+                            maxlength="10"
+                            v-model="
+                              form.articulos[indextr].costo_neto_descuento
+                            "
+                            :disabled="form.articulos[indextr].descuento_b == 0"
+                          />
+                          <div class="input-text">
+                            <span>
+                              {{
+                                errors.first("costo_neto_descuento" + indextr)
+                              }}
+                            </span>
+                          </div>
+                        </vs-td>
+
+                        <vs-td class="">
+                          <div v-if="form.articulos[indextr].descuento_b == 1">
+                            $
+                            {{
+                              (form.articulos[indextr].costo_neto_descuento *
+                                form.articulos[indextr].cantidad)
+                                | numFormat("0,000.00")
+                            }}
+                          </div>
+                          <div v-else>
+                            $
+                            {{
+                              (form.articulos[indextr].costo_neto_normal *
+                                form.articulos[indextr].cantidad)
+                                | numFormat("0,000.00")
+                            }}
+                          </div>
                         </vs-td>
 
                         <vs-td class="">
@@ -357,7 +373,7 @@
                             name="tasa_iva"
                             data-vv-as=" "
                             v-validate="
-                              'required|decimal:2|min_value:14|max_value:25'
+                              'required|decimal:2|min_value:0|max_value:25'
                             "
                             type="text"
                             class="w-full cantidad"
@@ -381,7 +397,7 @@
                           <div class="mt-3 text-center">
                             <span class="h5">
                               $
-                              {{ totalContrato | numFormat("0,000.00") }}
+                              {{ totalCompra | numFormat("0,000.00") }}
                             </span>
                           </div>
                         </div>
@@ -391,30 +407,23 @@
                             <span>(*)</span>
                           </label>
                           <vs-input
-                            :disabled="
-                              tiene_pagos_realizados ||
-                              ventaLiquidada ||
-                              fueCancelada
-                            "
                             size="large"
-                            name="tasa_iva"
+                            name="pago_efectivo"
                             data-vv-as=" "
-                            v-validate="
-                              'required|decimal:2|min_value:14|max_value:25'
-                            "
+                            v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Porcentaje IVA"
-                            v-model="form.tasa_iva"
-                            maxlength="2"
+                            placeholder="Cantidad pagada en efectivo"
+                            v-model="form.pago_efectivo"
+                            maxlength="8"
                           />
                           <span class="mensaje-requerido">
-                            {{ errors.first("tasa_iva") }}
+                            {{ errors.first("pago_efectivo") }}
                           </span>
                           <span
                             class="mensaje-requerido"
-                            v-if="this.errores.tasa_iva"
-                            >{{ errores.tasa_iva[0] }}</span
+                            v-if="this.errores.pago_efectivo"
+                            >{{ errores.pago_efectivo[0] }}</span
                           >
                         </div>
                         <div class="w-full input-text px-2 text-center">
@@ -423,30 +432,23 @@
                             <span>(*)</span>
                           </label>
                           <vs-input
-                            :disabled="
-                              tiene_pagos_realizados ||
-                              ventaLiquidada ||
-                              fueCancelada
-                            "
                             size="large"
-                            name="tasa_iva"
+                            name="pago_cheque"
                             data-vv-as=" "
-                            v-validate="
-                              'required|decimal:2|min_value:14|max_value:25'
-                            "
+                            v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Porcentaje IVA"
-                            v-model="form.tasa_iva"
-                            maxlength="2"
+                            placeholder="Cantidad pagada con cheque"
+                            v-model="form.pago_cheque"
+                            maxlength="8"
                           />
                           <span class="mensaje-requerido">
-                            {{ errors.first("tasa_iva") }}
+                            {{ errors.first("pago_cheque") }}
                           </span>
                           <span
                             class="mensaje-requerido"
-                            v-if="this.errores.tasa_iva"
-                            >{{ errores.tasa_iva[0] }}</span
+                            v-if="this.errores.pago_cheque"
+                            >{{ errores.pago_cheque[0] }}</span
                           >
                         </div>
                         <div class="w-full input-text px-2 text-center">
@@ -455,30 +457,23 @@
                             <span>(*)</span>
                           </label>
                           <vs-input
-                            :disabled="
-                              tiene_pagos_realizados ||
-                              ventaLiquidada ||
-                              fueCancelada
-                            "
                             size="large"
-                            name="tasa_iva"
+                            name="pago_tarjeta"
                             data-vv-as=" "
-                            v-validate="
-                              'required|decimal:2|min_value:14|max_value:25'
-                            "
+                            v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Porcentaje IVA"
-                            v-model="form.tasa_iva"
-                            maxlength="2"
+                            placeholder="Pago con tarjeta"
+                            v-model="form.pago_tarjeta"
+                            maxlength="8"
                           />
                           <span class="mensaje-requerido">
-                            {{ errors.first("tasa_iva") }}
+                            {{ errors.first("pago_tarjeta") }}
                           </span>
                           <span
                             class="mensaje-requerido"
-                            v-if="this.errores.tasa_iva"
-                            >{{ errores.tasa_iva[0] }}</span
+                            v-if="this.errores.pago_tarjeta"
+                            >{{ errores.pago_tarjeta[0] }}</span
                           >
                         </div>
                         <div class="w-full input-text px-2 text-center">
@@ -487,30 +482,23 @@
                             <span>(*)</span>
                           </label>
                           <vs-input
-                            :disabled="
-                              tiene_pagos_realizados ||
-                              ventaLiquidada ||
-                              fueCancelada
-                            "
                             size="large"
-                            name="tasa_iva"
+                            name="pago_transferencia"
                             data-vv-as=" "
-                            v-validate="
-                              'required|decimal:2|min_value:14|max_value:25'
-                            "
+                            v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Porcentaje IVA"
-                            v-model="form.tasa_iva"
-                            maxlength="2"
+                            placeholder="Pago con transferencia"
+                            v-model="form.pago_transferencia"
+                            maxlength="8"
                           />
                           <span class="mensaje-requerido">
-                            {{ errors.first("tasa_iva") }}
+                            {{ errors.first("pago_transferencia") }}
                           </span>
                           <span
                             class="mensaje-requerido"
-                            v-if="this.errores.tasa_iva"
-                            >{{ errores.tasa_iva[0] }}</span
+                            v-if="this.errores.pago_transferencia"
+                            >{{ errores.pago_transferencia[0] }}</span
                           >
                         </div>
                         <div class="w-full px-2 text-center mt-3">
@@ -519,8 +507,13 @@
                           >
                           <div class="mt-3 text-center">
                             <span class="h5">
-                              $
-                              {{ totalContrato | numFormat("0,000.00") }}
+                              <span v-if="totalCredito >= 0">
+                                $
+                                {{ totalCredito | numFormat("0,000.00") }}
+                              </span>
+                              <span v-else class="text-danger size-base">
+                                El total a pagar sobrepasa el total de la compra
+                              </span>
                             </span>
                           </div>
                         </div>
@@ -676,6 +669,7 @@ export default {
       return this.form.afiliacion.value;
     },
 */
+
     showVentana: {
       get() {
         return this.show;
@@ -692,7 +686,35 @@ export default {
         return newValue;
       },
     },
+
+    totalCompra: function () {
+      let total = 0;
+      this.form.articulos.forEach((element, index) => {
+        if (this.form.articulos[index].descuento_b == 1) {
+          total +=
+            this.form.articulos[index].cantidad *
+            this.form.articulos[index].costo_neto_descuento;
+        } else {
+          total +=
+            this.form.articulos[index].cantidad *
+            this.form.articulos[index].costo_neto_normal;
+        }
+      });
+      return total;
+    },
+
+    totalCredito: function () {
+      let total = 0;
+      let totalPagado =
+        this.form.pago_efectivo +
+        this.form.pago_cheque +
+        this.form.pago_tarjeta +
+        this.form.pago_transferencia;
+      total = this.totalCompra - totalPagado;
+      return total;
+    },
   },
+
   data() {
     return {
       sino: [
@@ -716,6 +738,12 @@ export default {
         referencia: "",
         articulos: [],
         tasa_iva: 16,
+        pago_efectivo: "",
+        pago_cheque: "",
+        pago_tarjeta: "",
+        pago_transferencia: "",
+        pago_credito: "",
+
         nota: "",
       },
       /**variables dle modulo */
@@ -768,13 +796,13 @@ export default {
               //lote: lote.lotes_id,
               //num_lote_inventario: lote.num_lote_inventario,
               cantidad: 1,
-              costo_neto_normal: datos.precio_venta,
+              //costo_neto_normal: datos.precio_venta,
+              costo_neto_normal: "",
               descuento_b: 0,
               costo_neto_descuento: 0,
               importe: 0,
-              facturable_b: datos.grava_iva_b,
-              existencia: datos.existencia,
-              plan_b: 0,
+              facturable_b: 1,
+              existencia: 0,
             });
           } else {
             this.$vs.notify({
