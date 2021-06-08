@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
  */
 /**en pruebas */
   Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
+  Route::get('inventario/get_compras/{id_compra?}/{paginated?}/', 'InventarioController@get_compras');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -195,6 +196,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
     Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
     Route::get('inventario/get_sat_unidades', 'InventarioController@get_sat_unidades');
+
+     Route::post('inventario/control_compras/{tipo?}', 'InventarioController@control_compras');
 
     Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
     Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');

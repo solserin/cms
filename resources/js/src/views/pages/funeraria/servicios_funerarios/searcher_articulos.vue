@@ -168,11 +168,10 @@ export default {
         this.$nextTick(() =>
           this.$refs["descripcion"].$el.querySelector("input").focus()
         );
-        this.$refs["buscador_lotes"].$el.querySelector(
-          ".vs-icon"
-        ).onclick = () => {
-          this.cancelar();
-        };
+        this.$refs["buscador_lotes"].$el.querySelector(".vs-icon").onclick =
+          () => {
+            this.cancelar();
+          };
         (async () => {
           await this.get_categorias_servicio();
         })();
@@ -195,6 +194,7 @@ export default {
               id: articulo.id,
               codigo_barras: articulo.codigo_barras,
               tipo: "Servicio",
+              tipo_articulos_id: articulo.tipo_articulos_id,
               categoria: articulo.categoria.categoria,
               descripcion: articulo.descripcion,
               //lote: "N/A",
@@ -217,6 +217,7 @@ export default {
               id: articulo.id,
               codigo_barras: articulo.codigo_barras,
               tipo: "Artículo",
+              tipo_articulos_id: articulo.tipo_articulos_id,
               categoria: articulo.categoria.categoria,
               descripcion: articulo.descripcion,
               //lote: lote.lotes_id,
@@ -349,8 +350,7 @@ export default {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
                 title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
+                text: "Verifique sus permisos con el administrador del sistema.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",

@@ -28,9 +28,19 @@ export default {
         return axios.post(call, param);
     },
 
+     control_compras(param) {
+        let call = "/inventario/control_compras/agregar";
+        return axios.post(call, param);
+    },
+
     modificar_articulo(param) {
         let call = "/inventario/control_articulos/modificar";
         return axios.post(call, param);
+    },
+
+     get_compras(param) {
+        let call = "/inventario/get_compras/all/paginated";
+        return axios.get(call, param);
     },
 
     get_inventario(param) {

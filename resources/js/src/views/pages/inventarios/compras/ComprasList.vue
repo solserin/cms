@@ -93,7 +93,7 @@
     <vs-table
       :sst="true"
       :max-items="serverOptions.per_page.value"
-      :data="ventas"
+      :data="compras"
       noDataText="0 Resultados"
       class="tabla-datos"
     >
@@ -111,23 +111,24 @@
       </template>
       <template slot-scope="{ data }">
         <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-          <vs-td :data="data[indextr].servicio_id">
-            <span class="font-semibold">{{ data[indextr].servicio_id }}</span>
+          <vs-td :data="data[indextr].num_compra">
+            <span class="font-semibold">{{ data[indextr].num_compra }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].nombre_afectado">
-            {{ data[indextr].nombre_afectado }}
+          <vs-td :data="data[indextr].proveedor">
+            {{ data[indextr].proveedor.razon_social }}
           </vs-td>
-          <vs-td :data="data[indextr].tipo_solicitud_texto">
-            {{ data[indextr].tipo_solicitud_texto }}
+          <vs-td :data="data[indextr].folio_referencia">
+            {{ data[indextr].folio_referencia }}
           </vs-td>
-          <vs-td :data="data[indextr].fecha_solicitud_texto">
+          <vs-td :data="data[indextr].fecha_compra_texto">
             <span class="font-medium">
-              {{ data[indextr].fecha_solicitud_texto }}
+              {{ data[indextr].fecha_compra_texto }}
             </span>
           </vs-td>
-          <vs-td :data="data[indextr].fecha_solicitud_texto">
+          <vs-td :data="data[indextr].total_compra">
             <span class="font-medium">
-              {{ data[indextr].fecha_solicitud_texto }}
+              $
+              {{ data[indextr].total_compra | numFormat("0,000.00") }}
             </span>
           </vs-td>
           <vs-td>
@@ -231,6 +232,9 @@ import CancelarVenta from "@pages/funeraria/servicios_funerarios/CancelarVenta";
 import Password from "@pages/confirmar_password";
 
 import usuarios from "@services/Usuarios";
+
+import inventario from "@services/inventario";
+
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
 import vSelect from "vue-select";
@@ -306,7 +310,7 @@ export default {
       verPaginado: true,
       total: 0,
       actual: 1,
-      ventas: [],
+      compras: [],
       //fin variables
       openStatus: false,
       callback: Function,
@@ -346,8 +350,8 @@ export default {
         }
       }
       let self = this;
-      if (funeraria.cancel) {
-        funeraria.cancel("Operation canceled by the user.");
+      if (inventario.cancel) {
+        inventario.cancel("Operation canceled by the user.");
       }
       this.$vs.loading();
       this.verPaginado = false;
@@ -357,9 +361,9 @@ export default {
       this.serverOptions.filtro_especifico_opcion = this.filtroEspecifico.value;
 
       try {
-        let res = await funeraria.get_solicitudes_servicios(this.serverOptions);
+        let res = await inventario.get_compras(this.serverOptions);
         if (res.data.data) {
-          this.ventas = res.data.data;
+          this.compras = res.data.data;
           this.total = res.data.last_page;
           this.actual = res.data.current_page;
         }

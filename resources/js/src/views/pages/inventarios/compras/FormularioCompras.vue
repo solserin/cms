@@ -103,9 +103,10 @@
                 </div>
 
                 <div class="w-full input-text xl:w-3/12 px-2">
-                  <label>Núm. Referencia</label>
+                  <label>Núm. Referencia <span>(*)</span></label>
                   <vs-input
                     name="referencia"
+                    v-validate="'required'"
                     maxlength="45"
                     type="text"
                     class="w-full"
@@ -209,7 +210,8 @@
 
                         <vs-td class="">
                           <div class="uppercase">
-                            {{ data[indextr].descripcion }}
+                            {{ data[indextr].descripcion }},
+                            {{ data[indextr].tipo }}
                           </div>
                         </vs-td>
 
@@ -344,7 +346,7 @@
                         <div class="w-full input-text px-2">
                           <label>Nota u Observación:</label>
                           <vs-textarea
-                            height="600px"
+                            height="520px"
                             :rows="9"
                             size="large"
                             ref="nota"
@@ -413,7 +415,7 @@
                             v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Cantidad pagada en efectivo"
+                            placeholder=""
                             v-model="form.pago_efectivo"
                             maxlength="8"
                           />
@@ -438,7 +440,7 @@
                             v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Cantidad pagada con cheque"
+                            placeholder=""
                             v-model="form.pago_cheque"
                             maxlength="8"
                           />
@@ -463,7 +465,7 @@
                             v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Pago con tarjeta"
+                            placeholder=""
                             v-model="form.pago_tarjeta"
                             maxlength="8"
                           />
@@ -488,7 +490,7 @@
                             v-validate="'required|decimal:2|min_value:0'"
                             type="text"
                             class="w-full cantidad"
-                            placeholder="Pago con transferencia"
+                            placeholder=""
                             v-model="form.pago_transferencia"
                             maxlength="8"
                           />
@@ -501,7 +503,7 @@
                             >{{ errores.pago_transferencia[0] }}</span
                           >
                         </div>
-                        <div class="w-full px-2 text-center mt-3">
+                        <div class="w-full px-2 text-center mt-3 hidden">
                           <label class="h4 font-medium color-copy"
                             >$ Resto a Pagar a Crédito</label
                           >
@@ -602,6 +604,7 @@ import "flatpickr/dist/themes/airbnb.css";
 import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
+import inventario from "@services/inventario";
 import funeraria from "@services/funeraria";
 import ClientesBuscador from "@pages/inventarios/compras/searcher.vue";
 import vSelect from "vue-select";
@@ -713,6 +716,10 @@ export default {
       total = this.totalCompra - totalPagado;
       return total;
     },
+
+    fecha_compra_validacion_computed: function () {
+      return this.form.fecha_compra;
+    },
   },
 
   data() {
@@ -738,12 +745,11 @@ export default {
         referencia: "",
         articulos: [],
         tasa_iva: 16,
-        pago_efectivo: "",
-        pago_cheque: "",
-        pago_tarjeta: "",
-        pago_transferencia: "",
-        pago_credito: "",
-
+        pago_efectivo: 0,
+        pago_cheque: 0,
+        pago_tarjeta: 0,
+        pago_transferencia: 0,
+        pago_credito: 0,
         nota: "",
       },
       /**variables dle modulo */
@@ -787,26 +793,38 @@ export default {
           if (res.data.length > 0) {
             let datos = res.data[0];
             /**agrego el concepto al listado del contrato */
-            this.form.articulos.push({
-              id: datos.id,
-              codigo_barras: datos.codigo_barras,
-              tipo: datos.tipo_articulo.tipo,
-              categoria: datos.categoria.categoria,
-              descripcion: datos.descripcion,
-              //lote: lote.lotes_id,
-              //num_lote_inventario: lote.num_lote_inventario,
-              cantidad: 1,
-              //costo_neto_normal: datos.precio_venta,
-              costo_neto_normal: "",
-              descuento_b: 0,
-              costo_neto_descuento: 0,
-              importe: 0,
-              facturable_b: 1,
-              existencia: 0,
-            });
+            if (datos.tipo_articulos_id == 1) {
+              this.form.articulos.push({
+                id: datos.id,
+                codigo_barras: datos.codigo_barras,
+                tipo: datos.tipo,
+                tipo_articulos_id: datos.tipo_articulos_id,
+                categoria: datos.categoria.categoria,
+                descripcion: datos.descripcion,
+                //lote: lote.lotes_id,
+                //num_lote_inventario: lote.num_lote_inventario,
+                cantidad: 1,
+                //costo_neto_normal: datos.precio_venta,
+                costo_neto_normal: "",
+                descuento_b: 0,
+                costo_neto_descuento: 0,
+                importe: 0,
+                facturable_b: 1,
+                existencia: 0,
+              });
+            } else {
+              this.$vs.notify({
+                title: "Buscar artículos",
+                text: "No se puede agregar conceptos de tipo servicio en una compra.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "warning",
+                time: 4000,
+              });
+            }
           } else {
             this.$vs.notify({
-              title: "Busar artículos y servicios",
+              title: "Buscar artículos",
               text: "No se ha encontrado el concepto con el número de clave ingresado.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -859,8 +877,8 @@ export default {
             (async () => {
               if (this.getTipoformulario == "agregar") {
                 /**EL FORMULARIO ES SOLO DE VALIDACION */
-                //this.callBackConfirmarAceptar = await this.guardar_venta;
-                //this.openConfirmarAceptar = true;
+                this.callBackConfirmarAceptar = await this.control_compras;
+                this.openConfirmarAceptar = true;
               }
             })();
           }
@@ -868,36 +886,33 @@ export default {
         .catch(() => {});
     },
 
-    async modificar_contrato() {
+    async control_compras() {
       //aqui mando guardar los datos
       this.errores = [];
       this.$vs.loading();
       try {
-        this.form.id_servicio = this.get_id_solicitud;
-        let res = await funeraria.modificar_contrato(this.form);
+        let res = await inventario.control_compras(this.form);
         if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Contrato Funerario",
-            text: "Se ha modificado el contrato correctamente.",
+            title: "Compra a Proveedores",
+            text: "Se ha registrado la compra correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "success",
             time: 5000,
           });
-          this.$emit("ver_pdfs_nueva_venta", res.data);
           this.cerrarVentana();
         } else {
           this.$vs.notify({
-            title: "Contrato Funerario",
-            text: "Error al modificar el contrato, por favor reintente.",
+            title: "Compra a Proveedores",
+            text: "Error al registrar la compra, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
             time: 6000,
           });
         }
-
         this.$vs.loading.close();
       } catch (err) {
         if (err.response) {
@@ -914,9 +929,8 @@ export default {
           } else if (err.response.status == 422) {
             //checo si existe cada error
             this.errores = err.response.data.error;
-
             this.$vs.notify({
-              title: "Contrato Funerario",
+              title: "Registro de Compras",
               text: "Verifique los errores encontrados en los datos.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -927,12 +941,12 @@ export default {
             //este error es por alguna condicion que el contrano no cumple para modificar
             //la propiedad esa ya ha sido vendida
             this.$vs.notify({
-              title: "Modificar información del contrato",
+              title: "Registro de Compras",
               text: err.response.data.error,
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "danger",
-              time: 3000,
+              time: 8000,
             });
           }
         }
@@ -944,8 +958,19 @@ export default {
     },
 
     LoteSeleccionado(datos) {
-      this.form.articulos.push(datos);
-      /**agregando los datos a la lista de articulos y servicios */
+      if (datos.tipo_articulos_id == 1) {
+        /**agregando los datos a la lista de articulos y servicios */
+        this.form.articulos.push(datos);
+      } else {
+        this.$vs.notify({
+          title: "Buscar artículos",
+          text: "No se puede agregar conceptos de tipo servicio en una compra.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "warning",
+          time: 4000,
+        });
+      }
     },
 
     cancelar() {
@@ -980,6 +1005,14 @@ export default {
       this.form.articulos = [];
       this.form.tasa_iva = 16;
       this.form.nota = "";
+      this.form.fecha_compra = "";
+      this.form.id_proveedor = "";
+      this.form.proveedor = "";
+      this.form.referencia = "";
+      this.form.pago_efectivo = 0;
+      this.form.pago_cheque = 0;
+      this.form.pago_tarjeta = 0;
+      this.form.pago_transferencia = 0;
     },
 
     closePassword() {

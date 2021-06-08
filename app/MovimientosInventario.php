@@ -14,6 +14,11 @@ class MovimientosInventario extends Model
         return $this->hasOne('App\User', 'id', 'registro_id');
     }
 
+     public function cancelo()
+    {
+        return $this->hasOne('App\User', 'id', 'cancelo_id');
+    }
+
     public function detalles()
     {
         return $this->hasMany('App\AjusteInventarioDetalle', 'movimientos_inventario_id', 'id')
@@ -44,6 +49,34 @@ class MovimientosInventario extends Model
             ->join('articulos', 'articulos.id', '=', 'venta_detalle.articulos_id')
             ->join('sat_productos_servicios', 'articulos.sat_productos_servicios_id', '=', 'sat_productos_servicios.id')
             ->join('sat_unidades', 'articulos.sat_unidades_venta', '=', 'sat_unidades.id')
+        ;
+    }
+
+
+    public function proveedor()
+    {
+       return $this->hasOne('App\Proveedores','id','proveedores_id');
+    }
+
+
+    public function compra_detalle()
+    {
+        return $this->hasMany('App\CompraDetalle', 'movimientos_inventario_id', 'id')
+        ->select(
+            'articulos.id',
+            'articulos.descripcion',
+            'compra_detalle.articulos_id',
+            'compra_detalle.movimientos_inventario_id',
+            'compra_detalle.cantidad',
+            'compra_detalle.costo_neto',
+            'compra_detalle.costo_neto_descuento',
+            'compra_detalle.descuento_b',
+            'compra_detalle.facturable_b',
+             DB::raw(
+                    '(0) AS descuento'
+                )
+            )
+        ->join('articulos', 'articulos.id', '=', 'compra_detalle.articulos_id')
         ;
     }
 }

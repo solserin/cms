@@ -1048,4 +1048,267 @@ class InventarioController extends ApiController
             return $this->errorResponse('Error al cargar los datos.', 409);
         }
     }
+
+
+
+
+
+
+       public function control_compras(Request $request, $tipo_servicio = '')
+    {
+        if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
+            return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
+        }
+        /**procede la peticion */
+
+        //validaciones
+        $validaciones = [
+            'id_proveedor'             => 'required',
+            'fecha_compra'          => 'required',
+            'referencia'             => 'required',
+            'tasa_iva'=> 'required|numeric|min:0|max:25',
+            'pago_efectivo'=> 'required|numeric|min:0',
+            'pago_cheque'=> 'required|numeric|min:0',
+            'pago_tarjeta'=> 'required|numeric|min:0',
+            'pago_transferencia'=> 'required|numeric|min:0',
+            'articulos.*.id'                   => 'integer|min:1',
+            'articulos.*.cantidad'             => 'integer|min:1',
+            'articulos.*.costo_neto_normal'    => 'numeric|min:0',
+            'articulos.*.costo_neto_descuento' => 'numeric|min:0',
+            'articulos.*.descuento_b'          => 'boolean',
+            'articulos.*.facturable_b'         => 'boolean',
+        ];
+
+        /**FIN DE VALIDACIONES*/
+        $mensajes = [
+            'id_proveedor.requeired'             => 'Seleccione al proveedor.',
+            'fecha_compra.required'          => 'Seleccione la fecha de la compra.',
+            'referencia.required'=>'Ingrese una referencia, Núm. Factura o Nota de Venta.',
+            'tasa_iva.required'=>'Ingrese el IVA.',
+            'pago_efectivo.required'=> 'Ingrese la cantidad a pagar con efectivo.',
+            'pago_efectivo.min'=> 'El mínimo debe ser 0.00.',
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        /**validaciones */
+
+        /**calculando totales segun los articulos y sus descuentos */
+
+        $total_compra=0;
+        foreach ($request->articulos as $key => $articulo) {
+            /**validando que el tipo de articulo no sea servicio */
+           if($articulo['tipo_articulos_id']==2){
+              return $this->errorResponse('Los conceptos de la compra deben ser de tipo artículos.',409);
+           }
+
+           if($articulo['descuento_b']==true){
+               $total_compra+=$articulo['cantidad']*$articulo['costo_neto_descuento'];
+           }else{
+                $total_compra+=$articulo['cantidad']*$articulo['costo_neto_normal'];
+           }
+        }
+
+        if(count($request->articulos)==0){
+              return $this->errorResponse('Ingrese los artículos de la compra.',409);
+        }
+        $total_pagado=$request->pago_efectivo+$request->pago_cheque+$request->pago_tarjeta+$request->pago_transferencia;
+
+
+        if($total_compra!=$total_pagado){
+              return $this->errorResponse('La cantidad pagada no cubre el total de la compra.',409);
+        }
+
+        
+
+
+        try {
+            DB::beginTransaction();
+            $id_compra=0;
+            
+            $num_compra = (int) MovimientosInventario::max('num_compra');
+            $num_compra++;
+            $id_compra = DB::table('movimientos_inventario')->insertGetId(
+                [
+                    'folio_referencia'=>$request->referencia,
+                    'fecha_registro'          => now(),
+                    'fecha_movimiento'=>$request->fecha_compra,
+                    'registro_id'    => (int) $request->user()->id,
+                    'nota'=>$request->nota,
+                    'tipo_movimientos_id'=>3,//CM
+                    'proveedores_id'=>$request->id_proveedor,
+                    'pago_efectivo'=>$request->pago_efectivo,
+                    'pago_cheque'=>$request->pago_cheque,
+                    'pago_tarjeta'=>$request->pago_tarjeta,
+                    'pago_transferencia'=>$request->pago_transferencia,
+                    'iva_porcentaje'=>$request->tasa_iva,
+                    'num_compra'=> $num_compra
+                ]
+            );
+
+            /**guardand el detalle de la compra */
+            $num_lote_inventario = (int) Inventario::max('num_lote_inventario');
+            $num_lote_inventario++;
+
+             foreach ($request->articulos as $key => $articulo) {
+               DB::table('compra_detalle')->insertGetId(
+                    [
+                        'articulos_id'=>$articulo['id'],
+                        'movimientos_inventario_id'          => $id_compra,
+                        'cantidad'=>$articulo['cantidad'],
+                        'costo_neto'=>$articulo['costo_neto_normal'],
+                        'costo_neto_descuento'=>$articulo['costo_neto_descuento'],
+                        'facturable_b'=>$articulo['facturable_b'],
+                        'descuento_b'=>$articulo['descuento_b'],
+                    ]
+                );
+
+                /**creando los lotes en el inventario */
+                //aqui voy
+               
+                 DB::table('inventario')->insertGetId(
+                    [
+                        'lotes_id'          => $id_compra,
+                        'articulos_id'=>$articulo['id'],
+                        'precio_compra_neto'          => $articulo['descuento_b']==1?$articulo['costo_neto_normal']:$articulo['costo_neto_descuento'],
+                        'existencia'=>$articulo['cantidad'],
+                        'num_lote_inventario'=>$num_lote_inventario
+                    ]
+                );
+            }
+            DB::commit();
+            return $id_compra;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+
+     public function get_compras(Request $request, $num_compra = 'all', $paginated = false)
+    {
+        $filtro_especifico_opcion = $request->filtro_especifico_opcion;
+        $titular                  = $request->titular;
+        $numero_control           = $request->numero_control;
+        $status                   = $request->status;
+        $fecha_operacion          = $request->fecha_operacion;
+
+        $resultado_query = MovimientosInventario::
+        select(
+            "id",
+            "folio_referencia",
+            "fecha_registro",
+            "fecha_movimiento",
+            "nota",
+            "cancelo_id",
+            "fecha_cancelacion",
+            "nota_cancelacion",
+            "operaciones_id",
+            "tipo_movimientos_id",
+            "proveedores_id",
+            "registro_id",
+            "iva_porcentaje",
+            "fecha_vencimiento_credito",
+            "pago_credito",
+            "pago_tarjeta",
+            "pago_transferencia",
+            "pago_cheque",
+            "pago_efectivo",
+            "status"
+        )
+        ->with('proveedor')
+        ->with('compra_detalle')
+        ->with('registro:id,nombre')
+        ->with('cancelo:id,nombre')
+        /**solo ventas de planes funerarios */
+            ->select(
+                /**venta operacion */
+              '*',
+              DB::raw(
+                    '(0) AS total_compra'
+                ),
+                DB::raw(
+                        '(0) AS total_compra_texto'
+                ),
+                DB::raw(
+                        '(0) AS fecha_compra_texto'
+                ),
+                 DB::raw(
+                        '(0) AS descuento_total'
+                ), 
+                 DB::raw(
+                        '(0) AS impuestos_total'
+                ),  
+            )
+            //solo compras a proveedores
+            ->where('tipo_movimientos_id',3)
+            ->where(function ($q) use ($num_compra) {
+                if (trim($num_compra) == 'all' || trim($num_compra) > 0) {
+                     if ($num_compra > 0) {
+                        $q->where('movimientos_inventario.num_compra', '=', $num_compra);
+                    }
+                }
+            })
+             ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
+                if (trim($numero_control) != '') {
+                    if ($filtro_especifico_opcion == 1) {
+                        /**filtro por numero de solicitud */
+                        $q->where('movimientos_inventario.num_compra', '=', $numero_control);
+                    }
+                }
+            })
+            ->where(function ($q) use ($status) {
+                if (trim($status) != '') {
+                    $q->where('movimientos_inventario.status', '=', $status);
+                }
+            })
+            ->orderBy('movimientos_inventario.id', 'desc')
+            ->get();
+        /**verificando si el usario necesita el resultado paginado, todo o por id */
+        $resultado = array();
+        if ($paginated == 'paginated') {
+            /**queire el resultado paginado */
+            $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
+            $resultado       = &$resultado_query['data'];
+        } else {
+            $resultado_query = $resultado_query->toArray();
+            $resultado       = &$resultado_query;
+        }
+
+        foreach ($resultado as $index_venta => &$compra) {
+           
+            /**sacando totales */
+            $total_compra=0;
+            $suma_neto=0;
+            $suma_descuento=0;
+            $suma_neto_total_sin_descuento=0;
+             $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
+            foreach($compra['compra_detalle'] as &$detalle){
+                $suma_neto_total_sin_descuento+=$detalle['costo_neto']*$detalle['cantidad'];
+                if($detalle['descuento_b']==1){
+                    $suma_descuento=$detalle['costo_neto_descuento']*$detalle['cantidad'];
+                    $total_compra+= $suma_descuento;
+                    $detalle['descuento']= round((($detalle['costo_neto']*$detalle['cantidad'])/$iva_porcentaje)-(($suma_descuento)/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
+                }else{
+                    $suma_neto=$detalle['costo_neto']*$detalle['cantidad'];
+                    $total_compra+=$suma_neto;
+                }
+        
+            }
+
+            $compra['total_compra']=$total_compra;
+            $compra['descuento_total']= round(($suma_neto_total_sin_descuento/$iva_porcentaje)-($suma_descuento/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
+           
+
+             $compra['fecha_compra_texto'] = fecha_abr($compra['fecha_movimiento']);
+        } //fin foreach compra
+
+        return $resultado_query;
+        /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
+    }
+
+
 }
