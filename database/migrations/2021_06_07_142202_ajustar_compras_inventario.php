@@ -13,6 +13,7 @@ class AjustarComprasInventario extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('compra_detalle');
          Schema::create('compra_detalle', function (Blueprint $table) {
             $table->integer('cantidad');
             $table->dateTime('fecha_caducidad')->nullable();

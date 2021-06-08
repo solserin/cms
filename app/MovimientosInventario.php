@@ -63,7 +63,7 @@ class MovimientosInventario extends Model
     {
         return $this->hasMany('App\CompraDetalle', 'movimientos_inventario_id', 'id')
         ->select(
-            'articulos.id',
+            'articulos.id as id_articulo',
             'articulos.descripcion',
             'compra_detalle.articulos_id',
             'compra_detalle.movimientos_inventario_id',

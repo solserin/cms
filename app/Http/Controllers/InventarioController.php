@@ -1054,7 +1054,7 @@ class InventarioController extends ApiController
 
 
 
-       public function control_compras(Request $request, $tipo_servicio = '')
+    public function control_compras(Request $request, $tipo_servicio = '')
     {
         if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
             return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
@@ -1178,6 +1178,7 @@ class InventarioController extends ApiController
                     ]
                 );
             }
+
             DB::commit();
             return $id_compra;
         } catch (\Throwable $th) {
@@ -1186,29 +1187,86 @@ class InventarioController extends ApiController
         }
     }
 
+     public function cancelar_compra(Request $request)
+    {
+         //validaciones
+        $validaciones = [
+            'id_compra'             => 'required|integer'
+        ];
 
+        /**FIN DE VALIDACIONES*/
+        $mensajes = [
+            'id_compra.required'             => 'Seleccione una compra a cancelar'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        $id_compra=$request->id_compra;
+
+        /**se valida que este activa esta compra */
+
+        $compra=MovimientosInventario::where('id','=',$id_compra)->where('tipo_movimientos_id','=',3)->get()->toArray();
+        if(count($compra)>0){
+            /**existe */
+            if($compra[0]['status']!=0){
+                /**se verifica si tiene lotes involucrados*/
+                $venta_detalle=VentaDetalle::where('lotes_id','=',$id_compra)->get()->toArray();
+                /*if(count($compra)>0){
+                    //ya tiene ventas asociadas y 
+                }*/
+                //se pone todo el inventario en 0
+                try {
+                    DB::beginTransaction();
+                    DB::table('inventario')->where('lotes_id', $id_compra)->update(
+                        [
+                            'existencia'               => 0
+                        ]
+                    );
+                    DB::table('movimientos_inventario')->where('id', $id_compra)->update(
+                        [
+                            'status'               => 0
+                        ]
+                    );
+                /**todo salio bien y se debe de guardar */
+                DB::commit();
+                return $id_compra;
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    return $th;
+                }
+            }else{
+                return $this->errorResponse('Esta compra ya fue cancelada anteriormente.', 409);
+            }
+        }else{
+            //no se puede cancelar esta compra
+             return $this->errorResponse('No se encontró esta venta registrada.', 409);
+        }
+
+    }
 
      public function get_compras(Request $request, $num_compra = 'all', $paginated = false)
     {
+        
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $titular                  = $request->titular;
+        $proveedor                  = $request->proveedor;
         $numero_control           = $request->numero_control;
         $status                   = $request->status;
-        $fecha_operacion          = $request->fecha_operacion;
-
+        $fecha_compra          = $request->fecha_compra;
         $resultado_query = MovimientosInventario::
         select(
-            "id",
+            'movimientos_inventario.id',
+            "num_compra",
             "folio_referencia",
             "fecha_registro",
             "fecha_movimiento",
-            "nota",
+            "movimientos_inventario.nota",
             "cancelo_id",
             "fecha_cancelacion",
             "nota_cancelacion",
-            "operaciones_id",
             "tipo_movimientos_id",
-            "proveedores_id",
+            "proveedores.id as id_proveedor",
             "registro_id",
             "iva_porcentaje",
             "fecha_vencimiento_credito",
@@ -1217,56 +1275,74 @@ class InventarioController extends ApiController
             "pago_transferencia",
             "pago_cheque",
             "pago_efectivo",
-            "status"
+            "movimientos_inventario.status",
+                 /**venta operacion */
+            DB::raw(
+                '(0) AS total_compra'
+            ),
+            DB::raw(
+                '(0) AS total_compra_texto'
+            ),
+            DB::raw(
+                '(null) AS fecha_compra_texto'
+            ),
+             DB::raw(
+                '(null) AS fecha_registro_texto'
+            ),
+            DB::raw(
+                '(0) AS descuento_total'
+            ), 
+            DB::raw(
+                '(0) AS subtotal'
+            ), 
+            DB::raw(
+                '(0) AS impuestos_total'
+            ),
+            DB::raw(
+                '(NULL) AS status_texto'
+            ), 
+            'nombre_comercial',
+            'razon_social',
+            'nombre_contacto'
         )
-        ->with('proveedor')
         ->with('compra_detalle')
         ->with('registro:id,nombre')
         ->with('cancelo:id,nombre')
         /**solo ventas de planes funerarios */
-            ->select(
-                /**venta operacion */
-              '*',
-              DB::raw(
-                    '(0) AS total_compra'
-                ),
-                DB::raw(
-                        '(0) AS total_compra_texto'
-                ),
-                DB::raw(
-                        '(0) AS fecha_compra_texto'
-                ),
-                 DB::raw(
-                        '(0) AS descuento_total'
-                ), 
-                 DB::raw(
-                        '(0) AS impuestos_total'
-                ),  
-            )
             //solo compras a proveedores
-            ->where('tipo_movimientos_id',3)
-            ->where(function ($q) use ($num_compra) {
+        ->join('proveedores', 'proveedores.id', '=', 'movimientos_inventario.proveedores_id')
+
+        ->where(function ($query) use ($proveedor) {
+            return $query->where('nombre_comercial', 'like', '%'.$proveedor.'%')
+                ->orWhere('razon_social', 'like', '%'.$proveedor.'%')
+                ->orWhere('nombre_contacto', 'like', '%'.$proveedor.'%');
+        })
+        ->where('tipo_movimientos_id',3)
+        ->where(function ($q) use ($num_compra) {
                 if (trim($num_compra) == 'all' || trim($num_compra) > 0) {
                      if ($num_compra > 0) {
                         $q->where('movimientos_inventario.num_compra', '=', $num_compra);
                     }
                 }
-            })
-             ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
+        })
+        ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
                 if (trim($numero_control) != '') {
                     if ($filtro_especifico_opcion == 1) {
-                        /**filtro por numero de solicitud */
+                        /**filtro por numero de registro */
                         $q->where('movimientos_inventario.num_compra', '=', $numero_control);
+                    }elseif ($filtro_especifico_opcion == 2) {
+                        /**filtro por numero de referencia */
+                        $q->where('movimientos_inventario.folio_referencia', '=', $numero_control);
                     }
                 }
-            })
-            ->where(function ($q) use ($status) {
+        })
+        ->where(function ($q) use ($status) {
                 if (trim($status) != '') {
                     $q->where('movimientos_inventario.status', '=', $status);
                 }
-            })
-            ->orderBy('movimientos_inventario.id', 'desc')
-            ->get();
+        })
+        ->orderBy('movimientos_inventario.id', 'desc')
+        ->get();
         /**verificando si el usario necesita el resultado paginado, todo o por id */
         $resultado = array();
         if ($paginated == 'paginated') {
@@ -1279,36 +1355,138 @@ class InventarioController extends ApiController
         }
 
         foreach ($resultado as $index_venta => &$compra) {
-           
             /**sacando totales */
             $total_compra=0;
             $suma_neto=0;
             $suma_descuento=0;
             $suma_neto_total_sin_descuento=0;
-             $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
+            $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
             foreach($compra['compra_detalle'] as &$detalle){
                 $suma_neto_total_sin_descuento+=$detalle['costo_neto']*$detalle['cantidad'];
                 if($detalle['descuento_b']==1){
                     $suma_descuento=$detalle['costo_neto_descuento']*$detalle['cantidad'];
                     $total_compra+= $suma_descuento;
                     $detalle['descuento']= round((($detalle['costo_neto']*$detalle['cantidad'])/$iva_porcentaje)-(($suma_descuento)/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
+                    $detalle['importe']= round((($detalle['costo_neto_descuento']*$detalle['cantidad'])), 2, PHP_ROUND_HALF_UP);
                 }else{
                     $suma_neto=$detalle['costo_neto']*$detalle['cantidad'];
                     $total_compra+=$suma_neto;
+                     $detalle['importe']= round((($detalle['costo_neto']*$detalle['cantidad'])), 2, PHP_ROUND_HALF_UP);
                 }
-        
             }
 
             $compra['total_compra']=$total_compra;
-            $compra['descuento_total']= round(($suma_neto_total_sin_descuento/$iva_porcentaje)-($suma_descuento/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
-           
+            $compra['total_compra_texto']=numeros_a_letras($total_compra);
+            
+            $compra['impuestos_total']= round($total_compra-($total_compra/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
+            if( $suma_descuento>0){
+                $compra['descuento_total']= round(($suma_neto_total_sin_descuento/$iva_porcentaje)-($suma_descuento/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
+            }
+            $compra['fecha_compra_texto'] = fecha_abr($compra['fecha_movimiento']);
+            $compra['fecha_registro_texto'] = fecha_abr($compra['fecha_registro']);
+             $compra['subtotal']= round($total_compra/$iva_porcentaje, 2, PHP_ROUND_HALF_UP);
 
-             $compra['fecha_compra_texto'] = fecha_abr($compra['fecha_movimiento']);
+            /**status segun pago o cancelación */
+            $total_pagado=$compra['pago_efectivo']+$compra['pago_cheque']+$compra['pago_tarjeta']+$compra['pago_transferencia'];
+
+            if($compra['status']==0){
+                $compra['status_texto']='Cancelada';
+            }else{
+                if($total_pagado>=$total_compra){
+                     $compra['status_texto']='Pagada';
+                }else{
+                     $compra['status_texto']='Por liquidar';
+                }
+            }
+
         } //fin foreach compra
 
         return $resultado_query;
         /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
     }
+
+
+
+    public function pdf_nota_compra(Request $request)
+    {
+        $id_compra = 2;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+         
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        
+        
+        /* $email             = $request->email_send === 'true' ? true : false;
+        $email_to          = $request->email_address;
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_compra           = $requestVentasList['id_compra'];
+*/
+        //obtengo la informacion de esa venta
+        $r = new \Illuminate\Http\Request();
+        $r->replace(['sample' => 'sample']);
+        $compra = $this->get_compras($r, $id_compra)[0];
+
+        if (empty($compra)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+
+        /**verificando si el documento aplica para esta solictitud */
+        /*if ($datos_venta['numero_convenio_raw'] == null) {
+        return 0;
+        }*/
+
+        $get_funeraria = new EmpresaController();
+        $empresa       = $get_funeraria->get_empresa_data();
+        $pdf           = PDF::loadView('inventarios/nota_compra/nota', ['datos' => $compra, 'empresa' => $empresa]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = strtoupper($compra['num_compra']) . '.pdf';
+
+        $pdf->setOptions([
+            'title'       => $name_pdf,
+            'footer-html' => view('inventarios.nota_compra.footer'),
+        ]);
+        if ($compra['status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('inventarios.nota_compra.header'),
+            ]);
+        }
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 20.4);
+        $pdf->setOption('margin-right', 20.4);
+        $pdf->setOption('margin-top', 10.4);
+        $pdf->setOption('margin-bottom', 25.4);
+        $pdf->setOption('page-size', 'letter');
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email     = $email_controller->pdf_email(
+                $email_to,
+                $request->destinatario,
+                $compra['num_compra'],
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
 
 
 }

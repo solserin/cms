@@ -79,7 +79,7 @@
               class="w-full"
               icon="search"
               placeholder="Filtrar por Nombre del Proveedor"
-              v-model="serverOptions.fallecido"
+              v-model="serverOptions.proveedor"
               v-on:keyup.enter="get_data(1)"
               v-on:blur="get_data(1, 'blur')"
               maxlength="75"
@@ -114,8 +114,8 @@
           <vs-td :data="data[indextr].num_compra">
             <span class="font-semibold">{{ data[indextr].num_compra }}</span>
           </vs-td>
-          <vs-td :data="data[indextr].proveedor">
-            {{ data[indextr].proveedor.razon_social }}
+          <vs-td :data="data[indextr].num_compra">
+            {{ data[indextr].razon_social }}
           </vs-td>
           <vs-td :data="data[indextr].folio_referencia">
             {{ data[indextr].folio_referencia }}
@@ -136,16 +136,10 @@
               {{ data[indextr].status_texto }}
               <span class="dot-danger"></span>
             </p>
-            <p v-else-if="data[indextr].status_texto == 'Por pagar'">
+            <p v-else-if="data[indextr].status_texto == 'Por liquidar'">
               {{ data[indextr].status_texto }}
               <span class="dot-warning"></span>
             </p>
-
-            <p v-else-if="data[indextr].status_texto == 'Activa'">
-              Sin Contrato
-              <span class="dot-warning"></span>
-            </p>
-
             <p v-else-if="data[indextr].status_texto == 'Pagada'">
               {{ data[indextr].status_texto }}
               <span class="dot-success"></span>
@@ -157,22 +151,15 @@
                 class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
                 title="Expediente"
-                @click="ConsultarVenta(data[indextr].servicio_id)"
+                @click="ConsultarCompra(data[indextr].num_compra)"
               />
 
               <img
-                v-if="data[indextr].status_b >= 1"
+                v-if="data[indextr].status >= 1"
                 class="img-btn-22 mx-3"
                 src="@assets/images/trash.svg"
                 title="Cancelar Contrato"
-                @click="cancelarVenta(data[indextr].servicio_id)"
-              />
-              <img
-                v-else
-                class="img-btn-22 mx-3"
-                src="@assets/images/trash-open.svg"
-                title="Este contrato ya fue cancelado, puede hacer click aquí para consultar"
-                @click="ConsultarVentaAcuse(data[indextr].servicio_id)"
+                @click="cancelarCompra(data[indextr].id)"
               />
             </div>
           </vs-td>
@@ -204,17 +191,10 @@
       :id_compra="id_compra"
     ></ReportesServicio>
 
-    <CancelarVenta
-      :show="openCancelar"
-      @closeCancelarVenta="openCancelar = false"
-      @ConsultarVenta="ConsultarVenta"
-      :id_compra="id_compra"
-    ></CancelarVenta>
-
     <FormularioCompras
       :tipo="tipoFormulario"
       :show="verFormularioCompras"
-      @closeVentana="verFormularioCompras = false"
+      @closeVentana="reloadList"
     ></FormularioCompras>
   </div>
 </template>
@@ -225,13 +205,10 @@ import funeraria from "@services/funeraria";
 
 import FormularioCompras from "@pages/inventarios/compras/FormularioCompras";
 
-import ReportesServicio from "@pages/funeraria/servicios_funerarios/ReportesServicio";
-import CancelarVenta from "@pages/funeraria/servicios_funerarios/CancelarVenta";
+import ReportesServicio from "@pages/inventarios/compras/ReportesServicio";
 
 //componente de password
 import Password from "@pages/confirmar_password";
-
-import usuarios from "@services/Usuarios";
 
 import inventario from "@services/inventario";
 
@@ -244,7 +221,6 @@ export default {
     Password,
     FormularioCompras,
     ReportesServicio,
-    CancelarVenta,
   },
   watch: {
     actual: function (newValue, oldValue) {
@@ -305,7 +281,7 @@ export default {
         status: "",
         filtro_especifico_opcion: "",
         numero_control: "",
-        fallecido: "",
+        proveedor: "",
       },
       verPaginado: true,
       total: 0,
@@ -327,14 +303,14 @@ export default {
       this.serverOptions.numero_control = "";
       this.mostrar = { label: "15", value: "15" };
       this.estado = { label: "Todas", value: "" };
-      this.serverOptions.fallecido = "";
+      this.serverOptions.proveedor = "";
       //this.get_data(this.actual);
     },
     async get_data(page, evento = "") {
       if (evento == "blur") {
         if (
-          this.serverOptions.fallecido != "" ||
-          this.serverOptions.fallecido == ""
+          this.serverOptions.proveedor != "" ||
+          this.serverOptions.proveedor == ""
         ) {
           //la funcion no avanza
 
@@ -394,7 +370,7 @@ export default {
       this.openStatus = false;
     },
 
-    ConsultarVenta(id_compra) {
+    ConsultarCompra(id_compra) {
       this.id_compra = id_compra;
       this.openReportes = true;
     },
@@ -404,9 +380,85 @@ export default {
       this.verFormularioCompras = true;
     },
 
-    cancelarVenta(id_compra) {
-      this.id_compra = id_compra;
-      this.openCancelar = true;
+    cancelarCompra(id_compra) {
+      (async () => {
+        this.id_compra = id_compra;
+        this.callback = await this.cancelar_compra;
+        this.openStatus = true;
+      })();
+    },
+
+    async cancelar_compra() {
+      //aqui mando guardar los datos
+      this.errores = [];
+      this.$vs.loading();
+      try {
+        let res = await inventario.cancelar_compra({
+          id_compra: this.id_compra,
+        });
+        if (res.data >= 1) {
+          //success
+          this.$vs.notify({
+            title: "Cancelar Compra",
+            text: "Se ha cancelado la compra correctamente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "success",
+            time: 5000,
+          });
+          (async () => {
+            await this.get_data(this.actual);
+          })();
+          this.cerrarVentana();
+        } else {
+          this.$vs.notify({
+            title: "Cancelar Compra",
+            text: "Error al cancelar la compra, por favor reintente.",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 6000,
+          });
+        }
+        this.$vs.loading.close();
+      } catch (err) {
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          } else if (err.response.status == 422) {
+            //checo si existe cada error
+            this.errores = err.response.data.error;
+            this.$vs.notify({
+              title: "Cancelar Compra",
+              text: "Verifique los errores encontrados en los datos.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 5000,
+            });
+          } else if (err.response.status == 409) {
+            //este error es por alguna condicion que el contrano no cumple para modificar
+            //la propiedad esa ya ha sido vendida
+            this.$vs.notify({
+              title: "Cancelar Compra",
+              text: err.response.data.error,
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "danger",
+              time: 8000,
+            });
+          }
+        }
+        this.$vs.loading.close();
+      }
     },
 
     closeListaReportes() {
@@ -417,13 +469,15 @@ export default {
         await this.get_data(this.actual);
       })();
     },
-    closeCancelarVentaRefrescar() {
-      this.openCancelar = false;
+
+    reloadList() {
       (async () => {
+        this.verFormularioCompras = false;
         await this.get_data(this.actual);
       })();
     },
   },
+
   created() {
     (async () => {
       await this.get_data(this.actual);

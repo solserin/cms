@@ -32,6 +32,10 @@ export default {
         let call = "/inventario/control_compras/agregar";
         return axios.post(call, param);
     },
+     cancelar_compra(param) {
+        let call = "/inventario/cancelar_compra";
+        return axios.post(call,param);
+    },
 
     modificar_articulo(param) {
         let call = "/inventario/control_articulos/modificar";
@@ -39,8 +43,12 @@ export default {
     },
 
      get_compras(param) {
-        let call = "/inventario/get_compras/all/paginated";
-        return axios.get(call, param);
+          return axios.get("/inventario/get_compras/all/paginated", {
+            cancelToken: new CancelToken(c => {
+                self.cancel = c;
+            }),
+            params: param
+        });
     },
 
     get_inventario(param) {
