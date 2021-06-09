@@ -13,27 +13,22 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
 -->
 <template>
   <div>
-    <div class="flex flex-wrap">
-      <div class="w-full mb-1">
-        <vs-button
-          class="float-right"
-          size="small"
-          color="success"
-          @click="formulario('agregar')"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-          <span class="texto-btn">Ajustar Inventario</span>
-        </vs-button>
-        <vs-button
-          class="float-right mr-12"
-          size="small"
-          color="primary"
-          @click="openReporteLotes()"
-        >
-          <img class="cursor-pointer img-btn" src="@assets/images/boxes.svg" />
-          <span class="texto-btn">Ver Lotes del Inventario</span>
-        </vs-button>
-      </div>
+    <div class="w-full text-right">
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="openReporteLotes()"
+        type="border"
+      >
+        <span>Ver Lotes del Inventario</span>
+      </vs-button>
+      <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="formulario('agregar')"
+      >
+        <span>Ajustar Inventario</span>
+      </vs-button>
     </div>
 
     <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
@@ -42,12 +37,10 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
         title="Filtros de selección"
         refresh-content-action
         @refresh="reset"
-        collapse-action
+        :collapse-action="false"
       >
         <div class="flex flex-wrap">
-          <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-6/12 xl:w-6/12 mb-1 px-2"
-          >
+          <div class="w-full xl:w-3/12 mb-1 px-2 input-text">
             <label class="text-sm opacity-75">Mostrar</label>
             <v-select
               :options="mostrarOptions"
@@ -59,7 +52,16 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
           </div>
 
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+            class="
+              w-full
+              sm:w-12/12
+              md:w-3/12
+              lg:w-3/12
+              xl:w-3/12
+              mb-1
+              px-2
+              input-text
+            "
           >
             <label class="text-sm opacity-75">Filtrar Específico</label>
             <v-select
@@ -71,7 +73,16 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-4 px-2"
+            class="
+              w-full
+              sm:w-12/12
+              md:w-3/12
+              lg:w-3/12
+              xl:w-3/12
+              mb-4
+              px-2
+              input-text
+            "
           >
             <label class="text-sm opacity-75">{{
               this.filtroEspecifico.label
@@ -93,12 +104,10 @@ con la ruta especifica del modulo que se desea consultar y el id del permiso
     <br />
     <vs-table
       :sst="true"
-      @search="handleSearch"
-      @change-page="handleChangePage"
-      @sort="handleSort"
       :max-items="serverOptions.per_page.value"
       :data="ajustes"
       noDataText="0 Resultados"
+      class="tabla-datos"
     >
       <template slot="header">
         <h3>Listado de Ajustes Realizados</h3>
@@ -337,8 +346,7 @@ export default {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
                 title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
+                text: "Verifique sus permisos con el administrador del sistema.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
