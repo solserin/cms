@@ -15,7 +15,7 @@
               class="tabla-datos"
             >
               <template slot="header">
-                <h3>Documentos del contrato</h3>
+                <h3>Documentos de la Compra</h3>
               </template>
               <template slot="thead">
                 <vs-th>#</vs-th>
@@ -119,7 +119,7 @@ export default {
       documentos: [
         {
           documento: "Nota de Compra",
-          url: "/funeraria/get_hoja_solicitud",
+          url: "/inventario/pdf_nota_compra",
           tipo: "pdf",
         },
       ],
@@ -128,7 +128,7 @@ export default {
       ListaReportes: [],
       request: {
         id_pago: "",
-        id_servicio: "",
+        id_compra: "",
         email: "",
         destinatario: "",
       },
@@ -136,11 +136,6 @@ export default {
     };
   },
   methods: {
-    pagar(referencia) {
-      this.referencia = referencia;
-      this.verFormularioPagos = true;
-    },
-
     cancelar() {
       this.$emit("closeListaReportes");
       return;
@@ -154,7 +149,7 @@ export default {
       });
       //estado de cuenta
       this.request.email = "";
-
+      this.request.id_compra = this.get_compra_id;
       this.request.destinatario = "";
       this.openReportesLista = true;
       this.$vs.loading.close();

@@ -1409,21 +1409,21 @@ class InventarioController extends ApiController
 
     public function pdf_nota_compra(Request $request)
     {
-        $id_compra = 2;
+     /*   $id_compra = 2;
         $email = false;
         $email_to = 'hector@gmail.com';
-         
+       */  
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
         
         
-        /* $email             = $request->email_send === 'true' ? true : false;
+        $email             = $request->email_send === 'true' ? true : false;
         $email_to          = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
         $id_compra           = $requestVentasList['id_compra'];
-*/
+
         //obtengo la informacion de esa venta
         $r = new \Illuminate\Http\Request();
         $r->replace(['sample' => 'sample']);
