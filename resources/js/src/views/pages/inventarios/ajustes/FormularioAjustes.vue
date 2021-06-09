@@ -1,50 +1,60 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="normal-forms venta-propiedades background-header-forms"
+      :class="['forms-popup bg-content-theme', z_index]"
       fullscreen
       close="cancelar"
       :title="title"
       :active.sync="showVentana"
       ref="formulario"
     >
-      <div class="flex flex-wrap">
-        <div
-          class="w-full sm:w-1/6 ml-auto md:w-1/6 lg:w-1/6 xl:w-1/6 px-2 mb-1"
+      <div class="w-full text-right">
+        <vs-button
+          class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+          color="primary"
+          @click="openBuscador = true"
         >
-          <vs-button
-            color="success"
-            size="small"
-            class="w-full ml-auto"
-            @click="openBuscador = true"
-          >
-            <img
-              class="cursor-pointer img-btn"
-              src="@assets/images/searcharticulo.svg"
-            />
-            <span class="texto-btn">Buscar Articulos</span>
-          </vs-button>
-        </div>
+          <span>Buscar Articulos</span>
+        </vs-button>
       </div>
+
       <div class="flex flex-wrap px-2">
         <div class="mt-5 vx-col w-full md:w-2/2 lg:w-2/2 xl:w-2/2">
-          <vx-card no-radius title="Filtros de selección">
+          <vx-card
+            no-radius
+            title="Filtros de selección"
+            :collapse-action="false"
+          >
             <div class="flex flex-wrap">
               <div class="w-full text-right">
                 <vs-button
                   v-if="form.ajuste.length > 0"
-                  class=""
-                  @click="quitarTodos"
+                  class="
+                    w-full
+                    sm:w-full sm:w-auto
+                    md:w-auto
+                    md:ml-2
+                    my-2
+                    md:mt-0
+                  "
                   color="danger"
-                  size="small"
+                  @click="quitarTodos"
                 >
-                  <span class="font-medium text-base"
-                    >Quitar todos los Artículos</span
-                  >
+                  <span>Quitar todos los Artículos</span>
                 </vs-button>
               </div>
+
               <div
-                class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 mb-1 px-2"
+                class="
+                  w-full
+                  sm:w-12/12
+                  md:w-3/12
+                  lg:w-3/12
+                  xl:w-3/12
+                  mb-1
+                  px-2
+                  input-text
+                "
               >
                 <label class="text-base opacity-75 font-medium"
                   >Datos del Ajuste</label
@@ -59,7 +69,16 @@
                 />
               </div>
               <div
-                class="w-full sm:w-12/12 md:w-9/12 lg:w-9/12 xl:w-9/12 mb-4 px-2"
+                class="
+                  w-full
+                  sm:w-12/12
+                  md:w-9/12
+                  lg:w-9/12
+                  xl:w-9/12
+                  mb-4
+                  px-2
+                  input-text
+                "
               >
                 <label class="text-base opacity-75 font-medium">Nota:</label>
                 <vs-input
@@ -119,7 +138,17 @@
                     data-vv-as=" "
                     data-vv-validate-on="blur"
                     v-validate="'required|integer|min_value:' + min_existencia"
-                    class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad"
+                    class="
+                      w-full
+                      sm:w-10/12
+                      md:w-8/12
+                      lg:w-8/12
+                      xl:w-8/12
+                      mr-auto
+                      ml-auto
+                      mt-1
+                      cantidad
+                    "
                     maxlength="4"
                     v-model="form.ajuste[indextr].existencia_fisica"
                   />
@@ -137,7 +166,17 @@
                       v-validate="'required'"
                       :config="configdateTimePickerFechasCaducidad"
                       placeholder="Fecha de caducidad"
-                      class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 text-center"
+                      class="
+                        w-full
+                        sm:w-10/12
+                        md:w-8/12
+                        lg:w-8/12
+                        xl:w-8/12
+                        mr-auto
+                        ml-auto
+                        mt-1
+                        text-center
+                      "
                       v-model="form.ajuste[indextr].fecha_caducidad"
                     />
                     <div>
@@ -154,7 +193,17 @@
                 <vs-td :data="data[indextr].nota">
                   <vs-input
                     :name="'nota' + indextr"
-                    class="w-full sm:w-11/12 md:w-11/12 lg:w-11/12 xl:w-11/12 mr-auto ml-auto mt-1 cantidad"
+                    class="
+                      w-full
+                      sm:w-11/12
+                      md:w-11/12
+                      lg:w-11/12
+                      xl:w-11/12
+                      mr-auto
+                      ml-auto
+                      mt-1
+                      cantidad
+                    "
                     maxlength="150"
                     v-model="form.ajuste[indextr].nota"
                   />
@@ -184,19 +233,15 @@
             </p>
           </div>
         </div>
-      </div>
-      <div
-        class="w-full sm:w-12/12 md:w-3/12 lg:w-3/12 xl:w-3/12 pt-6 pb-10 px-2 mr-auto ml-auto"
-      >
-        <vs-button class="w-full" @click="acceptAlert()" color="success">
-          <img
-            width="25px"
-            class="cursor-pointer"
-            size="small"
-            src="@assets/images/boxes.svg"
-          />
-          <span class="texto-btn">Ajustar Inventario</span>
-        </vs-button>
+        <div class="w-full text-center">
+          <vs-button
+            class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2"
+            color="success"
+            @click="acceptAlert()"
+          >
+            <span>Ajustar Inventario</span>
+          </vs-button>
+        </div>
       </div>
     </vs-popup>
     <Password
@@ -263,6 +308,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {
@@ -468,8 +518,7 @@ export default {
               if (cambio == false) {
                 this.$vs.notify({
                   title: "Guardar Artículo",
-                  text:
-                    "No hay diferencias en los articulos que ha seleccionado",
+                  text: "No hay diferencias en los articulos que ha seleccionado",
                   iconPack: "feather",
                   icon: "icon-alert-circle",
                   color: "danger",

@@ -2,7 +2,7 @@
   <div class="centerx">
     <vs-popup
       :title="HeaderNombre"
-      class="forms-popup"
+      :class="['forms-popup', z_index]"
       fullscreen
       :active.sync="showChecker"
       ref="formulario"
@@ -15,7 +15,15 @@
             <div class="form-group-content">
               <div class="flex flex-wrap">
                 <div
-                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+                  class="
+                    w-full
+                    sm:w-12/12
+                    md:w-12/12
+                    lg:w-12/12
+                    xl:w-12/12
+                    px-2
+                    input-text
+                  "
                 >
                   <label class=""> Seleccione 1 </label>
                   <v-select
@@ -31,7 +39,15 @@
                   </v-select>
                 </div>
                 <div
-                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+                  class="
+                    w-full
+                    sm:w-12/12
+                    md:w-12/12
+                    lg:w-12/12
+                    xl:w-12/12
+                    px-2
+                    input-text
+                  "
                 >
                   <label class="">Nombre destinatario</label>
                   <vs-input
@@ -51,7 +67,15 @@
                   }}</span>
                 </div>
                 <div
-                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+                  class="
+                    w-full
+                    sm:w-12/12
+                    md:w-12/12
+                    lg:w-12/12
+                    xl:w-12/12
+                    px-2
+                    input-text
+                  "
                 >
                   <label class="">Enviar por Correo</label>
                   <vs-input
@@ -71,7 +95,14 @@
                   }}</span>
                 </div>
                 <div
-                  class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2"
+                  class="
+                    w-full
+                    sm:w-12/12
+                    md:w-12/12
+                    lg:w-12/12
+                    xl:w-12/12
+                    px-2
+                  "
                 >
                   <vs-button
                     color="success"
@@ -173,6 +204,11 @@ export default {
       type: Object,
       required: true,
       default: [],
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index68k",
     },
   },
   components: {

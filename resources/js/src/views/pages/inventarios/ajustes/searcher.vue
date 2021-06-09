@@ -1,27 +1,22 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="searcher_clientes forms-popups-85 normal-forms inline-header-forms"
+      :class="['forms-popup bg-content-theme', z_index]"
       fullscreen
       title="Catálogo de articulos registrados"
       :active.sync="showVentana"
       ref="buscador_articulo"
     >
-      <div class="flex flex-wrap my-2">
-        <div
-          class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
+      <div class="w-full text-right">
+        <vs-button
+          class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+          color="primary"
+          @click="verFormularioArticulos = true"
         >
-          <vs-button
-            color="success"
-            size="small"
-            class="w-full ml-auto"
-            @click="verFormularioArticulos = true"
-          >
-            <img class="cursor-pointer img-btn" src="@assets/images/plus.svg" />
-            <span class="texto-btn">Registrar Artículo</span>
-          </vs-button>
-        </div>
+          <span>Registrar Artículo</span>
+        </vs-button>
       </div>
+
       <!--inicio de buscador-->
       <div class="py-3">
         <vx-card
@@ -29,12 +24,21 @@
           title="Filtros de selección"
           refresh-content-action
           @refresh="reset"
+          :collapse-action="false"
         >
           <template slot="no-body">
             <div>
               <div class="flex flex-wrap px-4 py-4">
                 <div
-                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                  class="
+                    w-full
+                    sm:w-12/12
+                    md:w-2/12
+                    lg:w-2/12
+                    xl:w-2/12
+                    px-2
+                    input-text
+                  "
                 >
                   <label class="text-sm opacity-75 font-bold"
                     >Núm. articulo</label
@@ -58,7 +62,15 @@
                   <div class="mt-2"></div>
                 </div>
                 <div
-                  class="w-full sm:w-12/12 md:w-2/12 lg:w-2/12 xl:w-2/12 px-2"
+                  class="
+                    w-full
+                    sm:w-12/12
+                    md:w-2/12
+                    lg:w-2/12
+                    xl:w-2/12
+                    px-2
+                    input-text
+                  "
                 >
                   <label class="text-sm opacity-75 font-bold"
                     >Código de Barras</label
@@ -82,7 +94,15 @@
                   <div class="mt-2"></div>
                 </div>
                 <div
-                  class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 px-2"
+                  class="
+                    w-full
+                    sm:w-12/12
+                    md:w-8/12
+                    lg:w-8/12
+                    xl:w-8/12
+                    px-2
+                    input-text
+                  "
                 >
                   <label class="text-sm opacity-75 font-bold"
                     >Nombre del Artículo</label
@@ -111,30 +131,23 @@
         </vx-card>
 
         <div class="resultados_articulos mt-10">
-          <div class="flex flex-wrap my-2">
-            <div
-              class="w-full sm:w-12/12 ml-auto md:w-1/5 lg:w-1/5 xl:w-1/5 mb-1 px-2"
+          <div class="w-full text-right">
+            <vs-button
+              class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+              color="success"
+              @click="SeleccionarTodos"
             >
-              <vs-button
-                color="primary"
-                size="small"
-                class="w-full ml-auto"
-                @click="SeleccionarTodos"
-              >
-                <img
-                  class="cursor-pointer img-btn"
-                  src="@assets/images/checked.svg"
-                />
-                <span class="texto-btn">Seleccionar Todos</span>
-              </vs-button>
-            </div>
+              <span>Seleccionar Todos</span>
+            </vs-button>
           </div>
+
           <vs-table
             :sst="true"
             :max-items="serverOptions.per_page"
             :data="articulos"
             stripe
             noDataText="0 Resultados"
+            class="tabla-datos mt-4"
           >
             <template slot="header">
               <h3>Lista actualizada de artículos registrados</h3>
@@ -205,6 +218,7 @@
         :show="verFormularioArticulos"
         @closeVentana="verFormularioArticulos = false"
         @retornar_id="retorno_id"
+        :z_index="'z-index55k'"
       ></FormularioArticulos>
       <!--fin de buscador-->
     </vs-popup>
@@ -228,6 +242,11 @@ export default {
       type: Boolean,
       required: true,
     },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index55k",
+    },
   },
   watch: {
     "serverOptions.nacionalidad": function (newVal, previousVal) {
@@ -241,11 +260,10 @@ export default {
         this.$nextTick(() =>
           this.$refs["nombre_articulo"].$el.querySelector("input").focus()
         );
-        this.$refs["buscador_articulo"].$el.querySelector(
-          ".vs-icon"
-        ).onclick = () => {
-          this.cancelar();
-        };
+        this.$refs["buscador_articulo"].$el.querySelector(".vs-icon").onclick =
+          () => {
+            this.cancelar();
+          };
 
         this.get_data("", 1);
       } else {
@@ -354,8 +372,7 @@ export default {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
                 title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
+                text: "Verifique sus permisos con el administrador del sistema.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",

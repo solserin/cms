@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="normal-forms background-header-forms articulos"
+      :class="['forms-popup bg-content-theme', z_index]"
       fullscreen
       close="cancelar"
       :title="title"
@@ -14,12 +14,10 @@
       >
         <vx-card no-radius>
           <div class="flex flex-wrap">
-            <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 mb-1 px-2"
-            >
-              <h1 class="font-bold uppercase">
+            <div class="w-full mb-1 px-2">
+              <span class="font-bold uppercase">
                 Cantidad de etiquetas a imprimir
-              </h1>
+              </span>
             </div>
             <div
               class="w-full sm:w-12/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mb-1 px-2"
@@ -43,18 +41,11 @@
             <div
               class="w-full sm:w-12/12 md:w-4/12 lg:w-4/12 xl:w-4/12 mb-1 px-2"
             >
-              <vs-button
-                class="float-right mr-12"
-                size="small"
-                color="success"
-                @click="openReporte()"
-              >
-                <img
-                  class="cursor-pointer img-btn"
-                  src="@assets/images/printlote.svg"
-                />
-                <span class="texto-btn">Imprimir Seleccionados</span>
-              </vs-button>
+              <div class="w-full text-right">
+                <vs-button color="success" @click="openReporte()">
+                  <span>Imprimir Seleccionados</span>
+                </vs-button>
+              </div>
             </div>
           </div>
         </vx-card>
@@ -62,12 +53,9 @@
       <!--comienzo de tabla-->
       <vs-table
         :sst="true"
-        @search="handleSearch"
-        @change-page="handleChangePage"
-        @sort="handleSort"
         noDataText="0 Resultados"
-        class="mt-6"
         :data="form.lotes"
+        class="tabla-datos"
       >
         <template slot="header">
           <h3>Lotes Disponibles del artículo</h3>
@@ -104,15 +92,13 @@
               }}</span>
             </vs-td>
             <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{ data[indextr].descripcion }}</span>
+              <span class="">{{ data[indextr].descripcion }}</span>
             </vs-td>
             <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{
-                data[indextr].num_lote_inventario
-              }}</span>
+              <span class="">{{ data[indextr].num_lote_inventario }}</span>
             </vs-td>
             <vs-td :data="data[indextr].id">
-              <span class="font-semibold">{{ data[indextr].existencia }}</span>
+              <span class="">{{ data[indextr].existencia }}</span>
             </vs-td>
             <vs-td class="w-2/12">
               <vs-input
@@ -125,7 +111,17 @@
                   '|max_value:' +
                   form.lotes[indextr].existencia
                 "
-                class="w-full sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-8/12 mr-auto ml-auto mt-1 cantidad"
+                class="
+                  w-full
+                  sm:w-10/12
+                  md:w-8/12
+                  lg:w-8/12
+                  xl:w-8/12
+                  mr-auto
+                  ml-auto
+                  mt-1
+                  cantidad
+                "
                 maxlength="4"
                 v-model="form.lotes[indextr].cantidad_imprimir"
               />
@@ -177,6 +173,7 @@
       :listadereportes="ListaReportes"
       :request="request"
       @closeReportes="openReportesLista = false"
+      :z_index="'z-index68k'"
     ></Reporteador>
     <ConfirmarAceptar
       :z_index="'z-index58k'"
@@ -208,6 +205,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {
@@ -422,8 +424,7 @@ export default {
         } else {
           this.$vs.notify({
             title: "Imprimir etiquetas",
-            text:
-              "La impresora puede imprimir 1500 etiquetas por rollo como máximo.",
+            text: "La impresora puede imprimir 1500 etiquetas por rollo como máximo.",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
