@@ -7,7 +7,7 @@
       :title="
         getTipoformulario == 'modificar'
           ? 'Contrato de Servicio Funerario'
-          : 'POR DEFINIR FUNCION'
+          : 'Servicio de Exhumación'
       "
       :active.sync="showVentana"
       ref="formulario"
@@ -40,6 +40,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="titulos"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -67,6 +68,7 @@
                         <span>(*)</span>
                       </label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="nombre_afectado"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
@@ -91,6 +93,7 @@
                         <span>(*)</span>
                       </label>
                       <flat-pickr
+                        :disabled="esExhumacion"
                         name="fecha_nacimiento"
                         data-vv-as=" "
                         v-validate:fecha_nacimiento_validacion_computed.immediate="
@@ -112,6 +115,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="generos"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -139,6 +143,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="nacionalidades"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -163,6 +168,7 @@
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>Entidad de Nacimiento</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="lugar_nacimiento"
                         maxlength="100"
                         type="text"
@@ -180,6 +186,7 @@
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>Ocupación Habitual</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="ocupacion"
                         maxlength="75"
                         type="text"
@@ -197,6 +204,7 @@
                     <div class="w-full input-text px-2">
                       <label>Último Domicilio</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="direccion_fallecido"
                         maxlength="150"
                         type="text"
@@ -218,6 +226,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="estados_civiles"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -244,6 +253,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="escolaridades"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -270,6 +280,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="afiliaciones"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -294,6 +305,7 @@
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>Indique la afiliación</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="afiliacion_nota"
                         maxlength="75"
                         type="text"
@@ -328,6 +340,7 @@
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>Folio del Certificado Médico</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="folio_certificado"
                         maxlength="45"
                         type="text"
@@ -350,6 +363,7 @@
                         <span>(*)</span>
                       </label>
                       <flat-pickr
+                        :disabled="esExhumacion"
                         name="fechahora_defuncion"
                         data-vv-as=" "
                         v-validate:fechahora_defuncion_validacion_computed.immediate="
@@ -375,6 +389,7 @@
                         <span>(*)</span>
                       </label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="causa_muerte"
                         data-vv-as=" "
                         v-validate.disabled="'required'"
@@ -399,6 +414,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="sino"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -423,6 +439,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="sino"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -447,6 +464,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="sitios_muerte"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -472,6 +490,7 @@
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>Indique dirección</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="lugar_muerte"
                         maxlength="125"
                         type="text"
@@ -495,6 +514,7 @@
                         <span>(*)</span>
                       </label>
                       <v-select
+                        :disabled="esExhumacion"
                         :options="sino"
                         :clearable="false"
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
@@ -517,6 +537,7 @@
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>Enfermedades que Padecía</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="enfermedades_padecidas"
                         maxlength="125"
                         type="text"
@@ -536,6 +557,7 @@
                     <div class="w-full input-text xl:w-4/12 px-2">
                       <label>Nombre del Informante</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="certificado_informante"
                         maxlength="125"
                         type="text"
@@ -556,6 +578,7 @@
                     <div class="w-full input-text xl:w-4/12 px-2">
                       <label>Teléfono del Informante</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="certificado_informante_telefono"
                         maxlength="45"
                         type="text"
@@ -576,6 +599,7 @@
                     <div class="w-full input-text xl:w-4/12 px-2">
                       <label>Parentesco con el fallecido</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="certificado_informante_parentesco"
                         maxlength="65"
                         type="text"
@@ -598,6 +622,7 @@
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>Nombre del Médico Legista</label>
                       <vs-input
+                        :disabled="esExhumacion"
                         name="medico_legista"
                         maxlength="125"
                         type="text"
@@ -654,7 +679,7 @@
           <!--contenido de los destinos del servicio-->
           <div class="flex flex-wrap">
             <div class="w-full xl:w-6/12 px-2 h-full py-4">
-              <div class="form-group py-6">
+              <div class="form-group py-6" v-show="!esExhumacion">
                 <div class="title-form-group">Embalsamiento</div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
@@ -662,6 +687,7 @@
                       <label>¿Embalsamar Cuerpo?</label>
                       <div class="mt-3">
                         <vs-radio
+                          :disabled="esExhumacion"
                           vs-name="embalsamar_b"
                           v-model="form.embalsamar_b"
                           :vs-value="1"
@@ -669,6 +695,7 @@
                           >SI</vs-radio
                         >
                         <vs-radio
+                          :disabled="esExhumacion"
                           vs-name="embalsamar_b"
                           v-model="form.embalsamar_b"
                           :vs-value="0"
@@ -686,7 +713,10 @@
                         class="w-full"
                         placeholder="Médico Responsable"
                         v-model="form.medico_responsable_embalsamado"
-                        :disabled="form.embalsamar_b != 1 ? true : false"
+                        :disabled="
+                          (form.embalsamar_b != 1 ? true : false) ||
+                          esExhumacion
+                        "
                       />
 
                       <span>
@@ -714,7 +744,10 @@
                         class="w-full"
                         placeholder="Nombre del preparador"
                         v-model="form.preparador"
-                        :disabled="form.embalsamar_b != 1 ? true : false"
+                        :disabled="
+                          (form.embalsamar_b != 1 ? true : false) ||
+                          esExhumacion
+                        "
                       />
 
                       <span>
@@ -731,7 +764,7 @@
             </div>
 
             <div class="w-full xl:w-6/12 px-2 h-full py-4">
-              <div class="form-group py-6">
+              <div class="form-group py-6" v-show="!esExhumacion">
                 <div class="title-form-group">Velación</div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
@@ -739,6 +772,7 @@
                       <label>¿Velar Cuerpo?</label>
                       <div class="mt-3">
                         <vs-radio
+                          :disabled="esExhumacion"
                           vs-name="velacion_b"
                           v-model="form.velacion_b"
                           :vs-value="1"
@@ -746,6 +780,7 @@
                           >SI</vs-radio
                         >
                         <vs-radio
+                          :disabled="esExhumacion"
                           vs-name="velacion_b"
                           v-model="form.velacion_b"
                           :vs-value="0"
@@ -771,7 +806,9 @@
                         "
                         name="lugar_servicio"
                         data-vv-as=" "
-                        :disabled="form.velacion_b != 1 ? true : false"
+                        :disabled="
+                          (form.velacion_b != 1 ? true : false) || esExhumacion
+                        "
                       >
                         <div slot="no-options">Seleccione 1</div>
                       </v-select>
@@ -800,7 +837,9 @@
                         class="w-full"
                         placeholder="Dirección donde se velará"
                         v-model="form.direccion_velacion"
-                        :disabled="form.velacion_b != 1 ? true : false"
+                        :disabled="
+                          (form.velacion_b != 1 ? true : false) || esExhumacion
+                        "
                       />
 
                       <span>
@@ -868,7 +907,7 @@
                     </div>
                     <div class="w-full input-text xl:w-6/12 px-2">
                       <label>
-                        Fecha de Entrga de Cenizas
+                        Fecha de Entrega de Cenizas
                         <span v-if="form.cremacion_b == 1">(*)</span>
                       </label>
                       <flat-pickr
@@ -1005,7 +1044,15 @@
                       <!--cementerio Aeternus-->
                       <div class="w-full" v-if="fueCancelada">
                         <div
-                          class="theme-background text-center mt-3 py-2 px-2 size-base border-gray-solid-1"
+                          class="
+                            theme-background
+                            text-center
+                            mt-3
+                            py-2
+                            px-2
+                            size-base
+                            border-gray-solid-1
+                          "
                         >
                           <div class="flex flex-wrap">
                             <div class="w-full lg:w-10/12 py-1 px-2">
@@ -1036,7 +1083,16 @@
                         "
                       >
                         <div
-                          class="bg-danger-50 text-center py-2 mt-3 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                          class="
+                            bg-danger-50
+                            text-center
+                            py-2
+                            mt-3
+                            size-base
+                            border-danger-solid-1
+                            cursor-pointer
+                            color-danger-900
+                          "
                           @click="openBuscadorTerreno = true"
                         >
                           Seleccione la propiedad
@@ -1044,7 +1100,14 @@
                       </div>
                       <div class="w-full" v-else>
                         <div
-                          class="bg-success-50 py-2 mt-3 size-base border-success-solid-2 uppercase"
+                          class="
+                            bg-success-50
+                            py-2
+                            mt-3
+                            size-base
+                            border-success-solid-2
+                            uppercase
+                          "
                         >
                           <div class="flex flex-wrap">
                             <div class="w-full lg:w-10/12 py-1 px-2">
@@ -1197,7 +1260,10 @@
               </div>
             </div>
 
-            <div class="w-full xl:w-6/12 px-2 h-full py-4">
+            <div
+              class="w-full xl:w-6/12 px-2 h-full py-4"
+              v-show="!esExhumacion"
+            >
               <div class="form-group py-6">
                 <div class="title-form-group">Aseguradora</div>
                 <div class="form-group-content">
@@ -1293,7 +1359,10 @@
               </div>
             </div>
 
-            <div class="w-full xl:w-6/12 px-2 h-full py-4">
+            <div
+              class="w-full xl:w-6/12 px-2 h-full py-4"
+              v-show="!esExhumacion"
+            >
               <div class="form-group py-6">
                 <div class="title-form-group">Misa / Ceremonia</div>
                 <div class="form-group-content">
@@ -1394,7 +1463,10 @@
                 </div>
               </div>
             </div>
-            <div class="w-full xl:w-6/12 px-2 h-full py-4">
+            <div
+              class="w-full xl:w-6/12 px-2 h-full py-4"
+              v-show="!esExhumacion"
+            >
               <div class="form-group py-6">
                 <div class="title-form-group">Cadena de Custodia</div>
                 <div class="form-group-content">
@@ -1492,6 +1564,7 @@
                       <label>¿Requirió Equipo de Velación?</label>
                       <div class="mt-3">
                         <vs-radio
+                          :disabled="esExhumacion"
                           vs-name="material_velacion_b"
                           v-model="form.material_velacion_b"
                           :vs-value="1"
@@ -1499,6 +1572,7 @@
                           >SI</vs-radio
                         >
                         <vs-radio
+                          :disabled="esExhumacion"
                           vs-name="material_velacion_b"
                           v-model="form.material_velacion_b"
                           :vs-value="0"
@@ -1716,7 +1790,13 @@
                               v-if="datosPlanFunerario != []"
                             >
                               <div
-                                class="bg-success-50 py-2 size-base border-success-solid-2 uppercase"
+                                class="
+                                  bg-success-50
+                                  py-2
+                                  size-base
+                                  border-success-solid-2
+                                  uppercase
+                                "
                               >
                                 <div class="flex flex-wrap">
                                   <div class="w-full py-1 px-2">
@@ -1822,7 +1902,13 @@
 
                         <div class="w-full px-2">
                           <div
-                            class="bg-success-50 py-2 size-base border-success-solid-2 uppercase"
+                            class="
+                              bg-success-50
+                              py-2
+                              size-base
+                              border-success-solid-2
+                              uppercase
+                            "
                           >
                             <div class="flex flex-wrap">
                               <div class="w-full py-1 px-2">
@@ -1958,7 +2044,14 @@
                           <span>(*)</span>
                         </label>
                         <div
-                          class="theme-background text-center py-2 px-2 size-base border-gray-solid-1"
+                          class="
+                            theme-background
+                            text-center
+                            py-2
+                            px-2
+                            size-base
+                            border-gray-solid-1
+                          "
                         >
                           <span class="font-medium"> Clave: </span>
                           {{ form.id_cliente }},
@@ -1977,7 +2070,16 @@
                           <span>(*)</span>
                         </label>
                         <div
-                          class="bg-danger-50 text-center py-2 px-2 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                          class="
+                            bg-danger-50
+                            text-center
+                            py-2
+                            px-2
+                            size-base
+                            border-danger-solid-1
+                            cursor-pointer
+                            color-danger-900
+                          "
                           @click="openBuscador = true"
                         >
                           Click para seleccionar al contratante
@@ -1989,7 +2091,14 @@
                           <span>(*)</span>
                         </label>
                         <div
-                          class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
+                          class="
+                            bg-success-50
+                            py-2
+                            px-2
+                            size-base
+                            border-success-solid-2
+                            uppercase
+                          "
                         >
                           <div class="flex flex-wrap">
                             <div class="w-full xl:w-8/12">
@@ -2041,7 +2150,7 @@
 
               <!--Uso de Planes-->
 
-              <div class="form-group">
+              <div class="form-group" v-show="!esExhumacion">
                 <div class="title-form-group">Uso de Planes Funerarios</div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
@@ -2146,7 +2255,14 @@
                           <span>(*)</span>
                         </label>
                         <div
-                          class="theme-background text-center py-2 px-2 size-base border-gray-solid-1"
+                          class="
+                            theme-background
+                            text-center
+                            py-2
+                            px-2
+                            size-base
+                            border-gray-solid-1
+                          "
                         >
                           <span class="font-medium"> Plan Funerario: </span>
                           {{ form.plan }}
@@ -2161,7 +2277,16 @@
                           <span>(*)</span>
                         </label>
                         <div
-                          class="bg-danger-50 text-center py-2 px-2 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                          class="
+                            bg-danger-50
+                            text-center
+                            py-2
+                            px-2
+                            size-base
+                            border-danger-solid-1
+                            cursor-pointer
+                            color-danger-900
+                          "
                           @click="openBuscadorPlan = true"
                         >
                           Click para seleccionar al convenio
@@ -2173,7 +2298,14 @@
                           <span>(*)</span>
                         </label>
                         <div
-                          class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
+                          class="
+                            bg-success-50
+                            py-2
+                            px-2
+                            size-base
+                            border-success-solid-2
+                            uppercase
+                          "
                         >
                           <div class="flex flex-wrap">
                             <div class="w-full lg:w-7/12">
@@ -2430,7 +2562,15 @@
                       src="@assets/images/barcode.svg"
                     />
                     <div
-                      class="w-auto lg:w-4/12 xl:w-2/12 px-2 input-text hidden lg:block"
+                      class="
+                        w-auto
+                        lg:w-4/12
+                        xl:w-2/12
+                        px-2
+                        input-text
+                        hidden
+                        lg:block
+                      "
                     >
                       <label>Clave o código de barras</label>
                       <vs-input
@@ -2451,7 +2591,14 @@
                       />
                     </div>
                     <img
-                      class="cursor-pointer img-btn-20 mx-3 mt-4 hidden lg:block"
+                      class="
+                        cursor-pointer
+                        img-btn-20
+                        mx-3
+                        mt-4
+                        hidden
+                        lg:block
+                      "
                       src="@assets/images/searcharticulo.svg"
                       title="Buscador de artículos y servicios"
                       @click="openBuscadorArticulos = true"
@@ -2844,7 +2991,14 @@
                             </div>
 
                             <div
-                              class="w-full px-2 size-base color-copy mt-3 text-center"
+                              class="
+                                w-full
+                                px-2
+                                size-base
+                                color-copy
+                                mt-3
+                                text-center
+                              "
                             >
                               <span class="color-danger-900 font-medium"
                                 >Ojo:</span
@@ -2957,6 +3111,7 @@ import {
   configdateTimePicker,
   configdateTimePickerWithTime,
 } from "@/VariablesGlobales";
+import { tr } from "date-fns/locale";
 
 export default {
   components: {
@@ -3014,18 +3169,8 @@ export default {
           await this.get_material_velacion();
           await this.get_tipos_contratante();
 
-          if (this.getTipoformulario == "agregar") {
-            /**acciones cuando el formulario es de agregar */
-          } else {
-            await this.get_solicitudes_servicios_id();
-            /**aqui cargo la informacion que existe hasta el momento sobre este servicio */
-            /**es modificar */
-            /**aqui me traigo la informacion capturara hasta el momento de esta llamada de modificacion */
-            /**pasando el valor de la venta id */
-            //this.form.id_venta = this.get_venta_id;
-            /**se cargan los datos al formulario */
-            //await this.consultar_venta_id();
-          }
+          await this.get_solicitudes_servicios_id();
+          /**aqui cargo la informacion que existe hasta el momento sobre este servicio */
         })();
       } else {
         /**acciones al cerrar el formulario */
@@ -3055,7 +3200,8 @@ export default {
         };*/
       } else {
         if (this.secciones_original == []) {
-          this.secciones = this.datosPlanFunerario.venta_plan.secciones_original;
+          this.secciones =
+            this.datosPlanFunerario.venta_plan.secciones_original;
         } else {
           this.secciones = this.secciones_original;
         }
@@ -3067,9 +3213,8 @@ export default {
         if (this.data_contrato != []) {
           /**el contrato tiene un plan funerario de uso inmediato */
           //se selecciona este por defecto
-          this.form.plan_funerario = this.planes_funerarios[
-            this.planes_funerarios.length - 1
-          ];
+          this.form.plan_funerario =
+            this.planes_funerarios[this.planes_funerarios.length - 1];
         }
         this.secciones = this.form.plan_funerario.secciones;
       } else {
@@ -3139,6 +3284,13 @@ export default {
     },
   },
   computed: {
+    esExhumacion: function () {
+      if (this.getTipoformulario == "exhumar") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     verUsoConvenios: function () {
       if (
         this.form.inhumacion_b == 0 &&
@@ -3935,10 +4087,18 @@ export default {
             this.form.certificado_informante_parentesco =
               data.certificado_informante_parentesco;
             this.form.medico_legista = data.medico_legista;
+
             this.estados_cuerpo.forEach((element) => {
-              if (element.value == data.estado_afectado_id) {
-                this.form.estado_cuerpo = element;
-                return;
+              if (this.esExhumacion) {
+                if (element.value == 5) {
+                  this.form.estado_cuerpo = element;
+                  return;
+                }
+              } else {
+                if (element.value == data.estado_afectado_id) {
+                  this.form.estado_cuerpo = element;
+                  return;
+                }
               }
             });
 
@@ -4170,83 +4330,100 @@ export default {
             }
             this.form.parentesco_contratante = data.parentesco_contratante;
 
-            /**cargando los datos para el plan funerario a futuro en caso de que tenga uno en el contrato */
-            if (
-              data.plan_funerario_futuro_b == 1 &&
-              data.ventas_planes_id > 0
-            ) {
-              this.form.plan_funerario_futuro_b = this.sino[0];
-              /**el contrato tiene venta de plan funerario y se debe de cargar los conceptos */
-              this.form.id_convenio_plan = data.ventas_planes_id;
-              this.form.plan = data.plan_funerario_futuro;
-              this.secciones = data.plan_funerario_secciones_originales;
-              this.secciones_original =
-                data.plan_funerario_secciones_originales;
-              this.datosPlanFunerario.nombre =
-                data.nombre_titular_plan_funerario_futuro;
-              this.datosPlanFunerario.fecha_operacion_texto =
-                data.plan_funerario_futuro_fecha_venta_texto;
-              this.datosPlanFunerario.operacion_status =
-                data.plan_funerario_futuro_status;
-              this.datosPlanFunerario.status_texto =
-                data.plan_funerario_futuro_status_texto;
-              this.datosPlanFunerario.saldo_neto =
-                data.plan_funerario_futuro_saldo_restante;
+            if (this.esExhumacion) {
+              /**aqui voy */
+              this.form.nota = "";
+              this.form.fechahora_inhumacion = "";
 
-              if (data.tipos_contratante_id != "") {
-                /**cargando el tipo de contratante*/
-                this.tipos_contratante.forEach((tipo) => {
-                  if (tipo.value == data.tipos_contratante_id) {
-                    this.form.tipo_contratante = tipo;
-                    return;
-                  }
-                });
-              }
+              this.form.cremacion_b = 0;
+              this.form.fecha_cremacion = "";
+              this.form.fechahora_cremacion = "";
+              this.form.descripcion_urna = "";
+
+              this.form.traslado_b = 0;
+              this.form.fechahora_traslado = "";
+              this.form.destino_traslado = "";
+
+              this.form.fechahora_contrato = "";
+              this.form.parentesco_contratante = "";
+              this.form.id_cliente = "";
             } else {
-              this.form.plan_funerario_futuro_b = this.sino[1];
-              /**no tiene plan a futuro seleccionado y por lo tanto se debe verificar si cuenta con un plan de uso inmediato incluido */
+              this.form.nota = data.nota_servicio;
+              /**cargando los datos para el plan funerario a futuro en caso de que tenga uno en el contrato */
               if (
-                data.plan_funerario_inmediato_b == 1 &&
-                data.planes_funerarios_id > 0
+                data.plan_funerario_futuro_b == 1 &&
+                data.ventas_planes_id > 0
               ) {
-                this.form.plan_funerario_inmediato_b = this.sino[0];
-                /**aqui al cargarse los planes funerario se debe de dejar cargar y despues agregar el plan seleccionado como plan original */
-              } else {
-                /**simplemente no hay plan funerario de uso inmediato */
-                this.form.plan_funerario_inmediato_b = this.sino[1];
-              }
-            }
+                this.form.plan_funerario_futuro_b = this.sino[0];
+                /**el contrato tiene venta de plan funerario y se debe de cargar los conceptos */
+                this.form.id_convenio_plan = data.ventas_planes_id;
+                this.form.plan = data.plan_funerario_futuro;
+                this.secciones = data.plan_funerario_secciones_originales;
+                this.secciones_original =
+                  data.plan_funerario_secciones_originales;
+                this.datosPlanFunerario.nombre =
+                  data.nombre_titular_plan_funerario_futuro;
+                this.datosPlanFunerario.fecha_operacion_texto =
+                  data.plan_funerario_futuro_fecha_venta_texto;
+                this.datosPlanFunerario.operacion_status =
+                  data.plan_funerario_futuro_status;
+                this.datosPlanFunerario.status_texto =
+                  data.plan_funerario_futuro_status_texto;
+                this.datosPlanFunerario.saldo_neto =
+                  data.plan_funerario_futuro_saldo_restante;
 
-            /**cargando articulos */
-            if (
-              data.operacion.movimientoinventario.articulosserviciofunerario
-                .length > 0
-            ) {
-              data.operacion.movimientoinventario.articulosserviciofunerario.forEach(
-                (articulo) => {
-                  this.form.articulos_servicios.push({
-                    id: articulo.articulos_id,
-                    codigo_barras: articulo.codigo_barras,
-                    tipo: articulo.tipo,
-                    categoria: articulo.categoria,
-                    descripcion: articulo.descripcion,
-                    // lote: articulo.lotes_id,
-                    //num_lote_inventario: articulo.num_lote_inventario,
-                    cantidad: articulo.cantidad,
-                    costo_neto_normal: articulo.costo_neto_normal,
-                    descuento_b: articulo.descuento_b,
-                    costo_neto_descuento: articulo.costo_neto_descuento,
-                    importe: articulo.importe,
-                    facturable_b: articulo.facturable_b,
-                    existencia: "N/A",
-                    plan_b: articulo.plan_b,
+                if (data.tipos_contratante_id != "") {
+                  /**cargando el tipo de contratante*/
+                  this.tipos_contratante.forEach((tipo) => {
+                    if (tipo.value == data.tipos_contratante_id) {
+                      this.form.tipo_contratante = tipo;
+                      return;
+                    }
                   });
                 }
-              );
+              } else {
+                this.form.plan_funerario_futuro_b = this.sino[1];
+                /**no tiene plan a futuro seleccionado y por lo tanto se debe verificar si cuenta con un plan de uso inmediato incluido */
+                if (
+                  data.plan_funerario_inmediato_b == 1 &&
+                  data.planes_funerarios_id > 0
+                ) {
+                  this.form.plan_funerario_inmediato_b = this.sino[0];
+                  /**aqui al cargarse los planes funerario se debe de dejar cargar y despues agregar el plan seleccionado como plan original */
+                } else {
+                  /**simplemente no hay plan funerario de uso inmediato */
+                  this.form.plan_funerario_inmediato_b = this.sino[1];
+                }
+              }
+              /**cargando articulos */
+              if (
+                data.operacion.movimientoinventario.articulosserviciofunerario
+                  .length > 0
+              ) {
+                data.operacion.movimientoinventario.articulosserviciofunerario.forEach(
+                  (articulo) => {
+                    this.form.articulos_servicios.push({
+                      id: articulo.articulos_id,
+                      codigo_barras: articulo.codigo_barras,
+                      tipo: articulo.tipo,
+                      categoria: articulo.categoria,
+                      descripcion: articulo.descripcion,
+                      // lote: articulo.lotes_id,
+                      //num_lote_inventario: articulo.num_lote_inventario,
+                      cantidad: articulo.cantidad,
+                      costo_neto_normal: articulo.costo_neto_normal,
+                      descuento_b: articulo.descuento_b,
+                      costo_neto_descuento: articulo.costo_neto_descuento,
+                      importe: articulo.importe,
+                      facturable_b: articulo.facturable_b,
+                      existencia: "N/A",
+                      plan_b: articulo.plan_b,
+                    });
+                  }
+                );
+              }
+              /**fin de cargar articulos */
             }
-            /**fin de cargar articulos */
-
-            this.form.nota = data.nota_servicio;
           } else {
             /**no hay datos que mostrar y se cierra la ventana */
           }
@@ -4303,13 +4480,23 @@ export default {
       await funeraria
         .get_estados_afectado()
         .then((res) => {
+          /**3,5,4 solo para exhumacion */
           this.estados_cuerpo = [];
           this.estados_cuerpo.push({ label: "Seleccione 1", value: "" });
           res.data.forEach((element) => {
-            this.estados_cuerpo.push({
-              label: element.estado,
-              value: element.id,
-            });
+            if (this.esExhumacion) {
+              if (element.id == 3 || element.id == 4 || element.id == 5) {
+                this.estados_cuerpo.push({
+                  label: element.estado,
+                  value: element.id,
+                });
+              }
+            } else {
+              this.estados_cuerpo.push({
+                label: element.estado,
+                value: element.id,
+              });
+            }
           });
           this.form.estado_cuerpo = this.estados_cuerpo[0];
         })
@@ -4508,16 +4695,15 @@ export default {
                   " (PLAN ORIGINAL)",
                 value: this.data_contrato.planes_funerarios_id,
                 plan: this.data_contrato.plan_funerario_original,
-                secciones: this.data_contrato
-                  .plan_funerario_secciones_originales,
+                secciones:
+                  this.data_contrato.plan_funerario_secciones_originales,
                 costo_neto: this.data_contrato.costo_plan_original,
               });
             }
             //se selecciona este por defecto
             if (this.form.plan_funerario_inmediato_b.value == 1) {
-              this.form.plan_funerario = this.planes_funerarios[
-                this.planes_funerarios.length - 1
-              ];
+              this.form.plan_funerario =
+                this.planes_funerarios[this.planes_funerarios.length - 1];
             }
           } else {
             this.form.plan_funerario = this.planes_funerarios[0];
@@ -4573,8 +4759,7 @@ export default {
           } else {
             this.$vs.notify({
               title: "Busar artículos y servicios",
-              text:
-                "No se ha encontrado el concepto con el número de clave ingresado.",
+              text: "No se ha encontrado el concepto con el número de clave ingresado.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "warning",
@@ -4595,8 +4780,7 @@ export default {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
                 title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
+                text: "Verifique sus permisos con el administrador del sistema.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",

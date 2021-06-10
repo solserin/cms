@@ -111,7 +111,7 @@
       <template slot="thead">
         <vs-th>Núm. Servicio</vs-th>
         <vs-th>Fallecido</vs-th>
-        <vs-th>Tipo Servicio</vs-th>
+        <vs-th hidden>Tipo Servicio</vs-th>
         <vs-th>Fecha</vs-th>
 
         <vs-th>Estatus</vs-th>
@@ -125,7 +125,7 @@
           <vs-td :data="data[indextr].nombre_afectado">
             {{ data[indextr].nombre_afectado }}
           </vs-td>
-          <vs-td :data="data[indextr].tipo_solicitud_texto">
+          <vs-td :data="data[indextr].tipo_solicitud_texto" hidden>
             {{ data[indextr].tipo_solicitud_texto }}
           </vs-td>
           <vs-td :data="data[indextr].fecha_solicitud_texto">
@@ -156,6 +156,20 @@
           </vs-td>
           <vs-td :data="data[indextr].id">
             <div class="flex justify-center">
+              <img
+                v-show="data[indextr].cementerios_servicio_id == 1"
+                class="cursor-pointer img-btn-20 mx-3"
+                src="@assets/images/shovel.svg"
+                title="Exhumar Cuerpo"
+                @click="Exhumar(data[indextr].servicio_id)"
+              />
+              <img
+                v-show="data[indextr].cementerios_servicio_id != 1"
+                class="cursor-pointer img-btn-20 mx-3"
+                src="@assets/images/shovel_disabled.svg"
+                title="Exhumar Cuerpo"
+                @click="noExhuma()"
+              />
               <img
                 class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
@@ -458,6 +472,22 @@ export default {
       this.verFormularioSolicitud = true;
     },
 
+    Exhumar(id_solicitud) {
+      this.tipoFormulario = "exhumar";
+      this.id_solicitud_modificar = id_solicitud;
+      this.verFormularioServicios = true;
+    },
+    noExhuma() {
+      this.$vs.notify({
+        title: "Servicios Funerarios",
+        text: "Este servicio no fue sepultado en cementerio Aeternus.",
+        iconPack: "feather",
+        icon: "icon-alert-circle",
+        color: "danger",
+        time: 6000,
+      });
+    },
+
     cancelarVenta(id_solicitud) {
       this.id_solicitud = id_solicitud;
       this.openCancelar = true;
@@ -487,6 +517,7 @@ export default {
       })();
     },
   },
+
   created() {
     (async () => {
       await this.get_data(this.actual);
