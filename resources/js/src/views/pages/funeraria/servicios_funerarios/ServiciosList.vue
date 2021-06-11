@@ -111,7 +111,7 @@
       <template slot="thead">
         <vs-th>Núm. Servicio</vs-th>
         <vs-th>Fallecido</vs-th>
-        <vs-th hidden>Tipo Servicio</vs-th>
+        <vs-th>Tipo Servicio</vs-th>
         <vs-th>Fecha</vs-th>
 
         <vs-th>Estatus</vs-th>
@@ -125,7 +125,7 @@
           <vs-td :data="data[indextr].nombre_afectado">
             {{ data[indextr].nombre_afectado }}
           </vs-td>
-          <vs-td :data="data[indextr].tipo_solicitud_texto" hidden>
+          <vs-td :data="data[indextr].tipo_solicitud_texto">
             {{ data[indextr].tipo_solicitud_texto }}
           </vs-td>
           <vs-td :data="data[indextr].fecha_solicitud_texto">
@@ -157,19 +157,13 @@
           <vs-td :data="data[indextr].id">
             <div class="flex justify-center">
               <img
-                v-show="data[indextr].cementerios_servicio_id == 1"
+                v-show="data[indextr].permite_exhumar_b"
                 class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/shovel.svg"
                 title="Exhumar Cuerpo"
                 @click="Exhumar(data[indextr].servicio_id)"
               />
-              <img
-                v-show="data[indextr].cementerios_servicio_id != 1"
-                class="cursor-pointer img-btn-20 mx-3"
-                src="@assets/images/shovel_disabled.svg"
-                title="Exhumar Cuerpo"
-                @click="noExhuma()"
-              />
+
               <img
                 class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
@@ -177,17 +171,29 @@
                 @click="ConsultarVenta(data[indextr].servicio_id)"
               />
               <img
+                v-show="verModificarSolicitud(data[indextr])"
                 class="img-btn-18 mx-3"
                 src="@assets/images/edit.svg"
                 title="Modificar Solicitud de Servicio"
                 @click="openModificarSolicitud(data[indextr].servicio_id)"
               />
+
               <img
+                v-if="data[indextr].tipo_solicitud_id == 1"
                 class="img-btn-22 mx-3"
                 src="@assets/images/contrato.svg"
                 title="Editar Contrato"
                 @click="openModificar(data[indextr].servicio_id)"
               />
+
+              <img
+                v-else
+                class="img-btn-22 mx-3"
+                src="@assets/images/contrato.svg"
+                title="Editar Contrato"
+                @click="ModificarExhumacion(data[indextr].servicio_id)"
+              />
+
               <img
                 v-if="data[indextr].status_b >= 1"
                 class="img-btn-22 mx-3"
@@ -290,6 +296,7 @@ export default {
     PlanesVenta,
     FormularioSolicitud,
   },
+  computed: {},
   watch: {
     actual: function (newValue, oldValue) {
       (async () => {
@@ -373,6 +380,13 @@ export default {
     };
   },
   methods: {
+    verModificarSolicitud(datos) {
+      if (datos.tipo_solicitud_id == 2) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     reset(card) {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = { label: "Núm. Servicio", value: "1" };
@@ -461,7 +475,7 @@ export default {
     },
 
     openModificar(id_solicitud) {
-      this.tipoFormulario = "modificar";
+      this.tipoFormulario = "servicio_funerario";
       this.id_solicitud_modificar = id_solicitud;
       this.verFormularioServicios = true;
     },
@@ -477,15 +491,10 @@ export default {
       this.id_solicitud_modificar = id_solicitud;
       this.verFormularioServicios = true;
     },
-    noExhuma() {
-      this.$vs.notify({
-        title: "Servicios Funerarios",
-        text: "Este servicio no fue sepultado en cementerio Aeternus.",
-        iconPack: "feather",
-        icon: "icon-alert-circle",
-        color: "danger",
-        time: 6000,
-      });
+    ModificarExhumacion(id_solicitud) {
+      this.tipoFormulario = "modificar_exhumar";
+      this.id_solicitud_modificar = id_solicitud;
+      this.verFormularioServicios = true;
     },
 
     cancelarVenta(id_solicitud) {

@@ -5,7 +5,7 @@
       fullscreen
       close="cancelar"
       :title="
-        getTipoformulario == 'modificar'
+        getTipoformulario == 'servicio_funerario'
           ? 'Contrato de Servicio Funerario'
           : 'Servicio de Exhumación'
       "
@@ -3291,7 +3291,10 @@ export default {
   },
   computed: {
     esExhumacion: function () {
-      if (this.getTipoformulario == "exhumar") {
+      if (
+        this.getTipoformulario == "exhumar" ||
+        this.getTipoformulario == "modificar_exhumar"
+      ) {
         return true;
       } else {
         return false;
@@ -4336,26 +4339,27 @@ export default {
             }
             this.form.parentesco_contratante = data.parentesco_contratante;
 
-            if (this.esExhumacion) {
+            /**limpio el formulario de ciertos datos solo cuando es una exhuamcion, no para modificar exhumacion */
+            if (this.getTipoformulario == "exhumacion") {
               /**aqui voy */
-              /*
-              this.form.nota = "";
-              this.form.fechahora_inhumacion = "";
+              this.form.inhumacion_b = 0;
+              this.form.velacion_b = 0;
+              this.form.aseguradora_b = 0;
+              this.form.misa_b = 0;
+              this.form.custodia_b = 0;
 
+              this.form.fechahora_inhumacion = "";
               this.form.cremacion_b = 0;
               this.form.fecha_cremacion = "";
               this.form.fechahora_cremacion = "";
               this.form.descripcion_urna = "";
-
               this.form.traslado_b = 0;
               this.form.fechahora_traslado = "";
               this.form.destino_traslado = "";
-
               this.form.fechahora_contrato = "";
               this.form.parentesco_contratante = "";
               this.form.id_cliente = "";
-              */
-
+              this.form.nota = "";
               this.form.plan_funerario_futuro_b = this.sino[1];
               this.form.plan_funerario_inmediato_b = this.sino[1];
             } else {
@@ -4820,15 +4824,9 @@ export default {
           } else {
             //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
             (async () => {
-              if (this.getTipoformulario == "agregar") {
-                /**EL FORMULARIO ES SOLO DE VALIDACION */
-                //this.callBackConfirmarAceptar = await this.guardar_venta;
-                //this.openConfirmarAceptar = true;
-              } else {
-                /**es modificacion */
-                this.callback = await this.modificar_contrato;
-                this.openPassword = true;
-              }
+              /**es modificacion */
+              this.callback = await this.modificar_contrato;
+              this.openPassword = true;
             })();
           }
         })
@@ -4841,7 +4839,10 @@ export default {
       this.$vs.loading();
       try {
         this.form.id_servicio = this.get_id_solicitud;
-        let res = await funeraria.modificar_contrato(this.form);
+        let res = await funeraria.modificar_contrato(
+          this.form,
+          this.getTipoformulario
+        );
         if (res.data >= 1) {
           //success
           this.$vs.notify({
