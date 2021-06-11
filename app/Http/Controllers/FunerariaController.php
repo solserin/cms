@@ -2875,32 +2875,32 @@ class FunerariaController extends ApiController
         try {
             DB::beginTransaction();
 
-        /**se verifica que tipo de servicio se intenta atender */
+            /**se verifica que tipo de servicio se intenta atender */
 
-        if($tipo_servicio=='exhumar'){
+            if($tipo_servicio=='exhumar'){
 
-            /**verificar si este servicio ya fue cancelado o si fue previamente exhumado
-             * si no, se puede continuar con la exhumacion de este servicio
-             */
+                /**verificar si este servicio ya fue cancelado o si fue previamente exhumado
+                 * si no, se puede continuar con la exhumacion de este servicio
+                 */
 
-            //se crea una copia de toda la informacion para despues modificarse sobre el nuevo id
-            /**creo el nuevo servicio como una copia del servicio que se seleccionó */
-            $servicio = ServiciosFunerarios::find($request->id_servicio);
-            $nuevo_servicio = $servicio->replicate();
-            $nuevo_servicio->timestamps = false;
-            $nuevo_servicio->fechahora_registro=now();
-            $nuevo_servicio->registro_contrato_id=(int) $request->user()->id;
-            $nuevo_servicio->modifico_id=(int) $request->user()->id;
-            $nuevo_servicio->fecha_modificacion=now();
-            $nuevo_servicio->registro_id=(int) $request->user()->id;
-            $nuevo_servicio->nota_servicio='';
-            $nuevo_servicio->save();
+                //se crea una copia de toda la informacion para despues modificarse sobre el nuevo id
+                /**creo el nuevo servicio como una copia del servicio que se seleccionó */
+                $servicio = ServiciosFunerarios::find($request->id_servicio);
+                $nuevo_servicio = $servicio->replicate();
+                $nuevo_servicio->timestamps = false;
+                $nuevo_servicio->fechahora_registro=now();
+                $nuevo_servicio->registro_contrato_id=(int) $request->user()->id;
+                $nuevo_servicio->modifico_id=(int) $request->user()->id;
+                $nuevo_servicio->fecha_modificacion=now();
+                $nuevo_servicio->registro_id=(int) $request->user()->id;
+                $nuevo_servicio->nota_servicio='';
+                $nuevo_servicio->save();
 
-            $request->id_servicio=$nuevo_servicio->id;
-
-            //return $this->errorResponse($nuevo_servicio->id,409);
-            //$newClient = $client->replicate()->save();
-        }
+                /**actualizo el id_servicio original por el nuevo servicio creado "el de exhumacion" */
+                $request->id_servicio=$nuevo_servicio->id;
+                //return $this->errorResponse($nuevo_servicio->id,409);
+                //$newClient = $client->replicate()->save();
+            }
 
 
 
