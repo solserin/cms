@@ -2706,7 +2706,8 @@ class FunerariaController extends ApiController
 
     public function control_contratos(Request $request, $tipo_servicio = '')
     {
-        if (!(trim($tipo_servicio) == 'modificar')) {
+        $tipo_servicio=trim($tipo_servicio);
+        if (!$tipo_servicio== 'modificar' || !$tipo_servicio== 'exhumar' || !$tipo_servicio== 'modificar_exhumar') {
             return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
         }
 
@@ -2870,7 +2871,40 @@ class FunerariaController extends ApiController
 
         /**verificando si es tipo modificar para validar que venga el id a modificar */
         $datos_solicitud = array();
-        if ($tipo_servicio == 'modificar') {
+
+        try {
+            DB::beginTransaction();
+
+        /**se verifica que tipo de servicio se intenta atender */
+
+        if($tipo_servicio=='exhumar'){
+
+            /**verificar si este servicio ya fue cancelado o si fue previamente exhumado
+             * si no, se puede continuar con la exhumacion de este servicio
+             */
+
+            //se crea una copia de toda la informacion para despues modificarse sobre el nuevo id
+            /**creo el nuevo servicio como una copia del servicio que se seleccionó */
+            $servicio = ServiciosFunerarios::find($request->id_servicio);
+            $nuevo_servicio = $servicio->replicate();
+            $nuevo_servicio->timestamps = false;
+            $nuevo_servicio->fechahora_registro=now();
+            $nuevo_servicio->registro_contrato_id=(int) $request->user()->id;
+            $nuevo_servicio->modifico_id=(int) $request->user()->id;
+            $nuevo_servicio->fecha_modificacion=now();
+            $nuevo_servicio->registro_id=(int) $request->user()->id;
+            $nuevo_servicio->nota_servicio='';
+            $nuevo_servicio->save();
+
+            $request->id_servicio=$nuevo_servicio->id;
+
+            //return $this->errorResponse($nuevo_servicio->id,409);
+            //$newClient = $client->replicate()->save();
+        }
+
+
+
+        
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
             $datos_solicitud = $this->get_solicitudes_servicios($r, $request->id_servicio)[0];
@@ -2892,10 +2926,9 @@ class FunerariaController extends ApiController
                     return $this->errorResponse('El plan funerario a futuro seleccionado ya ha sido utilizado por el servicio prestado al finado : ' . $servicios_planes_usados[0]->nombre_afectado, 409);
                 }
             }
-        }
+        
         $id_return = 0;
-        try {
-            DB::beginTransaction();
+      
             /**SE COMIENZA EL PROCESO PARA ACTUALIZAR EL CONTRATO */
             DB::table('servicios_funerarios')->where('id', $request->id_servicio)->update(
                 [

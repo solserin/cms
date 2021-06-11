@@ -678,8 +678,11 @@
         <div class="tab-content" v-show="activeTab == 2">
           <!--contenido de los destinos del servicio-->
           <div class="flex flex-wrap">
-            <div class="w-full xl:w-6/12 px-2 h-full py-4">
-              <div class="form-group py-6" v-show="!esExhumacion">
+            <div
+              class="w-full xl:w-6/12 px-2 h-full py-4"
+              v-show="!esExhumacion"
+            >
+              <div class="form-group py-6">
                 <div class="title-form-group">Embalsamiento</div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
@@ -763,8 +766,11 @@
               </div>
             </div>
 
-            <div class="w-full xl:w-6/12 px-2 h-full py-4">
-              <div class="form-group py-6" v-show="!esExhumacion">
+            <div
+              class="w-full xl:w-6/12 px-2 h-full py-4"
+              v-show="!esExhumacion"
+            >
+              <div class="form-group py-6">
                 <div class="title-form-group">Velación</div>
                 <div class="form-group-content">
                   <div class="flex flex-wrap">
@@ -4332,6 +4338,7 @@ export default {
 
             if (this.esExhumacion) {
               /**aqui voy */
+              /*
               this.form.nota = "";
               this.form.fechahora_inhumacion = "";
 
@@ -4347,6 +4354,10 @@ export default {
               this.form.fechahora_contrato = "";
               this.form.parentesco_contratante = "";
               this.form.id_cliente = "";
+              */
+
+              this.form.plan_funerario_futuro_b = this.sino[1];
+              this.form.plan_funerario_inmediato_b = this.sino[1];
             } else {
               this.form.nota = data.nota_servicio;
               /**cargando los datos para el plan funerario a futuro en caso de que tenga uno en el contrato */
