@@ -163,6 +163,13 @@
                 title="Exhumar Cuerpo"
                 @click="Exhumar(data[indextr].servicio_id)"
               />
+              <img
+                v-show="data[indextr].exhumado_b"
+                class="cursor-pointer img-btn-20 mx-3"
+                src="@assets/images/shovel_disabled.svg"
+                title="Servicio Exhumado"
+                @click="Exhumado()"
+              />
 
               <img
                 class="cursor-pointer img-btn-20 mx-3"
@@ -491,6 +498,18 @@ export default {
       this.id_solicitud_modificar = id_solicitud;
       this.verFormularioServicios = true;
     },
+
+    Exhumado() {
+      this.$vs.notify({
+        title: "Exhumar Servicio",
+        text: "Este servicio ya fue exhumado.",
+        iconPack: "feather",
+        icon: "icon-alert-circle",
+        color: "danger",
+        time: 4000,
+      });
+    },
+
     ModificarExhumacion(id_solicitud) {
       this.tipoFormulario = "modificar_exhumar";
       this.id_solicitud_modificar = id_solicitud;

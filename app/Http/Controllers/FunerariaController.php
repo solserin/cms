@@ -3841,8 +3841,11 @@ class FunerariaController extends ApiController
         $resultado_query          = ServiciosFunerarios::select(
             'id',
             'servicios_funerarios_exhumado_id',
-              DB::raw(
+            DB::raw(
                 '(null) as permite_exhumar_b'
+            ),
+            DB::raw(
+                '(null) as exhumado_b'
             ),
             'registro_contrato_id',
             'nota_servicio',
@@ -4263,7 +4266,12 @@ class FunerariaController extends ApiController
             if ($solicitud['tipo_solicitud_id'] == 1) {
                 $solicitud['tipo_solicitud_texto'] = 'Servicio Funerario';
             } elseif ($solicitud['tipo_solicitud_id'] == 2) {
-                $solicitud['tipo_solicitud_texto'] = 'Servicio de Exhumación';
+                /**Reviso si el servicio llevo reinhumacion o solo se exhumo */
+                if($solicitud['ventas_terrenos_id'] >0){
+                     $solicitud['tipo_solicitud_texto'] = 'Exhumación y Reinhumación';
+                }else{
+                     $solicitud['tipo_solicitud_texto'] = 'Servicio de Exhumación';
+                }
             }
             if ($solicitud['contagioso_b'] == 0) {
                 $solicitud['contagioso_texto'] = 'NO';
@@ -4585,6 +4593,7 @@ class FunerariaController extends ApiController
             }
 
              $solicitud['permite_exhumar_b']=1;
+              $solicitud['exhumado_b']=0;
             /**revisando si este servicio pérmite exhumar */
              if($solicitud['cementerios_servicio_id']==1 && $solicitud['status_b']!=0){
                  /**solo para cementerio aeternus */
@@ -4592,6 +4601,7 @@ class FunerariaController extends ApiController
                     foreach ($solicitud['servicio_exhumado'] as $exhumado) {
                                 if($exhumado['status']==1){
                                     $solicitud['permite_exhumar_b']=0;
+                                    $solicitud['exhumado_b']=1;
                                     break;
                                 }
                         }
