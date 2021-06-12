@@ -4661,6 +4661,11 @@ class FunerariaController extends ApiController
                 return $this->errorResponse('Esta solicitud ya habia sido cancelada.', 409);
             }
 
+            /**verifica si el servicio puede ser cancelado por motivos de exhumacion */
+            if ($datos_solicitud['exhumado_b'] == 1) {
+                return $this->errorResponse('Este servicio ha sido exhumado y no puede ser cancelado, por motivos de historial.', 409);
+            }
+
             DB::beginTransaction();
             /**verifico si la solicitud tiene servicio funerario sino para eliminar la soliitud */
 
