@@ -37,6 +37,13 @@ class AjustarComprasInventario extends Migration
             $table->unsignedDecimal('iva_porcentaje', 10, 2)->nullable()->after('registro_id');
             $table->unsignedBigInteger('num_compra')->nullable()->after('registro_id');
         });
+
+        Schema::create('costos_incurridos', function (Blueprint $table) {
+            $table->string('costo_detalle')->nullable();
+            $table->unsignedDecimal('costo_neto', 10, 2)->nullable();
+            $table->unsignedBigInteger('movimientos_inventario_id')->unsigned()->nullable();
+            $table->foreign('movimientos_inventario_id')->references('id')->on('movimientos_inventario');
+        });
     }
 
     /**
@@ -58,5 +65,6 @@ class AjustarComprasInventario extends Migration
         });
 
         Schema::dropIfExists('compra_detalle');
+        Schema::dropIfExists('costos_incurridos');
     }
 }
