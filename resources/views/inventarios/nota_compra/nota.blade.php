@@ -148,34 +148,89 @@
             <table class="w-100 size-15px pagos_tabla">
                 <thead>
                     <tr>
+                        <td class="center"><span class="bold uppercase px-2">#</span></td>
                         <td class="center"><span class="bold uppercase px-2">Descripción</span></td>
-                        <td class="center"><span class="bold uppercase px-2">Cantidad</span></td>
-                        <td class="py-1 center"><span class="bold uppercase px-2">Costo Neto</span></td>
-                        <td class="right"><span class="bold uppercase px-2">Importe</span></td>
+                        <td class="center"><span class="bold uppercase px-2">$ Subt.</span></td>
+                        <td class="center"><span class="bold uppercase px-2">$ Desc.</span></td>
+                        <td class="center"><span class="bold uppercase px-2">$ IVA</span></td>
+                        <td class="center"><span class="bold uppercase px-2">Cant.</span></td>
+                        <td class="center"><span class="bold uppercase px-2">$ Imp.</span></td>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($datos['compra_detalle'] as $detalle)
+                    @foreach ($datos['compra_detalle'] as $index => $detalle)
                     <tr>
+                        <td class="py-1 center"><span class="px-2 uppercase">{{ $index+1 }}</span>
+                        </td>
                         <td class="py-1 center"><span class="px-2 uppercase">{{ $detalle['descripcion'] }}</span>
                         </td>
-                        <td class="py-1 center"><span class="px-2 capitalize">{{ $detalle['cantidad'] }}</span>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ number_format($detalle['subtotal'],2)}}
+                            </span>
                         </td>
-                        <td class="py-1 center"><span class="px-2">
-                                @if ($detalle['descuento_b']==1)
-                                $ {{ number_format($detalle['costo_neto_descuento'],2)}}
-                                @else
-                                $ {{ number_format($detalle['costo_neto'],2)}}
-                                @endif
-                            </span></td>
-                        <td class="py-1 right"><span class="px-2">
-                                $ {{ number_format($detalle['importe'],2)}}
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ number_format($detalle['descuento'],2)}}
+                            </span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ number_format($detalle['iva'],2)}}
+                            </span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ $detalle['cantidad']}}
+                            </span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ number_format($detalle['importe'],2)}}
                             </span>
                         </td>
                     </tr>
                     @endforeach
+
+
+                    @foreach ($datos['costos_incurridos'] as $index => $costo)
                     <tr>
-                        <td rowspan="10" colspan="2" class="w-50">
+                        <td class="py-1 center"><span class="px-2 uppercase">{{ $index+1 }}</span>
+                        </td>
+                        <td class="py-1 center"><span class="px-2 uppercase">{{ $costo['costo_detalle'] }}</span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ number_format($costo['subtotal'],2)}}
+                            </span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                0,00
+                            </span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ number_format($costo['iva'],2)}}
+                            </span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                1
+                            </span>
+                        </td>
+                        <td class="py-1 center">
+                            <span class="px-2 capitalize">
+                                {{ number_format($costo['costo_neto'],2)}}
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+
+
+
+                    <tr>
+                        <td rowspan="10" colspan="5" class="w-50">
                             <div class="w-full">
                                 <span class="px-2 uppercase size-12px bold">
                                     nota/observación:
@@ -233,7 +288,7 @@
                         </td>
                         <td class="right">
                             <span class="px-2 bold">
-                                $ {{ number_format($datos['descuento_total'],2)}}
+                                $ {{ number_format($datos['descuento'],2)}}
                             </span>
                         </td>
                     </tr>
@@ -245,7 +300,7 @@
                         </td>
                         <td class="right">
                             <span class="px-2 bold">
-                                $ {{ number_format($datos['impuestos_total'],2)}}
+                                $ {{ number_format($datos['iva'],2)}}
                             </span>
                         </td>
                     </tr>
@@ -257,7 +312,7 @@
                         </td>
                         <td class="right">
                             <span class="px-2 bold">
-                                $ {{ number_format($datos['total_compra'],2)}}
+                                $ {{ number_format($datos['total'],2)}}
                             </span>
                         </td>
                     </tr>

@@ -43,6 +43,7 @@ class AjustarComprasInventario extends Migration
             $table->unsignedDecimal('costo_neto', 10, 2)->nullable();
             $table->unsignedBigInteger('movimientos_inventario_id')->unsigned()->nullable();
             $table->foreign('movimientos_inventario_id')->references('id')->on('movimientos_inventario');
+            $table->tinyInteger('facturable_b')->nullable();
         });
     }
 

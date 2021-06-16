@@ -274,7 +274,12 @@
                             :name="'costo_neto_descuento' + indextr"
                             data-vv-as=" "
                             data-vv-validate-on="blur"
-                            v-validate="'required|decimal:2|min_value:' + 0"
+                            v-validate="
+                              'required|decimal:2|min_value:' +
+                              0 +
+                              '|max_value:' +
+                              form.articulos[indextr].costo_neto_normal
+                            "
                             class="mr-auto ml-auto input-cantidad"
                             maxlength="10"
                             v-model="
@@ -342,11 +347,92 @@
                 <div class="w-full">
                   <div class="flex flex-wrap my-6">
                     <div class="w-full xl:w-8/12 px-2">
+                      <div class="form-group py-6">
+                        <div class="title-form-group">
+                          Gastos Incurridos de la Compra
+                        </div>
+                        <div class="form-group-content">
+                          <div class="flex flex-wrap">
+                            <div class="w-full input-text xl:w-7/12 px-2">
+                              <label
+                                >Concepto del costo incurrido
+                                <span v-if="this.form.costo_incurrido_costo"
+                                  >(*)</span
+                                ></label
+                              >
+                              <vs-input
+                                name="costo_incurrido_detalle"
+                                maxlength="150"
+                                data-vv-as=" "
+                                v-validate="
+                                  this.validar_costo_incurrido_detalle
+                                "
+                                type="text"
+                                class="w-full"
+                                placeholder="Detalle de los costos incurridos"
+                                v-model="form.costo_incurrido_detalle"
+                              />
+                              <span>
+                                {{ errors.first("costo_incurrido_detalle") }}
+                              </span>
+                              <span
+                                v-if="this.errores.costo_incurrido_detalle"
+                                >{{ errores.costo_incurrido_detalle[0] }}</span
+                              >
+                            </div>
+                            <div class="w-full input-text xl:w-3/12 px-2">
+                              <label
+                                >Total del costo incurrido<span
+                                  v-if="this.form.costo_incurrido_detalle"
+                                  >(*)</span
+                                ></label
+                              >
+                              <vs-input
+                                name="costo_incurrido_costo"
+                                data-vv-as=" "
+                                v-validate="this.validar_costo_incurrido_costo"
+                                maxlength="8"
+                                type="text"
+                                class="w-full"
+                                placeholder="Total por los costos incurridos"
+                                v-model="form.costo_incurrido_costo"
+                              />
+                              <span>
+                                {{ errors.first("costo_incurrido_costo") }}
+                              </span>
+                              <span v-if="this.errores.costo_incurrido_costo">{{
+                                errores.costo_incurrido_costo[0]
+                              }}</span>
+                            </div>
+
+                            <div
+                              class="
+                                w-full
+                                input-text
+                                xl:w-2/12
+                                px-2
+                                text-center
+                              "
+                            >
+                              <label>Facturable</label>
+                              <vs-switch
+                                class="ml-auto mr-auto mt-3"
+                                color="success"
+                                icon-pack="feather"
+                                v-model="form.facturable_b_gasto_incurrido"
+                              >
+                                <span slot="on">SI</span>
+                                <span slot="off">NO</span>
+                              </vs-switch>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <div class="flex flex-wrap">
                         <div class="w-full input-text px-2">
                           <label>Nota u Observación:</label>
                           <vs-textarea
-                            height="520px"
+                            height="400px"
                             :rows="9"
                             size="large"
                             ref="nota"
@@ -673,6 +759,18 @@ export default {
     },
 */
 
+    validar_costo_incurrido_costo: function () {
+      if (this.form.costo_incurrido_detalle != "") {
+        return "decimal:2|min_value:0|required";
+      } else return "decimal:2|min_value:0";
+    },
+
+    validar_costo_incurrido_detalle: function () {
+      if (this.form.costo_incurrido_costo > 0) {
+        return "required";
+      } else return "";
+    },
+
     showVentana: {
       get() {
         return this.show;
@@ -703,6 +801,7 @@ export default {
             this.form.articulos[index].costo_neto_normal;
         }
       });
+      total += parseFloat(this.form.costo_incurrido_costo);
       return total;
     },
 
@@ -751,6 +850,9 @@ export default {
         pago_transferencia: 0,
         pago_credito: 0,
         nota: "",
+        costo_incurrido_detalle: "",
+        costo_incurrido_costo: "",
+        facturable_b_gasto_incurrido: 0,
       },
       /**variables dle modulo */
       openBuscadorArticulos: false,
@@ -874,6 +976,18 @@ export default {
             return;
           } else {
             //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
+            if (this.form.articulos.length == 0) {
+              this.$vs.notify({
+                title: "Error",
+                text: "Verifique que capturó los artículos de la compra",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                position: "bottom-right",
+                time: "12000",
+              });
+              return;
+            }
             (async () => {
               if (this.getTipoformulario == "agregar") {
                 /**EL FORMULARIO ES SOLO DE VALIDACION */

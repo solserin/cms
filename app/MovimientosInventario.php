@@ -71,12 +71,15 @@ class MovimientosInventario extends Model
             'compra_detalle.costo_neto',
             'compra_detalle.costo_neto_descuento',
             'compra_detalle.descuento_b',
-            'compra_detalle.facturable_b',
-             DB::raw(
-                    '(0) AS descuento'
-                )
+            'compra_detalle.facturable_b'
             )
         ->join('articulos', 'articulos.id', '=', 'compra_detalle.articulos_id')
         ;
+    }
+
+
+     public function costos_incurridos()
+    {
+        return $this->hasMany('App\CostosIncurridos', 'movimientos_inventario_id', 'id');
     }
 }

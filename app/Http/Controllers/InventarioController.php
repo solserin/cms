@@ -1077,7 +1077,18 @@ class InventarioController extends ApiController
             'articulos.*.costo_neto_descuento' => 'numeric|min:0',
             'articulos.*.descuento_b'          => 'boolean',
             'articulos.*.facturable_b'         => 'boolean',
+            'costo_incurrido_costo'             => '',
+            'costo_incurrido_detalle'             => '',
         ];
+
+
+        if(trim($request->costo_incurrido_detalle)!=''){
+             $validaciones['costo_incurrido_costo']='required|numeric|min:0';
+        }
+
+        if(trim($request->costo_incurrido_costo)!=''){
+             $validaciones['costo_incurrido_detalle']='required';
+        }
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
@@ -1110,6 +1121,9 @@ class InventarioController extends ApiController
                 $total_compra+=$articulo['cantidad']*$articulo['costo_neto_normal'];
            }
         }
+
+        $total_compra+=$request->costo_incurrido_costo;
+
 
         if(count($request->articulos)==0){
               return $this->errorResponse('Ingrese los artículos de la compra.',409);
@@ -1145,6 +1159,15 @@ class InventarioController extends ApiController
                     'pago_transferencia'=>$request->pago_transferencia,
                     'iva_porcentaje'=>$request->tasa_iva,
                     'num_compra'=> $num_compra
+                ]
+            );
+
+            DB::table('costos_incurridos')->insertGetId(
+                [
+                    'costo_detalle'=>$request->costo_incurrido_detalle,
+                    'costo_neto'=>$request->costo_incurrido_costo,
+                    'movimientos_inventario_id'=>$id_compra,
+                    'facturable_b'=>$request->facturable_b_gasto_incurrido
                 ]
             );
 
@@ -1278,25 +1301,16 @@ class InventarioController extends ApiController
             "movimientos_inventario.status",
                  /**venta operacion */
             DB::raw(
-                '(0) AS total_compra'
+                '(0) AS subtotal'
             ),
             DB::raw(
-                '(0) AS total_compra_texto'
+                '(0) AS descuento'
             ),
             DB::raw(
-                '(null) AS fecha_compra_texto'
+                '(null) AS iva'
             ),
              DB::raw(
-                '(null) AS fecha_registro_texto'
-            ),
-            DB::raw(
-                '(0) AS descuento_total'
-            ), 
-            DB::raw(
-                '(0) AS subtotal'
-            ), 
-            DB::raw(
-                '(0) AS impuestos_total'
+                '(null) AS total'
             ),
             DB::raw(
                 '(NULL) AS status_texto'
@@ -1308,6 +1322,8 @@ class InventarioController extends ApiController
         ->with('compra_detalle')
         ->with('registro:id,nombre')
         ->with('cancelo:id,nombre')
+        ->with('costos_incurridos')
+        
         /**solo ventas de planes funerarios */
             //solo compras a proveedores
         ->join('proveedores', 'proveedores.id', '=', 'movimientos_inventario.proveedores_id')
@@ -1355,36 +1371,64 @@ class InventarioController extends ApiController
         }
 
         foreach ($resultado as $index_venta => &$compra) {
-            /**sacando totales */
-            $total_compra=0;
-            $suma_neto=0;
-            $suma_descuento=0;
-            $suma_neto_total_sin_descuento=0;
-            $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
-            foreach($compra['compra_detalle'] as &$detalle){
-                $suma_neto_total_sin_descuento+=$detalle['costo_neto']*$detalle['cantidad'];
-                if($detalle['descuento_b']==1){
-                    $suma_descuento=$detalle['costo_neto_descuento']*$detalle['cantidad'];
-                    $total_compra+= $suma_descuento;
-                    $detalle['descuento']= round((($detalle['costo_neto']*$detalle['cantidad'])/$iva_porcentaje)-(($suma_descuento)/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
-                    $detalle['importe']= round((($detalle['costo_neto_descuento']*$detalle['cantidad'])), 2, PHP_ROUND_HALF_UP);
+            /**subtotal */
+            /**descuento */
+            /**IVA */
+            /**importe */
+             foreach($compra['compra_detalle'] as &$detalle){
+                if($detalle['facturable_b']==1){
+                     $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
                 }else{
-                    $suma_neto=$detalle['costo_neto']*$detalle['cantidad'];
-                    $total_compra+=$suma_neto;
-                     $detalle['importe']= round((($detalle['costo_neto']*$detalle['cantidad'])), 2, PHP_ROUND_HALF_UP);
+                    $iva_porcentaje=1;
                 }
-            }
 
-            $compra['total_compra']=$total_compra;
-            $compra['total_compra_texto']=numeros_a_letras($total_compra);
-            
-            $compra['impuestos_total']= round($total_compra-($total_compra/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
-            if( $suma_descuento>0){
-                $compra['descuento_total']= round(($suma_neto_total_sin_descuento/$iva_porcentaje)-($suma_descuento/$iva_porcentaje), 2, PHP_ROUND_HALF_UP);
-            }
+                $detalle['subtotal']=($detalle['costo_neto']/$iva_porcentaje);
+                if($detalle['descuento_b']==1){
+                    $detalle['descuento']=(($detalle['costo_neto']-$detalle['costo_neto_descuento'])/$iva_porcentaje);
+                }else{
+                    $detalle['descuento']=0;
+                }
+                $detalle['iva']=($detalle['subtotal']-$detalle['descuento'])*($iva_porcentaje-1);
+                $detalle['importe']=(($detalle['subtotal']-$detalle['descuento'])*$detalle['cantidad'])*$iva_porcentaje;
+
+
+                $detalle['subtotal']=round($detalle['subtotal'],2);
+                $detalle['descuento']=round($detalle['descuento'],2);
+                $detalle['iva']=round($detalle['iva'],2);
+                $detalle['importe']=round($detalle['importe'],2);
+
+                $compra['subtotal']+=$detalle['subtotal'];
+                $compra['descuento']+=$detalle['descuento'];
+                $compra['iva']+=$detalle['iva'];
+                $compra['total']+=$detalle['importe'];
+             }
+
+             /**agregagamos los costos incurridos */
+              foreach($compra['costos_incurridos'] as &$costo){
+                if($costo['facturable_b']==1){
+                     $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
+                }else{
+                    $iva_porcentaje=1;
+                }
+                $costo['subtotal']=($costo['costo_neto']/$iva_porcentaje);
+                $costo['iva']=($costo['subtotal'])*($iva_porcentaje-1);
+
+                $costo['subtotal']=round($costo['subtotal'],2);
+                $costo['iva']=round($costo['iva'],2);
+
+
+                $compra['subtotal']+=$costo['subtotal'];
+                $compra['iva']+=$costo['iva'];
+                $compra['total']+=$costo['costo_neto'];
+              }
+
+            $compra['subtotal']=round($compra['subtotal'],2);
+            $compra['iva']=round($compra['iva'],2);
+            $compra['total']=round($compra['total'],2);
+
+            $compra['total_compra_texto']=numeros_a_letras($compra['total']);
             $compra['fecha_compra_texto'] = fecha_abr($compra['fecha_movimiento']);
             $compra['fecha_registro_texto'] = fecha_abr($compra['fecha_registro']);
-             $compra['subtotal']= round($total_compra/$iva_porcentaje, 2, PHP_ROUND_HALF_UP);
 
             /**status segun pago o cancelación */
             $total_pagado=$compra['pago_efectivo']+$compra['pago_cheque']+$compra['pago_tarjeta']+$compra['pago_transferencia'];
@@ -1392,7 +1436,7 @@ class InventarioController extends ApiController
             if($compra['status']==0){
                 $compra['status_texto']='Cancelada';
             }else{
-                if($total_pagado>=$total_compra){
+                if($total_pagado>=$compra['total']){
                      $compra['status_texto']='Pagada';
                 }else{
                      $compra['status_texto']='Por liquidar';
@@ -1409,10 +1453,11 @@ class InventarioController extends ApiController
 
     public function pdf_nota_compra(Request $request)
     {
-     /*   $id_compra = 2;
+        /*
+        $id_compra = 2;
         $email = false;
         $email_to = 'hector@gmail.com';
-       */  
+        */
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad

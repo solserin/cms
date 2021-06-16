@@ -125,10 +125,10 @@
               {{ data[indextr].fecha_compra_texto }}
             </span>
           </vs-td>
-          <vs-td :data="data[indextr].total_compra">
+          <vs-td :data="data[indextr].total">
             <span class="font-medium">
               $
-              {{ data[indextr].total_compra | numFormat("0,000.00") }}
+              {{ data[indextr].total | numFormat("0,000.00") }}
             </span>
           </vs-td>
           <vs-td>
