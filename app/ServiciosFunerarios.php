@@ -141,4 +141,10 @@ class ServiciosFunerarios extends Model
     {
         return $this->hasOne('App\Titulos', 'id', 'titulos_id');
     }
+
+
+    public function servicio_exhumado()
+    {
+        return $this->hasMany('App\ServiciosFunerarios','servicios_funerarios_exhumado_id','id');
+    }
 }

@@ -20,8 +20,8 @@ export default {
         return axios.post(call, param);
     },
 
-    modificar_contrato(param) {
-        let call = "/funeraria/control_contratos/modificar";
+    modificar_contrato(param,tipo_servicio) {
+        let call = "/funeraria/control_contratos/"+tipo_servicio;
         return axios.post(call, param);
     },
 

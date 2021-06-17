@@ -2706,7 +2706,8 @@ class FunerariaController extends ApiController
 
     public function control_contratos(Request $request, $tipo_servicio = '')
     {
-        if (!(trim($tipo_servicio) == 'modificar')) {
+        $tipo_servicio=trim($tipo_servicio);
+        if (!$tipo_servicio== 'servicio_funerario' || !$tipo_servicio== 'exhumar' || !$tipo_servicio== 'modificar_exhumar') {
             return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
         }
 
@@ -2870,7 +2871,45 @@ class FunerariaController extends ApiController
 
         /**verificando si es tipo modificar para validar que venga el id a modificar */
         $datos_solicitud = array();
-        if ($tipo_servicio == 'modificar') {
+
+        try {
+            DB::beginTransaction();
+
+            /**se verifica que tipo de servicio se intenta atender */
+
+            if($tipo_servicio=='exhumar'){
+
+                /**verificar si este servicio ya fue cancelado o si fue previamente exhumado
+                 * si no, se puede continuar con la exhumacion de este servicio
+                 */
+                $verificar=ServiciosFunerarios::where('servicios_funerarios_exhumado_id','=',$request->id_servicio)
+                ->where('status','<>',0)->get()->toArray();
+                if(count($verificar)>0){
+                    return $this->errorResponse('Este servicio ya ha sido exhumando anteriormente.',409);
+                }
+
+                //se crea una copia de toda la informacion para despues modificarse sobre el nuevo id
+                /**creo el nuevo servicio como una copia del servicio que se seleccionó */
+                $servicio = ServiciosFunerarios::find($request->id_servicio);
+                $nuevo_servicio = $servicio->replicate();
+                $nuevo_servicio->timestamps = false;
+                $nuevo_servicio->fechahora_registro=now();
+                $nuevo_servicio->registro_contrato_id=(int) $request->user()->id;
+                $nuevo_servicio->modifico_id=(int) $request->user()->id;
+                $nuevo_servicio->fecha_modificacion=now();
+                $nuevo_servicio->registro_id=(int) $request->user()->id;
+                $nuevo_servicio->nota_servicio='';
+                $nuevo_servicio->tipo_solicitud_id=2;//exhumacion
+                $nuevo_servicio->servicios_funerarios_exhumado_id=$request->id_servicio;
+                $nuevo_servicio->save();
+
+                /**actualizo el id_servicio original por el nuevo servicio creado "el de exhumacion" */
+                $request->id_servicio=$nuevo_servicio->id;
+            }
+
+
+
+        
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
             $datos_solicitud = $this->get_solicitudes_servicios($r, $request->id_servicio)[0];
@@ -2892,10 +2931,9 @@ class FunerariaController extends ApiController
                     return $this->errorResponse('El plan funerario a futuro seleccionado ya ha sido utilizado por el servicio prestado al finado : ' . $servicios_planes_usados[0]->nombre_afectado, 409);
                 }
             }
-        }
+        
         $id_return = 0;
-        try {
-            DB::beginTransaction();
+      
             /**SE COMIENZA EL PROCESO PARA ACTUALIZAR EL CONTRATO */
             DB::table('servicios_funerarios')->where('id', $request->id_servicio)->update(
                 [
@@ -3802,6 +3840,13 @@ class FunerariaController extends ApiController
         $fecha_operacion          = $request->fecha_operacion;
         $resultado_query          = ServiciosFunerarios::select(
             'id',
+            'servicios_funerarios_exhumado_id',
+            DB::raw(
+                '(null) as permite_exhumar_b'
+            ),
+            DB::raw(
+                '(null) as exhumado_b'
+            ),
             'registro_contrato_id',
             'nota_servicio',
             'titulos_id',
@@ -3994,6 +4039,8 @@ class FunerariaController extends ApiController
             ->with('operacion.pagosProgramados.pagados')
             ->with('operacion.cliente')
             ->with('operacion.cancelador')
+            ->with('servicio_exhumado:servicios_funerarios_exhumado_id,id,status')
+
         /**validnado si se hace filtrado de algun plan funerario de uso inmediato */
             ->where(function ($q) use ($uso_plan_funerario_futuro) {
                 if (trim($uso_plan_funerario_futuro) != '' && $uso_plan_funerario_futuro > 0) {
@@ -4049,6 +4096,7 @@ class FunerariaController extends ApiController
         $articulos = Articulos::with('categoria')->with('tipo_articulo')->get();
 
         foreach ($resultado as $index_venta => &$solicitud) {
+
             $conceptos_resumidos            = [];
             $articulos_servicios_recorridos = [];
             if (isset($solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
@@ -4218,7 +4266,12 @@ class FunerariaController extends ApiController
             if ($solicitud['tipo_solicitud_id'] == 1) {
                 $solicitud['tipo_solicitud_texto'] = 'Servicio Funerario';
             } elseif ($solicitud['tipo_solicitud_id'] == 2) {
-                $solicitud['tipo_solicitud_texto'] = 'Exhumación';
+                /**Reviso si el servicio llevo reinhumacion o solo se exhumo */
+                if($solicitud['ventas_terrenos_id'] >0){
+                     $solicitud['tipo_solicitud_texto'] = 'Exhumación y Reinhumación';
+                }else{
+                     $solicitud['tipo_solicitud_texto'] = 'Servicio de Exhumación';
+                }
             }
             if ($solicitud['contagioso_b'] == 0) {
                 $solicitud['contagioso_texto'] = 'NO';
@@ -4538,6 +4591,26 @@ class FunerariaController extends ApiController
                     $solicitud['status_texto'] = 'Activa';
                 }
             }
+
+             $solicitud['permite_exhumar_b']=1;
+              $solicitud['exhumado_b']=0;
+            /**revisando si este servicio pérmite exhumar */
+             if($solicitud['cementerios_servicio_id']==1 && $solicitud['status_b']!=0){
+                 /**solo para cementerio aeternus */
+                 if(!is_null($solicitud['servicio_exhumado'])){
+                    foreach ($solicitud['servicio_exhumado'] as $exhumado) {
+                                if($exhumado['status']==1){
+                                    $solicitud['permite_exhumar_b']=0;
+                                    $solicitud['exhumado_b']=1;
+                                    break;
+                                }
+                        }
+                }
+             }else{
+                 $solicitud['permite_exhumar_b']=0;
+             }
+            unset($solicitud['servicio_exhumado']);
+        
         } //fin foreach venta
 
         return $resultado_query;
@@ -4586,6 +4659,11 @@ class FunerariaController extends ApiController
 
             if ($datos_solicitud['status_b'] == 0) {
                 return $this->errorResponse('Esta solicitud ya habia sido cancelada.', 409);
+            }
+
+            /**verifica si el servicio puede ser cancelado por motivos de exhumacion */
+            if ($datos_solicitud['exhumado_b'] == 1) {
+                return $this->errorResponse('Este servicio ha sido exhumado y no puede ser cancelado, por motivos de historial.', 409);
             }
 
             DB::beginTransaction();

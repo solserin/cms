@@ -157,23 +157,50 @@
           <vs-td :data="data[indextr].id">
             <div class="flex justify-center">
               <img
+                v-show="data[indextr].permite_exhumar_b"
+                class="cursor-pointer img-btn-20 mx-3"
+                src="@assets/images/shovel.svg"
+                title="Exhumar Cuerpo"
+                @click="Exhumar(data[indextr].servicio_id)"
+              />
+              <img
+                v-show="data[indextr].exhumado_b"
+                class="cursor-pointer img-btn-20 mx-3"
+                src="@assets/images/shovel_disabled.svg"
+                title="Servicio Exhumado"
+                @click="Exhumado()"
+              />
+
+              <img
                 class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
                 title="Expediente"
                 @click="ConsultarVenta(data[indextr].servicio_id)"
               />
               <img
+                v-show="verModificarSolicitud(data[indextr])"
                 class="img-btn-18 mx-3"
                 src="@assets/images/edit.svg"
                 title="Modificar Solicitud de Servicio"
                 @click="openModificarSolicitud(data[indextr].servicio_id)"
               />
+
               <img
+                v-if="data[indextr].tipo_solicitud_id == 1"
                 class="img-btn-22 mx-3"
                 src="@assets/images/contrato.svg"
                 title="Editar Contrato"
                 @click="openModificar(data[indextr].servicio_id)"
               />
+
+              <img
+                v-else
+                class="img-btn-22 mx-3"
+                src="@assets/images/contrato.svg"
+                title="Editar Contrato"
+                @click="ModificarExhumacion(data[indextr].servicio_id)"
+              />
+
               <img
                 v-if="data[indextr].status_b >= 1"
                 class="img-btn-22 mx-3"
@@ -276,6 +303,7 @@ export default {
     PlanesVenta,
     FormularioSolicitud,
   },
+  computed: {},
   watch: {
     actual: function (newValue, oldValue) {
       (async () => {
@@ -359,6 +387,13 @@ export default {
     };
   },
   methods: {
+    verModificarSolicitud(datos) {
+      if (datos.tipo_solicitud_id == 2) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     reset(card) {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = { label: "Núm. Servicio", value: "1" };
@@ -447,7 +482,7 @@ export default {
     },
 
     openModificar(id_solicitud) {
-      this.tipoFormulario = "modificar";
+      this.tipoFormulario = "servicio_funerario";
       this.id_solicitud_modificar = id_solicitud;
       this.verFormularioServicios = true;
     },
@@ -456,6 +491,29 @@ export default {
       this.tipoFormularioSolicitud = "modificar";
       this.id_solicitud_modificar = id_solicitud;
       this.verFormularioSolicitud = true;
+    },
+
+    Exhumar(id_solicitud) {
+      this.tipoFormulario = "exhumar";
+      this.id_solicitud_modificar = id_solicitud;
+      this.verFormularioServicios = true;
+    },
+
+    Exhumado() {
+      this.$vs.notify({
+        title: "Exhumar Servicio",
+        text: "Este servicio ya fue exhumado.",
+        iconPack: "feather",
+        icon: "icon-alert-circle",
+        color: "danger",
+        time: 4000,
+      });
+    },
+
+    ModificarExhumacion(id_solicitud) {
+      this.tipoFormulario = "modificar_exhumar";
+      this.id_solicitud_modificar = id_solicitud;
+      this.verFormularioServicios = true;
     },
 
     cancelarVenta(id_solicitud) {
@@ -487,6 +545,7 @@ export default {
       })();
     },
   },
+
   created() {
     (async () => {
       await this.get_data(this.actual);
