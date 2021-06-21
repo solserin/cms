@@ -344,9 +344,6 @@ const router = new Router({
                         authRequired: true
                     }
                 },
-
-
-
                 {
                     path: "/inventarios/funeraria/compras",
                     name: "compras_inventario",
@@ -396,6 +393,33 @@ const router = new Router({
                             }
                         ],
                         pageTitle: "Funeraria",
+                        rule: "editor",
+                        authRequired: true
+                    }
+                },
+
+                {
+                    path: "/reportes",
+                    name: "reportes",
+                    component: () =>
+                        import(
+                            "@/views/pages/reportes/GeneradorReportes"
+                        ),
+                    meta: {
+                        breadcrumb: [
+                            {
+                                title: "Home",
+                                url: "/"
+                            },
+                            {
+                                title: "Listado de reportes disponibles"
+                            },
+                            {
+                                title: "Generar reportes",
+                                active: true
+                            }
+                        ],
+                        pageTitle: "Reportes",
                         rule: "editor",
                         authRequired: true
                     }
