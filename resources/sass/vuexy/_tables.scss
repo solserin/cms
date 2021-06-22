@@ -11,6 +11,12 @@
     white-space: nowrap !important;
 }
 
+.tabla-datos-no-data {
+    .not-data-table {
+        display: none !important;
+    }
+}
+
 .no-header {
     .header-table {
         display: none !important;

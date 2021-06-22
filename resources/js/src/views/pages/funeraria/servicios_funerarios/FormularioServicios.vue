@@ -3101,7 +3101,6 @@ import ConfirmarDanger from "@pages/ConfirmarDanger";
 //componente de password
 import Password from "@pages/confirmar_password";
 import funeraria from "@services/funeraria";
-import usuarios from "@services/Usuarios";
 import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
