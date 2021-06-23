@@ -19,6 +19,11 @@ class MovimientosInventario extends Model
         return $this->hasOne('App\User', 'id', 'cancelo_id');
     }
 
+     public function operacion()
+    {
+        return $this->belongsTo('App\Operaciones', 'operaciones_id','id');
+    }
+
     public function detalles()
     {
         return $this->hasMany('App\AjusteInventarioDetalle', 'movimientos_inventario_id', 'id')

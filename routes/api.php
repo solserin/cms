@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
   Route::get('inventario/get_compras/{id_compra?}/{paginated?}/', 'InventarioController@get_compras');
   Route::get('inventario/pdf_nota_compra', 'InventarioController@pdf_nota_compra');
 
+Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
+
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */

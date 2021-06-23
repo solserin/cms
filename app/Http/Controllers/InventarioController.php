@@ -108,6 +108,7 @@ class InventarioController extends ApiController
                     [
                         'nota'                => $request->nota,
                         'fecha_registro'      => now(),
+                        'fecha_movimiento'      => now(),
                         'registro_id'         => (int) $request->user()->id,
                         'tipo_movimientos_id' => 2,
                         //'subtotal' => 0,
@@ -154,6 +155,7 @@ class InventarioController extends ApiController
                     [
                         'nota'                => $request->nota,
                         'fecha_registro'      => now(),
+                        'fecha_movimiento'      => now(),
                         'registro_id'         => (int) $request->user()->id,
                         'tipo_movimientos_id' => 1,
                         //'subtotal' => 0,
@@ -1530,6 +1532,112 @@ class InventarioController extends ApiController
         } else {
             return $pdf->inline($name_pdf);
         }
+    }
+
+
+
+
+
+
+     public function get_reporte_existencias_costos($fecha)
+    {
+       $articulos=Articulos::where('tipo_articulos_id',1)
+        ->select('*')
+        ->with('inventario_existencia_cero')
+        ->get()->toArray();
+        
+
+        //2- (EA) Entrada de lote por ajustes
+       $movimientos=MovimientosInventario::
+        select(
+            'id',
+            'fecha_movimiento',
+            'operaciones_id',
+            'tipo_movimientos_id',
+            'status'
+        )
+        ->with('detalles')
+        ->with('articulosserviciofunerario')
+        ->with('compra_detalle')
+        ->with('operacion:id,status')
+        ->where('fecha_movimiento','<=',$fecha)
+        ->orderBy('fecha_movimiento', 'asc')
+        ->get()->toArray();
+
+        $inventario=[];
+        /**id_articulo
+         * lotes_id
+         * existencia
+         */
+        
+         foreach($movimientos as $index => $movimiento){
+             /**sumando los ingresos de mercancia por ajuste no inventariado
+              * 2- (EA) Entrada de lote por ajustes
+              */
+              if($movimiento['tipo_movimientos_id']==2){
+                   foreach($movimiento['detalles'] as $index_detalle => $detalle){
+                         foreach($articulos as $index_articulo => &$articulo){
+                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
+                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['lotes_id']==$lote['lotes_id']){
+                                    $lote['existencia']+=$detalle['existencia_fisica'];
+                                    $lote['ver_inventario_b']=1;
+                                }
+                            }
+                        }
+                   }
+              }
+
+
+
+              /**sumando o restando los ingresos de mercancia por ajuste no inventariado
+              * 1- (AI) Ajustes de inventario
+              */
+              if($movimiento['tipo_movimientos_id']==1){
+                   foreach($movimiento['detalles'] as $index_detalle => $detalle){
+                        /*
+                        $sumar=true;
+                        $cantidad=abs($detalle['existencia_sistema']-$detalle['existencia_fisica']);
+                        if($cantidad>0){
+                            if($detalle['existencia_sistema']>$detalle['existencia_fisica']){
+                                $sumar=false;
+                            }
+                        }
+                        if(!$sumar){
+                             $cantidad= $cantidad*-1;
+                        }
+                        */
+                        
+                         foreach($articulos as $index_articulo => &$articulo){
+                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
+                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['lotes_id']==$lote['lotes_id']){
+                                    $cantidad=$detalle['existencia_fisica']-$detalle['existencia_sistema'];
+                                    $lote['existencia']+=$cantidad;
+                                    $lote['ver_inventario_b']=1;
+                                }
+                            }
+                        }
+                   }
+              }
+
+
+              /**sumando los ingresos de mercancia por compra
+              * 3- (CM) Compra de mercancías a proveedor
+              */
+              if($movimiento['tipo_movimientos_id']==3 && $movimiento['status']!=0){
+                   foreach($movimiento['compra_detalle'] as $index_detalle => $detalle){
+                         foreach($articulos as $index_articulo => &$articulo){
+                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
+                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['movimientos_inventario_id']==$lote['lotes_id']){
+                                    $lote['existencia']+=$detalle['cantidad'];
+                                    $lote['ver_inventario_b']=1;
+                                }
+                            }
+                        }
+                   }
+              }
+         }
+
+        return $articulos;
     }
 
 
