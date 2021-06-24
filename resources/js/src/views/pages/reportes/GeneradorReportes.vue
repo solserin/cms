@@ -227,12 +227,8 @@ export default {
 
     onCloseDate(selectedDates, dateStr, instance) {
       /**se valdiad que se busque la informacion solo en los casos donde la fechas cambien */
-      let buscar = false;
       if (selectedDates.length == 0) {
         /**no hay fechas que buscar */
-        if (this.form.fecha_inicio != "" || this.form.fecha_fin != "") {
-          buscar = true;
-        }
         this.form.fecha_inicio = "";
         this.form.fecha_fin = "";
       } else {
@@ -242,7 +238,6 @@ export default {
             moment(selectedDates[0]).format("YYYY-MM-DD") ||
           this.form.fecha_fin != moment(selectedDates[1]).format("YYYY-MM-DD")
         ) {
-          buscar = true;
           /**agreggo la fecha 1 */
           this.form.fecha_inicio = moment(selectedDates[0]).format(
             "YYYY-MM-DD"
@@ -250,12 +245,12 @@ export default {
           this.form.fecha_fin = moment(selectedDates[1]).format("YYYY-MM-DD");
         }
       }
-      if (buscar) {
-        this.get_data("fecha_timbrado", 1, "select");
-      }
     },
 
     openReporte() {
+      if (!this.validarFecha()) {
+        return;
+      }
       this.ListaReportes = [];
       this.ListaReportes.push({
         nombre: this.form.reporte.label,
@@ -267,6 +262,23 @@ export default {
       this.form.destinatario = "";
       this.openReportesLista = true;
       this.$vs.loading.close();
+    },
+
+    validarFecha() {
+      if (this.form.fecha == "") {
+        this.$vs.notify({
+          title: "Error",
+          text: "Seleccione la fecha del reporte.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "6000",
+        });
+        return false;
+      } else {
+        return true;
+      }
     },
   },
   created() {

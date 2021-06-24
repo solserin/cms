@@ -35,6 +35,7 @@ class ReportesController extends ApiController
             $fecha_inicio=$datosRequest['fecha_inicio'];
             $fecha_fin=$datosRequest['fecha_fin'];
         }else{
+            return $this->errorResponse('Error al generar el reporte',409);
             $modulo=1;
             $reporte=1;
             $fecha=now();
