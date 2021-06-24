@@ -278,7 +278,7 @@
                   }}</span>
                 </div>
 
-                <div class="w-full xl:w-4/12 input-text px-2">
+                <div class="w-full xl:w-6/12 input-text px-2">
                   <label>
                     Mínimo Inventario
                     <span class="">(*)</span>
@@ -301,7 +301,7 @@
                     errores.minimo_inventario[0]
                   }}</span>
                 </div>
-                <div class="w-full xl:w-4/12 input-text px-2">
+                <div class="w-full xl:w-6/12 input-text px-2">
                   <label>
                     Máximo Inventario
                     <span class="">(*)</span>
@@ -326,7 +326,28 @@
                   }}</span>
                 </div>
 
-                <div class="w-full xl:w-4/12 input-text px-2">
+                <div class="w-full xl:w-6/12 input-text px-2">
+                  <label>
+                    $ Costo Compra
+                    <span class="">(*)</span>
+                  </label>
+                  <vs-input
+                    v-validate.disabled="'required|decimal:2'"
+                    name="costo_compra"
+                    data-vv-as=" "
+                    type="text"
+                    class="w-full"
+                    placeholder="Costo neto de compra"
+                    v-model="form.costo_compra"
+                    maxlength="16"
+                  />
+                  <span class="">{{ errors.first("costo_compra") }}</span>
+                  <span class="" v-if="this.errores.costo_compra">{{
+                    errores.costo_compra[0]
+                  }}</span>
+                </div>
+
+                <div class="w-full xl:w-6/12 input-text px-2">
                   <label>
                     $ Costo Neto de Venta
                     <span class="">(*)</span>
@@ -704,7 +725,7 @@ export default {
         factor: 1,
         minimo_inventario: 1,
         maximo_inventario: 1,
-
+        costo_compra: "",
         costo_venta: "",
         nota: "",
         /**form */
@@ -746,8 +767,7 @@ export default {
         /**error al cargar */
         this.$vs.notify({
           title: "Error",
-          text:
-            "Ha ocurrido un error al tratar de cargar las cateogrías, por favor reintente.",
+          text: "Ha ocurrido un error al tratar de cargar las cateogrías, por favor reintente.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -775,8 +795,7 @@ export default {
         /**error al cargar */
         this.$vs.notify({
           title: "Error",
-          text:
-            "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
+          text: "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -810,8 +829,7 @@ export default {
         /**error al cargar */
         this.$vs.notify({
           title: "Error",
-          text:
-            "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
+          text: "Ha ocurrido un error al tratar de cargar el catálogo de unidades, por favor reintente.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -928,6 +946,7 @@ export default {
         this.form.factor = datos.factor;
         this.form.minimo_inventario = datos.minimo;
         this.form.maximo_inventario = datos.maximo;
+        this.form.costo_compra = datos.precio_compra;
         this.form.costo_venta = datos.precio_venta;
         this.form.nota = datos.nota;
         /**en caso de modificar */
@@ -1166,6 +1185,7 @@ export default {
       this.form.factor = 1;
       this.form.minimo_inventario = 1;
       this.form.maximo_inventario = 1;
+      this.form.costo_compra = "";
       this.form.costo_venta = "";
       this.form.nota = "";
       /**en caso de modificar */

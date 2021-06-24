@@ -220,6 +220,7 @@ class InventarioController extends ApiController
             'minimo_inventario'      => 'integer|required|min:1',
             'maximo_inventario'      => 'integer|required|gte:minimo_inventario',
             'opcion_caducidad.value' => 'numeric|required',
+            'costo_compra'            => 'numeric|required|min:1',
             'costo_venta'            => 'numeric|required|min:1',
             'codigo_barras'          => '',
         ];
@@ -303,7 +304,7 @@ class InventarioController extends ApiController
                         'codigo_barras'              => $request->codigo_barras,
                         'descripcion'                => $request->descripcion,
                         'descripcion_ingles'         => $request->descripcion,
-                        'precio_compra'              => $request->costo_venta,
+                        'precio_compra'              => $request->costo_compra,
                         'precio_venta'               => $request->costo_venta,
                         'minimo'                     => $request->minimo_inventario,
                         'maximo'                     => $request->maximo_inventario,
@@ -370,7 +371,7 @@ class InventarioController extends ApiController
                         'codigo_barras'              => $request->codigo_barras,
                         'descripcion'                => $request->descripcion,
                         'descripcion_ingles'         => $request->descripcion,
-                        'precio_compra'              => $request->costo_venta,
+                        'precio_compra'              => $request->costo_compra,
                         'precio_venta'               => $request->costo_venta,
                         'minimo'                     => $request->minimo_inventario,
                         'maximo'                     => $request->maximo_inventario,
@@ -1536,13 +1537,21 @@ class InventarioController extends ApiController
 
 
 
-
-
-
      public function get_reporte_existencias_costos($fecha)
     {
        $articulos=Articulos::where('tipo_articulos_id',1)
-        ->select('*')
+        ->select(
+            'id',
+            'codigo_barras',
+            'descripcion',
+            'precio_compra',
+            'precio_venta',
+            'tipo_articulos_id',
+            'status',
+            DB::raw(
+                    '(0) AS total_costo_articulo'
+            )
+        )
         ->with('inventario_existencia_cero')
         ->get()->toArray();
         
@@ -1559,16 +1568,21 @@ class InventarioController extends ApiController
         ->with('detalles')
         ->with('articulosserviciofunerario')
         ->with('compra_detalle')
+        ->with('costos_incurridos')
         ->with('operacion:id,status')
         ->where('fecha_movimiento','<=',$fecha)
         ->orderBy('fecha_movimiento', 'asc')
         ->get()->toArray();
 
-        $inventario=[];
-        /**id_articulo
-         * lotes_id
-         * existencia
-         */
+
+        /**asigno el costo de compra a cada articulo directo desde el modulo de articulos.*/
+        foreach($articulos as $index_articulo => &$articulo){
+            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
+                if($articulo['id']==$lote['articulos_id']){
+                    $lote['costo_costeado']= $articulo['precio_compra'];
+                }
+            }
+        }
         
          foreach($movimientos as $index => $movimiento){
              /**sumando los ingresos de mercancia por ajuste no inventariado
@@ -1588,30 +1602,15 @@ class InventarioController extends ApiController
               }
 
 
-
               /**sumando o restando los ingresos de mercancia por ajuste no inventariado
               * 1- (AI) Ajustes de inventario
               */
               if($movimiento['tipo_movimientos_id']==1){
                    foreach($movimiento['detalles'] as $index_detalle => $detalle){
-                        /*
-                        $sumar=true;
-                        $cantidad=abs($detalle['existencia_sistema']-$detalle['existencia_fisica']);
-                        if($cantidad>0){
-                            if($detalle['existencia_sistema']>$detalle['existencia_fisica']){
-                                $sumar=false;
-                            }
-                        }
-                        if(!$sumar){
-                             $cantidad= $cantidad*-1;
-                        }
-                        */
-                        
                          foreach($articulos as $index_articulo => &$articulo){
                             foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
                                 if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['lotes_id']==$lote['lotes_id']){
-                                    $cantidad=$detalle['existencia_fisica']-$detalle['existencia_sistema'];
-                                    $lote['existencia']+=$cantidad;
+                                    $lote['existencia']=$detalle['existencia_fisica'];
                                     $lote['ver_inventario_b']=1;
                                 }
                             }
@@ -1624,12 +1623,46 @@ class InventarioController extends ApiController
               * 3- (CM) Compra de mercancías a proveedor
               */
               if($movimiento['tipo_movimientos_id']==3 && $movimiento['status']!=0){
+                  /**aqui saco el total de articulos y su costeo con tod y costo incurridos */
+                  $cantidad_por_compra=0;
+                  foreach($movimiento['compra_detalle'] as $index_detalle => $detalle){
+                      $cantidad_por_compra+=$detalle['cantidad'];
+                  }
+                  $costos_total=0;
+                  foreach($movimiento['costos_incurridos'] as $index_costo => $costo){
+                      $costos_total+=$costo['costo_neto'];
+                  }
+                  /**el costo incuttido por articulo solo se le suma al costo de adquision de cada articulo */
+                  $costo_incurrido_por_articulo=$costos_total/$cantidad_por_compra;
+
                    foreach($movimiento['compra_detalle'] as $index_detalle => $detalle){
                          foreach($articulos as $index_articulo => &$articulo){
                             foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
                                 if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['movimientos_inventario_id']==$lote['lotes_id']){
                                     $lote['existencia']+=$detalle['cantidad'];
                                     $lote['ver_inventario_b']=1;
+                                    if($detalle['descuento_b']==1){
+                                        $lote['costo_costeado']= $detalle['costo_neto_descuento']+ $costo_incurrido_por_articulo;
+                                    }else{
+                                        $lote['costo_costeado']= $detalle['costo_neto']+ $costo_incurrido_por_articulo;
+                                    }
+                                }
+                            }
+                        }
+                   }
+              }
+
+
+              /**restando mercancia vendida en los servicios funerarios
+              * 9- (VM) Venta de mercancías
+              */
+              if($movimiento['tipo_movimientos_id']==9 && $movimiento['operacion']['status']!=0){
+                   foreach($movimiento['articulosserviciofunerario'] as $index_detalle => $detalle){
+                         foreach($articulos as $index_articulo => &$articulo){
+                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
+                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['lotes_id']==$lote['lotes_id']){
+                                  $lote['existencia']-=$detalle['cantidad'];
+                                  $lote['ver_inventario_b']=1;
                                 }
                             }
                         }
@@ -1637,7 +1670,20 @@ class InventarioController extends ApiController
               }
          }
 
-        return $articulos;
+
+        unset($movimientos);
+         /**aqui saco los totales de los articulos */
+        $total=0;
+        foreach($articulos as $index_articulo => &$articulo){
+            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
+                    $lote['total_costo_lote']= $lote['existencia']*$lote['costo_costeado'];
+                    $articulo['total_costo_articulo']+=$lote['total_costo_lote'];
+                    $total+=$articulo['total_costo_articulo'];
+            }
+        }
+
+        $array=['fecha'=>fecha_abr($fecha),'costo_inventario'=>$total,'articulos'=>$articulos];
+         return $array;
     }
 
 

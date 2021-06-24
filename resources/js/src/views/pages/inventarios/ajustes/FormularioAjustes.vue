@@ -366,10 +366,11 @@ export default {
       accionNombre: "Ajustar Inventario",
       /**form */
       tipoAjustes: [
-        {
+        /*{
           value: "1",
           label: "Lote no Inventariado",
         },
+        */
         {
           label: "Inventario Actual",
           value: "2",
@@ -379,7 +380,8 @@ export default {
       form: {
         nota: "",
         ajuste: [],
-        tipoAjuste: { label: "Lote no Inventariado", value: "1" },
+        //tipoAjuste: { label: "Lote no Inventariado", value: "1" },
+        tipoAjuste: { label: "Inventario Actual", value: "2" },
       },
       errores: [],
     };

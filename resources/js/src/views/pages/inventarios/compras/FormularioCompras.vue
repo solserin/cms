@@ -801,6 +801,9 @@ export default {
             this.form.articulos[index].costo_neto_normal;
         }
       });
+      if (this.form.costo_incurrido_costo <= 0) {
+        this.form.costo_incurrido_costo = 0;
+      }
       total += parseFloat(this.form.costo_incurrido_costo);
       return total;
     },
