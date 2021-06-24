@@ -38,7 +38,6 @@
             <flat-pickr
               name="rango_fechas"
               data-vv-as=" "
-              v-validate:rango_fechas_validacion_computed.immediate="'required'"
               :config="configdateTimePickerRange"
               v-model="form.rango_fechas"
               placeholder="Rango de fechas del reporte"
@@ -54,7 +53,6 @@
             <flat-pickr
               name="fecha"
               data-vv-as=" "
-              v-validate:fecha_validacion_computed.immediate="'required'"
               :config="configdateTimePicker"
               v-model="form.fecha"
               placeholder="Fecha del Reporte"
@@ -91,15 +89,8 @@
                   <img
                     class="cursor-pointer img-btn-24 mx-2"
                     src="@assets/images/pdf.svg"
-                    title="Ver Nota de Pago"
-                    @click="
-                      openReporte(
-                        'reporte de pago',
-                        '/pagos/recibo_de_pago/',
-                        4,
-                        'pago'
-                      )
-                    "
+                    title="Ver Reporte"
+                    @click="openReporte()"
                   />
                 </div>
               </vs-td>
@@ -107,6 +98,14 @@
           </template>
         </vs-table>
       </div>
+
+      <Reporteador
+        :header="'consultar documentos de venta de propiedad'"
+        :show="openReportesLista"
+        :listadereportes="ListaReportes"
+        :request="form"
+        @closeReportes="openReportesLista = false"
+      ></Reporteador>
     </div>
   </div>
 </template>
@@ -115,6 +114,8 @@
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import "flatpickr/dist/themes/airbnb.css";
+import Reporteador from "@pages/Reporteador";
+const moment = require("moment");
 /**VARIABLES GLOBALES */
 import vSelect from "vue-select";
 import {
@@ -125,14 +126,9 @@ export default {
   components: {
     "v-select": vSelect,
     flatPickr,
+    Reporteador,
   },
   computed: {
-    fecha_validacion_computed: function () {
-      return this.form.fecha;
-    },
-    rango_fechas_validacion_computed: function () {
-      return this.form.rango_fechas;
-    },
     ver_fecha: function () {
       let ver = true;
       if (this.form.modulo.value == 1) {
@@ -179,13 +175,19 @@ export default {
   },
   data() {
     return {
+      ListaReportes: [],
+      openReportesLista: false,
       configdateTimePicker: configdateTimePicker,
       configdateTimePickerRange: configdateTimePickerRange,
       form: {
         modulo: { label: "Seleccionar", value: "" },
         reporte: { label: "Seleccionar", value: "", detalle: "" },
-        rango_fechas: "",
+        rango_fechas: [],
+        fecha_inicio: "",
+        fecha_fin: "",
         fecha: "",
+        email: "",
+        destinatario: "",
       },
       modulos: [
         {
@@ -223,16 +225,48 @@ export default {
       card.removeRefreshAnimation(500);
     },
 
-    openReporte(nombre_reporte = "", link = "", parametro = "", tipo = "") {},
-
     onCloseDate(selectedDates, dateStr, instance) {
       /**se valdiad que se busque la informacion solo en los casos donde la fechas cambien */
       let buscar = false;
       if (selectedDates.length == 0) {
         /**no hay fechas que buscar */
+        if (this.form.fecha_inicio != "" || this.form.fecha_fin != "") {
+          buscar = true;
+        }
+        this.form.fecha_inicio = "";
+        this.form.fecha_fin = "";
       } else {
         /**hay fechas que buscar */
+        if (
+          this.form.fecha_inicio !=
+            moment(selectedDates[0]).format("YYYY-MM-DD") ||
+          this.form.fecha_fin != moment(selectedDates[1]).format("YYYY-MM-DD")
+        ) {
+          buscar = true;
+          /**agreggo la fecha 1 */
+          this.form.fecha_inicio = moment(selectedDates[0]).format(
+            "YYYY-MM-DD"
+          );
+          this.form.fecha_fin = moment(selectedDates[1]).format("YYYY-MM-DD");
+        }
       }
+      if (buscar) {
+        this.get_data("fecha_timbrado", 1, "select");
+      }
+    },
+
+    openReporte() {
+      this.ListaReportes = [];
+      this.ListaReportes.push({
+        nombre: this.form.reporte.label,
+        url: "reportes/get_reportes",
+      });
+
+      //estado de cuenta
+      this.form.email = "";
+      this.form.destinatario = "";
+      this.openReportesLista = true;
+      this.$vs.loading.close();
     },
   },
   created() {

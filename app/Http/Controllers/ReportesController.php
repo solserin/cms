@@ -12,56 +12,41 @@ class ReportesController extends ApiController
 {
     public function get_reportes(Request $request)
     {
-        $modulo=1;
-        $reporte=1;
-        $fecha=now();
-        $rango_fechas='';
-        if(isset($request->modulo['value'])){
-            $modulo=$request->modulo['value'];
-            $reporte=$request->reporte['value'];
-            $fecha=$validaciones['fecha'];
-            $rango_fechas='';
+
+        $email             = $request->email_send === 'true' ? true : false;
+        $email_to          = $request->email_address;
+        $datosRequest=[];
+        $modulo='';
+        $reporte='';
+        $fecha='';
+        $fecha_inicio='';
+        $fecha_fin='';
+
+
+        if(isset($request->request_parent[0])){
+            $datosRequest = json_decode($request->request_parent[0], true);
         }
-        //return $this->errorResponse($request['author'],409);
-        //validaciones
-        $validaciones = [
-            'modulo.value'            => 'required',
-            'reporte.value'            => 'required',
-            'fecha'            => '',
-            'rango_fechas'            => ''
-        ];
         
-        if ($modulo == 1) {
-            /**Inventarios*/
-             if ($reporte == 1) {
-                /**Existencias y Costos*/
-                $validaciones['fecha'] = 'required|date_format:Y-m-d';
-             }else{
-                 $validaciones['rango_fechas'] = 'required';
-             }
+
+         if(isset($datosRequest['modulo']['value'])){
+            $modulo=$datosRequest['modulo']['value'];
+            $reporte=$datosRequest['modulo']['value'];
+            $fecha=$datosRequest['fecha'];
+            $fecha_inicio=$datosRequest['fecha_inicio'];
+            $fecha_fin=$datosRequest['fecha_fin'];
+        }else{
+            $modulo=1;
+            $reporte=1;
+            $fecha=now();
+            $fecha_inicio='1994-01-01';
+            $fecha_fin=now();
         }
+
     
-        /**FIN DE VALIDACIONES*/
-        $mensajes = [
-            'required'                           => 'Ingrese este dato',
-            'ajuste.fecha_caducidad.date_format' => 'indique la fecha de caducidad(Y-m-d)',
-        ];
-
-       /* request()->validate(
-            $validaciones,
-            $mensajes
-        );
-        */
-
-         
-        $id_compra = 2;
-        $email = false;
-        $email_to = 'hector@gmail.com';
         
 
         $inventario = new InventarioController();
         /**obteniendo datos para los reportes segun la peticion del usuario */
-
 
 
         /**guardo los datos a mostrar en el reporte */
@@ -77,6 +62,10 @@ class ReportesController extends ApiController
             $footer='reportes.inventario.footer';
             /**Inventarios*/
              if ($reporte == 1) {
+                 /**valido que ingresó la fecha */
+                 if(trim($fecha)==null){
+                     return $this->errorResponse('Ingrese la fecha para generar el reporte.',409);
+                 }
                 /**Existencias y Costos*/
                 $datos_reporte=$inventario->get_reporte_existencias_costos($fecha);
                 $name_pdf='Existencias y Costos';
@@ -122,7 +111,7 @@ class ReportesController extends ApiController
             $enviar_email     = $email_controller->pdf_email(
                 $email_to,
                 $request->destinatario,
-                $compra['num_compra'],
+                '',
                 $name_pdf,
                 $pdf
             );

@@ -144,6 +144,7 @@
         @closeVerificar="openConfirmarAceptar = false"
         :accion="'Enviar el documento por correo'"
         :confirmarButton="'Enviar Documento'"
+        :z_index="'z-index70k'"
       ></ConfirmarAceptar>
     </vs-popup>
   </div>

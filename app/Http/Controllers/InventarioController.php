@@ -1681,9 +1681,11 @@ class InventarioController extends ApiController
                     $total+=$articulo['total_costo_articulo'];
             }
         }
+        
+    
 
         $array=['fecha'=>fecha_abr($fecha),'costo_inventario'=>$total,'articulos'=>$articulos];
-         return $array;
+        return $array;
     }
 
 
