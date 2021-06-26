@@ -50,20 +50,20 @@ class InventarioController extends ApiController
         }
         //validaciones
         $validaciones = [
-            'tipoAjuste.value'            => 'required',
-            'ajuste.*.id'                 => [
+            'tipoAjuste.value' => 'required',
+            'ajuste.*.id' => [
                 'required',
             ],
-            'ajuste.*.caduca_b'           => [
+            'ajuste.*.caduca_b' => [
                 'required',
             ],
-            'ajuste.*.fecha_caducidad'    => [
+            'ajuste.*.fecha_caducidad' => [
                 '',
             ],
-            'ajuste.*.lote'               => [
+            'ajuste.*.lote' => [
                 '',
             ],
-            'ajuste.*.existencia_fisica'  => [
+            'ajuste.*.existencia_fisica' => [
                 'required',
             ],
             'ajuste.*.existencia_sistema' => [
@@ -82,12 +82,12 @@ class InventarioController extends ApiController
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
-            'required'                           => 'Ingrese la clave del ajuste',
-            'ajuste.id.required'                 => 'ingrese el id del artículo',
-            'ajuste.existencia_fisica.required'  => 'ingrese la existencia física',
+            'required' => 'Ingrese la clave del ajuste',
+            'ajuste.id.required' => 'ingrese el id del artículo',
+            'ajuste.existencia_fisica.required' => 'ingrese la existencia física',
             'ajuste.existencia_sistema.required' => 'ingrese la existencia en el sistema',
-            'ajuste.caduca_b.required'           => 'indique si al artículo caduca',
-            'ajuste.fecha_caducidad.required'    => 'indique la fecha de caducidad',
+            'ajuste.caduca_b.required' => 'indique si al artículo caduca',
+            'ajuste.fecha_caducidad.required' => 'indique la fecha de caducidad',
             'ajuste.fecha_caducidad.date_format' => 'indique la fecha de caducidad(Y-m-d)',
         ];
         request()->validate(
@@ -106,10 +106,10 @@ class InventarioController extends ApiController
                 /**se crea un lote y despues se agregan al inventario */
                 $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
                     [
-                        'nota'                => $request->nota,
-                        'fecha_registro'      => now(),
-                        'fecha_movimiento'      => now(),
-                        'registro_id'         => (int) $request->user()->id,
+                        'nota' => $request->nota,
+                        'fecha_registro' => now(),
+                        'fecha_movimiento' => now(),
+                        'registro_id' => (int) $request->user()->id,
                         'tipo_movimientos_id' => 2,
                         //'subtotal' => 0,
                         //'descuento' => 0,
@@ -125,13 +125,13 @@ class InventarioController extends ApiController
                     }
                     DB::table('ajuste_detalle')->insert(
                         [
-                            'fecha_caducidad'           => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
-                            'existencia_sistema'        => $articulo['existencia_sistema'],
-                            'existencia_fisica'         => $articulo['existencia_fisica'],
+                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
+                            'existencia_sistema' => $articulo['existencia_sistema'],
+                            'existencia_fisica' => $articulo['existencia_fisica'],
                             'movimientos_inventario_id' => $id_movimiento,
-                            'lotes_id'                  => $id_movimiento,
-                            'articulos_id'              => $articulo['id'],
-                            'nota'                      => $articulo['nota'],
+                            'lotes_id' => $id_movimiento,
+                            'articulos_id' => $articulo['id'],
+                            'nota' => $articulo['nota'],
                             /**entrada de lostes por ajuste */
                         ]
                     );
@@ -140,11 +140,11 @@ class InventarioController extends ApiController
                 foreach ($request->ajuste as $key => $articulo) {
                     DB::table('inventario')->insert(
                         [
-                            'lotes_id'            => $id_movimiento,
-                            'precio_compra_neto'  => $articulo['precio_compra'],
-                            'fecha_caducidad'     => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
-                            'existencia'          => $articulo['existencia_fisica'],
-                            'articulos_id'        => $articulo['id'],
+                            'lotes_id' => $id_movimiento,
+                            'precio_compra_neto' => $articulo['precio_compra'],
+                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
+                            'existencia' => $articulo['existencia_fisica'],
+                            'articulos_id' => $articulo['id'],
                             'num_lote_inventario' => $num_lote_inventario,
                         ]
                     );
@@ -153,10 +153,10 @@ class InventarioController extends ApiController
                 /**es un ajuste de inventario del invnetario actual */
                 $id_movimiento = DB::table('movimientos_inventario')->insertGetId(
                     [
-                        'nota'                => $request->nota,
-                        'fecha_registro'      => now(),
-                        'fecha_movimiento'      => now(),
-                        'registro_id'         => (int) $request->user()->id,
+                        'nota' => $request->nota,
+                        'fecha_registro' => now(),
+                        'fecha_movimiento' => now(),
+                        'registro_id' => (int) $request->user()->id,
                         'tipo_movimientos_id' => 1,
                         //'subtotal' => 0,
                         //'descuento' => 0,
@@ -169,13 +169,13 @@ class InventarioController extends ApiController
                 foreach ($request->ajuste as $key => $articulo) {
                     DB::table('ajuste_detalle')->insert(
                         [
-                            'fecha_caducidad'           => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
-                            'existencia_sistema'        => $articulo['existencia_sistema'],
-                            'existencia_fisica'         => $articulo['existencia_fisica'],
+                            'fecha_caducidad' => $articulo['fecha_caducidad'] != 'N/A' ? $articulo['fecha_caducidad'] : null,
+                            'existencia_sistema' => $articulo['existencia_sistema'],
+                            'existencia_fisica' => $articulo['existencia_fisica'],
                             'movimientos_inventario_id' => $id_movimiento,
-                            'lotes_id'                  => $articulo['lote'],
-                            'articulos_id'              => $articulo['id'],
-                            'nota'                      => $articulo['nota'],
+                            'lotes_id' => $articulo['lote'],
+                            'articulos_id' => $articulo['id'],
+                            'nota' => $articulo['nota'],
                             /**entrada de lostes por ajuste */
                         ]
                     );
@@ -208,21 +208,21 @@ class InventarioController extends ApiController
 
         //validaciones
         $validaciones = [
-            'id_articulo_modificar'  => '',
-            'descripcion'            => 'required',
-            'tipo_articulo.value'    => 'numeric|required',
-            'departamento.value'     => 'numeric|required',
-            'categoria.value'        => 'numeric|required',
-            'unidad_sat.value'       => 'numeric|required',
-            'unidad.value'           => 'numeric|required',
-            'opcion_iva.value'       => 'numeric|required',
+            'id_articulo_modificar' => '',
+            'descripcion' => 'required',
+            'tipo_articulo.value' => 'numeric|required',
+            'departamento.value' => 'numeric|required',
+            'categoria.value' => 'numeric|required',
+            'unidad_sat.value' => 'numeric|required',
+            'unidad.value' => 'numeric|required',
+            'opcion_iva.value' => 'numeric|required',
             'opcion_caducidad.value' => 'numeric|required',
-            'minimo_inventario'      => 'integer|required|min:1',
-            'maximo_inventario'      => 'integer|required|gte:minimo_inventario',
+            'minimo_inventario' => 'integer|required|min:1',
+            'maximo_inventario' => 'integer|required|gte:minimo_inventario',
             'opcion_caducidad.value' => 'numeric|required',
-            'costo_compra'            => 'numeric|required|min:1',
-            'costo_venta'            => 'numeric|required|min:1',
-            'codigo_barras'          => '',
+            'costo_compra' => 'numeric|required|min:1',
+            'costo_venta' => 'numeric|required|min:1',
+            'codigo_barras' => '',
         ];
 
         /**verificando si es tipo modificar para validar que venga el id a modificar */
@@ -260,18 +260,18 @@ class InventarioController extends ApiController
             /**es de tipo servicio */
             $request->minimo_inventario = 1;
             $request->maximo_inventario = 1;
-            $request->codigo_barras     = null;
-            $opcion_caducidad           = 0;
+            $request->codigo_barras = null;
+            $opcion_caducidad = 0;
         }
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
             'id_articulo_modificar.required' => 'Ingrese un la clave única del artículo',
-            'required'                       => 'Ingrese este dato',
-            'numeric'                        => 'Este dato debe ser un número',
-            'integer'                        => 'Este dato debe ser un número entero',
-            'min'                            => 'la cantidad debe ser mínimo 1 (Uno)',
-            'gte'                            => 'la cantidad debe ser igual o mayor al minimo de inventario',
+            'required' => 'Ingrese este dato',
+            'numeric' => 'Este dato debe ser un número',
+            'integer' => 'Este dato debe ser un número entero',
+            'min' => 'la cantidad debe ser mínimo 1 (Uno)',
+            'gte' => 'la cantidad debe ser igual o mayor al minimo de inventario',
         ];
         request()->validate(
             $validaciones,
@@ -297,23 +297,23 @@ class InventarioController extends ApiController
             if ($tipo_servicio == 'agregar') {
                 $id_articulo = DB::table('articulos')->insertGetId(
                     [
-                        'imagen'                     => trim($request->imagen) === '' ? null : trim($request->imagen),
-                        'tipo_articulos_id'          => $request->tipo_articulo['value'],
+                        'imagen' => trim($request->imagen) === '' ? null : trim($request->imagen),
+                        'tipo_articulos_id' => $request->tipo_articulo['value'],
                         'sat_productos_servicios_id' => $request->unidad_sat['value'],
-                        'factor'                     => 1,
-                        'codigo_barras'              => $request->codigo_barras,
-                        'descripcion'                => $request->descripcion,
-                        'descripcion_ingles'         => $request->descripcion,
-                        'precio_compra'              => $request->costo_compra,
-                        'precio_venta'               => $request->costo_venta,
-                        'minimo'                     => $request->minimo_inventario,
-                        'maximo'                     => $request->maximo_inventario,
-                        'caduca_b'                   => $opcion_caducidad,
-                        'grava_iva_b'                => $request->opcion_iva['value'],
-                        'categorias_id'              => $request->categoria['value'],
-                        'sat_unidades_compra'        => $request->unidad['value'],
-                        'sat_unidades_venta'         => $request->unidad['value'],
-                        'nota'                       => $request->nota,
+                        'factor' => 1,
+                        'codigo_barras' => $request->codigo_barras,
+                        'descripcion' => $request->descripcion,
+                        'descripcion_ingles' => $request->descripcion,
+                        'precio_compra' => $request->costo_compra,
+                        'precio_venta' => $request->costo_venta,
+                        'minimo' => $request->minimo_inventario,
+                        'maximo' => $request->maximo_inventario,
+                        'caduca_b' => $opcion_caducidad,
+                        'grava_iva_b' => $request->opcion_iva['value'],
+                        'categorias_id' => $request->categoria['value'],
+                        'sat_unidades_compra' => $request->unidad['value'],
+                        'sat_unidades_venta' => $request->unidad['value'],
+                        'nota' => $request->nota,
                     ]
                 );
             }
@@ -343,7 +343,7 @@ class InventarioController extends ApiController
 
                 /**validando que nno se cambie el nombre ni tipo, categoria, departamento para cuidar la integridad de los contratos */
                 $ajuste = AjusteInventarioDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
-                $venta  = VentaDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
+                $venta = VentaDetalle::where('articulos_id', $request->id_articulo_modificar)->get();
 
                 $articulo = Articulos::where('id', $request->id_articulo_modificar)->first();
                 /*if (count($ajuste) > 0 || count($venta) > 0) {
@@ -364,23 +364,23 @@ class InventarioController extends ApiController
                 /**es modificar */
                 DB::table('articulos')->where('id', '=', $request->id_articulo_modificar)->update(
                     [
-                        'imagen'                     => trim($request->imagen) === '' ? null : trim($request->imagen),
-                        'tipo_articulos_id'          => $request->tipo_articulo['value'],
+                        'imagen' => trim($request->imagen) === '' ? null : trim($request->imagen),
+                        'tipo_articulos_id' => $request->tipo_articulo['value'],
                         'sat_productos_servicios_id' => $request->unidad_sat['value'],
-                        'factor'                     => 1,
-                        'codigo_barras'              => $request->codigo_barras,
-                        'descripcion'                => $request->descripcion,
-                        'descripcion_ingles'         => $request->descripcion,
-                        'precio_compra'              => $request->costo_compra,
-                        'precio_venta'               => $request->costo_venta,
-                        'minimo'                     => $request->minimo_inventario,
-                        'maximo'                     => $request->maximo_inventario,
-                        'caduca_b'                   => $opcion_caducidad,
-                        'grava_iva_b'                => $request->opcion_iva['value'],
-                        'categorias_id'              => $request->categoria['value'],
-                        'sat_unidades_compra'        => $request->unidad['value'],
-                        'sat_unidades_venta'         => $request->unidad['value'],
-                        'nota'                       => $request->nota,
+                        'factor' => 1,
+                        'codigo_barras' => $request->codigo_barras,
+                        'descripcion' => $request->descripcion,
+                        'descripcion_ingles' => $request->descripcion,
+                        'precio_compra' => $request->costo_compra,
+                        'precio_venta' => $request->costo_venta,
+                        'minimo' => $request->minimo_inventario,
+                        'maximo' => $request->maximo_inventario,
+                        'caduca_b' => $opcion_caducidad,
+                        'grava_iva_b' => $request->opcion_iva['value'],
+                        'categorias_id' => $request->categoria['value'],
+                        'sat_unidades_compra' => $request->unidad['value'],
+                        'sat_unidades_venta' => $request->unidad['value'],
+                        'nota' => $request->nota,
                     ]
                 );
             }
@@ -396,9 +396,9 @@ class InventarioController extends ApiController
     public function get_ajustes(Request $request, $id_ajuste = 'all', $paginated = '')
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $articulo                 = $request->articulo;
-        $numero_control           = $request->numero_control;
-        $resultado_query          = MovimientosInventario::select(
+        $articulo = $request->articulo;
+        $numero_control = $request->numero_control;
+        $resultado_query = MovimientosInventario::select(
             'id',
             'registro_id',
             'fecha_registro',
@@ -437,10 +437,10 @@ class InventarioController extends ApiController
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado       = &$resultado_query['data'];
+            $resultado = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado       = &$resultado_query;
+            $resultado = &$resultado_query;
         }
         foreach ($resultado as $key_ajuste => &$ajuste) {
             $ajuste['fecha_registro_texto'] = fecha_abr($ajuste['fecha_registro']);
@@ -476,18 +476,18 @@ class InventarioController extends ApiController
                 }
 
                 if ($detalle['existencia_sistema'] == $detalle['existencia_fisica']) {
-                    $detalle['resultado_ajuste']       = 1;
+                    $detalle['resultado_ajuste'] = 1;
                     $detalle['resultado_ajuste_texto'] = 'Sin Cambios';
                 } elseif ($detalle['existencia_sistema'] > $detalle['existencia_fisica']) {
                     if ($ajuste['tipo_movimientos_id'] == 1) {
-                        $detalle['resultado_ajuste']       = 0;
+                        $detalle['resultado_ajuste'] = 0;
                         $detalle['resultado_ajuste_texto'] = 'Salida de Mercancías';
                     } else {
-                        $detalle['resultado_ajuste']       = 1;
+                        $detalle['resultado_ajuste'] = 1;
                         $detalle['resultado_ajuste_texto'] = 'Ingreso de Mercancía';
                     }
                 } else {
-                    $detalle['resultado_ajuste']       = 2;
+                    $detalle['resultado_ajuste'] = 2;
                     $detalle['resultado_ajuste_texto'] = 'Ingreso de Mercancía';
                 }
                 /**diferencia real del cambio */
@@ -501,12 +501,12 @@ class InventarioController extends ApiController
     public function get_articulos(Request $request, $id_articulo = 'all', $paginated = '', $id_departamento = 0, $id_categoria = 0, $tipo_articulo = 0, $solo_inventariable = 0)
     {
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $articulo                 = $request->articulo;
-        $numero_control           = $request->numero_control;
-        $status                   = $request->status;
-        $id_articulo_request      = $request->id_articulo;
-        $codigo_barras_request    = $request->codigo_barras;
-        $resultado_query          = Articulos::select(
+        $articulo = $request->articulo;
+        $numero_control = $request->numero_control;
+        $status = $request->status;
+        $id_articulo_request = $request->id_articulo;
+        $codigo_barras_request = $request->codigo_barras;
+        $resultado_query = Articulos::select(
             '*',
             DB::raw(
                 '(NULL) AS grava_iva_texto'
@@ -612,10 +612,10 @@ class InventarioController extends ApiController
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado       = &$resultado_query['data'];
+            $resultado = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado       = &$resultado_query;
+            $resultado = &$resultado_query;
         }
 
         foreach ($resultado as $key_articulo => &$articulo) {
@@ -650,19 +650,19 @@ class InventarioController extends ApiController
                 $articulo['existencia'] = $existencia;
 
                 if ($existencia < $articulo['minimo']) {
-                    $articulo['estatus_inventario_b']     = '0';
+                    $articulo['estatus_inventario_b'] = '0';
                     $articulo['estatus_inventario_texto'] = 'Desabastecido';
                 } elseif ($existencia <= $articulo['maximo']) {
-                    $articulo['estatus_inventario_b']     = '1';
+                    $articulo['estatus_inventario_b'] = '1';
                     $articulo['estatus_inventario_texto'] = 'Abastecido';
                 } else {
-                    $articulo['estatus_inventario_b']     = '2';
+                    $articulo['estatus_inventario_b'] = '2';
                     $articulo['estatus_inventario_texto'] = 'Sobrestock';
                 }
             } else {
                 $articulo['existencia'] = 'N/A';
 
-                $articulo['estatus_inventario_b']     = '1';
+                $articulo['estatus_inventario_b'] = '1';
                 $articulo['estatus_inventario_texto'] = 'N/A';
             }
 
@@ -740,7 +740,7 @@ class InventarioController extends ApiController
                     $this->errorResponse('Es necesario un correo y un destinatario', 409);
                 }
             }
-            $email_to      = $request->email_address;
+            $email_to = $request->email_address;
             $datos_request = json_decode($request->request_parent[0], true);
 
             $r = new \Illuminate\Http\Request();
@@ -754,12 +754,12 @@ class InventarioController extends ApiController
              */
             //obtengo la informacion de esa venta
             $get_funeraria = new EmpresaController();
-            $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('inventarios/inventario_completo/inventario', ['empresa' => $empresa, 'inventario' => $inventario]);
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('inventarios/inventario_completo/inventario', ['empresa' => $empresa, 'inventario' => $inventario]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = 'Reporte de Inventario Registrado.pdf';
             $pdf->setOptions([
-                'title'       => $name_pdf,
+                'title' => $name_pdf,
                 'footer-html' => view('inventarios.inventario_completo.footer'),
             ]);
 
@@ -784,7 +784,7 @@ class InventarioController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email     = $email_controller->pdf_email(
+                $enviar_email = $email_controller->pdf_email(
                     $email_to,
                     $request->destinatario,
                     'Reporte de Inventario Registrado',
@@ -811,9 +811,9 @@ class InventarioController extends ApiController
                     $this->errorResponse('Es necesario un correo y un destinatario', 409);
                 }
             }
-            $email_to      = $request->email_address;
+            $email_to = $request->email_address;
             $datos_request = json_decode($request->request_parent[0], true);
-            $id_ajuste     = $datos_request['id_ajuste'];
+            $id_ajuste = $datos_request['id_ajuste'];
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
@@ -827,12 +827,12 @@ class InventarioController extends ApiController
             $ajuste = $this->get_ajustes($r, $id_ajuste, '');
             //obtengo la informacion de esa venta
             $get_funeraria = new EmpresaController();
-            $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('inventarios/ajustes/ajustes', ['empresa' => $empresa, 'ajustes' => $ajuste]);
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('inventarios/ajustes/ajustes', ['empresa' => $empresa, 'ajustes' => $ajuste]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = 'Reporte de Ajuste de Inventario.pdf';
             $pdf->setOptions([
-                'title'       => $name_pdf,
+                'title' => $name_pdf,
                 'footer-html' => view('inventarios.ajustes.footer'),
             ]);
             $pdf->setOptions([
@@ -856,7 +856,7 @@ class InventarioController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email     = $email_controller->pdf_email(
+                $enviar_email = $email_controller->pdf_email(
                     $email_to,
                     $request->destinatario,
                     'Reporte de Ajuste de Inventario',
@@ -882,12 +882,12 @@ class InventarioController extends ApiController
                 $this->errorResponse('Es necesario un correo y un destinatario', 409);
             }
         }
-        $email_to      = $request->email_address;
+        $email_to = $request->email_address;
         $datos_request = json_decode($request->request_parent[0], true);
-        $datos         = $datos_request['etiquetas'];
+        $datos = $datos_request['etiquetas'];
 
-        $lotes    = [];
-        $ids      = [];
+        $lotes = [];
+        $ids = [];
         $cantidad = 0;
         foreach ($datos as $dato) {
             if (!in_array($dato['lotes_id'], $lotes)) {
@@ -920,9 +920,9 @@ class InventarioController extends ApiController
 /**lo repito el numero de veces que se ocupa la etiqueta */
                         for ($i = 0; $i < $dato['cantidad']; $i++) {
                             array_push($etiquetas, [
-                                'id'                  => $articulo['id'],
-                                'descripcion'         => $articulo['descripcion'],
-                                'lotes_id'            => $inventario['lotes_id'],
+                                'id' => $articulo['id'],
+                                'descripcion' => $articulo['descripcion'],
+                                'lotes_id' => $inventario['lotes_id'],
                                 'num_lote_inventario' => $inventario['num_lote_inventario'],
                             ]);
                         }
@@ -943,8 +943,8 @@ class InventarioController extends ApiController
 
         //obtengo la informacion de esa venta
         $get_funeraria = new EmpresaController();
-        $empresa       = $get_funeraria->get_empresa_data();
-        $pdf           = PDF::loadView('inventarios/etiquetado/ajustes', ['empresa' => $empresa, 'etiquetas' => $etiquetas]);
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/etiquetado/ajustes', ['empresa' => $empresa, 'etiquetas' => $etiquetas]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = 'Reporte de Ajuste de Inventario.pdf';
 
@@ -967,7 +967,7 @@ class InventarioController extends ApiController
              */
             /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
             $email_controller = new EmailController();
-            $enviar_email     = $email_controller->pdf_email(
+            $enviar_email = $email_controller->pdf_email(
                 $email_to,
                 $request->destinatario,
                 'Reporte de Ajuste de Inventario',
@@ -992,7 +992,7 @@ class InventarioController extends ApiController
                     $this->errorResponse('Es necesario un correo y un destinatario', 409);
                 }
             }
-            $email_to      = $request->email_address;
+            $email_to = $request->email_address;
             $datos_request = json_decode($request->request_parent[0], true);
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
@@ -1006,12 +1006,12 @@ class InventarioController extends ApiController
             $articulos = $this->get_articulos($r, 'all', '', 0, 0, 0, 1);
             //obtengo la informacion de esa venta
             $get_funeraria = new EmpresaController();
-            $empresa       = $get_funeraria->get_empresa_data();
-            $pdf           = PDF::loadView('inventarios/ajuste_cantidades/ajustes', ['empresa' => $empresa, 'articulos' => $articulos]);
+            $empresa = $get_funeraria->get_empresa_data();
+            $pdf = PDF::loadView('inventarios/ajuste_cantidades/ajustes', ['empresa' => $empresa, 'articulos' => $articulos]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = 'Reporte de Inventario Por Lotes.pdf';
             $pdf->setOptions([
-                'title'       => $name_pdf,
+                'title' => $name_pdf,
                 'footer-html' => view('inventarios.ajuste_cantidades.footer'),
             ]);
             $pdf->setOptions([
@@ -1035,7 +1035,7 @@ class InventarioController extends ApiController
                  */
                 /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
                 $email_controller = new EmailController();
-                $enviar_email     = $email_controller->pdf_email(
+                $enviar_email = $email_controller->pdf_email(
                     $email_to,
                     $request->destinatario,
                     'Reporte de Inventario Por Lotes',
@@ -1052,11 +1052,6 @@ class InventarioController extends ApiController
         }
     }
 
-
-
-
-
-
     public function control_compras(Request $request, $tipo_servicio = '')
     {
         if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
@@ -1066,41 +1061,40 @@ class InventarioController extends ApiController
 
         //validaciones
         $validaciones = [
-            'id_proveedor'             => 'required',
-            'fecha_compra'          => 'required',
-            'referencia'             => 'required',
-            'tasa_iva'=> 'required|numeric|min:0|max:25',
-            'pago_efectivo'=> 'required|numeric|min:0',
-            'pago_cheque'=> 'required|numeric|min:0',
-            'pago_tarjeta'=> 'required|numeric|min:0',
-            'pago_transferencia'=> 'required|numeric|min:0',
-            'articulos.*.id'                   => 'integer|min:1',
-            'articulos.*.cantidad'             => 'integer|min:1',
-            'articulos.*.costo_neto_normal'    => 'numeric|min:0',
+            'id_proveedor' => 'required',
+            'fecha_compra' => 'required',
+            'referencia' => 'required',
+            'tasa_iva' => 'required|numeric|min:0|max:25',
+            'pago_efectivo' => 'required|numeric|min:0',
+            'pago_cheque' => 'required|numeric|min:0',
+            'pago_tarjeta' => 'required|numeric|min:0',
+            'pago_transferencia' => 'required|numeric|min:0',
+            'articulos.*.id' => 'integer|min:1',
+            'articulos.*.cantidad' => 'integer|min:1',
+            'articulos.*.costo_neto_normal' => 'numeric|min:0',
             'articulos.*.costo_neto_descuento' => 'numeric|min:0',
-            'articulos.*.descuento_b'          => 'boolean',
-            'articulos.*.facturable_b'         => 'boolean',
-            'costo_incurrido_costo'             => '',
-            'costo_incurrido_detalle'             => '',
+            'articulos.*.descuento_b' => 'boolean',
+            'articulos.*.facturable_b' => 'boolean',
+            'costo_incurrido_costo' => '',
+            'costo_incurrido_detalle' => '',
         ];
 
-
-        if(trim($request->costo_incurrido_detalle)!=''){
-             $validaciones['costo_incurrido_costo']='required|numeric|min:0';
+        if (trim($request->costo_incurrido_detalle) != '') {
+            $validaciones['costo_incurrido_costo'] = 'required|numeric|min:0';
         }
 
-        if(trim($request->costo_incurrido_costo)!=''){
-             $validaciones['costo_incurrido_detalle']='required';
+        if (trim($request->costo_incurrido_costo) != '') {
+            $validaciones['costo_incurrido_detalle'] = 'required';
         }
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
-            'id_proveedor.requeired'             => 'Seleccione al proveedor.',
-            'fecha_compra.required'          => 'Seleccione la fecha de la compra.',
-            'referencia.required'=>'Ingrese una referencia, Núm. Factura o Nota de Venta.',
-            'tasa_iva.required'=>'Ingrese el IVA.',
-            'pago_efectivo.required'=> 'Ingrese la cantidad a pagar con efectivo.',
-            'pago_efectivo.min'=> 'El mínimo debe ser 0.00.',
+            'id_proveedor.requeired' => 'Seleccione al proveedor.',
+            'fecha_compra.required' => 'Seleccione la fecha de la compra.',
+            'referencia.required' => 'Ingrese una referencia, Núm. Factura o Nota de Venta.',
+            'tasa_iva.required' => 'Ingrese el IVA.',
+            'pago_efectivo.required' => 'Ingrese la cantidad a pagar con efectivo.',
+            'pago_efectivo.min' => 'El mínimo debe ser 0.00.',
         ];
         request()->validate(
             $validaciones,
@@ -1111,66 +1105,61 @@ class InventarioController extends ApiController
 
         /**calculando totales segun los articulos y sus descuentos */
 
-        $total_compra=0;
+        $total_compra = 0;
         foreach ($request->articulos as $key => $articulo) {
             /**validando que el tipo de articulo no sea servicio */
-           if($articulo['tipo_articulos_id']==2){
-              return $this->errorResponse('Los conceptos de la compra deben ser de tipo artículos.',409);
-           }
+            if ($articulo['tipo_articulos_id'] == 2) {
+                return $this->errorResponse('Los conceptos de la compra deben ser de tipo artículos.', 409);
+            }
 
-           if($articulo['descuento_b']==true){
-               $total_compra+=$articulo['cantidad']*$articulo['costo_neto_descuento'];
-           }else{
-                $total_compra+=$articulo['cantidad']*$articulo['costo_neto_normal'];
-           }
+            if ($articulo['descuento_b'] == true) {
+                $total_compra += $articulo['cantidad'] * $articulo['costo_neto_descuento'];
+            } else {
+                $total_compra += $articulo['cantidad'] * $articulo['costo_neto_normal'];
+            }
         }
 
-        $total_compra+=$request->costo_incurrido_costo;
+        $total_compra += $request->costo_incurrido_costo;
 
-
-        if(count($request->articulos)==0){
-              return $this->errorResponse('Ingrese los artículos de la compra.',409);
+        if (count($request->articulos) == 0) {
+            return $this->errorResponse('Ingrese los artículos de la compra.', 409);
         }
-        $total_pagado=$request->pago_efectivo+$request->pago_cheque+$request->pago_tarjeta+$request->pago_transferencia;
+        $total_pagado = $request->pago_efectivo + $request->pago_cheque + $request->pago_tarjeta + $request->pago_transferencia;
 
-
-        if($total_compra!=$total_pagado){
-              return $this->errorResponse('La cantidad pagada no cubre el total de la compra.',409);
+        if ($total_compra != $total_pagado) {
+            return $this->errorResponse('La cantidad pagada no cubre el total de la compra.', 409);
         }
-
-        
-
 
         try {
             DB::beginTransaction();
-            $id_compra=0;
-            
+            $id_compra = 0;
+
             $num_compra = (int) MovimientosInventario::max('num_compra');
             $num_compra++;
             $id_compra = DB::table('movimientos_inventario')->insertGetId(
                 [
-                    'folio_referencia'=>$request->referencia,
-                    'fecha_registro'          => now(),
-                    'fecha_movimiento'=>$request->fecha_compra,
-                    'registro_id'    => (int) $request->user()->id,
-                    'nota'=>$request->nota,
-                    'tipo_movimientos_id'=>3,//CM
-                    'proveedores_id'=>$request->id_proveedor,
-                    'pago_efectivo'=>$request->pago_efectivo,
-                    'pago_cheque'=>$request->pago_cheque,
-                    'pago_tarjeta'=>$request->pago_tarjeta,
-                    'pago_transferencia'=>$request->pago_transferencia,
-                    'iva_porcentaje'=>$request->tasa_iva,
-                    'num_compra'=> $num_compra
+                    'folio_referencia' => $request->referencia,
+                    'fecha_registro' => now(),
+                    'fecha_movimiento' => $request->fecha_compra,
+                    'registro_id' => (int) $request->user()->id,
+                    'nota' => $request->nota,
+                    'tipo_movimientos_id' => 3, //CM
+                    'proveedores_id' => $request->id_proveedor,
+                    'pago_efectivo' => $request->pago_efectivo,
+                    'pago_cheque' => $request->pago_cheque,
+                    'pago_tarjeta' => $request->pago_tarjeta,
+                    'pago_transferencia' => $request->pago_transferencia,
+                    'iva_porcentaje' => $request->tasa_iva,
+                    'num_compra' => $num_compra,
                 ]
             );
 
             DB::table('costos_incurridos')->insertGetId(
                 [
-                    'costo_detalle'=>$request->costo_incurrido_detalle,
-                    'costo_neto'=>$request->costo_incurrido_costo,
-                    'movimientos_inventario_id'=>$id_compra,
-                    'facturable_b'=>$request->facturable_b_gasto_incurrido
+                    'costo_detalle' => $request->costo_incurrido_detalle,
+                    'costo_neto' => $request->costo_incurrido_costo,
+                    'movimientos_inventario_id' => $id_compra,
+                    'facturable_b' => $request->facturable_b_gasto_incurrido,
                 ]
             );
 
@@ -1178,29 +1167,29 @@ class InventarioController extends ApiController
             $num_lote_inventario = (int) Inventario::max('num_lote_inventario');
             $num_lote_inventario++;
 
-             foreach ($request->articulos as $key => $articulo) {
-               DB::table('compra_detalle')->insertGetId(
+            foreach ($request->articulos as $key => $articulo) {
+                DB::table('compra_detalle')->insertGetId(
                     [
-                        'articulos_id'=>$articulo['id'],
-                        'movimientos_inventario_id'          => $id_compra,
-                        'cantidad'=>$articulo['cantidad'],
-                        'costo_neto'=>$articulo['costo_neto_normal'],
-                        'costo_neto_descuento'=>$articulo['costo_neto_descuento'],
-                        'facturable_b'=>$articulo['facturable_b'],
-                        'descuento_b'=>$articulo['descuento_b'],
+                        'articulos_id' => $articulo['id'],
+                        'movimientos_inventario_id' => $id_compra,
+                        'cantidad' => $articulo['cantidad'],
+                        'costo_neto' => $articulo['costo_neto_normal'],
+                        'costo_neto_descuento' => $articulo['costo_neto_descuento'],
+                        'facturable_b' => $articulo['facturable_b'],
+                        'descuento_b' => $articulo['descuento_b'],
                     ]
                 );
 
                 /**creando los lotes en el inventario */
                 //aqui voy
-               
-                 DB::table('inventario')->insertGetId(
+
+                DB::table('inventario')->insertGetId(
                     [
-                        'lotes_id'          => $id_compra,
-                        'articulos_id'=>$articulo['id'],
-                        'precio_compra_neto'          => $articulo['descuento_b']==1?$articulo['costo_neto_normal']:$articulo['costo_neto_descuento'],
-                        'existencia'=>$articulo['cantidad'],
-                        'num_lote_inventario'=>$num_lote_inventario
+                        'lotes_id' => $id_compra,
+                        'articulos_id' => $articulo['id'],
+                        'precio_compra_neto' => $articulo['descuento_b'] == 1 ? $articulo['costo_neto_normal'] : $articulo['costo_neto_descuento'],
+                        'existencia' => $articulo['cantidad'],
+                        'num_lote_inventario' => $num_lote_inventario,
                     ]
                 );
             }
@@ -1213,75 +1202,75 @@ class InventarioController extends ApiController
         }
     }
 
-     public function cancelar_compra(Request $request)
+    public function cancelar_compra(Request $request)
     {
-         //validaciones
+        //validaciones
         $validaciones = [
-            'id_compra'             => 'required|integer'
+            'id_compra' => 'required|integer',
         ];
 
         /**FIN DE VALIDACIONES*/
         $mensajes = [
-            'id_compra.required'             => 'Seleccione una compra a cancelar'
+            'id_compra.required' => 'Seleccione una compra a cancelar',
         ];
         request()->validate(
             $validaciones,
             $mensajes
         );
 
-        $id_compra=$request->id_compra;
+        $id_compra = $request->id_compra;
 
         /**se valida que este activa esta compra */
 
-        $compra=MovimientosInventario::where('id','=',$id_compra)->where('tipo_movimientos_id','=',3)->get()->toArray();
-        if(count($compra)>0){
+        $compra = MovimientosInventario::where('id', '=', $id_compra)->where('tipo_movimientos_id', '=', 3)->get()->toArray();
+        if (count($compra) > 0) {
             /**existe */
-            if($compra[0]['status']!=0){
+            if ($compra[0]['status'] != 0) {
                 /**se verifica si tiene lotes involucrados*/
-                $venta_detalle=VentaDetalle::where('lotes_id','=',$id_compra)->get()->toArray();
+                $venta_detalle = VentaDetalle::where('lotes_id', '=', $id_compra)->get()->toArray();
                 /*if(count($compra)>0){
-                    //ya tiene ventas asociadas y 
+                //ya tiene ventas asociadas y
                 }*/
                 //se pone todo el inventario en 0
                 try {
                     DB::beginTransaction();
                     DB::table('inventario')->where('lotes_id', $id_compra)->update(
                         [
-                            'existencia'               => 0
+                            'existencia' => 0,
                         ]
                     );
                     DB::table('movimientos_inventario')->where('id', $id_compra)->update(
                         [
-                            'status'               => 0
+                            'status' => 0,
                         ]
                     );
-                /**todo salio bien y se debe de guardar */
-                DB::commit();
-                return $id_compra;
+                    /**todo salio bien y se debe de guardar */
+                    DB::commit();
+                    return $id_compra;
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     return $th;
                 }
-            }else{
+            } else {
                 return $this->errorResponse('Esta compra ya fue cancelada anteriormente.', 409);
             }
-        }else{
+        } else {
             //no se puede cancelar esta compra
-             return $this->errorResponse('No se encontró esta venta registrada.', 409);
+            return $this->errorResponse('No se encontró esta venta registrada.', 409);
         }
 
     }
 
-     public function get_compras(Request $request, $num_compra = 'all', $paginated = false)
+    public function get_compras(Request $request, $num_compra = 'all', $paginated = false)
     {
-        
+
         $filtro_especifico_opcion = $request->filtro_especifico_opcion;
-        $proveedor                  = $request->proveedor;
-        $numero_control           = $request->numero_control;
-        $status                   = $request->status;
-        $fecha_compra          = $request->fecha_compra;
+        $proveedor = $request->proveedor;
+        $numero_control = $request->numero_control;
+        $status = $request->status;
+        $fecha_compra = $request->fecha_compra;
         $resultado_query = MovimientosInventario::
-        select(
+            select(
             'movimientos_inventario.id',
             "num_compra",
             "folio_referencia",
@@ -1302,7 +1291,7 @@ class InventarioController extends ApiController
             "pago_cheque",
             "pago_efectivo",
             "movimientos_inventario.status",
-                 /**venta operacion */
+            /**venta operacion */
             DB::raw(
                 '(0) AS subtotal'
             ),
@@ -1312,65 +1301,65 @@ class InventarioController extends ApiController
             DB::raw(
                 '(null) AS iva'
             ),
-             DB::raw(
+            DB::raw(
                 '(null) AS total'
             ),
             DB::raw(
                 '(NULL) AS status_texto'
-            ), 
+            ),
             'nombre_comercial',
             'razon_social',
             'nombre_contacto'
         )
-        ->with('compra_detalle')
-        ->with('registro:id,nombre')
-        ->with('cancelo:id,nombre')
-        ->with('costos_incurridos')
-        
-        /**solo ventas de planes funerarios */
-            //solo compras a proveedores
-        ->join('proveedores', 'proveedores.id', '=', 'movimientos_inventario.proveedores_id')
+            ->with('compra_detalle')
+            ->with('registro:id,nombre')
+            ->with('cancelo:id,nombre')
+            ->with('costos_incurridos')
 
-        ->where(function ($query) use ($proveedor) {
-            return $query->where('nombre_comercial', 'like', '%'.$proveedor.'%')
-                ->orWhere('razon_social', 'like', '%'.$proveedor.'%')
-                ->orWhere('nombre_contacto', 'like', '%'.$proveedor.'%');
-        })
-        ->where('tipo_movimientos_id',3)
-        ->where(function ($q) use ($num_compra) {
+        /**solo ventas de planes funerarios */
+        //solo compras a proveedores
+            ->join('proveedores', 'proveedores.id', '=', 'movimientos_inventario.proveedores_id')
+
+            ->where(function ($query) use ($proveedor) {
+                return $query->where('nombre_comercial', 'like', '%' . $proveedor . '%')
+                    ->orWhere('razon_social', 'like', '%' . $proveedor . '%')
+                    ->orWhere('nombre_contacto', 'like', '%' . $proveedor . '%');
+            })
+            ->where('tipo_movimientos_id', 3)
+            ->where(function ($q) use ($num_compra) {
                 if (trim($num_compra) == 'all' || trim($num_compra) > 0) {
-                     if ($num_compra > 0) {
+                    if ($num_compra > 0) {
                         $q->where('movimientos_inventario.num_compra', '=', $num_compra);
                     }
                 }
-        })
-        ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
+            })
+            ->where(function ($q) use ($numero_control, $filtro_especifico_opcion) {
                 if (trim($numero_control) != '') {
                     if ($filtro_especifico_opcion == 1) {
                         /**filtro por numero de registro */
                         $q->where('movimientos_inventario.num_compra', '=', $numero_control);
-                    }elseif ($filtro_especifico_opcion == 2) {
+                    } elseif ($filtro_especifico_opcion == 2) {
                         /**filtro por numero de referencia */
                         $q->where('movimientos_inventario.folio_referencia', '=', $numero_control);
                     }
                 }
-        })
-        ->where(function ($q) use ($status) {
+            })
+            ->where(function ($q) use ($status) {
                 if (trim($status) != '') {
                     $q->where('movimientos_inventario.status', '=', $status);
                 }
-        })
-        ->orderBy('movimientos_inventario.id', 'desc')
-        ->get();
+            })
+            ->orderBy('movimientos_inventario.id', 'desc')
+            ->get();
         /**verificando si el usario necesita el resultado paginado, todo o por id */
         $resultado = array();
         if ($paginated == 'paginated') {
             /**queire el resultado paginado */
             $resultado_query = $this->showAllPaginated($resultado_query)->toArray();
-            $resultado       = &$resultado_query['data'];
+            $resultado = &$resultado_query['data'];
         } else {
             $resultado_query = $resultado_query->toArray();
-            $resultado       = &$resultado_query;
+            $resultado = &$resultado_query;
         }
 
         foreach ($resultado as $index_venta => &$compra) {
@@ -1378,71 +1367,69 @@ class InventarioController extends ApiController
             /**descuento */
             /**IVA */
             /**importe */
-             foreach($compra['compra_detalle'] as &$detalle){
-                if($detalle['facturable_b']==1){
-                     $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
-                }else{
-                    $iva_porcentaje=1;
+            foreach ($compra['compra_detalle'] as &$detalle) {
+                if ($detalle['facturable_b'] == 1) {
+                    $iva_porcentaje = (1 + ($compra['iva_porcentaje'] / 100));
+                } else {
+                    $iva_porcentaje = 1;
                 }
 
-                $detalle['subtotal']=($detalle['costo_neto']/$iva_porcentaje);
-                if($detalle['descuento_b']==1){
-                    $detalle['descuento']=(($detalle['costo_neto']-$detalle['costo_neto_descuento'])/$iva_porcentaje);
-                }else{
-                    $detalle['descuento']=0;
+                $detalle['subtotal'] = ($detalle['costo_neto'] / $iva_porcentaje);
+                if ($detalle['descuento_b'] == 1) {
+                    $detalle['descuento'] = (($detalle['costo_neto'] - $detalle['costo_neto_descuento']) / $iva_porcentaje);
+                } else {
+                    $detalle['descuento'] = 0;
                 }
-                $detalle['iva']=($detalle['subtotal']-$detalle['descuento'])*($iva_porcentaje-1);
-                $detalle['importe']=(($detalle['subtotal']-$detalle['descuento'])*$detalle['cantidad'])*$iva_porcentaje;
+                $detalle['iva'] = ($detalle['subtotal'] - $detalle['descuento']) * ($iva_porcentaje - 1);
+                $detalle['importe'] = (($detalle['subtotal'] - $detalle['descuento']) * $detalle['cantidad']) * $iva_porcentaje;
 
+                $detalle['subtotal'] = round($detalle['subtotal'], 2);
+                $detalle['descuento'] = round($detalle['descuento'], 2);
+                $detalle['iva'] = round($detalle['iva'], 2);
+                $detalle['importe'] = round($detalle['importe'], 2);
 
-                $detalle['subtotal']=round($detalle['subtotal'],2);
-                $detalle['descuento']=round($detalle['descuento'],2);
-                $detalle['iva']=round($detalle['iva'],2);
-                $detalle['importe']=round($detalle['importe'],2);
+                $compra['subtotal'] += $detalle['subtotal'];
+                $compra['descuento'] += $detalle['descuento'];
+                $compra['iva'] += $detalle['iva'];
+                $compra['total'] += $detalle['importe'];
+            }
 
-                $compra['subtotal']+=$detalle['subtotal'];
-                $compra['descuento']+=$detalle['descuento'];
-                $compra['iva']+=$detalle['iva'];
-                $compra['total']+=$detalle['importe'];
-             }
-
-             /**agregagamos los costos incurridos */
-              foreach($compra['costos_incurridos'] as &$costo){
-                if($costo['facturable_b']==1){
-                     $iva_porcentaje=(1+($compra['iva_porcentaje']/100));
-                }else{
-                    $iva_porcentaje=1;
+            /**agregagamos los costos incurridos */
+            foreach ($compra['costos_incurridos'] as &$costo) {
+                if ($costo['facturable_b'] == 1) {
+                    $iva_porcentaje = (1 + ($compra['iva_porcentaje'] / 100));
+                } else {
+                    $iva_porcentaje = 1;
                 }
-                $costo['subtotal']=($costo['costo_neto']/$iva_porcentaje);
-                $costo['iva']=($costo['subtotal'])*($iva_porcentaje-1);
+                $costo['subtotal'] = ($costo['costo_neto'] / $iva_porcentaje);
+                $costo['iva'] = ($costo['subtotal']) * ($iva_porcentaje - 1);
 
-                $costo['subtotal']=round($costo['subtotal'],2);
-                $costo['iva']=round($costo['iva'],2);
+                $costo['subtotal'] = round($costo['subtotal'], 2);
+                $costo['iva'] = round($costo['iva'], 2);
 
+                $compra['subtotal'] += $costo['subtotal'];
+                $compra['iva'] += $costo['iva'];
+                $compra['total'] += $costo['costo_neto'];
+            }
 
-                $compra['subtotal']+=$costo['subtotal'];
-                $compra['iva']+=$costo['iva'];
-                $compra['total']+=$costo['costo_neto'];
-              }
+            $compra['subtotal'] = round($compra['subtotal'], 2);
+            $compra['iva'] = round($compra['iva'], 2);
+            $compra['total'] = round($compra['total'], 2);
 
-            $compra['subtotal']=round($compra['subtotal'],2);
-            $compra['iva']=round($compra['iva'],2);
-            $compra['total']=round($compra['total'],2);
-
-            $compra['total_compra_texto']=numeros_a_letras($compra['total']);
+            $compra['total_compra_texto'] = numeros_a_letras($compra['total']);
             $compra['fecha_compra_texto'] = fecha_abr($compra['fecha_movimiento']);
             $compra['fecha_registro_texto'] = fecha_abr($compra['fecha_registro']);
 
             /**status segun pago o cancelación */
-            $total_pagado=$compra['pago_efectivo']+$compra['pago_cheque']+$compra['pago_tarjeta']+$compra['pago_transferencia'];
+            $total_pagado = $compra['pago_efectivo'] + $compra['pago_cheque'] + $compra['pago_tarjeta'] + $compra['pago_transferencia'];
 
-            if($compra['status']==0){
-                $compra['status_texto']='Cancelada';
-            }else{
-                if($total_pagado>=$compra['total']){
-                     $compra['status_texto']='Pagada';
-                }else{
-                     $compra['status_texto']='Por liquidar';
+            if ($compra['status'] == 0) {
+                $compra['status_texto'] = 'Cancelada';
+            } else {
+                if ($total_pagado >= $compra['total']) {
+                    $compra['status_texto'] = 'Pagada';
+                } else {
+                    $compra['status_texto'] = 'Por liquidar';
                 }
             }
 
@@ -1452,25 +1439,22 @@ class InventarioController extends ApiController
         /**aqui se puede hacer todo los calculos para llenar la informacion calculada del servicio get_ventas */
     }
 
-
-
     public function pdf_nota_compra(Request $request)
     {
         /*
         $id_compra = 2;
         $email = false;
         $email_to = 'hector@gmail.com';
-        */
+         */
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-        
-        
-        $email             = $request->email_send === 'true' ? true : false;
-        $email_to          = $request->email_address;
+
+        $email = $request->email_send === 'true' ? true : false;
+        $email_to = $request->email_address;
         $requestVentasList = json_decode($request->request_parent[0], true);
-        $id_compra           = $requestVentasList['id_compra'];
+        $id_compra = $requestVentasList['id_compra'];
 
         //obtengo la informacion de esa venta
         $r = new \Illuminate\Http\Request();
@@ -1488,13 +1472,13 @@ class InventarioController extends ApiController
         }*/
 
         $get_funeraria = new EmpresaController();
-        $empresa       = $get_funeraria->get_empresa_data();
-        $pdf           = PDF::loadView('inventarios/nota_compra/nota', ['datos' => $compra, 'empresa' => $empresa]);
+        $empresa = $get_funeraria->get_empresa_data();
+        $pdf = PDF::loadView('inventarios/nota_compra/nota', ['datos' => $compra, 'empresa' => $empresa]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = strtoupper($compra['num_compra']) . '.pdf';
 
         $pdf->setOptions([
-            'title'       => $name_pdf,
+            'title' => $name_pdf,
             'footer-html' => view('inventarios.nota_compra.footer'),
         ]);
         if ($compra['status'] == 0) {
@@ -1521,7 +1505,7 @@ class InventarioController extends ApiController
              */
             /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
             $email_controller = new EmailController();
-            $enviar_email     = $email_controller->pdf_email(
+            $enviar_email = $email_controller->pdf_email(
                 $email_to,
                 $request->destinatario,
                 $compra['num_compra'],
@@ -1535,159 +1519,422 @@ class InventarioController extends ApiController
         }
     }
 
-
-
-     public function get_reporte_existencias_costos($fecha)
+    public function get_reporte_existencias_costos($fecha)
     {
-       $articulos=Articulos::where('tipo_articulos_id',1)
-        ->select(
-            'id',
-            'codigo_barras',
-            'descripcion',
-            'precio_compra',
-            'precio_venta',
-            'tipo_articulos_id',
-            'status',
-            DB::raw(
+        $articulos = Articulos::where('tipo_articulos_id', 1)
+            ->select(
+                'id',
+                'codigo_barras',
+                'descripcion',
+                'precio_compra',
+                'precio_venta',
+                'tipo_articulos_id',
+                'status',
+                DB::raw(
                     '(0) AS total_costo_articulo'
+                )
             )
-        )
-        ->with('inventario_existencia_cero')
-        ->get()->toArray();
-        
+            ->with('inventario_existencia_cero')
+            ->get()->toArray();
 
         //2- (EA) Entrada de lote por ajustes
-       $movimientos=MovimientosInventario::
-        select(
+        $movimientos = MovimientosInventario::
+            select(
             'id',
             'fecha_movimiento',
             'operaciones_id',
             'tipo_movimientos_id',
             'status'
         )
-        ->with('detalles')
-        ->with('articulosserviciofunerario')
-        ->with('compra_detalle')
-        ->with('costos_incurridos')
-        ->with('operacion:id,status')
-        ->where('fecha_movimiento','<=',$fecha)
-        ->orderBy('fecha_movimiento', 'asc')
-        ->get()->toArray();
-
+            ->with('detalles')
+            ->with('articulosserviciofunerario')
+            ->with('compra_detalle')
+            ->with('costos_incurridos')
+            ->with('operacion:id,status')
+            ->where('fecha_movimiento', '<=', $fecha)
+            ->orderBy('fecha_movimiento', 'asc')
+            ->get()->toArray();
 
         /**asigno el costo de compra a cada articulo directo desde el modulo de articulos.*/
-        foreach($articulos as $index_articulo => &$articulo){
-            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
-                if($articulo['id']==$lote['articulos_id']){
-                    $lote['costo_costeado']= $articulo['precio_compra'];
+        foreach ($articulos as $index_articulo => &$articulo) {
+            foreach ($articulo['inventario_existencia_cero'] as $index_lote => &$lote) {
+                if ($articulo['id'] == $lote['articulos_id']) {
+                    $lote['costo_costeado'] = $articulo['precio_compra'];
                 }
             }
         }
-        
-         foreach($movimientos as $index => $movimiento){
-             /**sumando los ingresos de mercancia por ajuste no inventariado
-              * 2- (EA) Entrada de lote por ajustes
-              */
-              if($movimiento['tipo_movimientos_id']==2){
-                   foreach($movimiento['detalles'] as $index_detalle => $detalle){
-                         foreach($articulos as $index_articulo => &$articulo){
-                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
-                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['lotes_id']==$lote['lotes_id']){
-                                    $lote['existencia']+=$detalle['existencia_fisica'];
-                                    $lote['ver_inventario_b']=1;
+
+        foreach ($movimientos as $index => $movimiento) {
+            /**sumando los ingresos de mercancia por ajuste no inventariado
+             * 2- (EA) Entrada de lote por ajustes
+             */
+            if ($movimiento['tipo_movimientos_id'] == 2) {
+                foreach ($movimiento['detalles'] as $index_detalle => $detalle) {
+                    foreach ($articulos as $index_articulo => &$articulo) {
+                        foreach ($articulo['inventario_existencia_cero'] as $index_lote => &$lote) {
+                            if ($detalle['articulos_id'] == $lote['articulos_id'] && $detalle['lotes_id'] == $lote['lotes_id']) {
+                                $lote['existencia'] += $detalle['existencia_fisica'];
+                                $lote['ver_inventario_b'] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**sumando o restando los ingresos de mercancia por ajuste no inventariado
+             * 1- (AI) Ajustes de inventario
+             */
+            if ($movimiento['tipo_movimientos_id'] == 1) {
+                foreach ($movimiento['detalles'] as $index_detalle => $detalle) {
+                    foreach ($articulos as $index_articulo => &$articulo) {
+                        foreach ($articulo['inventario_existencia_cero'] as $index_lote => &$lote) {
+                            if ($detalle['articulos_id'] == $lote['articulos_id'] && $detalle['lotes_id'] == $lote['lotes_id']) {
+                                $lote['existencia'] = $detalle['existencia_fisica'];
+                                $lote['ver_inventario_b'] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**sumando los ingresos de mercancia por compra
+             * 3- (CM) Compra de mercancías a proveedor
+             */
+            if ($movimiento['tipo_movimientos_id'] == 3 && $movimiento['status'] != 0) {
+                /**aqui saco el total de articulos y su costeo con tod y costo incurridos */
+                $cantidad_por_compra = 0;
+                foreach ($movimiento['compra_detalle'] as $index_detalle => $detalle) {
+                    $cantidad_por_compra += $detalle['cantidad'];
+                }
+                $costos_total = 0;
+                foreach ($movimiento['costos_incurridos'] as $index_costo => $costo) {
+                    $costos_total += $costo['costo_neto'];
+                }
+                /**el costo incuttido por articulo solo se le suma al costo de adquision de cada articulo */
+                $costo_incurrido_por_articulo = $costos_total / $cantidad_por_compra;
+
+                foreach ($movimiento['compra_detalle'] as $index_detalle => $detalle) {
+                    foreach ($articulos as $index_articulo => &$articulo) {
+                        foreach ($articulo['inventario_existencia_cero'] as $index_lote => &$lote) {
+                            if ($detalle['articulos_id'] == $lote['articulos_id'] && $detalle['movimientos_inventario_id'] == $lote['lotes_id']) {
+                                $lote['existencia'] += $detalle['cantidad'];
+                                $lote['ver_inventario_b'] = 1;
+                                if ($detalle['descuento_b'] == 1) {
+                                    $lote['costo_costeado'] = $detalle['costo_neto_descuento'] + $costo_incurrido_por_articulo;
+                                } else {
+                                    $lote['costo_costeado'] = $detalle['costo_neto'] + $costo_incurrido_por_articulo;
                                 }
                             }
                         }
-                   }
-              }
+                    }
+                }
+            }
 
-
-              /**sumando o restando los ingresos de mercancia por ajuste no inventariado
-              * 1- (AI) Ajustes de inventario
-              */
-              if($movimiento['tipo_movimientos_id']==1){
-                   foreach($movimiento['detalles'] as $index_detalle => $detalle){
-                         foreach($articulos as $index_articulo => &$articulo){
-                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
-                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['lotes_id']==$lote['lotes_id']){
-                                    $lote['existencia']=$detalle['existencia_fisica'];
-                                    $lote['ver_inventario_b']=1;
-                                }
+            /**restando mercancia vendida en los servicios funerarios
+             * 9- (VM) Venta de mercancías
+             */
+            if ($movimiento['tipo_movimientos_id'] == 9 && $movimiento['operacion']['status'] != 0) {
+                foreach ($movimiento['articulosserviciofunerario'] as $index_detalle => $detalle) {
+                    foreach ($articulos as $index_articulo => &$articulo) {
+                        foreach ($articulo['inventario_existencia_cero'] as $index_lote => &$lote) {
+                            if ($detalle['articulos_id'] == $lote['articulos_id'] && $detalle['lotes_id'] == $lote['lotes_id']) {
+                                $lote['existencia'] -= $detalle['cantidad'];
+                                $lote['ver_inventario_b'] = 1;
                             }
                         }
-                   }
-              }
-
-
-              /**sumando los ingresos de mercancia por compra
-              * 3- (CM) Compra de mercancías a proveedor
-              */
-              if($movimiento['tipo_movimientos_id']==3 && $movimiento['status']!=0){
-                  /**aqui saco el total de articulos y su costeo con tod y costo incurridos */
-                  $cantidad_por_compra=0;
-                  foreach($movimiento['compra_detalle'] as $index_detalle => $detalle){
-                      $cantidad_por_compra+=$detalle['cantidad'];
-                  }
-                  $costos_total=0;
-                  foreach($movimiento['costos_incurridos'] as $index_costo => $costo){
-                      $costos_total+=$costo['costo_neto'];
-                  }
-                  /**el costo incuttido por articulo solo se le suma al costo de adquision de cada articulo */
-                  $costo_incurrido_por_articulo=$costos_total/$cantidad_por_compra;
-
-                   foreach($movimiento['compra_detalle'] as $index_detalle => $detalle){
-                         foreach($articulos as $index_articulo => &$articulo){
-                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
-                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['movimientos_inventario_id']==$lote['lotes_id']){
-                                    $lote['existencia']+=$detalle['cantidad'];
-                                    $lote['ver_inventario_b']=1;
-                                    if($detalle['descuento_b']==1){
-                                        $lote['costo_costeado']= $detalle['costo_neto_descuento']+ $costo_incurrido_por_articulo;
-                                    }else{
-                                        $lote['costo_costeado']= $detalle['costo_neto']+ $costo_incurrido_por_articulo;
-                                    }
-                                }
-                            }
-                        }
-                   }
-              }
-
-
-              /**restando mercancia vendida en los servicios funerarios
-              * 9- (VM) Venta de mercancías
-              */
-              if($movimiento['tipo_movimientos_id']==9 && $movimiento['operacion']['status']!=0){
-                   foreach($movimiento['articulosserviciofunerario'] as $index_detalle => $detalle){
-                         foreach($articulos as $index_articulo => &$articulo){
-                            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
-                                if($detalle['articulos_id']==$lote['articulos_id'] && $detalle['lotes_id']==$lote['lotes_id']){
-                                  $lote['existencia']-=$detalle['cantidad'];
-                                  $lote['ver_inventario_b']=1;
-                                }
-                            }
-                        }
-                   }
-              }
-         }
-
-
-        unset($movimientos);
-         /**aqui saco los totales de los articulos */
-        $total=0;
-        foreach($articulos as $index_articulo => &$articulo){
-            foreach($articulo['inventario_existencia_cero'] as $index_lote => &$lote){
-                    $lote['total_costo_lote']= $lote['existencia']*$lote['costo_costeado'];
-                    $articulo['total_costo_articulo']+=$lote['total_costo_lote'];
-                    $total+=$articulo['total_costo_articulo'];
+                    }
+                }
             }
         }
-        
-    
 
-        $array=['fecha'=>fecha_abr($fecha),'costo_inventario'=>$total,'articulos'=>$articulos];
+        unset($movimientos);
+        /**aqui saco los totales de los articulos */
+        $total = 0;
+        foreach ($articulos as $index_articulo => &$articulo) {
+            foreach ($articulo['inventario_existencia_cero'] as $index_lote => &$lote) {
+                $lote['total_costo_lote'] = $lote['existencia'] * $lote['costo_costeado'];
+                $articulo['total_costo_articulo'] += $lote['total_costo_lote'];
+                $total += $articulo['total_costo_articulo'];
+            }
+        }
+
+        $array = ['fecha' => fecha_abr($fecha), 'costo_inventario' => $total, 'articulos' => $articulos];
         return $array;
     }
 
+    public function get_reporte_movimientos_inventario($fecha_inicio, $fecha_fin)
+    {
+        $inventario = Inventario::select('lotes_id', 'num_lote_inventario')->get()->toArray();
+        $movimientos = MovimientosInventario::
+            select(
+            'id',
+            'folio_referencia',
+            'fecha_movimiento',
+            'operaciones_id',
+            'tipo_movimientos_id',
+            'status',
+            'registro_id',
+            'proveedores_id',
+            DB::raw(
+                '(NULL) AS tipo_movimiento_texto'
+            ),
+            DB::raw(
+                '(NULL) AS fecha_movimiento_texto'
+            ),
+            DB::raw(
+                '(NULL) AS status_texto'
+            ),
+            'iva_porcentaje'
+        )
+            ->with('proveedor:id,razon_social')
+            ->with('registro:id,nombre')
+            ->with('detalle_ajuste_reporte.articulos:id,descripcion,precio_compra,precio_venta')
+            ->with('articulosserviciofunerario:articulos_id,descuento_b,facturable_b')
+            ->with('articulosserviciofunerario.articulo:id,descripcion,tipo_articulos_id,precio_compra,precio_venta')
+            ->with('compra_detalle.articulos:id,descripcion,precio_compra,precio_venta')
+            ->with('costos_incurridos')
+            ->with('operacion.cliente:id,nombre')
+            ->with('operacion:id,status,tasa_iva,servicios_funerarios_id,empresa_operaciones_id,clientes_id')
+            ->where('tipo_movimientos_id', 9)
+            ->whereBetween('fecha_movimiento', [$fecha_inicio, $fecha_fin])
+            ->orderBy('fecha_movimiento', 'asc')
+            ->get()->toArray();
 
+        $movimientos_costos = MovimientosInventario::
+            select(
+            'id',
+            'fecha_movimiento',
+            'tipo_movimientos_id',
+            'iva_porcentaje'
+        )
+            ->with('compra_detalle')
+            ->with('costos_incurridos')
+            ->whereIn('tipo_movimientos_id', [1, 2, 3])
+            ->orderBy('fecha_movimiento', 'asc')
+            ->get()->toArray();
+
+        foreach ($movimientos as $index => &$movimiento) {
+            $movimiento['fecha_movimiento_texto'] = fecha_abr($movimiento['fecha_movimiento']);
+            $movimiento['status_texto'] = $movimiento['status'] != 0 ? 'Activa' : 'Cancelada';
+
+            if ($movimiento['tipo_movimientos_id'] == 1) {
+                $movimiento['tipo_movimiento_texto'] = 'AI) Ajustes de inventario';
+                /**hago el erreglo con el ingreso o salida de mercancia */
+                $ajuste = array();
+                foreach ($movimiento['detalle_ajuste_reporte'] as $index_detalle => $detalle) {
+                    if ($detalle['existencia_fisica'] != $detalle['existencia_sistema']) {
+                        /**busco el numero de lote en el inventario */
+                        $num_lote = 0;
+                        foreach ($inventario as $lote) {
+                            if ($lote['lotes_id'] == $detalle['lotes_id']) {
+                                $num_lote = $lote['num_lote_inventario'];
+                                break;
+                            }
+                        }
+                        array_push($ajuste,
+                            [
+                                'tipo' => $detalle['existencia_fisica'] > $detalle['existencia_sistema'] ? 'Ingreso' : 'Salida',
+                                'cantidad' => abs($detalle['existencia_fisica'] - $detalle['existencia_sistema']),
+                                'nueva_existencia' => $detalle['existencia_fisica'],
+                                'articulo' => $detalle['articulos']['descripcion'],
+                                'costo' => $detalle['articulos']['precio_compra'],
+                                'precio_venta' => $detalle['articulos']['precio_venta'],
+                                'nota' => $detalle['nota'],
+                                'num_lote_inventario' => $num_lote,
+                            ]
+                        );
+                    }
+
+                }
+                $movimiento['ajuste_inventario'] = $ajuste;
+            } elseif ($movimiento['tipo_movimientos_id'] == 2) {
+                //Entrada de lote por ajustes
+                $movimiento['tipo_movimiento_texto'] = '(EA) Inventario inicial';
+                /**hago el erreglo con el ingreso de mercancia */
+                $ingresos = array();
+                foreach ($movimiento['detalle_ajuste_reporte'] as $index_detalle => $detalle) {
+                    /**busco el numero de lote en el inventario */
+                    $num_lote = 0;
+                    foreach ($inventario as $lote) {
+                        if ($lote['lotes_id'] == $detalle['lotes_id']) {
+                            $num_lote = $lote['num_lote_inventario'];
+                            break;
+                        }
+                    }
+                    array_push($ingresos,
+                        [
+                            'cantidad' => $detalle['existencia_fisica'],
+                            'articulo' => $detalle['articulos']['descripcion'],
+                            'costo' => $detalle['articulos']['precio_compra'],
+                            'precio_venta' => $detalle['articulos']['precio_venta'],
+                            'num_lote_inventario' => $num_lote,
+                        ]
+                    );
+                }
+                $movimiento['ingreso_mercancia'] = $ingresos;
+            } elseif ($movimiento['tipo_movimientos_id'] == 3) {
+                /**calculo la tasa del iva para hacer calculos de impuestos */
+                $tasa_iva_compra = ($movimiento['iva_porcentaje'] / 100) + 1;
+                $movimiento['tipo_movimiento_texto'] = '(CM) Compra de mercancías a proveedor';
+                /**hago el erreglo con el ingreso de mercancia */
+                $ingresos = array();
+                /**saco la cantidad de articulos para costear los costos incurridos */
+                $cantidad = 0;
+                foreach ($movimiento['compra_detalle'] as $index_detalle => $detalle) {
+                    $cantidad += $detalle['cantidad'];
+                }
+
+                $suma_costos_incurridos = 0;
+                $impuestos_costos_incurridos = 0;
+                foreach ($movimiento['costos_incurridos'] as $index_detalle => $costo) {
+                    $suma_costos_incurridos += $costo['costo_neto'];
+                    if ($costo['facturable_b'] == 1) {
+                        $impuestos_costos_incurridos += $costo['costo_neto'] - ($costo['costo_neto'] / $tasa_iva_compra);
+                    }
+                }
+
+                $costo_incurrido_articulo = $suma_costos_incurridos / $cantidad;
+                $impuestos_costos_incurridos = $impuestos_costos_incurridos / $cantidad;
+
+                foreach ($movimiento['compra_detalle'] as $index_detalle => $detalle) {
+                    /**busco el numero de lote en el inventario */
+                    $num_lote = 0;
+                    foreach ($inventario as $lote) {
+                        if ($lote['lotes_id'] == $detalle['movimientos_inventario_id']) {
+                            $num_lote = $lote['num_lote_inventario'];
+                            break;
+                        }
+                    }
+
+                    /**sumo los costos incurridos */
+                    $costo_articulo = $detalle['descuento_b'] == 1 ? $detalle['costo_neto_descuento'] : $detalle['costo_neto'];
+                    $impuestos = 0;
+                    if ($detalle['facturable_b'] == 1) {
+                        $impuestos = $costo_articulo - ($costo_articulo / $tasa_iva_compra);
+                    }
+                    $costo_articulo = $costo_articulo + $costo_incurrido_articulo;
+
+                    $impuesto_x_articulo = $impuestos + ($impuestos_costos_incurridos);
+                    array_push($ingresos,
+                        [
+                            'cantidad' => $detalle['cantidad'],
+                            'articulo' => $detalle['articulos']['descripcion'],
+                            'costo' => round($costo_articulo),
+                            'precio_venta' => 'N/A',
+                            'num_lote_inventario' => $num_lote,
+                            'impuestos' => round($impuesto_x_articulo, 2),
+                        ]
+                    );
+                    $movimiento['ingreso_compra'] = $ingresos;
+                }
+            } elseif ($movimiento['tipo_movimientos_id'] == 9) {
+                /**calculo la tasa del iva para hacer calculos de impuestos */
+                $tasa_iva_venta = ($movimiento['operacion']['tasa_iva'] / 100) + 1;
+
+                $movimiento['tipo_movimiento_texto'] = '(VM) Venta de mercancías';
+                /**haciendo el arreglo para cuando se trata de venta de mercancia por servicios */
+
+                $arreglo_salida = [];
+
+                if ($movimiento['operacion']['empresa_operaciones_id'] == 3) {
+                    $movimiento['operacion']['operacion_texto'] = 'Servicio Funerario';
+                }
+                if ($movimiento['operacion']['status'] != 0) {
+                    $movimiento['operacion']['status_texto'] = 'Activo';
+                } else {
+                    $movimiento['operacion']['status_texto'] = 'Cancelado';
+                }
+
+                $tiene_articulos_inventariables = false;
+                if (count($movimiento['articulosserviciofunerario']) > 0) {
+                    foreach ($movimiento['articulosserviciofunerario'] as $index_articulo => $articulo) {
+                        /**slo se toman en cuenta los articulos que son inventariables */
+                        if ($articulo['articulo']['tipo_articulos_id'] == 1) {
+                            $tiene_articulos_inventariables = true;
+
+                            /**busco el numero de lote en el inventario */
+                            $num_lote = 0;
+                            foreach ($inventario as $lote) {
+                                if ($lote['lotes_id'] == $articulo['lotes_id']) {
+                                    $num_lote = $lote['num_lote_inventario'];
+                                    break;
+                                }
+                            }
+
+                            /**obtengo el precio de venta del articulo en el servicio funerario */
+                            $precio_venta = $articulo['descuento_b'] == 1 ? $articulo['costo_neto_normal'] : $articulo['costo_neto_normal'];
+                            $impuesto = 0;
+                            if ($articulo['facturable_b'] == 1) {
+                                $impuesto = ($precio_venta - ($precio_venta / $tasa_iva_venta)) * $articulo['cantidad'];
+                            }
+
+                            /**verifico el costo de compra del producto */
+
+                            /**recorro el arreglo de movimientos de inventario para saber s el costo será tomado de una compra
+                             * o será el del precio de compra directo desde un ajuste.
+                             */
+                            $costo_articulo = 0;
+                            $suma_costos_incurridos = 0;
+                            $suma_impuestos_costos_incurridos = 0;
+                            $cantidad_articulos = 0;
+
+                            foreach ($movimientos_costos as $movimiento_costo) {
+                                $tasa_iva_compra = ($movimiento_costo['iva_porcentaje'] / 100) + 1;
+                                if ($movimiento_costo['id'] == $articulo['lotes_id']) {
+                                    /**si es de tipo compra se toma el costo del artículo de la comrpa tomando en cuenta
+                                     * los costos incurridos
+                                     */
+                                    if ($movimiento_costo['tipo_movimientos_id'] != 3) {
+                                        /**se toma el costo de precio de compra desde el catalogo de articulos */
+                                        $costo_articulo = $articulo['articulo']['precio_compra'];
+                                    } else {
+                                        /**calcular el costo del articulo buscand la compra */
+                                        foreach ($movimiento_costo['compra_detalle'] as $articulo_compra) {
+                                            $cantidad_articulos += $articulo_compra['cantidad'];
+                                        }
+                                        foreach ($movimiento_costo['costos_incurridos'] as $costo_incurrido) {
+                                            $suma_costos_incurridos += $costo_incurrido['costo_neto'];
+                                            if ($costo_incurrido['facturable_b'] == 1) {
+                                                $suma_impuestos_costos_incurridos += ($suma_impuestos_costos_incurridos - ($suma_impuestos_costos_incurridos / $tasa_iva_compra));
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+
+                            $cantidad_articulos = $cantidad_articulos == 0 ? 1 : $cantidad_articulos;
+                            $costo_articulo += ($suma_costos_incurridos / $cantidad_articulos);
+
+                            array_push($arreglo_salida,
+                                [
+                                    'lotes_id' => $articulo['lotes_id'],
+                                    'cantidad' => $articulo['cantidad'],
+                                    'articulo' => $articulo['articulo']['descripcion'],
+                                    'costo' => round($costo_articulo),
+                                    'precio_venta' => $precio_venta,
+                                    'num_lote_inventario' => $num_lote,
+                                    'impuestos' => round($impuesto, 2),
+                                    'utilidad' => round($precio_venta-$costo_articulo, 2),
+                                ]
+                            );
+                        }
+                    }
+                }
+                if (!$tiene_articulos_inventariables) {
+                    /**si no tiene articulos este movimiento se quita del arreglo final */
+                    unset($movimientos[$index]);
+                } else {
+                    $movimiento['salida_venta'] = $arreglo_salida;
+                }
+            }
+            unset($movimiento['compra_detalle']);
+            unset($movimiento['detalle_ajuste_reporte']);
+            unset($movimiento['articulosserviciofunerario']);
+            unset($movimiento['costos_incurridos']);
+        }
+
+        return $movimientos;
+    }
 
 }

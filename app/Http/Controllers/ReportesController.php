@@ -35,9 +35,9 @@ class ReportesController extends ApiController
             $fecha_inicio=$datosRequest['fecha_inicio'];
             $fecha_fin=$datosRequest['fecha_fin'];
         }else{
-            return $this->errorResponse('Error al generar el reporte',409);
+            //return $this->errorResponse('Error al generar el reporte',409);
             $modulo=1;
-            $reporte=1;
+            $reporte=2;
             $fecha=now();
             $fecha_inicio='1994-01-01';
             $fecha_fin=now();
@@ -70,6 +70,15 @@ class ReportesController extends ApiController
                 /**Existencias y Costos*/
                 $datos_reporte=$inventario->get_reporte_existencias_costos($fecha);
                 $name_pdf='Existencias y Costos';
+                $pdf_template='reportes/inventario/existencias_costos/reporte';
+             } elseif ($reporte == 2) {
+                 /**valido que ingresó la fecha */
+                 if(trim($fecha)==null){
+                     return $this->errorResponse('Ingrese la fecha para generar el reporte.',409);
+                 }
+                /**Movimientos del inventario*/
+                return $datos_reporte=$inventario->get_reporte_movimientos_inventario($fecha_inicio,$fecha_fin);
+                $name_pdf='Movimientos del Inventario';
                 $pdf_template='reportes/inventario/existencias_costos/reporte';
              }
         }

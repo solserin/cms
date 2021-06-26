@@ -87,4 +87,11 @@ class MovimientosInventario extends Model
     {
         return $this->hasMany('App\CostosIncurridos', 'movimientos_inventario_id', 'id');
     }
+
+
+     public function detalle_ajuste_reporte()
+    {
+        return $this->hasMany('App\AjusteInventarioDetalle', 'movimientos_inventario_id', 'id')
+            ->orderBy('ajuste_detalle.articulos_id', 'asc');
+    }
 }
