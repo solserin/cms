@@ -77,9 +77,9 @@ class ReportesController extends ApiController
                      return $this->errorResponse('Ingrese la fecha para generar el reporte.',409);
                  }
                 /**Movimientos del inventario*/
-                return $datos_reporte=$inventario->get_reporte_movimientos_inventario($fecha_inicio,$fecha_fin);
+                $datos_reporte=$inventario->get_reporte_movimientos_inventario($fecha_inicio,$fecha_fin);
                 $name_pdf='Movimientos del Inventario';
-                $pdf_template='reportes/inventario/existencias_costos/reporte';
+                $pdf_template='reportes/inventario/movimientos_inventario/reporte';
              }
         }
 
