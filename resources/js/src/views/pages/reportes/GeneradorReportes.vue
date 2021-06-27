@@ -248,9 +248,18 @@ export default {
     },
 
     openReporte() {
-      if (!this.validarFecha()) {
-        return;
+      if (this.form.modulo.value == 1) {
+        if (this.form.reporte.value == 1) {
+          if (!this.validarFecha()) {
+            return;
+          }
+        } else if (this.form.reporte.value == 2) {
+          if (!this.validarRangoFecha()) {
+            return;
+          }
+        }
       }
+
       this.ListaReportes = [];
       this.ListaReportes.push({
         nombre: this.form.reporte.label,
@@ -269,6 +278,23 @@ export default {
         this.$vs.notify({
           title: "Error",
           text: "Seleccione la fecha del reporte.",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+          position: "bottom-right",
+          time: "6000",
+        });
+        return false;
+      } else {
+        return true;
+      }
+    },
+
+    validarRangoFecha() {
+      if (this.form.fecha_inicio == "" || this.form.fecha_fin == "") {
+        this.$vs.notify({
+          title: "Error",
+          text: "Seleccione el rango de fechas para el reporte.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",

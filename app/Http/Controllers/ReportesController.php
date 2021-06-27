@@ -30,9 +30,9 @@ class ReportesController extends ApiController
 
          if(isset($datosRequest['modulo']['value'])){
             $modulo=$datosRequest['modulo']['value'];
-            $reporte=$datosRequest['modulo']['value'];
+            $reporte=$datosRequest['reporte']['value'];
             $fecha=$datosRequest['fecha'];
-            $fecha_inicio=$datosRequest['fecha_inicio'];
+             $fecha_inicio=$datosRequest['fecha_inicio'];
             $fecha_fin=$datosRequest['fecha_fin'];
         }else{
             //return $this->errorResponse('Error al generar el reporte',409);
@@ -42,9 +42,6 @@ class ReportesController extends ApiController
             $fecha_inicio='1994-01-01';
             $fecha_fin=now();
         }
-
-    
-        
 
         $inventario = new InventarioController();
         /**obteniendo datos para los reportes segun la peticion del usuario */
@@ -73,8 +70,8 @@ class ReportesController extends ApiController
                 $pdf_template='reportes/inventario/existencias_costos/reporte';
              } elseif ($reporte == 2) {
                  /**valido que ingresó la fecha */
-                 if(trim($fecha)==null){
-                     return $this->errorResponse('Ingrese la fecha para generar el reporte.',409);
+                 if(trim($fecha_inicio)==null || trim($fecha_fin)==null){
+                     return $this->errorResponse('Ingrese el rango de fechas para generar el reporte',409);
                  }
                 /**Movimientos del inventario*/
                 $datos_reporte=$inventario->get_reporte_movimientos_inventario($fecha_inicio,$fecha_fin);

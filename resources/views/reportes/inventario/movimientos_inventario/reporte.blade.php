@@ -41,8 +41,8 @@
                         </p>
 
                         <p class="line-xxs texto-sm bold mt-4">
-                            <span class="bg-gray">COSTO TOTAL DEL INVENTARIO
-                                $ 000.00</span>
+                            <span class="bg-gray">Total de Movimientos {{ $datos['numero_movimientos'] }}
+                            </span>
                         </p>
                     </div>
                 </th>
@@ -200,7 +200,14 @@
 
             <td class="right light px-2" colspan="2">
                 <div class="mt-2 bold">
-                    $ Total de la compra $ {{ number_format($movimiento['total_movimiento'],2) }}
+                    Total de la compra $ {{ number_format($movimiento['total_movimiento'],2) }}
+                </div>
+            </td>
+        </tr>
+        <tr class="mt-2">
+            <td class="left light px-2" colspan="2">
+                <div class="mt-2">
+                    <span class="bold">Proveedor</span> {{ $movimiento['proveedor']['razon_social'] }}
                 </div>
             </td>
         </tr>

@@ -2009,7 +2009,7 @@ class InventarioController extends ApiController
         }
 
         $rango_fechas = 'del ' . fecha_abr($fecha_inicio) . ' al ' . fecha_abr($fecha_fin);
-        $array = ['fecha' => $rango_fechas, 'movimientos' => $movimientos];
+        $array = ['fecha' => $rango_fechas, 'movimientos' => $movimientos,'numero_movimientos'=>count($movimientos)];
         return $array;
     }
 
