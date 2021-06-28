@@ -32,15 +32,15 @@ class ReportesController extends ApiController
             $modulo=$datosRequest['modulo']['value'];
             $reporte=$datosRequest['reporte']['value'];
             $fecha=$datosRequest['fecha'];
-             $fecha_inicio=$datosRequest['fecha_inicio'];
+            $fecha_inicio=$datosRequest['fecha_inicio'];
             $fecha_fin=$datosRequest['fecha_fin'];
         }else{
             //return $this->errorResponse('Error al generar el reporte',409);
             $modulo=1;
-            $reporte=2;
+            $reporte=3;
             $fecha=now();
-            $fecha_inicio='1994-01-01';
-            $fecha_fin=now();
+            $fecha_inicio='2021-06-01';
+            $fecha_fin='2021-07-01';
         }
 
         $inventario = new InventarioController();
@@ -69,13 +69,22 @@ class ReportesController extends ApiController
                 $name_pdf='Existencias y Costos';
                 $pdf_template='reportes/inventario/existencias_costos/reporte';
              } elseif ($reporte == 2) {
-                 /**valido que ingresó la fecha */
+                 /**valido que ingresó las fechas */
                  if(trim($fecha_inicio)==null || trim($fecha_fin)==null){
                      return $this->errorResponse('Ingrese el rango de fechas para generar el reporte',409);
                  }
                 /**Movimientos del inventario*/
                 $datos_reporte=$inventario->get_reporte_movimientos_inventario($fecha_inicio,$fecha_fin);
                 $name_pdf='Movimientos del Inventario';
+                $pdf_template='reportes/inventario/movimientos_inventario/reporte';
+             }elseif ($reporte == 3) {
+                /**valido que ingresó las fechas */
+                 if(trim($fecha_inicio)==null || trim($fecha_fin)==null){
+                     return $this->errorResponse('Ingrese el rango de fechas para generar el reporte',409);
+                 }
+                /**Movimientos del inventario*/
+                return $datos_reporte=$inventario->get_reporte_inventario_con_rotacion($fecha_inicio,$fecha_fin);
+                $name_pdf='Inventario Actual Global en Importes (Costo Definido por el Prodcuto)';
                 $pdf_template='reportes/inventario/movimientos_inventario/reporte';
              }
         }
