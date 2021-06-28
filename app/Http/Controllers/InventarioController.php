@@ -2034,14 +2034,17 @@ class InventarioController extends ApiController
                 DB::raw(
                     '(0) AS inventario_final'
                 ),
-                 DB::raw(
+                DB::raw(
                     '(0) AS costo_inventario_inicial'
                 ),
                 DB::raw(
                     '(0) AS costo_inventario_final'
                 ),
                 DB::raw(
-                    '(0) AS costo_total'
+                    '(0) AS costo_entradas'
+                ),
+                DB::raw(
+                    '(0) AS costo_salidas'
                 ),
                 DB::raw(
                     '(0) AS rotacion'
@@ -2066,15 +2069,31 @@ class InventarioController extends ApiController
             ->with('compra_detalle')
             ->with('costos_incurridos')
             ->with('operacion:id,status')
+            ->whereIn('tipo_movimientos_id', [1, 2, 3, 9])
         //->where('tipo_movimientos_id', 9)
             ->where('fecha_movimiento', '<=', $fecha_fin)
             ->orderBy('fecha_movimiento', 'asc')
             ->get()->toArray();
 
+        $movimientos_costos = MovimientosInventario::
+            select(
+            'id',
+            'fecha_movimiento',
+            'tipo_movimientos_id',
+            'iva_porcentaje'
+        )
+            ->with('compra_detalle')
+            ->with('costos_incurridos')
+            ->whereIn('tipo_movimientos_id', [1, 2, 3])
+            ->orderBy('fecha_movimiento', 'asc')
+            ->get()->toArray();
+
         /**obtener el inventario inicial  (hasta la fecha de inicio) */
         foreach ($articulos as $index_articulo => &$articulo) {
-            $restar_inventario_antes_fecha_inicial = 0;
-            $sumar_inventario_antes_fecha_inicial  = 0;
+            $restar_inventario_antes_fecha_inicial       = 0;
+            $sumar_inventario_antes_fecha_inicial        = 0;
+            $restar_costo_inventario_antes_fecha_inicial = 0;
+            $sumar_costo_inventario_antes_fecha_inicial  = 0;
 
             foreach ($movimientos as $index_movimiento => &$movimiento) {
                 if ($movimiento['status'] == 0) {
@@ -2088,7 +2107,7 @@ class InventarioController extends ApiController
                         if ($detalle['articulos_id'] == $articulo['id']) {
                             if ($movimiento['fecha_movimiento'] < $fecha_inicio) {
                                 $articulo['inventario_inicial'] += $detalle['existencia_fisica'];
-                                $articulo['costo_inventario_inicial'] += $detalle['existencia_fisica']*$articulo['precio_compra'];
+                                $articulo['costo_inventario_inicial'] += $detalle['existencia_fisica'] * $articulo['precio_compra'];
                             }
                         }
                     }
@@ -2096,18 +2115,63 @@ class InventarioController extends ApiController
                     foreach ($movimiento['detalles'] as $index_movimiento_detalle => &$detalle) {
                         if ($detalle['existencia_fisica'] != $detalle['existencia_sistema']) {
                             if ($detalle['articulos_id'] == $articulo['id']) {
+                                /**
+                                 * Buscamos los lotes para saber el costo del articulo
+                                 */
+                                $costo_articulo         = 0;
+                                $suma_costos_incurridos = 0;
+                                $cantidad_articulos     = 0;
+                                foreach ($movimientos_costos as $movimiento_costo) {
+                                    if ($movimiento_costo['id'] == $detalle['lotes_id']) {
+                                        /**si es de tipo compra se toma el costo del artículo de la comrpa tomando en cuenta
+                                         * los costos incurridos
+                                         */
+                                        if ($movimiento_costo['tipo_movimientos_id'] != 3) {
+                                            /**se toma el costo de precio de compra desde el catalogo de articulos */
+                                            $costo_articulo = $articulo['precio_compra'];
+                                        } else {
+                                            foreach ($movimiento_costo['compra_detalle'] as $index_movimiento_costo => &$costo) {
+                                                if ($costo['id_articulo'] == $articulo['id']) {
+                                                    $costo_articulo = $costo['descuento_b'] == 1 ? $costo['costo_neto_descuento'] : $costo['costo_neto'];
+                                                    break;
+                                                }
+                                            }
+                                            /**calcular el costo del articulo buscand la compra */
+                                            foreach ($movimiento_costo['compra_detalle'] as $articulo_compra) {
+                                                $cantidad_articulos += $articulo_compra['cantidad'];
+                                            }
+                                            foreach ($movimiento_costo['costos_incurridos'] as $costo_incurrido) {
+                                                $suma_costos_incurridos += $costo_incurrido['costo_neto'];
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                                $cantidad_articulos = $cantidad_articulos == 0 ? 1 : $cantidad_articulos;
+                                $costo_articulo += round($suma_costos_incurridos / $cantidad_articulos, 2);
+
                                 if ($movimiento['fecha_movimiento'] < $fecha_inicio) {
                                     if ($detalle['existencia_fisica'] > $detalle['existencia_sistema']) {
-                                        $sumar_inventario_antes_fecha_inicial += $detalle['existencia_fisica'] - $detalle['existencia_sistema'];
+                                        /**fue ingreso */
+                                        $cantidad = $detalle['existencia_fisica'] - $detalle['existencia_sistema'];
+                                        $sumar_inventario_antes_fecha_inicial += $cantidad;
+                                        $sumar_costo_inventario_antes_fecha_inicial += $cantidad * $costo_articulo;
                                     } else {
-                                        $restar_inventario_antes_fecha_inicial += $detalle['existencia_sistema'] - $detalle['existencia_fisica'];
+                                        /**fue salida */
+                                        $cantidad = $detalle['existencia_sistema'] - $detalle['existencia_fisica'];
+                                        $restar_inventario_antes_fecha_inicial += $cantidad;
+                                        $restar_costo_inventario_antes_fecha_inicial += $cantidad * $costo_articulo;
                                     }
                                 } else {
                                     /**hago historial de entradas y salidas */
                                     if ($detalle['existencia_fisica'] > $detalle['existencia_sistema']) {
-                                        $articulo['entradas'] += $detalle['existencia_fisica'] - $detalle['existencia_sistema'];
+                                        $cantidad = $detalle['existencia_fisica'] - $detalle['existencia_sistema'];
+                                        $articulo['entradas'] += $cantidad;
+                                        $articulo['costo_entradas'] += $cantidad * $costo_articulo;
                                     } else {
-                                        $articulo['salidas'] += $detalle['existencia_sistema'] - $detalle['existencia_fisica'];
+                                        $cantidad = $detalle['existencia_sistema'] - $detalle['existencia_fisica'];
+                                        $articulo['salidas'] += $cantidad;
+                                        $articulo['costo_salidas'] += $cantidad * $costo_articulo;
                                     }
                                 }
                             }
@@ -2117,13 +2181,33 @@ class InventarioController extends ApiController
                     }
                 } else if ($movimiento['tipo_movimientos_id'] == 3) {
                     /**haciendo compras */
+                    $cantidad_articulos = 0;
+                    foreach ($movimiento['compra_detalle'] as $articulo_compra) {
+                        $cantidad_articulos += $articulo_compra['cantidad'];
+                    }
+                    $suma_costos_incurridos = 0;
+                    foreach ($movimiento['costos_incurridos'] as $costo_incurrido) {
+                        $suma_costos_incurridos += $costo_incurrido['costo_neto'];
+                    }
+
+                    $cantidad_articulos = $cantidad_articulos == 0 ? 1 : $cantidad_articulos;
+
                     foreach ($movimiento['compra_detalle'] as $index_movimiento_detalle => &$detalle) {
                         if ($detalle['id_articulo'] == $articulo['id']) {
+                            /**
+                             * Buscamos los lotes para saber el costo del articulo
+                             */
+                            $costo_articulo = $detalle['descuento_b'] == 1 ? $detalle['costo_neto_descuento'] : $detalle['costo_neto'];
+                            $costo_articulo += round($suma_costos_incurridos / $cantidad_articulos, 2);
+
                             if ($movimiento['fecha_movimiento'] < $fecha_inicio) {
                                 $sumar_inventario_antes_fecha_inicial += $detalle['cantidad'];
+                                $sumar_costo_inventario_antes_fecha_inicial += $detalle['cantidad'] * $costo_articulo;
                             } else {
                                 $articulo['entradas'] += $detalle['cantidad'];
+                                $articulo['costo_entradas'] += $detalle['cantidad'] * $costo_articulo;
                             }
+                            break;
                         }
                     }
                 } else if ($movimiento['tipo_movimientos_id'] == 9) {
@@ -2132,10 +2216,50 @@ class InventarioController extends ApiController
                         if (count($movimiento['articulosserviciofunerario']) > 0) {
                             foreach ($movimiento['articulosserviciofunerario'] as $index_movimiento_detalle => &$detalle) {
                                 if ($detalle['articulos_id'] == $articulo['id']) {
+
+                                    /**
+                                     * Buscamos los lotes para saber el costo del articulo
+                                     */
+                                    $costo_articulo         = 0;
+                                    $suma_costos_incurridos = 0;
+                                    $cantidad_articulos     = 0;
+                                    foreach ($movimientos_costos as $movimiento_costo) {
+                                        if ($movimiento_costo['id'] == $detalle['lotes_id']) {
+                                            /**si es de tipo compra se toma el costo del artículo de la comrpa tomando en cuenta
+                                             * los costos incurridos
+                                             */
+                                            if ($movimiento_costo['tipo_movimientos_id'] != 3) {
+                                                /**se toma el costo de precio de compra desde el catalogo de articulos */
+                                                $costo_articulo = $articulo['precio_compra'];
+                                            } else {
+
+                                                foreach ($movimiento_costo['compra_detalle'] as $index_movimiento_costo => &$costo) {
+                                                    if ($costo['id_articulo'] == $articulo['id']) {
+                                                        $costo_articulo = $costo['descuento_b'] == 1 ? $costo['costo_neto_descuento'] : $costo['costo_neto'];
+                                                        break;
+                                                    }
+                                                }
+
+                                                /**calcular el costo del articulo buscand la compra */
+                                                foreach ($movimiento_costo['compra_detalle'] as $articulo_compra) {
+                                                    $cantidad_articulos += $articulo_compra['cantidad'];
+                                                }
+                                                foreach ($movimiento_costo['costos_incurridos'] as $costo_incurrido) {
+                                                    $suma_costos_incurridos += $costo_incurrido['costo_neto'];
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    $cantidad_articulos = $cantidad_articulos == 0 ? 1 : $cantidad_articulos;
+
+                                    $costo_articulo += ($suma_costos_incurridos / $cantidad_articulos);
                                     if ($movimiento['fecha_movimiento'] < $fecha_inicio) {
                                         $restar_inventario_antes_fecha_inicial += $detalle['cantidad'];
+                                        $restar_costo_inventario_antes_fecha_inicial += $detalle['cantidad'] * $costo_articulo;
                                     } else {
                                         $articulo['salidas'] += $detalle['cantidad'];
+                                        $articulo['costo_salidas'] += $detalle['cantidad'] * $costo_articulo;
                                     }
                                 }
                             }
@@ -2143,8 +2267,22 @@ class InventarioController extends ApiController
                     }
                 }
             }
+
+            /**ajustando los totales de inventario */
             $articulo['inventario_inicial'] += ($sumar_inventario_antes_fecha_inicial - $restar_inventario_antes_fecha_inicial);
-            $articulo['inventario_final'] =$articulo['inventario_inicial']+$articulo['entradas']-$articulo['salidas'];
+            $articulo['inventario_final'] = $articulo['inventario_inicial'] + $articulo['entradas'] - $articulo['salidas'];
+            $articulo['costo_inventario_inicial'] += ($sumar_costo_inventario_antes_fecha_inicial - $restar_costo_inventario_antes_fecha_inicial);
+            // return $articulo['costo_inventario_inicial']+$articulo['costo_entradas'].' // '. $articulo['costo_entradas'].' // '. $articulo['costo_salidas'];
+
+            $articulo['costo_inventario_final'] = $articulo['costo_inventario_inicial'] + $articulo['costo_entradas'] - $articulo['costo_salidas'];
+
+            /**calculando la rotacion del inventario */
+            $cogs = $articulo['costo_salidas'];
+
+            $inventario_promedio = ($articulo['inventario_inicial'] + $articulo['inventario_final']) / 2;
+            $inventario_promedio = $inventario_promedio > 0 ? $inventario_promedio : 1;
+
+            $articulo['rotacion'] = round($cogs / $inventario_promedio, 2);
         }
 
         return $articulos;
