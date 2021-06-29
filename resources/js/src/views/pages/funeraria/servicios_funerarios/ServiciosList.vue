@@ -158,14 +158,14 @@
             <div class="flex justify-center">
               <img
                 v-show="data[indextr].permite_exhumar_b"
-                class="cursor-pointer img-btn-20 mx-3"
+                class="cursor-pointer img-btn-20 mx-3 hidden"
                 src="@assets/images/shovel.svg"
                 title="Exhumar Cuerpo"
                 @click="Exhumar(data[indextr].servicio_id)"
               />
               <img
                 v-show="data[indextr].exhumado_b"
-                class="cursor-pointer img-btn-20 mx-3"
+                class="cursor-pointer img-btn-20 mx-3 hidden"
                 src="@assets/images/shovel_disabled.svg"
                 title="Servicio Exhumado"
                 @click="Exhumado()"
@@ -195,7 +195,7 @@
 
               <img
                 v-else
-                class="img-btn-22 mx-3"
+                class="img-btn-22 mx-3 hidden"
                 src="@assets/images/contrato.svg"
                 title="Editar Contrato"
                 @click="ModificarExhumacion(data[indextr].servicio_id)"
