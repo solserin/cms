@@ -1388,9 +1388,9 @@ class InventarioController extends ApiController
                 $detalle['iva']       = round($detalle['iva'], 2);
                 $detalle['importe']   = round($detalle['importe'], 2);
 
-                $compra['subtotal'] += $detalle['subtotal']* $detalle['cantidad'];
-                $compra['descuento'] += $detalle['descuento']* $detalle['cantidad'];
-                $compra['iva'] += $detalle['iva']* $detalle['cantidad'];
+                $compra['subtotal'] += $detalle['subtotal'] * $detalle['cantidad'];
+                $compra['descuento'] += $detalle['descuento'] * $detalle['cantidad'];
+                $compra['iva'] += $detalle['iva'] * $detalle['cantidad'];
                 $compra['total'] += $detalle['importe'];
             }
 
@@ -1690,6 +1690,21 @@ class InventarioController extends ApiController
             DB::raw(
                 '(0) AS total_movimiento'
             ),
+            DB::raw(
+                '(0) AS total_entradas'
+            ),
+            DB::raw(
+                '(0) AS total_salidas'
+            ),
+            DB::raw(
+                '(0) AS total_utilidad_venta'
+            ),
+            DB::raw(
+                '(0) AS cantidad_movimiento'
+            ),
+            DB::raw(
+                '(0) AS total_movimiento_costos'
+            ),
             'iva_porcentaje'
         )
             ->with('proveedor:id,razon_social')
@@ -1718,6 +1733,10 @@ class InventarioController extends ApiController
             ->whereIn('tipo_movimientos_id', [1, 2, 3])
             ->orderBy('fecha_movimiento', 'asc')
             ->get()->toArray();
+
+        /**totales en general */
+        $total_entradas_general = 0;
+        $total_salidas_general  = 0;
 
         foreach ($movimientos as $index => &$movimiento) {
             $movimiento['fecha_movimiento_texto'] = fecha_abr($movimiento['fecha_movimiento']);
@@ -1757,6 +1776,13 @@ class InventarioController extends ApiController
                                     /**se toma el costo de precio de compra desde el catalogo de articulos */
                                     $costo_articulo = $detalle['articulos']['precio_compra'];
                                 } else {
+                                    foreach ($movimiento_costo['compra_detalle'] as $index_movimiento_costo => &$costo) {
+                                        if ($costo['id_articulo'] == $articulo['id']) {
+                                            $costo_articulo = $costo['descuento_b'] == 1 ? $costo['costo_neto_descuento'] : $costo['costo_neto'];
+                                            break;
+                                        }
+                                    }
+
                                     /**calcular el costo del articulo buscand la compra */
                                     foreach ($movimiento_costo['detalle_compra'] as $articulo_detalle) {
                                         $cantidad_articulos += $articulo_detalle['cantidad'];
@@ -1774,14 +1800,14 @@ class InventarioController extends ApiController
 
                         $cantidad_articulos = $cantidad_articulos == 0 ? 1 : $cantidad_articulos;
                         $costo_articulo += round(($suma_costos_incurridos / $cantidad_articulos), 2);
-
+                        $importe = $cantidad * $costo_articulo;
                         array_push($ajuste,
                             [
                                 'antigua_existencia'  => $detalle['existencia_sistema'],
                                 'tipo_b'              => $detalle['existencia_fisica'] > $detalle['existencia_sistema'] ? 1 : 0,
                                 'tipo'                => $detalle['existencia_fisica'] > $detalle['existencia_sistema'] ? 'Ingreso' : 'Salida',
                                 'cantidad'            => $cantidad,
-                                'importe'             => $cantidad * $costo_articulo,
+                                'importe'             => $importe,
                                 'nueva_existencia'    => $detalle['existencia_fisica'],
                                 'articulo'            => $detalle['articulos']['descripcion'],
                                 'costo'               => $costo_articulo,
@@ -1790,6 +1816,15 @@ class InventarioController extends ApiController
                                 'num_lote_inventario' => $num_lote,
                             ]
                         );
+                        if ($detalle['existencia_fisica'] > $detalle['existencia_sistema']) {
+                            /**ingreso */
+                            $movimiento['total_entradas'] += $importe;
+                            $total_entradas_general += $importe;
+                        } else {
+                            /**salida */
+                            $movimiento['total_salidas'] += $importe;
+                            $total_salidas_general += $importe;
+                        }
                     }
                 }
                 $movimiento['ajuste_inventario'] = $ajuste;
@@ -1828,6 +1863,8 @@ class InventarioController extends ApiController
                 $movimiento['total_movimiento']  = $total_movimiento;
                 $movimiento['ingreso_mercancia'] = $ingresos;
                 $movimiento['num_lote_ingreso']  = $num_lote;
+                $movimiento['total_entradas']    = $total_movimiento;
+                $total_entradas_general += $total_movimiento;
 
             } elseif ($movimiento['tipo_movimientos_id'] == 3) {
                 /**calculo la tasa del iva para hacer calculos de impuestos */
@@ -1895,6 +1932,11 @@ class InventarioController extends ApiController
                     $movimiento['ingreso_compra']   = $ingresos;
                 }
                 $movimiento['total_movimiento'] = round($total_movimiento);
+                $movimiento['total_entradas']   = $movimiento['total_movimiento'];
+                if ($movimiento['status'] == 1) {
+                    /**sumo al total general de ingresos */
+                    $total_entradas_general += $movimiento['total_entradas'];
+                }
 
             } elseif ($movimiento['tipo_movimientos_id'] == 9) {
                 /**calculo la tasa del iva para hacer calculos de impuestos */
@@ -1959,6 +2001,13 @@ class InventarioController extends ApiController
                                         /**se toma el costo de precio de compra desde el catalogo de articulos */
                                         $costo_articulo = $articulo['articulo']['precio_compra'];
                                     } else {
+                                        foreach ($movimiento_costo['compra_detalle'] as $index_movimiento_costo => &$costo) {
+                                            if ($costo['id_articulo'] == $articulo['id']) {
+                                                $costo_articulo = $costo['descuento_b'] == 1 ? $costo['costo_neto_descuento'] : $costo['costo_neto'];
+                                                break;
+                                            }
+                                        }
+
                                         /**calcular el costo del articulo buscand la compra */
                                         foreach ($movimiento_costo['compra_detalle'] as $articulo_compra) {
                                             $cantidad_articulos += $articulo_compra['cantidad'];
@@ -1975,14 +2024,14 @@ class InventarioController extends ApiController
                             }
 
                             $cantidad_articulos = $cantidad_articulos == 0 ? 1 : $cantidad_articulos;
-                            $costo_articulo += ($suma_costos_incurridos / $cantidad_articulos);
+                            $costo_articulo += round($suma_costos_incurridos / $cantidad_articulos, 2);
 
                             array_push($arreglo_salida,
                                 [
                                     'lotes_id'            => $articulo['lotes_id'],
                                     'cantidad'            => $articulo['cantidad'],
                                     'articulo'            => $articulo['articulo']['descripcion'],
-                                    'costo'               => round($costo_articulo, 2),
+                                    'costo'               => $costo_articulo,
                                     'precio_venta'        => $precio_venta,
                                     'num_lote_inventario' => $num_lote,
                                     'impuestos'           => round($impuesto, 2),
@@ -1990,16 +2039,22 @@ class InventarioController extends ApiController
                                 ]
                             );
                             $total_movimiento += $precio_venta;
+                            $movimiento['cantidad_movimiento'] += $articulo['cantidad'];
+                            $movimiento['total_movimiento_costos'] += $articulo['cantidad'] * $costo_articulo;
                         }
-
                     }
+                    if ($movimiento['operacion']['status'] != 0) {
+                        /**sumo al total general de ingresos */
+                        $total_salidas_general += $movimiento['total_movimiento_costos'];
+                    }
+
                 }
                 if (!$tiene_articulos_inventariables) {
                     /**si no tiene articulos este movimiento se quita del arreglo final */
                     unset($movimientos[$index]);
                 } else {
                     $movimiento['salida_venta']     = $arreglo_salida;
-                    $movimiento['total_movimiento'] = round($total_movimiento);
+                    $movimiento['total_movimiento'] = round($total_movimiento, 2);
                 }
             }
             unset($movimiento['compra_detalle']);
@@ -2008,18 +2063,22 @@ class InventarioController extends ApiController
             unset($movimiento['costos_incurridos']);
         }
 
-        $rango_fechas = 'del ' . fecha_abr($fecha_inicio) . ' al ' . fecha_abr($fecha_fin);
-        $array        = ['fecha' => $rango_fechas, 'movimientos' => $movimientos, 'numero_movimientos' => count($movimientos)];
+        $rango_fechas      = 'del ' . fecha_abr($fecha_inicio) . ' al ' . fecha_abr($fecha_fin);
+        $totales_generales = [
+            'total_salidas_general'  => $total_salidas_general,
+            'total_entradas_general' => $total_entradas_general,
+        ];
+        $array = ['fecha' => $rango_fechas, 'movimientos' => $movimientos, 'numero_movimientos' => count($movimientos), 'totales_generales' => $totales_generales];
         return $array;
     }
 
     public function get_reporte_inventario_con_rotacion($fecha_inicio, $fecha_fin)
     {
         /**totales */
-        $total_inventario_inicial=0;
-        $total_entradas=0;
-        $total_salidas=0;
-        $total_costo_total=0;
+        $total_inventario_inicial = 0;
+        $total_entradas           = 0;
+        $total_salidas            = 0;
+        $total_costo_total        = 0;
 
         $articulos = Articulos::where('tipo_articulos_id', 1)
             ->select(
@@ -2285,7 +2344,7 @@ class InventarioController extends ApiController
             // return $articulo['costo_inventario_inicial']+$articulo['costo_entradas'].' // '. $articulo['costo_entradas'].' // '. $articulo['costo_salidas'];
             $articulo['costo_inventario_final'] = $articulo['costo_inventario_inicial'] + $articulo['costo_entradas'] - $articulo['costo_salidas'];
 
-            $total_inventario_inicial+=$articulo['inventario_inicial'];
+            $total_inventario_inicial += $articulo['inventario_inicial'];
             $total_entradas += $articulo['costo_entradas'];
             $total_salidas += $articulo['costo_salidas'];
             $total_costo_total += $articulo['costo_inventario_final'];
@@ -2299,16 +2358,15 @@ class InventarioController extends ApiController
             $articulo['rotacion'] = round($cogs / $inventario_promedio, 2);
         }
 
-
-        $totales=[
-            'total_inventario_inicial'=>$total_inventario_inicial,
-            'total_entradas'=>$total_entradas,
-            'total_salidas'=>$total_salidas,
-            'total_costo_total'=>$total_costo_total
+        $totales = [
+            'total_inventario_inicial' => $total_inventario_inicial,
+            'total_entradas'           => $total_entradas,
+            'total_salidas'            => $total_salidas,
+            'total_costo_total'        => $total_costo_total,
         ];
 
         $rango_fechas = 'del ' . fecha_abr($fecha_inicio) . ' al ' . fecha_abr($fecha_fin);
-        $array        = ['fecha' => $rango_fechas, 'articulos' => $articulos,'totales'=>$totales];
+        $array        = ['fecha' => $rango_fechas, 'articulos' => $articulos, 'totales' => $totales];
         return $array;
 
     }

@@ -37,10 +37,10 @@ class ReportesController extends ApiController
         }else{
             //return $this->errorResponse('Error al generar el reporte',409);
             $modulo=1;
-            $reporte=3;
+            $reporte=2;
             $fecha=now();
-            $fecha_inicio='2019-05-01';
-            $fecha_fin='2021-06-01';
+            $fecha_inicio='1990-01-01';
+            $fecha_fin=now();
         }
 
         $inventario = new InventarioController();

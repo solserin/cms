@@ -253,7 +253,10 @@ export default {
           if (!this.validarFecha()) {
             return;
           }
-        } else if (this.form.reporte.value == 2) {
+        } else if (
+          this.form.reporte.value == 2 ||
+          this.form.reporte.value == 3
+        ) {
           if (!this.validarRangoFecha()) {
             return;
           }

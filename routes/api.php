@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
-Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
+
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -257,6 +257,9 @@ Route::middleware(['auth:api'])->group(function () {
     /**rutas de timbrado de cfdi */
     Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi');
     Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio');
+
+    /**rutas de reportes */
+    Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
 
 });
 

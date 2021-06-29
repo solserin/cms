@@ -52,7 +52,17 @@
                         </p>
 
                         <p class="line-xxs texto-sm bold mt-4">
-                            <span class="bg-gray">Total de Movimientos {{ $datos['numero_movimientos'] }}
+                            <span class="">Total de Movimientos {{ $datos['numero_movimientos'] }}
+                            </span>
+                        </p>
+                        <p class="line-xxs texto-sm bold mt-4">
+                            <span class="bg-gray">Salida de Inventario $
+                                {{ number_format($datos['totales_generales']['total_salidas_general'],2) }}
+                            </span>
+                        </p>
+                        <p class="line-xxs texto-sm bold mt-4">
+                            <span class="bg-gray">Ingreso de Inventario $
+                                {{ number_format($datos['totales_generales']['total_entradas_general'],2) }}
                             </span>
                         </p>
                     </div>
@@ -76,13 +86,8 @@
             </th>
         </tr>
         <tr class="mt-2">
-            <td class="justificar px-2">
+            <td class="justificar px-2" colspan="2">
                 Ingreso de mercancía Lote {{ $movimiento['num_lote_ingreso'] }}
-            </td>
-            <td class="right light px-2">
-                <div class="mt-2 bold">
-                    Total del movimiento $ {{ number_format($movimiento['total_movimiento'],2) }}
-                </div>
             </td>
         </tr>
     </table>
@@ -117,6 +122,14 @@
             </td>
         </tr>
         @endforeach
+        <tr class="">
+            <td class="right bold" colspan="3">
+                Total de Entradas
+            </td>
+            <td class="right">
+                $ {{ number_format($movimiento['total_entradas'],2) }}
+            </td>
+        </tr>
     </table>
     @elseif ($movimiento['tipo_movimientos_id']==1)
     <!--Ingreso o salida de lotes por ajuste de inventario-->
@@ -150,10 +163,10 @@
                 Cantidad
             </th>
             <th class="right">
-                $ Costo
+                Costo
             </th>
             <th class="right">
-                $ Importe
+                Importe
             </th>
         </tr>
         @foreach ($movimiento['ajuste_inventario'] as $ajuste)
@@ -176,11 +189,27 @@
             <td class="right">
                 $ {{ number_format($ajuste['costo'],2) }}
             </td>
-            <td class="right">
+            <td class="right <?= $ajuste['tipo_b']==0?'text-danger':'';?>">
                 $ {{ number_format($ajuste['importe'],2) }}
             </td>
         </tr>
         @endforeach
+        <tr class="">
+            <td class="right bold" colspan="6">
+                Total de Salidas
+            </td>
+            <td class="right <?= $ajuste['tipo_b']==0?'text-danger':'';?>">
+                $ {{ number_format($movimiento['total_salidas'],2) }}
+            </td>
+        </tr>
+        <tr class="">
+            <td class="right bold" colspan="6">
+                Total de Entradas
+            </td>
+            <td class="right">
+                $ {{ number_format($movimiento['total_entradas'],2) }}
+            </td>
+        </tr>
     </table>
 
     @elseif ($movimiento['tipo_movimientos_id']==3)
@@ -208,15 +237,7 @@
             <td class="justificar px-2 <?= $movimiento['status']==0?'text-danger':'';?>">
                 Compra {{ $movimiento['status_texto'] }}
             </td>
-
-            <td class="right light px-2" colspan="2">
-                <div class="mt-2 bold">
-                    Total de la compra $ {{ number_format($movimiento['total_movimiento'],2) }}
-                </div>
-            </td>
-        </tr>
-        <tr class="mt-2">
-            <td class="left light px-2" colspan="2">
+            <td class="right light px-2">
                 <div class="mt-2">
                     <span class="bold">Proveedor</span> {{ $movimiento['proveedor']['razon_social'] }}
                 </div>
@@ -225,7 +246,7 @@
     </table>
 
 
-    <table class="w-100 ml-auto px-1 mt-2 datos-tabla">
+    <table class="w-100 ml-auto px-2 mt-2 datos-tabla">
         <tr class="">
             <th class="left">
                 Artículo
@@ -262,6 +283,14 @@
             </td>
         </tr>
         @endforeach
+        <tr class="bold">
+            <td class="right" colspan="4">
+                Total
+            </td>
+            <td class="right">
+                $ {{ number_format($movimiento['total_movimiento'],2) }}
+            </td>
+        </tr>
     </table>
 
 
@@ -278,22 +307,14 @@
             </th>
         </tr>
         <tr class="mt-2">
-            <td class="right light px-2" colspan="2">
+            <td class="justificar px-2 <?= $movimiento['operacion']['status']==0?'text-danger':'';?>">
+                Servicio {{ $movimiento['operacion']['status_texto'] }}
+            </td>
+            <td class="right light px-2">
                 <div class="mt-2">
                     {{ $movimiento['operacion']['operacion_texto'] }} Núm.
                     {{ $movimiento['operacion']['numero_servicio'] }}, Cliente:
                     {{ $movimiento['operacion']['cliente']['nombre'] }}
-                </div>
-            </td>
-        </tr>
-        <tr class="mt-2">
-            <td class="justificar px-2 <?= $movimiento['operacion']['status']==0?'text-danger':'';?>">
-                Servicio {{ $movimiento['operacion']['status_texto'] }}
-            </td>
-            <td class="right light px-2" colspan="2">
-                <div class="mt-2">
-                    <span class="bold"> Total de la venta(Sólo inventario contable)</span>
-                    $ {{ number_format($movimiento['total_movimiento'],2) }}
                 </div>
             </td>
         </tr>
@@ -317,9 +338,6 @@
             <th class="right">
                 $ Precio Venta
             </th>
-            <th class="right">
-                $ Utilidad
-            </th>
         </tr>
         @foreach ($movimiento['salida_venta'] as $salida)
         <tr class="">
@@ -338,11 +356,26 @@
             <td class="right">
                 $ {{ number_format($salida['precio_venta'],2) }}
             </td>
-            <td class="right <?= $salida['utilidad']<=0?'text-danger':'';?>">
-                $ {{ number_format($salida['utilidad'],2) }}
-            </td>
         </tr>
         @endforeach
+        <tr class="">
+
+            <td class="center bold">
+                Totales:
+            </td>
+            <td class="center">
+                {{ $movimiento['cantidad_movimiento'] }}
+            </td>
+            <td class="right">
+
+            </td>
+            <td class="right">
+                $ {{ number_format($movimiento['total_movimiento_costos'],2) }}
+            </td>
+            <td class="right">
+                $ {{ number_format($movimiento['total_movimiento'],2) }}
+            </td>
+        </tr>
     </table>
 
     @endif
