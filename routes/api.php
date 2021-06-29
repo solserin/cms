@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
-  Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
-  Route::get('inventario/get_compras/{id_compra?}/{paginated?}/', 'InventarioController@get_compras');
-  Route::get('inventario/pdf_nota_compra', 'InventarioController@pdf_nota_compra');
-
 Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
 
 /**ruta para obtener tokens */
@@ -176,7 +172,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/proveedores/modificar_proveedor', 'ProveedoresController@modificar_proveedor')->middleware('permiso:10,28');
     Route::post('/proveedores/delete_proveedor', 'ProveedoresController@delete_proveedor');
     Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
-
+    Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
     /**invnetario */
   
     Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
@@ -194,7 +190,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('inventarios/cementerio/get_sat_formas_pago', 'CementerioController@get_sat_formas_pago');
     Route::get('inventarios/cementerio/get_antiguedades_venta', 'CementerioController@get_antiguedades_venta');
     Route::get('inventario/get_inventario_pdf', 'InventarioController@get_inventario_pdf');
-
+    Route::get('inventario/pdf_nota_compra', 'InventarioController@pdf_nota_compra');
     Route::get('inventario/get_tipo_articulos', 'InventarioController@get_tipo_articulos');
     Route::get('inventario/get_categorias', 'InventarioController@get_categorias');
     Route::get('inventario/get_unidades', 'InventarioController@get_unidades');
@@ -202,7 +198,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('inventario/control_compras/{tipo?}', 'InventarioController@control_compras');
     Route::post('inventario/cancelar_compra', 'InventarioController@cancelar_compra');
-
+    Route::get('inventario/get_compras/{id_compra?}/{paginated?}/', 'InventarioController@get_compras');
     Route::get('inventario/get_ajuste_pdf', 'InventarioController@get_ajuste_pdf');
     Route::get('inventario/get_ajustes/{id_ajuste?}/{paginated?}', 'InventarioController@get_ajustes');
 
