@@ -104,6 +104,26 @@
             </td>
         </tr>
         @endforeach
+        <tr class="bg-gray bold">
+            <td class="center bold">
+                TOTALES
+            </td>
+            <td class="center">
+                {{  number_format($datos['totales']['total_inventario_inicial'],2)}}
+            </td>
+            <td class="right">
+                {{  number_format($datos['totales']['total_entradas'],2)}}
+            </td>
+            <td class="right">
+                {{  number_format($datos['totales']['total_salidas'],2)}}
+            </td>
+            <td class="right">
+                {{  number_format($datos['totales']['total_costo_total'],2)}}
+            </td>
+            <td class="center">
+                N/A
+            </td>
+        </tr>
     </table>
 </body>
 

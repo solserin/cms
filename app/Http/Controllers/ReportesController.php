@@ -39,8 +39,8 @@ class ReportesController extends ApiController
             $modulo=1;
             $reporte=3;
             $fecha=now();
-            $fecha_inicio='2021-06-01';
-            $fecha_fin='2021-07-01';
+            $fecha_inicio='2019-05-01';
+            $fecha_fin='2021-06-01';
         }
 
         $inventario = new InventarioController();

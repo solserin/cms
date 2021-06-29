@@ -2015,6 +2015,12 @@ class InventarioController extends ApiController
 
     public function get_reporte_inventario_con_rotacion($fecha_inicio, $fecha_fin)
     {
+        /**totales */
+        $total_inventario_inicial=0;
+        $total_entradas=0;
+        $total_salidas=0;
+        $total_costo_total=0;
+
         $articulos = Articulos::where('tipo_articulos_id', 1)
             ->select(
                 'id',
@@ -2048,7 +2054,7 @@ class InventarioController extends ApiController
                 ),
                 DB::raw(
                     '(0) AS rotacion'
-                )
+                ),
             )
             ->where('tipo_articulos_id', 1)
         //->where('id', 1)
@@ -2277,8 +2283,12 @@ class InventarioController extends ApiController
             $articulo['inventario_final'] = $articulo['inventario_inicial'] + $articulo['entradas'] - $articulo['salidas'];
             $articulo['costo_inventario_inicial'] += ($sumar_costo_inventario_antes_fecha_inicial - $restar_costo_inventario_antes_fecha_inicial);
             // return $articulo['costo_inventario_inicial']+$articulo['costo_entradas'].' // '. $articulo['costo_entradas'].' // '. $articulo['costo_salidas'];
-
             $articulo['costo_inventario_final'] = $articulo['costo_inventario_inicial'] + $articulo['costo_entradas'] - $articulo['costo_salidas'];
+
+            $total_inventario_inicial+=$articulo['inventario_inicial'];
+            $total_entradas += $articulo['costo_entradas'];
+            $total_salidas += $articulo['costo_salidas'];
+            $total_costo_total += $articulo['costo_inventario_final'];
 
             /**calculando la rotacion del inventario */
             $cogs = $articulo['costo_salidas'];
@@ -2289,8 +2299,16 @@ class InventarioController extends ApiController
             $articulo['rotacion'] = round($cogs / $inventario_promedio, 2);
         }
 
+
+        $totales=[
+            'total_inventario_inicial'=>$total_inventario_inicial,
+            'total_entradas'=>$total_entradas,
+            'total_salidas'=>$total_salidas,
+            'total_costo_total'=>$total_costo_total
+        ];
+
         $rango_fechas = 'del ' . fecha_abr($fecha_inicio) . ' al ' . fecha_abr($fecha_fin);
-        $array        = ['fecha' => $rango_fechas, 'articulos' => $articulos];
+        $array        = ['fecha' => $rango_fechas, 'articulos' => $articulos,'totales'=>$totales];
         return $array;
 
     }
