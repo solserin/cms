@@ -356,7 +356,7 @@
                             <div class="w-full input-text xl:w-7/12 px-2">
                               <label
                                 >Concepto del costo incurrido
-                                <span v-if="this.form.costo_incurrido_costo"
+                                <span v-if="this.form.costo_incurrido_detalle"
                                   >(*)</span
                                 ></label
                               >
@@ -369,7 +369,7 @@
                                 "
                                 type="text"
                                 class="w-full"
-                                placeholder="Detalle de los costos incurridos"
+                                placeholder=""
                                 v-model="form.costo_incurrido_detalle"
                               />
                               <span>
@@ -394,7 +394,7 @@
                                 maxlength="8"
                                 type="text"
                                 class="w-full"
-                                placeholder="Total por los costos incurridos"
+                                placeholder=""
                                 v-model="form.costo_incurrido_costo"
                               />
                               <span>
@@ -739,10 +739,6 @@ export default {
         };
         (async () => {
           if (this.getTipoformulario == "agregar") {
-            console.log(
-              "🚀 ~ file: FormularioCompras.vue ~ line 1115 ~ this.getTipoformulario",
-              this.getTipoformulario
-            );
             //await this.get_solicitudes_servicios_id();
           }
         })();
@@ -802,7 +798,7 @@ export default {
         }
       });
       if (this.form.costo_incurrido_costo <= 0) {
-        this.form.costo_incurrido_costo = 0;
+        //this.form.costo_incurrido_costo = 0;
       }
       total += parseFloat(this.form.costo_incurrido_costo);
       return total;

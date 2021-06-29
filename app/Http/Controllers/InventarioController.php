@@ -1388,9 +1388,9 @@ class InventarioController extends ApiController
                 $detalle['iva']       = round($detalle['iva'], 2);
                 $detalle['importe']   = round($detalle['importe'], 2);
 
-                $compra['subtotal'] += $detalle['subtotal'];
-                $compra['descuento'] += $detalle['descuento'];
-                $compra['iva'] += $detalle['iva'];
+                $compra['subtotal'] += $detalle['subtotal']* $detalle['cantidad'];
+                $compra['descuento'] += $detalle['descuento']* $detalle['cantidad'];
+                $compra['iva'] += $detalle['iva']* $detalle['cantidad'];
                 $compra['total'] += $detalle['importe'];
             }
 

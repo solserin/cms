@@ -49,6 +49,10 @@
                         <p class="line-xxs texto-sm light">
                             ÁLMACEN DE FUNERARIA
                         </p>
+                        <p class="line-xxs texto-sm bold mt-4">
+                            <span class="bg-gray">Método de Costeo PEPS
+                            </span>
+                        </p>
                     </div>
                 </th>
             </tr>
@@ -63,13 +67,13 @@
                 Artículo
             </th>
             <th class="center">
-                Inventario Inicial
+                $ Inventario Inicial
             </th>
             <th class="center">
-                Entradas
+                $ Entradas
             </th>
             <th class="center">
-                Salidas
+                $ Salidas
             </th>
             <th class="center">
                 $ Costo Total
