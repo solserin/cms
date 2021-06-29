@@ -83,9 +83,9 @@ class ReportesController extends ApiController
                      return $this->errorResponse('Ingrese el rango de fechas para generar el reporte',409);
                  }
                 /**Movimientos del inventario*/
-                return $datos_reporte=$inventario->get_reporte_inventario_con_rotacion($fecha_inicio,$fecha_fin);
+                $datos_reporte=$inventario->get_reporte_inventario_con_rotacion($fecha_inicio,$fecha_fin);
                 $name_pdf='Inventario Actual Global en Importes (Costo Definido por el Prodcuto)';
-                $pdf_template='reportes/inventario/movimientos_inventario/reporte';
+                $pdf_template='reportes/inventario/inventario_global/reporte';
              }
         }
 

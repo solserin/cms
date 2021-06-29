@@ -2102,7 +2102,10 @@ class InventarioController extends ApiController
 
                 /**primero los ingresos por ajuste (tipo 2) */
                 if ($movimiento['tipo_movimientos_id'] == 2) {
-                    /**sumo a inventario inicial */
+                    /**sumo a inventario inicial
+                     * son solamente ingresos de inventario, se planea que solo haya un movimiento tipo 2 en el sistema,
+                     * pues los demas seran solo ajustes, compras y ventas
+                     */
                     foreach ($movimiento['detalles'] as $index_movimiento_detalle => &$detalle) {
                         if ($detalle['articulos_id'] == $articulo['id']) {
                             if ($movimiento['fecha_movimiento'] < $fecha_inicio) {
@@ -2123,6 +2126,8 @@ class InventarioController extends ApiController
                                 $cantidad_articulos     = 0;
                                 foreach ($movimientos_costos as $movimiento_costo) {
                                     if ($movimiento_costo['id'] == $detalle['lotes_id']) {
+                                        //return $movimiento_costo;
+
                                         /**si es de tipo compra se toma el costo del artículo de la comrpa tomando en cuenta
                                          * los costos incurridos
                                          */
@@ -2239,7 +2244,6 @@ class InventarioController extends ApiController
                                                         break;
                                                     }
                                                 }
-
                                                 /**calcular el costo del articulo buscand la compra */
                                                 foreach ($movimiento_costo['compra_detalle'] as $articulo_compra) {
                                                     $cantidad_articulos += $articulo_compra['cantidad'];
@@ -2285,7 +2289,10 @@ class InventarioController extends ApiController
             $articulo['rotacion'] = round($cogs / $inventario_promedio, 2);
         }
 
-        return $articulos;
+        $rango_fechas = 'del ' . fecha_abr($fecha_inicio) . ' al ' . fecha_abr($fecha_fin);
+        $array        = ['fecha' => $rango_fechas, 'articulos' => $articulos];
+        return $array;
+
     }
 
 }

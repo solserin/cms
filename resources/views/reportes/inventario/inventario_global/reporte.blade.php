@@ -39,8 +39,8 @@
                 </th>
                 <th class="w-90">
                     <div class="w-100 right uppercase">
-                        <p class="line-xxs texto-sm light">{{ $empresa->nombre_comercial }}</p>
-                        <p class="line-xxs texto-sm  bold">{{ $datos['name_pdf'] }} al día <span
+                        <p class="line-xxs texto-sm light hidden">{{ $empresa->nombre_comercial }}</p>
+                        <p class="line-base texto-sm  bold">{{ $datos['name_pdf'] }} <span
                                 class="bold">{{ $datos['fecha'] }}</span>
                         </p>
                         <p class="line-xxs texto-sm light">
@@ -48,11 +48,6 @@
                         </p>
                         <p class="line-xxs texto-sm light">
                             ÁLMACEN DE FUNERARIA
-                        </p>
-
-                        <p class="line-xxs texto-sm bold mt-4">
-                            <span class="bg-gray">COSTO TOTAL DEL INVENTARIO
-                                $ {{  number_format($datos['costo_inventario'],2)}}</span>
                         </p>
                     </div>
                 </th>
@@ -62,66 +57,50 @@
 
 
 
-    @foreach ($datos['articulos'] as $articulo)
-    <table class="w-100 mt-8">
-        <tr class="bg-gray">
-            <th class="justificar px-2">
-                Nombre (Producto)
-            </th>
-            <th class="right light px-2">
-                {{ $articulo['descripcion'] }}
-            </th>
-        </tr>
-    </table>
-
-    <table class="w-80 ml-auto">
+    <table class="w-100 ml-auto px-1 mt-2 datos-tabla">
         <tr class="">
             <th class="center">
-                Lote
+                Artículo
             </th>
             <th class="center">
-                Existencia
+                Inventario Inicial
             </th>
-            <th class="right">
-                $ Costo
+            <th class="center">
+                Entradas
             </th>
-            <th class="right">
-                $ Costo Total x Lote
+            <th class="center">
+                Salidas
+            </th>
+            <th class="center">
+                $ Costo Total
+            </th>
+            <th class="center">
+                Rotación de Inventario
             </th>
         </tr>
-        @foreach ($articulo['inventario_existencia_cero'] as $lote)
-        @if ($lote['ver_inventario_b']==1)
+        @foreach ($datos['articulos'] as $articulo)
         <tr class="">
-            <td class="center">
-                {{ $lote['num_lote_inventario'] }}
+            <td class="left">
+                {{  $articulo['descripcion']}}
             </td>
             <td class="center">
-                {{ $lote['existencia'] }}
+                {{  number_format($articulo['costo_inventario_inicial'],2)}}
+            </td>
+            <td class="right ">
+                {{  number_format($articulo['costo_entradas'],2)}}
             </td>
             <td class="right">
-                {{  number_format($lote['costo_costeado'],2)}}
+                {{  number_format($articulo['costo_salidas'],2)}}
             </td>
             <td class="right">
-                {{ number_format($lote['total_costo_lote'],2) }}
+                {{  number_format($articulo['costo_inventario_final'],2)}}
+            </td>
+            <td class="center">
+                {{  $articulo['rotacion']}}
             </td>
         </tr>
-        @endif
         @endforeach
-        <tr class="bg-gray">
-            <td class="center bold" colspan="2">
-                Total por artículo
-            </td>
-            <td class="right">
-                $ {{  number_format($articulo['total_costo_articulo'],2)}}
-            </td>
-            <td class="right">
-                $ {{ number_format($articulo['total_costo_articulo'],2) }}
-            </td>
-        </tr>
     </table>
-
-    @endforeach
-
 </body>
 
 </html>

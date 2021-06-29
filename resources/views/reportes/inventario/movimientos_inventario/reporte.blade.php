@@ -13,8 +13,19 @@
         }
 
 
+        .datos-tabla {
+            border-collapse: collapse;
+        }
+
+
         .datos-tabla tr:nth-child(odd) {
             background-color: #f5f5f5;
+        }
+
+        .datos-tabla td,
+        .datos-tabla th {
+            border: 1px solid #ddd;
+            padding: 8px;
         }
     </style>
 </head>
