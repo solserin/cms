@@ -2113,7 +2113,7 @@ class InventarioController extends ApiController
                 ),
                 DB::raw(
                     '(0) AS rotacion'
-                ),
+                )
             )
             ->where('tipo_articulos_id', 1)
         //->where('id', 1)
