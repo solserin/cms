@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
  */
 /**en pruebas */
+Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
 
 
 /**ruta para obtener tokens */
@@ -259,7 +260,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio');
 
     /**rutas de reportes */
-    Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
+    
 
 });
 
