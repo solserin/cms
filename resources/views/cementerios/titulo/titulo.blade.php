@@ -166,16 +166,25 @@
                 {{$datos['venta_terreno']['area_nombre']}}
             </td>
             <td width="25%" class=" center py-6  uppercase border-black-1">
+                @if ($datos['venta_terreno']['tipo_propiedad']['id']!=4)
+                N/A
+                @else
                 {{$datos['venta_terreno']['fila_texto']}}
+                @endif
             </td>
             <td width="25%" class=" center py-6  uppercase border-black-1">
+                @if ($datos['venta_terreno']['tipo_propiedad']['id']==4)
                 {{$datos['venta_terreno']['lote_texto']}}
+                @else
+                {{$datos['venta_terreno']['fila_texto']}}
+                @endif
             </td>
             <td width="25%" class=" center py-6  uppercase border-black-1">
                 {{$datos['venta_terreno']['tipo_propiedad']['capacidad']}}
             </td>
         </tr>
     </table>
+    {{$datos['venta_terreno']['tipo_propiedad']['id']}}
     <p class="uppercase size-17px justificar letter-spacing-2 mt-4">
         Este título forma parte integrante del convenio de derecho de uso mortuorio perpetuo y está sujeto a lo que en
         él se estipula.
