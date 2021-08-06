@@ -184,7 +184,6 @@
             </td>
         </tr>
     </table>
-    {{$datos['venta_terreno']['tipo_propiedad']['id']}}
     <p class="uppercase size-17px justificar letter-spacing-2 mt-4">
         Este título forma parte integrante del convenio de derecho de uso mortuorio perpetuo y está sujeto a lo que en
         él se estipula.
