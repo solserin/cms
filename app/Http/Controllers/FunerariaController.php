@@ -1236,7 +1236,7 @@ class FunerariaController extends ApiController
 
             DB::commit();
             return
-            $tipo_servicio == 'agregar' ? $id_venta : $request->id_venta;
+                $tipo_servicio == 'agregar' ? $id_venta : $request->id_venta;
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
@@ -1263,7 +1263,7 @@ class FunerariaController extends ApiController
             ->with('cancelador:id,nombre')
             ->with('registro:id,nombre')
             ->where('empresa_operaciones_id', '=', 4)
-        /**solo ventas de planes funerarios */
+            /**solo ventas de planes funerarios */
             ->select(
                 /**venta operacion */
                 'operaciones.id as operacion_id',
@@ -1817,16 +1817,16 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],8,'por_area_firma');
-            $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_vendedor');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'], 8, 'por_area_firma');
+            $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'], null, 'por_vendedor');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path'],
-                'vendedor'=>$firma_vendedor['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path'],
+                'vendedor' => $firma_vendedor['firma_path']
             ];
 
 
-            $pdf = PDF::loadView('funeraria/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=> $firmas]);
+            $pdf = PDF::loadView('funeraria/solicitud/documento_solicitud', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "SOLICITUD TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
@@ -1910,18 +1910,18 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],9,'por_area_firma');
-            $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_vendedor');
-            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'], 9, 'por_area_firma');
+            $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'], null, 'por_vendedor');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'], null, 'por_gerente');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path'],
-                'vendedor'=>$firma_vendedor['firma_path'],
-                'gerente'=>$firma_gerente['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path'],
+                'vendedor' => $firma_vendedor['firma_path'],
+                'gerente' => $firma_gerente['firma_path']
             ];
 
 
-            $pdf           = PDF::loadView('funeraria/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf           = PDF::loadView('funeraria/convenio/documento_convenio', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONVENIO TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -1997,16 +1997,16 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],10,'por_area_firma');
-            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'], 10, 'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'], null, 'por_gerente');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path'],
-                'gerente'=>$firma_gerente['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path'],
+                'gerente' => $firma_gerente['firma_path']
             ];
 
 
-            $pdf           = PDF::loadView('funeraria/finiquitado/finiquitado', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf           = PDF::loadView('funeraria/finiquitado/finiquitado', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONSTANCIA DE FINIQUITO DE PLAN FUNERARIO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -2102,14 +2102,14 @@ class FunerariaController extends ApiController
                 }
                 $pagos_operacion =
                     json_decode($client->request(
-                    'GET',
-                    env('APP_URL') . 'pagos/get_pagos_backend/all/false/false?operacion_id=' . $datos_venta['operacion_id'],
-                    [
-                        'headers' => [
-                            'Authorization' => 'Bearer ' . $token,
-                        ],
-                    ]
-                )->getBody(), true);
+                        'GET',
+                        env('APP_URL') . 'pagos/get_pagos_backend/all/false/false?operacion_id=' . $datos_venta['operacion_id'],
+                        [
+                            'headers' => [
+                                'Authorization' => 'Bearer ' . $token,
+                            ],
+                        ]
+                    )->getBody(), true);
             } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                 return $this->errorResponse('Ocurrió un error durante la petición. Por favor reintente.', $e->getCode());
             }
@@ -2281,18 +2281,18 @@ class FunerariaController extends ApiController
 
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],13,'por_area_firma');
-            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'], 13, 'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'], null, 'por_gerente');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path'],
-                'gerente'=>$firma_gerente['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path'],
+                'gerente' => $firma_gerente['firma_path']
             ];
 
 
 
 
-            $pdf           = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=> $firmas]);
+            $pdf           = PDF::loadView('funeraria/reglamento_pago/reglamento', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "REGLAMENTO DE PAGO " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -2370,15 +2370,15 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'],14,'por_area_firma');
-            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'],null,'por_gerente');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'], 14, 'por_area_firma');
+            $firma_gerente       = $FirmasController->get_firma_documento($datos_venta['venta_plan']['vendedor_id'], null, 'por_gerente');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path'],
-                'gerente'=>$firma_gerente['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path'],
+                'gerente' => $firma_gerente['firma_path']
             ];
 
-            $pdf           = PDF::loadView('funeraria/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf           = PDF::loadView('funeraria/acuse_cancelacion/acuse', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['nombre']) . '.pdf';
 
@@ -2429,7 +2429,7 @@ class FunerariaController extends ApiController
 
     public function servicio_acuse_cancelacion(Request $request)
     {
-       
+
         try {
             $id_venta = 1;
             $email    = false;
@@ -2440,14 +2440,14 @@ class FunerariaController extends ApiController
             $email_to          = $request->email_address;
             $requestVentasList = json_decode($request->request_parent[0], true);
             $id_venta          = $requestVentasList['id_servicio'];
-            
+
 
             /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
              * por lo cual puede variar de paramtros degun la ncecesidad
              */
             //obtengo la informacion de esa venta
             $datos_venta = $this->get_solicitudes_servicios($request, $id_venta, '')[0];
-          
+
 
             if (empty($datos_venta)) {
                 /**datos vacios */
@@ -2458,17 +2458,17 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_gerente       = $FirmasController->get_firma_documento(null,null,'por_gerente');
-            $cliente       = $FirmasController->get_firma_documento($datos_venta['id'],29,'por_area_firma','solicitud');
+            $firma_gerente       = $FirmasController->get_firma_documento(null, null, 'por_gerente');
+            $cliente       = $FirmasController->get_firma_documento($datos_venta['id'], 29, 'por_area_firma', 'solicitud');
 
-            $firmas=[
-                'gerente'=>$firma_gerente['firma_path'],
-                'cliente'=>$cliente['firma_path']
+            $firmas = [
+                'gerente' => $firma_gerente['firma_path'],
+                'cliente' => $cliente['firma_path']
             ];
 
 
 
-            $pdf           = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf           = PDF::loadView('funeraria/acuse_cancelacion_servicio/acuse', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ACUSE DE CANCELACIÓN " . strtoupper($datos_venta['operacion']['cliente']['nombre']) . '.pdf';
 
@@ -2489,7 +2489,7 @@ class FunerariaController extends ApiController
             $pdf->setOption('margin-bottom', 13.4);
             $pdf->setOption('page-size', 'letter');
             if ($email == true) {
-                  
+
                 /**email */
                 /**
                  * parameters lista de la funcion
@@ -2706,8 +2706,8 @@ class FunerariaController extends ApiController
 
     public function control_contratos(Request $request, $tipo_servicio = '')
     {
-        $tipo_servicio=trim($tipo_servicio);
-        if (!$tipo_servicio== 'servicio_funerario' || !$tipo_servicio== 'exhumar' || !$tipo_servicio== 'modificar_exhumar') {
+        $tipo_servicio = trim($tipo_servicio);
+        if (!$tipo_servicio == 'servicio_funerario' || !$tipo_servicio == 'exhumar' || !$tipo_servicio == 'modificar_exhumar') {
             return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
         }
 
@@ -2877,15 +2877,15 @@ class FunerariaController extends ApiController
 
             /**se verifica que tipo de servicio se intenta atender */
 
-            if($tipo_servicio=='exhumar'){
+            if ($tipo_servicio == 'exhumar') {
 
                 /**verificar si este servicio ya fue cancelado o si fue previamente exhumado
                  * si no, se puede continuar con la exhumacion de este servicio
                  */
-                $verificar=ServiciosFunerarios::where('servicios_funerarios_exhumado_id','=',$request->id_servicio)
-                ->where('status','<>',0)->get()->toArray();
-                if(count($verificar)>0){
-                    return $this->errorResponse('Este servicio ya ha sido exhumando anteriormente.',409);
+                $verificar = ServiciosFunerarios::where('servicios_funerarios_exhumado_id', '=', $request->id_servicio)
+                    ->where('status', '<>', 0)->get()->toArray();
+                if (count($verificar) > 0) {
+                    return $this->errorResponse('Este servicio ya ha sido exhumando anteriormente.', 409);
                 }
 
                 //se crea una copia de toda la informacion para despues modificarse sobre el nuevo id
@@ -2893,23 +2893,23 @@ class FunerariaController extends ApiController
                 $servicio = ServiciosFunerarios::find($request->id_servicio);
                 $nuevo_servicio = $servicio->replicate();
                 $nuevo_servicio->timestamps = false;
-                $nuevo_servicio->fechahora_registro=now();
-                $nuevo_servicio->registro_contrato_id=(int) $request->user()->id;
-                $nuevo_servicio->modifico_id=(int) $request->user()->id;
-                $nuevo_servicio->fecha_modificacion=now();
-                $nuevo_servicio->registro_id=(int) $request->user()->id;
-                $nuevo_servicio->nota_servicio='';
-                $nuevo_servicio->tipo_solicitud_id=2;//exhumacion
-                $nuevo_servicio->servicios_funerarios_exhumado_id=$request->id_servicio;
+                $nuevo_servicio->fechahora_registro = now();
+                $nuevo_servicio->registro_contrato_id = (int) $request->user()->id;
+                $nuevo_servicio->modifico_id = (int) $request->user()->id;
+                $nuevo_servicio->fecha_modificacion = now();
+                $nuevo_servicio->registro_id = (int) $request->user()->id;
+                $nuevo_servicio->nota_servicio = '';
+                $nuevo_servicio->tipo_solicitud_id = 2; //exhumacion
+                $nuevo_servicio->servicios_funerarios_exhumado_id = $request->id_servicio;
                 $nuevo_servicio->save();
 
                 /**actualizo el id_servicio original por el nuevo servicio creado "el de exhumacion" */
-                $request->id_servicio=$nuevo_servicio->id;
+                $request->id_servicio = $nuevo_servicio->id;
             }
 
 
 
-        
+
             $r = new \Illuminate\Http\Request();
             $r->replace(['sample' => 'sample']);
             $datos_solicitud = $this->get_solicitudes_servicios($r, $request->id_servicio)[0];
@@ -2931,9 +2931,9 @@ class FunerariaController extends ApiController
                     return $this->errorResponse('El plan funerario a futuro seleccionado ya ha sido utilizado por el servicio prestado al finado : ' . $servicios_planes_usados[0]->nombre_afectado, 409);
                 }
             }
-        
-        $id_return = 0;
-      
+
+            $id_return = 0;
+
             /**SE COMIENZA EL PROCESO PARA ACTUALIZAR EL CONTRATO */
             DB::table('servicios_funerarios')->where('id', $request->id_servicio)->update(
                 [
@@ -3167,7 +3167,7 @@ class FunerariaController extends ApiController
                 }
             }
 
-           // return $this->errorResponse($inventario_temporal, 409);
+            // return $this->errorResponse($inventario_temporal, 409);
 
             $arreglo_de_lotes = [];
             if (count($requestArticulos) > 0) {
@@ -3180,65 +3180,64 @@ class FunerariaController extends ApiController
                                     $cantidad_concepto = $concepto['cantidad'];
                                     $crear_row = false;
                                     foreach ($articulo['inventario'] as &$lote) {
-                                        if ($cantidad_concepto > 0 && $lote['existencia']>0) {
+                                        if ($cantidad_concepto > 0 && $lote['existencia'] > 0) {
                                             if (!$crear_row) {
                                                 /**queda cantidad por crear en lotes */
-                                                if ($cantidad_concepto >= $lote['existencia'] && $lote['existencia']>0){
+                                                if ($cantidad_concepto >= $lote['existencia'] && $lote['existencia'] > 0) {
                                                     $crear_row = true;
                                                     /**al ser mayor la cantidad por agregar, metemos todo el lote en el lote a crear */
                                                     $concepto['lote'] = $lote['lotes_id'];
                                                     $cantidad_concepto -= $lote['existencia'];
                                                     $concepto['cantidad'] = $lote['existencia'];
-                                                    $articulo['existencia']-=$lote['existencia'];
+                                                    $articulo['existencia'] -= $lote['existencia'];
                                                     $lote['existencia']   = 0;
                                                     array_push($arreglo_de_lotes, $concepto);
                                                 } else {
                                                     /**se agrega la cantidad al lote del row actual, pues no necesita de crear ningun nuevo row */
                                                     $concepto['lote']     = $lote['lotes_id'];
                                                     $concepto['cantidad'] = $cantidad_concepto;
-                                                    $lote['existencia'] -=$cantidad_concepto;
-                                                     $articulo['existencia']-=$cantidad_concepto;
+                                                    $lote['existencia'] -= $cantidad_concepto;
+                                                    $articulo['existencia'] -= $cantidad_concepto;
                                                     array_push($arreglo_de_lotes, $concepto);
                                                     break;
                                                 }
-                                            }else{
-                                                  $copia_row_actual = $concepto;
-                                             if ($cantidad_concepto >= $lote['existencia'] && $lote['existencia']>0){
+                                            } else {
+                                                $copia_row_actual = $concepto;
+                                                if ($cantidad_concepto >= $lote['existencia'] && $lote['existencia'] > 0) {
                                                     /**al ser mayor la cantidad por agregar, metemos todo el lote en el lote a crear */
                                                     $cantidad_concepto -= $lote['existencia'];
                                                     $copia_row_actual['cantidad'] = $lote['existencia'];
                                                     $copia_row_actual['lote']     = $lote['lotes_id'];
                                                     $lote['existencia']           = 0;
-                                                     $articulo['existencia']-= $lote['existencia'];
+                                                    $articulo['existencia'] -= $lote['existencia'];
                                                     array_push($arreglo_de_lotes, $copia_row_actual);
-                                                     
                                                 } else {
                                                     /**se agrega la cantidad al lote del row actual, pues no necesita de crear ningun nuevo row */
                                                     $copia_row_actual['cantidad'] = $cantidad_concepto;
                                                     $copia_row_actual['lote']     = $lote['lotes_id'];
-                                                   $lote['existencia'] -=$cantidad_concepto;
-                                                    $articulo['existencia']-= $cantidad_concepto;
+                                                    $lote['existencia'] -= $cantidad_concepto;
+                                                    $articulo['existencia'] -= $cantidad_concepto;
                                                     array_push($arreglo_de_lotes, $copia_row_actual);
                                                     break;
                                                 }
                                             }
-                                        }else{
-                                          continue;
+                                        } else {
+                                            continue;
                                         }
                                     }
-                            }else{
-                                 return $this->errorResponse("No hay suficiente existencia del ".$articulo['descripcion']." en el inventario.", 409);
+                                } else {
+                                    return $this->errorResponse("No hay suficiente existencia del " . $articulo['descripcion'] . " en el inventario.", 409);
+                                }
+                            } else {
+                                $copia_row_actual = $concepto;
+                                $copia_row_actual['lote'] = null;
+                                $copia_row_actual['cantidad'] = $concepto['cantidad'];
+                                array_push($arreglo_de_lotes, $copia_row_actual);
                             }
-                        }else{
-                             $copia_row_actual = $concepto;
-                             $copia_row_actual['lote'] =null;
-                             $copia_row_actual['cantidad'] = $concepto['cantidad'];
-                            array_push($arreglo_de_lotes, $copia_row_actual);
                         }
                     }
                 }
             }
-        }
             //return $this->errorResponse($arreglo_de_lotes, 409);
             $requestArticulos = $arreglo_de_lotes;
             //return $this->errorResponse($requestArticulos, 409);
@@ -3682,8 +3681,8 @@ class FunerariaController extends ApiController
                     $esta = false;
                     foreach ($requestArticulos as $index_articulo_servicio => $articulo_servicio) {
                         if (
-                            $articulo_servicio['lote'] == $articulo_contrato['lotes_id'] 
-                        && $articulo_servicio['id'] == $articulo_contrato['articulos_id']
+                            $articulo_servicio['lote'] == $articulo_contrato['lotes_id']
+                            && $articulo_servicio['id'] == $articulo_contrato['articulos_id']
                         ) {
                             $esta = true;
                             break;
@@ -3725,22 +3724,22 @@ class FunerariaController extends ApiController
                     } //fin de si no esta el articulo ya requerido para el servicio
                 }
             } //fin if isset articulos en el contrato
-            
-            $datos=$detalle_inventario;
+
+            $datos = $detalle_inventario;
             /**actualizo el inventario */
             //return $this->errorResponse($detalle_inventario, 409);
 
-         
+
             foreach ($datos as $dato) {
-                $res=DB::table('inventario')
+                $res = DB::table('inventario')
                     ->where('articulos_id', '=', $dato['articulos_id'])
                     ->where('lotes_id', '=', $dato['lotes_id'])->update(
-                    [
-                        'existencia' => $dato['existencia']
-                    ]
-                );
+                        [
+                            'existencia' => $dato['existencia']
+                        ]
+                    );
             }
-            
+
             //return $this->errorResponse($datos, 409);
 
 
@@ -4041,7 +4040,7 @@ class FunerariaController extends ApiController
             ->with('operacion.cancelador')
             ->with('servicio_exhumado:servicios_funerarios_exhumado_id,id,status')
 
-        /**validnado si se hace filtrado de algun plan funerario de uso inmediato */
+            /**validnado si se hace filtrado de algun plan funerario de uso inmediato */
             ->where(function ($q) use ($uso_plan_funerario_futuro) {
                 if (trim($uso_plan_funerario_futuro) != '' && $uso_plan_funerario_futuro > 0) {
                     $q->where('servicios_funerarios.ventas_planes_id', '=', $uso_plan_funerario_futuro);
@@ -4075,8 +4074,8 @@ class FunerariaController extends ApiController
                     $q->where('servicios_funerarios.status', '=', $status);
                 }
             })
-        //->join('operaciones', 'operaciones.servicios_funerarios_id', '=', 'servicios_funerarios.id')
-        //->join('clientes', 'clientes.id', '=', 'operaciones.clientes_id')
+            //->join('operaciones', 'operaciones.servicios_funerarios_id', '=', 'servicios_funerarios.id')
+            //->join('clientes', 'clientes.id', '=', 'operaciones.clientes_id')
             ->where('nombre_afectado', 'like', '%' . $fallecido . '%')
             ->orderBy('servicios_funerarios.id', 'desc')
             ->get();
@@ -4267,10 +4266,10 @@ class FunerariaController extends ApiController
                 $solicitud['tipo_solicitud_texto'] = 'Servicio Funerario';
             } elseif ($solicitud['tipo_solicitud_id'] == 2) {
                 /**Reviso si el servicio llevo reinhumacion o solo se exhumo */
-                if($solicitud['ventas_terrenos_id'] >0){
-                     $solicitud['tipo_solicitud_texto'] = 'Exhumación y Reinhumación';
-                }else{
-                     $solicitud['tipo_solicitud_texto'] = 'Servicio de Exhumación';
+                if ($solicitud['ventas_terrenos_id'] > 0) {
+                    $solicitud['tipo_solicitud_texto'] = 'Exhumación y Reinhumación';
+                } else {
+                    $solicitud['tipo_solicitud_texto'] = 'Servicio de Exhumación';
                 }
             }
             if ($solicitud['contagioso_b'] == 0) {
@@ -4530,7 +4529,7 @@ class FunerariaController extends ApiController
                         } else {
                             $pagos_programados_cubiertos++;
                             $programado['fecha_a_pagar']
-                            = $fecha_ultimo_pago;
+                                = $fecha_ultimo_pago;
                             /**el pago programado ya fue cubierto */
                             $programado['status_pago']       = 2;
                             $programado['status_pago_texto'] = 'Pagado';
@@ -4592,25 +4591,24 @@ class FunerariaController extends ApiController
                 }
             }
 
-             $solicitud['permite_exhumar_b']=1;
-              $solicitud['exhumado_b']=0;
+            $solicitud['permite_exhumar_b'] = 1;
+            $solicitud['exhumado_b'] = 0;
             /**revisando si este servicio pérmite exhumar */
-             if($solicitud['cementerios_servicio_id']==1 && $solicitud['status_b']!=0){
-                 /**solo para cementerio aeternus */
-                 if(!is_null($solicitud['servicio_exhumado'])){
+            if ($solicitud['cementerios_servicio_id'] == 1 && $solicitud['status_b'] != 0) {
+                /**solo para cementerio aeternus */
+                if (!is_null($solicitud['servicio_exhumado'])) {
                     foreach ($solicitud['servicio_exhumado'] as $exhumado) {
-                                if($exhumado['status']==1){
-                                    $solicitud['permite_exhumar_b']=0;
-                                    $solicitud['exhumado_b']=1;
-                                    break;
-                                }
+                        if ($exhumado['status'] == 1) {
+                            $solicitud['permite_exhumar_b'] = 0;
+                            $solicitud['exhumado_b'] = 1;
+                            break;
                         }
+                    }
                 }
-             }else{
-                 $solicitud['permite_exhumar_b']=0;
-             }
+            } else {
+                $solicitud['permite_exhumar_b'] = 0;
+            }
             unset($solicitud['servicio_exhumado']);
-        
         } //fin foreach venta
 
         return $resultado_query;
@@ -4689,54 +4687,55 @@ class FunerariaController extends ApiController
 
             /**se deben de regresar los articulos que tiene este contrato al inventario */
             /**aqui voy */
-              
-              if (isset($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
+            $detalle_inventario = [];
+            if (isset($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'])) {
                 /**la operacion ya tenia articulos y servicios agregados y se deben de revisar para ver cuales
                  * se quitaron y se deben regresar al inventario
                  */
 
                 $lotes_iguales = [];
-                $detalle_inventario=[];
+                $detalle_inventario = [];
                 foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_contrato => $articulo_contrato) {
-                    if(in_array($index_contrato,$lotes_iguales) || !is_numeric($articulo_contrato['lotes_id'])){
+                    if (in_array($index_contrato, $lotes_iguales) || !is_numeric($articulo_contrato['lotes_id'])) {
                         continue;
                     }
-                  /**busco los ids y lotes iguales */
-                  $suma_articulo=0;
-                   foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_sub => $articulo_sub) {
-                       if(
-                           $articulo_contrato['articulos_id']==$articulo_sub['articulos_id'] &&
-                           $articulo_contrato['lotes_id']==$articulo_sub['lotes_id']
-                       )
-                       {
-                           $suma_articulo+=$articulo_sub['cantidad'];
+                    /**busco los ids y lotes iguales */
+                    $suma_articulo = 0;
+                    foreach ($datos_solicitud['operacion']['movimientoinventario']['articulosserviciofunerario'] as $index_sub => $articulo_sub) {
+                        if (
+                            $articulo_contrato['articulos_id'] == $articulo_sub['articulos_id'] &&
+                            $articulo_contrato['lotes_id'] == $articulo_sub['lotes_id']
+                        ) {
+                            $suma_articulo += $articulo_sub['cantidad'];
                             array_push($lotes_iguales, $index_sub);
-                       }
-                   }
-                   array_push($detalle_inventario, [
-                   'lotes_id'=>$articulo_contrato['lotes_id'],
-                   'articulos_id'=>$articulo_contrato['articulos_id'],
-                   'cantidad'=>$suma_articulo
-                   ]);
+                        }
+                    }
+                    array_push($detalle_inventario, [
+                        'lotes_id' => $articulo_contrato['lotes_id'],
+                        'articulos_id' => $articulo_contrato['articulos_id'],
+                        'cantidad' => $suma_articulo
+                    ]);
                 }
             } //fin if isset articulos en el contrato
 
             /**al ser obtenido el array de los articulos a regresar, solo de aumentan al inventario */
-            foreach($detalle_inventario as $detalle){
-                $total =Inventario::select('existencia')->where('lotes_id','=',$detalle['lotes_id'])->where('articulos_id','=',$detalle['articulos_id'])->first();
-               $suma=$total['existencia']+$detalle['cantidad'];
-                 DB::table('inventario')->where('lotes_id',$detalle['lotes_id'])->where('articulos_id',
-                 $detalle['articulos_id'])->update(
-                 [
-                 'existencia' => $suma
-                 ]
-                 );
+            foreach ($detalle_inventario as $detalle) {
+                $total = Inventario::select('existencia')->where('lotes_id', '=', $detalle['lotes_id'])->where('articulos_id', '=', $detalle['articulos_id'])->first();
+                $suma = $total['existencia'] + $detalle['cantidad'];
+                DB::table('inventario')->where('lotes_id', $detalle['lotes_id'])->where(
+                    'articulos_id',
+                    $detalle['articulos_id']
+                )->update(
+                    [
+                        'existencia' => $suma
+                    ]
+                );
             }
 
-            
-            
 
-          // return $this->errorResponse($detalle_inventario,409);
+
+
+            // return $this->errorResponse($detalle_inventario,409);
 
             DB::commit();
             return $request->solicitud_id;
@@ -4779,15 +4778,15 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_entrega       = $FirmasController->get_firma_documento($datos_solicitud['id'],15,'por_area_firma','solicitud');
-            $firma_no_portaba       = $FirmasController->get_firma_documento($datos_solicitud['id'],16,'por_area_firma','solicitud');
+            $firma_entrega       = $FirmasController->get_firma_documento($datos_solicitud['id'], 15, 'por_area_firma', 'solicitud');
+            $firma_no_portaba       = $FirmasController->get_firma_documento($datos_solicitud['id'], 16, 'por_area_firma', 'solicitud');
 
-            $firmas=[
-                'entrega_pertenencias'=>$firma_entrega['firma_path'],
-                'no_portaba'=>$firma_no_portaba['firma_path']
+            $firmas = [
+                'entrega_pertenencias' => $firma_entrega['firma_path'],
+                'no_portaba' => $firma_no_portaba['firma_path']
             ];
 
-            $pdf = PDF::loadView('funeraria/hoja_solicitud_servicio_funerario/hoja_solicitud', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/hoja_solicitud_servicio_funerario/hoja_solicitud', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "HOJA DE SERVICIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -4871,20 +4870,20 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $otorgante       = $FirmasController->get_firma_documento($datos_solicitud['id'],17,'por_area_firma','solicitud');
-            $aceptante       = $FirmasController->get_firma_documento($datos_solicitud['id'],18,'por_area_firma','solicitud');
-            $testigo1       = $FirmasController->get_firma_documento($datos_solicitud['id'],19,'por_area_firma','solicitud');
-            $testigo2       = $FirmasController->get_firma_documento($datos_solicitud['id'],20,'por_area_firma','solicitud');
+            $otorgante       = $FirmasController->get_firma_documento($datos_solicitud['id'], 17, 'por_area_firma', 'solicitud');
+            $aceptante       = $FirmasController->get_firma_documento($datos_solicitud['id'], 18, 'por_area_firma', 'solicitud');
+            $testigo1       = $FirmasController->get_firma_documento($datos_solicitud['id'], 19, 'por_area_firma', 'solicitud');
+            $testigo2       = $FirmasController->get_firma_documento($datos_solicitud['id'], 20, 'por_area_firma', 'solicitud');
 
-            $firmas=[
-                'otorgante'=>$otorgante['firma_path'],
-                'aceptante'=>$aceptante['firma_path'],
-                'testigo1'=>$testigo1['firma_path'],
-                'testigo2'=>$testigo2['firma_path']
+            $firmas = [
+                'otorgante' => $otorgante['firma_path'],
+                'aceptante' => $aceptante['firma_path'],
+                'testigo1' => $testigo1['firma_path'],
+                'testigo2' => $testigo2['firma_path']
             ];
 
 
-            $pdf = PDF::loadView('funeraria/hoja_preautorizacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/hoja_preautorizacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "HOJA DE PREAUTORIZACIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -4964,16 +4963,16 @@ class FunerariaController extends ApiController
 
             $FirmasController = new FirmasController();
 
-            $operacion_id=isset($datos_solicitud['operacion'])?$datos_solicitud['operacion']['id']:null;
+            $operacion_id = isset($datos_solicitud['operacion']) ? $datos_solicitud['operacion']['id'] : null;
 
-            $informante       = $FirmasController->get_firma_documento(100000,21,'por_area_firma');
-          
+            $informante       = $FirmasController->get_firma_documento(100000, 21, 'por_area_firma');
 
-            $firmas=[
-                'informante'=>$informante['firma_path']
+
+            $firmas = [
+                'informante' => $informante['firma_path']
             ];
 
-            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/certificado_defuncion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CERTIFICADO DE DEFUNCION " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5129,17 +5128,17 @@ class FunerariaController extends ApiController
             $registro      = RegistroPublico::first();
 
             $FirmasController = new FirmasController();
-            $contratante       = $FirmasController->get_firma_documento($datos_solicitud['id'],27,'por_area_firma','solicitud');
-            $publicidad       = $FirmasController->get_firma_documento($datos_solicitud['id'],28,'por_area_firma','solicitud');
-            $firma_gerente       = $FirmasController->get_firma_documento(null,null,'por_gerente');
+            $contratante       = $FirmasController->get_firma_documento($datos_solicitud['id'], 27, 'por_area_firma', 'solicitud');
+            $publicidad       = $FirmasController->get_firma_documento($datos_solicitud['id'], 28, 'por_area_firma', 'solicitud');
+            $firma_gerente       = $FirmasController->get_firma_documento(null, null, 'por_gerente');
 
-            $firmas=[
-                'contratante'=>$contratante['firma_path'],
-                'publicidad'=>$publicidad['firma_path'],
-                'gerente'=>$firma_gerente['firma_path']
+            $firmas = [
+                'contratante' => $contratante['firma_path'],
+                'publicidad' => $publicidad['firma_path'],
+                'gerente' => $firma_gerente['firma_path']
             ];
 
-            $pdf = PDF::loadView('funeraria/contrato_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'registro' => $registro,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/contrato_servicio_funerario/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'registro' => $registro, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONTRATO DE SERVICIO FUNERARIO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5215,21 +5214,21 @@ class FunerariaController extends ApiController
             $get_funeraria = new EmpresaController();
             $empresa       = $get_funeraria->get_empresa_data();
 
-          
+
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "CONSTANCIA DE EMBALSAMIENTO " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
 
             $FirmasController = new FirmasController();
-            $medico       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],23,'por_area_firma',null);
-            $embalsamador     = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'],24,'por_area_firma',null);
+            $medico       = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'], 23, 'por_area_firma', null);
+            $embalsamador     = $FirmasController->get_firma_documento($datos_solicitud['operacion']['id'], 24, 'por_area_firma', null);
 
-            $firmas=[
-                'medico'=>$medico['firma_path'],
-                'embalsamador'=>$embalsamador['firma_path']
+            $firmas = [
+                'medico' => $medico['firma_path'],
+                'embalsamador' => $embalsamador['firma_path']
             ];
 
-            $pdf = PDF::loadView('funeraria/embalsamiento/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/embalsamiento/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'firmas' => $firmas]);
 
 
             $pdf->setOptions([
@@ -5310,13 +5309,13 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'],25,'por_area_firma','solicitud');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'], 25, 'por_area_firma', 'solicitud');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path']
             ];
 
-            $pdf = PDF::loadView('funeraria/materialvelacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/materialvelacion/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "EQUIPO DE VELACIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5401,13 +5400,13 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'],22,'por_area_firma','solicitud');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'], 22, 'por_area_firma', 'solicitud');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path']
             ];
 
-            $pdf = PDF::loadView('funeraria/entrega_acta/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/entrega_acta/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ENTREGA DE ACTA DE DEFUNCIÓN " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5494,13 +5493,13 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'],26,'por_area_firma','solicitd');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'], 26, 'por_area_firma', 'solicitd');
 
-            $firmas=[
-                'cliente'=>$firma_cliente['firma_path']
+            $firmas = [
+                'cliente' => $firma_cliente['firma_path']
             ];
 
-            $pdf = PDF::loadView('funeraria/entrega_cenizas/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa,'firmas'=>$firmas]);
+            $pdf = PDF::loadView('funeraria/entrega_cenizas/documento', ['datos' => $datos_solicitud, 'empresa' => $empresa, 'firmas' => $firmas]);
 
             //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
             $name_pdf = "ENTREGA DE CENIZAS " . strtoupper($datos_solicitud['nombre_afectado']) . '.pdf';
@@ -5761,10 +5760,10 @@ class FunerariaController extends ApiController
                     $q->where('articulos.categorias_id', '=', $categoria_id);
                 }
             })
-           ->where(function ($q) use ($numero_control) {
+            ->where(function ($q) use ($numero_control) {
                 if (trim($numero_control) != '') {
                     /**filtro por numero de codigo o clave */
-                    $q->where('articulos.id', '=', $numero_control)->orWhere('articulos.codigo_barras', '=',$numero_control);
+                    $q->where('articulos.id', '=', $numero_control)->orWhere('articulos.codigo_barras', '=', $numero_control);
                 }
             })
             ->get()
