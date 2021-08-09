@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
+
 /**en pruebas */
 
 
@@ -174,7 +175,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/proveedores/alta_proveedor', 'ProveedoresController@alta_proveedor');
     Route::get('proveedores/get_proveedores/{id_provedor?}/{paginated?}', 'ProveedoresController@get_proveedores');
     /**invnetario */
-  
+
     Route::post('inventario/control_articulos/{tipo_servicio?}', 'InventarioController@control_articulos');
     Route::post('inventario/enable_disable/{tipo}', 'InventarioController@enable_disable');
     Route::post('inventario/ajustar_inventario', 'InventarioController@ajustar_inventario');
@@ -230,8 +231,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('funeraria/get_lugares_inhumacion', 'FunerariaController@get_lugares_inhumacion');
     Route::get('funeraria/get_material_velacion/{id_articulo?}/{paginated?}/{id_departamento?}/{id_categoria?}/{tipo_articulo?}/{solo_inventariable?}', 'InventarioController@get_articulos');
     Route::get('funeraria/get_tipos_contratante', 'FunerariaController@get_tipos_contratante');
-   
-   
+
+
     Route::get('funeraria/get_inventario/{id_articulo?}/{paginated?}/{solo_existencias?}/{con_material_velacion?}', 'FunerariaController@get_inventario');
     Route::get('funeraria/get_categorias_servicio', 'FunerariaController@get_categorias_servicio');
     /**fin de rutas del cementerio */
@@ -260,7 +261,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     /**rutas de reportes */
     Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
-
 });
 
 Route::get('inventarios/cementerio/documento_ubicacion_terreno', 'CementerioController@documento_ubicacion_terreno');
