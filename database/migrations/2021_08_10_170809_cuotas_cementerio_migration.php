@@ -20,7 +20,7 @@ class CuotasCementerioMigration extends Migration
             $table->date('fecha_inicio')->nullable();
             $table->date('fecha_fin')->nullable();
             $table->dateTime('fechahora_registro')->nullable();
-
+            $table->tinyInteger('tasa_iva');
             $table->unsignedBigInteger('registro_id')->unsigned()->nullable();
             $table->foreign('registro_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('modifico_id')->unsigned()->nullable();
