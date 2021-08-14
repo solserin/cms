@@ -402,9 +402,7 @@ const router = new Router({
                     path: "/reportes",
                     name: "reportes",
                     component: () =>
-                        import(
-                            "@/views/pages/reportes/GeneradorReportes"
-                        ),
+                        import("@/views/pages/reportes/GeneradorReportes"),
                     meta: {
                         breadcrumb: [
                             {

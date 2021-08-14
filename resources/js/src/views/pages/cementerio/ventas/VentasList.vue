@@ -1,6 +1,14 @@
 <template>
   <div>
     <div class="w-full text-right">
+         <vs-button
+        class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
+        color="primary"
+        @click="openCuotasCementerio = true"
+        type="border"
+      >
+        <span>Cuotas / Cementerio</span>
+      </vs-button>
       <vs-button
         class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
         color="primary"
@@ -245,6 +253,11 @@
       :show="openPlanesVenta"
       @closePlanesCementerio="openPlanesVenta = false"
     ></PlanesVenta>
+
+     <CuotasCementerio
+      :show="openCuotasCementerio"
+      @closeCuotasCementerio="openCuotasCementerio = false"
+    ></CuotasCementerio>
   </div>
 </template>
 
@@ -265,6 +278,9 @@ import usuarios from "@services/Usuarios";
 import { mostrarOptions } from "@/VariablesGlobales";
 import vSelect from "vue-select";
 import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
+import CuotasCementerio from "@pages/cementerio/ventas/cuotas/CuotasCementerio";
+
+
 export default {
   components: {
     "v-select": vSelect,
@@ -273,6 +289,7 @@ export default {
     ReportesVentas,
     CancelarVenta,
     PlanesVenta,
+    CuotasCementerio
   },
   watch: {
     actual: function (newValue, oldValue) {
@@ -295,6 +312,7 @@ export default {
     return {
       verAcuse: false,
       openPlanesVenta: false,
+      openCuotasCementerio: false,
       openCancelar: false,
       openReportes: false,
       verFormularioVentas: false,
