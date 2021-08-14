@@ -1034,8 +1034,9 @@ class CementerioController extends ApiController
         según la operación, en este caso de la tabla venta de terrenos, el id de la venta numero 1 o según el id de la venta).
         en el caso de pago de cuota de mantenimiento se agregan los digitos de la tabla de ventas_terrenos para mantener la singularidad del registro de pagos en
         la BD
+        quedando al final asi
+        00220210814011-140
          */
-
         //puede que venga con descuento pero no es del 100%
         //determinamos que tipo de ventas
         if ($request->tipo_financiamiento == 1 || (int) $request->financiamiento == 1) {
