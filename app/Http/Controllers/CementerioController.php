@@ -23,6 +23,137 @@ use App\Http\Controllers\FirmasController;
 
 class CementerioController extends ApiController
 {
+    /**CONTROL DE CUOTAS*/
+    public function control_cuotas(Request $request, $tipo_servicio = '')
+    {
+        if (!(trim($tipo_servicio) == 'agregar' || trim($tipo_servicio) == 'modificar')) {
+            return $this->errorResponse('Error, debe especificar que tipo de control está solicitando.', 409);
+        }
+
+        //validaciones directas sin condicionales
+        $validaciones = [
+            'descripcion'           => 'required',
+            'fecha_inicio'           => 'required|date',
+            'fecha_fin'           => 'required|date|after:fecha_inicio',
+            'cuota_total'           => 'required|numeric|min:1',
+            'tasa_iva'           => 'required|numeric|min:0|max:16',
+            //'id_cuota'           => !($tipo_servicio == "agregar") ? '' : 'required|integer|min:1'
+        ];
+
+
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+        $mensajes = [
+            'descripcion.required'           => 'Ingrese la descripción de la cuota.',
+            'fecha_inicio.required'           => 'Ingrese la fecha de inicio.',
+            'fecha_fin.required'           => 'Ingrese la fecha final.',
+            'fecha_fin.after'           => 'La fecha final debe ser mayor que la fecha inicial.',
+            'tasa_iva.required'           => 'Ingrese la tasa de IVA.'
+        ];
+
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+
+
+
+        /**verificando si es tipo modificar para validar que venga el id a modificar */
+
+        /*
+        $datos_plan = array();
+        if ($tipo_servicio == 'modificar') {
+            $datos_plan = $this->get_planes(false, $request->id_plan_modificar)[0];
+            if (empty($datos_plan)) {
+                return $this->errorResponse('No se encontró la información del plan solicitada', 409);
+            } else if ($datos_plan['status'] == 0) {
+                return $this->errorResponse('Esta plan ya fue cancelado, no puede modificarse', 409);
+            }
+        }
+
+        */
+
+        $id_return = 0;
+
+        try {
+            DB::beginTransaction();
+            if ($tipo_servicio == 'agregar') {
+                $id_cuota = DB::table('cuotas_cementerio')->insertGetId(
+                    [
+                        'descripcion'               => $request->descripcion,
+                        'cuota_total'               => $request->cuota_total,
+                        'fecha_inicio'               => $request->fecha_inicio,
+                        'fecha_fin'               => $request->fecha_fin,
+                        'tasa_iva'               => $request->tasa_iva,
+                        'registro_id'        => (int) $request->user()->id,
+                        'modifico_id'        => (int) $request->user()->id,
+                        'fechahora_registro'     => now(),
+                    ]
+                );
+
+                /**una vez registrada la cuota debemos asignar las cuotas a pagar a los clientes con propieades en el cementerio */
+
+
+
+                /**al registrar el plan, se procede a registrar los conceptos */
+                /*
+                foreach ($request->conceptos as $key_seccion => $seccion) {
+                    foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
+                        DB::table('plan_conceptos')->insert(
+                            [
+                                'seccion_id'           => ($key_seccion + 1),
+                                'concepto'             => $concepto['concepto'],
+                                'concepto_ingles'      => $concepto['concepto'],
+                                'planes_funerarios_id' => $id_plan,
+                            ]
+                        );
+                    }
+                }
+                */
+                $id_return = $id_cuota;
+                /**todo salio bien y se debe de guardar */
+            } else {
+                /**es modificar */
+                DB::table('planes_funerarios')->where('id', $request->id_plan_modificar)->update(
+                    [
+                        'plan'               => $request->descripcion,
+                        'plan_ingles'        => $request->descripcion,
+                        'nota'               => $request->nota != '' ? $request->nota : '',
+                        'nota_ingles'        => $request->nota != '' ? $request->nota : '',
+                        'modifico_id'        => (int) $request->user()->id,
+                        'fecha_modificacion' => now(),
+                    ]
+                );
+                /**eliminamos los coceptos originales */
+                DB::table('plan_conceptos')->where('planes_funerarios_id', $request->id_plan_modificar)->delete();
+
+                /**al actualizzar el plan, se procede a registrar los conceptos nuevamente*/
+                foreach ($request->conceptos as $key_seccion => $seccion) {
+                    foreach ($seccion['conceptos'] as $key_concepto => $concepto) {
+                        DB::table('plan_conceptos')->insert(
+                            [
+                                'seccion_id'           => ($key_seccion + 1),
+                                'concepto'             => $concepto['concepto'],
+                                'concepto_ingles'      => $concepto['concepto'],
+                                'planes_funerarios_id' => $request->id_plan_modificar,
+                            ]
+                        );
+                    }
+                }
+                $id_return = $request->id_plan_modificar;
+            }
+            DB::commit();
+            return $id_return;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+
+
 
     /**CANCELAR LA VENTA */
     public function cancelar_venta(Request $request)

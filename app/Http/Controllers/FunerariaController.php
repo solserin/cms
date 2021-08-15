@@ -34,6 +34,7 @@ use App\Http\Controllers\CementerioController;
 class FunerariaController extends ApiController
 {
 
+
     /**REGISTRAR PLAN FUNERARIO*/
     public function control_planes(Request $request, $tipo_servicio = '')
     {

@@ -35,7 +35,7 @@
         <div class="title-form-group">Cuotas del cementerio registradas</div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
-              <!--
+            <!--
                 <vs-table
                   :data="propiedad.precios"
                   noDataText="0 Resultados"
@@ -184,11 +184,10 @@ export default {
   watch: {
     show: function (newValue, oldValue) {
       if (newValue == true) {
-        this.$refs["planes_cementerio"].$el.querySelector(
-          ".vs-icon"
-        ).onclick = () => {
-          this.cancelar();
-        };
+        this.$refs["planes_cementerio"].$el.querySelector(".vs-icon").onclick =
+          () => {
+            this.cancelar();
+          };
 
         (async () => {
           /**manda traer los financiamientps */
@@ -329,7 +328,8 @@ export default {
       return;
     },
     retorno_id(dato) {
-      this.get_financiamientos();
+      alert(dato);
+      // this.get_financiamientos();
     },
     enable_disable_precio(id_precio, precio, accion) {
       this.accionPassword = accion + " precio " + precio;
@@ -374,8 +374,7 @@ export default {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
                 title: "Permiso denegado",
-                text:
-                  "Verifique sus permisos con el administrador del sistema.",
+                text: "Verifique sus permisos con el administrador del sistema.",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",

@@ -260,5 +260,10 @@ export default {
     consultar_venta_id(id_venta) {
         let service = "/cementerio/get_ventas/" + id_venta;
         return axios.get(service);
+    },
+
+    registrar_cuota(datos) {
+        let call = "/cementerio/control_cuotas/agregar";
+        return axios.post(call, datos);
     }
 };

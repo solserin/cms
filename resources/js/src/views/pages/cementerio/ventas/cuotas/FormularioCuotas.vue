@@ -21,7 +21,7 @@
                 data-vv-as=" "
                 data-vv-validate-on="blur"
                 v-validate="'required'"
-                maxlength="10"
+                maxlength="100"
                 type="text"
                 class="w-full"
                 placeholder="Ene 2021 - Enero 2022"
@@ -41,7 +41,7 @@
                 name="cuota_total"
                 data-vv-as=" "
                 data-vv-validate-on="blur"
-                v-validate="'required|numeric'"
+                v-validate="'required|decimal'"
                 maxlength="10"
                 type="text"
                 class="w-full"
@@ -84,10 +84,7 @@
               <flat-pickr
                 name="fecha_inicio"
                 data-vv-as=" "
-                v-validate:
-                fecha_inicio_validacion_computed.immediate="
-                        'required'
-                      "
+                v-validate:fecha_inicio_validacion_computed="'required'"
                 :config="configdateTimePicker"
                 v-model="form.fecha_inicio"
                 placeholder="Fecha de inicio"
@@ -104,20 +101,17 @@
                 <span>(*)</span>
               </label>
               <flat-pickr
-                name="fecha_final"
+                name="fecha_fin"
                 data-vv-as=" "
-                v-validate:
-                fecha_fin_validacion_computed.immediate="
-                        'required'
-                      "
+                v-validate:fecha_fin_validacion_computed="'required'"
                 :config="configdateTimePicker"
-                v-model="form.fecha_final"
+                v-model="form.fecha_fin"
                 placeholder="Fecha final"
                 class="w-full"
               />
-              <span>{{ errors.first("fecha_final") }}</span>
-              <span v-if="this.errores.fecha_final">{{
-                errores.fecha_final[0]
+              <span>{{ errors.first("fecha_fin") }}</span>
+              <span v-if="this.errores.fecha_fin">{{
+                errores.fecha_fin[0]
               }}</span>
             </div>
           </div>
@@ -143,7 +137,6 @@
             <span class="" v-else>Modificar Cuota</span>
           </vs-button>
         </div>
-        {{ form }}
       </div>
     </vs-popup>
     <Password
@@ -395,6 +388,10 @@ export default {
         })
         .catch((err) => {
           if (err.response) {
+            console.log(
+              "🚀 ~ file: FormularioCuotas.vue ~ line 397 ~ registrar_cuota ~ err.response",
+              err.response
+            );
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
