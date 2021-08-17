@@ -92,7 +92,73 @@ class CementerioController extends ApiController
                     ]
                 );
 
-                /**una vez registrada la cuota debemos asignar las cuotas a pagar a los clientes con propieades en el cementerio */
+
+                /**una vez registrada la cuota debemos asignar las cuotas a pagar a los clientes con propieades en el cementerio
+                 * Para ello debemos obtener todas las operaciones que son de tipo venta de propiedad 'empresa_operaciones_id  => 1'
+                 */
+
+                $tasa_iva = $request->tasa_iva;
+                $tasa_iva_calculos = ($tasa_iva / 100) + 1;
+                $tasa_iva_decimal = ($tasa_iva / 100);
+                $total = $request->cuota_total;
+                $subtotal = round($total / $tasa_iva_calculos, 2);
+                $descuento = 0;
+                $impuestos = round(($subtotal - $descuento) * $tasa_iva_decimal, 2);
+
+                /**datos a guardar en la operacion
+                 * tasa_iva
+                 * subtotal
+                 * descuento
+                 * impuestos
+                 * total
+                 * descuento_pronto_pago_b => 0
+                 * ventas_terrenos_id
+                 * financiamiento => 1 contado
+                 * clientes_id
+                 * fecha_registro
+                 * fecha_operacion
+                 * registro_id
+                 * modifico_id
+                 * fecha_modificacion
+                 * status
+                 * cuotas_cementerio_id
+                 * aplica_devolucion_b =>0
+                 */
+
+                /**se hace el insert masivo en la base de datos de las operaciones con los clientes que apliquen para la fecha de la cuota segun la fecha compra */
+                $select = 'SELECT 2,' . $id_cuota . ',' . $tasa_iva . ',' . $subtotal . ',' . $descuento . ',' . $impuestos . ',' . $total . ',' . '0,ventas_terrenos_id,1,clientes_id,' . '"' . now() . '"' . ',' . '"' . $request->fecha_inicio . '"' . ',' . (int) $request->user()->id . ',' . (int) $request->user()->id . ',1,0 from operaciones where empresa_operaciones_id =1 and status <>0 and fecha_operacion >=' . '"' . $request->fecha_inicio . '"';
+
+                // return DB::select(DB::raw($select));
+
+
+
+                DB::table('operaciones')->insertUsing(['empresa_operaciones_id', 'cuotas_cementerio_id', 'tasa_iva', 'subtotal', 'descuento', 'impuestos', 'total', 'descuento_pronto_pago_b', 'ventas_terrenos_id', 'financiamiento', 'clientes_id', 'fecha_registro', 'fecha_operacion', 'registro_id', 'modifico_id', 'status', 'aplica_devolucion_b'], $select);
+                $operaciones_a_programar_pagos = Operaciones::select('id', 'ventas_terrenos_id', 'clientes_id', 'cuotas_cementerio_id')->where('empresa_operaciones_id', 2)->where('cuotas_cementerio_id', $id_cuota)->get()->toArray();
+
+                /**se hace la inserccion de pagos programados en la base de datos */
+                ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
+
+                /**agrego los datos del request que necesita la funcion de programar pagos */
+                $request->request->add(['costo_neto' =>  $total]);
+                $request->request->add(['pago_inicial' =>  $total]);
+                $request->request->add(['descuento' =>  $descuento]);
+                $request->request->add(['fecha_venta' =>  $request->fecha_inicio]);
+                $request->request->add(['tipo_financiamiento' => 1]); //de contado
+
+
+                foreach ($operaciones_a_programar_pagos as  $operacion) {
+                    /**operacion tipo 2- 002- SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO.
+                     * El id venta lo modificamos para que se ajuste a las necesidades de esta operacion
+                     * en el caso de pago de cuota de mantenimiento se agregan los digitos de la tabla de ventas_terrenos para mantener la singularidad del registro de pagos en
+                     * la BD final asi 00220210814011-140
+                     */
+                    $this->programarPagos($request, $operacion['id'], $id_cuota . '-' . $operacion['ventas_terrenos_id'], '002');
+                }
+
+                // return $this->errorResponse('fff', 409);
+
+
+
 
 
 
@@ -1128,9 +1194,7 @@ class CementerioController extends ApiController
         /**aqui comienzan a gurdar los datos */
         $tasa_iva_calculos = 0;
         if (isset($request->tasa_iva) && isset($request->costo_neto) && isset($request->descuento)) {
-            if ($request->tasa_iva > 0) {
-                $tasa_iva_calculos = ($request->tasa_iva / 100) + 1;
-            }
+            $tasa_iva_calculos = ($request->tasa_iva / 100) + 1;
         } else {
             return $this->errorResponse('Ingrese IVA, costo neto y descuento.', 409);
         }

@@ -104,7 +104,7 @@
                 name="fecha_fin"
                 data-vv-as=" "
                 v-validate:fecha_fin_validacion_computed="'required'"
-                :config="configdateTimePicker"
+                :config="configdateTimePickerFechasCaducidad"
                 v-model="form.fecha_fin"
                 placeholder="Fecha final"
                 class="w-full"
@@ -175,7 +175,10 @@ import cementerio from "@services/cementerio";
 import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 
-import { configdateTimePicker } from "@/VariablesGlobales";
+import {
+  configdateTimePicker,
+  configdateTimePickerFechasCaducidad,
+} from "@/VariablesGlobales";
 /**VARIABLES GLOBALES */
 
 export default {
@@ -261,6 +264,7 @@ export default {
   data() {
     return {
       configdateTimePicker: configdateTimePicker,
+      configdateTimePickerFechasCaducidad: configdateTimePickerFechasCaducidad,
       datosCuota: [],
       title: "",
       accionConfirmarSinPassword: "",

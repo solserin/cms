@@ -1,6 +1,4 @@
-import {
-    Spanish
-} from "flatpickr/dist/l10n/es.js";
+import { Spanish } from "flatpickr/dist/l10n/es.js";
 import { range } from "lodash";
 export const configdateTimePickerWithTime = {
     enableTime: true,
@@ -19,13 +17,12 @@ export const configdateTimePicker = {
 };
 
 export const configdateTimePickerRange = {
-    mode:"range",
+    mode: "range",
     dateFormat: "Y-m-d",
     locale: Spanish,
     shorthandCurrentMonth: false,
-    maxDate: new Date(new Date().setDate(new Date().getDate())),
+    maxDate: new Date(new Date().setDate(new Date().getDate()))
 };
-
 
 export const configdateTimePickerFechasCaducidad = {
     enableTime: false,
@@ -35,7 +32,8 @@ export const configdateTimePickerFechasCaducidad = {
     maxDate: new Date(new Date().setDate(new Date().getDate() + 2000))
 };
 /**SELECT OPTIONS */
-export const mostrarOptions = [{
+export const mostrarOptions = [
+    {
         label: "15",
         value: "15"
     },
@@ -65,7 +63,8 @@ export const mostrarOptions = [{
     }
 ];
 
-export const estadosOptions = [{
+export const estadosOptions = [
+    {
         label: "Todos",
         value: ""
     },
@@ -79,9 +78,8 @@ export const estadosOptions = [{
     }
 ];
 
-
-
-export const generosOptions = [{
+export const generosOptions = [
+    {
         label: "Hombre",
         value: "1"
     },
@@ -147,6 +145,6 @@ export const alfabeto = [
     "AZ"
 ];
 
-export const PermisosModulo = localStorage.getItem("AccessPermissions") ?
-    JSON.parse(localStorage.getItem("AccessPermissions")) :
-    null;
+export const PermisosModulo = localStorage.getItem("AccessPermissions")
+    ? JSON.parse(localStorage.getItem("AccessPermissions"))
+    : null;
