@@ -218,7 +218,7 @@ export default {
         (async () => {
           if (this.getTipoformulario == "modificar") {
             this.title = "Modificar Cuota de Mantenimiento";
-            //this.get_cuota_by_id();
+            this.get_cuota_by_id();
             /**se cargan los datos al formulario */
           } else {
             this.title = "Registrar Cuota de Mantenimiento";
@@ -296,24 +296,12 @@ export default {
       this.$vs.loading();
       try {
         let res = await cementerio.get_cuota_by_id(this.get_cuota_id);
-        this.datosCuota = res.data;
+        this.datosCuota = res.data[0];
         this.form.descripcion = this.datosCuota.descripcion;
-        //actualizo los datos en el formulario
-        this.financiamientos.forEach((element) => {
-          if (element.value == this.datosCuota.contado_b) {
-            this.form.contado_b = element;
-            this.form.financiamiento = this.datosCuota.financiamiento;
-            return;
-          }
-        });
-        this.tipos_propiedad.forEach((element) => {
-          if (element.value == this.datosCuota.tipo_propiedades_id) {
-            this.form.tipo_propiedades_id = element;
-            return;
-          }
-        });
-        this.form.costo_neto = parseFloat(this.datosCuota.costo_neto);
-        this.form.pago_inicial = parseFloat(this.datosCuota.pago_inicial);
+        this.form.tasa_iva = this.datosCuota.tasa_iva;
+        this.form.cuota_total = parseFloat(this.datosCuota.cuota_total);
+        this.form.fecha_inicio = this.datosCuota.fecha_inicio;
+        this.form.fecha_fin = this.datosCuota.fecha_fin;
         this.$vs.loading.close();
       } catch (error) {
         this.$vs.loading.close();
@@ -392,10 +380,6 @@ export default {
         })
         .catch((err) => {
           if (err.response) {
-            console.log(
-              "🚀 ~ file: FormularioCuotas.vue ~ line 397 ~ registrar_cuota ~ err.response",
-              err.response
-            );
             if (err.response.status == 403) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({

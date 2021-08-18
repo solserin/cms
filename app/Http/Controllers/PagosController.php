@@ -86,6 +86,7 @@ class PagosController extends ApiController
             $resultado = Operaciones::select(
                 'ventas_planes_id',
                 'ventas_terrenos_id',
+                'cuotas_cementerio_id',
                 'servicios_funerarios_id',
                 'operaciones.id as operacion_id',
                 'operaciones.status as operacion_status',
@@ -112,6 +113,7 @@ class PagosController extends ApiController
                     '(NULL) AS fecha_a_pagar_texto'
                 )
             )
+                ->with('cuota_cementerio')
                 ->with([
                     'pagosProgramados' => function ($query) use ($request) {
                         if ($request->multipago == 'false') {
@@ -147,7 +149,7 @@ class PagosController extends ApiController
                     $dato['operacion_texto'] = 'Abono por Venta de Propiedad';
                 } elseif ($dato['empresa_operaciones_id'] == 2) {
                     /**SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO. */
-                    $dato['operacion_texto'] = 'Pago de Cuota de Mantenimiento';
+                    $dato['operacion_texto'] = 'Cuota Mtto. Cementerio | ' . $dato['cuota_cementerio']['descripcion'];
                 } elseif ($dato['empresa_operaciones_id'] == 3) {
                     /**SERVICIOS FUNERARIOS. */
                     $dato['operacion_texto'] = 'Pago por Servicios Funerarios';
@@ -557,6 +559,20 @@ class PagosController extends ApiController
                 );
                 /**generando el numero de titulo de la venta de propiedad */
                 $cementerio_controller->generarNumeroTitulo($datos_operacion['operacion_id'], true);
+            }
+        } else  if ($datos_operacion['empresa_operaciones_id'] == 2) {
+            /**cuotas de mantenimiento en cementerio */
+            $cuotas_controller = new CementerioController();
+            $datos_venta = $cuotas_controller->get_ventas($request, $datos_operacion['cuotas_cementerio_id'], '')[0];
+
+            if (round($datos_venta['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
+                /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
+                DB::table('operaciones')->where('id', $datos_venta['operacion_id'])->update(
+                    [
+                        /**status de ya liquidada */
+                        'status' => 2
+                    ]
+                );
             }
         } else  if ($datos_operacion['empresa_operaciones_id'] == 4) {
             /**venta de planes a futuro */
@@ -1184,7 +1200,7 @@ class PagosController extends ApiController
                     $pago['tipo_operacion_texto'] = 'VENTA DE TERRENOS';
                 } else if ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 2) {
                     /**es tipo de SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO. */
-                    $pago['tipo_operacion_texto'] = 'SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO.';
+                    $pago['tipo_operacion_texto'] = 'CUOTA DE MTTO. EN CEMENTERIO.';
                 } elseif ($pago['referencias_cubiertas'][0]['operacion_del_pago']['empresa_operaciones_id'] == 3) {
                     /**es tipo de  SERVICIOS FUNERARIOS */
                     $pago['tipo_operacion_texto'] = ' SERVICIOS FUNERARIOS';
@@ -1243,16 +1259,16 @@ class PagosController extends ApiController
         $empresa = $get_funeraria->get_empresa_data();
 
         $FirmasController = new FirmasController();
-        $firma_cobrador       = $FirmasController->get_firma_documento($datos_pago['cobrador_id'],null,'por_cobrador');
-        $cancelo       = $FirmasController->get_firma_documento($datos_pago['cancelo_id'],null,'por_cobrador');
-        $firmas=[
-            'cobrador'=>$firma_cobrador['firma_path'],
-              'cancelo'=>$cancelo['firma_path']
+        $firma_cobrador       = $FirmasController->get_firma_documento($datos_pago['cobrador_id'], null, 'por_cobrador');
+        $cancelo       = $FirmasController->get_firma_documento($datos_pago['cancelo_id'], null, 'por_cobrador');
+        $firmas = [
+            'cobrador' => $firma_cobrador['firma_path'],
+            'cancelo' => $cancelo['firma_path']
         ];
 
 
 
-        $pdf = PDF::loadView('pagos/recibo_pago', ['id_pago' => $id_pago, 'datos' => $datos_pago, 'empresa' => $empresa,'firmas'=>$firmas]);
+        $pdf = PDF::loadView('pagos/recibo_pago', ['id_pago' => $id_pago, 'datos' => $datos_pago, 'empresa' => $empresa, 'firmas' => $firmas]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf = "RECIBO DE PAGO " . strtoupper($datos_pago['referencias_cubiertas'][0]['operacion_del_pago']['cliente']['nombre']) . '.pdf';
 

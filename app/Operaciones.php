@@ -35,6 +35,12 @@ class Operaciones extends Model
             );
     }
 
+
+    public function cuota_cementerio()
+    {
+        return $this->belongsTo('App\Cuotas', 'cuotas_cementerio_id', 'id');
+    }
+
     /**la venta tiene uno o muchos pagos programados */
     public function pagosProgramados()
     {
@@ -229,5 +235,4 @@ class Operaciones extends Model
     {
         return $this->hasOne('App\MovimientosInventario', 'operaciones_id', 'operacion_id')->select('operaciones_id', 'id');
     }
-
 }

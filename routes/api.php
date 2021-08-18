@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
+Route::get('cementerio/get_cuotas/{id_cuota?}/{paginated?}/', 'CementerioController@get_cuotas');
 
 /**rutas publicas_ entran sin token */
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
@@ -135,6 +136,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
     Route::post('cementerio/control_cuotas/{tipo_servicio?}', 'CementerioController@control_cuotas');
+
 
     /**rutas de funeraria ventas planes */
     Route::post('funeraria/control_ventas/{tipo_servicio}', 'FunerariaController@control_ventas'); //agregar,modificar

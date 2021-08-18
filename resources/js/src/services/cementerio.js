@@ -256,6 +256,21 @@ export default {
         });
     },
 
+    get_cuotas(param) {
+        let service = "/cementerio/get_cuotas/all/false";
+        return axios.get(service, {
+            cancelToken: new CancelToken(c => {
+                this.cancel = c;
+            }),
+            params: param
+        });
+    },
+
+    get_cuota_by_id(id_cuota) {
+        let service = "/cementerio/get_cuotas/" + id_cuota;
+        return axios.get(service);
+    },
+
     //obtiene la venta por id
     consultar_venta_id(id_venta) {
         let service = "/cementerio/get_ventas/" + id_venta;
@@ -264,6 +279,11 @@ export default {
 
     registrar_cuota(datos) {
         let call = "/cementerio/control_cuotas/agregar";
+        return axios.post(call, datos);
+    },
+
+    update_cuota(datos) {
+        let call = "/cementerio/control_cuotas/modificar";
         return axios.post(call, datos);
     }
 };

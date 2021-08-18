@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popup popup-70"
+      class="forms-popup popup-90"
       fullscreen
       title="cuotas de mantenimiento en cementerio"
       :active.sync="showVentana"
@@ -9,18 +9,19 @@
     >
       <div class="w-full text-right">
         <vs-button
+          hidden
           class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
           color="primary"
           type="border"
           @click="
             openReporte(
-              'Precios x Propiedad (Español)',
-              '/cementerio/lista_precios_pdf/es',
+              'cuotass x Propiedad (Español)',
+              '/cementerio/lista_cuotass_pdf/es',
               ''
             )
           "
         >
-          <span>Imprimir lista de precios</span>
+          <span>Imprimir lista de cuotass</span>
         </vs-button>
         <vs-button
           class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
@@ -35,99 +36,107 @@
         <div class="title-form-group">Cuotas del cementerio registradas</div>
         <div class="form-group-content">
           <div class="flex flex-wrap">
-            <!--
-                <vs-table
-                  :data="propiedad.precios"
-                  noDataText="0 Resultados"
-                  class="tabla-datos"
+            <vs-table
+              :data="cuotas"
+              noDataText="0 Resultados"
+              class="tabla-datos w-full mt-6"
+            >
+              <template slot="header">
+                <h3>CUOTAS DE MANTENIMIENTO REGISTRADAS</h3>
+              </template>
+              <template slot="thead">
+                <vs-th>Clave</vs-th>
+                <vs-th>Descripción</vs-th>
+                <vs-th>Periodo</vs-th>
+                <vs-th>Monto Cuota ($)</vs-th>
+                <vs-th>Total de Propiedades</vs-th>
+                <vs-th>Total a Cobrar ($)</vs-th>
+                <vs-th>Total Cobrado ($)</vs-th>
+                <vs-th>Saldo Neto ($)</vs-th>
+
+                <vs-th>Acciones</vs-th>
+              </template>
+              <template slot-scope="{ data }">
+                <vs-tr
+                  :data="cuotas"
+                  :key="index_cuota"
+                  v-for="(cuotas, index_cuota) in data"
                 >
-                  <template slot="header">
-                    <h3>
-                      Tipo {{ propiedad.tipo }}, capacidad
-                      {{ propiedad.capacidad }} Persona(s)
-                    </h3>
-                  </template>
-                  <template slot="thead">
-                    <vs-th>#</vs-th>
-                    <vs-th>Pago Inicial ($)</vs-th>
-                    <vs-th>Costo Neto ($)</vs-th>
+                  <vs-td :data="data[index_cuota].id">
+                    <span class="font-semibold">{{ cuotas.id }}</span>
+                  </vs-td>
+                  <vs-td :data="data[index_cuota].descripcion">{{
+                    cuotas.descripcion
+                  }}</vs-td>
+                  <vs-td :data="data[index_cuota].periodo">{{
+                    cuotas.periodo
+                  }}</vs-td>
 
-                    <vs-th>Abono Mensual ($)</vs-th>
+                  <vs-td :data="data[index_cuota].cuota_total"
+                    >$ {{ cuotas.cuota_total | numFormat("0,000.00") }}</vs-td
+                  >
 
-                    <vs-th>Financiamiento</vs-th>
-                    <vs-th>Descripción</vs-th>
-                    <vs-th>Acciones</vs-th>
-                  </template>
-                  <template slot-scope="{ data }">
-                    <vs-tr
-                      :data="precio"
-                      :key="index_precio"
-                      v-for="(precio, index_precio) in data"
-                    >
-                      <vs-td :data="data[index_precio].id">
-                        <span class="font-semibold">{{
-                          index_precio + 1
-                        }}</span>
-                      </vs-td>
-                      <vs-td :data="data[index_precio].pago_inicial"
-                        >$
-                        {{ precio.pago_inicial | numFormat("0,000.00") }}</vs-td
-                      >
-                      <vs-td :data="data[index_precio].costo_neto"
-                        >$
-                        {{ precio.costo_neto | numFormat("0,000.00") }}</vs-td
-                      >
+                  <vs-td :data="data[index_cuota].num_pagos_programados">{{
+                    cuotas.num_pagos_programados
+                  }}</vs-td>
 
-                      <vs-td :data="data[index_precio].pago_mensual"
-                        >$
-                        {{ precio.pago_mensual | numFormat("0,000.00") }}</vs-td
-                      >
+                  <vs-td :data="data[index_cuota].total_x_cuota"
+                    >$ {{ cuotas.total_x_cuota | numFormat("0,000.00") }}</vs-td
+                  >
 
-                      <vs-td :data="data[index_precio].tipo_financiamiento">{{
-                        precio.tipo_financiamiento
-                      }}</vs-td>
-                      <vs-td :data="data[index_precio].descripcion">{{
-                        precio.descripcion
-                      }}</vs-td>
+                  <vs-td :data="data[index_cuota].total_cubierto"
+                    >$
+                    {{ cuotas.total_cubierto | numFormat("0,000.00") }}</vs-td
+                  >
+                  <vs-td :data="data[index_cuota].saldo_neto"
+                    >$ {{ cuotas.saldo_neto | numFormat("0,000.00") }}</vs-td
+                  >
 
-                      <vs-td :data="data[index_precio].status">
-                        <img
-                          class="cursor-pointer img-btn-18 mx-2"
-                          src="@assets/images/edit.svg"
-                          title="Modificar"
-                          @click="openModificar(data[index_precio].id)"
-                        />
-                        <img
-                          v-if="data[index_precio].status == 1"
-                          class="img-btn-24 mx-2"
-                          src="@assets/images/switchon.svg"
-                          title="Deshabilitar"
-                          @click="
-                            enable_disable_precio(
-                              data[index_precio].id,
-                              data[index_precio].descripcion,
-                              'deshabilitar'
-                            )
-                          "
-                        />
-                        <img
-                          v-else
-                          class="img-btn-24 mx-2"
-                          src="@assets/images/switchoff.svg"
-                          title="Habilitar"
-                          @click="
-                            enable_disable_precio(
-                              data[index_precio].id,
-                              data[index_precio].descripcion,
-                              'habilitar'
-                            )
-                          "
-                        />
-                      </vs-td>
-                    </vs-tr>
-                  </template>
-                </vs-table>
-                -->
+                  <vs-td :data="data[index_cuota].status">
+                    <img
+                      class="cursor-pointer img-btn-22 mx-2"
+                      src="@assets/images/pdf.svg"
+                      title="Consultar Documento"
+                      @click="
+                        openReporte(documento.documento, documento.url, '', '')
+                      "
+                    />
+                    <img
+                      class="cursor-pointer img-btn-18 mx-2"
+                      src="@assets/images/edit.svg"
+                      title="Modificar"
+                      @click="openModificar(data[index_cuota].id)"
+                    />
+                    <img
+                      v-if="data[index_cuota].status == 1"
+                      class="img-btn-24 mx-2"
+                      src="@assets/images/switchon.svg"
+                      title="Deshabilitar"
+                      @click="
+                        enable_disable_cuotas(
+                          data[index_cuota].id,
+                          data[index_cuota].descripcion,
+                          'deshabilitar'
+                        )
+                      "
+                    />
+                    <img
+                      v-else
+                      class="img-btn-24 mx-2"
+                      src="@assets/images/switchoff.svg"
+                      title="Habilitar"
+                      @click="
+                        enable_disable_cuotas(
+                          data[index_cuota].id,
+                          data[index_cuota].descripcion,
+                          'habilitar'
+                        )
+                      "
+                    />
+                  </vs-td>
+                </vs-tr>
+              </template>
+            </vs-table>
           </div>
         </div>
       </div>
@@ -149,7 +158,7 @@
       ></Password>
 
       <FormularioCuotas
-        :id_precio="id_precio_modificar"
+        :id_cuota="id_cuotas_modificar"
         :tipo="tipoFormulario"
         :show="verFormularioCuotas"
         @closeVentana="verFormularioCuotas = false"
@@ -157,7 +166,7 @@
       ></FormularioCuotas>
 
       <Reporteador
-        :header="'Consultar precios x propiedad'"
+        :header="'Consultar cuotass x propiedad'"
         :show="openReportesLista"
         :listadereportes="ListaReportes"
         :request="request"
@@ -190,8 +199,8 @@ export default {
           };
 
         (async () => {
-          /**manda traer los financiamientps */
-          await this.get_financiamientos();
+          /**manda traer los cuotas */
+          await this.get_cuotas();
         })();
       } else {
         /**cerrar ventana */
@@ -219,12 +228,11 @@ export default {
       },
       /**reportrador */
       selected: [],
-      propiedades: [],
-      propiedades_tipos: [],
-      propiedad_tipo: {},
+
+      cuotas: [],
       verFormularioCuotas: false,
       tipoFormulario: "",
-      id_precio_modificar: 0,
+      id_cuotas_modificar: 0,
       /** */
       operConfirmar: false,
       openPassword: false,
@@ -249,12 +257,12 @@ export default {
       this.ListaReportes = [];
       /**agrego los reportes de manera manual */
       this.ListaReportes.push({
-        nombre: "Precios x Propiedad (Español)",
-        url: "/cementerio/lista_precios_pdf/es",
+        nombre: "cuotass x Propiedad (Español)",
+        url: "/cementerio/lista_cuotass_pdf/es",
       });
       this.ListaReportes.push({
-        nombre: "Precios x Propiedad (Inglés)",
-        url: "/cementerio/lista_precios_pdf/en",
+        nombre: "cuotass x Propiedad (Inglés)",
+        url: "/cementerio/lista_cuotass_pdf/en",
       });
       //estado de cuenta
       this.request.email = "";
@@ -262,16 +270,16 @@ export default {
       this.openReportesLista = true;
       this.$vs.loading.close();
     },
-    openModificar(id_precio) {
+    openModificar(id_cuotas) {
       this.tipoFormulario = "modificar";
-      this.id_precio_modificar = id_precio;
+      this.id_cuotas_modificar = id_cuotas;
       this.verFormularioCuotas = true;
     },
     agregar() {
       this.tipoFormulario = "agregar";
       this.verFormularioCuotas = true;
     },
-    indexPrecios(index, propiedad_id) {
+    indexcuotass(index, propiedad_id) {
       if (this.propiedad_tipo.value != "") {
         if (propiedad_id != this.propiedad_tipo.value) {
           return "hidden";
@@ -284,26 +292,13 @@ export default {
         }
       }
     },
-    async get_financiamientos() {
+    async get_cuotas() {
       try {
         this.$vs.loading();
-        let res = await cementerio.get_financiamientos();
-
-        this.propiedades = res.data;
+        let res = await cementerio.get_cuotas();
+        this.cuotas = res.data;
         /**llenando los tipos de propiedad para el select */
         this.propiedades_tipos = [];
-        this.propiedades_tipos.push({
-          label: "Todas las Propiedades",
-          value: "",
-        });
-        this.propiedades.forEach((element) => {
-          this.propiedades_tipos.push({
-            label: "Tipo " + element.tipo,
-            value: element.id,
-          });
-          //la primero opcion
-          this.propiedad_tipo = this.propiedades_tipos[0];
-        });
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
@@ -328,28 +323,30 @@ export default {
       return;
     },
     retorno_id(dato) {
-      alert(dato);
-      // this.get_financiamientos();
+      (async () => {
+        /**manda traer los cuotas */
+        await this.get_cuotas();
+      })();
     },
-    enable_disable_precio(id_precio, precio, accion) {
-      this.accionPassword = accion + " precio " + precio;
-      this.id_precio_modificar = id_precio;
+    enable_disable_cuotas(id_cuotas, cuotas, accion) {
+      this.accionPassword = accion + " cuotas " + cuotas;
+      this.id_cuotas_modificar = id_cuotas;
       this.openPassword = true;
       this.callbackPassword = this.enable_disable;
     },
     enable_disable() {
       this.$vs.loading();
       let datos = {
-        id_precio: this.id_precio_modificar,
+        id_cuotas: this.id_cuotas_modificar,
       };
       cementerio
         .enable_disable(datos)
         .then((res) => {
           this.$vs.loading.close();
-          this.get_financiamientos();
+          this.get_cuotas();
           if (res.data >= 1) {
             this.$vs.notify({
-              title: "Cambiar estatus del precio",
+              title: "Cambiar estatus del cuotas",
               text: "Se ha actualizado el estatus exitosamente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -358,7 +355,7 @@ export default {
             });
           } else {
             this.$vs.notify({
-              title: "Cambiar estatus del precio",
+              title: "Cambiar estatus del cuotas",
               text: "No se realizaron cambios.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -386,7 +383,7 @@ export default {
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
-                title: "Cambiar estatus del precio",
+                title: "Cambiar estatus del cuotas",
                 text: err.response.data.error,
                 iconPack: "feather",
                 icon: "icon-alert-circle",
