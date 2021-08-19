@@ -114,7 +114,7 @@
                   </div>
 
                   <div class="w-full lg:w-6/12 xl:w-6/12 px-2 input-text">
-                    <label class=" ">
+                    <label class="">
                       Tipo de Venta
                       <span>(*)</span>
                     </label>
@@ -189,7 +189,14 @@
                   <div class="w-full py-2">
                     <div class="w-full px-2" v-if="fueCancelada">
                       <div
-                        class="theme-background text-center py-2 px-2 size-base border-gray-solid-1"
+                        class="
+                          theme-background
+                          text-center
+                          py-2
+                          px-2
+                          size-base
+                          border-gray-solid-1
+                        "
                       >
                         <span class="font-medium"> Clave: </span>
                         {{ form.id_cliente }},
@@ -201,7 +208,16 @@
                     </div>
                     <div class="w-full px-2" v-else-if="form.id_cliente == ''">
                       <div
-                        class="bg-danger-50 text-center py-2 px-2 size-base border-danger-solid-1 cursor-pointer color-danger-900"
+                        class="
+                          bg-danger-50
+                          text-center
+                          py-2
+                          px-2
+                          size-base
+                          border-danger-solid-1
+                          cursor-pointer
+                          color-danger-900
+                        "
                         @click="openBuscador = true"
                       >
                         Debe seleccionar a un cliente
@@ -209,7 +225,14 @@
                     </div>
                     <div class="w-full px-2" v-else>
                       <div
-                        class="bg-success-50 py-2 px-2 size-base border-success-solid-2 uppercase"
+                        class="
+                          bg-success-50
+                          py-2
+                          px-2
+                          size-base
+                          border-success-solid-2
+                          uppercase
+                        "
                       >
                         <div class="flex flex-wrap">
                           <div class="w-full lg:w-10/12 py-1">
@@ -259,13 +282,16 @@
                   </div>
 
                   <div class="w-full lg:w-6/12 xl:w-6/12 px-2 input-text">
-                    <label class=" ">
+                    <label class="">
                       Fecha de la Venta (Año-Mes-Dia)
                       <span>(*)</span>
                     </label>
                     <flat-pickr
                       :disabled="
-                        tiene_pagos_realizados || ventaLiquidada || fueCancelada
+                        tiene_pagos_realizados ||
+                        ventaLiquidada ||
+                        fueCancelada ||
+                        ModificarVenta
                       "
                       name="fecha_venta"
                       data-vv-as=" "
@@ -283,7 +309,7 @@
                     }}</span>
                   </div>
                   <div class="w-full lg:w-6/12 xl:w-6/12 px-2 input-text">
-                    <label class=" ">
+                    <label class="">
                       Núm. Solicitud
                       <span>(*)</span>
                     </label>
@@ -305,7 +331,7 @@
                     }}</span>
                   </div>
                   <div class="w-full lg:w-6/12 xl:w-6/12 px-2 input-text">
-                    <label class=" ">
+                    <label class="">
                       Núm. Convenio
                       <span>(*)</span>
                     </label>
@@ -327,7 +353,7 @@
                     }}</span>
                   </div>
                   <div class="w-full lg:w-6/12 xl:w-6/12 px-2 input-text">
-                    <label class=" ">
+                    <label class="">
                       Núm. Título
                       <span>(*)</span>
                     </label>
@@ -365,7 +391,7 @@
           <div class="form-group-content">
             <div class="flex flex-wrap">
               <div class="w-full lg:w-4/12 xl:w-4/12 px-2 input-text">
-                <label class=" ">
+                <label class="">
                   Nombre del titular sustituto
                   <span>(*)</span>
                 </label>
@@ -387,7 +413,7 @@
                 }}</span>
               </div>
               <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
-                <label class=" ">
+                <label class="">
                   Parentesco con el titular sustituto
                   <span>(*)</span>
                 </label>
@@ -411,7 +437,7 @@
                 }}</span>
               </div>
               <div class="w-full md:w-6/12 lg:w-4/12 xl:w-4/12 px-2 input-text">
-                <label class=" ">
+                <label class="">
                   Teléfono de contacto
                   <span>(*)</span>
                 </label>
@@ -521,7 +547,12 @@
                     <span
                       @click="remover_beneficiario(index)"
                       v-if="!fueCancelada"
-                      class="color-danger-900 cursor-pointer table-cell align-middle"
+                      class="
+                        color-danger-900
+                        cursor-pointer
+                        table-cell
+                        align-middle
+                      "
                       >X remover</span
                     >
                   </div>
@@ -546,7 +577,7 @@
                 <!--checkout-->
                 <div class="flex flex-wrap">
                   <div class="w-full md:w-6/12 input-text px-2">
-                    <label class=" ">
+                    <label class="">
                       Número de Pagos
                       <span>(*)</span>
                     </label>
@@ -576,7 +607,7 @@
                   </div>
 
                   <div class="w-full md:w-6/12 px-2 input-text hidden">
-                    <label class=" ">
+                    <label class="">
                       Salarios Mínimos x Mantenimiento
                       <span>(*)</span>
                     </label>
@@ -600,7 +631,7 @@
                   </div>
 
                   <div class="w-full md:w-6/12 input-text px-2">
-                    <label class=" ">
+                    <label class="">
                       Tasa IVA %
                       <span>(*)</span>
                     </label>
@@ -627,7 +658,7 @@
                   </div>
                   <!--aqui-->
                   <div class="w-full input-text px-2">
-                    <label class=" ">
+                    <label class="">
                       $ Costo neto de la propiedad
                       <span>(*)</span>
                     </label>
@@ -651,7 +682,7 @@
                   </div>
 
                   <div class="w-full input-text px-2">
-                    <label class=" ">
+                    <label class="">
                       $ Descuento
                       <span>(*)</span>
                     </label>
@@ -675,7 +706,7 @@
                   </div>
 
                   <div class="w-full md:w-6/12 input-text px-2">
-                    <label class=" ">
+                    <label class="">
                       $ Total a Pagar
                       <span>(*)</span>
                     </label>
@@ -693,7 +724,7 @@
                     <span>{{ errors.first("total_a_pagar") }}</span>
                   </div>
                   <div class="w-full md:w-6/12 input-text px-2">
-                    <label class=" ">
+                    <label class="">
                       $ Pago Inicial
                       <span>(*)</span>
                     </label>
@@ -725,7 +756,7 @@
                   </div>
 
                   <div class="w-full input-text px-2">
-                    <label class=" "> Ingrese alguna nota o comentario </label>
+                    <label class=""> Ingrese alguna nota o comentario </label>
                     <vs-textarea
                       :rows="4"
                       ref="nota"
@@ -741,10 +772,28 @@
                 <div class="flex flex-wrap">
                   <!--Resumen checkout-->
                   <div
-                    class="p-4 w-full md:w-10/12 mx-auto rounded-lg size-base border-gray-solid-1 hidden xl:block rounded-lg"
+                    class="
+                      p-4
+                      w-full
+                      md:w-10/12
+                      mx-auto
+                      rounded-lg
+                      size-base
+                      border-gray-solid-1
+                      hidden
+                      xl:block
+                      rounded-lg
+                    "
                   >
                     <div
-                      class="size-base font-bold color-black-900 uppercase pb-6 text-center"
+                      class="
+                        size-base
+                        font-bold
+                        color-black-900
+                        uppercase
+                        pb-6
+                        text-center
+                      "
                     >
                       Resumen de la venta
                     </div>
@@ -755,7 +804,14 @@
                         Cliente
                       </div>
                       <div
-                        class="w-full sm:w-6/12 px-2 font-medium text-right pb-2"
+                        class="
+                          w-full
+                          sm:w-6/12
+                          px-2
+                          font-medium
+                          text-right
+                          pb-2
+                        "
                       >
                         {{ form.cliente }}
                       </div>
@@ -765,7 +821,14 @@
                         Ubicación
                       </div>
                       <div
-                        class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                        class="
+                          w-full
+                          sm:w-6/12
+                          px-2
+                          font-medium
+                          text-right
+                          py-2
+                        "
                       >
                         <span v-if="this.datosAreas.id">
                           <span
@@ -818,7 +881,14 @@
                         Vendedor
                       </div>
                       <div
-                        class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                        class="
+                          w-full
+                          sm:w-6/12
+                          px-2
+                          font-medium
+                          text-right
+                          py-2
+                        "
                       >
                         <span v-if="this.form.vendedor.value != ''">{{
                           this.form.vendedor.label
@@ -831,7 +901,14 @@
                         $ Costo neto
                       </div>
                       <div
-                        class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                        class="
+                          w-full
+                          sm:w-6/12
+                          px-2
+                          font-medium
+                          text-right
+                          py-2
+                        "
                       >
                         $ {{ form.costo_neto | numFormat("0,000.00") }}
                       </div>
@@ -841,7 +918,14 @@
                         $ Descuento
                       </div>
                       <div
-                        class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                        class="
+                          w-full
+                          sm:w-6/12
+                          px-2
+                          font-medium
+                          text-right
+                          py-2
+                        "
                       >
                         $ {{ form.descuento | numFormat("0,000.00") }}
                       </div>
@@ -851,7 +935,14 @@
                         $ Total a pagar
                       </div>
                       <div
-                        class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                        class="
+                          w-full
+                          sm:w-6/12
+                          px-2
+                          font-medium
+                          text-right
+                          py-2
+                        "
                       >
                         $ {{ total_a_pagar_computed | numFormat("0,000.00") }}
                       </div>
@@ -861,14 +952,30 @@
                         $ Pago inicial
                       </div>
                       <div
-                        class="w-full sm:w-6/12 px-2 font-medium text-right py-2"
+                        class="
+                          w-full
+                          sm:w-6/12
+                          px-2
+                          font-medium
+                          text-right
+                          py-2
+                        "
                       >
                         $ {{ form.pago_inicial | numFormat("0,000.00") }}
                       </div>
                     </div>
                   </div>
                   <div
-                    class="w-full md:w-10/12 px-2 size-base color-copy pt-6 text-center mx-auto"
+                    class="
+                      w-full
+                      md:w-10/12
+                      px-2
+                      size-base
+                      color-copy
+                      pt-6
+                      text-center
+                      mx-auto
+                    "
                   >
                     <span class="color-danger-900 font-medium">Ojo:</span>
                     Al hacer hacer click, se está actuando en representación del
@@ -1699,8 +1806,7 @@ export default {
         /**error al cargar vendedores */
         this.$vs.notify({
           title: "Error",
-          text:
-            "Ha ocurrido un error al tratar de cargar el catálogo de vendedores, por favor reintente.",
+          text: "Ha ocurrido un error al tratar de cargar el catálogo de vendedores, por favor reintente.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -1843,7 +1949,8 @@ export default {
         this.datosVenta = res.data[0];
 
         /**actualizo el tipo_financimiamiento para que cargue los planes */
-        this.form.tipo_financiamiento = this.datosVenta.venta_terreno.tipo_financiamiento;
+        this.form.tipo_financiamiento =
+          this.datosVenta.venta_terreno.tipo_financiamiento;
         this.idAreaInicial = this.datosVenta.venta_terreno.propiedades_id;
         /**se comienza a llenar la informacion de los datos */
         this.ventasAntiguedad.forEach((element) => {
@@ -1891,8 +1998,10 @@ export default {
 
         /**datos del titular sustituto */
         this.form.titular_sustituto = this.datosVenta.titular_sustituto;
-        this.form.parentesco_titular_sustituto = this.datosVenta.parentesco_titular_sustituto;
-        this.form.telefono_titular_sustituto = this.datosVenta.telefono_titular_sustituto;
+        this.form.parentesco_titular_sustituto =
+          this.datosVenta.parentesco_titular_sustituto;
+        this.form.telefono_titular_sustituto =
+          this.datosVenta.telefono_titular_sustituto;
 
         /**beneficairios */
         this.form.beneficiarios = this.datosVenta.beneficiarios;
@@ -1903,7 +2012,8 @@ export default {
         this.form.costo_neto = this.datosVenta.costo_neto_calculado;
         this.form.descuento = this.datosVenta.descuento_neto_calculado;
 
-        this.form.pago_inicial = this.datosVenta.pagos_programados[0].monto_programado;
+        this.form.pago_inicial =
+          this.datosVenta.pagos_programados[0].monto_programado;
         this.form.nota = this.datosVenta.nota;
 
         /**mostrando los datos relacionados al pago */
@@ -1930,8 +2040,7 @@ export default {
       if (this.tienePagosVencidos) {
         this.$vs.notify({
           title: "Seleccionar Área del Cementerio",
-          text:
-            "No está permitido cambiar la ubicación de la propiedad mientras no esté al corriente con los pagos establecidos.",
+          text: "No está permitido cambiar la ubicación de la propiedad mientras no esté al corriente con los pagos establecidos.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",
@@ -1941,8 +2050,7 @@ export default {
       } else if (this.ventaLiquidada) {
         this.$vs.notify({
           title: "Seleccionar Área del Cementerio",
-          text:
-            "No está permitido cambiar la ubicación de la propiedad una vez ya liquidado el total de la cuenta.",
+          text: "No está permitido cambiar la ubicación de la propiedad una vez ya liquidado el total de la cuenta.",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "danger",

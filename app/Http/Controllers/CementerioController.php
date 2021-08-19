@@ -668,7 +668,6 @@ class CementerioController extends ApiController
 
         try {
             DB::beginTransaction();
-
             DB::table('operaciones')->where('ventas_terrenos_id', $request->venta_id)->update(
                 [
                     'motivos_cancelacion_id'          => $request['motivo.value'],
@@ -842,6 +841,9 @@ class CementerioController extends ApiController
                 return $this->errorResponse('Esta venta ya fue cancelada, no puede modificarse', 409);
             } else {
                 /**puede proceder con las valiaciones necesarias para */
+                if ($request->fecha_venta != $datos_venta['fecha_operacion']) {
+                    return $this->errorResponse('No se puede modificar la fecha de la venta por que tiene pagos programados. Puede cancelar la venta e ingresar nuevos datos.', 409);
+                }
             }
         }
 
@@ -1304,8 +1306,10 @@ class CementerioController extends ApiController
                     return $this->errorResponse('Error, Esta ubicación no se toma en cuenta en el cementerio.', 409);
                 }
             }
-
+            $id_venta = 0;
+            $id_operacion_cuota = 0;
             DB::beginTransaction();
+            ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
             if ($tipo_servicio == 'agregar') {
                 //venta de uso inmediato y de control sistematizado
                 //captura de la venta
@@ -1369,9 +1373,87 @@ class CementerioController extends ApiController
                 /**guardar venta parte final */
                 /**captura de pagos */
                 /**fin de captura de pagos */
+
+                /**aqui verifico la fecha de la venta para ver que cuotas de mantenimiento se le deben adjuntar
+                 * para ello se deben obterner las cuotas que le corresponden segun la fecha de la venta del terreno
+                 *
+                 */
+                /**aqui estoy */
+
+                $cuotas = Cuotas::select('*')->where('fecha_inicio', '>=', $request->fecha_venta)->get()->toArray();
+                foreach ($cuotas as $cuota) {
+
+                    $tasa_iva = $cuota['tasa_iva'];
+                    $tasa_iva_calculos = ($tasa_iva / 100) + 1;
+                    $tasa_iva_decimal = ($tasa_iva / 100);
+                    $total = $cuota['cuota_total'];
+                    $subtotal = round($total / $tasa_iva_calculos, 2);
+                    $descuento = 0;
+                    $impuestos = round(($subtotal - $descuento) * $tasa_iva_decimal, 2);
+                    /**datos a guardar en la operacion
+                     * tasa_iva
+                     * subtotal
+                     * descuento
+                     * impuestos
+                     * total
+                     * descuento_pronto_pago_b => 0
+                     * ventas_terrenos_id
+                     * financiamiento => 1 contado
+                     * clientes_id
+                     * fecha_registro
+                     * fecha_operacion
+                     * registro_id
+                     * modifico_id
+                     * fecha_modificacion
+                     * status
+                     * cuotas_cementerio_id
+                     * aplica_devolucion_b =>0
+                     */
+                    /**agrego los datos del request que necesita la funcion de programar pagos */
+                    $request->request->add(['costo_neto' =>  $total]);
+                    $request->request->add(['pago_inicial' =>  $total]);
+                    $request->request->add(['descuento' =>  $descuento]);
+                    $request->request->add(['fecha_venta' =>  $request->fecha_inicio]);
+                    $request->request->add(['tipo_financiamiento' => 1]); //de contado
+
+
+                    /**guardo operacion */
+                    $id_operacion_cuota = DB::table('operaciones')->insertGetId(
+                        [
+                            'empresa_operaciones_id' => 2,
+                            'cuotas_cementerio_id' => $cuota['id'],
+                            'tasa_iva' => $tasa_iva,
+                            'subtotal' => $subtotal,
+                            'descuento' => $descuento,
+                            'impuestos' => $impuestos,
+                            'total' => $total,
+                            'descuento_pronto_pago_b' => 0,
+                            'ventas_terrenos_id' => $id_venta,
+                            'financiamiento' => 1,
+                            'clientes_id' => (int) $request->id_cliente,
+                            'fecha_registro' => now(),
+                            'fecha_operacion' => $cuota['fecha_inicio'],
+                            'registro_id' => (int) $request->user()->id,
+                            'modifico_id' => (int) $request->user()->id,
+                            'status' => $cuota['status'],
+                            'aplica_devolucion_b' => 0,
+                            'costo_neto_pronto_pago' => $total
+                        ]
+                    );
+
+                    /**operacion tipo 2- 002- SERVICIO DE MANTENIMIENTO ANUAL EN CEMENTERIO.
+                     * El id venta lo modificamos para que se ajuste a las necesidades de esta operacion
+                     * en el caso de pago de cuota de mantenimiento se agregan los digitos de la tabla de ventas_terrenos para mantener la singularidad del registro de pagos en
+                     * la BD final asi 00220210814011-140
+                     */
+                    $this->programarPagos($request, $id_operacion_cuota, $cuota['id'] . '-' . $id_venta, '002');
+
+                    //return $this->errorResponse($id_operacion_cuota, 409);
+                }
             }
             /**fin if servicio tipo agregar */
             else {
+                $id_venta = $request->id_venta;
                 /**es modificar */
                 DB::table('ventas_terrenos')->where('id', '=', $request->id_venta)->update(
                     [
@@ -1445,8 +1527,7 @@ class CementerioController extends ApiController
             } //fin else de modificar venta de propiedad
 
             DB::commit();
-            return
-                $tipo_servicio == 'agregar' ? $id_venta : $request->id_venta;
+            return $id_venta;
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th;
