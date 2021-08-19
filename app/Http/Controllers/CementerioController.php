@@ -190,6 +190,77 @@ class CementerioController extends ApiController
 
 
 
+
+
+
+    public function cancelar_cuota(Request $request)
+    {
+
+        //validar id de cuota a cencelar
+        $validaciones = [
+            'id_cuotas'           => 'required|integer|min:1'
+        ];
+
+        /**FIN DE  VALIDACIONES CONDICIONADAS*/
+        $mensajes = [
+            'id_cuotas.required'           => 'Ingrese la cuota a cancelar.'
+        ];
+
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        $id_cuota = $request->id_cuotas;
+        $id_return = 0;
+        try {
+            DB::beginTransaction();
+            /**comienzo la cancelacion de la cuota
+             * cuando se cancela una cuota se considera lo siguiente
+             * 1 - La cuota no puede volver a reactivarse
+             * 2 - La cuota al cancelarse se cancelan las operaciones relacionadas a ella
+             */
+
+
+            $datos_cuota = $this->get_cuotas($request, $id_cuota, false)[0];
+            if (!empty($datos_cuota)) {
+                //validando primero que la cuota este activa
+                if ($datos_cuota['status'] != 0) {
+
+
+
+                    DB::table('cuotas_cementerio')->where('id', $id_cuota)->update(
+                        [
+                            'fechahora_cancelacion'               => now(),
+                            'status'               => 0,
+                            'cancelo_id'        => (int) $request->user()->id
+                        ]
+                    );
+                    DB::table('operaciones')->where('cuotas_cementerio_id', $id_cuota)->update(
+                        [
+                            'fecha_cancelacion'               => now(),
+                            'status'               => 0,
+                            'cancelo_id'        => (int) $request->user()->id
+                        ]
+                    );
+                }
+            } else {
+                return $this->errorResponse('Esta cuota no está registrada.', 409);
+            }
+
+            $id_return = $id_cuota;
+            /**todo salio bien y se cancelo la cuota */
+
+            DB::commit();
+            return $id_return;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
+    }
+
+
+
     /**obtiene todas cuotas de mantenimiento en el cementerio */
     public function get_cuotas(Request $request, $id_cuota = 'all', $paginated = false)
     {
@@ -206,7 +277,7 @@ class CementerioController extends ApiController
             ->with('propiedades.get_pagos_pagos_programados.pagados')
             ->with('propiedades.venta_terreno:id,ubicacion')
             ->with('propiedades.cliente:id,nombre,celular,telefono,status')
-            ->with('propiedades:id,ventas_terrenos_id,cuotas_cementerio_id,clientes_id,subtotal,descuento,impuestos,tasa_iva,total,costo_neto_pronto_pago,financiamiento,status')
+            ->with('propiedades:id,ventas_terrenos_id,cuotas_cementerio_id,clientes_id,subtotal,descuento,impuestos,tasa_iva,total,costo_neto_pronto_pago,financiamiento,fecha_cancelacion as fecha_cancelacion_operacion,status')
             ->select(
                 '*',
                 DB::raw(
@@ -450,9 +521,10 @@ class CementerioController extends ApiController
 
                         /**aqui verifico que si la operacion esta activa genere los intereses acorde al dia de hoy, si esta cancelada que tomen intereses a partir de la fecha de cancelacion */
                         $fecha_para_intereses = date('Y-m-d');
-                        if ($propiedad['status'] == 0) {
+                        if ($propiedad['status'] != 0) {
                             if (trim($propiedad['fecha_cancelacion_operacion']) != '') {
-                                $fecha_para_intereses = $propiedad['fecha_cancelacion_operacion'];
+                                $date = date_create($propiedad['fecha_cancelacion_operacion']);
+                                $fecha_para_intereses = date_format($date, 'Y-m-d');
                             }
                         }
 

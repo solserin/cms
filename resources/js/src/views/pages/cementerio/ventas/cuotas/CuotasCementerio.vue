@@ -53,7 +53,7 @@
                 <vs-th>Total a Cobrar ($)</vs-th>
                 <vs-th>Total Cobrado ($)</vs-th>
                 <vs-th>Saldo Neto ($)</vs-th>
-
+                <vs-th>Estatus</vs-th>
                 <vs-th>Acciones</vs-th>
               </template>
               <template slot-scope="{ data }">
@@ -91,6 +91,16 @@
                   <vs-td :data="data[index_cuota].saldo_neto"
                     >$ {{ cuotas.saldo_neto | numFormat("0,000.00") }}</vs-td
                   >
+                  <vs-td :data="data[index_cuota].status">
+                    <p v-if="data[index_cuota].status == 0">
+                      Cancelada
+                      <span class="dot-danger"></span>
+                    </p>
+                    <p v-else>
+                      Activo
+                      <span class="dot-success"></span>
+                    </p>
+                  </vs-td>
 
                   <vs-td :data="data[index_cuota].status">
                     <img
@@ -102,6 +112,7 @@
                       "
                     />
                     <img
+                      v-if="data[index_cuota].status == 1"
                       class="cursor-pointer img-btn-18 mx-2"
                       src="@assets/images/edit.svg"
                       title="Modificar"
@@ -110,26 +121,13 @@
                     <img
                       v-if="data[index_cuota].status == 1"
                       class="img-btn-24 mx-2"
-                      src="@assets/images/switchon.svg"
-                      title="Deshabilitar"
+                      src="@assets/images/trash.svg"
+                      title="Cancelar Cuota"
                       @click="
-                        enable_disable_cuotas(
+                        cancelar_cuotas(
                           data[index_cuota].id,
                           data[index_cuota].descripcion,
-                          'deshabilitar'
-                        )
-                      "
-                    />
-                    <img
-                      v-else
-                      class="img-btn-24 mx-2"
-                      src="@assets/images/switchoff.svg"
-                      title="Habilitar"
-                      @click="
-                        enable_disable_cuotas(
-                          data[index_cuota].id,
-                          data[index_cuota].descripcion,
-                          'habilitar'
+                          'cancelar'
                         )
                       "
                     />
@@ -140,7 +138,6 @@
           </div>
         </div>
       </div>
-
       <!--componente de confirmar sin contraseña-->
       <ConfirmarDanger
         :z_index="'z-index58k'"
@@ -328,26 +325,26 @@ export default {
         await this.get_cuotas();
       })();
     },
-    enable_disable_cuotas(id_cuotas, cuotas, accion) {
-      this.accionPassword = accion + " cuotas " + cuotas;
+    cancelar_cuotas(id_cuotas, descripcion, accion) {
+      this.accionPassword = accion + " cuota: " + descripcion;
       this.id_cuotas_modificar = id_cuotas;
       this.openPassword = true;
-      this.callbackPassword = this.enable_disable;
+      this.callbackPassword = this.cancelar_cuota;
     },
-    enable_disable() {
+    cancelar_cuota() {
       this.$vs.loading();
       let datos = {
         id_cuotas: this.id_cuotas_modificar,
       };
       cementerio
-        .enable_disable(datos)
+        .cancelar_cuota(datos)
         .then((res) => {
           this.$vs.loading.close();
           this.get_cuotas();
           if (res.data >= 1) {
             this.$vs.notify({
-              title: "Cambiar estatus del cuotas",
-              text: "Se ha actualizado el estatus exitosamente.",
+              title: "Cancelar cuota de mantenimiento",
+              text: "Se ha cancelado la cuota exitosamente.",
               iconPack: "feather",
               icon: "icon-alert-circle",
               color: "success",
@@ -355,7 +352,7 @@ export default {
             });
           } else {
             this.$vs.notify({
-              title: "Cambiar estatus del cuotas",
+              title: "Cancelar cuota de mantenimiento",
               text: "No se realizaron cambios.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -383,7 +380,7 @@ export default {
             } else if (err.response.status == 409) {
               /**FORBIDDEN ERROR */
               this.$vs.notify({
-                title: "Cambiar estatus del cuotas",
+                title: "Cancelar cuota de mantenimiento",
                 text: err.response.data.error,
                 iconPack: "feather",
                 icon: "icon-alert-circle",

@@ -136,6 +136,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
     Route::post('cementerio/control_cuotas/{tipo_servicio?}', 'CementerioController@control_cuotas');
+    Route::post('cementerio/cancelar_cuota', 'CementerioController@cancelar_cuota');
+
 
 
     /**rutas de funeraria ventas planes */

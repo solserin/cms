@@ -563,7 +563,7 @@ class PagosController extends ApiController
         } else  if ($datos_operacion['empresa_operaciones_id'] == 2) {
             /**cuotas de mantenimiento en cementerio */
             $cuotas_controller = new CementerioController();
-            $datos_venta = $cuotas_controller->get_ventas($request, $datos_operacion['cuotas_cementerio_id'], '')[0];
+            $datos_venta = $cuotas_controller->get_cuotas($request, $datos_operacion['cuotas_cementerio_id'], '')[0];
 
             if (round($datos_venta['saldo_neto'], 2, PHP_ROUND_HALF_UP) <= 0) {
                 /**tiene cero saldo y se debe de modificar el status a pagado de la venta (2) */
@@ -610,7 +610,13 @@ class PagosController extends ApiController
             }
         }
 
-        if ($datos_operacion['empresa_operaciones_id'] == 3) {
+        if ($datos_operacion['empresa_operaciones_id'] == 2) {
+            /**cuota de cementerio */
+            /**verificnado si la operacion no esta cancelada o pagada */
+            if ($datos_venta['propiedades']['0']['status'] == 0) {
+                return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);
+            }
+        } elseif ($datos_operacion['empresa_operaciones_id'] == 3) {
             /**verificnado si la operacion no esta cancelada o pagada */
             if ($datos_venta['operacion']['operacion_status'] == 0) {
                 return $this->errorResponse('No se puede proceder con el pago, debido a que la operación afectada ha sido cancelada.', 409);

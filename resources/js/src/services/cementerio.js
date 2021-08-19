@@ -285,5 +285,9 @@ export default {
     update_cuota(datos) {
         let call = "/cementerio/control_cuotas/modificar";
         return axios.post(call, datos);
+    },
+    cancelar_cuota(datos) {
+        let call = "/cementerio/cancelar_cuota";
+        return axios.post(call, datos);
     }
 };

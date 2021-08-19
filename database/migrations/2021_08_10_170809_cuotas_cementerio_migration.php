@@ -27,6 +27,7 @@ class CuotasCementerioMigration extends Migration
             $table->foreign('modifico_id')->references('id')->on('usuarios');
             $table->unsignedBigInteger('cancelo_id')->unsigned()->nullable();
             $table->foreign('cancelo_id')->references('id')->on('usuarios');
+            $table->dateTime('fechahora_cancelacion')->nullable();
             $table->tinyInteger('status')->default(1);
         });
         /**Agregando campo de cuotas_cementerio_id a operaciones*/
