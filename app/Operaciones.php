@@ -41,6 +41,11 @@ class Operaciones extends Model
         return $this->belongsTo('App\Cuotas', 'cuotas_cementerio_id', 'id');
     }
 
+    public function cuota_cementerio_terreno()
+    {
+        return $this->hasMany('App\Operaciones', 'ventas_terrenos_id', 'ventas_terrenos_id')->select('*', 'operaciones.id as operacion_id')->where('empresa_operaciones_id', 2);
+    }
+
     /**la venta tiene uno o muchos pagos programados */
     public function pagosProgramados()
     {

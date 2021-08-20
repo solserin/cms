@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-full text-right">
-         <vs-button
+      <vs-button
         class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
         color="primary"
         @click="openCuotasCementerio = true"
@@ -35,7 +35,16 @@
       >
         <div class="flex flex-wrap">
           <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
+            class="
+              w-full
+              sm:w-12/12
+              md:w-6/12
+              lg:w-3/12
+              xl:w-3/12
+              mb-1
+              px-2
+              input-text
+            "
           >
             <label class="">Mostrar</label>
             <v-select
@@ -47,7 +56,16 @@
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
+            class="
+              w-full
+              sm:w-12/12
+              md:w-6/12
+              lg:w-3/12
+              xl:w-3/12
+              mb-1
+              px-2
+              input-text
+            "
           >
             <label class="">Estado</label>
             <v-select
@@ -59,7 +77,16 @@
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 mb-1 px-2 input-text"
+            class="
+              w-full
+              sm:w-12/12
+              md:w-6/12
+              lg:w-3/12
+              xl:w-3/12
+              mb-1
+              px-2
+              input-text
+            "
           >
             <label class="">Filtrar Específico</label>
             <v-select
@@ -71,7 +98,15 @@
             />
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-6/12 lg:w-3/12 xl:w-3/12 px-2 input-text"
+            class="
+              w-full
+              sm:w-12/12
+              md:w-6/12
+              lg:w-3/12
+              xl:w-3/12
+              px-2
+              input-text
+            "
           >
             <label class="">Número de Control</label>
             <vs-input
@@ -97,7 +132,15 @@
             </h3>
           </div>
           <div
-            class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+            class="
+              w-full
+              sm:w-12/12
+              md:w-12/12
+              lg:w-12/12
+              xl:w-12/12
+              px-2
+              input-text
+            "
           >
             <label class="">Nombre del Titular</label>
             <vs-input
@@ -254,7 +297,7 @@
       @closePlanesCementerio="openPlanesVenta = false"
     ></PlanesVenta>
 
-     <CuotasCementerio
+    <CuotasCementerio
       :show="openCuotasCementerio"
       @closeCuotasCementerio="openCuotasCementerio = false"
     ></CuotasCementerio>
@@ -280,7 +323,6 @@ import vSelect from "vue-select";
 import PlanesVenta from "@pages/cementerio/ventas/PlanesVentas";
 import CuotasCementerio from "@pages/cementerio/ventas/cuotas/CuotasCementerio";
 
-
 export default {
   components: {
     "v-select": vSelect,
@@ -289,7 +331,7 @@ export default {
     ReportesVentas,
     CancelarVenta,
     PlanesVenta,
-    CuotasCementerio
+    CuotasCementerio,
   },
   watch: {
     actual: function (newValue, oldValue) {

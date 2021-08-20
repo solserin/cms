@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <div class="w-full py-6" v-if="datosVenta.operacion_id">
+        <div class="w-full pt-6" v-if="datosVenta.operacion_id">
           <vs-table
             class="tabla-datos"
             :data="datosVenta.pagos_programados"
@@ -207,6 +207,137 @@
           </vs-table>
         </div>
 
+        <div class="w-full py-6" v-if="pagos_programados_cuotas.length > 0">
+          <vs-table
+            class="tabla-datos"
+            :data="pagos_programados_cuotas"
+            noDataText="0 Resultados"
+          >
+            <template slot="header">
+              <h3>Cuotas de Mantenimiento</h3>
+            </template>
+            <template slot="thead">
+              <vs-th>#</vs-th>
+              <vs-th>Referencia</vs-th>
+              <vs-th>Periodo</vs-th>
+              <vs-th>Fecha Programada</vs-th>
+              <vs-th>Nueva Fecha de Pago</vs-th>
+              <vs-th>Monto Pago</vs-th>
+              <vs-th>Restante a Pagar</vs-th>
+              <vs-th>Concepto</vs-th>
+              <vs-th>Estatus</vs-th>
+              <vs-th>Pagar Recibo</vs-th>
+            </template>
+            <template>
+              <vs-tr
+                v-show="programados.status == 1"
+                v-for="(
+                  programados, index_programado
+                ) in pagos_programados_cuotas"
+                v-bind:key="programados.id"
+                ref="row"
+              >
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                >
+                  <span class="">{{ programados.num_pago }}</span>
+                </vs-td>
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                >
+                  {{ programados.referencia_pago }}
+                </vs-td>
+
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                >
+                  {{ programados.concepto_texto }}
+                </vs-td>
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                  >{{ programados.fecha_programada_abr }}</vs-td
+                >
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                >
+                  <span v-if="programados.saldo_neto > 0">
+                    {{ programados.fecha_a_pagar_abr }}
+                  </span>
+                  <span v-else>{{ programados.fecha_ultimo_pago_abr }} </span>
+                </vs-td>
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                  >$
+                  {{
+                    programados.monto_programado | numFormat("0,000.00")
+                  }}</vs-td
+                >
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                  >$ {{ programados.saldo_neto | numFormat("0,000.00") }}</vs-td
+                >
+                <vs-td
+                  :class="[
+                    programados.status_pago == 0 ? 'text-danger-900' : '',
+                  ]"
+                  >{{ programados.concepto_texto }}</vs-td
+                >
+                <vs-td>
+                  <p v-if="programados.status_pago == 0">
+                    {{ programados.status_pago_texto }}
+                    <span class="dot-danger"></span>
+                  </p>
+                  <p v-else-if="programados.status_pago == 1">
+                    {{ programados.status_pago_texto }}
+                    <span class="dot-warning"></span>
+                  </p>
+                  <p v-else>
+                    {{ programados.status_pago_texto }}
+                    <span class="dot-success"></span>
+                  </p>
+                </vs-td>
+                <vs-td>
+                  <div
+                    class="flex justify-center"
+                    v-if="programados.status != 0"
+                  >
+                    <img
+                      v-if="programados.saldo_neto > 0"
+                      class="cursor-pointer img-btn-24 mx-2"
+                      src="@assets/images/dollar_bill.svg"
+                      title="Pagar Ficha"
+                      @click="pagar(programados.referencia_pago)"
+                    />
+                    <img
+                      v-else
+                      class="cursor-pointer img-btn-20 mx-2"
+                      src="@assets/images/right.svg"
+                      title="ficha cubierta"
+                    />
+                  </div>
+                </vs-td>
+                <!-- <template class="expand-user" slot="expand">
+                d
+              </template>
+              -->
+              </vs-tr>
+            </template>
+          </vs-table>
+        </div>
         <div class="w-full" v-if="datosVenta.operacion_id">
           <vs-table class="tabla-datos" :data="pagos" noDataText="0 Resultados">
             <template slot="header">
@@ -334,11 +465,10 @@ export default {
   watch: {
     show: function (newValue, oldValue) {
       if (newValue == true) {
-        this.$refs["lista_reportes"].$el.querySelector(
-          ".vs-icon"
-        ).onclick = () => {
-          this.cancelar();
-        };
+        this.$refs["lista_reportes"].$el.querySelector(".vs-icon").onclick =
+          () => {
+            this.cancelar();
+          };
         (async () => {
           await this.consultar_venta_id();
           if (this.operacion_id != "") {
@@ -457,6 +587,7 @@ export default {
       tipoFormularioPagos: "",
       operacion_id: "",
       pagos: [],
+      pagos_programados_cuotas: [],
     };
   },
   methods: {
@@ -528,9 +659,18 @@ export default {
         this.operacion_id = "";
         let res = await cementerio.consultar_venta_id(this.get_venta_id);
         this.datosVenta = res.data[0];
+
         this.operacion_id = this.datosVenta.operacion_id;
+
+        if (this.datosVenta.cuota_cementerio_terreno[0].pagos_programados) {
+          this.pagos_programados_cuotas =
+            this.datosVenta.cuota_cementerio_terreno[0].pagos_programados;
+        }
+
+        /**aqui voy */
+
         /*if (this.datosVenta.pagos_programados.length > 0) {
-          //calculando el total de rows 
+          //calculando el total de rows
           this.funcion_reemplazada = [];
           for (
             let index = 0;
@@ -572,6 +712,19 @@ export default {
         let datos_request = { operacion_id: this.operacion_id };
         let res = await pagos.consultar_pagos_operacion_id(datos_request);
         this.pagos = res.data.data;
+
+        if (this.datosVenta.cuota_cementerio_terreno.length > 0) {
+          let datos_request = {
+            operacion_id: this.datosVenta.cuota_cementerio_terreno[0].id,
+          };
+          let res = await pagos.consultar_pagos_operacion_id(datos_request);
+
+          res.data.data.forEach((element) => {
+            element.movimientos_pagos_texto += " > Cuota de Mantto.";
+            this.pagos.push(element);
+          });
+        }
+
         this.$vs.loading.close();
       } catch (err) {
         this.$vs.loading.close();
