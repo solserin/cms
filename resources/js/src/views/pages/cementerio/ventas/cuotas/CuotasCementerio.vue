@@ -76,9 +76,10 @@
                     >$ {{ cuotas.cuota_total | numFormat("0,000.00") }}</vs-td
                   >
 
-                  <vs-td :data="data[index_cuota].num_pagos_programados">{{
-                    cuotas.num_pagos_programados
-                  }}</vs-td>
+                  <vs-td
+                    :data="data[index_cuota].num_pagos_programados_vigentes"
+                    >{{ cuotas.num_pagos_programados_vigentes }}</vs-td
+                  >
 
                   <vs-td :data="data[index_cuota].total_x_cuota"
                     >$ {{ cuotas.total_x_cuota | numFormat("0,000.00") }}</vs-td

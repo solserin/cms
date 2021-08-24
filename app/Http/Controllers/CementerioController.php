@@ -288,6 +288,9 @@ class CementerioController extends ApiController
                     '(0) AS num_pagos_programados'
                 ),
                 DB::raw(
+                    '(0) AS num_pagos_programados_vigentes'
+                ),
+                DB::raw(
                     '(0) AS total_x_cuota'
                 ),
                 DB::raw(
@@ -585,7 +588,7 @@ class CementerioController extends ApiController
                     /**actualizando los datos en general por cuota */
                     $propiedad['pagos_realizados']               = $pagos_realizados;
                     $propiedad['pagos_vigentes']                 = $pagos_vigentes;
-                    $propiedad['num_pagos_programados_vigentes'] = $num_pagos_programados_vigentes;
+
                     $propiedad['pagos_cancelados']               = $pagos_cancelados;
                     $propiedad['pagos_programados_cubiertos']    = $pagos_programados_cubiertos;
                     $propiedad['pagos_vencidos']                 = $vencidos;
@@ -596,6 +599,7 @@ class CementerioController extends ApiController
 
 
                     $cuota['num_pagos_programados']               += 1;
+                    $cuota['num_pagos_programados_vigentes'] += $num_pagos_programados_vigentes;
                     $cuota['total_cubierto']                  += $propiedad['total_cubierto'];
                     $cuota['abonado_capital']                  += $propiedad['abonado_capital'];
                     $cuota['abonado_intereses']                  += $propiedad['abonado_intereses'];
@@ -679,6 +683,26 @@ class CementerioController extends ApiController
                     'status'                          => 0,
                 ]
             );
+
+            /**se cancelan las operaciones relacionadas a las cuotas de esta venta */
+            DB::table('operaciones')->where('ventas_terrenos_id', $request->venta_id)->where('empresa_operaciones_id', 2)->update(
+                [
+                    'motivos_cancelacion_id'          => $request['motivo.value'],
+                    'fecha_cancelacion'               => now(),
+                    'cantidad_a_regresar_cancelacion' => 0,
+                    'cancelo_id'                      => (int) $request->user()->id,
+                    'nota_cancelacion'                => $request->comentario,
+                    'status'                          => 0,
+                ]
+            );
+            /**cnacelando los pagos programados de dicha cuota */
+            $operaciones_cuotas = Operaciones::select('id')->where('empresa_operaciones_id', 2)->where('ventas_terrenos_id', $request->venta_id)->get()->toArray();
+            DB::table('pagos_programados')->whereIn('operaciones_id', $operaciones_cuotas)->update(
+                [
+                    'status'                          => 0,
+                ]
+            );
+
             DB::commit();
             return $request->venta_id;
         } catch (\Throwable $th) {
@@ -2821,14 +2845,15 @@ class CementerioController extends ApiController
                 $arreglo_de_pagos_realizados = [];
                 /**guardo los dias que lleva vencido el pago vencido mas antiguo */
                 foreach ($venta['cuota_cementerio_terreno'][0]['pagos_programados'] as $index_programado => &$programado) {
-                    $programado['status'] = $venta['cuota_cementerio_terreno'][0]['cuota_cementerio']['status'];
+                    $status_cuota = $venta['cuota_cementerio_terreno'][0]['cuota_cementerio']['status'];
+                    $programado['status'] = $status_cuota == 0 ? $status_cuota : $programado['status'];
                     /**actualizando el concepto del pago */
                     if ($programado['conceptos_pagos_id'] == 1) {
                         $programado['concepto_texto'] = 'Enganche';
                     } elseif ($programado['conceptos_pagos_id'] == 2) {
                         $programado['concepto_texto'] = 'Abono';
                     } else {
-                        $programado['concepto_texto'] = 'Pago Único Periodo ' . $venta['cuota_cementerio_terreno'][0]['cuota_cementerio']['descripcion'];
+                        $programado['concepto_texto'] = 'Cuota ' . $venta['cuota_cementerio_terreno'][0]['cuota_cementerio']['descripcion'];
                     }
 
                     /**actualizando fecha de pago abre con helper de fechas */

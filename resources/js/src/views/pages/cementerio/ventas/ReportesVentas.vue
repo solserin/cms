@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <div class="w-full pt-6" v-if="datosVenta.operacion_id">
+        <div class="w-full mt-6" v-if="datosVenta.operacion_id">
           <vs-table
             class="tabla-datos"
             :data="datosVenta.pagos_programados"
@@ -207,7 +207,7 @@
           </vs-table>
         </div>
 
-        <div class="w-full py-6" v-if="pagos_programados_cuotas.length > 0">
+        <div class="w-full mt-6" v-if="pagos_programados_cuotas.length > 0">
           <vs-table
             class="tabla-datos"
             :data="pagos_programados_cuotas"
@@ -338,7 +338,7 @@
             </template>
           </vs-table>
         </div>
-        <div class="w-full" v-if="datosVenta.operacion_id">
+        <div class="w-full mt-6" v-if="datosVenta.operacion_id">
           <vs-table class="tabla-datos" :data="pagos" noDataText="0 Resultados">
             <template slot="header">
               <h3>Listado de Abonos Recibidos</h3>
