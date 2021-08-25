@@ -725,8 +725,6 @@ class CementerioController extends ApiController
                 $this->errorResponse('Es necesario un correo y un destinatario', 409);
             }
         }
-
-
         $email_to        = $request->email_address;
         $datos_request   = json_decode($request->request_parent[0], true);
         $id_cuota = $datos_request['id_cuota'];
@@ -791,6 +789,86 @@ class CementerioController extends ApiController
             return $pdf->inline($name_pdf);
         }
     }
+
+    public function get_cuota_pdf_todas($idioma = 'es', Request $request)
+    {
+
+        if (!($idioma == 'en' || $idioma == 'es')) {
+            $idioma = 'es';
+        }
+        App::setLocale($idioma);
+
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email = $request->email_send === 'true' ? true : false;
+        if ($email == true) {
+            if (!$request->email_addres || !$request->destinatario) {
+                $this->errorResponse('Es necesario un correo y un destinatario', 409);
+            }
+        }
+        $email_to        = $request->email_address;
+        // $datos_request   = json_decode($request->request_parent[0], true);
+        //$id_cuota = $datos_request['id_cuota'];
+
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+        /*  $id_cuota = 1;
+        $email = false;
+        $email_to = 'hector@gmail.com';
+        */
+        $cuotas = $this->get_cuotas($request, 'all', false);
+
+
+        //obtengo la informacion de esa cuota
+
+        $get_funeraria = new EmpresaController();
+        $empresa       = $get_funeraria->get_empresa_data();
+
+        $pdf           = PDF::loadView('cementerios/cuotas_todas/cuota', ['empresa' => $empresa, 'cuotas' => $cuotas, 'idioma' => $idioma]);
+
+        $name_pdf =  'Cuotas de cementerio.pdf';
+        $pdf->setOptions([
+            'title'       => $name_pdf,
+            'footer-html' => view('cementerios.cuotas_todas.footer', ['empresa' => $empresa]),
+        ]);
+
+        $pdf->setOptions([
+            'header-html' => view('cementerios.cuotas_todas.header'),
+        ]);
+
+        $pdf->setOption('orientation', 'landscape');
+        $pdf->setOption('margin-left', 12.4);
+        $pdf->setOption('margin-right', 12.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 12.4);
+        $pdf->setOption('page-size', 'letter');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email     = $email_controller->pdf_email(
+                $email_to,
+                $request->destinatario,
+                __('cementerio/cuotas_todas.cuota'),
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
 
 
 

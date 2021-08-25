@@ -9,19 +9,14 @@
     >
       <div class="w-full text-right">
         <vs-button
-          hidden
           class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
           color="primary"
           type="border"
           @click="
-            openReporte(
-              'cuotass x Propiedad (Español)',
-              '/cementerio/lista_cuotass_pdf/es',
-              ''
-            )
+            openReporte(documentos[0].documento, documentos[0].url, '', '')
           "
         >
-          <span>Imprimir lista de cuotass</span>
+          <span>Imprimir lista de cuotas</span>
         </vs-button>
         <vs-button
           class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
@@ -105,7 +100,7 @@
 
                   <vs-td :data="data[index_cuota].status">
                     <img
-                      class="cursor-pointer img-btn-22 mx-2"
+                      class="cursor-pointer img-btn-22 mx-2 hidden"
                       src="@assets/images/pdf.svg"
                       title="Consultar Documento"
                       @click="
@@ -224,7 +219,7 @@ export default {
       documentos: [
         {
           documento: "Cuota de mantenimiento",
-          url: "/cementerio/get_cuota_pdf",
+          url: "/cementerio/get_cuota_pdf_todas",
           tipo: "pdf",
         },
       ],
