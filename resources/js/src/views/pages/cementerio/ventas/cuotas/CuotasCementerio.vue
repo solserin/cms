@@ -109,7 +109,12 @@
                       src="@assets/images/pdf.svg"
                       title="Consultar Documento"
                       @click="
-                        openReporte(documento.documento, documento.url, '', '')
+                        openReporte(
+                          documentos[0].documento,
+                          documentos[0].url,
+                          data[index_cuota].id,
+                          ''
+                        )
                       "
                     />
                     <img
@@ -164,7 +169,7 @@
       ></FormularioCuotas>
 
       <Reporteador
-        :header="'Consultar cuotass x propiedad'"
+        :header="'Consultar cuotas x propiedad'"
         :show="openReportesLista"
         :listadereportes="ListaReportes"
         :request="request"
@@ -216,12 +221,19 @@ export default {
   },
   data() {
     return {
+      documentos: [
+        {
+          documento: "Cuota de mantenimiento",
+          url: "/cementerio/get_cuota_pdf",
+          tipo: "pdf",
+        },
+      ],
       /**reporteador */
       openReportesLista: false,
       ListaReportes: [],
       request: {
         destinatario: "",
-        id_tipo_propiedad: "",
+        id_cuota: "",
         email: "",
       },
       /**reportrador */
@@ -251,20 +263,18 @@ export default {
     },
   },
   methods: {
-    openReporte(nombre_reporte = "", link = "", parametro = "") {
+    openReporte(nombre_reporte = "", link = "", parametro = "", tipo = "") {
       this.ListaReportes = [];
-      /**agrego los reportes de manera manual */
       this.ListaReportes.push({
-        nombre: "cuotass x Propiedad (Español)",
-        url: "/cementerio/lista_cuotass_pdf/es",
-      });
-      this.ListaReportes.push({
-        nombre: "cuotass x Propiedad (Inglés)",
-        url: "/cementerio/lista_cuotass_pdf/en",
+        nombre: nombre_reporte,
+        url: link,
       });
       //estado de cuenta
       this.request.email = "";
-      this.request.id_tipo_propiedad = this.propiedad_tipo.value;
+
+      this.request.id_cuota = parametro;
+
+      this.request.destinatario = "";
       this.openReportesLista = true;
       this.$vs.loading.close();
     },

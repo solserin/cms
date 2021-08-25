@@ -19,8 +19,7 @@ use Illuminate\Http\Request;
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
-Route::get('cementerio/get_cuotas/{id_cuota?}/{paginated?}/', 'CementerioController@get_cuotas');
-Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+
 
 /**rutas publicas_ entran sin token */
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
@@ -135,9 +134,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
-
     Route::post('cementerio/control_cuotas/{tipo_servicio?}', 'CementerioController@control_cuotas');
     Route::post('cementerio/cancelar_cuota', 'CementerioController@cancelar_cuota');
+    Route::get('cementerio/get_cuotas/{id_cuota?}/{paginated?}/', 'CementerioController@get_cuotas');
+    Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+    Route::get('cementerio/get_cuota_pdf', 'CementerioController@get_cuota_pdf');
 
 
 
