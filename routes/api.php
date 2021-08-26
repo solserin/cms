@@ -19,12 +19,7 @@ use Illuminate\Http\Request;
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
-Route::get('cementerio/get_cuotas/{id_cuota?}/{paginated?}/', 'CementerioController@get_cuotas');
-Route::get('cementerio/get_cuotas_simple/', 'CementerioController@get_cuotas_simple');
-Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
-Route::get('cementerio/get_cuota_pdf_todas', 'CementerioController@get_cuota_pdf_todas');
-Route::get('cementerio/get_cuota_pdf', 'CementerioController@get_cuota_pdf');
-Route::get('cementerio/get_abonos_vencidos_propiedades', 'CementerioController@get_abonos_vencidos_propiedades');
+
 
 /**rutas publicas_ entran sin token */
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
@@ -139,9 +134,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
-
     Route::post('cementerio/control_cuotas/{tipo_servicio?}', 'CementerioController@control_cuotas');
     Route::post('cementerio/cancelar_cuota', 'CementerioController@cancelar_cuota');
+    Route::get('cementerio/get_cuotas/{id_cuota?}/{paginated?}/', 'CementerioController@get_cuotas');
+    Route::get('cementerio/get_cuotas_simple/', 'CementerioController@get_cuotas_simple');
+    Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+    Route::get('cementerio/get_cuota_pdf_todas', 'CementerioController@get_cuota_pdf_todas');
+    Route::get('cementerio/get_cuota_pdf', 'CementerioController@get_cuota_pdf');
+    Route::get('cementerio/get_abonos_vencidos_propiedades', 'CementerioController@get_abonos_vencidos_propiedades');
 
 
 
@@ -165,8 +165,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('funeraria/reglamento_pago', 'FunerariaController@reglamento_pago');
     Route::get('funeraria/acuse_cancelacion', 'FunerariaController@acuse_cancelacion');
     Route::get('funeraria/documento_estado_de_cuenta_planes', 'FunerariaController@documento_estado_de_cuenta_planes');
-    Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}/{unir_lotes_cantidad?}', 'FunerariaController@get_solicitudes_servicios');
+    Route::get('funeraria/get_servicios_adeudos', 'FunerariaController@get_servicios_adeudos');
+    Route::get('funeraria/get_abonos_vencidos_planes_funerarios', 'FunerariaController@get_abonos_vencidos_planes_funerarios');
     Route::get('funeraria/get_ventas/{id_venta?}/{paginated?}/', 'FunerariaController@get_ventas');
+    Route::get('funeraria/get_solicitudes_servicios/{id_servicio?}/{paginated?}/{planes_funerarios_futuro?}/{uso_terreno_id?}/{unir_lotes_cantidad?}', 'FunerariaController@get_solicitudes_servicios');
+
 
     /**rutas de pagos */
     Route::get('pagos/calcular_adeudo/{referencia}/{fecha_pago}/{multipago?}', 'PagosController@calcular_adeudo');

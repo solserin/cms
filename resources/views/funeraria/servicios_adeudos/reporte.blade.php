@@ -88,7 +88,7 @@
                                 Descripción
                             </div>
                             <p class="control-valor">
-                                Abonos vencidos de propiedades por cobrar
+                                Servicios funerarios con adeudo
                             </p>
                             <div class="control bg-header size-13px">
                                 Fecha de reporte
@@ -115,7 +115,7 @@
             </table>
         </div>
         <div class="py-3 ">
-            <span class="uppercase bold size-15px">Desglose de abonos vencidos de propiedades en cementerio:</span>
+            <span class="uppercase bold size-15px">Desglose servicios funerarios con adeudo:</span>
         </div>
 
         <div class="w-100">
@@ -123,89 +123,62 @@
                 <thead>
                     <tr>
                         <td class="center"><span class="bold uppercase px-2">#</span></td>
-                        <td class="center"><span class="bold uppercase px-2">Núm. Venta</span></td>
+                        <td class="center"><span class="bold uppercase px-2">Núm. Servicio</span></td>
                         <td class="center"><span class="bold uppercase px-2">Cliente</span></td>
                         <td class="center"><span class="bold uppercase px-2">Tél.</span></td>
-                        <td class="center"><span class="bold uppercase px-2">Ubicación</span></td>
-                        <td class="center"><span class="bold uppercase px-2">Pagos vencidos</span></td>
+                        <td class="center"><span class="bold uppercase px-2">Fallecido</span></td>
+                        <td class="center"><span class="bold uppercase px-2">Fecha solicitud</span></td>
                         <td class="center"><span class="bold uppercase px-2">Saldo</span></td>
-                        <td class="center"><span class="bold uppercase px-2">Intereses</span></td>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $index_r = 0;
-                    $pagos_vencidos = 0;
+                    $index_r = 1;
                     $saldo_neto = 0;
-                    $intereses = 0;
                     ?>
                     @foreach ($ventas as $index => $venta)
-                        @if ($venta['saldo_neto'] > 0 && $venta['operacion_status'] != 0)
-                            <?php
-                            $pagos_vencidos += $venta['pagos_vencidos'];
-                            $saldo_neto += $venta['saldo_neto'];
-                            $intereses += $venta['intereses'];
-                            ?>
-                            @if ($venta['financiamiento'] == 1)
+                        @isset($venta['operacion'])
+                            @if ($venta['operacion']['saldo_neto'] > 0 && $venta['operacion']['operacion_status'] != 0)
+                                <?php
+                                $saldo_neto += $venta['operacion']['saldo_neto'];
+                                ?>
                                 <!--es de uso inmendiato-->
                                 <tr>
                                     <td class="center"><span class="bold uppercase px-2">{{ $index_r }}</span></td>
                                     <td class="center"><span
-                                            class="uppercase px-2">{{ $venta['ventas_terrenos_id'] }}</span>
+                                            class="uppercase px-2">{{ $venta['operacion']['servicios_funerarios_id'] }}</span>
                                     </td>
-                                    <td class="center"><span class="uppercase px-2">{{ $venta['nombre'] }}</span></td>
-                                    <td class="center"><span class="uppercase px-2">{{ $venta['celular'] }} /
-                                            {{ $venta['telefono'] }}</span></td>
+                                    <td class="center"><span
+                                            class="uppercase px-2">{{ $venta['operacion']['cliente']['nombre'] }}</span>
+                                    </td>
+                                    <td class="center"><span
+                                            class="uppercase px-2">{{ $venta['operacion']['cliente']['celular'] }} /
+                                            {{ $venta['operacion']['cliente']['telefono'] }}
+                                        </span></td>
+                                    <td class="center"><span class="uppercase px-2">{{ $venta['nombre_afectado'] }}
+                                        </span></td>
                                     <td class="center"><span class="uppercase px-2">
-                                            {{ $venta['venta_terreno']['ubicacion_texto'] }}</span></td>
-                                    <td class="center"><span class="uppercase px-2">N/A</span>
+                                            {{ $venta['fecha_solicitud_texto'] }}
+                                        </span>
                                     </td>
                                     <td class="center"><span class="uppercase px-2">$
-                                            {{ number_format($venta['saldo_neto'], 2) }}</span></td>
-                                    <td class="center"><span class="uppercase px-2">$
-                                            {{ number_format($venta['intereses'], 2) }}</span></td>
+                                            {{ number_format($venta['operacion']['saldo_neto'], 2) }}
+                                        </span></td>
                                 </tr>
-                            @else
-                                <!--es de abonos-->
-                                @if ($venta['pagos_vencidos'] > 0)
-                                    <tr>
-                                        <td class="center"><span class="bold uppercase px-2">{{ $index_r }}</span>
-                                        </td>
-                                        <td class="center"><span
-                                                class="uppercase px-2">{{ $venta['ventas_terrenos_id'] }}</span>
-                                        </td>
-                                        <td class="center"><span class="uppercase px-2">{{ $venta['nombre'] }}</span>
-                                        </td>
-                                        <td class="center"><span class="uppercase px-2">{{ $venta['celular'] }} /
-                                                {{ $venta['telefono'] }}</span></td>
-                                        <td class="center"><span class="uppercase px-2">
-                                                {{ $venta['venta_terreno']['ubicacion_texto'] }}</span></td>
-                                        <td class="center"><span
-                                                class="uppercase px-2 bold">{{ $venta['pagos_vencidos'] }}</span>
-                                        </td>
-                                        <td class="center"><span class="uppercase px-2">$
-                                                {{ number_format($venta['saldo_neto'], 2) }}</span></td>
-                                        <td class="center"><span class="uppercase px-2">$
-                                                {{ number_format($venta['intereses'], 2) }}</span></td>
-                                    </tr>
-                                @endif
+                                <?php
+                                $index_r++;
+                                ?>
                             @endif
-                            <?php
-                            $index_r++;
-                            ?>
-                        @endif
+                        @endisset
                     @endforeach
                     <tr>
-                        <td class="py-3 right" colspan="5"><span class="bold uppercase px-2">Totales :
+                        <td class="py-3 right" colspan="6"><span class="bold uppercase px-2">Totales :
                             </span>
                         </td>
 
-                        <td class="center"><span class="uppercase px-2 bold">{{ $pagos_vencidos }}</span>
-                        </td>
                         <td class="center"><span class="uppercase px-2">
                                 $ {{ number_format($saldo_neto, 2) }}</span></td>
-                        <td class="center"><span class="uppercase px-2">
-                                $ {{ number_format($intereses, 2) }}</span></td>
+
                     </tr>
                 </tbody>
             </table>

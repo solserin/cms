@@ -88,7 +88,7 @@
                                 Descripción
                             </div>
                             <p class="control-valor">
-                                Abonos vencidos de propiedades por cobrar
+                                Abonos vencidos de planes funerarios por cobrar
                             </p>
                             <div class="control bg-header size-13px">
                                 Fecha de reporte
@@ -115,7 +115,7 @@
             </table>
         </div>
         <div class="py-3 ">
-            <span class="uppercase bold size-15px">Desglose de abonos vencidos de propiedades en cementerio:</span>
+            <span class="uppercase bold size-15px">Desglose de abonos vencidos de planes funerarios:</span>
         </div>
 
         <div class="w-100">
@@ -134,7 +134,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $index_r = 0;
+                    $index_r = 1;
                     $pagos_vencidos = 0;
                     $saldo_neto = 0;
                     $intereses = 0;
@@ -151,13 +151,14 @@
                                 <tr>
                                     <td class="center"><span class="bold uppercase px-2">{{ $index_r }}</span></td>
                                     <td class="center"><span
-                                            class="uppercase px-2">{{ $venta['ventas_terrenos_id'] }}</span>
+                                            class="uppercase px-2">{{ $venta['ventas_planes_id'] }}</span>
                                     </td>
                                     <td class="center"><span class="uppercase px-2">{{ $venta['nombre'] }}</span></td>
                                     <td class="center"><span class="uppercase px-2">{{ $venta['celular'] }} /
                                             {{ $venta['telefono'] }}</span></td>
-                                    <td class="center"><span class="uppercase px-2">
-                                            {{ $venta['venta_terreno']['ubicacion_texto'] }}</span></td>
+                                    <td class="center"><span
+                                            class="uppercase px-2">{{ $venta['venta_plan']['nombre_original'] }}
+                                        </span></td>
                                     <td class="center"><span class="uppercase px-2">N/A</span>
                                     </td>
                                     <td class="center"><span class="uppercase px-2">$
@@ -172,14 +173,15 @@
                                         <td class="center"><span class="bold uppercase px-2">{{ $index_r }}</span>
                                         </td>
                                         <td class="center"><span
-                                                class="uppercase px-2">{{ $venta['ventas_terrenos_id'] }}</span>
+                                                class="uppercase px-2">{{ $venta['ventas_planes_id'] }}</span>
                                         </td>
                                         <td class="center"><span class="uppercase px-2">{{ $venta['nombre'] }}</span>
                                         </td>
                                         <td class="center"><span class="uppercase px-2">{{ $venta['celular'] }} /
                                                 {{ $venta['telefono'] }}</span></td>
-                                        <td class="center"><span class="uppercase px-2">
-                                                {{ $venta['venta_terreno']['ubicacion_texto'] }}</span></td>
+                                        <td class="center"><span
+                                                class="uppercase px-2">{{ $venta['venta_plan']['nombre_original'] }}
+                                            </span></td>
                                         <td class="center"><span
                                                 class="uppercase px-2 bold">{{ $venta['pagos_vencidos'] }}</span>
                                         </td>

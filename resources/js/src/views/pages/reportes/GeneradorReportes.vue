@@ -143,6 +143,9 @@ export default {
       } else if (this.form.modulo.value == 2) {
         /**cementerio */
         ver = false;
+      } else if (this.form.modulo.value == 3) {
+        /**funeraria */
+        ver = false;
       }
       return ver;
     },
@@ -155,6 +158,9 @@ export default {
         }
       } else if (this.form.modulo.value == 2) {
         /**cementerio */
+        ver = false;
+      } else if (this.form.modulo.value == 3) {
+        /**funeraria */
         ver = false;
       }
       return ver;
@@ -207,6 +213,20 @@ export default {
             });
           });
         })();
+      } else if (newValue.value == 3) {
+        /**funeraria*/
+        this.reportes.push({
+          label: "Abonos vencidos de planes funerarios",
+          value: "reporte_planes",
+          detalle: "Abonos vencidos de venta de planes funerarios",
+          excel_b: 0,
+        });
+        this.reportes.push({
+          label: "Servicios funerarios con adeudo",
+          value: "reporte_servicios",
+          detalle: "Servicios funerarios que tienen falta de pago",
+          excel_b: 0,
+        });
       }
 
       this.form.reporte = this.reportes[0];
@@ -248,10 +268,11 @@ export default {
           label: "Funeraria",
           value: "3",
         },
+        /*
         {
           label: "Cobranza",
           value: "4",
-        },
+        },*/
       ],
       reportes: [
         {

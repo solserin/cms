@@ -802,7 +802,6 @@ class CementerioController extends ApiController
 
     public function get_abonos_vencidos_propiedades($idioma = 'es', Request $request)
     {
-
         if (!($idioma == 'en' || $idioma == 'es')) {
             $idioma = 'es';
         }
@@ -875,6 +874,7 @@ class CementerioController extends ApiController
             return $pdf->inline($name_pdf);
         }
     }
+
 
     public function get_cuota_pdf_todas($idioma = 'es', Request $request)
     {
