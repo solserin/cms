@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
 Route::get('cementerio/get_cuotas/{id_cuota?}/{paginated?}/', 'CementerioController@get_cuotas');
+Route::get('cementerio/get_cuotas_simple/', 'CementerioController@get_cuotas_simple');
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 Route::get('cementerio/get_cuota_pdf_todas', 'CementerioController@get_cuota_pdf_todas');
 Route::get('cementerio/get_cuota_pdf', 'CementerioController@get_cuota_pdf');

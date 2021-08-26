@@ -256,6 +256,15 @@ class CementerioController extends ApiController
     }
 
 
+    /**get cuotas simple */
+    public function get_cuotas_simple()
+    {
+
+        return Cuotas::orderBy('id', 'asc')->where('status', '<>', 0)
+            ->get();
+    }
+
+
     /**obtiene todas cuotas de mantenimiento en el cementerio */
     public function get_cuotas(Request $request, $id_cuota = 'all', $paginated = false)
     {
@@ -727,7 +736,8 @@ class CementerioController extends ApiController
         }
         $email_to        = $request->email_address;
         $datos_request   = json_decode($request->request_parent[0], true);
-        $id_cuota = $datos_request['id_cuota'];
+
+        $id_cuota = $datos_request['reporte']['value'];
 
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad

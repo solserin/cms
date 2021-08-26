@@ -115,6 +115,7 @@ import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import "flatpickr/dist/themes/airbnb.css";
 import Reporteador from "@pages/Reporteador";
+import cementerio from "@services/cementerio";
 const moment = require("moment");
 /**VARIABLES GLOBALES */
 import vSelect from "vue-select";
@@ -144,10 +145,7 @@ export default {
     "form.modulo": function (newValue, oldValue) {
       /**Cargando los reportes segun el modulo */
       this.reportes = [{ label: "Seleccionar", value: "" }];
-      if (newValue.value != 1) {
-        this.form.reporte = this.reportes[0];
-        return;
-      }
+
       if (newValue.value == 1) {
         /**inventario*/
         this.reportes.push({
@@ -169,8 +167,27 @@ export default {
           detalle: "Inventario Actual Global Funeraria",
           excel_b: 1,
         });
+      } else if (newValue.value == 2) {
+        /**cementerio*/
+        (async () => {
+          /**manda traer los cuotas */
+          await this.get_cuotas_simple();
+          this.cuotas.forEach((element) => {
+            this.reportes.push({
+              label: "Deudores cuota cementerio " + element.descripcion,
+              value: element.id,
+              detalle: element.descripcion,
+              excel_b: 0,
+              tipo_reporte: "cuota_cementerio",
+            });
+          });
+        })();
       }
-      this.form.reporte = this.reportes[1];
+      if (this.form.reportes.length > 0) {
+        this.form.reporte = this.reportes[1];
+      } else {
+        this.form.reporte = this.reportes[0];
+      }
     },
   },
   data() {
@@ -188,7 +205,10 @@ export default {
         fecha: "",
         email: "",
         destinatario: "",
+        tipo_reporte: "",
+        id_cuota: "",
       },
+      cuotas: [],
       modulos: [
         {
           label: "Seleccionar",
@@ -220,7 +240,31 @@ export default {
     };
   },
   methods: {
-    async get_data(page, evento = "") {},
+    async get_cuotas_simple() {
+      try {
+        this.$vs.loading();
+        let res = await cementerio.get_cuotas_simple();
+        this.cuotas = res.data;
+        this.$vs.loading.close();
+      } catch (err) {
+        this.$vs.loading.close();
+        this.ver = true;
+        if (err.response) {
+          if (err.response.status == 403) {
+            /**FORBIDDEN ERROR */
+            this.$vs.notify({
+              title: "Permiso denegado",
+              text: "Verifique sus permisos con el administrador del sistema.",
+              iconPack: "feather",
+              icon: "icon-alert-circle",
+              color: "warning",
+              time: 4000,
+            });
+          }
+        }
+      }
+    },
+
     reset(card) {
       card.removeRefreshAnimation(500);
     },
@@ -248,6 +292,7 @@ export default {
     },
 
     openReporte() {
+      this.form.tipo_reporte = "";
       if (this.form.modulo.value == 1) {
         if (this.form.reporte.value == 1) {
           if (!this.validarFecha()) {
@@ -261,6 +306,9 @@ export default {
             return;
           }
         }
+      } else if (this.form.modulo.value == 2) {
+        /**cementerio */
+        this.form.tipo_reporte = this.form.reporte.tipo_reporte;
       }
 
       this.ListaReportes = [];
