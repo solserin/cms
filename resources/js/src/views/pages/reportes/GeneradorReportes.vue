@@ -30,7 +30,10 @@
             />
           </div>
 
-          <div class="w-full xl:w-4/12 mb-1 px-2 input-text" v-show="ver_fecha">
+          <div
+            class="w-full xl:w-4/12 mb-1 px-2 input-text"
+            v-show="ver_fecha_rango"
+          >
             <label class="">
               Rango de Fechas año/mes/dia
               <span>(*)</span>
@@ -45,7 +48,7 @@
               @on-close="onCloseDate"
             />
           </div>
-          <div class="w-full xl:w-4/12 px-2 input-text" v-show="!ver_fecha">
+          <div class="w-full xl:w-4/12 px-2 input-text" v-show="ver_fecha">
             <label>
               Fecha del Reporte
               <span>(*)</span>
@@ -134,9 +137,25 @@ export default {
       let ver = true;
       if (this.form.modulo.value == 1) {
         /**inventarios */
+        if (this.form.reporte.value != 1) {
+          ver = false;
+        }
+      } else if (this.form.modulo.value == 2) {
+        /**cementerio */
+        ver = false;
+      }
+      return ver;
+    },
+    ver_fecha_rango: function () {
+      let ver = true;
+      if (this.form.modulo.value == 1) {
+        /**inventarios */
         if (this.form.reporte.value == 1) {
           ver = false;
         }
+      } else if (this.form.modulo.value == 2) {
+        /**cementerio */
+        ver = false;
       }
       return ver;
     },
@@ -169,6 +188,12 @@ export default {
         });
       } else if (newValue.value == 2) {
         /**cementerio*/
+        this.reportes.push({
+          label: "Abonos vencidos de propiedades",
+          value: "reporte_propiedades",
+          detalle: "Abonos vencidos de venta de propiedades",
+          excel_b: 0,
+        });
         (async () => {
           /**manda traer los cuotas */
           await this.get_cuotas_simple();
@@ -183,11 +208,8 @@ export default {
           });
         })();
       }
-      if (this.form.reportes.length > 0) {
-        this.form.reporte = this.reportes[1];
-      } else {
-        this.form.reporte = this.reportes[0];
-      }
+
+      this.form.reporte = this.reportes[0];
     },
   },
   data() {

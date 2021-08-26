@@ -24,6 +24,7 @@ Route::get('cementerio/get_cuotas_simple/', 'CementerioController@get_cuotas_sim
 Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 Route::get('cementerio/get_cuota_pdf_todas', 'CementerioController@get_cuota_pdf_todas');
 Route::get('cementerio/get_cuota_pdf', 'CementerioController@get_cuota_pdf');
+Route::get('cementerio/get_abonos_vencidos_propiedades', 'CementerioController@get_abonos_vencidos_propiedades');
 
 /**rutas publicas_ entran sin token */
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');

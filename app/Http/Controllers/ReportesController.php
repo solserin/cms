@@ -26,8 +26,6 @@ class ReportesController extends ApiController
         if (isset($request->request_parent[0])) {
             $datosRequest = json_decode($request->request_parent[0], true);
         }
-
-
         if (isset($datosRequest['modulo']['value'])) {
             $modulo = $datosRequest['modulo']['value'];
             $reporte = $datosRequest['reporte']['value'];
@@ -89,11 +87,15 @@ class ReportesController extends ApiController
             }
         } else   if ($modulo == 2) {
             /**cementerio */
-            if (!is_null($datosRequest['tipo_reporte'])) {
-                $cementerio = new CementerioController();
-
-                return $cementerio->get_cuota_pdf('es', $request);
-                return $this->errorResponse($reporte, 409);
+            $cementerio = new CementerioController();
+            if (isset($datosRequest['tipo_reporte'])) {
+                if (!is_null($datosRequest['tipo_reporte'])) {
+                    return $cementerio->get_cuota_pdf('es', $request);
+                }
+            } else {
+                if ($reporte == 'reporte_propiedades') {
+                    return $cementerio->get_abonos_vencidos_propiedades('es', $request);
+                }
             }
         }
 

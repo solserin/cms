@@ -150,7 +150,7 @@
             </table>
         </div>
         <div class="py-3 ">
-            <span class="uppercase bold size-15px">Desglose de deudores de cuota:</span>
+            <span class="uppercase bold size-15px">Desglose de pagos vencidos de cuota en cementerio:</span>
         </div>
 
         <div class="w-100">
@@ -164,11 +164,12 @@
                         <td class="center"><span class="bold uppercase px-2">Ubicación</span></td>
                         <td class="center"><span class="bold uppercase px-2">$ Pagado.</span></td>
                         <td class="center"><span class="bold uppercase px-2">Saldo</span></td>
+                        <td class="center"><span class="bold uppercase px-2">Días de vencido</span></td>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($cuota['propiedades'] as $index => $propiedad)
-                        @if ($propiedad['saldo_neto'] > 0)
+                        @if ($propiedad['saldo_neto'] > 0 && $propiedad['get_pagos_pagos_programados'][0]['status_pago'] == 0)
                             <tr>
                                 <td class="center"><span class="bold uppercase px-2">{{ $index + 1 }}</span></td>
                                 <td class="center"><span
@@ -186,6 +187,9 @@
                                 </td>
                                 <td class="center"><span class=" uppercase px-2">$
                                         {{ number_format($propiedad['saldo_neto'], 2) }}</span>
+                                </td>
+                                <td class="center"><span
+                                        class=" uppercase px-2">{{ $propiedad['get_pagos_pagos_programados'][0]['dias_vencido'] }}</span>
                                 </td>
                             </tr>
                         @endif
