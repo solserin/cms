@@ -4027,11 +4027,7 @@ class FunerariaController extends ApiController
             'preparador',
             'tipos_contratante_id'
         )
-            ->WhereHas('operacion', function ($q) use ($request) {
-                if (isset($request->filtrar_solo_adeudos)) {
-                    $q->where('status', 1)->where('total', '>', 0);
-                }
-            })
+
             ->with('registro:id,nombre')
             ->with('nacionalidad')
             ->with('escolaridad')
@@ -4045,6 +4041,12 @@ class FunerariaController extends ApiController
             ->with('operacion.cliente')
             ->with('operacion.cancelador')
             ->with('servicio_exhumado:servicios_funerarios_exhumado_id,id,status')
+            /**este truco es solo para poder evitar la falta de informacion cuando no se cuenta con el filtrado especial de aduedos del reporte de servicios funerarios*/
+            ->WhereHas(isset($request->filtrar_solo_adeudos) ? 'operacion' : 'registro', function ($q) use ($request) {
+                if (isset($request->filtrar_solo_adeudos)) {
+                    $q->where('status', 1)->where('total', '>', 0);
+                }
+            })
             /**validnado si se hace filtrado de algun plan funerario de uso inmediato */
             ->where(function ($q) use ($uso_plan_funerario_futuro) {
                 if (trim($uso_plan_funerario_futuro) != '' && $uso_plan_funerario_futuro > 0) {
