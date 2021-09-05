@@ -661,10 +661,12 @@ export default {
         this.datosVenta = res.data[0];
 
         this.operacion_id = this.datosVenta.operacion_id;
-
-        if (this.datosVenta.cuota_cementerio_terreno[0].pagos_programados) {
-          this.pagos_programados_cuotas =
-            this.datosVenta.cuota_cementerio_terreno[0].pagos_programados;
+        this.pagos_programados_cuotas = [];
+        if (this.datosVenta.cuota_cementerio_terreno.length > 0) {
+          this.datosVenta.cuota_cementerio_terreno.forEach((element) => {
+            this.pagos_programados_cuotas.push(element.pagos_programados[0]);
+          });
+          //this.pagos_programados_cuotas =this.datosVenta.cuota_cementerio_terreno[0].pagos_programados;
         }
 
         /**aqui voy */
