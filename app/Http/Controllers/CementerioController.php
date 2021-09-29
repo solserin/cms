@@ -2800,6 +2800,16 @@ class CementerioController extends ApiController
                     }
                 }
             })
+
+            //aqui filtro solo cuando es busqueda por ubicacion en raw
+            ->WhereHas(isset($request->ubicacion_raw) ? 'venta_terreno' : 'registro', function ($q) use ($request) {
+                if (isset($request->ubicacion_raw)) {
+                    $q->where('ubicacion', $request->ubicacion_raw);
+                    $q->where('operaciones.status', '<>', 0);
+                }
+            })
+            //fin de filtrado por ubicacion
+
             ->where(function ($q) use ($status) {
                 if (trim($status) != '') {
                     $q->where('operaciones.status', '=', $status);

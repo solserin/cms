@@ -172,6 +172,11 @@
                     </div>
                   </div>
                   <div class="w-full px-2 size-small color-copy pt-2">
+                    <span class="color-danger-900 font-medium">{{
+                      disponibilidad_propiedad
+                    }}</span>
+                  </div>
+                  <div class="w-full px-2 size-small color-copy pt-2">
                     <span class="color-danger-900 font-medium">Ojo:</span>
                     Debe seleccionar la modalidad de la venta que se esté
                     registrando en caso de que haya sido realizada fuera del
@@ -1243,6 +1248,50 @@ export default {
     //fin de watchs con mapa
   },
   computed: {
+    /**verifico la disponibilidad de la propiedad */
+    //aqui estoy
+    disponibilidad_propiedad: function () {
+      let solicitar_disponibilidad = false;
+      let response = {};
+      if (this.datosAreas.tipo_propiedades_id) {
+        if (this.datosAreas.tipo_propiedades_id != 4) {
+          //si no es tipo terraza, se hace la peticion cuando se haya seleccionado solo la fila
+          //form.filas
+          if (this.form.filas.value != "") {
+            solicitar_disponibilidad = true;
+            //return "peticion de filas" + this.crear_ubicacion_computed;
+          }
+        } else {
+          //la peticion se realiza cuando se selecciona la ubicación
+          //form.lotes
+          if (this.form.lotes.value != "") {
+            solicitar_disponibilidad = true;
+            //return "peticion de lotes" + this.crear_ubicacion_computed;
+          }
+        }
+        if (solicitar_disponibilidad) {
+          /**hago la peticion para ver disponibilidad */
+
+          (async () => {
+            let res = await cementerio.get_ventas({
+              ubicacion_raw: this.crear_ubicacion_computed,
+            });
+            if (res.data.length > 0) {
+              /**ocupado */
+              console.log(res.data);
+              response = { res: 0, message: "Ocupado" };
+            } else {
+              /**disponible para venta */
+              response = { res: 1, message: "Disponible" };
+            }
+          })();
+          return response;
+        }
+      } else {
+        return false;
+      }
+    },
+
     minimo_financiamiento: function () {
       if (this.form.tipo_financiamiento == 1) {
         return 1;
