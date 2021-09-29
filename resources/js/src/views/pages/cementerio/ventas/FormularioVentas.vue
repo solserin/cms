@@ -172,9 +172,17 @@
                     </div>
                   </div>
                   <div class="w-full px-2 size-small color-copy pt-2">
-                    <span class="color-danger-900 font-medium">{{
-                      disponibilidad_propiedad
-                    }}</span>
+                    <span
+                      class="font-medium uppercase"
+                      v-if="disponibilidad_terreno == 1"
+                    >
+                      <span class="dot-success"></span>
+                      Propiedad disponible para venta</span
+                    >
+                    <span class="uppercase font-medium" v-else>
+                      <span class="dot-danger"></span>
+                      Propiedad ya vendida</span
+                    >
                   </div>
                   <div class="w-full px-2 size-small color-copy pt-2">
                     <span class="color-danger-900 font-medium">Ojo:</span>
@@ -1244,53 +1252,17 @@ export default {
         }
       }
     },
+    crear_ubicacion_computed: function (newValue, oldValue) {
+      (async () => {
+        await this.get_disponibilidad();
+      })();
+    },
 
     //fin de watchs con mapa
   },
   computed: {
     /**verifico la disponibilidad de la propiedad */
     //aqui estoy
-    disponibilidad_propiedad: function () {
-      let solicitar_disponibilidad = false;
-      let response = {};
-      if (this.datosAreas.tipo_propiedades_id) {
-        if (this.datosAreas.tipo_propiedades_id != 4) {
-          //si no es tipo terraza, se hace la peticion cuando se haya seleccionado solo la fila
-          //form.filas
-          if (this.form.filas.value != "") {
-            solicitar_disponibilidad = true;
-            //return "peticion de filas" + this.crear_ubicacion_computed;
-          }
-        } else {
-          //la peticion se realiza cuando se selecciona la ubicación
-          //form.lotes
-          if (this.form.lotes.value != "") {
-            solicitar_disponibilidad = true;
-            //return "peticion de lotes" + this.crear_ubicacion_computed;
-          }
-        }
-        if (solicitar_disponibilidad) {
-          /**hago la peticion para ver disponibilidad */
-
-          (async () => {
-            let res = await cementerio.get_ventas({
-              ubicacion_raw: this.crear_ubicacion_computed,
-            });
-            if (res.data.length > 0) {
-              /**ocupado */
-              console.log(res.data);
-              response = { res: 0, message: "Ocupado" };
-            } else {
-              /**disponible para venta */
-              response = { res: 1, message: "Disponible" };
-            }
-          })();
-          return response;
-        }
-      } else {
-        return false;
-      }
-    },
 
     minimo_financiamiento: function () {
       if (this.form.tipo_financiamiento == 1) {
@@ -1542,6 +1514,7 @@ export default {
   },
   data() {
     return {
+      disponibilidad_terreno: "",
       configdateTimePicker: configdateTimePicker,
       verDisponibilidad: false,
       openBuscador: false,
@@ -1636,6 +1609,23 @@ export default {
     };
   },
   methods: {
+    async get_disponibilidad() {
+      try {
+        let res = await cementerio.get_ventas({
+          ubicacion_raw: this.crear_ubicacion_computed,
+        });
+        if (res.data.data.length > 0) {
+          /**ocupado */
+          this.disponibilidad_terreno = 0;
+        } else {
+          /**disponible para venta */
+          this.disponibilidad_terreno = 1;
+        }
+      } catch (error) {
+        return error;
+      }
+    },
+
     //obtengo los datos del area seleccionada desde el mapa  "child"
     getDatosTipoPropiedad(datos) {
       //actualizo los datos que se ocupan para manejar las ubicaciones de las propiedades
