@@ -63,6 +63,51 @@
             />
           </div>
         </div>
+
+        <div class="flex flex-wrap" v-if="ver_filtros_cementerio_mapa">
+          <div class="w-full xl:w-4/12 mb-1 px-2 input-text">
+            <label class="">Tipo de Propiedad</label>
+            <v-select
+              :options="tipo_propiedades"
+              :clearable="false"
+              v-model="form.tipo_propiedad"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              class="w-full"
+            />
+          </div>
+          <div class="w-full xl:w-4/12 mb-1 px-2 input-text">
+            <label class="">Área/Sección</label>
+            <v-select
+              :options="areas_propiedades"
+              v-model="form.area_propiedades"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              class="w-full"
+            />
+          </div>
+
+          <div class="w-full xl:w-4/12 mb-1 px-2 input-text">
+            <label class="">
+              Filtrar por ventas/servicios
+              <span>(*)</span>
+            </label>
+
+            <vs-checkbox
+              color="primary"
+              class="size-small font-medium color-copy py-2"
+              v-model="selected"
+              :vs-value="CC"
+              >Fecha de venta</vs-checkbox
+            >
+            <vs-checkbox
+              color="primary"
+              class="size-small font-medium color-copy py-2"
+              v-model="selected"
+              :vs-value="CC"
+              >Fecha de utilización</vs-checkbox
+            >
+          </div>
+        </div>
       </vx-card>
 
       <div class="w-full pt-8" v-if="form.reporte.value">
@@ -101,7 +146,6 @@
           </template>
         </vs-table>
       </div>
-
       <Reporteador
         :header="'consultar documentos de venta de propiedad'"
         :show="openReportesLista"
@@ -158,10 +202,25 @@ export default {
         }
       } else if (this.form.modulo.value == 2) {
         /**cementerio */
-        ver = false;
+        if (this.form.reporte.value == "reporte_mapa") {
+          ver = true;
+        } else {
+          ver = false;
+        }
       } else if (this.form.modulo.value == 3) {
         /**funeraria */
         ver = false;
+      }
+      return ver;
+    },
+
+    ver_filtros_cementerio_mapa: function () {
+      let ver = false;
+      if (this.form.modulo.value == 2) {
+        /**cementerio */
+        if (this.form.reporte.value == "reporte_mapa") {
+          ver = true;
+        }
       }
       return ver;
     },
@@ -200,6 +259,12 @@ export default {
           detalle: "Abonos vencidos de venta de propiedades",
           excel_b: 0,
         });
+        this.reportes.push({
+          label: "Mapa del cementerio",
+          value: "reporte_mapa",
+          detalle: "Mapeado de propiedades del cementerio",
+          excel_b: 0,
+        });
         (async () => {
           /**manda traer los cuotas */
           await this.get_cuotas_simple();
@@ -228,12 +293,33 @@ export default {
           excel_b: 0,
         });
       }
-
       this.form.reporte = this.reportes[0];
+    },
+
+    "form.tipo_propiedad": function (newValue, oldValue) {
+      this.areas_propiedades = [];
+      this.areas_propiedades.push({ label: "Todas", value: "" });
+      this.datosCementerio.forEach((element) => {
+        if (newValue.value != "") {
+          if (newValue.value == element.tipo_propiedades_id) {
+            this.areas_propiedades.push({
+              value: element.id,
+              label: element.nombre_area,
+            });
+          }
+        } else {
+          this.areas_propiedades.push({
+            value: element.id,
+            label: element.nombre_area,
+          });
+        }
+      });
+      this.form.area_propiedades = this.areas_propiedades[0];
     },
   },
   data() {
     return {
+      selected: ["A", "C", "CC", "B", "D", "E", "F", "G"],
       ListaReportes: [],
       openReportesLista: false,
       configdateTimePicker: configdateTimePicker,
@@ -249,8 +335,14 @@ export default {
         destinatario: "",
         tipo_reporte: "",
         id_cuota: "",
+        /**variables para el control de reportes de propiedades del cementerio */
+        tipo_propiedad: { label: "Todas", value: "" },
+        area_propiedades: { label: "Todas", value: "" },
       },
       cuotas: [],
+      datosCementerio: [],
+      tipo_propiedades: [],
+      areas_propiedades: [],
       modulos: [
         {
           label: "Seleccionar",
@@ -283,6 +375,38 @@ export default {
     };
   },
   methods: {
+    async get_tipo_propiedades() {
+      try {
+        this.$vs.loading();
+        let res = await cementerio.get_tipo_propiedades();
+        this.tipo_propiedades.push({
+          value: "",
+          label: "Todas",
+        });
+        res.data.forEach((element) => {
+          this.tipo_propiedades.push({
+            value: element.id,
+            label: element.tipo,
+          });
+        });
+        this.form.tipo_propiedad = this.tipo_propiedades[0];
+        this.$vs.loading.close();
+      } catch (error) {
+        this.$vs.loading.close();
+      }
+    },
+
+    async get_cementerio() {
+      try {
+        this.$vs.loading();
+        let res = await cementerio.get_cementerio();
+        this.datosCementerio = res.data;
+        this.$vs.loading.close();
+      } catch (error) {
+        this.$vs.loading.close();
+      }
+    },
+
     async get_cuotas_simple() {
       try {
         this.$vs.loading();
@@ -403,6 +527,10 @@ export default {
   },
   created() {
     this.form.modulo = this.modulos[1];
+    (async () => {
+      await this.get_cementerio();
+      await this.get_tipo_propiedades();
+    })();
   },
 };
 </script>

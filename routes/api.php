@@ -14,7 +14,8 @@ use Illuminate\Http\Request;
  */
 
 /**en pruebas */
-
+Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -112,8 +113,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/clientes/alta_cliente', 'ClientesController@alta_cliente');
 
     /**rutas del cementerio */
-    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
-
     Route::get('generarNumeroTitulo', 'CementerioController@generarNumeroTitulo');
     Route::post('cementerio/control_ventas/{tipo_servicio}', 'CementerioController@control_ventas'); //agregar,modificar
     Route::post('cementerio/registrar_precio_propiedad', 'CementerioController@registrar_precio_propiedad');
@@ -131,8 +130,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
     Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
-    Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
-    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+
+
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::post('cementerio/control_cuotas/{tipo_servicio?}', 'CementerioController@control_cuotas');
     Route::post('cementerio/cancelar_cuota', 'CementerioController@cancelar_cuota');
