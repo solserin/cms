@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 /**en pruebas */
 Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
 Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
+Route::get('cementerio/get_mapeado', 'CementerioController@get_mapeado');
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');

@@ -876,6 +876,93 @@ class CementerioController extends ApiController
     }
 
 
+
+    public function get_mapeado($idioma = 'es', Request $request)
+    {
+        if (!($idioma == 'en' || $idioma == 'es')) {
+            $idioma = 'es';
+        }
+        App::setLocale($idioma);
+
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email = $request->email_send === 'true' ? true : false;
+        if ($email == true) {
+            if (!$request->email_addres || !$request->destinatario) {
+                $this->errorResponse('Es necesario un correo y un destinatario', 409);
+            }
+        }
+        /*
+        $email_to        = $request->email_address;
+        $datos_request   = json_decode($request->request_parent[0], true);
+*/
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
+
+        $tipo_propiedad_id = 1;
+        $id_area = 1;
+        $fecha_inicio = '';
+        $fecha_fin = '';
+        $filtro_seleccion = 0;
+
+        $email = false;
+        $email_to = 'hector@gmail.com';
+
+        $cementerio = $this->get_cementerio();
+
+        $ventas = $this->get_ventas($request, 'all', false);
+        //$funeraria = new FunerariaController();
+        //$servicios = $funeraria->get_solicitudes_servicios($request, 'all', false);
+
+
+        $get_funeraria = new EmpresaController();
+        $empresa       = $get_funeraria->get_empresa_data();
+        $pdf           = PDF::loadView('cementerios/abonos_vencidos/reporte', ['empresa' => $empresa, 'ventas' => $ventas, 'idioma' => $idioma]);
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf =  'Pagos vencidos en propiedades.pdf';
+        $pdf->setOptions([
+            'title'       => $name_pdf,
+            'footer-html' => view('cementerios.abonos_vencidos.footer', ['empresa' => $empresa]),
+        ]);
+
+        $pdf->setOptions([
+            'header-html' => view('cementerios.abonos_vencidos.header'),
+        ]);
+
+        $pdf->setOption('orientation', 'landscape');
+        $pdf->setOption('margin-left', 12.4);
+        $pdf->setOption('margin-right', 12.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 12.4);
+        $pdf->setOption('page-size', 'letter');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email     = $email_controller->pdf_email(
+                $email_to,
+                $request->destinatario,
+                'Abonos vencidos de propiedades',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
+
+
     public function get_cuota_pdf_todas($idioma = 'es', Request $request)
     {
 

@@ -87,25 +87,14 @@
           </div>
 
           <div class="w-full xl:w-4/12 mb-1 px-2 input-text">
-            <label class="">
-              Filtrar por ventas/servicios
-              <span>(*)</span>
-            </label>
-
-            <vs-checkbox
-              color="primary"
-              class="size-small font-medium color-copy py-2"
-              v-model="selected"
-              :vs-value="CC"
-              >Fecha de venta</vs-checkbox
-            >
-            <vs-checkbox
-              color="primary"
-              class="size-small font-medium color-copy py-2"
-              v-model="selected"
-              :vs-value="CC"
-              >Fecha de utilización</vs-checkbox
-            >
+            <label class="">Filtro de Selección</label>
+            <v-select
+              :options="filtros_seleccion"
+              v-model="form.filtro_seleccion"
+              :clearable="false"
+              :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              class="w-full"
+            />
           </div>
         </div>
       </vx-card>
@@ -262,7 +251,7 @@ export default {
         this.reportes.push({
           label: "Mapa del cementerio",
           value: "reporte_mapa",
-          detalle: "Mapeado de propiedades del cementerio",
+          detalle: "Reporte de cementerio",
           excel_b: 0,
         });
         (async () => {
@@ -319,7 +308,6 @@ export default {
   },
   data() {
     return {
-      selected: ["A", "C", "CC", "B", "D", "E", "F", "G"],
       ListaReportes: [],
       openReportesLista: false,
       configdateTimePicker: configdateTimePicker,
@@ -338,7 +326,13 @@ export default {
         /**variables para el control de reportes de propiedades del cementerio */
         tipo_propiedad: { label: "Todas", value: "" },
         area_propiedades: { label: "Todas", value: "" },
+        filtro_seleccion: { label: "Solo disponibilidad", value: "" },
       },
+      filtros_seleccion: [
+        { label: "Solo disponibilidad", value: "" },
+        { label: "Fecha de venta", value: "1" },
+        { label: "Fecha de servicio", value: "2" },
+      ],
       cuotas: [],
       datosCementerio: [],
       tipo_propiedades: [],
@@ -475,7 +469,15 @@ export default {
         }
       } else if (this.form.modulo.value == 2) {
         /**cementerio */
-        this.form.tipo_reporte = this.form.reporte.tipo_reporte;
+        if (this.form.reporte.value == "reporte_mapa") {
+          //valido el rango de fecha solo para aquellos que necesitan fecha de venta o servicios
+          if (this.form.filtro_seleccion.value > 0) {
+            if (!this.validarRangoFecha()) {
+              return;
+            }
+            this.form.tipo_reporte = this.form.reporte.tipo_reporte;
+          }
+        }
       }
 
       this.ListaReportes = [];
