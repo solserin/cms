@@ -891,10 +891,10 @@ class CementerioController extends ApiController
                 $this->errorResponse('Es necesario un correo y un destinatario', 409);
             }
         }
-        /*
-        $email_to        = $request->email_address;
-        $datos_request   = json_decode($request->request_parent[0], true);
-*/
+
+        //$email_to        = $request->email_address;
+        //$datos_request   = json_decode($request->request_parent[0], true);
+
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
@@ -907,12 +907,30 @@ class CementerioController extends ApiController
 
         $email = false;
         $email_to = 'hector@gmail.com';
-
         $cementerio = $this->get_cementerio();
-
         $ventas = $this->get_ventas($request, 'all', false);
         //$funeraria = new FunerariaController();
         //$servicios = $funeraria->get_solicitudes_servicios($request, 'all', false);
+
+
+        $datos_reporte = array();
+
+        /**limpiando array areas seleccionadas del cementerio */
+
+
+        foreach ($cementerio as $key => &$area) {
+            if ($tipo_propiedad_id == '') {
+                array_push($datos_cementerio, $area);
+            } else {
+                if ($tipo_propiedad_id == $area['tipo_propiedades_id']) {
+                } else {
+                    unset($area);
+                    continue;
+                }
+            }
+        }
+
+        return $cementerio;
 
 
         $get_funeraria = new EmpresaController();

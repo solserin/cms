@@ -253,6 +253,7 @@ export default {
           value: "reporte_mapa",
           detalle: "Reporte de cementerio",
           excel_b: 0,
+          tipo_reporte: "reporte_mapa",
         });
         (async () => {
           /**manda traer los cuotas */
@@ -475,7 +476,7 @@ export default {
             if (!this.validarRangoFecha()) {
               return;
             }
-            this.form.tipo_reporte = this.form.reporte.tipo_reporte;
+            this.form.tipo_reporte = this.form.reporte.value;
           }
         }
       }

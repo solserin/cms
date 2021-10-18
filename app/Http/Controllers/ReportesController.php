@@ -91,7 +91,11 @@ class ReportesController extends ApiController
             $funeraria = new FunerariaController();
             if (isset($datosRequest['tipo_reporte'])) {
                 if (!is_null($datosRequest['tipo_reporte'])) {
-                    return $cementerio->get_cuota_pdf('es', $request);
+                    if ($datosRequest['tipo_reporte'] == 'cuota_cementerio') {
+                        return $cementerio->get_cuota_pdf('es', $request);
+                    } elseif ($datosRequest['tipo_reporte'] == 'reporte_mapa') {
+                        return $cementerio->get_mapeado('es', $request);
+                    }
                 }
             } else {
                 if ($reporte == 'reporte_propiedades') {
@@ -105,10 +109,8 @@ class ReportesController extends ApiController
             /**funeraria */
             $funeraria = new FunerariaController();
             if ($reporte == 'reporte_planes') {
-
                 return $funeraria->get_abonos_vencidos_planes_funerarios('es', $request);
             } else if ($reporte == 'reporte_servicios') {
-
                 return $funeraria->get_servicios_adeudos('es', $request);
             }
         }
