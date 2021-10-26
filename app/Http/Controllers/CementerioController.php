@@ -899,7 +899,7 @@ class CementerioController extends ApiController
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
 
-        $tipo_propiedad_id = 1;
+        $tipo_propiedad_id = '';
         $id_area = 1;
         $fecha_inicio = '';
         $fecha_fin = '';
@@ -908,27 +908,66 @@ class CementerioController extends ApiController
         $email = false;
         $email_to = 'hector@gmail.com';
         $cementerio = $this->get_cementerio();
-        $ventas = $this->get_ventas($request, 'all', false);
+        //$ventas = $this->get_ventas($request, 'all', false);
         //$funeraria = new FunerariaController();
         //$servicios = $funeraria->get_solicitudes_servicios($request, 'all', false);
+        $ventas_cementerio = Operaciones::select(
+            'id',
+            'clientes_id',
+            'fecha_operacion',
+            'ventas_terrenos_id'
+        )
+            ->with('cliente:id,nombre')
+            ->with('venta_terreno:id,ubicacion,tipo_propiedades_id,propiedades_id')
+            // ->with('venta_terreno')
+            ->where('empresa_operaciones_id', 1)->where('status', '<>', 0)->get();
 
-
-        $datos_reporte = array();
+        foreach ($ventas_cementerio as $key => $venta) {
+            //obtengo los datos para las propieades vendidad por tipo de area , id_area, fila y lote
+            $venta['fila_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[2]));
+            $venta['lote_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[3]));
+        }
 
         /**limpiando array areas seleccionadas del cementerio */
-
-
         foreach ($cementerio as $key => &$area) {
-            if ($tipo_propiedad_id == '') {
-                array_push($datos_cementerio, $area);
+            unset($area['tipo_propiedad']);
+            unset($area['frente']);
+            if (($tipo_propiedad_id != $area['tipo_propiedades_id']) && $tipo_propiedad_id != '') {
+                unset($cementerio[$key]);
+                continue;
+            }
+            /**una vez filtrado las partes del cementeio que se van a mostrar, procedemos a crear el mapeado con la estructura de dicha area*/
+            $mapa = array();
+            if ($area['tipo_propiedades_id'] != 4) {
+                //para tipo terraza hacemos el mapa en fila y columna
             } else {
-                if ($tipo_propiedad_id == $area['tipo_propiedades_id']) {
-                } else {
-                    unset($area);
-                    continue;
+                /**el mapa es una sola columna */
+            }
+
+            /**obtengo las propieades vendidas de dicha area del cementerio */
+            $propiedades = array();
+            foreach ($ventas_cementerio as $key => $venta) {
+                if ($venta['venta_terreno']['propiedades_id'] == $area['id']) {
+                    /**al pertenecer a dicha area esta venta se agrega los datos del mapeado */
+                    array_push(
+                        $propiedades,
+                        [
+                            'operacion_id' => $venta['id'],
+                            'clientes_id' => $venta['clientes_id'],
+                            'fecha_operacion' => $venta['fecha_operacion'],
+                            'ventas_terrenos_id' => $venta['ventas_terrenos_id'],
+                            'ubicacion' => $venta['venta_terreno']['ubicacion'],
+                            'fila_raw' => $venta['fila_raw'],
+                            'lote_raw' => $venta['lote_raw'],
+                            'cliente' => $venta['cliente']['nombre'],
+                        ]
+
+                    );
                 }
             }
+            $area['propiedades'] = $propiedades;
         }
+
 
         return $cementerio;
 
@@ -1075,6 +1114,9 @@ class CementerioController extends ApiController
             '*',
             DB::raw(
                 '(NULL) AS nombre_area'
+            ),
+            DB::raw(
+                '(NULL) AS mapa'
             )
         )
             ->with('filas_columnas')->with('tipoPropiedad')->with('tipoPropiedad.precios')->with('filas_columnas')->orderBy('id', 'asc')->get()->toArray();
