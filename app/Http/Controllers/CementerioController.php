@@ -903,7 +903,7 @@ class CementerioController extends ApiController
         $id_area = 1;
         $fecha_inicio = '';
         $fecha_fin = '';
-        $filtro_seleccion = 0;
+        $filtro_seleccion = '';
 
         $email = false;
         $email_to = 'hector@gmail.com';
@@ -935,9 +935,6 @@ class CementerioController extends ApiController
 
 
 
-
-
-
         //aqui ando
 
         /**limpiando array areas seleccionadas del cementerio */
@@ -954,12 +951,10 @@ class CementerioController extends ApiController
             foreach ($ventas_cementerio as $key => &$venta) {
                 if ($venta['venta_terreno']['propiedades_id'] == $area['id']) {
                     /**al pertenecer a dicha area esta venta se agrega los datos del mapeado */
-
                     /**actualizo la feca del servicio con texto */
                     foreach ($venta['venta_terreno']['servicios_por_terreno'] as &$servicio) {
                         $servicio['fecha_inhumacion_texto'] = fecha_abr($servicio['fechahora_inhumacion']);
                     }
-
                     array_push(
                         $propiedades,
                         [
@@ -972,6 +967,7 @@ class CementerioController extends ApiController
                             'lote_raw' => $venta['lote_raw'],
                             'cliente' => $venta['cliente']['nombre'],
                             'fecha_venta_texto' => fecha_abr($venta['fecha_operacion']),
+                            'num_servicios' => count($venta['venta_terreno']['servicios_por_terreno']),
                             'servicios_funerarios' => $venta['venta_terreno']['servicios_por_terreno']
                         ]
                     );
@@ -980,22 +976,27 @@ class CementerioController extends ApiController
             $area['propiedades'] = $propiedades;
         }
 
+        $tipo_propiedad_id = '';
+        $id_area = 1;
+        $fecha_inicio = '';
+        $fecha_fin = '';
+        $filtro_seleccion = '';
 
-        return $cementerio;
+        //return $cementerio;
 
 
         $get_funeraria = new EmpresaController();
         $empresa       = $get_funeraria->get_empresa_data();
-        $pdf           = PDF::loadView('cementerios/abonos_vencidos/reporte', ['empresa' => $empresa, 'ventas' => $ventas, 'idioma' => $idioma]);
+        $pdf           = PDF::loadView('cementerios/cementerio_mapa/reporte', ['empresa' => $empresa, 'cementerio' => $cementerio, 'idioma' => $idioma]);
         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
         $name_pdf =  'Pagos vencidos en propiedades.pdf';
         $pdf->setOptions([
             'title'       => $name_pdf,
-            'footer-html' => view('cementerios.abonos_vencidos.footer', ['empresa' => $empresa]),
+            'footer-html' => view('cementerios.cementerio_mapa.footer', ['empresa' => $empresa]),
         ]);
 
         $pdf->setOptions([
-            'header-html' => view('cementerios.abonos_vencidos.header'),
+            'header-html' => view('cementerios.cementerio_mapa.header'),
         ]);
 
         $pdf->setOption('orientation', 'landscape');
