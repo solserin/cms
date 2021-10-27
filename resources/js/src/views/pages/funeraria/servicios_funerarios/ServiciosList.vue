@@ -209,14 +209,14 @@
                 @click="cancelarVenta(data[indextr].servicio_id)"
               />
               <img
-                v-else-if="data[indextr].operacion!=null"
+                v-else-if="data[indextr].operacion != null"
                 class="img-btn-22 mx-3"
                 src="@assets/images/trash-open.svg"
                 title="Este contrato ya fue cancelado, puede hacer click aquí para consultar"
                 @click="ConsultarVentaAcuse(data[indextr].servicio_id)"
               />
               <img
-               v-else
+                v-else
                 class="img-btn-22 mx-3"
                 src="@assets/images/trash-open.svg"
                 title="Este servicio ya fue cancelado pero no tiene contrato asignado"
@@ -552,8 +552,8 @@ export default {
       })();
     },
 
-    sinContrato(){
-         this.$vs.notify({
+    sinContrato() {
+      this.$vs.notify({
         title: "Consultar acuse de cancelación",
         text: "Servicio cancelado sin contrato.",
         iconPack: "feather",
@@ -561,7 +561,7 @@ export default {
         color: "danger",
         time: 4000,
       });
-    }
+    },
   },
 
   created() {

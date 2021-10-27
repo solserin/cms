@@ -327,12 +327,13 @@ export default {
         /**variables para el control de reportes de propiedades del cementerio */
         tipo_propiedad: { label: "Todas", value: "" },
         area_propiedades: { label: "Todas", value: "" },
-        filtro_seleccion: { label: "Solo disponibilidad", value: "" },
+        filtro_seleccion: { label: "Estado del cementerio", value: "" },
       },
       filtros_seleccion: [
-        { label: "Solo disponibilidad", value: "" },
-        { label: "Fecha de venta", value: "1" },
-        { label: "Fecha de servicio", value: "2" },
+        { label: "Estado del cementerio", value: "" },
+        { label: "Solo disponibilidad", value: "1" },
+        { label: "Fecha de venta", value: "2" },
+        { label: "Fecha de servicio", value: "3" },
       ],
       cuotas: [],
       datosCementerio: [],

@@ -915,18 +915,30 @@ class CementerioController extends ApiController
             'id',
             'clientes_id',
             'fecha_operacion',
-            'ventas_terrenos_id'
+            'ventas_terrenos_id',
+            DB::raw(
+                '(NULL) AS fecha_venta_texto'
+            ),
         )
             ->with('cliente:id,nombre')
+            ->with('venta_terreno.servicios_por_terreno')
             ->with('venta_terreno:id,ubicacion,tipo_propiedades_id,propiedades_id')
-            // ->with('venta_terreno')
             ->where('empresa_operaciones_id', 1)->where('status', '<>', 0)->get();
+
+        /**agrego la fila y el lote desde la ubicacion completa */
 
         foreach ($ventas_cementerio as $key => $venta) {
             //obtengo los datos para las propieades vendidad por tipo de area , id_area, fila y lote
             $venta['fila_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[2]));
             $venta['lote_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[3]));
         }
+
+
+
+
+
+
+        //aqui ando
 
         /**limpiando array areas seleccionadas del cementerio */
         foreach ($cementerio as $key => &$area) {
@@ -936,19 +948,18 @@ class CementerioController extends ApiController
                 unset($cementerio[$key]);
                 continue;
             }
-            /**una vez filtrado las partes del cementeio que se van a mostrar, procedemos a crear el mapeado con la estructura de dicha area*/
-            $mapa = array();
-            if ($area['tipo_propiedades_id'] != 4) {
-                //para tipo terraza hacemos el mapa en fila y columna
-            } else {
-                /**el mapa es una sola columna */
-            }
 
             /**obtengo las propieades vendidas de dicha area del cementerio */
             $propiedades = array();
-            foreach ($ventas_cementerio as $key => $venta) {
+            foreach ($ventas_cementerio as $key => &$venta) {
                 if ($venta['venta_terreno']['propiedades_id'] == $area['id']) {
                     /**al pertenecer a dicha area esta venta se agrega los datos del mapeado */
+
+                    /**actualizo la feca del servicio con texto */
+                    foreach ($venta['venta_terreno']['servicios_por_terreno'] as &$servicio) {
+                        $servicio['fecha_inhumacion_texto'] = fecha_abr($servicio['fechahora_inhumacion']);
+                    }
+
                     array_push(
                         $propiedades,
                         [
@@ -960,8 +971,9 @@ class CementerioController extends ApiController
                             'fila_raw' => $venta['fila_raw'],
                             'lote_raw' => $venta['lote_raw'],
                             'cliente' => $venta['cliente']['nombre'],
+                            'fecha_venta_texto' => fecha_abr($venta['fecha_operacion']),
+                            'servicios_funerarios' => $venta['venta_terreno']['servicios_por_terreno']
                         ]
-
                     );
                 }
             }

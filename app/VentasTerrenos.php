@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class VentasTerrenos extends Model
@@ -27,5 +28,22 @@ class VentasTerrenos extends Model
                 'tipo',
                 'capacidad'
             );
+    }
+
+
+    public function servicios_por_terreno()
+    {
+        return $this->hasMany('App\ServiciosFunerarios', 'ventas_terrenos_id', 'id')
+            ->select(
+                'id',
+                'nombre_afectado',
+                'fechahora_inhumacion',
+                'ventas_terrenos_id',
+                DB::raw(
+                    '(NULL) AS fecha_inhumacion_texto'
+                )
+            )
+            ->where('inhumacion_b', 1)
+            ->orderBy('fechahora_inhumacion', 'desc');
     }
 }

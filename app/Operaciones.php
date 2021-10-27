@@ -9,6 +9,8 @@ class Operaciones extends Model
 {
     protected $table = 'operaciones';
 
+
+
     public function venta_terreno()
     {
         return $this->belongsTo('App\VentasTerrenos', 'ventas_terrenos_id', 'id')
