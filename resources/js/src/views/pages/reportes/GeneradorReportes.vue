@@ -192,7 +192,7 @@ export default {
       } else if (this.form.modulo.value == 2) {
         /**cementerio */
         if (this.form.reporte.value == "reporte_mapa") {
-          ver = true;
+          this.form.filtro_seleccion.value > 1 ? (ver = true) : (ver = false);
         } else {
           ver = false;
         }

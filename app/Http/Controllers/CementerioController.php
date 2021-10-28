@@ -899,11 +899,12 @@ class CementerioController extends ApiController
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
 
-        $tipo_propiedad_id = '';
-        $id_area = 1;
-        $fecha_inicio = '';
-        $fecha_fin = '';
+        $tipo_propiedad_id = '4';
+        $id_area = '';
         $filtro_seleccion = '';
+        $fecha_inicio = '2020-03-01';
+        $fecha_fin = '2021-03-01';
+
 
         $email = false;
         $email_to = 'hector@gmail.com';
@@ -911,7 +912,7 @@ class CementerioController extends ApiController
         //$ventas = $this->get_ventas($request, 'all', false);
         //$funeraria = new FunerariaController();
         //$servicios = $funeraria->get_solicitudes_servicios($request, 'all', false);
-        $ventas_cementerio = Operaciones::select(
+        $query = Operaciones::select(
             'id',
             'clientes_id',
             'fecha_operacion',
@@ -921,9 +922,28 @@ class CementerioController extends ApiController
             ),
         )
             ->with('cliente:id,nombre')
-            ->with('venta_terreno.servicios_por_terreno')
             ->with('venta_terreno:id,ubicacion,tipo_propiedades_id,propiedades_id')
-            ->where('empresa_operaciones_id', 1)->where('status', '<>', 0)->get();
+            ->with(['venta_terreno.servicios_por_terreno' => function ($q) use ($filtro_seleccion, $fecha_fin, $fecha_inicio) {
+                if ($filtro_seleccion == 3) {
+                    /**solo las ventas que tienen servicios funerarios dentro de esas fechas */
+                    $q->WhereBetween('fechahora_inhumacion', [$fecha_inicio, $fecha_fin]);
+                }
+            }])
+            /*
+            ->WhereHas(isset($request->filtrar_solo_adeudos) ? 'operacion' : 'registro', function ($q) use ($request) {
+                if (isset($request->filtrar_solo_adeudos)) {
+                    $q->where('status', 1)->where('total', '>', 0);
+                }
+            })*/
+            ->where('empresa_operaciones_id', 1)->where('status', '<>', 0);
+
+        //aplico los filtros a las ventas que sean en la fecha señalada si aplican
+        if ($filtro_seleccion == 2) {
+            /**solo vnentas entre las fechas señaladas */
+            $query->WhereBetween('fecha_operacion', [$fecha_inicio, $fecha_fin]);
+        }
+
+        $ventas_cementerio = $query->get();
 
         /**agrego la fila y el lote desde la ubicacion completa */
 
@@ -942,6 +962,9 @@ class CementerioController extends ApiController
             unset($area['tipo_propiedad']);
             unset($area['frente']);
             if (($tipo_propiedad_id != $area['tipo_propiedades_id']) && $tipo_propiedad_id != '') {
+                unset($cementerio[$key]);
+                continue;
+            } else if (($id_area != $area['id']) && $id_area != '') {
                 unset($cementerio[$key]);
                 continue;
             }
@@ -976,15 +999,42 @@ class CementerioController extends ApiController
             $area['propiedades'] = $propiedades;
         }
 
-        $tipo_propiedad_id = '';
-        $id_area = 1;
-        $fecha_inicio = '';
-        $fecha_fin = '';
-        $filtro_seleccion = '';
+        /**agregando al array los parametros de filtracion */
+        $nombre_reporte = '';
+        switch ($filtro_seleccion) {
+            case '1':
+                $nombre_reporte = 'Disponibilidad de propiedades';
+                break;
+            case '2':
+                $nombre_reporte = 'Propiedades por fecha de venta';
+                break;
+            case '1':
+                $nombre_reporte = 'Propiedades por fecha de servicio';
+                break;
+            default:
+                $nombre_reporte = 'Estatus general del cementerio';
+                break;
+        }
+
+        /**anexo la filtracion del reporte */
+
+        $cementerio = [
+            'cementerio' => $cementerio,
+            'filtracion' => [
+                'tipo_propiedad_id' => $tipo_propiedad_id,
+                'id_area' => $id_area,
+                'fecha_inicio' => $fecha_inicio,
+                'fecha_fin' => $fecha_fin,
+                'filtro_seleccion' => $filtro_seleccion,
+                'nombre_reporte' => $nombre_reporte
+            ]
+        ];
+
+
 
         //return $cementerio;
 
-
+        //aqui estoy trabajando
         $get_funeraria = new EmpresaController();
         $empresa       = $get_funeraria->get_empresa_data();
         $pdf           = PDF::loadView('cementerios/cementerio_mapa/reporte', ['empresa' => $empresa, 'cementerio' => $cementerio, 'idioma' => $idioma]);

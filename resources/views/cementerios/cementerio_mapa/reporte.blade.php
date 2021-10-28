@@ -26,26 +26,6 @@
             margin-right: auto;
         }
 
-        .santander {
-            color: #D31413 !important;
-        }
-
-        .digito {
-            padding: 3px 7px 3px 7px;
-            border: 1px solid #dae1e7;
-            font-size: 1em;
-            line-height: 1.5em;
-        }
-
-        .barcode div {
-            min-height: 40px !important;
-        }
-
-        .bg-total {
-            background-color: #FE0000;
-            color: #fff;
-        }
-
 
         .numeros-contrato {
             width: 100% !important;
@@ -64,6 +44,57 @@
             font-size: .9em;
             line-height: .3em !important;
             text-transform: uppercase;
+        }
+
+        .table-modulo,
+        .table-modulo tr,
+        .table-modulo th,
+        .table-modulo td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .tabla-cuadriplex,
+        .tabla-cuadriplex tr,
+        .tabla-cuadriplex th,
+        .tabla-cuadriplex td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .table-modulo .titular td,
+        .table-modulo .titular tr,
+        .table-modulo .titular th {
+            border-collapse: collapse;
+            border: none;
+        }
+
+        .keep-together {
+            page-break-inside: avoid;
+        }
+
+        .break-before {
+            page-break-before: always;
+        }
+
+        .break-after {
+            page-break-after: always;
+        }
+
+        /*
+        So I can force:
+        That a particular container content is not spread over two pages (if it fits one page). When using the keep-together class a page break is created before the container if necessary.
+        That a page break is forced before a particular container.
+        That a page break is forced after a particular container.
+        */
+
+        .tabla-cuadriplex {
+            height: 400px !important;
+        }
+
+        .vendida {
+            text-decoration: line-through;
+            color: #EA5455;
         }
 
     </style>
@@ -88,7 +119,7 @@
                                 Descripción
                             </div>
                             <p class="control-valor">
-                                Reporte de cementerio
+                                {{ $cementerio['filtracion']['nombre_reporte'] }}
                             </p>
                             <div class="control bg-header size-13px">
                                 Fecha de reporte
@@ -98,7 +129,6 @@
                             </p>
                         </div>
                     </th>
-
                 </tr>
             </thead>
         </table>
@@ -115,68 +145,19 @@
             </table>
         </div>
         <div class="py-3 ">
-            <span class="uppercase bold size-15px">Desglose de información:</span>
+            <span class="uppercase bold size-15px">Desglose del cementerio:</span>
         </div>
-        @foreach ($cementerio as $area)
-            @if ($area['tipo_propiedades_id'] != 4)
-                <div class="py-3">
-                    {{ $area['nombre_area'] }}
-                </div>
-                <div class="w-100">
-                    <table class="w-100 size-14px pagos_tabla">
-                        <thead>
-                            <tr>
-                                <td class="center"><span class="bold uppercase px-2">Número de Módulo</span>
-                                </td>
-                                <td class="center"><span class="bold uppercase px-2">Estatus</span></td>
-                                <td class="center"><span class="bold uppercase px-2">Fecha de Venta</span></td>
-                                <td class="center"><span class="bold uppercase px-2">Servicios Brindados</span>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            for ($i = 1; $i <= $area['filas']; $i++) {
-                                $esta=false;
-                            ?>
-                            @foreach ($area['propiedades'] as $venta)
-                                @if ($venta['fila_raw'] == $i)
-                                    <tr>
-                                        <td class="center">
-                                            <span class="bold px-2">{{ $i }}</span>
-                                        </td>
-                                        <td class="center"><span class="bold px-2">Vendida</span></td>
-                                        <td class="center"><span
-                                                class="px-2">{{ $venta['fecha_venta_texto'] }}</span></td>
-                                        <td class="center"><span
-                                                class="px-2">{{ $venta['num_servicios'] }}</span>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                    $esta = true;
-                                    ?>
-                                @break;
-                            @endif
-            @endforeach
-            @if (!$esta)
-                <tr class="">
-                    <td class="center">
-                        <span class="bold uppercase px-2">{{ $i }}</span>
-                    </td>
-                    <td class="center"><span class="px-2">Disponible</span></td>
-                    <td class="center"><span class="px-2">N/A</span></td>
-                    <td class="center"><span class="px-2">0</span>
-                    </td>
-                </tr>
-            @endif
-
-            <?php
-                            }
-                            ?>
-            </tbody>
-            </table>
-    </div>
-    @endif
-    @endforeach
+        <!--Verificando el tipo de reporte que se va listar-->
+        @if ($cementerio['filtracion']['filtro_seleccion'] == '')
+            <!--Es el listado completo del cementerio con sus propieades vendidas y servicios utilizados, un estado general-->
+            @include('cementerios.cementerio_mapa.estado_general',['datos'=>$cementerio['cementerio']])
+        @elseif ($cementerio['filtracion']['filtro_seleccion']==1)
+            <!--Es el listado completo del cementerio solo con disponibilidad y espacios ocupados-->
+        @elseif ($cementerio['filtracion']['filtro_seleccion']==2)
+            <!--Es el listado completo del cementerio solo con las ventas de terrenos entre las fechas enviadas-->
+        @elseif ($cementerio['filtracion']['filtro_seleccion']==3)
+            <!--Es el listado completo del cementerio solo con los servicios utilizados entre las fechas enviadas-->
+        @endif
     </div>
 </body>
 
