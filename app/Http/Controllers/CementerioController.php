@@ -899,10 +899,10 @@ class CementerioController extends ApiController
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
 
-        $tipo_propiedad_id = '4';
+        $tipo_propiedad_id = '';
         $id_area = '';
-        $filtro_seleccion = '';
-        $fecha_inicio = '2020-03-01';
+        $filtro_seleccion = '3';
+        $fecha_inicio = '2020-01-01';
         $fecha_fin = '2021-03-01';
 
 
@@ -986,6 +986,7 @@ class CementerioController extends ApiController
                             'fecha_operacion' => $venta['fecha_operacion'],
                             'ventas_terrenos_id' => $venta['ventas_terrenos_id'],
                             'ubicacion' => $venta['venta_terreno']['ubicacion'],
+                            'ubicacón_texto' => $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $cementerio)['ubicacion_texto'],
                             'fila_raw' => $venta['fila_raw'],
                             'lote_raw' => $venta['lote_raw'],
                             'cliente' => $venta['cliente']['nombre'],

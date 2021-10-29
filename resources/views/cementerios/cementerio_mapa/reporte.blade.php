@@ -87,7 +87,6 @@
         That a page break is forced before a particular container.
         That a page break is forced after a particular container.
         */
-
         .tabla-cuadriplex {
             height: 400px !important;
         }
@@ -95,6 +94,12 @@
         .vendida {
             text-decoration: line-through;
             color: #EA5455;
+        }
+
+        .venta-en-terraza {
+            padding: 7px;
+            border: 1px solid #000;
+            margin-top: 7px;
         }
 
     </style>
@@ -147,17 +152,7 @@
         <div class="py-3 ">
             <span class="uppercase bold size-15px">Desglose del cementerio:</span>
         </div>
-        <!--Verificando el tipo de reporte que se va listar-->
-        @if ($cementerio['filtracion']['filtro_seleccion'] == '')
-            <!--Es el listado completo del cementerio con sus propieades vendidas y servicios utilizados, un estado general-->
-            @include('cementerios.cementerio_mapa.estado_general',['datos'=>$cementerio['cementerio']])
-        @elseif ($cementerio['filtracion']['filtro_seleccion']==1)
-            <!--Es el listado completo del cementerio solo con disponibilidad y espacios ocupados-->
-        @elseif ($cementerio['filtracion']['filtro_seleccion']==2)
-            <!--Es el listado completo del cementerio solo con las ventas de terrenos entre las fechas enviadas-->
-        @elseif ($cementerio['filtracion']['filtro_seleccion']==3)
-            <!--Es el listado completo del cementerio solo con los servicios utilizados entre las fechas enviadas-->
-        @endif
+        @include('cementerios.cementerio_mapa.estado_general',['datos'=>$cementerio['cementerio'],'filtracion'=>$cementerio['filtracion']])
     </div>
 </body>
 
