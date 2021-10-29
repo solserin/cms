@@ -315,7 +315,14 @@ export default {
       configdateTimePickerRange: configdateTimePickerRange,
       form: {
         modulo: { label: "Seleccionar", value: "" },
-        reporte: { label: "Seleccionar", value: "", detalle: "" },
+        reporte: {
+          label: "Seleccionar",
+          value: "",
+          detalle: "",
+          excel_b: 0,
+          tipo_reporte: "reporte_mapa",
+        },
+
         rango_fechas: [],
         fecha_inicio: "",
         fecha_fin: "",
@@ -473,12 +480,13 @@ export default {
         /**cementerio */
         if (this.form.reporte.value == "reporte_mapa") {
           //valido el rango de fecha solo para aquellos que necesitan fecha de venta o servicios
-          if (this.form.filtro_seleccion.value > 0) {
+          if (this.form.filtro_seleccion.value > 1) {
             if (!this.validarRangoFecha()) {
               return;
             }
-            this.form.tipo_reporte = this.form.reporte.value;
           }
+          //aqui voy
+          this.form.tipo_reporte = this.form.reporte.value;
         }
       }
 

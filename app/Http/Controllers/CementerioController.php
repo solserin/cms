@@ -883,7 +883,6 @@ class CementerioController extends ApiController
             $idioma = 'es';
         }
         App::setLocale($idioma);
-
         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
         $email = $request->email_send === 'true' ? true : false;
         if ($email == true) {
@@ -898,16 +897,34 @@ class CementerioController extends ApiController
         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
          * por lo cual puede variar de paramtros degun la ncecesidad
          */
-
         $tipo_propiedad_id = '';
         $id_area = '';
-        $filtro_seleccion = '3';
-        $fecha_inicio = '2020-01-01';
-        $fecha_fin = '2021-03-01';
+        $filtro_seleccion = '';
+        $fecha_inicio = '';
+        $fecha_fin = '';
+        $datosRequest = null;
+        if (isset($request->request_parent[0])) {
+            $datosRequest = json_decode($request->request_parent[0], true);
+        }
+        if (isset($datosRequest['modulo']['value'])) {
+            $tipo_propiedad_id = $datosRequest['tipo_propiedad']['value'];
+            $id_area = $datosRequest['area_propiedades']['value'];
+            $filtro_seleccion = $datosRequest['filtro_seleccion']['value'];
+            $fecha_inicio = $datosRequest['fecha_inicio'];
+            $fecha_fin = $datosRequest['fecha_fin'];
+            $email_to        = $request->email_address;
+        } else {
+            //return $this->errorResponse('Error al generar el reporte', 409);
+            $tipo_propiedad_id = '4';
+            $id_area = '';
+            $filtro_seleccion = '3';
+            $fecha_inicio = '2020-01-01';
+            $fecha_fin = now();
+            $email = false;
+            $email_to = 'hector@gmail.com';
+        }
 
 
-        $email = false;
-        $email_to = 'hector@gmail.com';
         $cementerio = $this->get_cementerio();
         //$ventas = $this->get_ventas($request, 'all', false);
         //$funeraria = new FunerariaController();
