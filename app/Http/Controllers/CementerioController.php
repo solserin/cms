@@ -936,7 +936,7 @@ class CementerioController extends ApiController
             'ventas_terrenos_id',
             DB::raw(
                 '(NULL) AS fecha_venta_texto'
-            ),
+            )
         )
             ->with('cliente:id,nombre')
             ->with('venta_terreno:id,ubicacion,tipo_propiedades_id,propiedades_id')
