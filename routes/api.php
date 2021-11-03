@@ -14,9 +14,7 @@ use Illuminate\Http\Request;
  */
 
 /**en pruebas */
-Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
-Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
-Route::get('cementerio/get_mapeado', 'CementerioController@get_mapeado');
+
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -142,7 +140,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_cuota_pdf_todas', 'CementerioController@get_cuota_pdf_todas');
     Route::get('cementerio/get_cuota_pdf', 'CementerioController@get_cuota_pdf');
     Route::get('cementerio/get_abonos_vencidos_propiedades', 'CementerioController@get_abonos_vencidos_propiedades');
-
+    Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
+    Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
+    Route::get('cementerio/get_mapeado', 'CementerioController@get_mapeado');
 
 
     /**rutas de funeraria ventas planes */
