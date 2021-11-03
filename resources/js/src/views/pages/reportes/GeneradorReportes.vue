@@ -485,8 +485,11 @@ export default {
               return;
             }
           }
-          //aqui voy
           this.form.tipo_reporte = this.form.reporte.value;
+        } else {
+          if (this.form.reporte.tipo_reporte == "cuota_cementerio") {
+            this.form.tipo_reporte = this.form.reporte.tipo_reporte;
+          }
         }
       }
 
