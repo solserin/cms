@@ -685,8 +685,6 @@
                         </td>
                     </tr>
                 </table>
-
-
             </td>
         </tr>
 
@@ -700,6 +698,15 @@
                 </div>
             </td>
             <td class="w-65 px-2" colspan="3">{{ $datos['enfermedades_padecidas'] }}</td>
+        </tr>
+        <tr class="size-13px">
+            <td class="w-35  bold px-2 ">
+               causa de muerte
+                <div class="w-normal">
+                    (death cause)
+                </div>
+            </td>
+            <td class="w-65 px-2" colspan="3">{{ $datos['causa_muerte'] }}</td>
         </tr>
     </table>
     <table class="w-100 texto-base mt-1 datos_tabla uppercase">

@@ -4997,8 +4997,8 @@ class FunerariaController extends ApiController
             //$pdf->setOption('header-right', 'dddd');
             $pdf->setOption('margin-left', 12.4);
             $pdf->setOption('margin-right', 12.4);
-            $pdf->setOption('margin-top', 4.4);
-            $pdf->setOption('margin-bottom', 1.4);
+            $pdf->setOption('margin-top', 3.4);
+            $pdf->setOption('margin-bottom', 1);
             $pdf->setOption('page-size', 'letter');
 
             if ($email == true) {
