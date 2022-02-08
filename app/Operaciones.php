@@ -39,9 +39,12 @@ class Operaciones extends Model
 
     public function sepultados()
     {
-        return $this->hasMany('App\ServiciosFunerarios','ventas_terrenos_id','ventas_terrenos_id')->where('status','<>',0)->select('ventas_terrenos_id','nombre_afectado','fechahora_defuncion',DB::raw(
+        return $this->hasMany(
+            'App\ServiciosFunerarios','ventas_terrenos_id','ventas_terrenos_id')->where('status','<>',0)->select('ventas_terrenos_id','nombre_afectado','fechahora_defuncion',
+            DB::raw(
             '(NULL) AS fecha_defuncion_texto'
-        ),);
+            )
+    );
     }
 
 
