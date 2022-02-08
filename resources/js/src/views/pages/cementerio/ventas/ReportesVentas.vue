@@ -570,6 +570,13 @@ export default {
           documento_id: 7,
           firma: true,
         },
+        {
+          documento: "Servicios en la propiedad",
+          url: "/cementerio/servicios_propiedad",
+          tipo: "pdf",
+          documento_id: 8,
+          firma: false,
+        },
       ],
       total: 0 /**rows que se van a remplazar el click en el evento de las tablas para modificar el expand */,
       funcion_reemplazada: [],
