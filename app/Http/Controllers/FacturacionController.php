@@ -443,7 +443,7 @@ class FacturacionController extends ApiController
                     ]
                 );
                 /**verificando si se debe de quitar el nodo de Descuento */
-                if ($concepto['descuento_b']['value'] != 1) {
+                if ( $descuento_concepto <=0) {
                     /**no hay descuento y debe quitarse*/
                     unset($conceptos['cfdi:Concepto'][count($conceptos['cfdi:Concepto']) - 1]['_attributes']['Descuento']);
                 }
