@@ -333,7 +333,7 @@ class FacturacionController extends ApiController
 
         $tipo_comprobante = TipoComprobantes::where('id', '=', $request->tipo_comprobante['value'])->first();
         if (is_null($tipo_comprobante)) {
-            return 'No se encontró el tipo de comprobanteque se está utilizando.';
+            return 'No se encontró el tipo de comprobante que se está utilizando.';
         }
         $metodo_pago = MetodosPago::where('id', '=', $request->metodo_pago['value'])->first();
         if (is_null($metodo_pago)) {
@@ -489,6 +489,8 @@ class FacturacionController extends ApiController
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
                     'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
                     'UsoCFDI' => $uso_cfdi['clave'],
+                    'RegimenFiscal' => '601',
+                    'DomicilioFiscalReceptor' => '601',//codigo postal del emisor
                 ],
             ],
             'cfdi:Conceptos'        => $conceptos,
@@ -554,11 +556,12 @@ class FacturacionController extends ApiController
             'Sello'              => '',
             'Serie'              => $serie . ($numero_serie),
             'SubTotal'           => $request->tipo_comprobante['value'] != '5' ? number_format((float) round($subtotal, 2), 2, '.', '') : '0',
+            'Exportacion'=>01,//No aplica
             'Descuento'          => number_format((float) round($descuento, 2), 2, '.', ''),
             'TipoCambio'         => '1',
             'TipoDeComprobante'  => $tipo_comprobante['clave'],
             'Total'              => $request->tipo_comprobante['value'] != '5' ? number_format((float) round($total, 2), 2, '.', '') : '0',
-            'Version'            => '3.3',
+            'Version'            => '4.0',
             'xsi:schemaLocation' => $schema_location,
         ];
 
