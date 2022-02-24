@@ -128,13 +128,14 @@
                                     @if (ENV('APP_ENV')=='local')
                                     <span class="texto-xs2 semibold line-0 uppercase text-danger">este
                                         documento es una
-                                        representación impresa de un cfdi no válido
+                                        representación impresa de un cfdi no válido  versión {{$datos['Comprobante']['Version']}}
                                     </span>
                                     @else
                                     <span class="texto-xs2 semibold line-0 uppercase">este
-                                        documento es una representación impresa de un cfdi
+                                        documento es una representación impresa de un cfdi {{$datos['Comprobante']['Version']}}
                                     </span>
                                     @endif
+                                   
                                 </td>
                             </tr>
                         </table>
