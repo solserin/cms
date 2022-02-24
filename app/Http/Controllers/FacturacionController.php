@@ -378,6 +378,8 @@ class FacturacionController extends ApiController
             }
 
             /**CREANDO LOS NODOS DE CONCEPTO */
+            $iva_trasladado=0;
+            $total_base_impuestos=0;
             foreach ($request->conceptos as $key => $concepto) {
                 //cargo la clave del sat
                 $esta_clave_sat = false;
@@ -395,6 +397,7 @@ class FacturacionController extends ApiController
                 //cargo la unidad
                 $esta_clave_unidad = false;
                 $clave_unidad      = '';
+                
                 foreach ($get_sat_unidades as $key => $clave) {
                     if ($clave->id == $concepto['unidad_sat']['value']) {
                         $esta_clave_unidad = true;
@@ -414,6 +417,7 @@ class FacturacionController extends ApiController
                 $subtotal += $ValorUnitarioPrecioNeto * $concepto['cantidad'];
                 $descuento += $descuento_concepto * $concepto['cantidad'];
                 $iva_trasladado += round((($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad']) * $tasa_iva, 2);
+                $total_base_impuestos+=number_format((float) round(($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad'], 2), 2, '.', '');
                 $total += round((($ValorUnitarioPrecioNeto - $descuento_concepto) * $concepto['cantidad']) * (1 + $tasa_iva), 2);
                 array_push($conceptos['cfdi:Concepto'],
                     [
@@ -426,6 +430,12 @@ class FacturacionController extends ApiController
                             'Importe'       => number_format((float) round($concepto['cantidad'] * $ValorUnitarioPrecioNeto, 2), 2, '.', ''),
                             'ValorUnitario' => number_format((float) round($ValorUnitarioPrecioNeto, 2), 2, '.', ''),
                             'Descuento'     => number_format((float) round($descuento_concepto * $concepto['cantidad'], 2), 2, '.', ''),
+                            'ObjetoImp'     => '02',
+                           /* 
+                                01	No objeto de impuesto.	19/10/2021
+                                02	Sí objeto de impuesto.	19/10/2021
+                                03	Sí objeto del impuesto y no obligado al desglose.
+                            */
                         ],
                         'cfdi:Impuestos' => [
                             'cfdi:Traslados' => [
@@ -448,6 +458,7 @@ class FacturacionController extends ApiController
                     unset($conceptos['cfdi:Concepto'][count($conceptos['cfdi:Concepto']) - 1]['_attributes']['Descuento']);
                 }
             }
+            
         } else if ($request->tipo_comprobante['value'] == '5') {
             /**pago */
             $serie = 'P';
@@ -476,12 +487,20 @@ class FacturacionController extends ApiController
 
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
+           /* 'cfdi:InformacionGlobal'         => [
+                '_attributes' => [
+                    'Periodicidad'     => ENV('APP_ENV') == 'local' ? '01' : strtoupper($request->rfc),
+                    'Meses'  => ENV('APP_ENV') == 'local' ? '02' : strtoupper($request->mes_global),
+                    'Año' => ENV('APP_ENV') == 'local' ? '2022' : strtoupper($request->year_gloabal),
+                ],
+            ],
+            */
             'cfdi:CfdiRelacionados' => $request->array_cfdis_a_relacionar_xml,
             'cfdi:Emisor'           => [
                 '_attributes' => [
                     'RegimenFiscal' => '601',
                     'Rfc'           => ENV('APP_ENV') == 'local' ? 'EWE1709045U0' : strtoupper($datos_funeraria['rfc']),
-                    'Nombre'        => ENV('APP_ENV') == 'local' ? 'EMISOR DE PRUEBAS SA DE CV' : strtoupper($datos_funeraria['razon_social']),
+                    'Nombre'        => ENV('APP_ENV') == 'local' ? 'ESCUELA WILSON ESQUIVEL' : strtoupper($datos_funeraria['razon_social']),
                 ],
             ],
             'cfdi:Receptor'         => [
@@ -489,8 +508,8 @@ class FacturacionController extends ApiController
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
                     'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
                     'UsoCFDI' => $uso_cfdi['clave'],
-                    'RegimenFiscal' => '601',
-                    'DomicilioFiscalReceptor' => '601',//codigo postal del emisor
+                    'RegimenFiscalReceptor' => ENV('APP_ENV') == 'local' ? '616': strtoupper($request->regimen_id),
+                    'DomicilioFiscalReceptor' => ENV('APP_ENV') == 'local' ? '82140' : strtoupper($request->cp),//codigo postal del emisor
                 ],
             ],
             'cfdi:Conceptos'        => $conceptos,
@@ -501,6 +520,7 @@ class FacturacionController extends ApiController
                 'cfdi:Traslados' => [
                     'cfdi:Traslado' => [
                         '_attributes' => [
+                            'Base'    =>  $total_base_impuestos,
                             'Importe'    => number_format((float) round($iva_trasladado, 2), 2, '.', ''),
                             'Impuesto'   => "002",
                             'TasaOCuota' => $tasa_iva,
@@ -524,25 +544,28 @@ class FacturacionController extends ApiController
                         'pago10:DoctoRelacionado' => $request->array_cfdis_a_pagar_xml,
                     ],
                 ],
-            ],
+            ]
         ];
+
+        //aqui trabajo
+        //return number_format((float) round($iva_trasladado, 2), 2, '.', '').'-'.$total_base_impuestos;
 
         /**AQUI AGREGO LOS PAGOS QUE SE GENERARON */
         $numero_serie = 0;
         if ($request->tipo_comprobante['value'] == 1) {
-            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $schema_location = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd';
             $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 1)->count();
         } else if ($request->tipo_comprobante['value'] == 2) {
-            $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $schema_location = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd';
             $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 2)->count();
         } else {
             if ($request->tipo_comprobante['value'] == 5) {
                 $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 5)->count();
-                $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd';
+                $schema_location = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd';
             }
         }
         $comprobante = [
-            'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
+            'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/4',
             'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
             'xmlns:pago10'       => 'http://www.sat.gob.mx/Pagos',
             'Certificado'        => '',
@@ -556,13 +579,19 @@ class FacturacionController extends ApiController
             'Sello'              => '',
             'Serie'              => $serie . ($numero_serie),
             'SubTotal'           => $request->tipo_comprobante['value'] != '5' ? number_format((float) round($subtotal, 2), 2, '.', '') : '0',
-            'Exportacion'=>01,//No aplica
             'Descuento'          => number_format((float) round($descuento, 2), 2, '.', ''),
             'TipoCambio'         => '1',
             'TipoDeComprobante'  => $tipo_comprobante['clave'],
             'Total'              => $request->tipo_comprobante['value'] != '5' ? number_format((float) round($total, 2), 2, '.', '') : '0',
             'Version'            => '4.0',
             'xsi:schemaLocation' => $schema_location,
+            'Exportacion'=>'01'//No aplica
+            /*
+            “Exportacion” y se pretende incorporar un catálogo de operaciones para considerar si 
+            se trata de una exportación definitiva (02), 
+            temporal (03) 
+            o no se trata de este tipo de operaciones (01).
+        */
         ];
 
         /**removiendo cfdis relacionados en caso de no aplica */
@@ -1141,6 +1170,9 @@ class FacturacionController extends ApiController
 
                 /**mandamos crear el XML, con el nombre temporal del folio registrado en la parte superior */
                 $xml_a_timbrar = $this->GenerarXmlCfdi($request, $folio_para_asignar);
+
+                //return $this->errorResponse( $xml_a_timbrar, 409);
+
                 /**verificando que el xml se haya genrado sin errores */
                 if ($xml_a_timbrar['nombre_xml'] != $folio_para_asignar . '.xml') {
                     Storage::disk($storage_disk_xmls)->delete($xml_a_timbrar['nombre_xml']);

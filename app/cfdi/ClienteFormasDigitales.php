@@ -64,7 +64,7 @@ class ClienteFormasDigitales
         $serial_number  = $data['serialNumberHex'];
         $no_certificado = $this->getNoCertificado($serial_number);
         $fecha_actual   = substr(date('c'), 0, 19);
-        $comprobante    = $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', 'Comprobante')->item(0);
+        $comprobante    = $this->xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/4', 'Comprobante')->item(0);
         $comprobante->setAttribute('Fecha', $fecha_actual);
         $cadena_original = $this->generarCadenaOriginal();
         openssl_sign($cadena_original, $signature, $private, "sha256WithRSAEncryption");
