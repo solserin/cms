@@ -1,7 +1,8 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-100 normal-forms inline-header-forms searcher_terrenos"
+       :class="['forms-popup popup-90', z_index]"
+     
       fullscreen
       title="Catálogo de CFDIs Timbrados"
       :active.sync="showVentana"
@@ -243,6 +244,11 @@ export default {
     tipo_search: {
       type: String,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index64k",
     },
   },
   watch: {

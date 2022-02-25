@@ -1,7 +1,7 @@
 <template >
   <div class="centerx">
     <vs-popup
-      class="forms-popups-100 normal-forms inline-header-forms searcher_terrenos"
+     :class="['forms-popup popup-90', z_index]"
       fullscreen
       title="Catálogo de operaciones atendidas"
       :active.sync="showVentana"
@@ -215,6 +215,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    z_index: {
+      type: String,
+      required: false,
+      default: "z-index54k",
     },
   },
   watch: {
