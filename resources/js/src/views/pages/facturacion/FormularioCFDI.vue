@@ -1,16 +1,16 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="normal-forms background-header-forms normal servicios_funerarios"
       fullscreen
       close="cancelar"
       :title="
         getTipoformulario == 'facturar'
-          ? 'Emitir CFDI 3.3'
+          ? 'Emitir CFDI'
           : 'POR DEFINIR FUNCION'
       "
       :active.sync="showVentana"
       ref="formulario"
+       class="forms-popup"
     >
       <div class="cfdi-contenido">
         <div>

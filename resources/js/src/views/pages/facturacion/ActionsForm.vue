@@ -1,11 +1,15 @@
 <template>
   <div class="centerx">
     <vs-popup
-      class="background-header-forms forms-popups-85 consultar_cfdi"
       close="cancelar"
-      :title="'CONSULTA DE CFDI 3.3'"
+      :title="'CONSULTA DE CFDI'"
       :active.sync="showVentana"
       ref="formulario"
+
+
+       class="forms-popup popup-70"
+
+
     >
       <div class="cfdi-contenido">
         <vs-table stripe class="cfdis-table" :noDataText="' '" :sst="true">
