@@ -506,7 +506,7 @@ class FacturacionController extends ApiController
             'cfdi:Receptor'         => [
                 '_attributes' => [
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
-                    'Nombre'  => ENV('APP_ENV') == 'local' ? 'RECEPTOR DE PRUEBAS SA DE CV' : strtoupper($request->razon_social),
+                    'Nombre'  => ENV('APP_ENV') == 'local' ? 'público en general' : strtoupper($request->razon_social),
                     'UsoCFDI' => $uso_cfdi['clave'],
                     'RegimenFiscalReceptor' => ENV('APP_ENV') == 'local' ? '616': strtoupper($request->regimen_id),
                     'DomicilioFiscalReceptor' => ENV('APP_ENV') == 'local' ? '82140' : strtoupper($request->cp),//codigo postal del emisor
@@ -546,8 +546,6 @@ class FacturacionController extends ApiController
                 ],
             ]
         ];
-
-        //aqui trabajo
         //return number_format((float) round($iva_trasladado, 2), 2, '.', '').'-'.$total_base_impuestos;
 
         /**AQUI AGREGO LOS PAGOS QUE SE GENERARON */
@@ -1349,9 +1347,9 @@ class FacturacionController extends ApiController
         }
 
         $tasa_iva = number_format((float) round($cfdi->tasa_iva / 100, 2), 6, '.', '');
-
+//aqui trabajo 2
         $ns = $xml->getNamespaces(true);
-        $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/3');
+        $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/4');
         $xml->registerXPathNamespace('tfd', 'http://www.sat.gob.mx/TimbreFiscalDigital');
         $xml->registerXPathNamespace('pago10', 'http://www.sat.gob.mx/Pagos');
 
@@ -1445,12 +1443,12 @@ class FacturacionController extends ApiController
         $tipo_comprobante = '';
         if ((string) $comprobante['TipoDeComprobante'] == 'I') {
             $tipo_comprobante = 'Ingreso';
-            $schema_location  = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $schema_location  = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd';
             /**obteniendo claves de los catalogos */
             $forma_pago = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
         } else if ((string) $comprobante['TipoDeComprobante'] == 'E') {
             $tipo_comprobante = 'Egreso';
-            $schema_location  = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd';
+            $schema_location  = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd';
             $forma_pago       = SatFormasPago::where('clave', '=', (string) $comprobante['FormaPago'])->first();
 
         } else {
@@ -1487,7 +1485,7 @@ class FacturacionController extends ApiController
                 } else {
                     return $this->errorResponse('Error al leer el xml', 409);
                 }
-                $schema_location = 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd';
+                $schema_location = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd';
             } else {
                 return $this->errorResponse('Error al leer el xml', 409);
             }
@@ -1510,7 +1508,7 @@ class FacturacionController extends ApiController
                 'tipo_comprobante_id' => $cfdi['sat_tipo_comprobante_id'],
             ],
             'Comprobante'       => [
-                'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/3',
+                'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/4',
                 'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
                 'xmlns:pago10'       => 'http://www.sat.gob.mx/Pagos',
                 'Certificado'        => (string) $comprobante['Certificado'],
@@ -2167,11 +2165,12 @@ class FacturacionController extends ApiController
         $fecha_cancelacion = date("Y-m-d H:i:s");
         /**datos para la consulta */
         $parametros            = new Parametros();
-        $parametros->rfcEmisor = $cfdi->rfc_emisor;
+        $parametros->rfcEmisor =trim($cfdi->rfc_emisor);
         $parametros->fecha     = str_replace(" ", "T", $fecha_cancelacion);
         $parametros->folios    = $cfdi['uuid'];
+        $parametros->motivo=3;
 
-        $parametros->rfc_receptor = $cfdi->rfc_receptor;
+       $parametros->rfc_receptor = trim($cfdi->rfc_receptor);
         $parametros->total        = $cfdi->total;
         $parametros->uuid         = $cfdi->uuid;
         $parametros->SelloCFD     = $xml['Complemento']['TimbreFiscalDigital']['SelloCFD'];
@@ -2202,23 +2201,22 @@ class FacturacionController extends ApiController
         }
 
         $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
-
+        //aqui trabajo
         $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
         $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path);
-
         $parametros->publicKey  = file_get_contents($certFile);
         $parametros->privateKey = file_get_contents($keyFile);
         $parametros->password   = $credentials_password;
-
         $autentica           = new Autenticar();
         $autentica->usuario  = $usuario;
         $autentica->password = $password;
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar, array('trace' => 1));
-        $result              = $client->Cancelacion_1($parametros);
-        //dd($result->return);
-        //echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
-        // return $result;
+        $result              = $client->cancelacion_1($parametros);
+        //return $this->errorResponse( $result, 409);
+        dd($result->return);
+       // echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
+        //return $result;
         if (isset($result->return->acuse)) {
             /*CÓDIGO    MENSAJE
             201    UUID Cancelado.
