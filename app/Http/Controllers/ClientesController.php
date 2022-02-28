@@ -34,6 +34,7 @@ class ClientesController extends ApiController
                 'id',
                 'nombre',
                 'direccion',
+                'cp',
                 'email',
                 'rfc as rfc_raw',
                 'status',
@@ -134,6 +135,7 @@ class ClientesController extends ApiController
             'rfc'                => '',
             'razon_social'       => '',
             'direccion_fiscal'   => '',
+            'cp'=>''
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
@@ -142,10 +144,11 @@ class ClientesController extends ApiController
             $validaciones['email'] = 'email|unique:clientes,email';
         }
 
-        if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '') {
+        if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '' || trim($request->cp) != '') {
             $validaciones['rfc']              = 'required|unique:clientes,rfc';
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
+            $validaciones['cp'] = 'required';
         }
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
@@ -179,6 +182,7 @@ class ClientesController extends ApiController
                 'rfc'                 => trim($request->rfc) != '' ? trim($request->rfc) : null,
                 'razon_social'        => trim($request->razon_social) != '' ? trim($request->razon_social) : null,
                 'direccion_fiscal'    => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : null,
+                'cp'    => trim($request->cp) != '' ? trim($request->cp) : null,
                 /**datos del contacto */
                 'nombre_contacto'     => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,
@@ -206,6 +210,7 @@ class ClientesController extends ApiController
             'rfc'                => '',
             'razon_social'       => '',
             'direccion_fiscal'   => '',
+            'cp'=>''
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
@@ -217,13 +222,14 @@ class ClientesController extends ApiController
             ];
         }
 
-        if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '') {
+        if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '' || trim($request->cp) != '') {
             $validaciones['rfc'] = [
                 'required',
                 Rule::unique('clientes', 'rfc')->ignore($request->id_cliente_modificar),
             ];
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
+            $validaciones['cp'] = 'required';
         }
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
@@ -256,6 +262,7 @@ class ClientesController extends ApiController
                 'rfc'                 => trim($request->rfc) != '' ? trim($request->rfc) : null,
                 'razon_social'        => trim($request->razon_social) != '' ? trim($request->razon_social) : null,
                 'direccion_fiscal'    => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : null,
+                'cp'    => trim($request->cp) != '' ? trim($request->cp) : null,
                 /**datos del contacto */
                 'nombre_contacto'     => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,

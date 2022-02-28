@@ -295,7 +295,7 @@
               }}</span>
             </div>
             <div
-              class="w-full sm:w-12/12 md:w-12/12 lg:w-12/12 xl:w-12/12 px-2 input-text"
+              class="w-full sm:w-12/12 md:w-6/12  px-2 input-text"
             >
               <label>
                 Dirección Fiscal
@@ -310,6 +310,30 @@
                 class="w-full"
                 placeholder="Ej. Av. Américas #405, Col. Lomas C.P. 30404 Mazatlán, Sin."
                 v-model="form.direccion_fiscal"
+              />
+              <span class="">
+                {{ errors.first("direccion_fiscal") }}
+              </span>
+              <span class="" v-if="this.errores.direccion_fiscal">{{
+                errores.direccion_fiscal[0]
+              }}</span>
+            </div>
+             <div
+              class="w-full sm:w-12/12 md:w-6/12  px-2 input-text"
+            >
+              <label>
+               CÓDIGO POSTAL
+                <span v-if="datos_fiscales_validacion_computed">(*)</span>
+              </label>
+              <vs-input
+                name="direccion_fiscal_cp"
+                data-vv-as=" "
+                v-validate:direccion_fiscal_cp_validacion_computed="'required'"
+                maxlength="8"
+                type="text"
+                class="w-full"
+                placeholder="82140"
+                v-model="form.cp"
               />
               <span class="">
                 {{ errors.first("direccion_fiscal") }}
@@ -521,7 +545,8 @@ export default {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
-        this.form.direccion_fiscal.trim() != ""
+        this.form.direccion_fiscal.trim() != "" ||
+          this.form.cp.trim() != ""
       )
         return true;
       else return false;
@@ -530,7 +555,8 @@ export default {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
-        this.form.direccion_fiscal.trim() != ""
+        this.form.direccion_fiscal.trim() != "" ||
+          this.form.cp.trim() != ""
       )
         return this.form.rfc;
       else return true;
@@ -539,7 +565,8 @@ export default {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
-        this.form.direccion_fiscal.trim() != ""
+        this.form.direccion_fiscal.trim() != "" ||
+          this.form.cp.trim() != ""
       )
         return this.form.razon_social;
       else return true;
@@ -548,9 +575,21 @@ export default {
       if (
         this.form.rfc.trim() != "" ||
         this.form.razon_social.trim() != "" ||
-        this.form.direccion_fiscal.trim() != ""
+        this.form.direccion_fiscal.trim() != "" ||
+          this.form.cp.trim() != ""
       )
         return this.form.direccion_fiscal;
+      else return true;
+    },
+
+     direccion_fiscal_cp_validacion_computed: function () {
+      if (
+        this.form.rfc.trim() != "" ||
+        this.form.razon_social.trim() != "" ||
+        this.form.direccion_fiscal.trim() != "" ||
+         this.form.cp.trim() != ""
+      )
+        return this.form.cp;
       else return true;
     },
   },
@@ -607,6 +646,7 @@ export default {
         /**datos del cliente fiscal */
         rfc: "",
         direccion_fiscal: "",
+        cp: "",
         razon_social: "",
 
         /**datos del contacto extra de referencia */
@@ -656,6 +696,8 @@ export default {
           this.form.rfc = res.data.rfc != null ? res.data.rfc : "";
           this.form.direccion_fiscal =
             res.data.direccion_fiscal != null ? res.data.direccion_fiscal : "";
+             this.form.cp =
+            res.data.cp != null ? res.data.cp : "";
           this.form.razon_social =
             res.data.razon_social != null ? res.data.razon_social : "";
           /**datos del contacto extra de referencia */
@@ -898,6 +940,7 @@ export default {
       /**datos del cliente fiscal */
       this.form.rfc = "";
       this.form.direccion_fiscal = "";
+      this.form.cp='';
       this.form.razon_social = "";
       /**datos del contacto extra de referencia */
       this.form.nombre_contacto = "";
