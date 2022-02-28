@@ -486,6 +486,16 @@ class FacturacionController extends ApiController
             return 'No se encontró tipo de comprobante que se está utilizando.';
         }
 
+        //Determino el atributo DomicilioFiscalReceptor
+        //aqui trabajo
+        //pub en general local o extranjero
+        $DomicilioFiscalReceptor='82140';//pongo el rfc de la empresa
+        if($request->tipo_rfc['value'] == 1){
+             //es DomicilioFiscalReceptor del cliente, tomado del catalogo de clientes
+            $DomicilioFiscalReceptor=$request->cp;
+        }
+        
+
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
            /* 'cfdi:InformacionGlobal'         => [
@@ -510,7 +520,7 @@ class FacturacionController extends ApiController
                     'Nombre'  => ENV('APP_ENV') == 'local' ? 'público en general' : strtoupper($request->razon_social),
                     'UsoCFDI' => $request->tipo_comprobante['value'] == '5' ? 'CP01':$uso_cfdi['clave'],
                     'RegimenFiscalReceptor' => ENV('APP_ENV') == 'local' ? '616': strtoupper($request->regimen_id),
-                    'DomicilioFiscalReceptor' => ENV('APP_ENV') == 'local' ? '82140' : strtoupper($request->cp),//codigo postal del emisor
+                    'DomicilioFiscalReceptor' => $DomicilioFiscalReceptor,//codigo postal del emisor
                 ],
             ],
             'cfdi:Conceptos'        => $conceptos,
