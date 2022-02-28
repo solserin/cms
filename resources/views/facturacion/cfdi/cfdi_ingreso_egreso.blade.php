@@ -180,7 +180,7 @@
 
     <table class="w-100 mt-5 datos_tabla uppercase texto-xs3">
         <tr>
-            <td class="w-60 py-1 px-2 bg-gray"><span class="bold">cliente</span></td>
+            <td class="w-60 py-1 px-2 bg-gray"><span class="bold">Datos del Receptor</span></td>
             <td class="w-20 px-1 px-2 center bg-gray"><span class="bold">Folio/Serie</span></td>
             <td class="w-20 px-1 px-2 center bg-gray"><span class="bold">fecha y hora</span></td>
         </tr>
@@ -206,6 +206,18 @@
                         <td class="w-100" colspan="2">
                             <span class="bold">dirección:</span> <span
                                 class="light">{{ $datos['Sistema']['cliente_direccion'] }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w-100" colspan="2">
+                            <span class="bold">Régimen Fiscal del Receptor:</span> <span
+                                class="light">{{ $datos['Receptor']['RegimenFiscalReceptor'] }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w-100" colspan="2">
+                            <span class="bold">CP Domicilio Fiscal:</span> <span
+                                class="light">{{ $datos['Receptor']['DomicilioFiscalReceptor'] }}</span>
                         </td>
                     </tr>
                 </table>

@@ -1402,6 +1402,10 @@ class FacturacionController extends ApiController
         /**determinando el regimen */
         $regimen  = SATRegimenes::select('regimen')->where('clave', (string) $emisor['RegimenFiscal'])->first();
         $uso_cfdi = SatUsosCfdi::select('uso')->where('clave', (string) $receptor['UsoCFDI'])->first();
+        $RegimenFiscalReceptor = SatRegimenes::select('regimen')->where('clave', (string) $receptor['RegimenFiscalReceptor'])->first();
+
+
+        
 
         /**agregando conceptos */
         $conceptos = [];
@@ -1563,6 +1567,8 @@ class FacturacionController extends ApiController
                 'Rfc'     => (string) $receptor['Rfc'],
                 'Nombre'  => (string) $receptor['Nombre'],
                 'UsoCFDI' => $uso_cfdi != null ? (string) $receptor['UsoCFDI'] . ' (' . $uso_cfdi['uso'] . ')' : '',
+                'RegimenFiscalReceptor' => $RegimenFiscalReceptor != null ? (string) $receptor['RegimenFiscalReceptor'] . ' (' . $RegimenFiscalReceptor['regimen'] . ')' : '',
+                'DomicilioFiscalReceptor'     => (string) $receptor['DomicilioFiscalReceptor']
             ],
             'Conceptos'         => $conceptos,
             'Impuestos'         => [
