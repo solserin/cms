@@ -15,6 +15,7 @@ class AddCpClientes extends Migration
     {
         Schema::table('clientes', function ($table) {
             $table->string('cp')->nullable()->after('direccion_fiscal');
+            $table->unsignedBigInteger('rigimen_fiscal_id')->unsigned()->nullable()->after('direccion_fiscal');
         });
     }
 
@@ -27,6 +28,7 @@ class AddCpClientes extends Migration
     {
         Schema::table('clientes', function ($table) {
             $table->dropColumn('cp');
-            });
+            $table->dropColumn('rigimen_fiscal_id');
+        });
     }
 }
