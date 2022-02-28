@@ -1995,6 +1995,7 @@ export default {
         razon_social: "",
         direccion_fiscal: "",
          direccion_fiscal_cp: "",
+         regimen_receptor_clave:'',
         /**FIN DE datos del cliente */
 
         /**TIPO DE COMPROBANTE */
@@ -2882,7 +2883,6 @@ export default {
       /**obtiene los datos retornados del buscar cliente */
       this.form.cliente = datos.nombre;
       this.form.id_cliente = datos.id_cliente;
-      console.log(datos);
       this.datos_cliente = datos;
       if (datos.datos.rfc != "" && datos.datos.rfc != "N/A") {
         this.form.rfc = datos.datos.rfc;
@@ -2897,6 +2897,7 @@ export default {
       ) {
         this.form.direccion_fiscal = datos.datos.direccion_fiscal;
          this.form.direccion_fiscal_cp = datos.datos.direccion_fiscal_cp;
+          this.form.regimen_receptor_clave = datos.datos.regimen.clave;
       }
       //alert(datos.id_cliente);
     },
