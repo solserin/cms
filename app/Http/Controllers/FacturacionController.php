@@ -359,7 +359,7 @@ class FacturacionController extends ApiController
 
         /**NODO INICIAL DE CONCEPTOS */
         $conceptos['cfdi:Concepto'] = [];
-
+        $total_base_impuestos=0;
         /**VERIFICANDO QUE TIPO DE COMPROBANTE SE VA A REALIZAR */
         if ($request->tipo_comprobante['value'] == '1' || $request->tipo_comprobante['value'] == '2') {
 /**validnado que tenga conceptos si es de tipo ingreso o egreso */
@@ -475,6 +475,7 @@ class FacturacionController extends ApiController
                         'ClaveUnidad'   => 'ACT',
                         'Descripcion'   => 'Pago',
                         'Importe'       => 0,
+                        'ObjetoImp'=>'01',
                         'ValorUnitario' => 0,
                     ],
                 ]
@@ -507,7 +508,7 @@ class FacturacionController extends ApiController
                 '_attributes' => [
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
                     'Nombre'  => ENV('APP_ENV') == 'local' ? 'público en general' : strtoupper($request->razon_social),
-                    'UsoCFDI' => $uso_cfdi['clave'],
+                    'UsoCFDI' => $request->tipo_comprobante['value'] == '5' ? 'CP01':$uso_cfdi['clave'],
                     'RegimenFiscalReceptor' => ENV('APP_ENV') == 'local' ? '616': strtoupper($request->regimen_id),
                     'DomicilioFiscalReceptor' => ENV('APP_ENV') == 'local' ? '82140' : strtoupper($request->cp),//codigo postal del emisor
                 ],
@@ -529,24 +530,31 @@ class FacturacionController extends ApiController
                     ],
                 ],
             ],
+            //aqui traba
             'cfdi:Complemento'      => [
-                'pago10:Pagos' => [
+                'pago20:Pagos' => [
                     '_attributes' => [
-                        'Version' => '1.0',
+                        'Version' => '2.0',
                     ],
-                    'pago10:Pago' => [
+                    'pago20:Totales' => [
+                        '_attributes'             => [
+                            'MontoTotalPagos'    => number_format((float) round($total, 2), 2, '.', '')
+                        ]
+                    ],
+                    'pago20:Pago' => [
                         '_attributes'             => [
                             'FechaPago'    => $request->fecha_pago . 'T12:00:00',
                             'FormaDePagoP' => $forma_pago['clave'],
                             'MonedaP'      => 'MXN',
                             'Monto'        => number_format((float) round($total, 2), 2, '.', ''),
+                            'TipoCambioP'=>'1'
                         ],
-                        'pago10:DoctoRelacionado' => $request->array_cfdis_a_pagar_xml,
+                        'pago20:DoctoRelacionado' => $request->array_cfdis_a_pagar_xml
+                       
                     ],
                 ],
             ]
         ];
-        //return number_format((float) round($iva_trasladado, 2), 2, '.', '').'-'.$total_base_impuestos;
 
         /**AQUI AGREGO LOS PAGOS QUE SE GENERARON */
         $numero_serie = 0;
@@ -559,13 +567,13 @@ class FacturacionController extends ApiController
         } else {
             if ($request->tipo_comprobante['value'] == 5) {
                 $numero_serie    = Cfdis::where('sat_tipo_comprobante_id', '=', 5)->count();
-                $schema_location = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd';
+                $schema_location = 'http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd';
             }
         }
         $comprobante = [
             'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/4',
             'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
-            'xmlns:pago10'       => 'http://www.sat.gob.mx/Pagos',
+            'xmlns:pago20'       => 'http://www.sat.gob.mx/Pagos20',
             'Certificado'        => '',
             'Fecha'              => str_replace(" ", "T", date("Y-m-d H:i:s")),
             'Folio'              => $folio_para_asignar,
@@ -599,7 +607,7 @@ class FacturacionController extends ApiController
         }
 
         if ($request->tipo_comprobante['value'] != '5') {
-            unset($comprobante['xmlns:pago10']);
+            unset($comprobante['xmlns:pago20']);
             unset($array['cfdi:Complemento']);
         } else {
             unset($comprobante['FormaPago']);
@@ -946,14 +954,15 @@ class FacturacionController extends ApiController
                                                 }
                                                 array_push($array_cfdis_a_pagar_xml, [
                                                     '_attributes' => [
+                                                        'EquivalenciaDR'=>"1",
                                                         'Folio'            => $cfdi_bd['id'],
                                                         'IdDocumento'      => $cfdi_bd['uuid'],
                                                         'ImpPagado'        => $cfdi_pagar['monto_pago'],
                                                         'ImpSaldoAnt'      => $cfdi_bd['total'] - $total_pagado - $total_egresado,
                                                         'ImpSaldoInsoluto' => $cfdi_bd['total'] - $total_pagado - $cfdi_pagar['monto_pago'] - $total_egresado,
-                                                        'MetodoDePagoDR'   => $metodo_pago['clave'],
                                                         'MonedaDR'         => "MXN",
                                                         'NumParcialidad'   => $numero_parcialidad,
+                                                        'ObjetoImpDR'=>'01'
                                                     ],
                                                 ]);
                                             } else {
@@ -1351,7 +1360,7 @@ class FacturacionController extends ApiController
         $ns = $xml->getNamespaces(true);
         $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/4');
         $xml->registerXPathNamespace('tfd', 'http://www.sat.gob.mx/TimbreFiscalDigital');
-        $xml->registerXPathNamespace('pago10', 'http://www.sat.gob.mx/Pagos');
+        $xml->registerXPathNamespace('pago20', 'http://www.sat.gob.mx/Pagos');
 
         $comprobante = $xml->xpath('//cfdi:Comprobante')[0];
         $emisor      = $xml->xpath('//cfdi:Emisor')[0];
@@ -1454,8 +1463,8 @@ class FacturacionController extends ApiController
         } else {
             if ((string) $comprobante['TipoDeComprobante'] == 'P') {
                 $tipo_comprobante = 'Pago';
-                if (isset($xml->xpath('//pago10:Pago')[0])) {
-                    $pago         = $xml->xpath('//pago10:Pago')[0]->attributes();
+                if (isset($xml->xpath('//pago20:Pago')[0])) {
+                    $pago         = $xml->xpath('//pago20:Pago')[0]->attributes();
                     $forma_pago   = SatFormasPago::where('clave', '=', (string) $pago['FormaDePagoP'])->first();
                     $pago_arreglo = [
                         'FechaPago'    => fecha_abr((string) $pago['FechaPago']),
@@ -1464,11 +1473,11 @@ class FacturacionController extends ApiController
                         'Monto'        => (string) $pago['Monto'],
                     ];
 
-                    if (!isset($xml->xpath('//pago10:DoctoRelacionado')[0])) {
+                    if (!isset($xml->xpath('//pago20:DoctoRelacionado')[0])) {
                         return $this->errorResponse('Error al leer el xml, los documentos relacionados no existen', 409);
                     }
 
-                    foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Complemento//pago10:Pagos//pago10:Pago//pago10:DoctoRelacionado') as $docto_relacionado) {
+                    foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Complemento//pago20:Pagos//pago20:Pago//pago20:DoctoRelacionado') as $docto_relacionado) {
                         /**documentos relacionados */
                         array_push($documentos_pagados_arreglo,
                             [
@@ -1477,7 +1486,6 @@ class FacturacionController extends ApiController
                                 'ImpPagado'        => (String) $docto_relacionado['ImpPagado'],
                                 'ImpSaldoAnt'      => (String) $docto_relacionado['ImpSaldoAnt'],
                                 'ImpSaldoInsoluto' => (String) $docto_relacionado['ImpSaldoInsoluto'],
-                                'MetodoDePagoDR'   => (String) $docto_relacionado['MetodoDePagoDR'],
                                 'MonedaDR'         => (String) $docto_relacionado['MonedaDR'],
                                 'NumParcialidad'   => (String) $docto_relacionado['NumParcialidad'],
                             ]);
@@ -1510,7 +1518,7 @@ class FacturacionController extends ApiController
             'Comprobante'       => [
                 'xmlns:cfdi'         => 'http://www.sat.gob.mx/cfd/4',
                 'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
-                'xmlns:pago10'       => 'http://www.sat.gob.mx/Pagos',
+                'xmlns:pago20'       => 'http://www.sat.gob.mx/Pagos',
                 'Certificado'        => (string) $comprobante['Certificado'],
                 'Fecha'              => (string) $comprobante['Fecha'],
                 'FechaTexto'         => fecha_abr((string) $comprobante['Fecha']),
@@ -1582,7 +1590,7 @@ class FacturacionController extends ApiController
             $comprobante_cfdi['Complemento']['Pago']['DoctoRelacionado'] = $documentos_pagados_arreglo;
             /**agregando el nodo del pago */
         } else {
-            unset($comprobante_cfdi['Comprobante']['xmlns:pago10']);
+            unset($comprobante_cfdi['Comprobante']['xmlns:pago20']);
             unset($comprobante_cfdi['Complemento']['Pago']);
         }
 

@@ -125,8 +125,17 @@
                             </tr>
                             <tr>
                                 <td class="w-100">
-                                    <span class="texto-xs2 semibold line-0 uppercase">este documento es una
-                                        representación impresa de un cfdi</span>
+                                    @if (ENV('APP_ENV')=='local')
+                                    <span class="texto-xs2 semibold line-0 uppercase text-danger">este
+                                        documento es una
+                                        representación impresa de un cfdi no válido  versión {{$datos['Comprobante']['Version']}}
+                                    </span>
+                                    @else
+                                    <span class="texto-xs2 semibold line-0 uppercase">este
+                                        documento es una representación impresa de un cfdi {{$datos['Comprobante']['Version']}}
+                                    </span>
+                                    @endif
+                                   
                                 </td>
                             </tr>
                         </table>
@@ -251,7 +260,6 @@
                 <td class="py-1 px-1 bg-gray center"><span class="bold">folio.</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">uuid</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">moneda</span></td>
-                <td class="px-1 px-1 center bg-gray"><span class="bold">mét. pago</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">parcialidad</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">$saldo ant.</span></td>
                 <td class="px-1 px-1 center bg-gray"><span class="bold">$pago</span></td>
@@ -262,7 +270,6 @@
                 <td class="py-1 px-1 center"><span class="light">{{ $pago['Folio'] }}</span></td>
                 <td class="px-1 px-1 center"><span class="light">{{ $pago['IdDocumento'] }}</span></td>
                 <td class="px-1 px-1 center"><span class="light">{{ $pago['MonedaDR'] }}</span></td>
-                <td class="px-1 px-1 center"><span class="light">{{ $pago['MetodoDePagoDR'] }}</span></td>
                 <td class="px-1 px-1 center"><span class="light">{{ $pago['NumParcialidad'] }}</span></td>
                 <td class="px-1 px-1 center"><span class="light">{{number_format($pago['ImpSaldoAnt'],2) }}</span>
                 </td>
