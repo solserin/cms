@@ -11,7 +11,7 @@
       class="forms-popup"
     >
       <div class="flex flex-wrap">
-        <div class="w-full">
+        <div class="w-full py-6">
           <!--Contenido del plan-->
           <div class="form-group">
             <div class="title-form-group">Datos del Comprobante</div>
@@ -216,7 +216,7 @@
           </div>
         </div>
 
-        <div class="w-full">
+        <div class="w-full py-6">
           <!--Contenido del receptor-->
           <div class="form-group">
             <div class="title-form-group">Datos del Receptor</div>
@@ -500,7 +500,7 @@
           </div>
         </div>
 
-        <div class="w-full" v-if="form.tipo_relacion.value > 0">
+        <div class="w-full py-6" v-if="form.tipo_relacion.value > 0">
           <!--Contenido del receptor-->
           <div class="form-group">
             <div class="title-form-group">
@@ -656,7 +656,7 @@
         </div>
 
         <!---cfdis a pagar-->
-        <div class="w-full" v-if="form.tipo_comprobante.value == 5">
+        <div class="w-full py-6" v-if="form.tipo_comprobante.value == 5">
           <!--Contenido del receptor-->
           <div class="form-group">
             <div class="title-form-group">CFDIS a Pagar</div>
@@ -846,7 +846,7 @@
 
         <!---conceptos operaciones-->
 
-        <div class="w-full" v-if="form.tipo_comprobante.value == 1">
+        <div class="w-full py-6" v-if="form.tipo_comprobante.value == 1">
           <!--Contenido del receptor-->
           <div class="form-group">
             <div class="title-form-group">Operaciones Relacionadas al CFDI</div>
@@ -1146,7 +1146,7 @@
                       v-model="form.precio_descuento"
                       v-validate="
                         form.tipo_comprobante.value == 1 &&
-                        form.descuento_b.value == 1
+                        form.descuento_b.value == 0
                           ? 'required|'
                           : '' +
                             'decimal:2|min_value:' +
@@ -1169,7 +1169,7 @@
             </div>
           </div>
 
-          <div class="w-full text-right">
+          <div class="w-full text-right pt-4 md:mt-0">
             <vs-button
               class="w-full sm:w-full sm:w-auto md:w-auto md:ml-2 my-2 md:mt-0"
               color="success"
@@ -1522,11 +1522,6 @@
                             color="success"
                             size="large"
                           >
-                            <img
-                              width="25px"
-                              class="cursor-pointer img-btn"
-                              src="@assets/images/save.svg"
-                            />
                             <span>Timbrar CFDI</span>
                           </vs-button>
                         </div>
