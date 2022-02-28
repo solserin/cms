@@ -490,11 +490,16 @@ class FacturacionController extends ApiController
         //aqui trabajo
         //pub en general local o extranjero
         $DomicilioFiscalReceptor='82140';//pongo el rfc de la empresa
+        $RegimenFiscalReceptor='616';
+        if( $request->tipo_rfc['value']==1){
+            if(ENV('APP_ENV') != 'local'){
+                $RegimenFiscalReceptor=DB::table('sat_regimenes')->where('id',$request->regimen['value'])->first()->clave;
+            }
+        }
         if($request->tipo_rfc['value'] == 1){
              //es DomicilioFiscalReceptor del cliente, tomado del catalogo de clientes
-            $DomicilioFiscalReceptor=$request->direccion_fiscal_cp;
+            //$DomicilioFiscalReceptor=$request->direccion_fiscal_cp;
         }
-        
 
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
@@ -519,7 +524,7 @@ class FacturacionController extends ApiController
                     'Rfc'     => ENV('APP_ENV') == 'local' ? 'XEXX010101000' : strtoupper($request->rfc),
                     'Nombre'  => ENV('APP_ENV') == 'local' ? 'público en general' : strtoupper($request->razon_social),
                     'UsoCFDI' => $request->tipo_comprobante['value'] == '5' ? 'CP01':$uso_cfdi['clave'],
-                    'RegimenFiscalReceptor' => ENV('APP_ENV') == 'local' ? '616': strtoupper($request->regimen_id),
+                    'RegimenFiscalReceptor' => $RegimenFiscalReceptor,
                     'DomicilioFiscalReceptor' => $DomicilioFiscalReceptor,//codigo postal del emisor
                 ],
             ],

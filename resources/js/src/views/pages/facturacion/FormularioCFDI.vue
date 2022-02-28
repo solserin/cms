@@ -222,9 +222,30 @@
             <div class="title-form-group">Datos del Receptor</div>
             <div class="form-group-content">
               <div class="flex flex-wrap">
+                <div
+                  class="w-full px-2"
+                  v-if="cliente_datos_validos_cfdi != null"
+                >
+                  <div
+                    class="w-full alerta pt-4 pb-6 px-2"
+                    v-if="cliente_datos_validos_cfdi == true"
+                  >
+                    <div class="info">
+                      <p>El cliente tiene sus datos en orden para facturas.</p>
+                    </div>
+                  </div>
+                  <div class="w-full alerta pt-4 pb-6 px-2" v-else>
+                    <div class="danger">
+                      <p>
+                        Actualice la información del cliente si requiere
+                        facturar con su RFC. Hágalo desde el módulo de clientes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 <div class="w-full xl:w-6/12">
                   <div
-                    class="w-full px-2 input-text"
+                    class="w-full px-2 input-text mt-1"
                     v-if="form.id_cliente == ''"
                   >
                     <label>
@@ -247,7 +268,7 @@
                       Click para seleccionar al Receptor
                     </div>
                   </div>
-                  <div class="w-full px-2 input-text" v-else>
+                  <div class="w-full px-2 input-text mt-1" v-else>
                     <label>
                       Receptor
                       <span>(*)</span>
@@ -279,6 +300,13 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="px-2">
+                    <span
+                      class="text-danger"
+                      v-if="this.errores['id_cliente']"
+                      >{{ errores["id_cliente"][0] }}</span
+                    >
                   </div>
                 </div>
 
@@ -324,6 +352,7 @@
                     class="w-full pb-1 pt-1"
                     placeholder="Ingrese el RFC"
                     v-model="form.rfc"
+                    :disabled="true"
                   />
                   <span class="text-danger" v-if="errors.first('form.rfc')">
                     Ingrese un RFC
@@ -374,7 +403,7 @@
                   }}</span>
                 </div>
                 <div
-                  class="w-full xl:w-3/12 px-2 input-text"
+                  class="w-full xl:w-6/12 px-2 input-text"
                   v-if="form.tipo_rfc.value == 1"
                 >
                   <label>
@@ -390,6 +419,7 @@
                     class="w-full pb-1 pt-1"
                     placeholder="Razón social del contribuyente"
                     v-model="form.razon_social"
+                    :disabled="true"
                   />
                   <span
                     class="text-danger"
@@ -402,7 +432,7 @@
                   }}</span>
                 </div>
 
-                <div class="w-full xl:w-3/12 px-2 input-text" v-else>
+                <div class="w-full xl:w-6/12 px-2 input-text" v-else>
                   <label>
                     Razón Social
                     <span>(*)</span>
@@ -425,7 +455,7 @@
                 </div>
 
                 <div
-                  class="w-full xl:w-3/12 px-2 input-text"
+                  class="w-full xl:w-6/12 px-2 input-text"
                   v-if="form.tipo_rfc.value == 1"
                 >
                   <label>
@@ -439,6 +469,7 @@
                     class="w-full pb-1 pt-1"
                     placeholder="Dirección fiscal del contribuyente"
                     v-model="form.direccion_fiscal"
+                    :disabled="true"
                   />
                   <span class="text-danger" v-if="this.errores.razon_social">{{
                     errores.razon_social[0]
@@ -448,7 +479,7 @@
                   }}</span>
                 </div>
 
-                <div class="w-full xl:w-3/12 px-2 input-text" v-else>
+                <div class="w-full xl:w-6/12 px-2 input-text" v-else>
                   <label>
                     Dirección Fiscal
                     <span>(*)</span>
@@ -463,7 +494,7 @@
                     value="N/A"
                   />
                 </div>
-                <div class="w-full xl:w-3/12 px-2 input-text">
+                <div class="w-full xl:w-6/12 px-2 input-text">
                   <label>
                     País de Residencia
                     <span>(*)</span>
@@ -496,9 +527,8 @@
                   >
                 </div>
 
-
-                 <div
-                  class="w-full xl:w-3/12 px-2 input-text"
+                <div
+                  class="w-full xl:w-6/12 px-2 input-text"
                   v-if="form.tipo_rfc.value == 1"
                 >
                   <label>
@@ -512,18 +542,23 @@
                     class="w-full pb-1 pt-1"
                     placeholder="CP de dirección fiscal del contribuyente"
                     v-model="form.direccion_fiscal_cp"
+                    :disabled="true"
                   />
-                  <span class="text-danger" v-if="this.errores.direccion_fiscal_cp">{{
-                    errores.direccion_fiscal_cp[0]
-                  }}</span>
-                  <span class="text-danger" v-if="this.errores.direccion_fiscal_cp">{{
-                    errores.direccion_fiscal_cp[0]
-                  }}</span>
+                  <span
+                    class="text-danger"
+                    v-if="this.errores.direccion_fiscal_cp"
+                    >{{ errores.direccion_fiscal_cp[0] }}</span
+                  >
+                  <span
+                    class="text-danger"
+                    v-if="this.errores.direccion_fiscal_cp"
+                    >{{ errores.direccion_fiscal_cp[0] }}</span
+                  >
                 </div>
 
-                <div class="w-full xl:w-3/12 px-2 input-text" v-else>
+                <div class="w-full xl:w-6/12 px-2 input-text" v-else>
                   <label>
-                    Dirección Fiscal
+                    Código Postal Fiscal
                     <span>(*)</span>
                   </label>
                   <vs-input
@@ -535,6 +570,33 @@
                     placeholder="CP de dirección fiscal del contribuyente"
                     value="N/A"
                   />
+                </div>
+
+                <div class="w-full xl:w-12/12 px-2 input-text">
+                  <label>
+                    Régimen Fiscal
+                    <span>(*)</span>
+                  </label>
+                  <v-select
+                    :options="regimenes"
+                    :clearable="false"
+                    :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    v-model="form.regimen"
+                    class="mb-4 sm:mb-0 pb-1 pt-1"
+                    name="regimen"
+                    :disabled="true"
+                  >
+                    <div slot="no-options">Seleccione 1</div>
+                  </v-select>
+                  {{form.regimen}}
+                  <span class="text-danger">
+                    {{ errors.first("form.regimen") }}
+                  </span>
+                  <span
+                    class="text-danger"
+                    v-if="this.errores['regimen.value']"
+                    >{{ errores["regimen.value"][0] }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -1635,7 +1697,7 @@ import vSelect from "vue-select";
 import ConfirmarAceptar from "@pages/confirmarAceptar.vue";
 import SearchOperacion from "@pages/facturacion/search_operacion.vue";
 import SearchCfdi from "@pages/facturacion/search_cfdi.vue";
-import clientes from "@services/clientes";
+import sat from "@services/sat";
 import ClientesBuscador from "@pages/clientes/searcher.vue";
 import Reporteador from "@pages/Reporteador";
 
@@ -1689,6 +1751,7 @@ export default {
         };
         (async () => {
           if (this.getTipoformulario == "facturar") {
+            await this.get_regimenes();
             await this.get_tipos_comprobante();
             await this.get_metodos_pago();
             await this.get_sat_formas_pago();
@@ -1709,6 +1772,20 @@ export default {
         this.form.sat_pais = this.sat_paises[151];
       } else {
         this.form.sat_pais = this.sat_paises[0];
+      }
+      if (newValue.value == 1) {
+        if (this.datos_cliente != null) {
+          if (this.datos_cliente.datos.regimen != null) {
+            this.form.regimen = {
+              value: this.datos_cliente.datos.regimen.id,
+              label: this.datos_cliente.datos.regimen.regimen,
+            };
+          } else {
+            this.form.regimen = this.regimenes[0];
+          }
+        }
+      } else {
+        this.form.regimen = this.regimenes[11];
       }
     },
 
@@ -1774,6 +1851,26 @@ export default {
     },
   },
   computed: {
+    //valido si el cliente cumple con los cambios de datos para el cfdi 4.0
+    cliente_datos_validos_cfdi: function () {
+      if (this.datos_cliente != null) {
+        if (this.datos_cliente.datos) {
+          if (this.form.tipo_rfc.value == 1) {
+            //revisa si el cliente cumple con los datos requeridos
+            if (
+              this.datos_cliente.datos.rfc != null &&
+              this.datos_cliente.datos.cp != null &&
+              this.datos_cliente.datos.regimen != null
+            ) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+        }
+      } else return null;
+    },
+
     total_facturar: function () {
       let total = 0;
 
@@ -1971,6 +2068,12 @@ export default {
           label: "Seleccione 1",
         },
       ],
+      regimenes: [
+        {
+          value: "",
+          label: "Seleccione 1",
+        },
+      ],
       sino: [
         {
           value: "1",
@@ -1994,8 +2097,8 @@ export default {
         rfc: "",
         razon_social: "",
         direccion_fiscal: "",
-         direccion_fiscal_cp: "",
-         regimen_receptor_clave:'',
+        direccion_fiscal_cp: "",
+        regimen_receptor_clave: "",
         /**FIN DE datos del cliente */
 
         /**TIPO DE COMPROBANTE */
@@ -2037,6 +2140,10 @@ export default {
         },
 
         unidad_sat: {
+          value: "",
+          label: "Seleccione 1",
+        },
+        regimen: {
           value: "",
           label: "Seleccione 1",
         },
@@ -2087,6 +2194,20 @@ export default {
               //AL LLEGAR AQUI SE SABE QUE EL FORMULARIO PASO LA VALIDACION
               (async () => {
                 if (this.getTipoformulario == "facturar") {
+                  if (!this.datos_cliente.datos) {
+                    //pido que verifique los datos del cliente
+                    this.$vs.notify({
+                      title: "Error",
+                      text: "Verifique los datos del receptor.",
+                      iconPack: "feather",
+                      icon: "icon-alert-circle",
+                      color: "danger",
+                      position: "bottom-right",
+                      time: "8000",
+                    });
+                    return;
+                  }
+
                   /**validando que tenga los cfdis_relacionados en caso de aplicar */
                   if (this.form.tipo_relacion.value > 0) {
                     if (this.form.cfdis_relacionados.length > 0) {
@@ -2163,6 +2284,18 @@ export default {
                     this.form.tipo_comprobante.value == 1 ||
                     this.form.tipo_comprobante.value == 2
                   ) {
+                    if (this.form.uso_cfdi == this.usos_cfdi[10]) {
+                      this.$vs.notify({
+                        title: "Error",
+                        text: "Seleccione el uso de CFDI Correcto.",
+                        iconPack: "feather",
+                        icon: "icon-alert-circle",
+                        color: "danger",
+                        position: "bottom-right",
+                        time: "8000",
+                      });
+                      throw "exit";
+                    }
                     /**ingreso */
                     if (this.form.conceptos.length > 0) {
                       this.callback = await this.timbrar_cfdi;
@@ -2659,7 +2792,7 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de tipo de comprobantes",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2690,7 +2823,7 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de métodos de pago",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2718,7 +2851,7 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de formas de pago",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2750,7 +2883,7 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de tipo de relación",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2778,7 +2911,7 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de claves y productos del sat",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2810,7 +2943,7 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de unidades del sat",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2839,7 +2972,7 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de usos del cfdi del sat",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2868,8 +3001,37 @@ export default {
         })
         .catch((err) => {
           this.$vs.notify({
-            title: "Emitir CFDIS 3.3",
+            title: "Emitir CFDIS 4.0",
             text: "Error al cargar el catálogo de países del sat",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+            time: 8000,
+          });
+          this.$vs.loading.close();
+        });
+    },
+
+    async get_regimenes() {
+      //this.$vs.loading();
+      await sat
+        .getRegimenes()
+        .then((res) => {
+          this.regimenes = [];
+          this.regimenes.push({ label: "Seleccione 1", value: "" });
+          res.data.data.forEach((element) => {
+            this.regimenes.push({
+              label: element.regimen,
+              value: element.id,
+            });
+          });
+          this.form.regimen = this.regimenes[0];
+          this.$vs.loading.close();
+        })
+        .catch((err) => {
+          this.$vs.notify({
+            title: "Emitir CFDIS 4.0",
+            text: "Error al cargar el régimen fiscal",
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",
@@ -2896,8 +3058,13 @@ export default {
         datos.datos.direccion_fiscal != "N/A"
       ) {
         this.form.direccion_fiscal = datos.datos.direccion_fiscal;
-         this.form.direccion_fiscal_cp = datos.datos.direccion_fiscal_cp;
-          this.form.regimen_receptor_clave = datos.datos.regimen.clave;
+        this.form.direccion_fiscal_cp = datos.datos.direccion_fiscal_cp;
+      }
+
+      if (this.datos_cliente != null) {
+        if (this.datos_cliente.datos.regimen != null) {
+          this.form.regimen = {value:datos.datos.regimen.id,label:datos.datos.regimen.regimen};
+        }
       }
       //alert(datos.id_cliente);
     },
@@ -2908,7 +3075,9 @@ export default {
       this.form.rfc = "";
       this.form.razon_social = "";
       this.form.direccion_fiscal = "";
-      this.form.direccion_fiscal_cp=''
+      this.form.direccion_fiscal_cp = "";
+      this.form.regimen = { label: "Seleccione 1", value: "" };
+      this.datos_cliente = null;
     },
     quitarCliente() {
       this.botonConfirmarSinPassword = "Cambiar cliente";
@@ -2970,6 +3139,7 @@ export default {
 
     //regresa los datos a su estado inicial
     limpiarVentana() {
+      this.datos_cliente=null;
       this.form.id_cliente = "";
       this.form.cliente = "";
       this.form.tipo_rfc = {
@@ -2979,7 +3149,7 @@ export default {
       this.form.rfc = "";
       this.form.razon_social = "";
       this.form.direccion_fiscal = "";
-         this.form.direccion_fiscal_cp = "";
+      this.form.direccion_fiscal_cp = "";
       this.form.tipo_comprobante = {
         value: "",
         label: "Seleccione 1",
