@@ -42,12 +42,13 @@ class ClientesController extends ApiController
                 'razon_social',
                 'direccion_fiscal',
                 'vivo_b as vivo_b_raw',
+                'regimen_fiscal_id',
                 DB::Raw('IFNULL( clientes.rfc , "N/A" ) as rfc'),
                 DB::Raw('IFNULL( clientes.celular , "N/A" ) as celular'),
                 DB::Raw('IF(clientes.vivo_b=1 , "Vivo","Fallecido" ) as vivo_b'),
                 'nacionalidades_id',
                 'generos_id'
-            )->with('nacionalidad')->with('genero')->where(function ($q) use ($status) {
+            )->with('regimen')->with('nacionalidad')->with('genero')->where(function ($q) use ($status) {
                 if ($status != '') {
                     $q->where('clientes.status', $status);
                 }
@@ -115,7 +116,7 @@ class ClientesController extends ApiController
             DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
             'nacionalidades_id',
             'generos_id'
-        )->where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')
+        )->where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')->with('regimen')
             ->first();
         //se retorna el resultado
         return $resultado;
@@ -136,7 +137,8 @@ class ClientesController extends ApiController
             'rfc'                => '',
             'razon_social'       => '',
             'direccion_fiscal'   => '',
-            'cp'=>''
+            'cp'=>'',
+            'regimen.value'=>''
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
@@ -150,6 +152,7 @@ class ClientesController extends ApiController
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
             $validaciones['cp'] = 'required';
+            $validaciones['regimen.value'] = 'required';
         }
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
@@ -184,6 +187,7 @@ class ClientesController extends ApiController
                 'razon_social'        => trim($request->razon_social) != '' ? trim($request->razon_social) : null,
                 'direccion_fiscal'    => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : null,
                 'cp'    => trim($request->cp) != '' ? trim($request->cp) : null,
+                'regimen_fiscal_id'   => (int) $request->regimen['value'],
                 /**datos del contacto */
                 'nombre_contacto'     => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,
@@ -211,7 +215,8 @@ class ClientesController extends ApiController
             'rfc'                => '',
             'razon_social'       => '',
             'direccion_fiscal'   => '',
-            'cp'=>''
+            'cp'=>'',
+            'regimen.value'=>''
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
@@ -231,6 +236,7 @@ class ClientesController extends ApiController
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
             $validaciones['cp'] = 'required';
+            $validaciones['regimen.value'] = 'required';
         }
 
         /**FIN DE  VALIDACIONES CONDICIONADAS*/
@@ -264,6 +270,7 @@ class ClientesController extends ApiController
                 'razon_social'        => trim($request->razon_social) != '' ? trim($request->razon_social) : null,
                 'direccion_fiscal'    => trim($request->direccion_fiscal) != '' ? trim($request->direccion_fiscal) : null,
                 'cp'    => trim($request->cp) != '' ? trim($request->cp) : null,
+                'regimen_fiscal_id'   => (int) $request->regimen['value'],
                 /**datos del contacto */
                 'nombre_contacto'     => $request->nombre_contacto,
                 'parentesco_contacto' => $request->parentesco_contacto,
