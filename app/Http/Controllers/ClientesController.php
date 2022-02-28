@@ -35,6 +35,7 @@ class ClientesController extends ApiController
                 'nombre',
                 'direccion',
                 'cp',
+                'cp as direccion_fiscal_cp',
                 'email',
                 'rfc as rfc_raw',
                 'status',

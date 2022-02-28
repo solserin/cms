@@ -492,7 +492,7 @@ class FacturacionController extends ApiController
         $DomicilioFiscalReceptor='82140';//pongo el rfc de la empresa
         if($request->tipo_rfc['value'] == 1){
              //es DomicilioFiscalReceptor del cliente, tomado del catalogo de clientes
-            $DomicilioFiscalReceptor=$request->cp;
+            $DomicilioFiscalReceptor=$request->direccion_fiscal_cp;
         }
         
 

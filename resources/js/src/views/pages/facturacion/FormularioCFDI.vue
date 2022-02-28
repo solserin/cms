@@ -374,7 +374,7 @@
                   }}</span>
                 </div>
                 <div
-                  class="w-full xl:w-4/12 px-2 input-text"
+                  class="w-full xl:w-3/12 px-2 input-text"
                   v-if="form.tipo_rfc.value == 1"
                 >
                   <label>
@@ -402,7 +402,7 @@
                   }}</span>
                 </div>
 
-                <div class="w-full xl:w-4/12 px-2 input-text" v-else>
+                <div class="w-full xl:w-3/12 px-2 input-text" v-else>
                   <label>
                     Razón Social
                     <span>(*)</span>
@@ -425,7 +425,7 @@
                 </div>
 
                 <div
-                  class="w-full xl:w-4/12 px-2 input-text"
+                  class="w-full xl:w-3/12 px-2 input-text"
                   v-if="form.tipo_rfc.value == 1"
                 >
                   <label>
@@ -448,7 +448,7 @@
                   }}</span>
                 </div>
 
-                <div class="w-full xl:w-4/12 px-2 input-text" v-else>
+                <div class="w-full xl:w-3/12 px-2 input-text" v-else>
                   <label>
                     Dirección Fiscal
                     <span>(*)</span>
@@ -463,7 +463,7 @@
                     value="N/A"
                   />
                 </div>
-                <div class="w-full xl:w-4/12 px-2 input-text">
+                <div class="w-full xl:w-3/12 px-2 input-text">
                   <label>
                     País de Residencia
                     <span>(*)</span>
@@ -494,6 +494,47 @@
                     v-if="this.errores['sat_pais.value']"
                     >{{ errores["sat_pais.value"][0] }}</span
                   >
+                </div>
+
+
+                 <div
+                  class="w-full xl:w-3/12 px-2 input-text"
+                  v-if="form.tipo_rfc.value == 1"
+                >
+                  <label>
+                    Código Postal Fiscal
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    name="direccion_fiscal_cp"
+                    maxlength="8"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="CP de dirección fiscal del contribuyente"
+                    v-model="form.direccion_fiscal_cp"
+                  />
+                  <span class="text-danger" v-if="this.errores.direccion_fiscal_cp">{{
+                    errores.direccion_fiscal_cp[0]
+                  }}</span>
+                  <span class="text-danger" v-if="this.errores.direccion_fiscal_cp">{{
+                    errores.direccion_fiscal_cp[0]
+                  }}</span>
+                </div>
+
+                <div class="w-full xl:w-3/12 px-2 input-text" v-else>
+                  <label>
+                    Dirección Fiscal
+                    <span>(*)</span>
+                  </label>
+                  <vs-input
+                    :disabled="true"
+                    name="direccion_fiscal_cp"
+                    maxlength="8"
+                    type="text"
+                    class="w-full pb-1 pt-1"
+                    placeholder="CP de dirección fiscal del contribuyente"
+                    value="N/A"
+                  />
                 </div>
               </div>
             </div>
@@ -1953,6 +1994,7 @@ export default {
         rfc: "",
         razon_social: "",
         direccion_fiscal: "",
+         direccion_fiscal_cp: "",
         /**FIN DE datos del cliente */
 
         /**TIPO DE COMPROBANTE */
@@ -2854,6 +2896,7 @@ export default {
         datos.datos.direccion_fiscal != "N/A"
       ) {
         this.form.direccion_fiscal = datos.datos.direccion_fiscal;
+         this.form.direccion_fiscal_cp = datos.datos.direccion_fiscal_cp;
       }
       //alert(datos.id_cliente);
     },
@@ -2864,6 +2907,7 @@ export default {
       this.form.rfc = "";
       this.form.razon_social = "";
       this.form.direccion_fiscal = "";
+      this.form.direccion_fiscal_cp=''
     },
     quitarCliente() {
       this.botonConfirmarSinPassword = "Cambiar cliente";
@@ -2934,6 +2978,7 @@ export default {
       this.form.rfc = "";
       this.form.razon_social = "";
       this.form.direccion_fiscal = "";
+         this.form.direccion_fiscal_cp = "";
       this.form.tipo_comprobante = {
         value: "",
         label: "Seleccione 1",
