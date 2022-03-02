@@ -2080,6 +2080,7 @@ class FacturacionController extends ApiController
         $parametros->rfcReceptor = $cfdi->rfc_receptor;
         $parametros->total       = $cfdi->total;
         $parametros->SelloCFD    = $xml['Complemento']['TimbreFiscalDigital']['SelloCFD'];
+        $url_cancelar='';
         if (ENV('APP_ENV') == 'local') {
             $usuario      = ENV('USER_PAC_DEV');
             $password     = ENV('PASSWORD_PAC_DEV');
@@ -2095,6 +2096,7 @@ class FacturacionController extends ApiController
         $autentica->password = $password;
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar);
+        //return $client->__getFunctions();
         $result              = $client->ConsultarEstatusCFDI_2($parametros);
         /**determinando status segun el resultado de la respuesta del sat */
         /**
@@ -2197,11 +2199,15 @@ class FacturacionController extends ApiController
         $parametros->rfcEmisor =trim($cfdi->rfc_emisor);
         $parametros->fecha     = str_replace(" ", "T", $fecha_cancelacion);
         $parametros->folios    = $cfdi['uuid'];
-        $parametros->motivo=3;
-
-       $parametros->rfc_receptor = trim($cfdi->rfc_receptor);
+        $parametros->motivo=$request->motivo;
+        $parametros->rfc_receptor = trim($cfdi->rfc_receptor);
         $parametros->total        = $cfdi->total;
         $parametros->uuid         = $cfdi->uuid;
+        $parametros->folioSustitucion=$request->motivo!='03'?$request->uuid_a_sustituir_cancelar:'';
+       if($request->motivo=='03'){
+           //unset folioSustitucion
+           unset($parametros->folioSustitucion);
+       }
         $parametros->SelloCFD     = $xml['Complemento']['TimbreFiscalDigital']['SelloCFD'];
         if (ENV('APP_ENV') == 'local') {
             $certificado_path     = ENV('CER_PAC');
@@ -2212,6 +2218,8 @@ class FacturacionController extends ApiController
             $root_path_key        = ENV('ROOT_KEY_DEV');
             $credentials_password = ENV('PASSWORD_LLAVES');
             $url_cancelar         = ENV('WEB_SERVICE_CANCELACION_DEVELOP');
+            $WSDL_CANCELAR_DEV=ENV('WSDL_CANCELAR_DEV');
+            $WSDL_CANCELAR_PRODUCTION=ENV('WSDL_CANCELAR_PRODUCTION');
         } else {
             $facturacion_datos_sistema = Facturacion::First();
             /**data from DB */
@@ -2241,9 +2249,8 @@ class FacturacionController extends ApiController
         $autentica->password = $password;
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar, array('trace' => 1));
-        $result              = $client->cancelacion_1($parametros);
+        $result              = $client->Cancelacion40_2($parametros);
         //return $this->errorResponse( $result, 409);
-        dd($result->return);
        // echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
         //return $result;
         if (isset($result->return->acuse)) {

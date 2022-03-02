@@ -775,6 +775,10 @@ export default {
         };
     },
     methods: {
+         copy() {
+      this.$refs.clone.focus();
+      document.execCommand('copy');
+    },
         async get_cliente_by_id() {
             /**trae la informacion de el cliente por id */
             this.$vs.loading();
