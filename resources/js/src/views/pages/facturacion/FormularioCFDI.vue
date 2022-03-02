@@ -588,7 +588,6 @@
                   >
                     <div slot="no-options">Seleccione 1</div>
                   </v-select>
-                  {{form.regimen}}
                   <span class="text-danger">
                     {{ errors.first("form.regimen") }}
                   </span>
