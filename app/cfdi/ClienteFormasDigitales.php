@@ -24,7 +24,12 @@ class ClienteFormasDigitales
     public function timbrar($parametros)
     {
         /* conexion al web service */
-        $client = new SoapClient(ENV('WEB_SERVICE_DEVELOP'), array('encoding' => 'UTF-8'));
+        $web_service=ENV('WEB_SERVICE_DEVELOP');
+        if (ENV('APP_ENV') != 'local') {
+            $web_service=ENV('WEB_SERVICE_PRODUCTION');
+        }
+
+        $client = new SoapClient($web_service, array('encoding' => 'UTF-8'));
         return $client->TimbrarCFDI($parametros);
     }
 

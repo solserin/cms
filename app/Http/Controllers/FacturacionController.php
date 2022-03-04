@@ -500,7 +500,10 @@ class FacturacionController extends ApiController
              //es DomicilioFiscalReceptor del cliente, tomado del catalogo de clientes
             //$DomicilioFiscalReceptor=$request->direccion_fiscal_cp;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> hotfix
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
            /* 'cfdi:InformacionGlobal'         => [
@@ -514,7 +517,7 @@ class FacturacionController extends ApiController
             'cfdi:CfdiRelacionados' => $request->array_cfdis_a_relacionar_xml,
             'cfdi:Emisor'           => [
                 '_attributes' => [
-                    'RegimenFiscal' => '601',
+                    'RegimenFiscal' => 601,
                     'Rfc'           => ENV('APP_ENV') == 'local' ? 'EWE1709045U0' : strtoupper($datos_funeraria['rfc']),
                     'Nombre'        => ENV('APP_ENV') == 'local' ? 'ESCUELA WILSON ESQUIVEL' : strtoupper($datos_funeraria['razon_social']),
                 ],
@@ -1207,6 +1210,15 @@ class FacturacionController extends ApiController
                 /* carga archivo xml */
                 $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
                 $storage_disk_xmls        = ENV('STORAGE_DISK_XML');
+
+                /**datos */
+                $certificado_path     = '';
+                $key_path             = '';
+                $usuario              = '';
+                $password             = '';
+                $root_path_cer        = '';
+                $root_path_key        ='';
+                $credentials_password = '';
                 if (ENV('APP_ENV') == 'local') {
                     $certificado_path     = ENV('CER_PAC');
                     $key_path             = ENV('KEY_PAC');
@@ -1218,7 +1230,7 @@ class FacturacionController extends ApiController
                 } else {
                     $facturacion_datos_sistema = Facturacion::First();
                     /**data from DB */
-                    if ($facturacion_datos_sistema->cerFile || $facturacion_datos_sistema->keyFile || $facturacion_datos_sistema->password) {
+                    if (!$facturacion_datos_sistema->cerFile || !$facturacion_datos_sistema->keyFile || !$facturacion_datos_sistema->password) {
                         /**no procede */
                         return $this->errorResponse("no se han capturado los certificados digitales de facturación", 409);
                     }
@@ -1238,7 +1250,7 @@ class FacturacionController extends ApiController
                 $autentica->usuario  = $usuario;
                 $autentica->password = $password;
                 $parametros          = new Parametros();
-                $parametros->accesos = $autentica;
+               $parametros->accesos = $autentica;
                 //$this->errorResponse($clienteFD->sellarXML($certFile, $keyFile), 409);
                 /**SE MANDA SELLAR EL XML */
 
@@ -1254,6 +1266,7 @@ class FacturacionController extends ApiController
                 if (ENV('GENERAR_PEMS') == true) {
                     $clienteFD->crear_pem_files($datos_credenciales);
                 }
+              
 
                 $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
                 $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path . '.pem');
