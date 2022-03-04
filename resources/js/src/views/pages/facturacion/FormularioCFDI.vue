@@ -2187,7 +2187,7 @@ export default {
         if (res.data >= 1) {
           //success
           this.$vs.notify({
-            title: "Timbrar CFDI 3.3",
+            title: "Timbrar CFDI 4.0",
             text: "Se ha timbrado el CFDI correctamente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2198,7 +2198,7 @@ export default {
           this.cerrarVentana();
         } else {
           this.$vs.notify({
-            title: "Timbrar CFDI 3.3",
+            title: "Timbrar CFDI 4.0",
             text: "Error al timbrar el CFDI, por favor reintente.",
             iconPack: "feather",
             icon: "icon-alert-circle",
@@ -2224,7 +2224,7 @@ export default {
             //checo si existe cada error
             this.errores = err.response.data.error;
             this.$vs.notify({
-              title: "Timbrar CFDI 3.3",
+              title: "Timbrar CFDI 4.0",
               text: "Verifique los errores encontrados en los datos.",
               iconPack: "feather",
               icon: "icon-alert-circle",
@@ -2233,7 +2233,7 @@ export default {
             });
           } else if (err.response.status == 409) {
             this.$vs.notify({
-              title: "Timbrar CFDI 3.3",
+              title: "Timbrar CFDI 4.0",
               text: err.response.data.error,
               iconPack: "feather",
               icon: "icon-alert-circle",
