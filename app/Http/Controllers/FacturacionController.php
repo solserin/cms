@@ -500,10 +500,6 @@ class FacturacionController extends ApiController
              //es DomicilioFiscalReceptor del cliente, tomado del catalogo de clientes
             //$DomicilioFiscalReceptor=$request->direccion_fiscal_cp;
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> hotfix
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
            /* 'cfdi:InformacionGlobal'         => [
