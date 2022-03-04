@@ -513,7 +513,7 @@ class FacturacionController extends ApiController
             'cfdi:CfdiRelacionados' => $request->array_cfdis_a_relacionar_xml,
             'cfdi:Emisor'           => [
                 '_attributes' => [
-                    'RegimenFiscal' => 601,
+                    'RegimenFiscal' => '601',
                     'Rfc'           => ENV('APP_ENV') == 'local' ? 'EWE1709045U0' : strtoupper($datos_funeraria['rfc']),
                     'Nombre'        => ENV('APP_ENV') == 'local' ? 'ESCUELA WILSON ESQUIVEL' : strtoupper($datos_funeraria['razon_social']),
                 ],
