@@ -70,4 +70,12 @@ class Cfdis extends Model
             ->where('tipo_relacion_id', '=', 3);
         /**solo de tipo egreso */
     }
+
+
+    public function servicios_funerarios()
+    {
+        /**relacion de cfdis que egresó este comprobante*/
+        return $this->hasMany('App\CfdisOperaciones', 'cfdis_id', 'id');
+        /**solo de tipo egreso */
+    }
 }

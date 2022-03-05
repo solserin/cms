@@ -236,6 +236,27 @@
             <td colspan="2" class="center py-2">{{ $datos['Complemento']['TimbreFiscalDigital']['UUID'] }}</td>
         </tr>
     </table>
+
+   @foreach ($cfdi['servicios_funerarios'] as $servicio)
+            @if (isset($servicio['operacion_factura']))
+            @foreach ($servicio['operacion_factura'] as $operacion)
+            @if ($operacion['empresa_operaciones_id'] == 3)
+            <table class="w-100 datos_tabla uppercase table-collapsed texto-xs3">
+                <tr>
+                    <td class="w-65 py-1 px-2 "><span class="bold">Nombre del Fallecido: </span>
+                        <span>{{ $operacion['servicio_funerario']['nombre_afectado'] }}</span></td>
+                    <td class="w-35 px-1 px-2 "><span class="bold">Fecha de Defunción: </span>
+                        <span>{{ $operacion['servicio_funerario']['fecha_defuncion_texto'] }}</span></td>
+                </tr>
+            </table>
+            @endif
+            @endforeach
+            @endif
+   @endforeach
+
+    
+
+
     <table class="w-100 datos_tabla uppercase table-collapsed texto-xs3">
         <tr>
             <td class="w-40 py-1 px-2 center"><span class="bold">facturó: </span>

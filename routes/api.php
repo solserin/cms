@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
  */
 
 /**en pruebas */
-Route::get('/clientes/get_clientes', 'ClientesController@get_clientes');
+
 
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
@@ -103,7 +103,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('monedas/', 'SATMonedasController@getAll');
 
     /**CLIENTES */
-    
+    Route::get('/clientes/get_clientes', 'ClientesController@get_clientes');
     Route::get('/clientes/get_nacionalidades', 'ClientesController@get_nacionalidades');
     Route::post('/clientes/guardar_cliente', 'ClientesController@guardar_cliente');
     Route::post('/clientes/modificar_cliente', 'ClientesController@modificar_cliente');

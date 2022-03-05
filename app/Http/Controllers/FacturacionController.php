@@ -1718,6 +1718,7 @@ class FacturacionController extends ApiController
                 '(NULL) as status_texto'
             )
         )
+        ->with('servicios_funerarios.operacionFactura.servicio_funerario')
             ->with('pagos_asociados')
             ->with('egresos_asociados')
             ->with('cfdis_pagados')
@@ -1793,6 +1794,20 @@ class FacturacionController extends ApiController
         $sat_usos     = SatUsosCfdi::select('*')->get();
 
         foreach ($resultado as $index_cfdi => &$cfdi) {
+            //datos del servicio funerario
+//aqui voy
+            if(isset($cfdi['servicios_funerarios'])){
+                //tiene operaciones asociadas
+                foreach ($cfdi['servicios_funerarios'] as &$servicio) {
+                    if(!is_null($servicio['operacion_factura'])){
+                        if ($servicio['operacion_factura'][0]['empresa_operaciones_id'] == 3) {
+                            //es tipo servicio funerario
+                            $servicio['operacion_factura'][0]['servicio_funerario']['fecha_defuncion_texto']=fecha_abr( $servicio['operacion_factura'][0]['servicio_funerario']['fechahora_defuncion']);
+                        }  
+                    }
+                }
+            }
+
             /**status */
             if ($cfdi['status'] == 1) {
                 $cfdi['status_texto'] = 'Vigente';

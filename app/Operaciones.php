@@ -37,6 +37,20 @@ class Operaciones extends Model
             );
     }
 
+    
+    public function servicio_funerario()
+    {
+        return $this->belongsTo('App\ServiciosFunerarios', 'servicios_funerarios_id', 'id')
+        ->select(
+            'id',
+            'fechahora_defuncion',
+            'nombre_afectado',
+            DB::raw(
+                '(NULL) AS fecha_defuncion_texto'
+            )
+        );
+    }
+
     public function sepultados()
     {
         return $this->hasMany(

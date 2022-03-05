@@ -15,4 +15,15 @@ class CfdisOperaciones extends Model
                 '*'
             );
     }
+
+
+    public function operacionFactura()
+    {
+        return $this->hasMany('App\Operaciones', 'id', 'operaciones_id')
+            ->select(
+                'id',
+                'empresa_operaciones_id',
+                'servicios_funerarios_id'     
+            );
+    }
 }
