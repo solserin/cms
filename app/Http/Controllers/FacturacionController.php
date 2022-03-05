@@ -1648,7 +1648,7 @@ class FacturacionController extends ApiController
                         return $this->errorResponse('El CFDI ' . $checando_cfdi['uuid'] . ' no se encuentra en la base de datos del SAT.', 409);
                     }
                 }
-                return $checando_cfdi;
+                //return $checando_cfdi;
             }
         }
 
@@ -1923,7 +1923,7 @@ class FacturacionController extends ApiController
                     return $this->errorResponse('El CFDI ' . $checando_cfdi['uuid'] . ' no se encuentra en la base de datos del SAT.', 409);
                 }
             }
-            return $checando_cfdi;
+            //return $checando_cfdi;
         }
         $myRequest = new Request();
         $myRequest->request->add(['test' => 'test']);
