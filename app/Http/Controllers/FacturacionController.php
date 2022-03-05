@@ -2027,7 +2027,7 @@ class FacturacionController extends ApiController
                     return $this->errorResponse('El CFDI ' . $checando_cfdi['uuid'] . ' no se encuentra en la base de datos del SAT.', 409);
                 }
             }
-            return $checando_cfdi;
+           // return $checando_cfdi;
         }
 
         $zip_file = 'cdfi.zip'; // Name of our archive to download
@@ -2181,7 +2181,7 @@ class FacturacionController extends ApiController
                     return $this->errorResponse('El CFDI ' . $checando_cfdi['uuid'] . ' no se encuentra en la base de datos del SAT.', 409);
                 }
             }
-            return $checando_cfdi;
+            //return $checando_cfdi;
         }
 
         $cfdi = Cfdis::where('id', $request->id)->first();
@@ -2318,7 +2318,7 @@ class FacturacionController extends ApiController
                     return $this->errorResponse('El CFDI ' . $checando_cfdi['uuid'] . ' no se encuentra en la base de datos del SAT.', 409);
                 }
             }
-            return $checando_cfdi;
+            //return $checando_cfdi;
         } else {
             /**los datos se pasan vacios pues no hay datos rales que mostrar */
             $checando_cfdi['codigoEstatus']      = 'S: Comprobante obtenido satisfactoriamente';
