@@ -449,7 +449,7 @@ export default {
                     link.remove();
                     this.$vs.loading.close();
                     this.$vs.notify({
-                        title: "Descargar CFDI 3.3",
+                        title: "Descargar CFDI 4.0",
                         text: "Se ha descargado el CFDI correctamente.",
                         iconPack: "feather",
                         icon: "icon-alert-circle",
@@ -534,12 +534,11 @@ export default {
                  ...this.cfdi,
                  ...motivos
                };
-              console.log(datos_cfdi);
                 let res = await facturacion.cancelar_cfdi_folio(datos_cfdi);
                 if (res.data >= 1) {
                     //success
                     this.$vs.notify({
-                        title: "Cancelar CFDI 3.3",
+                        title: "Cancelar CFDI 4.0",
                         text: "Se ha cancelado el CFDI correctamente.",
                         iconPack: "feather",
                         icon: "icon-alert-circle",
@@ -550,7 +549,7 @@ export default {
                     //this.cerrarVentana();
                 } else {
                     this.$vs.notify({
-                        title: "Cancelar CFDI 3.3",
+                        title: "Cancelar CFDI 4.0",
                         text: "Error al cancelar el CFDI, por favor reintente.",
                         iconPack: "feather",
                         icon: "icon-alert-circle",
@@ -577,7 +576,7 @@ export default {
                         //checo si existe cada error
                         this.errores = err.response.data.error;
                         this.$vs.notify({
-                            title: "Timbrar CFDI 3.3",
+                            title: "Timbrar CFDI 4.0",
                             text:
                                 "Verifique los errores encontrados en los datos.",
                             iconPack: "feather",
@@ -587,7 +586,7 @@ export default {
                         });
                     } else if (err.response.status == 409) {
                         this.$vs.notify({
-                            title: "Timbrar CFDI 3.3",
+                            title: "Timbrar CFDI 4.0",
                             text: err.response.data.error,
                             iconPack: "feather",
                             icon: "icon-alert-circle",

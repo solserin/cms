@@ -148,7 +148,12 @@ class ClientesController extends ApiController
         }
 
         if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '' || trim($request->cp) != '') {
-            $validaciones['rfc']              = 'required|unique:clientes,rfc';
+            if(trim($request->rfc)!='XAXX010101000' && trim($request->rfc)!='XEX010101000'){
+                 $validaciones['rfc']              = 'required|unique:clientes,rfc';
+            }else{
+                $validaciones['rfc']              = 'required';
+            }
+           
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
             $validaciones['cp'] = 'required';
@@ -229,10 +234,14 @@ class ClientesController extends ApiController
         }
 
         if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '' || trim($request->cp) != '') {
-            $validaciones['rfc'] = [
-                'required',
-                Rule::unique('clientes', 'rfc')->ignore($request->id_cliente_modificar),
-            ];
+            if(trim($request->rfc)!='XAXX010101000' && trim($request->rfc)!='XEX010101000'){
+                $validaciones['rfc'] = [
+                    'required',
+                    Rule::unique('clientes', 'rfc')->ignore($request->id_cliente_modificar),
+                ];
+           }else{
+               $validaciones['rfc']              = 'required';
+           }
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
             $validaciones['cp'] = 'required';

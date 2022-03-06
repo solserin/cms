@@ -311,10 +311,6 @@ export default {
         (async () => {
           await this.get_solicitudes_servicios_id();
           if (this.operacion_id != "") {
-            console.log(
-              "🚀 ~ file: ReportesServicio.vue ~ line 314 ~ this.operacion_id",
-              this.operacion_id
-            );
             this.solicitudes_id = this.operacion_id;
             await this.consultar_pagos_operacion_id();
           }

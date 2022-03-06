@@ -498,7 +498,13 @@ class FacturacionController extends ApiController
         }
         if($request->tipo_rfc['value'] == 1){
              //es DomicilioFiscalReceptor del cliente, tomado del catalogo de clientes
-            //$DomicilioFiscalReceptor=$request->direccion_fiscal_cp;
+             if(ENV('APP_ENV') != 'local'){
+                //checo si es tipo pub en gral
+                if($request->rfc!=trim('XAXX010101000') && $request->rfc!=trim('XEXX010101000')){
+                    //pub en gral
+                    $DomicilioFiscalReceptor=$request->direccion_fiscal_cp;
+                }
+             }
         }
         /**creando nodos de EMISOR Y RECEPTOR Y AGREGANDO LOC CONCEPTOS QUE VAN A APLICAR A ESTE CFDI*/
         $array = [
@@ -1357,15 +1363,25 @@ class FacturacionController extends ApiController
     public function leer_xml($folio_xml = '')
     {
         $id_folio_cfdi = 0;
+        $cfdi =null;
         //EMPIEZO A LEER LA INFORMACION DEL CFDI
         if (trim($folio_xml) == '') {
             return $this->errorResponse('Debe especificar una ruta del archivo .xml', 409);
         } else {
-/* carga archivo xml */
-            $storage_disk_xmls = ENV('STORAGE_DISK_XML');
             $id_folio_cfdi     = $folio_xml;
+            $storage_disk_xmls = ENV('STORAGE_DISK_XML');
+            $cfdi = Cfdis::with('timbro')->with('cliente')->where('id', '=', $id_folio_cfdi)->first();
+            if(isset($cfdi->xml_timbrado)){
+                //lo creo
+               Storage::disk($storage_disk_xmls)->put($folio_xml . '.xml', ($cfdi->xml_timbrado));
+            }
+            /* carga archivo xml */
             $folio_xml         = Storage::disk($storage_disk_xmls)->path($folio_xml . '.xml');
         }
+
+        /**se trae la informacion del cfdi de la bd */
+       
+        
         if (File::exists($folio_xml)) {
             $xml = simplexml_load_file($folio_xml);
         } else {
@@ -1373,7 +1389,7 @@ class FacturacionController extends ApiController
         }
 
         /**se trae la informacion del cfdi de la bd */
-        $cfdi = Cfdis::with('timbro')->with('cliente')->where('id', '=', $id_folio_cfdi)->first();
+        //$cfdi = Cfdis::with('timbro')->with('cliente')->where('id', '=', $id_folio_cfdi)->first();
 
         if (is_null($cfdi)) {
             return $this->errorResponse('El xml que indicó no existe.', 409);
@@ -1467,7 +1483,7 @@ class FacturacionController extends ApiController
         $complemento                     = $xml->xpath('//tfd:TimbreFiscalDigital')[0];
         $ultimos_ocho_digitos_sello_cfdi = $newstring = substr((string) $comprobante['Sello'], -8);
 
-        $cadena_codigo_qr = "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=" . (string) $complemento['UUID'] . "&tt=" . (string) $comprobante['Total'] . "&re=" . (string) $emisor['Rfc'] . "&rr=" . (string) $emisor['Rfc'] . "&fe=" . $ultimos_ocho_digitos_sello_cfdi;
+        $cadena_codigo_qr = "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=" . (string) $complemento['UUID'] . "&tt=" . (string) $comprobante['Total'] . "&re=" . (string) $emisor['Rfc'] . "&rr=" . (string) $receptor['Rfc'] . "&fe=" . $ultimos_ocho_digitos_sello_cfdi;
         $codigo_qr        = DNS2D::getBarcodeHTML($cadena_codigo_qr, 'QRCODE', 3, 3);
 
         /**DATOS DEL NODO DE PAGOS */
@@ -1537,7 +1553,7 @@ class FacturacionController extends ApiController
                 'total_letra'         => numeros_a_letras($cfdi['sat_tipo_comprobante_id'] != 5 ? (string) $comprobante['Total'] : (string) $pago['Monto']),
                 'cliente_id'          => $cfdi['cliente']['id'],
                 'cliente_nombre'      => $cfdi['cliente']['nombre'],
-                'cliente_direccion'   => $cfdi['cliente']['direccion'],
+                'cliente_direccion'   => trim($cfdi['cliente']['direccion_fiscal'])!=''?$cfdi['cliente']['direccion_fiscal']:'N/A',
                 'cliente_email'       => $cfdi['cliente']['email'],
                 'cliente_telefono'    => $cfdi['cliente']['celular'],
                 'timbro_nombre'       => $cfdi['timbro']['nombre'],
@@ -1640,8 +1656,9 @@ class FacturacionController extends ApiController
         $status = $request->status;
 
         if ($numero_control > 0) {
+            /*
             if (ENV('APP_ENV') != 'local') {
-                /**actualizamos cfdis en caso de que este en produccion */
+                //actualizamos cfdis en caso de que este en produccion
                 $checando_cfdi = $this->get_cfdi_status_sat($numero_control);
                 if (isset($checando_cfdi['estado'])) {
                     if ($checando_cfdi['estado'] == 'No Encontrado') {
@@ -1650,6 +1667,7 @@ class FacturacionController extends ApiController
                 }
                 //return $checando_cfdi;
             }
+            */
         }
 
         $resultado_query = Cfdis::

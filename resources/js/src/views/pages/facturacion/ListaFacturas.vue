@@ -364,7 +364,6 @@ export default {
                 time: 8000,
                 position: "bottom-right"
             });
-            //console.log(e);
         },
         openActions(folio) {
             this.id_cfdi = folio;

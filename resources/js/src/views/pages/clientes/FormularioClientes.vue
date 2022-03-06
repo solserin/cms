@@ -281,6 +281,17 @@
                 </div>
                 <div class="form-group-content">
                     <div class="flex flex-wrap">
+                         <div class="w-full  px-2 text-danger">
+                           COPIAR RFC PÚBLICO EN GRAL.
+                                <img
+                                    width="16"
+                                    class="cursor-pointer"
+                                    src="@assets/images/copytoclipboard.svg"
+                                    v-clipboard:copy="'XAXX010101000'"
+                                    v-clipboard:success="onCopy"
+                                    v-clipboard:error="onError"
+                                />
+                         </div>
                         <div class="w-full md:w-4/12  px-2 input-text">
                             <label class="">
                                 RFC
@@ -346,7 +357,7 @@
                                 :clearable="false"
                                 :dir="$vs.rtl ? 'rtl' : 'ltr'"
                                 v-model="form.regimen"
-                                class="mb-4 sm:mb-0 pb-1 pt-1"
+                                class="mb-4 sm:mb-0"
                                 name="regimen"
                             >
                                 <div slot="no-options">Seleccione 1</div>
@@ -775,10 +786,28 @@ export default {
         };
     },
     methods: {
-         copy() {
-      this.$refs.clone.focus();
-      document.execCommand('copy');
-    },
+         onCopy: function(e) {
+            this.$vs.notify({
+                title: "Seleccionar CFDI",
+                text: "RFC Copiado " + e.text,
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "success",
+                time: 2000,
+                position: "bottom-right"
+            });
+        },
+        onError: function(e) {
+            this.$vs.notify({
+                title: "Seleccionar RFC",
+                text: "Error al copiar, por favor reintente.",
+                iconPack: "feather",
+                icon: "icon-alert-circle",
+                color: "danger",
+                time: 4000,
+                position: "bottom-right"
+            });
+        },
         async get_cliente_by_id() {
             /**trae la informacion de el cliente por id */
             this.$vs.loading();
@@ -891,10 +920,6 @@ export default {
             await sat
                 .getRegimenes()
                 .then(res => {
-                    console.log(
-                        "🚀 ~ file: FormularioClientes.vue ~ line 868 ~ get_regimenes ~ res",
-                        res
-                    );
                     //le agrego las nacionalidades
                     this.regimenes = [];
                     this.regimenes.push({ label: "Seleccione 1", value: "" });
