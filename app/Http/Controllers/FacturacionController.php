@@ -282,7 +282,7 @@ class FacturacionController extends ApiController
                     'clave_sat'             => ['value' => 5, 'label' => 'Productos de entierro o tumbas (48131500)'],
                     'unidad_sat'            => ['value' => 2, 'label' => 'Pieza (H87)'],
                     "cantidad"              => 1,
-                    "descripcion"           => 'Propiedad en cementerio (Ubicación ' . $cementerio_controller->ubicacion_texto($operacion['venta_terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . ')',
+                    "descripcion"           => 'Espacio en cementerio (Ubicación ' . $cementerio_controller->ubicacion_texto($operacion['venta_terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . ')',
                     'descuento_b'           => $operacion['descuento'] > 0 ? ['value' => 1, 'label' => 'SI'] : ['value' => 0, 'label' => 'NO'],
                     'modifica_b'            => 1,
                     'concepto_operacion_id' => $operacion['operacion_id'],
