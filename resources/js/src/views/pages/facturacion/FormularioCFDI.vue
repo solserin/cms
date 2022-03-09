@@ -1352,15 +1352,9 @@
                         </vs-td>
                         <vs-td>
                           <div class="capitalize">
-                            <span v-if="data[indextr].descuento_b.value == 0">
+                            <span >
                               {{
                                 data[indextr].precio_neto
-                                  | numFormat("0,000.00")
-                              }}
-                            </span>
-                            <span v-else>
-                              {{
-                                data[indextr].precio_descuento
                                   | numFormat("0,000.00")
                               }}
                             </span>
