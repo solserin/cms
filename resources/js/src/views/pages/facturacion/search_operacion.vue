@@ -126,7 +126,7 @@
             noDataText="0 Resultados"
           >
             <template slot="header">
-              <h3>Lista de Artículos y Servicios por Lotes</h3>
+              <h3>Lista de Operaciones a Facturar</h3>
             </template>
             <template slot="thead">
               <vs-th>#</vs-th>
@@ -146,6 +146,11 @@
                     class="font-semibold"
                     v-if="data[indextr].empresa_operaciones_id == 1"
                     >{{ data[indextr].ventas_terrenos_id }}</span
+                  >
+                  <span
+                    class="font-semibold"
+                    v-else-if="data[indextr].empresa_operaciones_id == 2"
+                    >Venta Cementerio > {{ data[indextr].ventas_terrenos_id }}</span
                   >
                   <span
                     class="font-semibold"

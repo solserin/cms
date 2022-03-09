@@ -2419,6 +2419,8 @@ export default {
         let clave_operacion_por_tipo = 0;
         if (datos.empresa_operaciones_id == 1) {
           clave_operacion_por_tipo = datos.ventas_terrenos_id;
+        } else if (datos.empresa_operaciones_id == 2) {
+          clave_operacion_por_tipo = datos.cuotas_cementerio_id;
         } else if (datos.empresa_operaciones_id == 3) {
           clave_operacion_por_tipo = datos.servicios_funerarios_id;
         } else if (datos.empresa_operaciones_id == 4) {

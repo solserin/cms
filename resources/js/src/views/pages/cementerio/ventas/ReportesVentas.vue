@@ -242,7 +242,7 @@
                     programados.status_pago == 0 ? 'text-danger-900' : '',
                   ]"
                 >
-                  <span class="">{{ programados.num_pago }}</span>
+                  <span class="">{{ index_programado + 1 }}</span>
                 </vs-td>
                 <vs-td
                   :class="[

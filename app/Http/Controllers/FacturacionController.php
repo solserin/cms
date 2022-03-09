@@ -120,7 +120,7 @@ class FacturacionController extends ApiController
             [
                 'id'    => 2,
                 'tipo'  => 'Mantenimiento en cementerio',
-                'ver_b' => 0,
+                'ver_b' => 1,
             ],
             [
                 'id'    => 3,
@@ -180,6 +180,7 @@ class FacturacionController extends ApiController
             'empresa_operaciones_id',
             'ventas_terrenos_id',
             'servicios_funerarios_id',
+            'cuotas_cementerio_id',
             'ventas_planes_id',
             DB::raw(
                 '(NULL) AS fecha_operacion_texto'
@@ -213,11 +214,16 @@ class FacturacionController extends ApiController
             })
             ->where(function ($q) use ($numero_control) {
                 if ($numero_control > 0) {
-                    $q->where('ventas_terrenos_id', '=', $numero_control);
-                    $q->orWhere('ventas_planes_id', '=', $numero_control);
-                    $q->orWhere('servicios_funerarios_id', '=', $numero_control);
+                        //cuota de mantenimiento
+                        $q->where('ventas_terrenos_id', '=', $numero_control);
+                        $q->orWhere('ventas_planes_id', '=', $numero_control);
+                        $q->orWhere('servicios_funerarios_id', '=', $numero_control);
                 }
 
+                if($numero_control==2){
+                    //si es de pago de cuota de mantenimiento traigo solo los pagados
+                    $q->where('ventas_terrenos_id', '=', $numero_control);
+                }
             })
             ->orderBy('operaciones.fecha_operacion', 'desc')
             ->get();
@@ -283,6 +289,21 @@ class FacturacionController extends ApiController
                     'unidad_sat'            => ['value' => 2, 'label' => 'Pieza (H87)'],
                     "cantidad"              => 1,
                     "descripcion"           => 'Espacio en cementerio (Ubicación ' . $cementerio_controller->ubicacion_texto($operacion['venta_terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . ')',
+                    'descuento_b'           => $operacion['descuento'] > 0 ? ['value' => 1, 'label' => 'SI'] : ['value' => 0, 'label' => 'NO'],
+                    'modifica_b'            => 0,
+                    'concepto_operacion_id' => $operacion['operacion_id'],
+                    'precio_neto'           => $operacion['descuento'] > 0 ? round((($operacion['subtotal']) * (1 + ($operacion['tasa_iva'] / 100))), 2, PHP_ROUND_HALF_UP) : $operacion['total'],
+                    'precio_descuento'      => $operacion['descuento'] > 0 ? $operacion['total'] : 0,
+                ]);
+
+            } 
+            elseif ($operacion['empresa_operaciones_id'] == 2) {
+                /**Mantenimiento de terrenos */
+                array_push($conceptos, [
+                    'clave_sat'              => ['value' => 2, 'label' => 'Servicios funerarios y asociados (85171500)'],
+                    'unidad_sat'             => ['value' => 1, 'label' => 'Unidad de servicio (E48)'],
+                    "cantidad"              => 1,
+                    "descripcion"           => 'Cuota de mantenimiento (Ubicación ' . $cementerio_controller->ubicacion_texto($operacion['venta_terreno']['ubicacion'], $datos_cementerio)['ubicacion_texto'] . ') Periodo ' . fecha_abr($operacion['fecha_operacion']),
                     'descuento_b'           => $operacion['descuento'] > 0 ? ['value' => 1, 'label' => 'SI'] : ['value' => 0, 'label' => 'NO'],
                     'modifica_b'            => 1,
                     'concepto_operacion_id' => $operacion['operacion_id'],
