@@ -1731,6 +1731,7 @@ class FacturacionController extends ApiController
             'sat_usos_cfdi_id',
             'fecha_timbrado',
             'status',
+            'nota',
             'tasa_iva',
             DB::raw(
                 '(NULL) as tipo_comprobante_texto'

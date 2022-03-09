@@ -162,6 +162,19 @@
           <vs-td :data="data[indextr].id">
             <div class="flex justify-center">
               <img
+                v-if="data[indextr].nota"
+                class="cursor-pointer img-btn-20 mr-6"
+                src="@assets/images/notepad_ver.svg"
+                title="Notas"
+                @click="verNota(data[indextr].nota.trim(),data[indextr].venta_plan.nombre_original + '/ '+data[indextr].nombre)"
+              />
+               <img
+                v-else
+                class="cursor-pointer img-btn-20 mr-6"
+                src="@assets/images/notepad_ver_no.svg"
+                title="Notas"
+              />
+              <img
                 class="cursor-pointer img-btn-20 mx-3"
                 src="@assets/images/folder.svg"
                 title="Expediente"
@@ -237,6 +250,14 @@
       :show="openPlanesVenta"
       @closePlanesFuneraria="openPlanesVenta = false"
     ></PlanesVenta>
+
+         <VerNotas
+      :show="openVerNotas"
+      :nota="nota_contenido"
+      :title="titulo_nota"
+      @closeVerNotas="openVerNotas = false"
+    ></VerNotas>
+
   </div>
 </template>
 
@@ -248,7 +269,7 @@ import FormularioVentas from "../ventas/FormularioVentas";
 
 import ReportesVentas from "../ventas/ReportesVentas";
 import CancelarVenta from "../ventas/CancelarVenta";
-
+import VerNotas from "@pages/VerNotas";
 //componente de password
 import Password from "@pages/confirmar_password";
 
@@ -265,6 +286,7 @@ export default {
     ReportesVentas,
     CancelarVenta,
     PlanesVenta,
+    VerNotas
   },
   watch: {
     actual: function (newValue, oldValue) {
@@ -285,6 +307,9 @@ export default {
   },
   data() {
     return {
+        openVerNotas: false,
+      nota_contenido:'',
+      titulo_nota:'',
       verAcuse: false,
       openPlanesVenta: false,
       openCancelar: false,
@@ -356,6 +381,11 @@ export default {
     };
   },
   methods: {
+    verNota(nota,title) {
+      this.openVerNotas = true;
+      this.nota_contenido=nota;
+      this.titulo_nota=title;
+    },
     reset(card) {
       card.removeRefreshAnimation(500);
       this.filtroEspecifico = { label: "Núm. Solicitud", value: "1" };

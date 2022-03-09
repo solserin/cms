@@ -286,7 +286,6 @@
                         </tbody>
                     </vs-table>
                 </div>
-                {{uuid_a_sustituir_cancelar}}
             </div>
         </vs-popup>
         <Password

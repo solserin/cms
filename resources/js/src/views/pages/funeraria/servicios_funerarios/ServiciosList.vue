@@ -157,6 +157,19 @@
           <vs-td :data="data[indextr].id">
             <div class="flex justify-center">
               <img
+                v-if="data[indextr].nota_servicio"
+                class="cursor-pointer img-btn-20 mr-6"
+                src="@assets/images/notepad_ver.svg"
+                title="Notas"
+                @click="verNota(data[indextr].nota_servicio.trim(), data[indextr].tipo_solicitud_texto + '/ '+data[indextr].nombre_afectado)"
+              />
+               <img
+                v-else
+                class="cursor-pointer img-btn-20 mr-6"
+                src="@assets/images/notepad_ver_no.svg"
+                title="Notas"
+              />
+              <img
                 v-show="data[indextr].permite_exhumar_b"
                 class="cursor-pointer img-btn-20 mx-3 hidden"
                 src="@assets/images/shovel.svg"
@@ -279,6 +292,13 @@
       :show="openPlanesVenta"
       @closePlanesFuneraria="openPlanesVenta = false"
     ></PlanesVenta>
+
+      <VerNotas
+      :show="openVerNotas"
+      :nota="nota_contenido"
+      :title="titulo_nota"
+      @closeVerNotas="openVerNotas = false"
+    ></VerNotas>
   </div>
 </template>
 
@@ -294,7 +314,7 @@ import CancelarVenta from "../servicios_funerarios/CancelarVenta";
 
 //componente de password
 import Password from "@pages/confirmar_password";
-
+import VerNotas from "@pages/VerNotas";
 import usuarios from "@services/Usuarios";
 /**VARIABLES GLOBALES */
 import { mostrarOptions } from "@/VariablesGlobales";
@@ -309,6 +329,7 @@ export default {
     CancelarVenta,
     PlanesVenta,
     FormularioSolicitud,
+    VerNotas
   },
   computed: {},
   watch: {
@@ -330,6 +351,9 @@ export default {
   },
   data() {
     return {
+        openVerNotas: false,
+      nota_contenido:'',
+      titulo_nota:'',
       verAcuse: false,
       openPlanesVenta: false,
       openCancelar: false,
@@ -394,6 +418,11 @@ export default {
     };
   },
   methods: {
+      verNota(nota,title) {
+      this.openVerNotas = true;
+      this.nota_contenido=nota;
+      this.titulo_nota=title;
+    },
     verModificarSolicitud(datos) {
       if (datos.tipo_solicitud_id == 2) {
         return false;
