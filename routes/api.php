@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 /**ruta para obtener tokens */
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 /**rutas de modulo en proceso */
-Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'FacturacionController@get_operaciones');
+
 
 /**rutas publicas_ entran sin token */
 Route::get('funeraria/get_planes/{solo_a_futuro?}/{id_plan?}', 'FunerariaController@get_planes');
@@ -259,7 +259,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('facturacion/get_usos_cfdi', 'FacturacionController@get_usos_cfdi');
     Route::get('facturacion/get_sat_paises', 'FacturacionController@get_sat_paises');
     Route::get('facturacion/get_empresa_tipo_operaciones', 'FacturacionController@get_empresa_tipo_operaciones');
-   
+    Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'FacturacionController@get_operaciones');
     Route::get('facturacion/get_cfdi_from_xml/{folio?}', 'FacturacionController@leer_xml');
     Route::get('facturacion/get_cfdis_timbrados/{folio_id?}/{paginated?}/{metodo_pago_id?}/{tipo_comprobante_id?}', 'FacturacionController@get_cfdis_timbrados');
     Route::get('facturacion/get_cfdi_pdf/{folio_id?}', 'FacturacionController@get_cfdi_pdf');
