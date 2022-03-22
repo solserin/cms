@@ -262,18 +262,20 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('facturacion/get_operaciones/{id_operacion_local?}/{paginated?}/', 'FacturacionController@get_operaciones');
     Route::get('facturacion/get_cfdi_from_xml/{folio?}', 'FacturacionController@leer_xml');
     Route::get('facturacion/get_cfdis_timbrados/{folio_id?}/{paginated?}/{metodo_pago_id?}/{tipo_comprobante_id?}', 'FacturacionController@get_cfdis_timbrados');
-    Route::get('facturacion/get_cfdi_pdf/{folio_id?}', 'FacturacionController@get_cfdi_pdf');
     Route::get('facturacion/get_cfdi_download/{folio_id?}', 'FacturacionController@get_cfdi_download');
     Route::get('facturacion/consultar_cfdi_folio/{folio_id?}', 'FacturacionController@consultar_cfdi_folio');
     Route::get('facturacion/get_acuse_cancelacion_pdf/{folio_id?}', 'FacturacionController@get_acuse_cancelacion_pdf');
     Route::get('facturacion/get_cfdi_status_sat/{folio_id?}', 'FacturacionController@get_cfdi_status_sat');
     /**rutas de timbrado de cfdi */
-    Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi');
-    Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio');
-
+    Route::get('facturacion/get_cfdi_pdf/{folio_id?}', 'FacturacionController@get_cfdi_pdf')->middleware(['permiso:21,62']);
+    Route::post('facturacion/timbrar_cfdi', 'FacturacionController@timbrar_cfdi')->middleware(['permiso:21,60']);
+    Route::post('facturacion/cancelar_cfdi_folio', 'FacturacionController@cancelar_cfdi_folio')->middleware(['permiso:21,61']);
     /**rutas de reportes */
     Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
 });
+
+
+
 
 Route::get('inventarios/cementerio/documento_ubicacion_terreno', 'CementerioController@documento_ubicacion_terreno');
 
