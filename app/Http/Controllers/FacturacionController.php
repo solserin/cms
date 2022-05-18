@@ -167,30 +167,30 @@ class FacturacionController extends ApiController
         $tipo_operacion_id = $request->tipo_operacion_id;
 
         $resultado_query = Operaciones::select(
-                'empresa_operaciones_id',
-                'subtotal',
-                'tasa_iva',
-                'descuento',
-                'total',
-                'operaciones.id as operacion_id',
-                'clientes.id as cliente_id',
-                'clientes.nombre',
-                'fecha_operacion',
-                'empresa_operaciones_id',
-                'ventas_terrenos_id',
-                'servicios_funerarios_id',
-                'cuotas_cementerio_id',
-                'ventas_planes_id',
-                DB::raw(
-                    '(NULL) AS fecha_operacion_texto'
-                ),
-                DB::raw(
-                    '(NULL) AS tipo_operacion_texto'
-                ),
-                DB::raw(
-                    '(NULL) AS conceptos'
-                )
+            'empresa_operaciones_id',
+            'subtotal',
+            'tasa_iva',
+            'descuento',
+            'total',
+            'operaciones.id as operacion_id',
+            'clientes.id as cliente_id',
+            'clientes.nombre',
+            'fecha_operacion',
+            'empresa_operaciones_id',
+            'ventas_terrenos_id',
+            'servicios_funerarios_id',
+            'cuotas_cementerio_id',
+            'ventas_planes_id',
+            DB::raw(
+                '(NULL) AS fecha_operacion_texto'
+            ),
+            DB::raw(
+                '(NULL) AS tipo_operacion_texto'
+            ),
+            DB::raw(
+                '(NULL) AS conceptos'
             )
+        )
             ->with('movimiento_operacion_inventario.articulos_operacion:movimientos_inventario_id,cantidad,plan_b,descuento_b,facturable_b,costo_neto_normal,costo_neto_descuento,articulos_id,sat_productos_servicios.id as sat_producto_servicio_id,sat_productos_servicios.clave as sat_producto_servicio_clave,sat_productos_servicios.descripcion as sat_producto_servicio_descripcion,articulos.descripcion as articulo_descripcion,sat_unidades.id as sat_unidad_id,sat_unidades.unidad as sat_unidad,sat_unidades.clave as sat_unidad_clave')
             ->where('operaciones.status', '<>', 0)
             ->where(function ($q) use ($tipo_operacion_id) {
@@ -689,6 +689,7 @@ class FacturacionController extends ApiController
             'metodo_pago.value'        => 'required',
             'forma_pago.value'         => 'required',
             'fecha_pago'               => '',
+            'fecha_cfdi'               => '',
             'uso_cfdi.value'           => 'required',
             'tipo_relacion.value'      => '',
             'cfdis_relacionados'       => '',
@@ -1680,71 +1681,71 @@ class FacturacionController extends ApiController
         }
 
         $resultado_query = Cfdis::select(
-                'id',
-                'uuid',
-                'clientes_id',
-                DB::raw(
-                    '(NULL) as cliente_nombre'
-                ),
-                DB::raw(
-                    '(NULL) as cliente_email'
-                ),
-                'serie',
-                'fecha',
-                'sat_formas_pago_id',
-                'subtotal',
-                'descuento',
-                'total',
-                DB::raw(
-                    '(NULL) as total_pagado'
-                ),
-                DB::raw(
-                    '(NULL) as total_egresos'
-                ),
-                DB::raw(
-                    '(NULL) as saldo_cfdi'
-                ),
-                DB::raw(
-                    '(NULL) as maximo_a_egresar'
-                ),
-                'sat_tipo_comprobante_id',
-                'sat_metodos_pago_id',
-                'rfc_emisor',
-                'nombre_emisor',
-                'sat_pais_id',
-                'rfc_receptor',
-                'nombre_receptor',
-                'residencia_fiscal_receptor',
-                'sat_usos_cfdi_id',
-                'fecha_timbrado',
-                'status',
-                'nota',
-                'tasa_iva',
-                DB::raw(
-                    '(NULL) as tipo_comprobante_texto'
-                ),
-                DB::raw(
-                    '(NULL) as sat_uso_cfdi_texto'
-                ),
-                DB::raw(
-                    '(NULL) as sat_formas_pago_texto'
-                ),
-                DB::raw(
-                    '(NULL) as sat_metodos_pago_texto'
-                ),
-                DB::raw(
-                    '(NULL) as sat_pais_texto'
-                ),
-                DB::raw(
-                    '(NULL) as fecha_timbrado_texto'
-                ),
-                DB::raw(
-                    '(NULL) as situacion_pago_texto'
-                ),
-                DB::raw(
-                    '(NULL) as status_texto'
-                )
+            'id',
+            'uuid',
+            'clientes_id',
+            DB::raw(
+                '(NULL) as cliente_nombre'
+            ),
+            DB::raw(
+                '(NULL) as cliente_email'
+            ),
+            'serie',
+            'fecha',
+            'sat_formas_pago_id',
+            'subtotal',
+            'descuento',
+            'total',
+            DB::raw(
+                '(NULL) as total_pagado'
+            ),
+            DB::raw(
+                '(NULL) as total_egresos'
+            ),
+            DB::raw(
+                '(NULL) as saldo_cfdi'
+            ),
+            DB::raw(
+                '(NULL) as maximo_a_egresar'
+            ),
+            'sat_tipo_comprobante_id',
+            'sat_metodos_pago_id',
+            'rfc_emisor',
+            'nombre_emisor',
+            'sat_pais_id',
+            'rfc_receptor',
+            'nombre_receptor',
+            'residencia_fiscal_receptor',
+            'sat_usos_cfdi_id',
+            'fecha_timbrado',
+            'status',
+            'nota',
+            'tasa_iva',
+            DB::raw(
+                '(NULL) as tipo_comprobante_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_uso_cfdi_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_formas_pago_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_metodos_pago_texto'
+            ),
+            DB::raw(
+                '(NULL) as sat_pais_texto'
+            ),
+            DB::raw(
+                '(NULL) as fecha_timbrado_texto'
+            ),
+            DB::raw(
+                '(NULL) as situacion_pago_texto'
+            ),
+            DB::raw(
+                '(NULL) as status_texto'
             )
+        )
             ->with('servicios_funerarios.operacionFactura.servicio_funerario')
             ->with('pagos_asociados')
             ->with('egresos_asociados')
@@ -1956,19 +1957,19 @@ class FacturacionController extends ApiController
             $email    = false;
             $email_to = 'hector@gmail.com';
         }
+        //amq
 
-        /*
         if (ENV('APP_ENV') != 'local') {
             //actualizamos cfdis en caso de que este en produccion
             $checando_cfdi = $this->get_cfdi_status_sat($folio_id);
+            return $checando_cfdi;
             if (isset($checando_cfdi['estado'])) {
                 if ($checando_cfdi['estado'] == 'No Encontrado') {
                     return $this->errorResponse('El CFDI ' . $checando_cfdi['uuid'] . ' no se encuentra en la base de datos del SAT.', 409);
                 }
             }
-            //return $checando_cfdi;
         }
-        */
+
         $myRequest = new Request();
         $myRequest->request->add(['test' => 'test']);
         $cfdi = $this->get_cfdis_timbrados($myRequest, $folio_id)[0];
@@ -2150,8 +2151,10 @@ class FacturacionController extends ApiController
         $autentica->password = $password;
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar);
-        //return $client->__getFunctions();
+        return $client->__getFunctions();
         $result              = $client->ConsultarEstatusCFDI_2($parametros);
+        //amq
+        dd($result);
         /**determinando status segun el resultado de la respuesta del sat */
         /**
          * codigoEstatus
