@@ -2203,6 +2203,7 @@ class FacturacionController extends ApiController
 
     public function cancelar_cfdi_folio(Request $request)
     {
+
         $validaciones = [
             /**validacion de datos para el cfdi */
             'id' => 'required|integer|min:1',
@@ -2249,18 +2250,20 @@ class FacturacionController extends ApiController
             /**datos no encontrados */
             return $this->errorResponse('Error al cargar los datos del xml.', 409);
         }
-
         date_default_timezone_set("America/Mazatlan");
         $fecha_cancelacion = date("Y-m-d H:i:s");
         /**datos para la consulta */
+        //aqui trabajo
         $parametros            = new Parametros();
         $parametros->rfcEmisor = trim($cfdi->rfc_emisor);
         $parametros->fecha     = str_replace(" ", "T", $fecha_cancelacion);
-        $parametros->folios    = $cfdi['uuid'];
+        //$parametros->folios =  array($cfdi['uuid']);
         $parametros->motivo = $request->motivo;
+
         $parametros->rfc_receptor = trim($cfdi->rfc_receptor);
         $parametros->total        = $cfdi->total;
         $parametros->uuid         = $cfdi->uuid;
+        //dd($parametros);
         $parametros->folioSustitucion = $request->motivo != '03' ? $request->uuid_a_sustituir_cancelar : '';
         if ($request->motivo == '03') {
             //unset folioSustitucion
@@ -2276,8 +2279,6 @@ class FacturacionController extends ApiController
             $root_path_key        = ENV('ROOT_KEY_DEV');
             $credentials_password = ENV('PASSWORD_LLAVES');
             $url_cancelar         = ENV('WEB_SERVICE_CANCELACION_DEVELOP');
-            $WSDL_CANCELAR_DEV = ENV('WSDL_CANCELAR_DEV');
-            $WSDL_CANCELAR_PRODUCTION = ENV('WSDL_CANCELAR_PRODUCTION');
         } else {
             $facturacion_datos_sistema = Facturacion::First();
             /**data from DB */
@@ -2296,7 +2297,7 @@ class FacturacionController extends ApiController
         }
 
         $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
-        //aqui trabajo
+
         $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
         $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path);
         $parametros->publicKey  = file_get_contents($certFile);
@@ -2307,7 +2308,9 @@ class FacturacionController extends ApiController
         $autentica->password = $password;
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar, array('trace' => 1));
+        //return $client->__getFunctions();
         $result              = $client->Cancelacion40_2($parametros);
+        dd($result);
         //return $this->errorResponse( $result, 409);
         // echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
         //return $result;
@@ -2450,4 +2453,12 @@ class Parametros
 {
     public $accesos;
     public $comprobante;
+}
+
+class Folios
+{
+    public $uuid = '';
+    public $motivo = '';
+    public $folio = '';
+    //Es un listado de objetos tipo folio donde se indica el motivo, folio de sustitucion y el uuid a cancelar.
 }
