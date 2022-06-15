@@ -412,12 +412,6 @@
             “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
                 class="uppercase bold texto-sm">cinco</span> horas de anticipación.
         </p>
-        <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
-            “La Empresa” ofrecerá el servicio de inhumación amparado por este convenio de <span
-                class="uppercase bold texto-sm">lunes a domingo de, {{ $empresa->cementerio->hora_apertura }} a
-                {{ $empresa->cementerio->hora_cierre }} horas</span>.
-        </p>
         @else
         <p class="texto-base justificar line-base">
             <span class="uppercase bold texto-sm underline pr-2">Quinta.- </span>
@@ -432,15 +426,7 @@
             “El Cliente” se compromete a solicitar dicho servicio con un mínimo de <span
                 class="uppercase bold texto-sm">cinco</span> horas de anticipación.
         </p>
-        <p class="texto-base justificar line-base">
-            <span class="uppercase bold texto-sm underline pr-2">séptima.- </span>
-            “La Empresa” ofrecerá el servicio de inhumación de cenizas amparado por este convenio de <span
-                class="uppercase bold texto-sm">lunes a domingo de, {{ $empresa->cementerio->hora_apertura }} a
-                {{ $empresa->cementerio->hora_cierre }} horas</span>.
-        </p>
         @endif
-
-
 
         @if ($datos['venta_terreno']['tipo_propiedades_id']!=3)
         <p class="texto-base justificar line-base">
