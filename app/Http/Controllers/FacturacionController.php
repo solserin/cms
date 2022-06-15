@@ -502,7 +502,6 @@ class FacturacionController extends ApiController
         }
 
         //Determino el atributo DomicilioFiscalReceptor
-        //aqui trabajo
         //pub en general local o extranjero
         $DomicilioFiscalReceptor = '82140'; //pongo el rfc de la empresa
         $RegimenFiscalReceptor = '616';
@@ -565,7 +564,6 @@ class FacturacionController extends ApiController
                     ],
                 ],
             ],
-            //aqui traba
             'cfdi:Complemento'      => [
                 'pago20:Pagos' => [
                     '_attributes' => [
@@ -1405,7 +1403,6 @@ class FacturacionController extends ApiController
         }
 
         $tasa_iva = number_format((float) round($cfdi->tasa_iva / 100, 2), 6, '.', '');
-        //aqui trabajo 2
         $ns = $xml->getNamespaces(true);
         $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/4');
         $xml->registerXPathNamespace('tfd', 'http://www.sat.gob.mx/TimbreFiscalDigital');
@@ -2234,6 +2231,7 @@ class FacturacionController extends ApiController
             //return $checando_cfdi;
         }
 */
+
         $cfdi = Cfdis::where('id', $request->id)->first();
         if (empty($cfdi)) {
             /**datos no encontrados */
@@ -2258,17 +2256,37 @@ class FacturacionController extends ApiController
         $parametros->rfcEmisor = trim($cfdi->rfc_emisor);
         $parametros->fecha     = str_replace(" ", "T", $fecha_cancelacion);
         //$parametros->folios =  array($cfdi['uuid']);
-        $parametros->motivo = $request->motivo;
+
 
         $parametros->rfc_receptor = trim($cfdi->rfc_receptor);
         $parametros->total        = $cfdi->total;
-        $parametros->uuid         = $cfdi->uuid;
-        //dd($parametros);
-        $parametros->folioSustitucion = $request->motivo != '03' ? $request->uuid_a_sustituir_cancelar : '';
-        if ($request->motivo == '03') {
+
+
+
+        //$parametros->motivo = $request->motivo;
+        //$parametros->uuid         = $cfdi->uuid;
+        $motivo = $request->motivo;
+        $uuid         = $cfdi->uuid;
+        $folioSustitucion = '';
+        if ($request->motivo != '03') {
             //unset folioSustitucion
-            unset($parametros->folioSustitucion);
+            $folioSustitucion = $request->uuid_a_sustituir_cancelar;
         }
+
+        $folio_cancelar = new Folio();
+        $folio_cancelar->uuid =  $uuid;
+        $folio_cancelar->motivo =  $motivo;
+        $folio_cancelar->folioSustitucion = $folioSustitucion;
+        //return $this->successResponse(array($folio_cancelar), 200);
+
+        //dd($parametros);
+        $parametros->folios = array($folio_cancelar);
+        //dd($parametros);
+
+
+
+
+
         $parametros->SelloCFD     = $xml['Complemento']['TimbreFiscalDigital']['SelloCFD'];
         if (ENV('APP_ENV') == 'local') {
             $certificado_path     = ENV('CER_PAC');
@@ -2309,7 +2327,7 @@ class FacturacionController extends ApiController
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar, array('trace' => 1));
         //return $client->__getFunctions();
-        $result              = $client->Cancelacion40_2($parametros);
+        $result              = $client->Cancelacion40_3($parametros);
         dd($result);
         //return $this->errorResponse( $result, 409);
         // echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
@@ -2455,10 +2473,10 @@ class Parametros
     public $comprobante;
 }
 
-class Folios
+class Folio
 {
     public $uuid = '';
     public $motivo = '';
-    public $folio = '';
+    public $folioSustitucion  = '';
     //Es un listado de objetos tipo folio donde se indica el motivo, folio de sustitucion y el uuid a cancelar.
 }
