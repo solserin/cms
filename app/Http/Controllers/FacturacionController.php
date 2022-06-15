@@ -502,6 +502,7 @@ class FacturacionController extends ApiController
         }
 
         //Determino el atributo DomicilioFiscalReceptor
+        //aqui trabajo
         //pub en general local o extranjero
         $DomicilioFiscalReceptor = '82140'; //pongo el rfc de la empresa
         $RegimenFiscalReceptor = '616';
@@ -564,6 +565,7 @@ class FacturacionController extends ApiController
                     ],
                 ],
             ],
+            //aqui traba
             'cfdi:Complemento'      => [
                 'pago20:Pagos' => [
                     '_attributes' => [
@@ -687,7 +689,6 @@ class FacturacionController extends ApiController
             'metodo_pago.value'        => 'required',
             'forma_pago.value'         => 'required',
             'fecha_pago'               => '',
-            'fecha_cfdi'               => '',
             'uso_cfdi.value'           => 'required',
             'tipo_relacion.value'      => '',
             'cfdis_relacionados'       => '',
@@ -1403,6 +1404,7 @@ class FacturacionController extends ApiController
         }
 
         $tasa_iva = number_format((float) round($cfdi->tasa_iva / 100, 2), 6, '.', '');
+        //aqui trabajo 2
         $ns = $xml->getNamespaces(true);
         $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/4');
         $xml->registerXPathNamespace('tfd', 'http://www.sat.gob.mx/TimbreFiscalDigital');
@@ -1954,19 +1956,19 @@ class FacturacionController extends ApiController
             $email    = false;
             $email_to = 'hector@gmail.com';
         }
-        //amq
 
+        /*
         if (ENV('APP_ENV') != 'local') {
             //actualizamos cfdis en caso de que este en produccion
             $checando_cfdi = $this->get_cfdi_status_sat($folio_id);
-            return $checando_cfdi;
             if (isset($checando_cfdi['estado'])) {
                 if ($checando_cfdi['estado'] == 'No Encontrado') {
                     return $this->errorResponse('El CFDI ' . $checando_cfdi['uuid'] . ' no se encuentra en la base de datos del SAT.', 409);
                 }
             }
+            //return $checando_cfdi;
         }
-
+        */
         $myRequest = new Request();
         $myRequest->request->add(['test' => 'test']);
         $cfdi = $this->get_cfdis_timbrados($myRequest, $folio_id)[0];
@@ -2148,10 +2150,8 @@ class FacturacionController extends ApiController
         $autentica->password = $password;
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar);
-        return $client->__getFunctions();
+        //return $client->__getFunctions();
         $result              = $client->ConsultarEstatusCFDI_2($parametros);
-        //amq
-        dd($result);
         /**determinando status segun el resultado de la respuesta del sat */
         /**
          * codigoEstatus
@@ -2200,7 +2200,6 @@ class FacturacionController extends ApiController
 
     public function cancelar_cfdi_folio(Request $request)
     {
-
         $validaciones = [
             /**validacion de datos para el cfdi */
             'id' => 'required|integer|min:1',
@@ -2231,7 +2230,6 @@ class FacturacionController extends ApiController
             //return $checando_cfdi;
         }
 */
-
         $cfdi = Cfdis::where('id', $request->id)->first();
         if (empty($cfdi)) {
             /**datos no encontrados */
@@ -2248,45 +2246,23 @@ class FacturacionController extends ApiController
             /**datos no encontrados */
             return $this->errorResponse('Error al cargar los datos del xml.', 409);
         }
+
         date_default_timezone_set("America/Mazatlan");
         $fecha_cancelacion = date("Y-m-d H:i:s");
         /**datos para la consulta */
-        //aqui trabajo
         $parametros            = new Parametros();
         $parametros->rfcEmisor = trim($cfdi->rfc_emisor);
         $parametros->fecha     = str_replace(" ", "T", $fecha_cancelacion);
-        //$parametros->folios =  array($cfdi['uuid']);
-
-
+        $parametros->folios    = $cfdi['uuid'];
+        $parametros->motivo = $request->motivo;
         $parametros->rfc_receptor = trim($cfdi->rfc_receptor);
         $parametros->total        = $cfdi->total;
-
-
-
-        //$parametros->motivo = $request->motivo;
-        //$parametros->uuid         = $cfdi->uuid;
-        $motivo = $request->motivo;
-        $uuid         = $cfdi->uuid;
-        $folioSustitucion = '';
-        if ($request->motivo != '03') {
+        $parametros->uuid         = $cfdi->uuid;
+        $parametros->folioSustitucion = $request->motivo != '03' ? $request->uuid_a_sustituir_cancelar : '';
+        if ($request->motivo == '03') {
             //unset folioSustitucion
-            $folioSustitucion = $request->uuid_a_sustituir_cancelar;
+            unset($parametros->folioSustitucion);
         }
-
-        $folio_cancelar = new Folio();
-        $folio_cancelar->uuid =  $uuid;
-        $folio_cancelar->motivo =  $motivo;
-        $folio_cancelar->folioSustitucion = $folioSustitucion;
-        //return $this->successResponse(array($folio_cancelar), 200);
-
-        //dd($parametros);
-        $parametros->folios = array($folio_cancelar);
-        //dd($parametros);
-
-
-
-
-
         $parametros->SelloCFD     = $xml['Complemento']['TimbreFiscalDigital']['SelloCFD'];
         if (ENV('APP_ENV') == 'local') {
             $certificado_path     = ENV('CER_PAC');
@@ -2297,6 +2273,8 @@ class FacturacionController extends ApiController
             $root_path_key        = ENV('ROOT_KEY_DEV');
             $credentials_password = ENV('PASSWORD_LLAVES');
             $url_cancelar         = ENV('WEB_SERVICE_CANCELACION_DEVELOP');
+            $WSDL_CANCELAR_DEV = ENV('WSDL_CANCELAR_DEV');
+            $WSDL_CANCELAR_PRODUCTION = ENV('WSDL_CANCELAR_PRODUCTION');
         } else {
             $facturacion_datos_sistema = Facturacion::First();
             /**data from DB */
@@ -2315,7 +2293,7 @@ class FacturacionController extends ApiController
         }
 
         $storage_disk_credentials = ENV('STORAGE_DISK_CREDENTIALS');
-
+        //aqui trabajo
         $certFile = Storage::disk($storage_disk_credentials)->path($root_path_cer . $certificado_path);
         $keyFile  = Storage::disk($storage_disk_credentials)->path($root_path_key . $key_path);
         $parametros->publicKey  = file_get_contents($certFile);
@@ -2326,9 +2304,7 @@ class FacturacionController extends ApiController
         $autentica->password = $password;
         $parametros->accesos = $autentica;
         $client              = new SoapClient($url_cancelar, array('trace' => 1));
-        //return $client->__getFunctions();
-        $result              = $client->Cancelacion40_3($parametros);
-        dd($result);
+        $result              = $client->Cancelacion40_2($parametros);
         //return $this->errorResponse( $result, 409);
         // echo "<b>Request</b>:<br>" . htmlentities($client->__getLastRequest()) . "\n";
         //return $result;
@@ -2471,12 +2447,4 @@ class Parametros
 {
     public $accesos;
     public $comprobante;
-}
-
-class Folio
-{
-    public $uuid = '';
-    public $motivo = '';
-    public $folioSustitucion  = '';
-    //Es un listado de objetos tipo folio donde se indica el motivo, folio de sustitucion y el uuid a cancelar.
 }
