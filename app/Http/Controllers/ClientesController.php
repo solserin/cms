@@ -95,7 +95,7 @@ class ClientesController extends ApiController
                         $q->where('clientes.nacionalidades_id', '=', $nacionalidad);
                     }
                 })
-            /**descartando el cliente publico en general */
+                /**descartando el cliente publico en general */
                 //->whereNotIn('clientes.id', [1, 193])
                 ->orderBy('clientes.id', 'desc')
                 ->get()
@@ -110,13 +110,13 @@ class ClientesController extends ApiController
     {
         $cliente_id = $request->cliente_id;
         $resultado  =
-        Clientes::select(
-            '*',
-            'vivo_b as vivo_b_raw',
-            DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
-            'nacionalidades_id',
-            'generos_id'
-        )->where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')->with('regimen')
+            Clientes::select(
+                '*',
+                'vivo_b as vivo_b_raw',
+                DB::Raw('IF(clientes.vivo_b=1 , "VIVO","FALLECIDO" ) as vivo_b'),
+                'nacionalidades_id',
+                'generos_id'
+            )->where('clientes.id', '=', $cliente_id)->with('nacionalidad')->with('genero')->with('regimen')
             ->first();
         //se retorna el resultado
         return $resultado;
@@ -137,8 +137,8 @@ class ClientesController extends ApiController
             'rfc'                => '',
             'razon_social'       => '',
             'direccion_fiscal'   => '',
-            'cp'=>'',
-            'regimen.value'=>''
+            'cp' => '',
+            'regimen.value' => ''
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
@@ -148,12 +148,12 @@ class ClientesController extends ApiController
         }
 
         if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '' || trim($request->cp) != '') {
-            if(trim($request->rfc)!='XAXX010101000' && trim($request->rfc)!='XEX010101000'){
-                 $validaciones['rfc']              = 'required|unique:clientes,rfc';
-            }else{
+            if (trim($request->rfc) != 'XAXX010101000' && trim($request->rfc) != 'XEX010101000') {
+                // $validaciones['rfc']              = 'required|unique:clientes,rfc';
+            } else {
                 $validaciones['rfc']              = 'required';
             }
-           
+
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
             $validaciones['cp'] = 'required';
@@ -220,8 +220,8 @@ class ClientesController extends ApiController
             'rfc'                => '',
             'razon_social'       => '',
             'direccion_fiscal'   => '',
-            'cp'=>'',
-            'regimen.value'=>''
+            'cp' => '',
+            'regimen.value' => ''
         ];
 
         /**VALIDACIONES CONDICIONADAS*/
@@ -234,14 +234,14 @@ class ClientesController extends ApiController
         }
 
         if (trim($request->rfc) != '' || trim($request->razon_social) != '' || trim($request->direccion_fiscal) != '' || trim($request->cp) != '') {
-            if(trim($request->rfc)!='XAXX010101000' && trim($request->rfc)!='XEX010101000'){
-                $validaciones['rfc'] = [
+            if (trim($request->rfc) != 'XAXX010101000' && trim($request->rfc) != 'XEX010101000') {
+                /*$validaciones['rfc'] = [
                     'required',
                     Rule::unique('clientes', 'rfc')->ignore($request->id_cliente_modificar),
-                ];
-           }else{
-               $validaciones['rfc']              = 'required';
-           }
+                ];*/
+            } else {
+                $validaciones['rfc']              = 'required';
+            }
             $validaciones['razon_social']     = 'required';
             $validaciones['direccion_fiscal'] = 'required';
             $validaciones['cp'] = 'required';
