@@ -313,11 +313,13 @@ export default {
     },
     watch: {
         "serverOptions.tipo_comprobante": function(newVal, previousVal) {
-            this.get_data("", 1);
+            (async () => {
+                await this.get_data("", 1);
+            })();
         },
         actual: function(newValue, oldValue) {
             (async () => {
-                //await this.get_data(this.actual);
+                await this.get_data("", this.actual);
             })();
         }
     },
@@ -489,7 +491,7 @@ export default {
             };
             //this.get_data(this.actual);
         },
-        get_data(origen = "", page, evento = "") {
+        async get_data(origen = "", page, evento = "") {
             if (evento == "blur") {
                 return;
             } else {
@@ -557,7 +559,7 @@ export default {
     created() {
         (async () => {
             await this.get_tipos_comprobante();
-            await this.get_data(this.actual);
+            //await this.get_data(this.actual);
         })();
     }
 };
