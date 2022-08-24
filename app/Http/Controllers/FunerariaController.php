@@ -5500,7 +5500,7 @@ class FunerariaController extends ApiController
             $empresa       = $get_funeraria->get_empresa_data();
 
             $FirmasController = new FirmasController();
-            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'], 26, 'por_area_firma', 'solicitd');
+            $firma_cliente       = $FirmasController->get_firma_documento($datos_solicitud['id'], 26, 'por_area_firma', 'solicitud');
 
             $firmas = [
                 'cliente' => $firma_cliente['firma_path']
