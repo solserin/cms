@@ -27,6 +27,7 @@
                                                 >
                                                     Resumen del Convenio
                                                 </div>
+
                                                 <div
                                                     class="flex flex-wrap color-copy"
                                                 >
@@ -45,6 +46,10 @@
                                                                     >Ubicación
                                                                     de la
                                                                     Propiedad</span
+                                                                >
+                                                                <span v-else
+                                                                    >Paquete
+                                                                    Funerario</span
                                                                 >
                                                             </div>
                                                             <div
@@ -79,6 +84,77 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="w-full">
+                                                        <div
+                                                            class="w-full xl:w-4/12 input-text px-2 mx-auto mt-5 "
+                                                        >
+                                                            <label
+                                                                >Estatus del
+                                                                covenio:</label
+                                                            >
+                                                            <v-select
+                                                                :options="
+                                                                    estados
+                                                                "
+                                                                :clearable="
+                                                                    false
+                                                                "
+                                                                v-model="
+                                                                    form.estado
+                                                                "
+                                                                :dir="
+                                                                    $vs.rtl
+                                                                        ? 'rtl'
+                                                                        : 'ltr'
+                                                                "
+                                                                class="w-full"
+                                                                data-vv-as=" "
+                                                            >
+                                                                <div
+                                                                    slot="no-options"
+                                                                >
+                                                                    Seleccione 1
+                                                                </div>
+                                                            </v-select>
+                                                            <span>{{
+                                                                errors.first(
+                                                                    "motivo"
+                                                                )
+                                                            }}</span>
+                                                            <span
+                                                                v-if="
+                                                                    this
+                                                                        .errores[
+                                                                        'motivo.value'
+                                                                    ]
+                                                                "
+                                                                >{{
+                                                                    errores[
+                                                                        "motivo.value"
+                                                                    ][0]
+                                                                }}</span
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="w-full"
+                                                        v-if="
+                                                            getDatosConvenio.status ==
+                                                                1
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="w-full text-center mx-auto mt-5 "
+                                                        >
+                                                            Registrado el día:
+                                                            {{
+                                                                getDatosConvenio.fecha_entrega
+                                                            }}, por :
+                                                            {{
+                                                                getDatosConvenio.entregado_por
+                                                            }}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -101,7 +177,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="bottom-buttons-section">
                 <div class="text-advice">
                     <span class="ojo-advice">Ojo:</span>
@@ -109,22 +184,13 @@
                     correcto de click en el "Botón de Abajo”.
                 </div>
 
-                <div class="w-full" v-if="getDatosConvenio.status == 0">
+                <div class="w-full">
                     <vs-button
                         class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
                         color="success"
                         @click="Guardar()"
                     >
-                        <span>Marcar Convenio Como Entregado</span>
-                    </vs-button>
-                </div>
-                <div class="w-full" v-else>
-                    <vs-button
-                        class="w-full sm:w-full md:w-auto md:ml-2 my-2 md:mt-0"
-                        color="danger"
-                        @click="Guardar()"
-                    >
-                        <span>Marcar Convenio Como No</span>
+                        <span>Guardar Cambios</span>
                     </vs-button>
                 </div>
             </div>
@@ -133,15 +199,18 @@
             :show="openStatus"
             :callback-on-success="callback"
             @closeVerificar="openStatus = false"
-            :accion="accionNombre"
+            :accion="'Entrega de Convenios'"
         ></Password>
     </div>
 </template>
 <script>
+import vSelect from "vue-select";
 import Password from "@pages/confirmar_password";
 import cementerio from "@services/cementerio";
+
 export default {
     components: {
+        "v-select": vSelect,
         Password
     },
     props: {
@@ -164,6 +233,7 @@ export default {
                     this.cerrar();
                 };
                 this.form.nota = this.getDatosConvenio.nota;
+                this.form.estado = this.estados[0];
             } else {
                 //limpiar
                 this.form.nota = "";
@@ -173,14 +243,25 @@ export default {
 
     data() {
         return {
+            estados: [
+                {
+                    label: "ENTREGADO",
+                    value: 1
+                },
+                {
+                    label: "NO ENTREGADO",
+                    value: 0
+                }
+            ],
             openStatus: false,
             callback: Function,
-            accionNombre: "",
+
             form: {
                 id: "",
                 tipo: "",
                 nota: "",
-                action: ""
+                action: "",
+                estado: {}
             },
             errores: []
         };
@@ -213,17 +294,8 @@ export default {
         Guardar() {
             this.form.tipo = this.getDatosConvenio.tipo;
             this.form.id = this.getDatosConvenio.id;
-            this.form.action = this.getDatosConvenio.status == 0 ? 1 : 0;
-
-            if (this.getDatosConvenio.status == 0) {
-                this.accionNombre = "Marcar convenio como entregado";
-            } else {
-                this.accionNombre = "Desmarcar convenio como entregado";
-            }
-
+            this.form.action = this.form.estado.value;
             //llamando a la function segun su cotnrolador
-            if (this.form.tipo == "terreno") {
-            }
             (async () => {
                 this.callback = await this.actualizar;
                 this.openStatus = true;

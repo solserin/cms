@@ -1263,6 +1263,7 @@ class FunerariaController extends ApiController
             ->with('AjustesPoliticas')
             ->with('cancelador:id,nombre')
             ->with('registro:id,nombre')
+            ->with('venta_plan.entrego_convenio')
             ->where('empresa_operaciones_id', '=', 4)
             /**solo ventas de planes funerarios */
             ->select(
@@ -1705,6 +1706,9 @@ class FunerariaController extends ApiController
             } else {
                 $venta['venta_plan']['tipo_financiamiento_texto'] = 'A Futuro';
             }
+
+
+            $venta['venta_plan']['fecha_convenio_entrega_texto']      = $venta['venta_plan']['fecha_registro_convenio'] != NULL ? fecha_abr($venta['venta_plan']['fecha_registro_convenio']) : NULL;
 
             /**agregando los conceptos originales del plan */
             $secciones = [

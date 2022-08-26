@@ -542,12 +542,13 @@ export default {
             this.datosConvenio.status = datos.venta_terreno.status_convenio;
             this.datosConvenio.producto = datos.venta_terreno.ubicacion_texto;
             this.datosConvenio.fecha_entrega =
-                datos.venta_terreno.fecha_registro_convenio;
+                datos.venta_terreno.fecha_convenio_entrega_texto;
             this.datosConvenio.entregado_por =
                 datos.venta_terreno.entrego_convenio != null
                     ? datos.venta_terreno.entrego_convenio.nombre
                     : "";
             this.datosConvenio.nota = datos.venta_terreno.nota_convenio;
+
             this.openEntregarconvenio = true;
         },
 

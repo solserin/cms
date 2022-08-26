@@ -736,20 +736,26 @@ class CementerioController extends ApiController
         );
 
         $id = $request->id;
-        $fecha = NULL;
-        $usuario = NULL;
-        $nota = NULL;
-        if ($request->action == 1) {
-            //marca como entregado
-            $fecha = now();
-            $usuario = (int) $request->user()->id;
-            $nota = $request->nota;
-        }
+        $nota = $request->nota;
+        //marca como entregado
+        $fecha = now();
+        $usuario = (int) $request->user()->id;
 
-        $res = 0;
+
         //verificamos que tipo es
         if ($request->tipo == 'terreno') {
-            $res = DB::table('ventas_terrenos')->where('id', $id)->update(
+            $solicitud = DB::table('ventas_terrenos')->where('id', $id)->first();
+            if ($solicitud->status_convenio == 1) {
+                if ($request->action == 0) {
+                    $fecha = NULL;
+                    $usuario = NULL;
+                } else {
+                    $fecha = $solicitud->fecha_registro_convenio;
+                    $usuario = $solicitud->registro_id_convenio;
+                }
+            }
+            //checo si ya fue actualizado
+            DB::table('ventas_terrenos')->where('id', $id)->update(
                 [
                     'status_convenio'  => $request->action,
                     'nota_convenio'         => $nota,
@@ -758,8 +764,27 @@ class CementerioController extends ApiController
                 ]
             );
         } else {
+            $solicitud = DB::table('ventas_planes')->where('id', $id)->first();
+            if ($solicitud->status_convenio == 1) {
+                if ($request->action == 0) {
+                    $fecha = NULL;
+                    $usuario = NULL;
+                } else {
+                    $fecha = $solicitud->fecha_registro_convenio;
+                    $usuario = $solicitud->registro_id_convenio;
+                }
+            }
+            //checo si ya fue actualizado
+            DB::table('ventas_planes')->where('id', $id)->update(
+                [
+                    'status_convenio'  => $request->action,
+                    'nota_convenio'         => $nota,
+                    'fecha_registro_convenio'              => $fecha,
+                    'registro_id_convenio'              => $usuario
+                ]
+            );
         }
-        return $this->successResponse($res, 200);
+        return $this->successResponse(1, 200);
     }
 
 
@@ -3608,6 +3633,9 @@ class CementerioController extends ApiController
             $venta['venta_terreno']['tipo_texto']      = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['tipo_texto'];
             $venta['venta_terreno']['fila_texto']      = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['fila_texto'];
             $venta['venta_terreno']['lote_texto']      = $this->ubicacion_texto($venta['venta_terreno']['ubicacion'], $datos_cementerio)['lote_texto'];
+
+            $venta['venta_terreno']['fecha_convenio_entrega_texto']      = $venta['venta_terreno']['fecha_registro_convenio'] != NULL ? fecha_abr($venta['venta_terreno']['fecha_registro_convenio']) : NULL;
+
             /**agregando fila, lote, y tipo, por separado en valor numrico */
             $venta['venta_terreno']['fila_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[2]));
             $venta['venta_terreno']['lote_raw'] = (intval(explode("-", $venta['venta_terreno']['ubicacion'])[3]));

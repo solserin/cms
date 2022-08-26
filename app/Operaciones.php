@@ -33,32 +33,41 @@ class Operaciones extends Model
                 ),
                 DB::raw(
                     '(NULL) AS ubicacion_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_convenio_entrega_texto'
                 )
             );
     }
 
-    
+
     public function servicio_funerario()
     {
         return $this->belongsTo('App\ServiciosFunerarios', 'servicios_funerarios_id', 'id')
-        ->select(
-            'id',
-            'fechahora_defuncion',
-            'nombre_afectado',
-            DB::raw(
-                '(NULL) AS fecha_defuncion_texto'
-            )
-        );
+            ->select(
+                'id',
+                'fechahora_defuncion',
+                'nombre_afectado',
+                DB::raw(
+                    '(NULL) AS fecha_defuncion_texto'
+                )
+            );
     }
 
     public function sepultados()
     {
         return $this->hasMany(
-            'App\ServiciosFunerarios','ventas_terrenos_id','ventas_terrenos_id')->where('status','<>',0)->select('ventas_terrenos_id','nombre_afectado','fechahora_defuncion',
+            'App\ServiciosFunerarios',
+            'ventas_terrenos_id',
+            'ventas_terrenos_id'
+        )->where('status', '<>', 0)->select(
+            'ventas_terrenos_id',
+            'nombre_afectado',
+            'fechahora_defuncion',
             DB::raw(
-            '(NULL) AS fecha_defuncion_texto'
+                '(NULL) AS fecha_defuncion_texto'
             )
-    );
+        );
     }
 
 
@@ -253,6 +262,9 @@ class Operaciones extends Model
                 '*',
                 DB::raw(
                     '(NULL) AS tipo_financiamiento_texto'
+                ),
+                DB::raw(
+                    '(NULL) AS fecha_convenio_entrega_texto'
                 )
             );
     }
