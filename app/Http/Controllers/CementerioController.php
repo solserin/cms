@@ -718,6 +718,51 @@ class CementerioController extends ApiController
         }
     }
 
+    public function actualizar_status_convenio(Request $request)
+    {
+        /**unicamente puede regresarse lo que  se ha cubierto de capital */
+        $validaciones = [
+            'id'     => 'required',
+            'tipo' => 'required',
+            'action'     => 'required'
+        ];
+
+        $mensajes = [
+            'required' => 'Ingrese este dato'
+        ];
+        request()->validate(
+            $validaciones,
+            $mensajes
+        );
+
+        $id = $request->id;
+        $fecha = NULL;
+        $usuario = NULL;
+        $nota = NULL;
+        if ($request->action == 1) {
+            //marca como entregado
+            $fecha = now();
+            $usuario = (int) $request->user()->id;
+            $nota = $request->nota;
+        }
+
+        $res = 0;
+        //verificamos que tipo es
+        if ($request->tipo == 'terreno') {
+            $res = DB::table('ventas_terrenos')->where('id', $id)->update(
+                [
+                    'status_convenio'  => $request->action,
+                    'nota_convenio'         => $nota,
+                    'fecha_registro_convenio'              => $fecha,
+                    'registro_id_convenio'              => $usuario
+                ]
+            );
+        } else {
+        }
+        return $this->successResponse($res, 200);
+    }
+
+
 
     public function get_cuota_pdf($idioma = 'es', Request $request)
     {
@@ -2864,6 +2909,7 @@ class CementerioController extends ApiController
             ->with('cuota_cementerio_terreno.pagosProgramados.pagados')
             ->with('cuota_cementerio_terreno.cuota_cementerio:id,descripcion,status')
             ->with('venta_terreno.vendedor')
+            ->with('venta_terreno.entrego_convenio')
             ->with('venta_terreno.tipo_propiedad')
             ->with('beneficiarios')
             ->with('AjustesPoliticas')
@@ -3067,7 +3113,7 @@ class CementerioController extends ApiController
                 /**asigno los datos de los finados dentro de la propiedad */
                 $sepultado['fecha_defuncion_texto'] = fecha_abr($sepultado['fechahora_defuncion']);
             }
-           
+
 
             /**calculando el costo neto y descuento calcuado */
             /**aqui voy*/
@@ -3321,7 +3367,7 @@ class CementerioController extends ApiController
                 $venta['dias_vencidos']                  = $dias_vencido_primer_pago_vencido;
 
 
-                
+
                 /**areegloe de todos los pagos limpios(no repetidos) */
                 //$venta['pagos_realizados_arreglo'] = $arreglo_de_pagos_realizados;
             } else {
@@ -4110,95 +4156,95 @@ class CementerioController extends ApiController
 
 
 
-     /**pdf de los servicios que han usado esta propiedad */
-     public function servicios_propiedad(Request $request)
-     {
-         /**estos valores verifican si el usuario quiere mandar el pdf por correo */
-         $email             = $request->email_send === 'true' ? true : false;
-         $email_to          = $request->email_address;
-         $requestVentasList = json_decode($request->request_parent[0], true);
-         $id_venta          = $requestVentasList['venta_id'];
- 
-         /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
-          * por lo cual puede variar de paramtros degun la ncecesidad
-          */
+    /**pdf de los servicios que han usado esta propiedad */
+    public function servicios_propiedad(Request $request)
+    {
+        /**estos valores verifican si el usuario quiere mandar el pdf por correo */
+        $email             = $request->email_send === 'true' ? true : false;
+        $email_to          = $request->email_address;
+        $requestVentasList = json_decode($request->request_parent[0], true);
+        $id_venta          = $requestVentasList['venta_id'];
+
+        /**aqui obtengo los datos que se ocupan para generar el reporte, es enviado desde cada modulo al reporteador
+         * por lo cual puede variar de paramtros degun la ncecesidad
+         */
         /*$id_venta = 210;
          $email = false;
          $email_to = 'hector@gmail.com';
           */
- 
-         //obtengo la informacion de esa venta
-         $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
-         if (empty($datos_venta)) {
-             /**datos no encontrados */
-             return $this->errorResponse('Error al cargar los datos.', 409);
-         }
- 
-         /**verificando si el documento aplica para esta solictitud */
-         /*if ($datos_venta['numero_solicitud_raw'] == null) {
+
+        //obtengo la informacion de esa venta
+        $datos_venta = $this->get_ventas($request, $id_venta, '')[0];
+        if (empty($datos_venta)) {
+            /**datos no encontrados */
+            return $this->errorResponse('Error al cargar los datos.', 409);
+        }
+
+        /**verificando si el documento aplica para esta solictitud */
+        /*if ($datos_venta['numero_solicitud_raw'] == null) {
          return 0;
          }*/
- 
-         $get_funeraria = new EmpresaController();
-         $empresa       = $get_funeraria->get_empresa_data();
- 
-         $FirmasController = new FirmasController();
-         $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'], 1, 'por_area_firma');
-         $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'], null, 'por_vendedor');
- 
-         $firmas = [
-             'cliente' => $firma_cliente['firma_path'],
-             'vendedor' => $firma_vendedor['firma_path']
-         ];
- 
- 
-         $pdf = PDF::loadView('cementerios/servicios_propiedad/documento', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
- 
-         //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
-         $name_pdf = "SERVICIOS POR PROPIEDAD | TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
-         $pdf->setOptions([
-             'title'       => $name_pdf,
-             'footer-html' => view('cementerios.servicios_propiedad.footer', ['empresa' => $empresa]),
-         ]);
-         if ($datos_venta['operacion_status'] == 0) {
-             $pdf->setOptions([
-                 'header-html' => view('cementerios.servicios_propiedad.header'),
-             ]);
-         }
- 
-         //$pdf->setOption('grayscale', true);
-         //$pdf->setOption('header-right', 'dddd');
-         $pdf->setOption('margin-left', 12.4);
-         $pdf->setOption('margin-right', 12.4);
-         $pdf->setOption('margin-top', 12.4);
-         $pdf->setOption('margin-bottom', 12.4);
-         $pdf->setOption('page-size', 'letter');
- 
-         if ($email == true) {
-             /**email */
-             /**
-              * parameters lista de la funcion
-              * to destinatario
-              * to_name nombre del destinatario
-              * subject motivo del correo
-              * name_pdf nombre del pdf
-              * pdf archivo pdf a enviar
-              */
-             /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
-             $email_controller = new EmailController();
-             $enviar_email     = $email_controller->pdf_email(
-                 $email_to,
-                 strtoupper($datos_venta['nombre']),
-                 'SERVICIOS POR PROPIEDAD',
-                 $name_pdf,
-                 $pdf
-             );
-             return $enviar_email;
-             /**email fin */
-         } else {
-             return $pdf->inline($name_pdf);
-         }
-     }
+
+        $get_funeraria = new EmpresaController();
+        $empresa       = $get_funeraria->get_empresa_data();
+
+        $FirmasController = new FirmasController();
+        $firma_cliente       = $FirmasController->get_firma_documento($datos_venta['operacion_id'], 1, 'por_area_firma');
+        $firma_vendedor       = $FirmasController->get_firma_documento($datos_venta['venta_terreno']['vendedor_id'], null, 'por_vendedor');
+
+        $firmas = [
+            'cliente' => $firma_cliente['firma_path'],
+            'vendedor' => $firma_vendedor['firma_path']
+        ];
+
+
+        $pdf = PDF::loadView('cementerios/servicios_propiedad/documento', ['datos' => $datos_venta, 'empresa' => $empresa, 'firmas' => $firmas]);
+
+        //return view('lista_usuarios', ['usuarios' => $res, 'empresa' => $empresa]);
+        $name_pdf = "SERVICIOS POR PROPIEDAD | TITULAR " . strtoupper($datos_venta['nombre']) . '.pdf';
+        $pdf->setOptions([
+            'title'       => $name_pdf,
+            'footer-html' => view('cementerios.servicios_propiedad.footer', ['empresa' => $empresa]),
+        ]);
+        if ($datos_venta['operacion_status'] == 0) {
+            $pdf->setOptions([
+                'header-html' => view('cementerios.servicios_propiedad.header'),
+            ]);
+        }
+
+        //$pdf->setOption('grayscale', true);
+        //$pdf->setOption('header-right', 'dddd');
+        $pdf->setOption('margin-left', 12.4);
+        $pdf->setOption('margin-right', 12.4);
+        $pdf->setOption('margin-top', 12.4);
+        $pdf->setOption('margin-bottom', 12.4);
+        $pdf->setOption('page-size', 'letter');
+
+        if ($email == true) {
+            /**email */
+            /**
+             * parameters lista de la funcion
+             * to destinatario
+             * to_name nombre del destinatario
+             * subject motivo del correo
+             * name_pdf nombre del pdf
+             * pdf archivo pdf a enviar
+             */
+            /**quiere decir que el usuario desa mandar el archivo por correo y no consultarlo */
+            $email_controller = new EmailController();
+            $enviar_email     = $email_controller->pdf_email(
+                $email_to,
+                strtoupper($datos_venta['nombre']),
+                'SERVICIOS POR PROPIEDAD',
+                $name_pdf,
+                $pdf
+            );
+            return $enviar_email;
+            /**email fin */
+        } else {
+            return $pdf->inline($name_pdf);
+        }
+    }
 
     /**pdf del estado de cuenta del cementerio */
     public function documento_estado_de_cuenta_cementerio(Request $request)

@@ -129,7 +129,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/documento_titulo', 'CementerioController@documento_titulo');
     Route::get('cementerio/referencias_de_pago/{id_pago?}', 'CementerioController@referencias_de_pago');
     Route::get('cementerio/reglamento_pago', 'CementerioController@reglamento_pago');
-    Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
+
     Route::get('cementerio/servicios_propiedad', 'CementerioController@servicios_propiedad');
     Route::post('cementerio/cancelar_venta', 'CementerioController@cancelar_venta');
     Route::post('cementerio/control_cuotas/{tipo_servicio?}', 'CementerioController@control_cuotas');
@@ -142,7 +142,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('cementerio/get_cementerio', 'CementerioController@get_cementerio');
     Route::get('cementerio/get_tipo_propiedades', 'CementerioController@get_tipo_propiedades');
     Route::get('cementerio/get_mapeado', 'CementerioController@get_mapeado');
-
+    Route::post('cementerio/actualizar_status_convenio', 'CementerioController@actualizar_status_convenio');
 
     /**rutas de funeraria ventas planes */
     Route::post('funeraria/control_ventas/{tipo_servicio}', 'FunerariaController@control_ventas'); //agregar,modificar
@@ -274,6 +274,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('reportes/get_reportes', 'ReportesController@get_reportes');
 });
 
+
+Route::get('cementerio/get_ventas/{id_venta?}/{paginated?}/', 'CementerioController@get_ventas');
 
 
 

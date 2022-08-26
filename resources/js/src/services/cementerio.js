@@ -23,6 +23,13 @@ export default {
         return axios.post(call, datos);
     },
 
+    
+
+    actualizar_status_convenio(datos) {
+        let call = "/cementerio/actualizar_status_convenio";
+        return axios.post(call, datos);
+    },
+
     /**get financiamientos de las propiedades segun su tipo */
     get_financiamientos() {
         return axios.get("/cementerio/get_financiamientos");
